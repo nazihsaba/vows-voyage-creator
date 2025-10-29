@@ -81,30 +81,50 @@ const Dashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="mb-8">
-          <Button
-            onClick={() => navigate("/dashboard/create")}
-            className="bg-primary hover:bg-primary-hover"
+        <div className="grid gap-6 md:grid-cols-2 mb-8">
+          <Card 
+            className="shadow-soft hover:shadow-elegant transition-all cursor-pointer"
+            onClick={() => navigate("/dashboard/select-event-type")}
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Create New Wedding Invitation
-          </Button>
-        </div>
-
-        {weddings.length === 0 ? (
-          <Card className="shadow-soft">
-            <CardContent className="p-12 text-center">
-              <Heart className="w-16 h-16 text-primary mx-auto mb-4 opacity-50" />
-              <h2 className="text-2xl font-serif font-semibold mb-2">No invitations yet</h2>
-              <p className="text-muted-foreground mb-6">
-                Create your first wedding invitation to get started
+            <CardContent className="p-8 text-center">
+              <Plus className="w-16 h-16 text-primary mx-auto mb-4" />
+              <h2 className="text-2xl font-serif font-semibold mb-2">Add Event</h2>
+              <p className="text-muted-foreground">
+                Create a new event invitation
               </p>
-              <Button onClick={() => navigate("/dashboard/create")}>
-                Create Invitation
-              </Button>
             </CardContent>
           </Card>
-        ) : (
+
+          <Card 
+            className="shadow-soft hover:shadow-elegant transition-all cursor-pointer"
+            onClick={() => {
+              // Scroll to events list
+              document.getElementById("events-list")?.scrollIntoView({ behavior: "smooth" });
+            }}
+          >
+            <CardContent className="p-8 text-center">
+              <Heart className="w-16 h-16 text-primary mx-auto mb-4" />
+              <h2 className="text-2xl font-serif font-semibold mb-2">My Events</h2>
+              <p className="text-muted-foreground">
+                View and manage your events
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+
+        <div id="events-list">
+          <h2 className="text-2xl font-serif font-semibold mb-6">All Events</h2>
+          {weddings.length === 0 ? (
+            <Card className="shadow-soft">
+              <CardContent className="p-12 text-center">
+                <Heart className="w-16 h-16 text-primary mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-serif font-semibold mb-2">No events yet</h3>
+                <p className="text-muted-foreground">
+                  Your created events will appear here
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {weddings.map((wedding) => (
               <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all">
@@ -169,8 +189,9 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
-        )}
+            </div>
+          )}
+        </div>
       </main>
     </div>
   );

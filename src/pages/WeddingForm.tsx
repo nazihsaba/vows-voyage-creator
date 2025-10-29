@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,6 +11,7 @@ import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 
 const WeddingForm = () => {
   const { id } = useParams();
+  const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
@@ -27,6 +28,7 @@ const WeddingForm = () => {
     slug: "",
     status: "draft",
     main_picture_url: "",
+    template_type: searchParams.get("template") || "template1",
   });
 
   useEffect(() => {
@@ -168,7 +170,9 @@ const WeddingForm = () => {
                     value={formData.groom_name}
                     onChange={(e) => setFormData({ ...formData, groom_name: e.target.value })}
                     required
+                    disabled={!!id}
                   />
+                  {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="bride_name">Bride Name *</Label>
@@ -177,7 +181,9 @@ const WeddingForm = () => {
                     value={formData.bride_name}
                     onChange={(e) => setFormData({ ...formData, bride_name: e.target.value })}
                     required
+                    disabled={!!id}
                   />
+                  {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
               </div>
 
@@ -268,7 +274,9 @@ const WeddingForm = () => {
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="e.g., john-jane-2024"
+                  disabled={!!id}
                 />
+                {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
               </div>
 
               <div className="flex gap-4">

@@ -95,6 +95,7 @@ export type Database = {
           id: string
           last_name: string | null
           updated_at: string | null
+          username: string | null
         }
         Insert: {
           created_at?: string | null
@@ -103,6 +104,7 @@ export type Database = {
           id: string
           last_name?: string | null
           updated_at?: string | null
+          username?: string | null
         }
         Update: {
           created_at?: string | null
@@ -111,6 +113,7 @@ export type Database = {
           id?: string
           last_name?: string | null
           updated_at?: string | null
+          username?: string | null
         }
         Relationships: []
       }
@@ -165,6 +168,7 @@ export type Database = {
           rsvp_deadline: string | null
           slug: string
           status: string | null
+          template_type: string | null
           updated_at: string | null
           user_id: string
           wedding_date: string
@@ -181,6 +185,7 @@ export type Database = {
           rsvp_deadline?: string | null
           slug: string
           status?: string | null
+          template_type?: string | null
           updated_at?: string | null
           user_id: string
           wedding_date: string
@@ -197,6 +202,7 @@ export type Database = {
           rsvp_deadline?: string | null
           slug?: string
           status?: string | null
+          template_type?: string | null
           updated_at?: string | null
           user_id?: string
           wedding_date?: string

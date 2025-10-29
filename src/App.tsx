@@ -8,6 +8,8 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
+import EventTypeSelection from "./pages/EventTypeSelection";
+import TemplateSelection from "./pages/TemplateSelection";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -22,6 +24,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
+          <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
