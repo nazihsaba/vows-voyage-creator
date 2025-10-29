@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Plus, LogOut, Loader2, ExternalLink, Copy } from "lucide-react";
+import { Heart, Plus, LogOut, Loader2, ExternalLink, Copy, Eye } from "lucide-react";
 import { format } from "date-fns";
 
 const Dashboard = () => {
@@ -136,6 +136,14 @@ const Dashboard = () => {
                       onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
                     >
                       Edit
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => window.open(`/invite/${wedding.slug}?preview=true`, "_blank")}
+                      title="Preview invitation"
+                    >
+                      <Eye className="w-4 h-4" />
                     </Button>
                     {wedding.status === "published" && (
                       <>

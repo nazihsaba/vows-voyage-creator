@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { ArrowLeft, Loader2, Eye } from "lucide-react";
 
 const WeddingForm = () => {
   const { id } = useParams();
@@ -184,6 +184,16 @@ const WeddingForm = () => {
                 <Button type="submit" disabled={loading} className="flex-1">
                   {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
+                {formData.slug && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => window.open(`/invite/${formData.slug}?preview=true`, "_blank")}
+                  >
+                    <Eye className="w-4 h-4 mr-2" />
+                    Preview
+                  </Button>
+                )}
                 <Button
                   type="button"
                   variant="outline"
