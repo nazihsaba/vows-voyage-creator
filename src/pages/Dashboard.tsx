@@ -4,12 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { Heart, Plus, LogOut, Loader2, ExternalLink, Copy, Eye } from "lucide-react";
+import { Heart, Plus, LogOut, Loader2, ExternalLink, Copy, Eye, Trash2 } from "lucide-react";
 import { format } from "date-fns";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 
 const Dashboard = () => {
   const [weddings, setWeddings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
 
@@ -53,6 +64,32 @@ const Dashboard = () => {
       title: "Link copied!",
       description: "Invitation link copied to clipboard.",
     });
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("weddings")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+
+      setWeddings(weddings.filter(w => w.id !== id));
+      toast({
+        title: "Event deleted",
+        description: "Your event has been successfully deleted.",
+      });
+    } catch (error) {
+      console.error("Error deleting wedding:", error);
+      toast({
+        title: "Error",
+        description: "Failed to delete event. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   if (loading) {
@@ -185,6 +222,14 @@ const Dashboard = () => {
                         </Button>
                       </>
                     )}
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDeletingId(wedding.id)}
+                      title="Delete event"
+                    >
+                      <Trash2 className="w-4 h-4 text-destructive" />
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -193,6 +238,23 @@ const Dashboard = () => {
           )}
         </div>
       </main>
+
+      <AlertDialog open={!!deletingId} onOpenChange={() => setDeletingId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete the event and all associated data.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deletingId && handleDelete(deletingId)}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
