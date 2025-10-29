@@ -36,7 +36,7 @@ const WeddingInvite = () => {
           query = query.eq("status", "published");
         }
         
-        const { data: weddingData, error: weddingError } = await query.single();
+        const { data: weddingData, error: weddingError } = await query.maybeSingle();
 
         if (weddingError) throw weddingError;
         setWedding(weddingData);
