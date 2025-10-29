@@ -18,6 +18,9 @@ const WeddingForm = () => {
   const [uploading, setUploading] = useState(false);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -50,6 +53,17 @@ const WeddingForm = () => {
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
+
+      // Fetch existing gallery images
+      const { data: galleryData } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .eq("wedding_id", id)
+        .order("image_order");
+      
+      if (galleryData) {
+        setExistingGalleryImages(galleryData);
+      }
     } catch (error) {
       console.error("Error fetching wedding:", error);
     }
@@ -71,6 +85,63 @@ const WeddingForm = () => {
     setImageFile(null);
     setImagePreview("");
     setFormData({ ...formData, main_picture_url: "" });
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
+    
+    if (totalImages > 6) {
+      toast({
+        title: "Maximum 6 images allowed",
+        description: "Please select fewer images for the gallery.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    const newPreviews: string[] = [];
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        newPreviews.push(reader.result as string);
+        if (newPreviews.length === files.length) {
+          setGalleryPreviews([...galleryPreviews, ...newPreviews]);
+        }
+      };
+      reader.readAsDataURL(file);
+    });
+
+    setGalleryFiles([...galleryFiles, ...files]);
+  };
+
+  const removeGalleryImage = (index: number) => {
+    const newFiles = [...galleryFiles];
+    const newPreviews = [...galleryPreviews];
+    newFiles.splice(index, 1);
+    newPreviews.splice(index, 1);
+    setGalleryFiles(newFiles);
+    setGalleryPreviews(newPreviews);
+  };
+
+  const removeExistingGalleryImage = async (imageId: string) => {
+    try {
+      const { error } = await supabase
+        .from("gallery_images")
+        .delete()
+        .eq("id", imageId);
+
+      if (error) throw error;
+
+      setExistingGalleryImages(existingGalleryImages.filter((img) => img.id !== imageId));
+      toast({ title: "Image removed successfully" });
+    } catch (error: any) {
+      toast({
+        title: "Error removing image",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const uploadImage = async (file: File, userId: string) => {
@@ -112,6 +183,8 @@ const WeddingForm = () => {
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
+      let weddingId = id;
+
       if (id) {
         const { error } = await supabase
           .from("weddings")
@@ -119,16 +192,37 @@ const WeddingForm = () => {
           .eq("id", id);
 
         if (error) throw error;
-        toast({ title: "Wedding updated successfully!" });
       } else {
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("weddings")
-          .insert([{ ...formData, slug, main_picture_url: imageUrl, user_id: user.id }]);
+          .insert([{ ...formData, slug, main_picture_url: imageUrl, user_id: user.id }])
+          .select()
+          .single();
 
         if (error) throw error;
-        toast({ title: "Wedding created successfully!" });
+        weddingId = data.id;
       }
 
+      // Upload gallery images if template is Gallery Showcase
+      if (formData.template_type === "template2" && galleryFiles.length > 0) {
+        const galleryUrls = await Promise.all(
+          galleryFiles.map((file) => uploadImage(file, user.id))
+        );
+
+        const galleryInserts = galleryUrls.map((url, index) => ({
+          wedding_id: weddingId,
+          image_url: url,
+          image_order: existingGalleryImages.length + index + 1,
+        }));
+
+        const { error: galleryError } = await supabase
+          .from("gallery_images")
+          .insert(galleryInserts);
+
+        if (galleryError) throw galleryError;
+      }
+
+      toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
       navigate("/dashboard");
     } catch (error: any) {
       toast({
@@ -266,6 +360,87 @@ const WeddingForm = () => {
                   />
                 </div>
               </div>
+
+              {formData.template_type === "template2" && (
+                <div className="space-y-2">
+                  <Label>Gallery Images (up to 6)</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Upload images to showcase in your wedding gallery
+                  </p>
+                  
+                  {/* Existing Gallery Images */}
+                  {existingGalleryImages.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {existingGalleryImages.map((image) => (
+                        <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
+                          <img 
+                            src={image.image_url} 
+                            alt="Gallery" 
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeExistingGalleryImage(image.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* New Gallery Images */}
+                  {galleryPreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {galleryPreviews.map((preview, index) => (
+                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
+                          <img 
+                            src={preview} 
+                            alt={`Gallery ${index + 1}`} 
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeGalleryImage(index)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Upload Button */}
+                  {(existingGalleryImages.length + galleryFiles.length) < 6 && (
+                    <>
+                      <label
+                        htmlFor="gallery_images"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload gallery images</span>
+                        <span className="text-xs text-muted-foreground mt-1">
+                          {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                        </span>
+                      </label>
+                      <Input
+                        id="gallery_images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGalleryChange}
+                        className="hidden"
+                      />
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="slug">Custom URL Slug</Label>
