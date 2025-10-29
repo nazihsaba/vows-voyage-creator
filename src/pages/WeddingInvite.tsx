@@ -20,34 +20,12 @@ const WeddingInvite = () => {
   const [giftCards, setGiftCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
-  const [authReady, setAuthReady] = useState(false);
-
-  // Wait for auth to be ready
-  useEffect(() => {
-    const checkAuth = async () => {
-      if (isPreview) {
-        const { data: { user } } = await supabase.auth.getUser();
-        console.log("Auth check - user:", user?.id);
-        setAuthReady(!!user);
-      } else {
-        setAuthReady(true);
-      }
-    };
-    checkAuth();
-  }, [isPreview]);
 
   useEffect(() => {
-    if (!authReady && isPreview) {
-      console.log("Waiting for auth to be ready...");
-      return;
-    }
-
     const fetchWedding = async () => {
       if (!slug) return;
 
       try {
-        console.log("Fetching wedding with slug:", slug, "preview:", isPreview);
-
         // Fetch wedding data (allow preview for draft status)
         let query = supabase
           .from("weddings")
@@ -60,18 +38,7 @@ const WeddingInvite = () => {
         
         const { data: weddingData, error: weddingError } = await query.maybeSingle();
 
-        if (weddingError) {
-          console.error("Error fetching wedding:", weddingError);
-          throw weddingError;
-        }
-        
-        if (!weddingData) {
-          console.error("No wedding found with slug:", slug);
-          setWedding(null);
-          setLoading(false);
-          return;
-        }
-        
+        if (weddingError) throw weddingError;
         setWedding(weddingData);
 
         // Fetch locations
@@ -107,7 +74,7 @@ const WeddingInvite = () => {
     };
 
     fetchWedding();
-  }, [slug, isPreview, authReady]);
+  }, [slug, isPreview]);
 
   if (loading) {
     return (
