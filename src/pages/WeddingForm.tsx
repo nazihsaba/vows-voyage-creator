@@ -7,13 +7,16 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 
 const WeddingForm = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -23,6 +26,7 @@ const WeddingForm = () => {
     main_description: "",
     slug: "",
     status: "draft",
+    main_picture_url: "",
   });
 
   useEffect(() => {
@@ -41,9 +45,47 @@ const WeddingForm = () => {
 
       if (error) throw error;
       setFormData(data);
+      if (data.main_picture_url) {
+        setImagePreview(data.main_picture_url);
+      }
     } catch (error) {
       console.error("Error fetching wedding:", error);
     }
+  };
+
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeImage = () => {
+    setImageFile(null);
+    setImagePreview("");
+    setFormData({ ...formData, main_picture_url: "" });
+  };
+
+  const uploadImage = async (file: File, userId: string) => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${userId}/${Date.now()}.${fileExt}`;
+    
+    const { error: uploadError, data } = await supabase.storage
+      .from('wedding-images')
+      .upload(fileName, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: { publicUrl } } = supabase.storage
+      .from('wedding-images')
+      .getPublicUrl(fileName);
+
+    return publicUrl;
   };
 
   const generateSlug = (groomName: string, brideName: string) => {
@@ -53,17 +95,25 @@ const WeddingForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
+    setUploading(true);
 
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
+
+      let imageUrl = formData.main_picture_url;
+
+      // Upload new image if selected
+      if (imageFile) {
+        imageUrl = await uploadImage(imageFile, user.id);
+      }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ ...formData, slug })
+          .update({ ...formData, slug, main_picture_url: imageUrl })
           .eq("id", id);
 
         if (error) throw error;
@@ -71,7 +121,7 @@ const WeddingForm = () => {
       } else {
         const { error } = await supabase
           .from("weddings")
-          .insert([{ ...formData, slug, user_id: user.id }]);
+          .insert([{ ...formData, slug, main_picture_url: imageUrl, user_id: user.id }]);
 
         if (error) throw error;
         toast({ title: "Wedding created successfully!" });
@@ -86,6 +136,7 @@ const WeddingForm = () => {
       });
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -171,6 +222,46 @@ const WeddingForm = () => {
               </div>
 
               <div className="space-y-2">
+                <Label htmlFor="main_picture">Main Wedding Photo</Label>
+                <div className="flex flex-col gap-4">
+                  {imagePreview ? (
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                      <img 
+                        src={imagePreview} 
+                        alt="Wedding preview" 
+                        className="w-full h-full object-cover"
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={removeImage}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="main_picture"
+                      className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                    >
+                      <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Click to upload image</span>
+                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                    </label>
+                  )}
+                  <Input
+                    id="main_picture"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageChange}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
                 <Label htmlFor="slug">Custom URL Slug</Label>
                 <Input
                   id="slug"
@@ -181,8 +272,8 @@ const WeddingForm = () => {
               </div>
 
               <div className="flex gap-4">
-                <Button type="submit" disabled={loading} className="flex-1">
-                  {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
+                <Button type="submit" disabled={loading || uploading} className="flex-1">
+                  {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
                 {formData.slug && (
                   <Button
