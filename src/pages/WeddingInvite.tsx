@@ -6,7 +6,8 @@ import { WeddingGallery } from "@/components/WeddingGallery";
 import { EventLocation } from "@/components/EventLocation";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableWeddingInvite } from "@/components/EditableWeddingInvite";
-import { InlineEditableText } from "@/components/InlineEditableText";
+import { EditableField } from "@/components/EditableField";
+import { EditableImage } from "@/components/EditableImage";
 import { format } from "date-fns";
 import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
@@ -23,20 +24,26 @@ const WeddingInvite = () => {
   const [giftCards, setGiftCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
+  const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
   const { toast } = useToast();
 
-  const updateWeddingField = async (field: string, value: string) => {
+  const updateFieldCustomization = async (fieldId: string, text: string, style: any) => {
     if (!wedding?.id || !isPreview) return;
 
     try {
+      const updatedCustomizations = {
+        ...fieldCustomizations,
+        [fieldId]: { text, ...style },
+      };
+
       const { error } = await supabase
         .from("weddings")
-        .update({ [field]: value })
+        .update({ field_customizations: updatedCustomizations })
         .eq("id", wedding.id);
 
       if (error) throw error;
 
-      setWedding({ ...wedding, [field]: value });
+      setFieldCustomizations(updatedCustomizations);
       toast({
         title: "Updated",
         description: "Changes saved successfully.",
@@ -49,6 +56,40 @@ const WeddingInvite = () => {
         variant: "destructive",
       });
     }
+  };
+
+  const updateMainImage = async (newUrl: string) => {
+    if (!wedding?.id || !isPreview) return;
+
+    try {
+      const { error } = await supabase
+        .from("weddings")
+        .update({ main_picture_url: newUrl })
+        .eq("id", wedding.id);
+
+      if (error) throw error;
+
+      setWedding({ ...wedding, main_picture_url: newUrl });
+      toast({
+        title: "Image updated",
+        description: "Main image has been changed.",
+      });
+    } catch (error) {
+      console.error("Error updating image:", error);
+      toast({
+        title: "Error",
+        description: "Failed to update image.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const getFieldValue = (fieldId: string, defaultValue: string) => {
+    return fieldCustomizations[fieldId]?.text || defaultValue;
+  };
+
+  const getFieldStyle = (fieldId: string) => {
+    return fieldCustomizations[fieldId] || {};
   };
 
   useEffect(() => {
@@ -70,6 +111,7 @@ const WeddingInvite = () => {
 
         if (weddingError) throw weddingError;
         setWedding(weddingData);
+        setFieldCustomizations(weddingData?.field_customizations || {});
 
         // Fetch locations
         const { data: locationsData } = await supabase
@@ -198,37 +240,45 @@ const WeddingInvite = () => {
           {/* Hero Section */}
           {currentSectionType === "hero" && (
             <div className="relative h-full flex items-center justify-center">
-              <img
-                src={wedding.main_picture_url || heroImage}
-                alt="Wedding couple"
+              <EditableImage
+                imageUrl={wedding.main_picture_url || heroImage}
+                onUpdate={updateMainImage}
+                isPreview={isPreview}
                 className="absolute inset-0 w-full h-full object-cover"
+                alt="Wedding couple"
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
               <div className="relative z-10 text-center text-white px-8">
-                <h1 
-                  className={`font-serif mb-4`}
-                  style={{ 
-                    fontFamily: wedding?.locked_name_style?.fontFamily || 'Dancing Script, cursive',
-                    fontSize: wedding?.locked_name_style?.fontSize === '4xl' ? '3rem' :
-                             wedding?.locked_name_style?.fontSize === '5xl' ? '4rem' :
-                             wedding?.locked_name_style?.fontSize === '6xl' ? '5rem' : '6rem'
-                  }}
-                >
-                  {wedding.groom_name}
-                </h1>
+                <EditableField
+                  fieldId="groom_name"
+                  text={wedding.groom_name}
+                  style={getFieldStyle("groom_name")}
+                  onUpdate={updateFieldCustomization}
+                  isLocked={true}
+                  isPreview={isPreview}
+                  tag="h1"
+                  className="font-serif mb-4"
+                />
                 <p className="text-4xl mb-4">&</p>
-                <h1 
-                  className={`font-serif mb-8`}
-                  style={{ 
-                    fontFamily: wedding?.locked_name_style?.fontFamily || 'Dancing Script, cursive',
-                    fontSize: wedding?.locked_name_style?.fontSize === '4xl' ? '3rem' :
-                             wedding?.locked_name_style?.fontSize === '5xl' ? '4rem' :
-                             wedding?.locked_name_style?.fontSize === '6xl' ? '5rem' : '6rem'
-                  }}
-                >
-                  {wedding.bride_name}
-                </h1>
-                <p className="text-xl tracking-wide">are getting married</p>
+                <EditableField
+                  fieldId="bride_name"
+                  text={wedding.bride_name}
+                  style={getFieldStyle("bride_name")}
+                  onUpdate={updateFieldCustomization}
+                  isLocked={true}
+                  isPreview={isPreview}
+                  tag="h1"
+                  className="font-serif mb-8"
+                />
+                <EditableField
+                  fieldId="hero_subtitle"
+                  text={getFieldValue("hero_subtitle", "are getting married")}
+                  style={getFieldStyle("hero_subtitle")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  tag="p"
+                  className="text-xl tracking-wide"
+                />
               </div>
               <div className="absolute bottom-20 left-1/2 -translate-x-1/2 text-white text-center">
                 <p className="text-sm mb-2">Swipe Left</p>
@@ -241,20 +291,25 @@ const WeddingInvite = () => {
           {currentSectionType === "quote" && (
             <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20 p-8">
               <div className="text-center text-foreground max-w-md">
-                {isPreview ? (
-                  <InlineEditableText
-                    value={wedding.main_description || '"Therefore what God has joined together, let no one separate."'}
-                    onChange={(value) => setWedding({ ...wedding, main_description: value })}
-                    onSave={() => updateWeddingField("main_description", wedding.main_description)}
-                    className="text-2xl font-serif italic mb-4 block"
-                    multiline
-                  />
-                ) : (
-                  <p className="text-2xl font-serif italic mb-4">
-                    {wedding.main_description || '"Therefore what God has joined together, let no one separate."'}
-                  </p>
-                )}
-                <p className="text-lg text-muted-foreground">- Mark 10:9</p>
+                <EditableField
+                  fieldId="quote_text"
+                  text={getFieldValue("quote_text", wedding.main_description || '"Therefore what God has joined together, let no one separate."')}
+                  style={getFieldStyle("quote_text")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  multiline={true}
+                  tag="p"
+                  className="text-2xl font-serif italic mb-4"
+                />
+                <EditableField
+                  fieldId="quote_attribution"
+                  text={getFieldValue("quote_attribution", "- Mark 10:9")}
+                  style={getFieldStyle("quote_attribution")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  tag="p"
+                  className="text-lg text-muted-foreground"
+                />
               </div>
             </div>
           )}
@@ -263,37 +318,44 @@ const WeddingInvite = () => {
           {currentSectionType === "family" && (
             <div className="h-full flex items-center justify-center bg-white p-8">
               <div className="text-center max-w-md">
-                <p className="text-xl mb-8 text-muted-foreground">With joyous hearts,</p>
-                {isPreview ? (
-                  <>
-                    <InlineEditableText
-                      value={wedding.groom_family || "Groom's Family"}
-                      onChange={(value) => setWedding({ ...wedding, groom_family: value })}
-                      onSave={() => updateWeddingField("groom_family", wedding.groom_family)}
-                      className="text-3xl font-serif mb-2 text-primary"
-                    />
-                    <p className="text-2xl mb-2 text-primary">&</p>
-                    <InlineEditableText
-                      value={wedding.bride_family || "Bride's Family"}
-                      onChange={(value) => setWedding({ ...wedding, bride_family: value })}
-                      onSave={() => updateWeddingField("bride_family", wedding.bride_family)}
-                      className="text-3xl font-serif mb-8 text-primary"
-                    />
-                  </>
-                ) : (
-                  <>
-                    <h3 className="text-3xl font-serif mb-2 text-primary">
-                      {wedding.groom_family || "Groom's Family"}
-                    </h3>
-                    <p className="text-2xl mb-2 text-primary">&</p>
-                    <h3 className="text-3xl font-serif mb-8 text-primary">
-                      {wedding.bride_family || "Bride's Family"}
-                    </h3>
-                  </>
-                )}
-                <p className="text-lg text-muted-foreground">
-                  Request the honor of your presence at the wedding of their son and daughter
-                </p>
+                <EditableField
+                  fieldId="family_intro"
+                  text={getFieldValue("family_intro", "With joyous hearts,")}
+                  style={getFieldStyle("family_intro")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  tag="p"
+                  className="text-xl mb-8 text-muted-foreground"
+                />
+                <EditableField
+                  fieldId="groom_family"
+                  text={getFieldValue("groom_family", wedding.groom_family || "Groom's Family")}
+                  style={getFieldStyle("groom_family")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  tag="h3"
+                  className="text-3xl font-serif mb-2 text-primary"
+                />
+                <p className="text-2xl mb-2 text-primary">&</p>
+                <EditableField
+                  fieldId="bride_family"
+                  text={getFieldValue("bride_family", wedding.bride_family || "Bride's Family")}
+                  style={getFieldStyle("bride_family")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  tag="h3"
+                  className="text-3xl font-serif mb-8 text-primary"
+                />
+                <EditableField
+                  fieldId="family_description"
+                  text={getFieldValue("family_description", "Request the honor of your presence at the wedding of their son and daughter")}
+                  style={getFieldStyle("family_description")}
+                  onUpdate={updateFieldCustomization}
+                  isPreview={isPreview}
+                  multiline={true}
+                  tag="p"
+                  className="text-lg text-muted-foreground"
+                />
                 <div className="mt-8">
                   <h2 className="text-4xl font-serif text-primary mb-2">
                     {wedding.groom_name} & {wedding.bride_name}

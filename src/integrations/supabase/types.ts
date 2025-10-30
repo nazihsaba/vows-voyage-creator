@@ -165,6 +165,7 @@ export type Database = {
           custom_font_heading: string | null
           custom_primary_color: string | null
           custom_text_color: string | null
+          field_customizations: Json | null
           groom_family: string | null
           groom_name: string
           heading_font_size: string | null
@@ -189,6 +190,7 @@ export type Database = {
           custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
+          field_customizations?: Json | null
           groom_family?: string | null
           groom_name: string
           heading_font_size?: string | null
@@ -213,6 +215,7 @@ export type Database = {
           custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
+          field_customizations?: Json | null
           groom_family?: string | null
           groom_name?: string
           heading_font_size?: string | null
