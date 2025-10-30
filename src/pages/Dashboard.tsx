@@ -42,9 +42,9 @@ const Dashboard = () => {
       icon: Cake,
       color: "text-amber-500",
       templates: [
-        { id: "template1", name: "Birthday Bash", description: "Fun and colorful design" },
-        { id: "template2", name: "Milestone Celebration", description: "Perfect for special ages" },
-        { id: "template3", name: "Kids Party", description: "Coming soon", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Fun and colorful design", disabled: true },
+        { id: "template2", name: "Coming soon", description: "Perfect for special ages", disabled: true },
+        { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
     },
     {
@@ -53,9 +53,9 @@ const Dashboard = () => {
       icon: TreePine,
       color: "text-green-600",
       templates: [
-        { id: "template1", name: "Festive Gathering", description: "Traditional Christmas theme" },
-        { id: "template2", name: "Winter Wonderland", description: "Elegant holiday design" },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Traditional Christmas theme", disabled: true },
+        { id: "template2", name: "Coming soon", description: "Elegant holiday design", disabled: true },
+        { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
     },
     {
@@ -64,9 +64,9 @@ const Dashboard = () => {
       icon: Baby,
       color: "text-blue-400",
       templates: [
-        { id: "template1", name: "Blessed Beginning", description: "Classic baptism invitation" },
-        { id: "template2", name: "Spiritual Celebration", description: "Modern and elegant" },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Classic baptism invitation", disabled: true },
+        { id: "template2", name: "Coming soon", description: "Modern and elegant", disabled: true },
+        { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
     },
     {
@@ -75,9 +75,9 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-purple-500",
       templates: [
-        { id: "template1", name: "Love Story", description: "Celebrate your journey together" },
-        { id: "template2", name: "Golden Years", description: "Perfect for milestone anniversaries" },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Celebrate your journey together", disabled: true },
+        { id: "template2", name: "Coming soon", description: "Perfect for milestone anniversaries", disabled: true },
+        { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
     },
     {
@@ -86,9 +86,9 @@ const Dashboard = () => {
       icon: PartyPopper,
       color: "text-indigo-500",
       templates: [
-        { id: "template1", name: "General Celebration", description: "Versatile event template" },
-        { id: "template2", name: "Custom Event", description: "Flexible design for any occasion" },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Versatile event template", disabled: true },
+        { id: "template2", name: "Coming soon", description: "Flexible design for any occasion", disabled: true },
+        { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
     },
   ];
@@ -111,6 +111,15 @@ const Dashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
+        <div className="flex gap-4 mb-8 justify-center">
+          <Button size="lg" onClick={() => navigate("/dashboard/select-event-type")}>
+            Create New Event
+          </Button>
+          <Button size="lg" variant="outline" onClick={() => navigate("/dashboard/my-events")}>
+            My Events
+          </Button>
+        </div>
+        
         <div className="space-y-12">
           {templateCategories.map((category) => {
             const Icon = category.icon;
