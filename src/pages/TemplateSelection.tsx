@@ -47,7 +47,7 @@ const TemplateSelection = () => {
           {templates.map((template) => (
             <Card
               key={template.id}
-              className={`shadow-soft hover:shadow-elegant transition-all ${
+              className={`shadow-soft hover:shadow-elegant transition-all flex flex-col ${
                 template.disabled ? "opacity-50" : "cursor-pointer"
               }`}
               onClick={() =>
@@ -62,8 +62,8 @@ const TemplateSelection = () => {
                 <CardTitle className="text-xl font-serif">{template.name}</CardTitle>
                 <CardDescription>{template.description}</CardDescription>
               </CardHeader>
-              <CardContent>
-                <ul className="space-y-2">
+              <CardContent className="flex flex-col h-full">
+                <ul className="space-y-2 flex-grow">
                   {template.features.map((feature, index) => (
                     <li key={index} className="flex items-center text-sm">
                       <span className="w-1.5 h-1.5 rounded-full bg-primary mr-2" />
@@ -71,9 +71,12 @@ const TemplateSelection = () => {
                     </li>
                   ))}
                 </ul>
-                {!template.disabled && (
-                  <Button className="w-full mt-4">Select Template</Button>
-                )}
+                <Button 
+                  className="w-full mt-4" 
+                  disabled={template.disabled}
+                >
+                  {template.disabled ? "Coming Soon" : "Select Template"}
+                </Button>
               </CardContent>
             </Card>
           ))}

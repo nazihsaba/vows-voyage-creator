@@ -5,6 +5,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { WeddingGallery } from "@/components/WeddingGallery";
 import { EventLocation } from "@/components/EventLocation";
 import { GiftCards } from "@/components/GiftCards";
+import { EditableWeddingInvite } from "@/components/EditableWeddingInvite";
 import { format } from "date-fns";
 import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
@@ -124,7 +125,7 @@ const WeddingInvite = () => {
 
   const currentSectionType = sections[currentSection];
 
-  return (
+  const content = (
     <div className="relative min-h-screen bg-black overflow-hidden">
       {/* Mobile Story-Style Layout */}
       <div className="max-w-md mx-auto h-screen relative">
@@ -380,6 +381,16 @@ const WeddingInvite = () => {
       </div>
     </div>
   );
+
+  if (isPreview) {
+    return (
+      <EditableWeddingInvite wedding={wedding} onUpdate={setWedding}>
+        {content}
+      </EditableWeddingInvite>
+    );
+  }
+
+  return content;
 };
 
 export default WeddingInvite;
