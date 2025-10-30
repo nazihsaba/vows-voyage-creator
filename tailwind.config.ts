@@ -52,11 +52,11 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        wedding: {
-          'rose-gold': "hsl(var(--rose-gold))",
-          'blush': "hsl(var(--blush))",
-          'ivory': "hsl(var(--ivory))",
-          'sage': "hsl(var(--sage))",
+        event: {
+          'sky-blue': "hsl(var(--sky-blue))",
+          'lavender': "hsl(var(--lavender))",
+          'coral': "hsl(var(--coral))",
+          'snow': "hsl(var(--snow))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",

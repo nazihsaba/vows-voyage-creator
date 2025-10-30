@@ -8,115 +8,122 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
-    --background: 30 40% 98%;
-    --foreground: 20 20% 20%;
+    /* Snow White - clarity, freshness */
+    --background: 0 0% 98%;
+    --foreground: 0 0% 18%;
 
     --card: 0 0% 100%;
-    --card-foreground: 20 20% 20%;
+    --card-foreground: 0 0% 18%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 20 20% 20%;
+    --popover-foreground: 0 0% 18%;
 
-    /* Rose gold and romantic tones */
-    --primary: 340 65% 70%;
+    /* Sky Blue - creativity, openness */
+    --primary: 200 63% 58%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 340 70% 65%;
+    --primary-hover: 200 63% 52%;
     
-    --secondary: 45 40% 88%;
-    --secondary-foreground: 20 20% 20%;
+    /* Soft Lavender - fun and imagination */
+    --secondary: 254 100% 77%;
+    --secondary-foreground: 0 0% 18%;
 
-    --muted: 30 30% 95%;
-    --muted-foreground: 20 15% 45%;
+    --muted: 0 0% 94%;
+    --muted-foreground: 0 0% 40%;
 
-    --accent: 140 30% 85%;
-    --accent-foreground: 20 20% 20%;
+    /* Coral Pink - energy and excitement */
+    --accent: 353 100% 74%;
+    --accent-foreground: 0 0% 18%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 25% 90%;
-    --input: 30 25% 90%;
-    --ring: 340 65% 70%;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 200 63% 58%;
 
     --radius: 0.75rem;
 
-    /* Wedding specific colors */
-    --rose-gold: 28 80% 70%;
-    --blush: 340 65% 90%;
-    --ivory: 45 40% 95%;
-    --sage: 140 30% 75%;
+    /* Event specific colors */
+    --sky-blue: 200 63% 58%;
+    --lavender: 254 100% 77%;
+    --coral: 353 100% 74%;
+    --snow: 0 0% 98%;
 
     /* Gradients */
-    --gradient-romantic: linear-gradient(135deg, hsl(340, 65%, 75%), hsl(28, 80%, 75%));
-    --gradient-soft: linear-gradient(180deg, hsl(30, 40%, 98%), hsl(45, 40%, 95%));
+    --gradient-romantic: linear-gradient(135deg, hsl(200, 63%, 58%), hsl(254, 100%, 77%));
+    --gradient-soft: linear-gradient(180deg, hsl(0, 0%, 98%), hsl(254, 100%, 90%));
 
     /* Shadows */
-    --shadow-soft: 0 4px 20px -2px hsl(340 65% 70% / 0.15);
-    --shadow-elegant: 0 10px 40px -10px hsl(340 65% 70% / 0.25);
+    --shadow-soft: 0 4px 20px -2px hsl(200 63% 58% / 0.15);
+    --shadow-elegant: 0 10px 40px -10px hsl(200 63% 58% / 0.25);
 
     /* Animations */
     --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     --transition-bounce: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
-    --sidebar-foreground: 240 5.3% 26.1%;
-    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-foreground: 0 0% 18%;
+    --sidebar-primary: 200 63% 58%;
     --sidebar-primary-foreground: 0 0% 98%;
-    --sidebar-accent: 240 4.8% 95.9%;
-    --sidebar-accent-foreground: 240 5.9% 10%;
-    --sidebar-border: 220 13% 91%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 254 100% 90%;
+    --sidebar-accent-foreground: 0 0% 18%;
+    --sidebar-border: 0 0% 90%;
+    --sidebar-ring: 200 63% 58%;
   }
 
   .dark {
-    --background: 20 25% 10%;
-    --foreground: 30 15% 95%;
+    /* Charcoal Gray background */
+    --background: 0 0% 12%;
+    --foreground: 0 0% 95%;
 
-    --card: 20 25% 12%;
-    --card-foreground: 30 15% 95%;
+    --card: 0 0% 15%;
+    --card-foreground: 0 0% 95%;
 
-    --popover: 20 25% 12%;
-    --popover-foreground: 30 15% 95%;
+    --popover: 0 0% 15%;
+    --popover-foreground: 0 0% 95%;
 
-    --primary: 340 65% 65%;
+    /* Sky Blue - darker for dark mode */
+    --primary: 200 63% 52%;
     --primary-foreground: 0 0% 100%;
-    --primary-hover: 340 70% 60%;
+    --primary-hover: 200 63% 48%;
 
-    --secondary: 30 20% 18%;
-    --secondary-foreground: 30 15% 95%;
+    /* Soft Lavender - darker for dark mode */
+    --secondary: 254 100% 70%;
+    --secondary-foreground: 0 0% 100%;
 
-    --muted: 30 20% 15%;
-    --muted-foreground: 30 10% 60%;
+    --muted: 0 0% 20%;
+    --muted-foreground: 0 0% 65%;
 
-    --accent: 140 20% 25%;
-    --accent-foreground: 30 15% 95%;
+    /* Coral Pink - darker for dark mode */
+    --accent: 353 100% 68%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 30 20% 20%;
-    --input: 30 20% 20%;
-    --ring: 340 65% 65%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 200 63% 52%;
 
-    --rose-gold: 28 70% 60%;
-    --blush: 340 60% 40%;
-    --ivory: 45 30% 25%;
-    --sage: 140 25% 35%;
+    --sky-blue: 200 63% 52%;
+    --lavender: 254 100% 70%;
+    --coral: 353 100% 68%;
+    --snow: 0 0% 95%;
 
-    --gradient-romantic: linear-gradient(135deg, hsl(340, 60%, 40%), hsl(28, 70%, 40%));
-    --gradient-soft: linear-gradient(180deg, hsl(20, 25%, 10%), hsl(30, 20%, 15%));
+    --gradient-romantic: linear-gradient(135deg, hsl(200, 63%, 45%), hsl(254, 100%, 65%));
+    --gradient-soft: linear-gradient(180deg, hsl(0, 0%, 12%), hsl(254, 50%, 20%));
 
     --shadow-soft: 0 4px 20px -2px hsl(0 0% 0% / 0.3);
     --shadow-elegant: 0 10px 40px -10px hsl(0 0% 0% / 0.5);
 
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-background: 0 0% 12%;
+    --sidebar-foreground: 0 0% 95%;
+    --sidebar-primary: 200 63% 52%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 254 100% 20%;
+    --sidebar-accent-foreground: 0 0% 95%;
+    --sidebar-border: 0 0% 20%;
+    --sidebar-ring: 200 63% 52%;
   }
 }
 
