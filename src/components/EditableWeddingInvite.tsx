@@ -3,9 +3,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Edit2, Save, X } from "lucide-react";
+import { Edit2, Save, X, Palette } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 interface EditableWeddingInviteProps {
   wedding: any;
@@ -16,11 +17,14 @@ interface EditableWeddingInviteProps {
 export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableWeddingInviteProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editData, setEditData] = useState({
-    groom_name: wedding?.groom_name || "",
-    bride_name: wedding?.bride_name || "",
     groom_family: wedding?.groom_family || "",
     bride_family: wedding?.bride_family || "",
     main_description: wedding?.main_description || "",
+  });
+  const [colors, setColors] = useState({
+    primary: "#E0C097",
+    accent: "#E6B7B8",
+    text: "#2C2C2C",
   });
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
@@ -59,13 +63,23 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
 
   const handleCancel = () => {
     setEditData({
-      groom_name: wedding?.groom_name || "",
-      bride_name: wedding?.bride_name || "",
       groom_family: wedding?.groom_family || "",
       bride_family: wedding?.bride_family || "",
       main_description: wedding?.main_description || "",
     });
+    setColors({
+      primary: "#E0C097",
+      accent: "#E6B7B8",
+      text: "#2C2C2C",
+    });
     setIsEditing(false);
+  };
+
+  const applyColors = () => {
+    const root = document.documentElement;
+    root.style.setProperty("--primary", colors.primary);
+    root.style.setProperty("--accent", colors.accent);
+    root.style.setProperty("--foreground", colors.text);
   };
 
   return (
@@ -104,61 +118,146 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
 
       {/* Edit Panel */}
       {isEditing && (
-        <div className="fixed left-0 top-0 bottom-0 w-80 bg-white shadow-2xl z-40 overflow-y-auto p-6">
-          <h3 className="text-xl font-serif font-bold text-primary mb-6">Edit Details</h3>
-          
-          <div className="space-y-4">
-            <div>
-              <Label htmlFor="groom_name">Groom's Name</Label>
-              <Input
-                id="groom_name"
-                value={editData.groom_name}
-                onChange={(e) => setEditData({ ...editData, groom_name: e.target.value })}
-              />
-            </div>
+        <div className="fixed left-0 top-0 bottom-0 w-96 bg-white shadow-2xl z-40 overflow-y-auto">
+          <Tabs defaultValue="content" className="w-full">
+            <TabsList className="w-full rounded-none border-b">
+              <TabsTrigger value="content" className="flex-1">Content</TabsTrigger>
+              <TabsTrigger value="colors" className="flex-1">
+                <Palette className="w-4 h-4 mr-2" />
+                Colors
+              </TabsTrigger>
+            </TabsList>
 
-            <div>
-              <Label htmlFor="bride_name">Bride's Name</Label>
-              <Input
-                id="bride_name"
-                value={editData.bride_name}
-                onChange={(e) => setEditData({ ...editData, bride_name: e.target.value })}
-              />
-            </div>
+            <TabsContent value="content" className="p-6">
+              <h3 className="text-xl font-serif font-bold text-primary mb-6">Edit Content</h3>
+              
+              <div className="space-y-4">
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <p className="text-sm text-muted-foreground mb-2">🔒 Locked Fields</p>
+                  <div className="space-y-2">
+                    <div>
+                      <Label className="text-xs">Groom's Name</Label>
+                      <p className="text-sm font-medium">{wedding?.groom_name}</p>
+                    </div>
+                    <div>
+                      <Label className="text-xs">Bride's Name</Label>
+                      <p className="text-sm font-medium">{wedding?.bride_name}</p>
+                    </div>
+                  </div>
+                </div>
 
-            <div>
-              <Label htmlFor="groom_family">Groom's Family</Label>
-              <Input
-                id="groom_family"
-                value={editData.groom_family}
-                onChange={(e) => setEditData({ ...editData, groom_family: e.target.value })}
-              />
-            </div>
+                <div>
+                  <Label htmlFor="groom_family">Groom's Family</Label>
+                  <Input
+                    id="groom_family"
+                    value={editData.groom_family}
+                    onChange={(e) => setEditData({ ...editData, groom_family: e.target.value })}
+                  />
+                </div>
 
-            <div>
-              <Label htmlFor="bride_family">Bride's Family</Label>
-              <Input
-                id="bride_family"
-                value={editData.bride_family}
-                onChange={(e) => setEditData({ ...editData, bride_family: e.target.value })}
-              />
-            </div>
+                <div>
+                  <Label htmlFor="bride_family">Bride's Family</Label>
+                  <Input
+                    id="bride_family"
+                    value={editData.bride_family}
+                    onChange={(e) => setEditData({ ...editData, bride_family: e.target.value })}
+                  />
+                </div>
 
-            <div>
-              <Label htmlFor="main_description">Description/Quote</Label>
-              <Textarea
-                id="main_description"
-                value={editData.main_description}
-                onChange={(e) => setEditData({ ...editData, main_description: e.target.value })}
-                rows={4}
-              />
-            </div>
-          </div>
+                <div>
+                  <Label htmlFor="main_description">Description/Quote</Label>
+                  <Textarea
+                    id="main_description"
+                    value={editData.main_description}
+                    onChange={(e) => setEditData({ ...editData, main_description: e.target.value })}
+                    rows={4}
+                  />
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="colors" className="p-6">
+              <h3 className="text-xl font-serif font-bold text-primary mb-6">Customize Colors</h3>
+              
+              <div className="space-y-6">
+                <div>
+                  <Label htmlFor="primary-color">Primary Color (Gold)</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      id="primary-color"
+                      type="color"
+                      value={colors.primary}
+                      onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                      className="w-20 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      type="text"
+                      value={colors.primary}
+                      onChange={(e) => setColors({ ...colors, primary: e.target.value })}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="accent-color">Accent Color (Blush)</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      id="accent-color"
+                      type="color"
+                      value={colors.accent}
+                      onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                      className="w-20 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      type="text"
+                      value={colors.accent}
+                      onChange={(e) => setColors({ ...colors, accent: e.target.value })}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="text-color">Text Color</Label>
+                  <div className="flex gap-2 mt-2">
+                    <Input
+                      id="text-color"
+                      type="color"
+                      value={colors.text}
+                      onChange={(e) => setColors({ ...colors, text: e.target.value })}
+                      className="w-20 h-10 p-1 cursor-pointer"
+                    />
+                    <Input
+                      type="text"
+                      value={colors.text}
+                      onChange={(e) => setColors({ ...colors, text: e.target.value })}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  onClick={applyColors} 
+                  className="w-full"
+                  variant="outline"
+                >
+                  Apply Colors Preview
+                </Button>
+
+                <div className="p-4 bg-muted/30 rounded-lg">
+                  <p className="text-xs text-muted-foreground">
+                    💡 Colors will be applied to the live preview. Click "Save" to persist changes.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+          </Tabs>
         </div>
       )}
 
       {/* Content */}
-      <div className={isEditing ? "ml-80" : ""}>
+      <div className={isEditing ? "ml-96" : ""}>
         {children}
       </div>
     </div>
