@@ -1,10 +1,30 @@
 import { Button } from "@/components/ui/button";
 import { PartyPopper, Calendar, Image, Gift, Link as LinkIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import heroImage from "@/assets/wedding-hero.jpg";
+import { useState, useEffect } from "react";
+import eventWedding from "@/assets/event-wedding.jpg";
+import eventBirthday from "@/assets/event-birthday.jpg";
+import eventParty from "@/assets/event-party.jpg";
+import eventCelebration from "@/assets/event-celebration.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  
+  const heroImages = [
+    { src: eventWedding, alt: "Wedding celebration" },
+    { src: eventBirthday, alt: "Birthday party" },
+    { src: eventParty, alt: "Party celebration" },
+    { src: eventCelebration, alt: "Special celebration" },
+  ];
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <div className="min-h-screen bg-gradient-soft">
@@ -22,7 +42,16 @@ const Index = () => {
 
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
         <div className="absolute inset-0">
-          <img src={heroImage} alt="Celebration event" className="w-full h-full object-cover" />
+          {heroImages.map((image, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === currentImageIndex ? "opacity-100" : "opacity-0"
+              }`}
+            >
+              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
+            </div>
+          ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
