@@ -34,9 +34,14 @@ const Index = () => {
             <PartyPopper className="w-8 h-8 text-primary" />
             <span className="text-2xl font-serif font-bold text-primary">Auréa</span>
           </div>
-          <Button onClick={() => navigate("/auth")} variant="outline">
-            Sign In
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={() => navigate("/dashboard")} variant="outline">
+              My Events
+            </Button>
+            <Button onClick={() => navigate("/auth")}>
+              Sign In
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -61,13 +66,23 @@ const Index = () => {
           <p className="text-xl md:text-2xl mb-8 font-light">
             Weddings, Birthdays, Parties & More - Share your special moments with stunning digital invitations
           </p>
-          <Button
-            size="lg"
-            onClick={() => navigate("/auth")}
-            className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
-          >
-            Get Started Free
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              size="lg"
+              onClick={() => navigate("/dashboard")}
+              className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
+            >
+              Create Event
+            </Button>
+            <Button
+              size="lg"
+              onClick={() => navigate("/dashboard")}
+              variant="outline"
+              className="text-lg px-8 py-6 bg-white/90 hover:bg-white text-foreground border-white"
+            >
+              My Events
+            </Button>
+          </div>
         </div>
       </section>
 
@@ -109,13 +124,23 @@ const Index = () => {
           <p className="text-xl text-muted-foreground mb-8">
             Choose from weddings, birthdays, parties and more - start creating today
           </p>
-          <Button
-            size="lg"
-            onClick={() => navigate("/auth")}
-            className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
-          >
-            Create Your Invitation
-          </Button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <Button
+              size="lg"
+              onClick={() => navigate("/dashboard")}
+              className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
+            >
+              Create Your Invitation
+            </Button>
+            <Button
+              size="lg"
+              onClick={() => navigate("/dashboard")}
+              variant="outline"
+              className="text-lg px-8 py-6"
+            >
+              View My Events
+            </Button>
+          </div>
         </div>
       </section>
     </div>

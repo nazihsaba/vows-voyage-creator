@@ -53,10 +53,11 @@ export default {
           foreground: "hsl(var(--card-foreground))",
         },
         event: {
-          'sky-blue': "hsl(var(--sky-blue))",
-          'lavender': "hsl(var(--lavender))",
-          'coral': "hsl(var(--coral))",
-          'snow': "hsl(var(--snow))",
+          'ivory': "hsl(var(--ivory))",
+          'champagne': "hsl(var(--champagne))",
+          'blush': "hsl(var(--blush))",
+          'slate': "hsl(var(--slate))",
+          'olive': "hsl(var(--olive))",
         },
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
