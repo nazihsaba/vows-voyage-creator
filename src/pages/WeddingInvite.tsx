@@ -198,8 +198,28 @@ const WeddingInvite = () => {
 
   const content = (
     <div className="relative min-h-screen bg-black overflow-hidden">
+      {/* Fixed Background Image */}
+      <div className="fixed inset-0 w-full h-full">
+        {isPreview ? (
+          <EditableImage
+            imageUrl={wedding.main_picture_url || heroImage}
+            onUpdate={updateMainImage}
+            isPreview={isPreview}
+            className="w-full h-full object-cover"
+            alt="Wedding couple"
+          />
+        ) : (
+          <img
+            src={wedding.main_picture_url || heroImage}
+            alt="Wedding couple"
+            className="w-full h-full object-cover"
+          />
+        )}
+        <div className="absolute inset-0 bg-black/30" />
+      </div>
+
       {/* Mobile Story-Style Layout */}
-      <div className="max-w-md mx-auto h-screen relative">
+      <div className="max-w-md mx-auto h-screen relative z-10">
         {/* Navigation Arrows */}
         {currentSection > 0 && (
           <Button
@@ -240,22 +260,6 @@ const WeddingInvite = () => {
           {/* Hero Section */}
           {currentSectionType === "hero" && (
             <div className="relative h-full flex items-center justify-center">
-              {isPreview ? (
-                <EditableImage
-                  imageUrl={wedding.main_picture_url || heroImage}
-                  onUpdate={updateMainImage}
-                  isPreview={isPreview}
-                  className="absolute inset-0 w-full h-full object-cover"
-                  alt="Wedding couple"
-                />
-              ) : (
-                <img
-                  src={wedding.main_picture_url || heroImage}
-                  alt="Wedding couple"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              )}
-              <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
               <div className="relative z-10 text-center text-white px-8">
                 <EditableField
                   fieldId="groom_name"
