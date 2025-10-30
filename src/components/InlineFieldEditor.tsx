@@ -79,7 +79,8 @@ export const InlineFieldEditor = ({
   }, [onCancel]);
 
   const handleSave = () => {
-    onSave(text, style);
+    // For locked fields, always use the original text
+    onSave(isLocked ? currentText : text, style);
   };
 
   return (
@@ -189,7 +190,7 @@ export const InlineFieldEditor = ({
             }}
             className={cn(style.fontSize || "text-base")}
           >
-            {text}
+            {isLocked ? currentText : text}
           </div>
         </div>
 

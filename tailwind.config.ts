@@ -16,6 +16,11 @@ export default {
       fontFamily: {
         serif: ['Playfair Display', 'serif'],
         sans: ['Inter', 'sans-serif'],
+        'dancing': ['Dancing Script', 'cursive'],
+        'playfair': ['Playfair Display', 'serif'],
+        'cormorant': ['Cormorant Garamond', 'serif'],
+        'great-vibes': ['Great Vibes', 'cursive'],
+        'cinzel': ['Cinzel', 'serif'],
       },
       colors: {
         border: "hsl(var(--border))",
