@@ -205,11 +205,27 @@ const WeddingInvite = () => {
               />
               <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-transparent to-black/50" />
               <div className="relative z-10 text-center text-white px-8">
-                <h1 className="font-serif text-6xl mb-4" style={{ fontFamily: 'Dancing Script, cursive' }}>
+                <h1 
+                  className={`font-serif mb-4`}
+                  style={{ 
+                    fontFamily: wedding?.locked_name_style?.fontFamily || 'Dancing Script, cursive',
+                    fontSize: wedding?.locked_name_style?.fontSize === '4xl' ? '3rem' :
+                             wedding?.locked_name_style?.fontSize === '5xl' ? '4rem' :
+                             wedding?.locked_name_style?.fontSize === '6xl' ? '5rem' : '6rem'
+                  }}
+                >
                   {wedding.groom_name}
                 </h1>
                 <p className="text-4xl mb-4">&</p>
-                <h1 className="font-serif text-6xl mb-8" style={{ fontFamily: 'Dancing Script, cursive' }}>
+                <h1 
+                  className={`font-serif mb-8`}
+                  style={{ 
+                    fontFamily: wedding?.locked_name_style?.fontFamily || 'Dancing Script, cursive',
+                    fontSize: wedding?.locked_name_style?.fontSize === '4xl' ? '3rem' :
+                             wedding?.locked_name_style?.fontSize === '5xl' ? '4rem' :
+                             wedding?.locked_name_style?.fontSize === '6xl' ? '5rem' : '6rem'
+                  }}
+                >
                   {wedding.bride_name}
                 </h1>
                 <p className="text-xl tracking-wide">are getting married</p>

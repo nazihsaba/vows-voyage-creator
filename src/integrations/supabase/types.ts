@@ -161,11 +161,15 @@ export type Database = {
           bride_name: string
           created_at: string | null
           custom_accent_color: string | null
+          custom_font_body: string | null
+          custom_font_heading: string | null
           custom_primary_color: string | null
           custom_text_color: string | null
           groom_family: string | null
           groom_name: string
+          heading_font_size: string | null
           id: string
+          locked_name_style: Json | null
           main_description: string | null
           main_picture_url: string | null
           rsvp_deadline: string | null
@@ -181,11 +185,15 @@ export type Database = {
           bride_name: string
           created_at?: string | null
           custom_accent_color?: string | null
+          custom_font_body?: string | null
+          custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
           groom_family?: string | null
           groom_name: string
+          heading_font_size?: string | null
           id?: string
+          locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
           rsvp_deadline?: string | null
@@ -201,11 +209,15 @@ export type Database = {
           bride_name?: string
           created_at?: string | null
           custom_accent_color?: string | null
+          custom_font_body?: string | null
+          custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
           groom_family?: string | null
           groom_name?: string
+          heading_font_size?: string | null
           id?: string
+          locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
           rsvp_deadline?: string | null

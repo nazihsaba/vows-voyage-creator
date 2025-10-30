@@ -3,10 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Edit2, Save, X, Palette } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Edit2, Save, X, Palette, Type } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { hexToHSL, hslToHex } from "@/lib/colorUtils";
 
 interface EditableWeddingInviteProps {
   wedding: any;
@@ -26,27 +28,63 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
     accent: wedding?.custom_accent_color || "#E6B7B8",
     text: wedding?.custom_text_color || "#2C2C2C",
   });
+  const [fonts, setFonts] = useState({
+    heading: wedding?.custom_font_heading || "Playfair Display",
+    body: wedding?.custom_font_body || "Inter",
+  });
+  const [lockedNameStyle, setLockedNameStyle] = useState({
+    fontFamily: wedding?.locked_name_style?.fontFamily || "Dancing Script",
+    fontSize: wedding?.locked_name_style?.fontSize || "6xl",
+  });
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
 
-  // Apply colors immediately when they change
+  // Apply colors and fonts immediately when they change
   useEffect(() => {
     const root = document.documentElement;
-    root.style.setProperty("--primary", colors.primary);
-    root.style.setProperty("--accent", colors.accent);
-    root.style.setProperty("--foreground", colors.text);
+    
+    // Convert hex to HSL for CSS variables
+    root.style.setProperty("--primary", hexToHSL(colors.primary));
+    root.style.setProperty("--accent", hexToHSL(colors.accent));
+    root.style.setProperty("--foreground", hexToHSL(colors.text));
+    
+    console.log("Colors applied:", {
+      primary: hexToHSL(colors.primary),
+      accent: hexToHSL(colors.accent),
+      text: hexToHSL(colors.text)
+    });
   }, [colors]);
 
   const handleSave = async () => {
-    if (!wedding?.id) return;
+    if (!wedding?.id) {
+      toast({
+        title: "Error",
+        description: "Wedding ID is missing",
+        variant: "destructive",
+      });
+      return;
+    }
     
     setIsSaving(true);
+    console.log("Saving data:", {
+      ...editData,
+      custom_primary_color: colors.primary,
+      custom_accent_color: colors.accent,
+      custom_text_color: colors.text,
+      custom_font_heading: fonts.heading,
+      custom_font_body: fonts.body,
+      locked_name_style: lockedNameStyle,
+    });
+
     try {
       const updateData = {
         ...editData,
         custom_primary_color: colors.primary,
         custom_accent_color: colors.accent,
         custom_text_color: colors.text,
+        custom_font_heading: fonts.heading,
+        custom_font_body: fonts.body,
+        locked_name_style: lockedNameStyle,
       };
 
       const { data, error } = await supabase
@@ -56,19 +94,23 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error("Supabase error:", error);
+        throw error;
+      }
 
+      console.log("Save successful:", data);
       onUpdate(data);
       setIsEditing(false);
       toast({
         title: "Changes saved",
         description: "Your wedding details have been updated.",
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error("Error saving changes:", error);
       toast({
         title: "Error saving changes",
-        description: "Please try again.",
+        description: error.message || "Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -87,8 +129,32 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
       accent: wedding?.custom_accent_color || "#E6B7B8",
       text: wedding?.custom_text_color || "#2C2C2C",
     });
+    setFonts({
+      heading: wedding?.custom_font_heading || "Playfair Display",
+      body: wedding?.custom_font_body || "Inter",
+    });
+    setLockedNameStyle({
+      fontFamily: wedding?.locked_name_style?.fontFamily || "Dancing Script",
+      fontSize: wedding?.locked_name_style?.fontSize || "6xl",
+    });
     setIsEditing(false);
   };
+
+  const fontOptions = [
+    { value: "Dancing Script", label: "Dancing Script (Elegant Script)" },
+    { value: "Playfair Display", label: "Playfair Display (Classic Serif)" },
+    { value: "Cormorant Garamond", label: "Cormorant Garamond (Refined)" },
+    { value: "Great Vibes", label: "Great Vibes (Romantic)" },
+    { value: "Cinzel", label: "Cinzel (Modern Formal)" },
+    { value: "Inter", label: "Inter (Clean Sans-serif)" },
+  ];
+
+  const fontSizeOptions = [
+    { value: "4xl", label: "Small" },
+    { value: "5xl", label: "Medium" },
+    { value: "6xl", label: "Large" },
+    { value: "7xl", label: "Extra Large" },
+  ];
 
   return (
     <div className="relative">
@@ -128,11 +194,15 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
       {isEditing && (
         <div className="fixed left-0 top-0 bottom-0 w-96 bg-white shadow-2xl z-40 overflow-y-auto">
           <Tabs defaultValue="content" className="w-full">
-            <TabsList className="w-full rounded-none border-b">
+            <TabsList className="w-full rounded-none border-b sticky top-0 bg-white z-10">
               <TabsTrigger value="content" className="flex-1">Content</TabsTrigger>
               <TabsTrigger value="colors" className="flex-1">
                 <Palette className="w-4 h-4 mr-2" />
                 Colors
+              </TabsTrigger>
+              <TabsTrigger value="fonts" className="flex-1">
+                <Type className="w-4 h-4 mr-2" />
+                Fonts
               </TabsTrigger>
             </TabsList>
 
@@ -141,7 +211,7 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
               
               <div className="space-y-4">
                 <div className="p-4 bg-muted/30 rounded-lg">
-                  <p className="text-sm text-muted-foreground mb-2">🔒 Locked Fields</p>
+                  <p className="text-sm text-muted-foreground mb-2">🔒 Locked Fields (Style Only)</p>
                   <div className="space-y-2">
                     <div>
                       <Label className="text-xs">Groom's Name</Label>
@@ -151,6 +221,9 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
                       <Label className="text-xs">Bride's Name</Label>
                       <p className="text-sm font-medium">{wedding?.bride_name}</p>
                     </div>
+                    <p className="text-xs text-muted-foreground mt-2">
+                      💡 You can change the style of these names in the Fonts tab
+                    </p>
                   </div>
                 </div>
 
@@ -248,6 +321,110 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
                 <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
                   <p className="text-xs text-muted-foreground">
                     ✨ Colors are applied instantly as you select them. Click "Save" to persist your changes.
+                  </p>
+                </div>
+              </div>
+            </TabsContent>
+
+            <TabsContent value="fonts" className="p-6">
+              <h3 className="text-xl font-serif font-bold text-primary mb-6">Customize Typography</h3>
+              
+              <div className="space-y-6">
+                <div className="p-4 bg-primary/5 border border-primary/20 rounded-lg">
+                  <h4 className="font-semibold mb-3 flex items-center gap-2">
+                    🔒 Locked Names Style
+                  </h4>
+                  <div className="space-y-4">
+                    <div>
+                      <Label htmlFor="locked-font">Font Family</Label>
+                      <Select
+                        value={lockedNameStyle.fontFamily}
+                        onValueChange={(value) => setLockedNameStyle({ ...lockedNameStyle, fontFamily: value })}
+                      >
+                        <SelectTrigger id="locked-font">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {fontOptions.map((font) => (
+                            <SelectItem key={font.value} value={font.value}>
+                              {font.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label htmlFor="locked-size">Font Size</Label>
+                      <Select
+                        value={lockedNameStyle.fontSize}
+                        onValueChange={(value) => setLockedNameStyle({ ...lockedNameStyle, fontSize: value })}
+                      >
+                        <SelectTrigger id="locked-size">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {fontSizeOptions.map((size) => (
+                            <SelectItem key={size.value} value={size.value}>
+                              {size.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div 
+                      className="p-4 bg-white rounded text-center"
+                      style={{ fontFamily: lockedNameStyle.fontFamily }}
+                    >
+                      <p className={`text-${lockedNameStyle.fontSize}`}>
+                        {wedding?.groom_name} & {wedding?.bride_name}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div>
+                  <Label htmlFor="heading-font">Heading Font</Label>
+                  <Select
+                    value={fonts.heading}
+                    onValueChange={(value) => setFonts({ ...fonts, heading: value })}
+                  >
+                    <SelectTrigger id="heading-font">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fontOptions.map((font) => (
+                        <SelectItem key={font.value} value={font.value}>
+                          {font.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Used for section titles and family names
+                  </p>
+                </div>
+
+                <div>
+                  <Label htmlFor="body-font">Body Font</Label>
+                  <Select
+                    value={fonts.body}
+                    onValueChange={(value) => setFonts({ ...fonts, body: value })}
+                  >
+                    <SelectTrigger id="body-font">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fontOptions.map((font) => (
+                        <SelectItem key={font.value} value={font.value}>
+                          {font.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Used for descriptions and body text
                   </p>
                 </div>
               </div>
