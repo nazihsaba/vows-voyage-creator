@@ -6,10 +6,12 @@ import { WeddingGallery } from "@/components/WeddingGallery";
 import { EventLocation } from "@/components/EventLocation";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableWeddingInvite } from "@/components/EditableWeddingInvite";
+import { InlineEditableText } from "@/components/InlineEditableText";
 import { format } from "date-fns";
 import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 const WeddingInvite = () => {
   const { slug } = useParams();
@@ -21,6 +23,33 @@ const WeddingInvite = () => {
   const [giftCards, setGiftCards] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
+  const { toast } = useToast();
+
+  const updateWeddingField = async (field: string, value: string) => {
+    if (!wedding?.id || !isPreview) return;
+
+    try {
+      const { error } = await supabase
+        .from("weddings")
+        .update({ [field]: value })
+        .eq("id", wedding.id);
+
+      if (error) throw error;
+
+      setWedding({ ...wedding, [field]: value });
+      toast({
+        title: "Updated",
+        description: "Changes saved successfully.",
+      });
+    } catch (error) {
+      console.error("Error updating field:", error);
+      toast({
+        title: "Error",
+        description: "Failed to save changes.",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     const fetchWedding = async () => {
@@ -196,9 +225,19 @@ const WeddingInvite = () => {
           {currentSectionType === "quote" && (
             <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20 p-8">
               <div className="text-center text-foreground max-w-md">
-                <p className="text-2xl font-serif italic mb-4">
-                  {wedding.main_description || '"Therefore what God has joined together, let no one separate."'}
-                </p>
+                {isPreview ? (
+                  <InlineEditableText
+                    value={wedding.main_description || '"Therefore what God has joined together, let no one separate."'}
+                    onChange={(value) => setWedding({ ...wedding, main_description: value })}
+                    onSave={() => updateWeddingField("main_description", wedding.main_description)}
+                    className="text-2xl font-serif italic mb-4 block"
+                    multiline
+                  />
+                ) : (
+                  <p className="text-2xl font-serif italic mb-4">
+                    {wedding.main_description || '"Therefore what God has joined together, let no one separate."'}
+                  </p>
+                )}
                 <p className="text-lg text-muted-foreground">- Mark 10:9</p>
               </div>
             </div>
@@ -209,13 +248,33 @@ const WeddingInvite = () => {
             <div className="h-full flex items-center justify-center bg-white p-8">
               <div className="text-center max-w-md">
                 <p className="text-xl mb-8 text-muted-foreground">With joyous hearts,</p>
-                <h3 className="text-3xl font-serif mb-2 text-primary">
-                  {wedding.groom_family || "Groom's Family"}
-                </h3>
-                <p className="text-2xl mb-2 text-primary">&</p>
-                <h3 className="text-3xl font-serif mb-8 text-primary">
-                  {wedding.bride_family || "Bride's Family"}
-                </h3>
+                {isPreview ? (
+                  <>
+                    <InlineEditableText
+                      value={wedding.groom_family || "Groom's Family"}
+                      onChange={(value) => setWedding({ ...wedding, groom_family: value })}
+                      onSave={() => updateWeddingField("groom_family", wedding.groom_family)}
+                      className="text-3xl font-serif mb-2 text-primary"
+                    />
+                    <p className="text-2xl mb-2 text-primary">&</p>
+                    <InlineEditableText
+                      value={wedding.bride_family || "Bride's Family"}
+                      onChange={(value) => setWedding({ ...wedding, bride_family: value })}
+                      onSave={() => updateWeddingField("bride_family", wedding.bride_family)}
+                      className="text-3xl font-serif mb-8 text-primary"
+                    />
+                  </>
+                ) : (
+                  <>
+                    <h3 className="text-3xl font-serif mb-2 text-primary">
+                      {wedding.groom_family || "Groom's Family"}
+                    </h3>
+                    <p className="text-2xl mb-2 text-primary">&</p>
+                    <h3 className="text-3xl font-serif mb-8 text-primary">
+                      {wedding.bride_family || "Bride's Family"}
+                    </h3>
+                  </>
+                )}
                 <p className="text-lg text-muted-foreground">
                   Request the honor of your presence at the wedding of their son and daughter
                 </p>

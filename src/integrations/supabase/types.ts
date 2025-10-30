@@ -160,6 +160,9 @@ export type Database = {
           bride_family: string | null
           bride_name: string
           created_at: string | null
+          custom_accent_color: string | null
+          custom_primary_color: string | null
+          custom_text_color: string | null
           groom_family: string | null
           groom_name: string
           id: string
@@ -177,6 +180,9 @@ export type Database = {
           bride_family?: string | null
           bride_name: string
           created_at?: string | null
+          custom_accent_color?: string | null
+          custom_primary_color?: string | null
+          custom_text_color?: string | null
           groom_family?: string | null
           groom_name: string
           id?: string
@@ -194,6 +200,9 @@ export type Database = {
           bride_family?: string | null
           bride_name?: string
           created_at?: string | null
+          custom_accent_color?: string | null
+          custom_primary_color?: string | null
+          custom_text_color?: string | null
           groom_family?: string | null
           groom_name?: string
           id?: string

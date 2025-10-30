@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -22,21 +22,36 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
     main_description: wedding?.main_description || "",
   });
   const [colors, setColors] = useState({
-    primary: "#E0C097",
-    accent: "#E6B7B8",
-    text: "#2C2C2C",
+    primary: wedding?.custom_primary_color || "#E0C097",
+    accent: wedding?.custom_accent_color || "#E6B7B8",
+    text: wedding?.custom_text_color || "#2C2C2C",
   });
   const [isSaving, setIsSaving] = useState(false);
   const { toast } = useToast();
+
+  // Apply colors immediately when they change
+  useEffect(() => {
+    const root = document.documentElement;
+    root.style.setProperty("--primary", colors.primary);
+    root.style.setProperty("--accent", colors.accent);
+    root.style.setProperty("--foreground", colors.text);
+  }, [colors]);
 
   const handleSave = async () => {
     if (!wedding?.id) return;
     
     setIsSaving(true);
     try {
+      const updateData = {
+        ...editData,
+        custom_primary_color: colors.primary,
+        custom_accent_color: colors.accent,
+        custom_text_color: colors.text,
+      };
+
       const { data, error } = await supabase
         .from("weddings")
-        .update(editData)
+        .update(updateData)
         .eq("id", wedding.id)
         .select()
         .single();
@@ -68,18 +83,11 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
       main_description: wedding?.main_description || "",
     });
     setColors({
-      primary: "#E0C097",
-      accent: "#E6B7B8",
-      text: "#2C2C2C",
+      primary: wedding?.custom_primary_color || "#E0C097",
+      accent: wedding?.custom_accent_color || "#E6B7B8",
+      text: wedding?.custom_text_color || "#2C2C2C",
     });
     setIsEditing(false);
-  };
-
-  const applyColors = () => {
-    const root = document.documentElement;
-    root.style.setProperty("--primary", colors.primary);
-    root.style.setProperty("--accent", colors.accent);
-    root.style.setProperty("--foreground", colors.text);
   };
 
   return (
@@ -237,17 +245,9 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
                   </div>
                 </div>
 
-                <Button 
-                  onClick={applyColors} 
-                  className="w-full"
-                  variant="outline"
-                >
-                  Apply Colors Preview
-                </Button>
-
-                <div className="p-4 bg-muted/30 rounded-lg">
+                <div className="p-4 bg-accent/10 rounded-lg border border-accent/20">
                   <p className="text-xs text-muted-foreground">
-                    💡 Colors will be applied to the live preview. Click "Save" to persist changes.
+                    ✨ Colors are applied instantly as you select them. Click "Save" to persist your changes.
                   </p>
                 </div>
               </div>
