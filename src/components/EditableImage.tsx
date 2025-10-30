@@ -73,43 +73,45 @@ export const EditableImage = ({
   }
 
   return (
-    <div
-      className="relative group"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <img src={imageUrl} alt={alt} className={cn(className, "transition-all")} />
+    <>
+      <div
+        className="relative group w-full h-full"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <img src={imageUrl} alt={alt} className={cn(className, "transition-all")} />
 
-      {isHovered && !isUploading && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-all">
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => fileInputRef.current?.click()}
-            className="bg-white/90 hover:bg-white"
-          >
-            <Upload className="w-4 h-4 mr-1" />
-            Change
-          </Button>
-          {onRemove && (
+        {isHovered && !isUploading && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-all z-10">
             <Button
               size="sm"
-              variant="destructive"
-              onClick={onRemove}
-              className="bg-destructive/90 hover:bg-destructive"
+              variant="secondary"
+              onClick={() => fileInputRef.current?.click()}
+              className="bg-white/90 hover:bg-white"
             >
-              <Trash2 className="w-4 h-4 mr-1" />
-              Remove
+              <Upload className="w-4 h-4 mr-1" />
+              Change
             </Button>
-          )}
-        </div>
-      )}
+            {onRemove && (
+              <Button
+                size="sm"
+                variant="destructive"
+                onClick={onRemove}
+                className="bg-destructive/90 hover:bg-destructive"
+              >
+                <Trash2 className="w-4 h-4 mr-1" />
+                Remove
+              </Button>
+            )}
+          </div>
+        )}
 
-      {isUploading && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-          <div className="text-white text-sm">Uploading...</div>
-        </div>
-      )}
+        {isUploading && (
+          <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10">
+            <div className="text-white text-sm">Uploading...</div>
+          </div>
+        )}
+      </div>
 
       <input
         ref={fileInputRef}
@@ -118,6 +120,6 @@ export const EditableImage = ({
         onChange={handleFileSelect}
         className="hidden"
       />
-    </div>
+    </>
   );
 };

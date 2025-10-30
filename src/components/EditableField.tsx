@@ -43,10 +43,22 @@ export const EditableField = ({
     
     e.stopPropagation();
     const rect = e.currentTarget.getBoundingClientRect();
-    setPosition({
-      x: rect.left + window.scrollX,
-      y: rect.bottom + window.scrollY + 8,
-    });
+    
+    // Calculate position ensuring it stays within viewport
+    let x = rect.left + window.scrollX;
+    let y = rect.bottom + window.scrollY + 8;
+    
+    // Adjust if popup would go off right edge
+    if (x + 400 > window.innerWidth) {
+      x = window.innerWidth - 420; // 400 + 20 padding
+    }
+    
+    // Adjust if popup would go off bottom edge
+    if (y + 500 > window.innerHeight + window.scrollY) {
+      y = rect.top + window.scrollY - 508; // Place above element
+    }
+    
+    setPosition({ x, y });
     setIsEditing(true);
   };
 
@@ -92,9 +104,10 @@ export const EditableField = ({
       {isEditing && (
         <div
           style={{
-            position: "absolute",
+            position: "fixed",
             left: `${position.x}px`,
             top: `${position.y}px`,
+            zIndex: 9999,
           }}
         >
           <InlineFieldEditor

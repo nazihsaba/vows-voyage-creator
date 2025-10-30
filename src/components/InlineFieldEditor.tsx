@@ -67,6 +67,17 @@ export const InlineFieldEditor = ({
     setStyle(currentStyle);
   }, [currentText, currentStyle]);
 
+  useEffect(() => {
+    // Close on escape key
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onCancel();
+      }
+    };
+    window.addEventListener("keydown", handleEscape);
+    return () => window.removeEventListener("keydown", handleEscape);
+  }, [onCancel]);
+
   const handleSave = () => {
     onSave(text, style);
   };
@@ -75,9 +86,10 @@ export const InlineFieldEditor = ({
     <div 
       ref={editorRef}
       className={cn(
-        "fixed bg-white rounded-lg shadow-2xl border-2 border-primary p-4 z-50 min-w-[300px] max-w-[400px]",
+        "bg-white rounded-lg shadow-2xl border-2 border-primary p-4 min-w-[300px] max-w-[400px]",
         className
       )}
+      style={{ zIndex: 10000 }}
       onClick={(e) => e.stopPropagation()}
     >
       <div className="space-y-4">
@@ -118,8 +130,8 @@ export const InlineFieldEditor = ({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              {fontOptions.map((font) => (
+          <SelectContent className="bg-white z-[10000]">
+            {fontOptions.map((font) => (
                 <SelectItem key={font.value} value={font.value}>
                   {font.label}
                 </SelectItem>
@@ -138,8 +150,8 @@ export const InlineFieldEditor = ({
             <SelectTrigger>
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
-              {fontSizes.map((size) => (
+          <SelectContent className="bg-white z-[10000]">
+            {fontSizes.map((size) => (
                 <SelectItem key={size.value} value={size.value}>
                   {size.label}
                 </SelectItem>
