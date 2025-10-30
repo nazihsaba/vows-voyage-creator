@@ -35,9 +35,6 @@ const Index = () => {
             <span className="text-2xl font-serif font-bold text-primary">Auréa</span>
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/dashboard")} variant="outline">
-              My Events
-            </Button>
             <Button onClick={() => navigate("/auth")}>
               Sign In
             </Button>
@@ -73,14 +70,6 @@ const Index = () => {
               className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
             >
               Create Event
-            </Button>
-            <Button
-              size="lg"
-              onClick={() => navigate("/dashboard")}
-              variant="outline"
-              className="text-lg px-8 py-6 bg-white/90 hover:bg-white text-foreground border-white"
-            >
-              My Events
             </Button>
           </div>
         </div>
@@ -124,21 +113,13 @@ const Index = () => {
           <p className="text-xl text-muted-foreground mb-8">
             Choose from weddings, birthdays, parties and more - start creating today
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex justify-center">
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
               className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
             >
               Create Your Invitation
-            </Button>
-            <Button
-              size="lg"
-              onClick={() => navigate("/dashboard")}
-              variant="outline"
-              className="text-lg px-8 py-6"
-            >
-              View My Events
             </Button>
           </div>
         </div>

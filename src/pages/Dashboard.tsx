@@ -4,6 +4,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar } from "lucide-react";
+import weddingClassic from "@/assets/template-wedding-classic.jpg";
+import weddingModern from "@/assets/template-wedding-modern.jpg";
+import birthdayTemplate from "@/assets/template-birthday.jpg";
+import christmasTemplate from "@/assets/template-christmas.jpg";
+import baptismTemplate from "@/assets/template-baptism.jpg";
+import anniversaryTemplate from "@/assets/template-anniversary.jpg";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -31,8 +37,8 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-rose-500",
       templates: [
-        { id: "template1", name: "Classic Elegance", description: "Traditional wedding invitation" },
-        { id: "template2", name: "Modern Romance", description: "Contemporary design with gallery" },
+        { id: "template1", name: "Classic Elegance", description: "Traditional wedding invitation", image: weddingClassic },
+        { id: "template2", name: "Modern Romance", description: "Contemporary design with gallery", image: weddingModern },
         { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
       ],
     },
@@ -42,7 +48,7 @@ const Dashboard = () => {
       icon: Cake,
       color: "text-amber-500",
       templates: [
-        { id: "template1", name: "Coming soon", description: "Fun and colorful design", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Fun and colorful design", disabled: true, image: birthdayTemplate },
         { id: "template2", name: "Coming soon", description: "Perfect for special ages", disabled: true },
         { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
@@ -53,7 +59,7 @@ const Dashboard = () => {
       icon: TreePine,
       color: "text-green-600",
       templates: [
-        { id: "template1", name: "Coming soon", description: "Traditional Christmas theme", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Traditional Christmas theme", disabled: true, image: christmasTemplate },
         { id: "template2", name: "Coming soon", description: "Elegant holiday design", disabled: true },
         { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
@@ -64,7 +70,7 @@ const Dashboard = () => {
       icon: Baby,
       color: "text-blue-400",
       templates: [
-        { id: "template1", name: "Coming soon", description: "Classic baptism invitation", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Classic baptism invitation", disabled: true, image: baptismTemplate },
         { id: "template2", name: "Coming soon", description: "Modern and elegant", disabled: true },
         { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
@@ -75,7 +81,7 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-purple-500",
       templates: [
-        { id: "template1", name: "Coming soon", description: "Celebrate your journey together", disabled: true },
+        { id: "template1", name: "Coming soon", description: "Celebrate your journey together", disabled: true, image: anniversaryTemplate },
         { id: "template2", name: "Coming soon", description: "Perfect for milestone anniversaries", disabled: true },
         { id: "template3", name: "Coming soon", description: "Coming soon", disabled: true },
       ],
@@ -145,8 +151,18 @@ const Dashboard = () => {
                       }
                     >
                       <CardHeader>
-                        <div className="aspect-video bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg flex items-center justify-center mb-4">
-                          <Icon className={`w-16 h-16 ${category.color} opacity-50`} />
+                        <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                          {template.image ? (
+                            <img 
+                              src={template.image} 
+                              alt={template.name}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                              <Icon className={`w-16 h-16 ${category.color} opacity-50`} />
+                            </div>
+                          )}
                         </div>
                         <CardTitle className="text-xl font-serif">{template.name}</CardTitle>
                         <CardDescription>{template.description}</CardDescription>
