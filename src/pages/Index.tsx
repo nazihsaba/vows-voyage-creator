@@ -32,7 +32,7 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
             <PartyPopper className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-serif font-bold text-primary">Perfect Events</span>
+            <span className="text-2xl font-serif font-bold text-primary">Auréa</span>
           </div>
           <Button onClick={() => navigate("/auth")} variant="outline">
             Sign In
