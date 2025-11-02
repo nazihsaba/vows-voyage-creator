@@ -13,6 +13,8 @@ import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-rea
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { useTemplate } from "@/hooks/useTemplate";
+import { RomanticFullscreenTemplate } from "@/components/templates/RomanticFullscreenTemplate";
 
 const WeddingInvite = () => {
   const { slug } = useParams();
@@ -164,6 +166,26 @@ const WeddingInvite = () => {
           <p className="text-lg text-muted-foreground">The wedding invitation you're looking for doesn't exist.</p>
         </div>
       </div>
+    );
+  }
+
+  // Check if wedding uses a template system
+  const template = useTemplate(wedding.template_id);
+  
+  // If using romantic fullscreen template, render it
+  if (template?.id === 'romantic-fullscreen') {
+    return (
+      <RomanticFullscreenTemplate
+        template={template}
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isPreview={isPreview}
+        onFieldUpdate={updateFieldCustomization}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
     );
   }
 
