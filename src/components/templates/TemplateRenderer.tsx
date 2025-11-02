@@ -4,6 +4,7 @@ import { WeddingGallery } from '@/components/WeddingGallery';
 import { EventLocation } from '@/components/EventLocation';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
+import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -31,6 +32,22 @@ export const TemplateRenderer = ({
   getFieldStyle,
   children,
 }: TemplateRendererProps) => {
+  // Use custom template component if specified
+  if (template.component === 'AnthonyOdileTemplate') {
+    return (
+      <AnthonyOdileTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
   // Sort sections by order
   const sortedSections = [...template.sections].sort((a, b) => a.order - b.order);
   

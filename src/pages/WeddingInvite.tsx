@@ -8,6 +8,8 @@ import { GiftCards } from "@/components/GiftCards";
 import { EditableWeddingInvite } from "@/components/EditableWeddingInvite";
 import { EditableField } from "@/components/EditableField";
 import { EditableImage } from "@/components/EditableImage";
+import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
+import { useTemplate } from "@/hooks/useTemplate";
 import { format } from "date-fns";
 import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
@@ -26,6 +28,9 @@ const WeddingInvite = () => {
   const [currentSection, setCurrentSection] = useState(0);
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
   const { toast } = useToast();
+  
+  // Get template configuration if using template system
+  const template = useTemplate(wedding?.template_type);
 
   const updateFieldCustomization = async (fieldId: string, text: string, style: any) => {
     if (!wedding?.id || !isPreview) return;
@@ -169,6 +174,56 @@ const WeddingInvite = () => {
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
+
+  // If using template system, render with TemplateRenderer
+  if (template) {
+    const getFieldValue = (fieldId: string, defaultValue: string) => {
+      return fieldCustomizations[fieldId]?.text || defaultValue;
+    };
+
+    const getFieldStyle = (fieldId: string) => {
+      const customization = fieldCustomizations[fieldId];
+      if (!customization) return {};
+      const { text, ...style } = customization;
+      return style;
+    };
+
+    const content = (
+      <TemplateRenderer
+        template={template}
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isPreview={isPreview}
+        onFieldUpdate={updateFieldCustomization}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      >
+        {/* Hero content passed as children for templates that need it */}
+        <div className="text-center text-white space-y-6">
+          <h1 className="text-5xl md:text-7xl font-script">
+            {wedding.groom_name} & {wedding.bride_name}
+          </h1>
+          <p className="text-xl md:text-2xl tracking-wide">
+            {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+          </p>
+        </div>
+      </TemplateRenderer>
+    );
+
+    if (isPreview) {
+      return (
+        <EditableWeddingInvite wedding={wedding} onUpdate={setWedding}>
+          {content}
+        </EditableWeddingInvite>
+      );
+    }
+
+    return content;
+  }
+
+  // Default story-style layout for weddings without template_type
 
   const sections = [
     "hero",

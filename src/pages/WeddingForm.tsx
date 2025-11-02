@@ -203,8 +203,9 @@ const WeddingForm = () => {
         weddingId = data.id;
       }
 
-      // Upload gallery images if template is Gallery Showcase
-      if (formData.template_type === "template2" && galleryFiles.length > 0) {
+      // Upload gallery images if template supports gallery
+      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen"];
+      if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         const galleryUrls = await Promise.all(
           galleryFiles.map((file) => uploadImage(file, user.id))
         );
@@ -361,7 +362,8 @@ const WeddingForm = () => {
                 </div>
               </div>
 
-              {formData.template_type === "template2" && (
+              {/* Gallery Images Section - for templates with gallery support */}
+              {(formData.template_type === "template2" || formData.template_type === "template4" || formData.template_type === "classic-gallery" || formData.template_type === "elegant-fullscreen") && (
                 <div className="space-y-2">
                   <Label>Gallery Images (up to 6)</Label>
                   <p className="text-sm text-muted-foreground mb-2">
