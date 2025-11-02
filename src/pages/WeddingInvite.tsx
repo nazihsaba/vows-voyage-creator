@@ -170,7 +170,7 @@ const WeddingInvite = () => {
   }
 
   // Check if wedding uses a template system
-  const template = useTemplate(wedding.template_id);
+  const template = useTemplate(wedding.template_type);
   
   // If using romantic fullscreen template, render it
   if (template?.id === 'romantic-fullscreen') {

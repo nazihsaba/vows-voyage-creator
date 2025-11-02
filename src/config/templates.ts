@@ -331,7 +331,7 @@ export const templates: Template[] = [
     category: 'romantic',
     description: 'Immersive fullscreen experience with music and elegant transitions',
     thumbnail: '/placeholder.svg',
-    isPremium: true,
+    isPremium: false,
     isPopular: true,
     component: 'RomanticFullscreenTemplate',
     sections: [
