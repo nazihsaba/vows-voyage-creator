@@ -13,9 +13,6 @@ import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-rea
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { useTemplate } from "@/hooks/useTemplate";
-import { RomanticFullscreenTemplate } from "@/components/templates/RomanticFullscreenTemplate";
-import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 
 const WeddingInvite = () => {
   const { slug } = useParams();
@@ -167,111 +164,6 @@ const WeddingInvite = () => {
           <p className="text-lg text-muted-foreground">The wedding invitation you're looking for doesn't exist.</p>
         </div>
       </div>
-    );
-  }
-
-  // Check if wedding uses a template system
-  const template = useTemplate(wedding.template_type);
-  
-  // If using romantic fullscreen template, render it with its custom component
-  if (template?.id === 'romantic-fullscreen') {
-    return (
-      <RomanticFullscreenTemplate
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isPreview={isPreview}
-        onFieldUpdate={updateFieldCustomization}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-  
-  // If template exists but no custom component, use TemplateRenderer
-  if (template) {
-    const ceremony = locations.find((l) => l.type === "ceremony");
-    const venue = locations.find((l) => l.type === "venue");
-    
-    const heroContent = (
-      <div className="space-y-8">
-        {isPreview ? (
-          <EditableImage
-            imageUrl={wedding.main_picture_url || heroImage}
-            onUpdate={updateMainImage}
-            alt="Wedding photo"
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-elegant"
-            isPreview={isPreview}
-          />
-        ) : (
-          <img
-            src={wedding.main_picture_url || heroImage}
-            alt="Wedding"
-            className="w-full max-w-2xl mx-auto rounded-lg shadow-elegant object-cover"
-          />
-        )}
-        
-        <div className="space-y-4">
-          <EditableField
-            fieldId="groom_name"
-            text={getFieldValue("groom_name", wedding.groom_name)}
-            style={getFieldStyle("groom_name")}
-            onUpdate={updateFieldCustomization}
-            isPreview={isPreview}
-            tag="h1"
-            className="text-5xl md:text-7xl font-serif font-bold text-primary"
-          />
-          <div className="flex items-center justify-center gap-4">
-            <div className="h-px w-16 bg-secondary" />
-            <span className="text-2xl text-secondary">&</span>
-            <div className="h-px w-16 bg-secondary" />
-          </div>
-          <EditableField
-            fieldId="bride_name"
-            text={getFieldValue("bride_name", wedding.bride_name)}
-            style={getFieldStyle("bride_name")}
-            onUpdate={updateFieldCustomization}
-            isPreview={isPreview}
-            tag="h1"
-            className="text-5xl md:text-7xl font-serif font-bold text-primary"
-          />
-          <EditableField
-            fieldId="wedding_date"
-            text={getFieldValue("wedding_date", format(new Date(wedding.wedding_date), "MMMM dd, yyyy"))}
-            style={getFieldStyle("wedding_date")}
-            onUpdate={updateFieldCustomization}
-            isPreview={isPreview}
-            tag="p"
-            className="text-xl text-muted-foreground"
-          />
-        </div>
-      </div>
-    );
-    
-    const content = (
-      <TemplateRenderer
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isPreview={isPreview}
-        onFieldUpdate={updateFieldCustomization}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      >
-        {heroContent}
-      </TemplateRenderer>
-    );
-
-    return isPreview ? (
-      <EditableWeddingInvite wedding={wedding} onUpdate={setWedding}>
-        {content}
-      </EditableWeddingInvite>
-    ) : (
-      content
     );
   }
 

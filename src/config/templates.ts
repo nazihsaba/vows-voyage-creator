@@ -323,45 +323,6 @@ export const templates: Template[] = [
       animations: true,
     },
   },
-  
-  // Romantic Fullscreen Template
-  {
-    id: 'romantic-fullscreen',
-    name: 'Romantic Fullscreen',
-    category: 'romantic',
-    description: 'Immersive fullscreen experience with music and elegant transitions',
-    thumbnail: '/placeholder.svg',
-    isPremium: false,
-    isPopular: true,
-    component: 'RomanticFullscreenTemplate',
-    sections: [
-      { id: 'hero', enabled: true, order: 1, customizable: true },
-      { id: 'story', enabled: true, order: 2, customizable: true },
-      { id: 'gallery', enabled: true, order: 3, customizable: true },
-      { id: 'countdown', enabled: true, order: 4, customizable: true },
-      { id: 'details', enabled: true, order: 5, customizable: true },
-      { id: 'location', enabled: true, order: 6, customizable: true },
-      { id: 'gifts', enabled: true, order: 7, customizable: true },
-      { id: 'rsvp', enabled: true, order: 8, customizable: true },
-    ],
-    style: {
-      layout: 'single-page',
-      spacing: 'spacious',
-      fontPrimary: 'Cormorant Garamond',
-      fontSecondary: 'Montserrat',
-      headingSize: 'xl',
-      colorScheme: {
-        primary: '#D4A574',
-        secondary: '#8B7355',
-        accent: '#F5E6D3',
-        background: '#FFFFFF',
-        text: '#3E2723',
-      },
-      borderRadius: 'lg',
-      shadows: 'soft',
-      animations: true,
-    },
-  },
 ];
 
 export const templateConfig: TemplateConfig = {
