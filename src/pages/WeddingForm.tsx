@@ -33,6 +33,15 @@ const WeddingForm = () => {
     main_picture_url: "",
     template_type: searchParams.get("template") || "template1",
   });
+  
+  const template = formData.template_type;
+  const shouldShowGalleryUpload = 
+    template === 'template2' || 
+    template === 'classic-gallery' ||
+    template === 'template4' ||
+    template === 'elegant-fullscreen' ||
+    template === 'template5' ||
+    template === 'elegant-fullscreen-carousel';
 
   useEffect(() => {
     if (id) {

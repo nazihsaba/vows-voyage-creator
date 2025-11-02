@@ -5,6 +5,7 @@ import { EventLocation } from '@/components/EventLocation';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
 import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
+import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -36,6 +37,22 @@ export const TemplateRenderer = ({
   if (template.component === 'AnthonyOdileTemplate') {
     return (
       <AnthonyOdileTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
+  if (template.component === 'AnthonyOdileCarouselTemplate') {
+    return (
+      <AnthonyOdileCarouselTemplate
+        template={template}
         wedding={wedding}
         locations={locations}
         gallery={gallery}

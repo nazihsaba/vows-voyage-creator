@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { templateConfig, getTemplatesByCategory, getPopularTemplates } from "@/config/templates";
-import { TemplatePreview } from "@/components/templates/TemplatePreview";
+import { TemplatePreviewLive } from "@/components/templates/TemplatePreviewLive";
 import { TemplateCategory } from "@/types/templates";
 
 const TemplateSelection = () => {
@@ -72,7 +72,7 @@ const TemplateSelection = () => {
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {popularTemplates.map((template) => (
-                <TemplatePreview
+                <TemplatePreviewLive
                   key={template.id}
                   template={template}
                   selected={selectedTemplate === template.id}
@@ -99,7 +99,7 @@ const TemplateSelection = () => {
           <TabsContent value={activeCategory} className="space-y-6">
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {displayTemplates.map((template) => (
-                <TemplatePreview
+                <TemplatePreviewLive
                   key={template.id}
                   template={template}
                   selected={selectedTemplate === template.id}

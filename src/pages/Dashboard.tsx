@@ -118,11 +118,11 @@ const Dashboard = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         <div className="flex gap-4 mb-8 justify-center">
-          <Button size="lg" onClick={() => navigate("/dashboard/select-event-type")}>
-            Create New Event
-          </Button>
-          <Button size="lg" variant="outline" onClick={() => navigate("/dashboard/my-events")}>
+          <Button size="lg" onClick={() => navigate("/dashboard/my-events")}>
             My Events
+          </Button>
+          <Button size="lg" variant="outline" onClick={() => navigate("/dashboard/select-event-type")}>
+            Create New Event
           </Button>
         </div>
         
