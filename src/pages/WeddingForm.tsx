@@ -21,6 +21,15 @@ const WeddingForm = () => {
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
+  const [locations, setLocations] = useState({
+    ceremony_location: "",
+    ceremony_time: "",
+    venue_location: "",
+    venue_time: "",
+  });
+  const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
+    { card_name: "", card_number: "" }
+  ]);
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -41,7 +50,7 @@ const WeddingForm = () => {
     template === 'template4' ||
     template === 'elegant-fullscreen' ||
     template === 'template5' ||
-    template === 'elegant-fullscreen-carousel';
+    template === 'modern-wedding';
 
   useEffect(() => {
     if (id) {
@@ -72,6 +81,34 @@ const WeddingForm = () => {
       
       if (galleryData) {
         setExistingGalleryImages(galleryData);
+      }
+
+      // Fetch locations
+      const { data: locationsData } = await supabase
+        .from("wedding_locations")
+        .select("*")
+        .eq("wedding_id", id);
+
+      if (locationsData) {
+        const ceremony = locationsData.find(l => l.type === 'ceremony');
+        const venue = locationsData.find(l => l.type === 'venue');
+        setLocations({
+          ceremony_location: ceremony?.location_name || "",
+          ceremony_time: ceremony?.time || "",
+          venue_location: venue?.location_name || "",
+          venue_time: venue?.time || "",
+        });
+      }
+
+      // Fetch gift cards
+      const { data: cardsData } = await supabase
+        .from("gift_cards")
+        .select("*")
+        .eq("wedding_id", id)
+        .order("card_order");
+
+      if (cardsData && cardsData.length > 0) {
+        setGiftCards(cardsData);
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -213,7 +250,7 @@ const WeddingForm = () => {
       }
 
       // Upload gallery images if template supports gallery
-      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen"];
+      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen", "template5", "modern-wedding"];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         const galleryUrls = await Promise.all(
           galleryFiles.map((file) => uploadImage(file, user.id))
@@ -230,6 +267,58 @@ const WeddingForm = () => {
           .insert(galleryInserts);
 
         if (galleryError) throw galleryError;
+      }
+
+      // Save locations
+      if (id) {
+        // Delete existing locations
+        await supabase.from("wedding_locations").delete().eq("wedding_id", weddingId);
+      }
+
+      const locationInserts = [];
+      if (locations.ceremony_location || locations.ceremony_time) {
+        locationInserts.push({
+          wedding_id: weddingId,
+          type: 'ceremony',
+          location_name: locations.ceremony_location,
+          time: locations.ceremony_time,
+        });
+      }
+      if (locations.venue_location || locations.venue_time) {
+        locationInserts.push({
+          wedding_id: weddingId,
+          type: 'venue',
+          location_name: locations.venue_location,
+          time: locations.venue_time,
+        });
+      }
+
+      if (locationInserts.length > 0) {
+        const { error: locError } = await supabase
+          .from("wedding_locations")
+          .insert(locationInserts);
+        if (locError) throw locError;
+      }
+
+      // Save gift cards
+      if (id) {
+        // Delete existing gift cards
+        await supabase.from("gift_cards").delete().eq("wedding_id", weddingId);
+      }
+
+      const validCards = giftCards.filter(card => card.card_name && card.card_number);
+      if (validCards.length > 0) {
+        const cardInserts = validCards.map((card, index) => ({
+          wedding_id: weddingId,
+          card_name: card.card_name,
+          card_number: card.card_number,
+          card_order: index + 1,
+        }));
+
+        const { error: cardError } = await supabase
+          .from("gift_cards")
+          .insert(cardInserts);
+        if (cardError) throw cardError;
       }
 
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
@@ -371,8 +460,112 @@ const WeddingForm = () => {
                 </div>
               </div>
 
+              {/* Location Fields */}
+              <div className="space-y-4 border-t pt-6">
+                <h3 className="text-lg font-semibold">Event Locations</h3>
+                
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="ceremony_location">Ceremony Location</Label>
+                    <Input
+                      id="ceremony_location"
+                      value={locations.ceremony_location}
+                      onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
+                      placeholder="Church or venue name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="ceremony_time">Ceremony Time</Label>
+                    <Input
+                      id="ceremony_time"
+                      type="time"
+                      value={locations.ceremony_time}
+                      onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="venue_location">Venue Location</Label>
+                    <Input
+                      id="venue_location"
+                      value={locations.venue_location}
+                      onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
+                      placeholder="Reception venue name"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="venue_time">Venue Time</Label>
+                    <Input
+                      id="venue_time"
+                      type="time"
+                      value={locations.venue_time}
+                      onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Card List Section */}
+              <div className="space-y-4 border-t pt-6">
+                <div className="flex items-center justify-between">
+                  <h3 className="text-lg font-semibold">Gift Cards</h3>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setGiftCards([...giftCards, { card_name: "", card_number: "" }])}
+                  >
+                    Add Card
+                  </Button>
+                </div>
+
+                {giftCards.map((card, index) => (
+                  <div key={index} className="grid md:grid-cols-2 gap-4 p-4 border rounded-lg relative">
+                    <div className="space-y-2">
+                      <Label htmlFor={`card_name_${index}`}>Card Name</Label>
+                      <Input
+                        id={`card_name_${index}`}
+                        value={card.card_name}
+                        onChange={(e) => {
+                          const newCards = [...giftCards];
+                          newCards[index].card_name = e.target.value;
+                          setGiftCards(newCards);
+                        }}
+                        placeholder="e.g., Visa"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor={`card_number_${index}`}>Card Number</Label>
+                      <Input
+                        id={`card_number_${index}`}
+                        value={card.card_number}
+                        onChange={(e) => {
+                          const newCards = [...giftCards];
+                          newCards[index].card_number = e.target.value;
+                          setGiftCards(newCards);
+                        }}
+                        placeholder="XXXX-XXXX-XXXX-XXXX"
+                      />
+                    </div>
+                    {giftCards.length > 1 && (
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => setGiftCards(giftCards.filter((_, i) => i !== index))}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+
               {/* Gallery Images Section - for templates with gallery support */}
-              {(formData.template_type === "template2" || formData.template_type === "template4" || formData.template_type === "classic-gallery" || formData.template_type === "elegant-fullscreen") && (
+              {shouldShowGalleryUpload && (
                 <div className="space-y-2">
                   <Label>Gallery Images (up to 6)</Label>
                   <p className="text-sm text-muted-foreground mb-2">

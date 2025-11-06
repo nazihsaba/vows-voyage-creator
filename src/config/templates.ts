@@ -324,12 +324,12 @@ export const templates: Template[] = [
     },
   },
   
-  // Anthony & Odile Style Template
+  // Wedding Templates
   {
     id: 'elegant-fullscreen',
-    name: 'Odile & Anthony - Classic',
+    name: 'Classic Elegance',
     category: 'elegant',
-    description: 'Fullscreen elegant design with beautiful typography and static image gallery',
+    description: 'Scrollable elegant design with beautiful typography and static image gallery',
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
@@ -362,14 +362,14 @@ export const templates: Template[] = [
     },
   },
   {
-    id: 'elegant-fullscreen-carousel',
-    name: 'Odile & Anthony - Carousel',
-    category: 'elegant',
-    description: 'Fullscreen elegant design with beautiful typography and dynamic carousel gallery',
+    id: 'modern-wedding',
+    name: 'Modern Template',
+    category: 'modern',
+    description: 'Contemporary design with bold typography, fixed background, and clean layouts',
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
-    component: 'AnthonyOdileCarouselTemplate',
+    component: 'ModernTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },

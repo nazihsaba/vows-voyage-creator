@@ -43,7 +43,7 @@ export const EventLocation = ({ type, locationName, locationLink, time }: EventL
               className="border-primary text-primary hover:bg-primary hover:text-primary-foreground"
             >
               <a href={locationLink} target="_blank" rel="noopener noreferrer">
-                View on Google Maps
+                View on Map
               </a>
             </Button>
           </div>
