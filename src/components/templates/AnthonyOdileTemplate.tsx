@@ -205,40 +205,58 @@ export const AnthonyOdileTemplate = ({
       <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
-            <h2 className="text-4xl md:text-5xl font-script mb-4">Wedding Events</h2>
+            <h2 className="text-4xl md:text-5xl font-script mb-6 text-[#3e2723]">Wedding Events</h2>
             <EditableField
               fieldId="events-subtitle"
-              text={getFieldValue("events-subtitle", "With all humility, we would like to invite you all to attend our wedding which will be held on:")}
+              text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
               style={getFieldStyle("events-subtitle")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-lg max-w-2xl mx-auto"
+              className="text-lg max-w-2xl mx-auto whitespace-pre-line"
             />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-script mb-4">Ceremony</h3>
-                <EventLocation
-                  type="ceremony"
-                  locationName={ceremony.location_name}
-                  locationLink={ceremony.location_link}
-                  time={ceremony.time}
-                />
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+                <h3 className="text-3xl font-script mb-2 text-[#3e2723]">Ceremony</h3>
+                <p className="text-2xl font-bold text-[#3e2723]">{ceremony.time}</p>
+                <div className="space-y-2">
+                  <p className="text-sm uppercase tracking-wider text-gray-600">Event Location</p>
+                  <p className="text-lg font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                </div>
+                {ceremony.location_link && (
+                  <a
+                    href={ceremony.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-[#c9a6a6] hover:bg-[#b89595] text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
+                )}
               </div>
             )}
             {venue && (
-              <div className="bg-white p-8 rounded-lg shadow-lg">
-                <h3 className="text-2xl font-script mb-4">Venue</h3>
-                <EventLocation
-                  type="venue"
-                  locationName={venue.location_name}
-                  locationLink={venue.location_link}
-                  time={venue.time}
-                />
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+                <h3 className="text-3xl font-script mb-2 text-[#3e2723]">Venue</h3>
+                <p className="text-2xl font-bold text-[#3e2723]">{venue.time}</p>
+                <div className="space-y-2">
+                  <p className="text-sm uppercase tracking-wider text-gray-600">Event Location</p>
+                  <p className="text-lg font-medium text-[#3e2723]">{venue.location_name}</p>
+                </div>
+                {venue.location_link && (
+                  <a
+                    href={venue.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-[#c9a6a6] hover:bg-[#b89595] text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
+                )}
               </div>
             )}
           </div>
@@ -249,7 +267,8 @@ export const AnthonyOdileTemplate = ({
       {giftCards.length > 0 && (
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-script text-center mb-12">Wedding Gift</h2>
+            <h2 className="text-4xl md:text-5xl font-script text-center mb-12 text-[#3e2723]">Wedding Gift</h2>
+            <p className="text-center text-lg mb-8 text-gray-600">For those who desire a wedding list is available</p>
             <GiftCards giftCards={giftCards} />
           </div>
         </section>
