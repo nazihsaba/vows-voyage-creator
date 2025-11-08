@@ -11,6 +11,7 @@ import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
+import OTPDemo from "./pages/OTPDemo";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -24,6 +25,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
+          <Route path="/otp-demo" element={<OTPDemo />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/my-events" element={<MyEvents />} />
           <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />

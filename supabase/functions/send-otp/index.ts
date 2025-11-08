@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "https://esm.sh/resend@4.0.0";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
@@ -11,8 +12,12 @@ const corsHeaders = {
 
 interface OTPRequest {
   email: string;
-  otpCode: string;
   userName?: string;
+}
+
+// Generate 6-digit OTP
+function generateOTP(): string {
+  return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -21,9 +26,47 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, otpCode, userName }: OTPRequest = await req.json();
+    const { email, userName }: OTPRequest = await req.json();
 
-    console.log("Sending OTP to:", email);
+    if (!email) {
+      return new Response(
+        JSON.stringify({ error: "Email is required" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    console.log("Generating OTP for:", email);
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Generate OTP code
+    const otpCode = generateOTP();
+    
+    // Calculate expiration time (10 minutes from now)
+    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+
+    // Store OTP in database
+    const { error: dbError } = await supabase
+      .from("otp_codes")
+      .insert({
+        email: email.toLowerCase(),
+        code: otpCode,
+        expires_at: expiresAt,
+        used: false,
+      });
+
+    if (dbError) {
+      console.error("Database error:", dbError);
+      throw new Error("Failed to store OTP code");
+    }
+
+    console.log("OTP stored, sending email to:", email);
 
     const emailResponse = await resend.emails.send({
       from: "Wedding Invites <onboarding@resend.dev>",
