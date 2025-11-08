@@ -88,9 +88,9 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      // Verify OTP
+      // Verify OTP (don't mark as used yet for password reset)
       const { data: verifyData, error: verifyError } = await supabase.functions.invoke("verify-otp", {
-        body: { email, code: otpCode },
+        body: { email, code: otpCode, markAsUsed: false },
       });
 
       if (verifyError) throw verifyError;
@@ -101,7 +101,7 @@ const Auth = () => {
 
       // Check if this is password reset or sign up
       if (isResetFlow) {
-        // Password reset flow - show new password form (keep OTP for verification)
+        // Password reset flow - show new password form (DON'T mark OTP as used yet)
         toast({
           title: "Code Verified!",
           description: "Please set your new password.",

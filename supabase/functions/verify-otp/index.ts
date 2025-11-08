@@ -10,6 +10,7 @@ const corsHeaders = {
 interface VerifyOTPRequest {
   email: string;
   code: string;
+  markAsUsed?: boolean; // Optional flag to mark OTP as used
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -18,7 +19,7 @@ const handler = async (req: Request): Promise<Response> => {
   }
 
   try {
-    const { email, code }: VerifyOTPRequest = await req.json();
+    const { email, code, markAsUsed = true }: VerifyOTPRequest = await req.json();
 
     if (!email || !code) {
       return new Response(
@@ -67,14 +68,17 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Mark OTP as used
-    const { error: updateError } = await supabase
-      .from("otp_codes")
-      .update({ used: true })
-      .eq("id", otpData.id);
+    // Mark OTP as used only if requested (for signup flow)
+    // For password reset, we'll mark it as used in the reset-password function
+    if (markAsUsed) {
+      const { error: updateError } = await supabase
+        .from("otp_codes")
+        .update({ used: true })
+        .eq("id", otpData.id);
 
-    if (updateError) {
-      console.error("Failed to mark OTP as used:", updateError);
+      if (updateError) {
+        console.error("Failed to mark OTP as used:", updateError);
+      }
     }
 
     console.log("OTP verified successfully for:", email);

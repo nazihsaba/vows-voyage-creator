@@ -68,12 +68,6 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Mark OTP as used
-    await supabase
-      .from("otp_codes")
-      .update({ used: true })
-      .eq("id", otpData.id);
-
     // Get user by email
     const { data: userData, error: userError } = await supabase.auth.admin.listUsers();
     
@@ -107,6 +101,12 @@ const handler = async (req: Request): Promise<Response> => {
       console.error("Failed to update password:", updateError);
       throw new Error("Failed to update password");
     }
+
+    // Mark OTP as used ONLY after successful password reset
+    await supabase
+      .from("otp_codes")
+      .update({ used: true })
+      .eq("id", otpData.id);
 
     console.log("Password reset successfully for:", email);
 
