@@ -212,9 +212,10 @@ const WeddingForm = () => {
     }
   };
 
-  const uploadImage = async (file: File, userId: string) => {
+  const uploadImage = async (file: File, userId: string, index?: number) => {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${userId}/${Date.now()}.${fileExt}`;
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ''}`;
+    const fileName = `${userId}/${uniqueId}.${fileExt}`;
     
     const { error: uploadError, data } = await supabase.storage
       .from('wedding-images')
@@ -286,7 +287,7 @@ const WeddingForm = () => {
         const startingOrder = (maxOrderData?.image_order || 0) + 1;
 
         const galleryUrls = await Promise.all(
-          galleryFiles.map((file) => uploadImage(file, user.id))
+          galleryFiles.map((file, index) => uploadImage(file, user.id, index))
         );
 
         const galleryInserts = galleryUrls.map((url, index) => ({
