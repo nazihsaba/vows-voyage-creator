@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 
@@ -17,6 +18,8 @@ const WeddingForm = () => {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [createdWeddingId, setCreatedWeddingId] = useState<string | null>(null);
+  const [previewModalOpen, setPreviewModalOpen] = useState(false);
+  const [previewUrl, setPreviewUrl] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
@@ -838,7 +841,7 @@ const WeddingForm = () => {
                       onClick={() => {
                         // For existing weddings, open normal preview
                         if (formData.slug) {
-                          window.open(`/invite/${formData.slug}?preview=true`, "_blank");
+                          setPreviewUrl(`/invite/${formData.slug}?preview=true`);
                         } else {
                           // For new weddings, store preview data and open preview
                           const previewData = {
@@ -849,8 +852,9 @@ const WeddingForm = () => {
                             galleryPreviews,
                           };
                           sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
-                          window.open(`/invite/preview?draft=true`, "_blank");
+                          setPreviewUrl(`/invite/preview?draft=true`);
                         }
+                        setPreviewModalOpen(true);
                       }}
                       disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
                     >
@@ -899,6 +903,21 @@ const WeddingForm = () => {
           </CardContent>
         </Card>
       </div>
+
+      <Dialog open={previewModalOpen} onOpenChange={setPreviewModalOpen}>
+        <DialogContent className="max-w-[95vw] w-full h-[95vh] p-0">
+          <DialogHeader className="p-6 pb-0">
+            <DialogTitle>Preview Invitation</DialogTitle>
+          </DialogHeader>
+          <div className="flex-1 w-full h-full overflow-hidden p-6 pt-2">
+            <iframe
+              src={previewUrl}
+              className="w-full h-full border-0 rounded-lg"
+              title="Wedding Invitation Preview"
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
