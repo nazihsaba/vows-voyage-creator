@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, Users } from "lucide-react";
+import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, Users, Search, ChevronDown, ChevronRight } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -61,6 +62,8 @@ const ManageLinks = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
+  const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
     if (weddingId) {
@@ -169,6 +172,22 @@ const ManageLinks = () => {
     return { attending, notAttending, pending, total: linkInvitees.length };
   };
 
+  const toggleLink = (linkId: string) => {
+    setExpandedLinks(prev => ({
+      ...prev,
+      [linkId]: !prev[linkId]
+    }));
+  };
+
+  const filteredLinks = links.filter(link => {
+    const linkInvitees = invitees[link.id] || [];
+    const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesGuestName = linkInvitees.some(invitee => 
+      invitee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    return matchesLinkName || matchesGuestName;
+  });
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
@@ -232,12 +251,21 @@ const ManageLinks = () => {
         ) : (
           <Card className="shadow-elegant">
             <CardHeader>
-              <div className="flex justify-between items-center">
+              <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
                   <h2 className="text-xl font-serif font-semibold">All Invitation Links & Guests</h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {links.length} {links.length === 1 ? 'link' : 'links'} • {Object.values(invitees).flat().length} total guests
+                    {filteredLinks.length} {filteredLinks.length === 1 ? 'link' : 'links'} • {Object.values(invitees).flat().length} total guests
                   </p>
+                </div>
+                <div className="relative w-full md:w-64">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Search links or guests..."
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                    className="pl-9"
+                  />
                 </div>
               </div>
             </CardHeader>
@@ -247,195 +275,167 @@ const ManageLinks = () => {
                   <Table>
                     <TableHeader>
                       <TableRow className="bg-accent/30">
+                        <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold">Invitation Link</TableHead>
                         <TableHead className="font-semibold">Created</TableHead>
-                        <TableHead className="font-semibold">Guest Name</TableHead>
-                        <TableHead className="font-semibold">RSVP Status</TableHead>
-                        <TableHead className="font-semibold">Response Date</TableHead>
+                        <TableHead className="font-semibold">Guests</TableHead>
+                        <TableHead className="font-semibold">RSVP Summary</TableHead>
                         <TableHead className="font-semibold text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {links.map((link, linkIndex) => {
-                        const linkInvitees = invitees[link.id] || [];
-                        const stats = getRSVPStats(link.id);
-                        
-                        if (linkInvitees.length === 0) {
-                          // Show link even if no invitees
+                      {filteredLinks.length === 0 ? (
+                        <TableRow>
+                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                            {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
+                          </TableCell>
+                        </TableRow>
+                      ) : (
+                        filteredLinks.map((link, linkIndex) => {
+                          const linkInvitees = invitees[link.id] || [];
+                          const stats = getRSVPStats(link.id);
+                          const isExpanded = expandedLinks[link.id] || false;
+                          
                           return (
-                            <TableRow 
-                              key={link.id}
-                              className={linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'}
-                            >
-                              <TableCell className="font-medium">
-                                <div>
-                                  <div className="font-semibold text-foreground">{link.link_name}</div>
-                                  <div className="flex gap-1.5 mt-1.5">
-                                    <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-xs">
-                                      {stats.attending}
-                                    </Badge>
-                                    <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-xs">
-                                      {stats.notAttending}
-                                    </Badge>
-                                    <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs">
-                                      {stats.pending}
-                                    </Badge>
-                                  </div>
-                                </div>
-                              </TableCell>
-                              <TableCell className="text-sm text-muted-foreground">
-                                {new Date(link.created_at).toLocaleDateString('en-US', {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  year: 'numeric'
-                                })}
-                              </TableCell>
-                              <TableCell colSpan={3} className="text-sm text-muted-foreground italic">
-                                No guests added yet
-                              </TableCell>
-                              <TableCell className="text-right">
-                                <div className="flex gap-1 justify-end">
-                                  <Button
+                            <React.Fragment key={link.id}>
+                              {/* Main Link Row */}
+                              <TableRow 
+                                className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} hover:bg-accent/10 transition-colors cursor-pointer`}
+                                onClick={() => toggleLink(link.id)}
+                              >
+                                <TableCell>
+                                  <Button 
+                                    variant="ghost" 
                                     size="icon"
-                                    variant="ghost"
-                                    onClick={() => copyToClipboard(link.unique_slug, link.number_of_persons)}
-                                    title="Copy Link"
-                                    className="h-8 w-8"
+                                    className="h-6 w-6"
                                   >
-                                    <Copy className="w-4 h-4" />
+                                    {isExpanded ? (
+                                      <ChevronDown className="w-4 h-4" />
+                                    ) : (
+                                      <ChevronRight className="w-4 h-4" />
+                                    )}
                                   </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={() => window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank')}
-                                    title="Open Link"
-                                    className="h-8 w-8"
-                                  >
-                                    <ExternalLink className="w-4 h-4" />
-                                  </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={() => setDeleteId(link.id)}
-                                    title="Delete Link"
-                                    className="text-destructive hover:text-destructive h-8 w-8"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            </TableRow>
-                          );
-                        }
-                        
-                        return linkInvitees.map((invitee, inviteeIndex) => (
-                          <TableRow 
-                            key={invitee.id}
-                            className={linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'}
-                          >
-                            {inviteeIndex === 0 && (
-                              <>
-                                <TableCell 
-                                  rowSpan={linkInvitees.length}
-                                  className="font-medium border-r border-border/50"
-                                >
-                                  <div>
-                                    <div className="font-semibold text-foreground">{link.link_name}</div>
-                                    <div className="text-xs text-muted-foreground mt-1">
-                                      {linkInvitees.length} {linkInvitees.length === 1 ? 'guest' : 'guests'}
-                                    </div>
-                                    <div className="flex gap-1.5 mt-1.5">
-                                      <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-xs">
-                                        {stats.attending}
-                                      </Badge>
-                                      <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-xs">
-                                        {stats.notAttending}
-                                      </Badge>
-                                      <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs">
-                                        {stats.pending}
-                                      </Badge>
-                                    </div>
-                                  </div>
                                 </TableCell>
-                                <TableCell 
-                                  rowSpan={linkInvitees.length}
-                                  className="text-sm text-muted-foreground border-r border-border/50"
-                                >
+                                <TableCell className="font-semibold text-foreground">
+                                  {link.link_name}
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
                                   {new Date(link.created_at).toLocaleDateString('en-US', {
                                     month: 'short',
                                     day: 'numeric',
                                     year: 'numeric'
                                   })}
                                 </TableCell>
-                              </>
-                            )}
-                            <TableCell className="font-medium">{invitee.name}</TableCell>
-                            <TableCell>
-                              {invitee.is_attending === null ? (
-                                <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700">
-                                  <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
-                                  Pending
-                                </Badge>
-                              ) : invitee.is_attending ? (
-                                <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
-                                  <Check className="w-3 h-3 mr-1" />
-                                  Attending
-                                </Badge>
-                              ) : (
-                                <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
-                                  <X className="w-3 h-3 mr-1" />
-                                  Not Attending
-                                </Badge>
+                                <TableCell>
+                                  <span className="text-sm font-medium">
+                                    {stats.total} {stats.total === 1 ? 'guest' : 'guests'}
+                                  </span>
+                                </TableCell>
+                                <TableCell>
+                                  <div className="flex gap-1.5">
+                                    <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-xs">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
+                                      {stats.attending}
+                                    </Badge>
+                                    <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-xs">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>
+                                      {stats.notAttending}
+                                    </Badge>
+                                    <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs">
+                                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1"></span>
+                                      {stats.pending}
+                                    </Badge>
+                                  </div>
+                                </TableCell>
+                                <TableCell className="text-right">
+                                  <div 
+                                    className="flex gap-1 justify-end"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => copyToClipboard(link.unique_slug, link.number_of_persons)}
+                                      title="Copy Link"
+                                      className="h-8 w-8"
+                                    >
+                                      <Copy className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank')}
+                                      title="Open Link"
+                                      className="h-8 w-8"
+                                    >
+                                      <ExternalLink className="w-4 h-4" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => setDeleteId(link.id)}
+                                      title="Delete Link"
+                                      className="text-destructive hover:text-destructive h-8 w-8"
+                                    >
+                                      <Trash2 className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                </TableCell>
+                              </TableRow>
+
+                              {/* Expanded Guest Rows */}
+                              {isExpanded && linkInvitees.length > 0 && linkInvitees.map((invitee, inviteeIndex) => (
+                                <TableRow 
+                                  key={invitee.id}
+                                  className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} border-l-4 border-l-primary/20`}
+                                >
+                                  <TableCell></TableCell>
+                                  <TableCell colSpan={2} className="pl-8 font-medium">
+                                    {invitee.name}
+                                  </TableCell>
+                                  <TableCell>
+                                    {invitee.is_attending === null ? (
+                                      <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700">
+                                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                        Pending
+                                      </Badge>
+                                    ) : invitee.is_attending ? (
+                                      <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+                                        <Check className="w-3 h-3 mr-1" />
+                                        Attending
+                                      </Badge>
+                                    ) : (
+                                      <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
+                                        <X className="w-3 h-3 mr-1" />
+                                        Not Attending
+                                      </Badge>
+                                    )}
+                                  </TableCell>
+                                  <TableCell colSpan={2} className="text-sm text-muted-foreground">
+                                    {invitee.is_attending !== null 
+                                      ? `Responded: ${new Date(invitee.created_at).toLocaleDateString('en-US', {
+                                          month: 'short',
+                                          day: 'numeric',
+                                          year: 'numeric'
+                                        })}`
+                                      : '-'}
+                                  </TableCell>
+                                </TableRow>
+                              ))}
+
+                              {/* Show message if no invitees */}
+                              {isExpanded && linkInvitees.length === 0 && (
+                                <TableRow className={linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'}>
+                                  <TableCell></TableCell>
+                                  <TableCell colSpan={5} className="text-center py-4 text-sm text-muted-foreground italic">
+                                    No guests added to this invitation yet
+                                  </TableCell>
+                                </TableRow>
                               )}
-                            </TableCell>
-                            <TableCell className="text-sm text-muted-foreground">
-                              {invitee.is_attending !== null 
-                                ? new Date(invitee.created_at).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    year: 'numeric'
-                                  })
-                                : '-'}
-                            </TableCell>
-                            {inviteeIndex === 0 && (
-                              <TableCell 
-                                rowSpan={linkInvitees.length}
-                                className="text-right border-l border-border/50"
-                              >
-                                <div className="flex gap-1 justify-end">
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={() => copyToClipboard(link.unique_slug, link.number_of_persons)}
-                                    title="Copy Link"
-                                    className="h-8 w-8"
-                                  >
-                                    <Copy className="w-4 h-4" />
-                                  </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={() => window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank')}
-                                    title="Open Link"
-                                    className="h-8 w-8"
-                                  >
-                                    <ExternalLink className="w-4 h-4" />
-                                  </Button>
-                                  <Button
-                                    size="icon"
-                                    variant="ghost"
-                                    onClick={() => setDeleteId(link.id)}
-                                    title="Delete Link"
-                                    className="text-destructive hover:text-destructive h-8 w-8"
-                                  >
-                                    <Trash2 className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                              </TableCell>
-                            )}
-                          </TableRow>
-                        ));
-                      })}
+                            </React.Fragment>
+                          );
+                        })
+                      )}
                     </TableBody>
                   </Table>
                 </div>
