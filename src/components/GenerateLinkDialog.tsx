@@ -135,6 +135,7 @@ export const GenerateLinkDialog = ({
         <div className="space-y-4 py-4">
           <div className="space-y-2">
             <Label htmlFor="linkName">Link Name *</Label>
+            <p className="text-sm text-muted-foreground">A friendly name to identify this invitation group (e.g., "Family Smith", "Work Colleagues")</p>
             <Input
               id="linkName"
               placeholder="e.g., Family Smith"
@@ -145,6 +146,7 @@ export const GenerateLinkDialog = ({
 
           <div className="space-y-2">
             <Label htmlFor="uniqueSlug">Link Unique Identifier *</Label>
+            <p className="text-sm text-muted-foreground">A unique URL-friendly identifier that will be part of the invitation link</p>
             <Input
               id="uniqueSlug"
               placeholder="e.g., family-smith"
@@ -162,7 +164,10 @@ export const GenerateLinkDialog = ({
 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
-              <Label>Invitees ({invitees.filter(n => n.trim()).length})</Label>
+              <div>
+                <Label>Invitees ({invitees.filter(n => n.trim()).length})</Label>
+                <p className="text-sm text-muted-foreground mt-1">Add the names of people who will receive this invitation link</p>
+              </div>
               <Button
                 type="button"
                 variant="outline"
