@@ -17,13 +17,14 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 
 const WeddingInvite = () => {
-  const { slug } = useParams();
+  const { slug, linkSlug, numberOfPersons } = useParams();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const [wedding, setWedding] = useState<any>(null);
   const [locations, setLocations] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
   const [giftCards, setGiftCards] = useState<any[]>([]);
+  const [invitees, setInvitees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
@@ -143,6 +144,25 @@ const WeddingInvite = () => {
           .order("card_order");
 
         setGiftCards(giftCardsData || []);
+
+        // Fetch invitees if linkSlug is provided
+        if (linkSlug && weddingData?.id) {
+          const { data: linkData } = await (supabase as any)
+            .from("invitation_links")
+            .select("id")
+            .eq("wedding_id", weddingData.id)
+            .eq("unique_slug", linkSlug)
+            .single();
+
+          if (linkData) {
+            const { data: inviteesData } = await (supabase as any)
+              .from("invitees")
+              .select("*")
+              .eq("invitation_link_id", linkData.id);
+
+            setInvitees(inviteesData || []);
+          }
+        }
       } catch (error) {
         console.error("Error fetching wedding:", error);
       } finally {
@@ -151,7 +171,7 @@ const WeddingInvite = () => {
     };
 
     fetchWedding();
-  }, [slug, isPreview]);
+  }, [slug, linkSlug, isPreview]);
 
   if (loading) {
     return (
@@ -189,27 +209,60 @@ const WeddingInvite = () => {
     };
 
     const content = (
-      <TemplateRenderer
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isPreview={isPreview}
-        onFieldUpdate={updateFieldCustomization}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      >
-        {/* Hero content passed as children for templates that need it */}
-        <div className="text-center text-white space-y-6">
-          <h1 className="text-5xl md:text-7xl font-script">
-            {wedding.groom_name} & {wedding.bride_name}
-          </h1>
-          <p className="text-xl md:text-2xl tracking-wide">
-            {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
-          </p>
-        </div>
-      </TemplateRenderer>
+      <>
+        <TemplateRenderer
+          template={template}
+          wedding={wedding}
+          locations={locations}
+          gallery={gallery}
+          giftCards={giftCards}
+          isPreview={isPreview}
+          onFieldUpdate={updateFieldCustomization}
+          getFieldValue={getFieldValue}
+          getFieldStyle={getFieldStyle}
+        >
+          {/* Hero content passed as children for templates that need it */}
+          <div className="text-center text-white space-y-6">
+            <h1 className="text-5xl md:text-7xl font-script">
+              {wedding.groom_name} & {wedding.bride_name}
+            </h1>
+            <p className="text-xl md:text-2xl tracking-wide">
+              {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+            </p>
+          </div>
+        </TemplateRenderer>
+        
+        {/* Display invitees section if link-specific */}
+        {invitees.length > 0 && (
+          <div className="bg-gradient-soft py-16 px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
+                We're Delighted to Invite
+              </h2>
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <p className="text-lg text-muted-foreground mb-6">
+                  This invitation is specially prepared for:
+                </p>
+                <div className="space-y-3">
+                  {invitees.map((invitee: any, index: number) => (
+                    <div 
+                      key={invitee.id}
+                      className="text-2xl font-serif text-primary py-2 border-b border-border last:border-0"
+                    >
+                      {invitee.name}
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 pt-6 border-t border-border">
+                  <p className="text-lg font-semibold text-primary">
+                    Number of Guests: {numberOfPersons || invitees.length}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </>
     );
 
     if (isPreview) {

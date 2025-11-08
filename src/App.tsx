@@ -32,6 +32,7 @@ const App = () => (
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
+          <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
