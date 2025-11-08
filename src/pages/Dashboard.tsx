@@ -5,8 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar } from "lucide-react";
-import weddingClassic from "@/assets/template-wedding-classic.jpg";
-import weddingModern from "@/assets/template-wedding-modern.jpg";
+import { templates } from "@/config/templates";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -32,17 +31,22 @@ const Dashboard = () => {
     navigate("/auth");
   };
 
+  // Get wedding templates from config
+  const weddingTemplates = templates.map((template) => ({
+    id: template.id,
+    name: template.name,
+    description: template.description,
+    disabled: false,
+    isPremium: template.isPremium,
+  }));
+
   const templateCategories = [
     {
       id: "weddings",
       name: "Weddings",
       icon: Heart,
       color: "text-rose-500",
-      templates: [
-        { id: "template1", name: "Classic Elegance", description: "Traditional wedding invitation", image: weddingClassic },
-        { id: "template2", name: "Modern Romance", description: "Contemporary design with gallery", image: weddingModern },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
-      ],
+      templates: weddingTemplates,
     },
     {
       id: "birthdays",
@@ -174,24 +178,21 @@ const Dashboard = () => {
                       }`}
                       onClick={() =>
                         !template.disabled &&
-                        navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`)
+                        navigate(`/dashboard/wedding-templates`)
                       }
                     >
                       <CardHeader>
                         <div className="aspect-video rounded-lg overflow-hidden mb-4">
-                          {template.image ? (
-                            <img 
-                              src={template.image} 
-                              alt={template.name}
-                              className="w-full h-full object-cover"
-                            />
-                          ) : (
-                            <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                              <Icon className={`w-16 h-16 ${category.color} opacity-50`} />
-                            </div>
-                          )}
+                          <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
+                            <Icon className={`w-16 h-16 ${category.color} opacity-50`} />
+                          </div>
                         </div>
-                        <CardTitle className="text-xl font-serif">{template.name}</CardTitle>
+                        <CardTitle className="text-xl font-serif flex items-center gap-2">
+                          {template.name}
+                          {template.isPremium && (
+                            <Badge variant="secondary" className="text-xs">Premium</Badge>
+                          )}
+                        </CardTitle>
                         <CardDescription>{template.description}</CardDescription>
                       </CardHeader>
                       <CardContent>
