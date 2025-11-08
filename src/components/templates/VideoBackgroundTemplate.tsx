@@ -146,7 +146,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Family Names Section */}
         <section className="min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="max-w-4xl w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 md:p-16 text-white shadow-2xl">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
@@ -176,7 +176,7 @@ export const VideoBackgroundTemplate = ({
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-white/20">
+              <div className="pt-8 border-t border-border">
                 <EditableField
                   fieldId="invitation-text"
                   text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding celebration")}
@@ -194,7 +194,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Countdown Section */}
         <section className="min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="max-w-4xl w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 md:p-16 shadow-2xl">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
         </section>
@@ -203,7 +203,7 @@ export const VideoBackgroundTemplate = ({
         {(ceremony || venue) && (
           <section className="min-h-screen flex items-center justify-center px-4 py-20">
             <div className="max-w-5xl w-full">
-              <div className="text-center mb-12 text-white">
+              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-4xl md:text-5xl font-script mb-6">Wedding Events</h2>
                 <EditableField
                   fieldId="events-subtitle"
@@ -219,7 +219,7 @@ export const VideoBackgroundTemplate = ({
 
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
-                  <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-xl text-white space-y-6">
+                  <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
                     <h3 className="text-3xl font-script mb-4">Ceremony</h3>
                     <p className="text-2xl font-bold">{ceremony.time}</p>
                     <div className="space-y-2">
@@ -231,7 +231,7 @@ export const VideoBackgroundTemplate = ({
                         href={ceremony.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg transition-colors border border-white/30"
+                        className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg transition-colors"
                       >
                         View on Map
                       </a>
@@ -239,7 +239,7 @@ export const VideoBackgroundTemplate = ({
                   </div>
                 )}
                 {venue && (
-                  <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-8 rounded-xl text-white space-y-6">
+                  <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
                     <h3 className="text-3xl font-script mb-4">Reception</h3>
                     <p className="text-2xl font-bold">{venue.time}</p>
                     <div className="space-y-2">
@@ -251,7 +251,7 @@ export const VideoBackgroundTemplate = ({
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block bg-white/20 hover:bg-white/30 text-white px-6 py-3 rounded-lg transition-colors border border-white/30"
+                        className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg transition-colors"
                       >
                         View on Map
                       </a>
@@ -266,8 +266,8 @@ export const VideoBackgroundTemplate = ({
         {/* Gift Cards Section */}
         {giftCards.length > 0 && (
           <section className="min-h-screen flex items-center justify-center px-4 py-20">
-            <div className="max-w-4xl w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 md:p-16 shadow-2xl">
-              <h2 className="text-4xl md:text-5xl font-script text-center mb-12 text-white">Wedding Gift</h2>
+            <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+              <h2 className="text-4xl md:text-5xl font-script text-center mb-12">Wedding Gift</h2>
               <GiftCards giftCards={giftCards} />
             </div>
           </section>
@@ -275,7 +275,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Closing Message */}
         <section className="min-h-screen flex items-center justify-center px-4 py-20">
-          <div className="max-w-3xl w-full bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl p-8 md:p-16 text-white text-center shadow-2xl space-y-8">
+          <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
             <EditableField
               fieldId="closing-message"
               text={getFieldValue("closing-message", "We can't wait to celebrate with you! Thank you for being part of our special day.")}
@@ -288,7 +288,7 @@ export const VideoBackgroundTemplate = ({
             />
 
             {wedding.rsvp_deadline && (
-              <div className="pt-8 border-t border-white/20">
+              <div className="pt-8 border-t border-border">
                 <p className="text-lg uppercase tracking-widest mb-2 opacity-70">
                   RSVP By
                 </p>
