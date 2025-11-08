@@ -35,6 +35,15 @@ export const GenerateLinkDialog = ({
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [invitees, setInvitees] = useState<string[]>([""]);
   const [loading, setLoading] = useState(false);
+  const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
+
+  const handleLinkNameChange = (value: string) => {
+    setLinkName(value);
+    if (!slugManuallyEdited) {
+      const autoSlug = value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      setUniqueSlug(autoSlug);
+    }
+  };
 
   const handleAddInvitee = () => {
     setInvitees([...invitees, ""]);
@@ -104,6 +113,7 @@ export const GenerateLinkDialog = ({
       setLinkName("");
       setUniqueSlug("");
       setInvitees([""]);
+      setSlugManuallyEdited(false);
       onSuccess();
       onOpenChange(false);
     } catch (error) {
@@ -140,7 +150,7 @@ export const GenerateLinkDialog = ({
               id="linkName"
               placeholder="e.g., Family Smith"
               value={linkName}
-              onChange={(e) => setLinkName(e.target.value)}
+              onChange={(e) => handleLinkNameChange(e.target.value)}
             />
           </div>
 
@@ -151,7 +161,10 @@ export const GenerateLinkDialog = ({
               id="uniqueSlug"
               placeholder="e.g., family-smith"
               value={uniqueSlug}
-              onChange={(e) => setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'))}
+              onChange={(e) => {
+                setSlugManuallyEdited(true);
+                setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'));
+              }}
             />
           </div>
 
