@@ -170,33 +170,37 @@ const MyEvents = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <Button
-                      variant="outline"
-                      className="w-full"
-                      onClick={() => {
-                        setSelectedWeddingId(wedding.id);
-                        setSelectedWeddingSlug(wedding.slug);
-                        setGenerateLinkOpen(true);
-                      }}
-                    >
-                      <Link2 className="w-4 h-4 mr-2" />
-                      Generate Link
-                    </Button>
-
-                    <Collapsible>
-                      <CollapsibleTrigger asChild>
-                        <Button variant="outline" className="w-full">
-                          Manage Links
+                    {wedding.status === 'published' && (
+                      <>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => {
+                            setSelectedWeddingId(wedding.id);
+                            setSelectedWeddingSlug(wedding.slug);
+                            setGenerateLinkOpen(true);
+                          }}
+                        >
+                          <Link2 className="w-4 h-4 mr-2" />
+                          Generate Link
                         </Button>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent className="mt-4">
-                        <LinkManagementTable
-                          weddingId={wedding.id}
-                          weddingSlug={wedding.slug}
-                          refresh={refreshLinks}
-                        />
-                      </CollapsibleContent>
-                    </Collapsible>
+
+                        <Collapsible>
+                          <CollapsibleTrigger asChild>
+                            <Button variant="outline" className="w-full">
+                              Manage Links
+                            </Button>
+                          </CollapsibleTrigger>
+                          <CollapsibleContent className="mt-4">
+                            <LinkManagementTable
+                              weddingId={wedding.id}
+                              weddingSlug={wedding.slug}
+                              refresh={refreshLinks}
+                            />
+                          </CollapsibleContent>
+                        </Collapsible>
+                      </>
+                    )}
 
                     <div className="flex justify-end gap-2 pt-2">
                       <Button
