@@ -198,15 +198,28 @@ const WeddingInvite = () => {
 
     setSubmittingRsvp(true);
     try {
-      // Update each invitee's attendance status
-      const updates = Object.entries(rsvpResponses).map(([inviteeId, isAttending]) =>
+      // Update all invitees - checked boxes get true, unchecked get false
+      const updates = invitees.map((invitee) =>
         supabase
           .from("invitees")
-          .update({ is_attending: isAttending })
-          .eq("id", inviteeId)
+          .update({ is_attending: rsvpResponses[invitee.id] === true })
+          .eq("id", invitee.id)
       );
 
-      await Promise.all(updates);
+      const results = await Promise.all(updates);
+      
+      // Check if any updates failed
+      const hasError = results.some(result => result.error);
+      if (hasError) {
+        throw new Error("Failed to update some invitees");
+      }
+
+      // Refresh invitees data to show updated status
+      const updatedInvitees = invitees.map(invitee => ({
+        ...invitee,
+        is_attending: rsvpResponses[invitee.id] === true
+      }));
+      setInvitees(updatedInvitees);
 
       toast({
         title: "RSVP Submitted",
@@ -342,7 +355,7 @@ const WeddingInvite = () => {
                   ) : (
                     <Button 
                       onClick={handleRsvpSubmit} 
-                      disabled={submittingRsvp || Object.keys(rsvpResponses).length === 0}
+                      disabled={submittingRsvp}
                       className="w-full"
                     >
                       {submittingRsvp ? "Submitting..." : "Submit RSVP"}

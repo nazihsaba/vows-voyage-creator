@@ -39,6 +39,31 @@ export const InviteeListDialog = ({
     }
   }, [linkId, open]);
 
+  // Set up real-time subscription for invitee updates
+  useEffect(() => {
+    if (!linkId || !open) return;
+
+    const channel = supabase
+      .channel('invitees-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'invitees',
+          filter: `invitation_link_id=eq.${linkId}`
+        },
+        () => {
+          fetchInvitees();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [linkId, open]);
+
   const fetchInvitees = async () => {
     if (!linkId) return;
 
