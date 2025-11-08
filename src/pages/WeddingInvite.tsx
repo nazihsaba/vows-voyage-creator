@@ -22,6 +22,7 @@ const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
+  const isDraftPreview = searchParams.get("draft") === "true";
   const [wedding, setWedding] = useState<any>(null);
   const [locations, setLocations] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
@@ -38,7 +39,7 @@ const WeddingInvite = () => {
   const template = useTemplate(wedding?.template_type);
 
   const updateFieldCustomization = async (fieldId: string, text: string, style: any) => {
-    if (!wedding?.id || !isPreview) return;
+    if (!wedding?.id || !isPreview || isDraftPreview) return;
 
     try {
       const updatedCustomizations = {
@@ -69,7 +70,7 @@ const WeddingInvite = () => {
   };
 
   const updateMainImage = async (newUrl: string) => {
-    if (!wedding?.id || !isPreview) return;
+    if (!wedding?.id || !isPreview || isDraftPreview) return;
 
     try {
       const { error } = await supabase
@@ -104,9 +105,62 @@ const WeddingInvite = () => {
 
   useEffect(() => {
     const fetchWedding = async () => {
-      if (!slug) return;
-
       try {
+        // Check for draft preview data in sessionStorage
+        if (isDraftPreview) {
+          const previewDataStr = sessionStorage.getItem('weddingPreviewData');
+          if (previewDataStr) {
+            const previewData = JSON.parse(previewDataStr);
+            
+            // Set wedding data from preview
+            setWedding({
+              ...previewData,
+              id: 'preview-draft',
+              status: 'draft',
+            });
+            
+            // Set locations from preview
+            const locationData = [];
+            if (previewData.locations?.ceremony_location) {
+              locationData.push({
+                type: 'ceremony',
+                location_name: previewData.locations.ceremony_location,
+                time: previewData.locations.ceremony_time,
+                location_link: previewData.locations.ceremony_location_link,
+              });
+            }
+            if (previewData.locations?.venue_location) {
+              locationData.push({
+                type: 'venue',
+                location_name: previewData.locations.venue_location,
+                time: previewData.locations.venue_time,
+                location_link: previewData.locations.venue_location_link,
+              });
+            }
+            setLocations(locationData);
+            
+            // Set gallery from preview
+            if (previewData.galleryPreviews && previewData.galleryPreviews.length > 0) {
+              const galleryData = previewData.galleryPreviews.map((url: string, index: number) => ({
+                id: `preview-${index}`,
+                image_url: url,
+                image_order: index + 1,
+              }));
+              setGallery(galleryData);
+            }
+            
+            // Set gift cards from preview
+            if (previewData.giftCards) {
+              setGiftCards(previewData.giftCards.filter((card: any) => card.card_name && card.card_number));
+            }
+            
+            setLoading(false);
+            return;
+          }
+        }
+
+        if (!slug) return;
+
         // Fetch wedding data (allow preview for draft status)
         let query = supabase
           .from("weddings")
@@ -184,7 +238,7 @@ const WeddingInvite = () => {
     };
 
     fetchWedding();
-  }, [slug, linkSlug, isPreview]);
+  }, [slug, linkSlug, isPreview, isDraftPreview]);
 
   const handleRsvpToggle = (inviteeId: string, isAttending: boolean) => {
     setRsvpResponses(prev => ({

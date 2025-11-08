@@ -828,16 +828,31 @@ const WeddingForm = () => {
                 <Button type="submit" disabled={loading || uploading} className="flex-1">
                   {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
-                {formData.slug && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    onClick={() => window.open(`/invite/${formData.slug}?preview=true`, "_blank")}
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    Preview
-                  </Button>
-                )}
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    // For existing weddings, open normal preview
+                    if (formData.slug) {
+                      window.open(`/invite/${formData.slug}?preview=true`, "_blank");
+                    } else {
+                      // For new weddings, store preview data and open preview
+                      const previewData = {
+                        ...formData,
+                        locations,
+                        giftCards,
+                        imagePreview,
+                        galleryPreviews,
+                      };
+                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                      window.open(`/invite/preview?draft=true`, "_blank");
+                    }
+                  }}
+                  disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Preview
+                </Button>
                 {id && (
                   <Button
                     type="button"
