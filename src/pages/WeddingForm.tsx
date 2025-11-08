@@ -161,19 +161,26 @@ const WeddingForm = () => {
       return;
     }
 
-    const newPreviews: string[] = [];
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        newPreviews.push(reader.result as string);
-        if (newPreviews.length === files.length) {
-          setGalleryPreviews([...galleryPreviews, ...newPreviews]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    // Immediately update files state to avoid duplication
+    setGalleryFiles(prev => [...prev, ...files]);
 
-    setGalleryFiles([...galleryFiles, ...files]);
+    // Use Promise.all to handle all FileReaders properly
+    Promise.all(
+      files.map((file) => {
+        return new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+        });
+      })
+    ).then((newPreviews) => {
+      setGalleryPreviews(prev => [...prev, ...newPreviews]);
+    });
+    
+    // Reset the input value to allow re-uploading the same file
+    e.target.value = '';
   };
 
   const removeGalleryImage = (index: number) => {
