@@ -4,7 +4,6 @@ export const templateMapping: Record<string, string> = {
   'template3': 'romantic-fullscreen',
   'template4': 'elegant-fullscreen',
   'template5': 'modern-wedding',
-  'template6': 'video-cinematic',
 };
 
 // Reverse mapping for saving to database
@@ -14,7 +13,6 @@ export const reverseTemplateMapping: Record<string, string> = {
   'romantic-fullscreen': 'template3',
   'elegant-fullscreen': 'template4',
   'modern-wedding': 'template5',
-  'video-cinematic': 'template6',
 };
 
 /**

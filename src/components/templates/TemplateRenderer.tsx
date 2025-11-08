@@ -7,7 +7,6 @@ import { EditableField } from '@/components/EditableField';
 import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
 import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { ModernTemplate } from './ModernTemplate';
-import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -70,21 +69,6 @@ export const TemplateRenderer = ({
   if (template.component === 'ModernTemplate') {
     return (
       <ModernTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'VideoBackgroundTemplate') {
-    return (
-      <VideoBackgroundTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
