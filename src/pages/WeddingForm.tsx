@@ -16,6 +16,7 @@ const WeddingForm = () => {
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [createdWeddingId, setCreatedWeddingId] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
@@ -270,6 +271,8 @@ const WeddingForm = () => {
 
         if (error) throw error;
         weddingId = data.id;
+        setCreatedWeddingId(data.id);
+        setFormData({ ...formData, slug: data.slug, main_picture_url: imageUrl });
       }
 
       // Upload gallery images if template supports gallery
@@ -377,10 +380,9 @@ const WeddingForm = () => {
 
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
       
-      // Navigate to my events page on create, stay on form on update
-      if (!id) {
-        navigate("/dashboard/my-events");
-      }
+      // Clear gallery files after successful save
+      setGalleryFiles([]);
+      setGalleryPreviews([]);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -828,66 +830,69 @@ const WeddingForm = () => {
                 <Button type="submit" disabled={loading || uploading} className="flex-1">
                   {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => {
-                    // For existing weddings, open normal preview
-                    if (formData.slug) {
-                      window.open(`/invite/${formData.slug}?preview=true`, "_blank");
-                    } else {
-                      // For new weddings, store preview data and open preview
-                      const previewData = {
-                        ...formData,
-                        locations,
-                        giftCards,
-                        imagePreview,
-                        galleryPreviews,
-                      };
-                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
-                      window.open(`/invite/preview?draft=true`, "_blank");
-                    }
-                  }}
-                  disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
-                >
-                  <Eye className="w-4 h-4 mr-2" />
-                  Preview
-                </Button>
-                {id && (
-                  <Button
-                    type="button"
-                    variant={formData.status === "published" ? "outline" : "default"}
-                    disabled={loading}
-                    onClick={async () => {
-                      if (!id) return;
-                      setLoading(true);
-                      try {
-                        const newStatus = formData.status === "published" ? "draft" : "published";
-                        const { error } = await supabase
-                          .from("weddings")
-                          .update({ status: newStatus })
-                          .eq("id", id);
-                        
-                        if (error) throw error;
-                        
-                        setFormData({ ...formData, status: newStatus });
-                        toast({ 
-                          title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
-                          description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
-                        });
-                      } catch (error: any) {
-                        toast({
-                          title: "Error",
-                          description: error.message,
-                          variant: "destructive",
-                        });
-                      } finally {
-                        setLoading(false);
-                      }
-                    }}
-                  >
-                    {formData.status === "published" ? "Unpublish" : "Publish"}
-                  </Button>
+                {(id || createdWeddingId) && (
+                  <>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => {
+                        // For existing weddings, open normal preview
+                        if (formData.slug) {
+                          window.open(`/invite/${formData.slug}?preview=true`, "_blank");
+                        } else {
+                          // For new weddings, store preview data and open preview
+                          const previewData = {
+                            ...formData,
+                            locations,
+                            giftCards,
+                            imagePreview,
+                            galleryPreviews,
+                          };
+                          sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                          window.open(`/invite/preview?draft=true`, "_blank");
+                        }
+                      }}
+                      disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Preview
+                    </Button>
+                    <Button
+                      type="button"
+                      variant={formData.status === "published" ? "outline" : "default"}
+                      disabled={loading}
+                      onClick={async () => {
+                        const weddingId = id || createdWeddingId;
+                        if (!weddingId) return;
+                        setLoading(true);
+                        try {
+                          const newStatus = formData.status === "published" ? "draft" : "published";
+                          const { error } = await supabase
+                            .from("weddings")
+                            .update({ status: newStatus })
+                            .eq("id", weddingId);
+                          
+                          if (error) throw error;
+                          
+                          setFormData({ ...formData, status: newStatus });
+                          toast({ 
+                            title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
+                            description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
+                          });
+                        } catch (error: any) {
+                          toast({
+                            title: "Error",
+                            description: error.message,
+                            variant: "destructive",
+                          });
+                        } finally {
+                          setLoading(false);
+                        }
+                      }}
+                    >
+                      {formData.status === "published" ? "Unpublish" : "Publish"}
+                    </Button>
+                  </>
                 )}
               </div>
             </form>
