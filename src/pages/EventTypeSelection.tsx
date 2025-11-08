@@ -47,7 +47,7 @@ const EventTypeSelection = () => {
           <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
             Select Event Type
           </h1>
-          <Button variant="outline" onClick={() => navigate(-1)}>
+          <Button variant="outline" onClick={() => navigate("/dashboard/my-events")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
