@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar } from "lucide-react";
 import weddingClassic from "@/assets/template-wedding-classic.jpg";
 import weddingModern from "@/assets/template-wedding-modern.jpg";
@@ -13,6 +14,7 @@ import anniversaryTemplate from "@/assets/template-anniversary.jpg";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -109,22 +111,50 @@ const Dashboard = () => {
               Choose Your Template
             </h1>
           </div>
-          <Button variant="outline" onClick={handleLogout}>
-            <LogOut className="w-4 h-4 mr-2" />
-            Logout
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={() => navigate("/dashboard/my-events")}>
+              My Events
+            </Button>
+            <Button variant="outline" onClick={handleLogout}>
+              <LogOut className="w-4 h-4 mr-2" />
+              Logout
+            </Button>
+          </div>
         </div>
       </header>
 
       <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex justify-center mb-8">
-          <Button size="lg" onClick={() => navigate("/dashboard/my-events")}>
-            My Events
-          </Button>
+        {/* Filter Chips */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2 justify-center">
+            <Badge
+              variant={selectedCategory === null ? "default" : "outline"}
+              className="cursor-pointer px-4 py-2 text-sm hover:bg-primary/10 transition-colors"
+              onClick={() => setSelectedCategory(null)}
+            >
+              All Events
+            </Badge>
+            {templateCategories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <Badge
+                  key={category.id}
+                  variant={selectedCategory === category.id ? "default" : "outline"}
+                  className="cursor-pointer px-4 py-2 text-sm hover:bg-primary/10 transition-colors"
+                  onClick={() => setSelectedCategory(category.id)}
+                >
+                  <Icon className={`w-4 h-4 mr-2 ${selectedCategory === category.id ? '' : category.color}`} />
+                  {category.name}
+                </Badge>
+              );
+            })}
+          </div>
         </div>
         
         <div className="space-y-12">
-          {templateCategories.map((category) => {
+          {templateCategories
+            .filter(category => selectedCategory === null || category.id === selectedCategory)
+            .map((category) => {
             const Icon = category.icon;
             return (
               <div key={category.id}>
