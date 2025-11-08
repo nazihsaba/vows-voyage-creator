@@ -224,6 +224,21 @@ export const AnthonyOdileCarouselTemplate = ({
             style={getStyle('rsvp_message')}
             multiline
           />
+          
+          {wedding.rsvp_deadline && (
+            <div className="pt-8 border-t border-white/20 mt-8">
+              <p className="text-lg uppercase tracking-widest mb-2 text-white/90">
+                Kindly confirm your attendance before this date:
+              </p>
+              <p className="text-3xl font-bold">
+                {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>

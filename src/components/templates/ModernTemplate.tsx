@@ -241,30 +241,20 @@ export const ModernTemplate = ({
             className="text-2xl md:text-3xl leading-relaxed"
           />
 
-          <div className="pt-8 border-t border-white/20">
-            <EditableField
-              fieldId="rsvp-text"
-              text={getFieldValue("rsvp-text", "Please RSVP by")}
-              style={getFieldStyle("rsvp-text")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-lg uppercase tracking-widest mb-2 text-white/70"
-            />
-            <EditableField
-              fieldId="rsvp-date"
-              text={getFieldValue("rsvp-date", new Date(new Date(wedding.wedding_date).getTime() - 20 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', { 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              }))}
-              style={getFieldStyle("rsvp-date")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-3xl font-bold"
-            />
-          </div>
+          {wedding.rsvp_deadline && (
+            <div className="pt-8 border-t border-white/20">
+              <p className="text-lg uppercase tracking-widest mb-2 text-white/70">
+                Kindly confirm your attendance before this date:
+              </p>
+              <p className="text-3xl font-bold">
+                {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
+                  year: 'numeric', 
+                  month: 'long', 
+                  day: 'numeric' 
+                })}
+              </p>
+            </div>
+          )}
         </div>
       </section>
     </div>
