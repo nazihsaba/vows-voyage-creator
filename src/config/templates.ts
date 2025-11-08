@@ -397,6 +397,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  
+  // Video Background Template
+  {
+    id: 'video-cinematic',
+    name: 'Cinematic Video',
+    category: 'modern',
+    description: 'Stunning video background with smooth scrolling effects and modern glassmorphism',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'VideoBackgroundTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'countdown', enabled: true, order: 3, customizable: true },
+      { id: 'location', enabled: true, order: 4, customizable: true },
+      { id: 'gifts', enabled: true, order: 5, customizable: true },
+    ],
+    style: {
+      colorScheme: {
+        primary: 'rgb(255, 255, 255)',
+        secondary: 'rgb(251, 113, 133)',
+        accent: 'rgba(255, 255, 255, 0.1)',
+        background: 'rgb(0, 0, 0)',
+        text: 'rgb(255, 255, 255)',
+      },
+      fontPrimary: "'Playfair Display', serif",
+      fontSecondary: "'Inter', sans-serif",
+      headingSize: 'xl',
+      layout: 'single-page',
+      spacing: 'comfortable',
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
