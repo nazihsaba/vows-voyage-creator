@@ -273,6 +273,7 @@ export type Database = {
           template_type: string | null
           updated_at: string | null
           user_id: string
+          video_url: string | null
           wedding_date: string
         }
         Insert: {
@@ -298,6 +299,7 @@ export type Database = {
           template_type?: string | null
           updated_at?: string | null
           user_id: string
+          video_url?: string | null
           wedding_date: string
         }
         Update: {
@@ -323,6 +325,7 @@ export type Database = {
           template_type?: string | null
           updated_at?: string | null
           user_id?: string
+          video_url?: string | null
           wedding_date?: string
         }
         Relationships: []
