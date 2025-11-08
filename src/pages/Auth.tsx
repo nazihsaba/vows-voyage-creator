@@ -97,27 +97,43 @@ const Auth = () => {
         throw new Error(verifyData?.error || "Invalid OTP code");
       }
 
-      // Create the account
-      const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
-          data: {
-            username,
+      // Check if this is password reset or sign up
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .ilike("email", email)
+        .maybeSingle();
+
+      if (existingProfile) {
+        // Password reset flow - show new password form (keep OTP for verification)
+        toast({
+          title: "Code Verified!",
+          description: "Please set your new password.",
+        });
+        setMode("newPassword");
+      } else {
+        // Sign up flow - create the account
+        const { error: signUpError } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${window.location.origin}/dashboard`,
+            data: {
+              username,
+            },
           },
-        },
-      });
+        });
 
-      if (signUpError) throw signUpError;
+        if (signUpError) throw signUpError;
 
-      toast({
-        title: "Account Created!",
-        description: "You can now log in with your credentials.",
-      });
-      
-      setMode("login");
-      setOtpCode("");
+        toast({
+          title: "Account Created!",
+          description: "You can now log in with your credentials.",
+        });
+        
+        setMode("login");
+        setOtpCode("");
+      }
     } catch (error: any) {
       toast({
         title: "Verification Failed",
@@ -163,22 +179,34 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
-        redirectTo: `${window.location.origin}/auth`,
+      // Check if user exists
+      const { data: existingProfile } = await supabase
+        .from("profiles")
+        .select("email")
+        .ilike("email", email)
+        .maybeSingle();
+
+      if (!existingProfile) {
+        throw new Error("No account found with this email address");
+      }
+
+      // Send OTP for password reset
+      const { error } = await supabase.functions.invoke("send-otp", {
+        body: { email, userName: "User" },
       });
 
       if (error) throw error;
 
       toast({
-        title: "Reset Link Sent!",
-        description: "Check your email for the password reset link.",
+        title: "Verification Code Sent!",
+        description: "Check your email for the verification code to reset your password.",
       });
       
-      setMode("login");
+      setMode("verify");
     } catch (error: any) {
       toast({
         title: "Reset Failed",
-        description: error.message || "Failed to send reset link.",
+        description: error.message || "Failed to send verification code.",
         variant: "destructive",
       });
     } finally {
@@ -210,18 +238,30 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { error } = await supabase.auth.updateUser({
-        password: newPassword,
+      // Call edge function to reset password
+      const { data, error } = await supabase.functions.invoke("reset-password", {
+        body: { 
+          email, 
+          newPassword,
+          otpCode 
+        },
       });
 
       if (error) throw error;
+      
+      if (!data?.success) {
+        throw new Error(data?.error || "Failed to reset password");
+      }
 
       toast({
         title: "Password Updated!",
-        description: "Your password has been successfully updated.",
+        description: "Your password has been successfully updated. You can now log in.",
       });
       
-      navigate("/dashboard");
+      setMode("login");
+      setNewPassword("");
+      setConfirmPassword("");
+      setOtpCode("");
     } catch (error: any) {
       toast({
         title: "Update Failed",
@@ -237,7 +277,7 @@ const Auth = () => {
     setLoading(true);
     try {
       const { error } = await supabase.functions.invoke("send-otp", {
-        body: { email, userName: username },
+        body: { email, userName: username || "User" },
       });
 
       if (error) throw error;
@@ -413,13 +453,23 @@ const Auth = () => {
                 <Button
                   type="button"
                   variant="link"
-                  onClick={() => {
-                    setMode("signup");
+                  onClick={async () => {
+                    const { data } = await supabase
+                      .from("profiles")
+                      .select("email")
+                      .ilike("email", email)
+                      .maybeSingle();
+                    
+                    if (data) {
+                      setMode("reset");
+                    } else {
+                      setMode("signup");
+                    }
                     setOtpCode("");
                   }}
                   className="text-sm"
                 >
-                  Change Details
+                  Change Email
                 </Button>
                 <Button
                   type="button"
