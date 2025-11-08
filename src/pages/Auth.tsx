@@ -9,9 +9,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Heart, Mail, KeyRound } from "lucide-react";
 
 const Auth = () => {
-  const [mode, setMode] = useState<"login" | "signup" | "verify" | "reset">("login");
+  const [mode, setMode] = useState<"login" | "signup" | "verify" | "reset" | "newPassword">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [username, setUsername] = useState("");
   const [otpCode, setOtpCode] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +21,15 @@ const Auth = () => {
   const { toast } = useToast();
 
   useEffect(() => {
+    // Check if this is a password recovery callback
+    const hashParams = new URLSearchParams(window.location.hash.substring(1));
+    const type = hashParams.get('type');
+    
+    if (type === 'recovery') {
+      setMode("newPassword");
+      return;
+    }
+
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         navigate("/dashboard");
@@ -175,6 +186,53 @@ const Auth = () => {
     }
   };
 
+  const handleUpdatePassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (newPassword !== confirmPassword) {
+      toast({
+        title: "Passwords Don't Match",
+        description: "Please make sure both passwords are identical.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      toast({
+        title: "Password Too Short",
+        description: "Password must be at least 6 characters long.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
+      });
+
+      if (error) throw error;
+
+      toast({
+        title: "Password Updated!",
+        description: "Your password has been successfully updated.",
+      });
+      
+      navigate("/dashboard");
+    } catch (error: any) {
+      toast({
+        title: "Update Failed",
+        description: error.message || "Failed to update password.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleResendOTP = async () => {
     setLoading(true);
     try {
@@ -215,12 +273,14 @@ const Auth = () => {
             {mode === "signup" && "Create Account"}
             {mode === "verify" && "Verify Email"}
             {mode === "reset" && "Reset Password"}
+            {mode === "newPassword" && "Set New Password"}
           </CardTitle>
           <CardDescription>
             {mode === "login" && "Sign in to your account"}
             {mode === "signup" && "Create a new account to get started"}
             {mode === "verify" && "Enter the 6-digit code sent to your email"}
             {mode === "reset" && "Enter your email to receive a reset link"}
+            {mode === "newPassword" && "Enter your new password below"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -400,6 +460,38 @@ const Auth = () => {
                   Back to login
                 </Button>
               </div>
+            </form>
+          )}
+
+          {mode === "newPassword" && (
+            <form onSubmit={handleUpdatePassword} className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="newPassword">New Password</Label>
+                <Input
+                  id="newPassword"
+                  type="password"
+                  value={newPassword}
+                  onChange={(e) => setNewPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="confirmPassword">Confirm Password</Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  minLength={6}
+                />
+              </div>
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? "Updating..." : "Update Password"}
+              </Button>
             </form>
           )}
         </CardContent>
