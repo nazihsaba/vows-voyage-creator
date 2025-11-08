@@ -462,7 +462,6 @@ const WeddingForm = () => {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="rsvp_deadline">Confirmation Deadline</Label>
-                  <p className="text-sm text-muted-foreground">Last date guests can RSVP</p>
                   <Input
                     id="rsvp_deadline"
                     type="date"

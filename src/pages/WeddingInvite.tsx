@@ -232,6 +232,25 @@ const WeddingInvite = () => {
           </div>
         </TemplateRenderer>
         
+        {/* Display confirmation deadline if set */}
+        {wedding.rsvp_deadline && (
+          <div className="bg-gradient-to-br from-primary/20 to-accent/20 py-16 px-4">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
+                Kindly Confirm Your Presence
+              </h2>
+              <div className="bg-white/90 backdrop-blur rounded-lg shadow-lg p-8">
+                <p className="text-lg text-muted-foreground mb-4">
+                  Please let us know if you can join us by
+                </p>
+                <p className="text-3xl md:text-4xl font-serif text-primary font-bold">
+                  {format(new Date(wedding.rsvp_deadline), "MMMM dd, yyyy")}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {/* Display invitees section if link-specific */}
         {invitees.length > 0 && (
           <div className="bg-gradient-soft py-16 px-4">
