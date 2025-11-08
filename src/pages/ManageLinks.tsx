@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -11,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X } from "lucide-react";
+import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, ChevronDown, ChevronUp, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -25,6 +25,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface InvitationLink {
   id: string;
@@ -61,6 +62,7 @@ const ManageLinks = () => {
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
+  const [expandedCards, setExpandedCards] = useState<Record<string, boolean>>({});
 
   useEffect(() => {
     if (weddingId) {
@@ -169,6 +171,25 @@ const ManageLinks = () => {
     return { attending, notAttending, pending, total: linkInvitees.length };
   };
 
+  const toggleCard = (linkId: string) => {
+    setExpandedCards(prev => ({
+      ...prev,
+      [linkId]: !prev[linkId]
+    }));
+  };
+
+  const expandAll = () => {
+    const allExpanded: Record<string, boolean> = {};
+    links.forEach(link => {
+      allExpanded[link.id] = true;
+    });
+    setExpandedCards(allExpanded);
+  };
+
+  const collapseAll = () => {
+    setExpandedCards({});
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
@@ -220,8 +241,9 @@ const ManageLinks = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {links.length === 0 ? (
-          <Card>
+          <Card className="shadow-elegant">
             <CardContent className="py-12 text-center">
+              <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
               <p className="text-muted-foreground mb-4">No invitation links created yet</p>
               <Button onClick={() => setGenerateLinkOpen(true)}>
                 Generate Your First Link
@@ -229,116 +251,194 @@ const ManageLinks = () => {
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
+            <div className="flex justify-end gap-2 mb-4">
+              <Button variant="outline" size="sm" onClick={expandAll}>
+                Expand All
+              </Button>
+              <Button variant="outline" size="sm" onClick={collapseAll}>
+                Collapse All
+              </Button>
+            </div>
+
             {links.map((link) => {
               const stats = getRSVPStats(link.id);
               const linkInvitees = invitees[link.id] || [];
+              const isExpanded = expandedCards[link.id] || false;
               
               return (
-                <Card key={link.id} className="shadow-soft">
-                  <CardHeader>
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1">
-                        <CardTitle className="text-xl font-serif mb-2">
-                          {link.link_name}
-                        </CardTitle>
-                        <div className="flex flex-wrap gap-2 items-center text-sm text-muted-foreground">
-                          <span>Created: {new Date(link.created_at).toLocaleDateString()}</span>
-                          <span>•</span>
-                          <span>{link.number_of_persons} {link.number_of_persons === 1 ? 'person' : 'persons'}</span>
-                          <span>•</span>
-                          <div className="flex gap-2">
-                            <Badge variant="outline" className="bg-green-50">
-                              {stats.attending} Attending
-                            </Badge>
-                            <Badge variant="outline" className="bg-red-50">
-                              {stats.notAttending} Not Attending
-                            </Badge>
-                            <Badge variant="outline" className="bg-yellow-50">
-                              {stats.pending} Pending
-                            </Badge>
+                <Collapsible
+                  key={link.id}
+                  open={isExpanded}
+                  onOpenChange={() => toggleCard(link.id)}
+                >
+                  <Card className="shadow-soft hover:shadow-elegant transition-all duration-300 border-l-4 border-l-primary/30">
+                    <CollapsibleTrigger asChild>
+                      <CardHeader className="cursor-pointer hover:bg-accent/5 transition-colors">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                          {/* Left side - Main info */}
+                          <div className="flex-1 space-y-3">
+                            <div className="flex items-center gap-3">
+                              <h3 className="text-xl font-serif font-semibold text-foreground">
+                                {link.link_name}
+                              </h3>
+                              {isExpanded ? (
+                                <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                              ) : (
+                                <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                              )}
+                            </div>
+                            
+                            <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
+                              <span className="flex items-center gap-1">
+                                <Users className="w-4 h-4" />
+                                {stats.total} {stats.total === 1 ? 'guest' : 'guests'}
+                              </span>
+                              <span>•</span>
+                              <span>
+                                Created {new Date(link.created_at).toLocaleDateString('en-US', {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  year: 'numeric'
+                                })}
+                              </span>
+                            </div>
+
+                            {/* RSVP Summary Badges */}
+                            <div className="flex flex-wrap gap-2">
+                              <Badge 
+                                variant="outline" 
+                                className="bg-green-50 border-green-200 text-green-700 hover:bg-green-100"
+                              >
+                                <span className="w-2 h-2 rounded-full bg-green-500 mr-2"></span>
+                                {stats.attending} Attending
+                              </Badge>
+                              <Badge 
+                                variant="outline" 
+                                className="bg-red-50 border-red-200 text-red-700 hover:bg-red-100"
+                              >
+                                <span className="w-2 h-2 rounded-full bg-red-500 mr-2"></span>
+                                {stats.notAttending} Not Attending
+                              </Badge>
+                              <Badge 
+                                variant="outline" 
+                                className="bg-yellow-50 border-yellow-200 text-yellow-700 hover:bg-yellow-100"
+                              >
+                                <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                {stats.pending} Pending
+                              </Badge>
+                            </div>
+                          </div>
+
+                          {/* Right side - Action buttons */}
+                          <div 
+                            className="flex gap-2 self-start"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                copyToClipboard(link.unique_slug, link.number_of_persons);
+                              }}
+                              title="Copy Link"
+                              className="hover:bg-primary/10"
+                            >
+                              <Copy className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank');
+                              }}
+                              title="Open Link"
+                              className="hover:bg-primary/10"
+                            >
+                              <ExternalLink className="w-4 h-4" />
+                            </Button>
+                            <Button
+                              size="icon"
+                              variant="ghost"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setDeleteId(link.id);
+                              }}
+                              title="Delete Link"
+                              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex gap-2">
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => copyToClipboard(link.unique_slug, link.number_of_persons)}
-                          title="Copy Link"
-                        >
-                          <Copy className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank')}
-                          title="Open Link"
-                        >
-                          <ExternalLink className="w-4 h-4" />
-                        </Button>
-                        <Button
-                          size="icon"
-                          variant="ghost"
-                          onClick={() => setDeleteId(link.id)}
-                          title="Delete Link"
-                          className="text-destructive hover:text-destructive"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    {linkInvitees.length > 0 ? (
-                      <div className="border rounded-lg overflow-hidden">
-                        <Table>
-                          <TableHeader>
-                            <TableRow>
-                              <TableHead>Guest Name</TableHead>
-                              <TableHead>RSVP Status</TableHead>
-                              <TableHead className="text-right">Response Date</TableHead>
-                            </TableRow>
-                          </TableHeader>
-                          <TableBody>
-                            {linkInvitees.map((invitee) => (
-                              <TableRow key={invitee.id}>
-                                <TableCell className="font-medium">{invitee.name}</TableCell>
-                                <TableCell>
-                                  {invitee.is_attending === null ? (
-                                    <Badge variant="outline" className="bg-yellow-50">
-                                      <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
-                                      Pending
-                                    </Badge>
-                                  ) : invitee.is_attending ? (
-                                    <Badge variant="outline" className="bg-green-50">
-                                      <Check className="w-3 h-3 mr-1" />
-                                      Attending
-                                    </Badge>
-                                  ) : (
-                                    <Badge variant="outline" className="bg-red-50">
-                                      <X className="w-3 h-3 mr-1" />
-                                      Not Attending
-                                    </Badge>
-                                  )}
-                                </TableCell>
-                                <TableCell className="text-right text-sm text-muted-foreground">
-                                  {invitee.is_attending !== null 
-                                    ? new Date(invitee.created_at).toLocaleDateString() 
-                                    : '-'}
-                                </TableCell>
-                              </TableRow>
-                            ))}
-                          </TableBody>
-                        </Table>
-                      </div>
-                    ) : (
-                      <div className="text-center py-8 text-muted-foreground">
-                        No invitees added to this link yet
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                      </CardHeader>
+                    </CollapsibleTrigger>
+
+                    <CollapsibleContent>
+                      <CardContent className="pt-0">
+                        {linkInvitees.length > 0 ? (
+                          <div className="border rounded-lg overflow-hidden bg-white shadow-inner">
+                            <div className="overflow-x-auto">
+                              <Table>
+                                <TableHeader>
+                                  <TableRow className="bg-accent/30">
+                                    <TableHead className="font-semibold">Guest Name</TableHead>
+                                    <TableHead className="font-semibold">RSVP Status</TableHead>
+                                    <TableHead className="text-right font-semibold">Response Date</TableHead>
+                                  </TableRow>
+                                </TableHeader>
+                                <TableBody>
+                                  {linkInvitees.map((invitee, index) => (
+                                    <TableRow 
+                                      key={invitee.id}
+                                      className={index % 2 === 0 ? 'bg-white' : 'bg-accent/5'}
+                                    >
+                                      <TableCell className="font-medium">{invitee.name}</TableCell>
+                                      <TableCell>
+                                        {invitee.is_attending === null ? (
+                                          <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700">
+                                            <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>
+                                            Pending
+                                          </Badge>
+                                        ) : invitee.is_attending ? (
+                                          <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
+                                            <Check className="w-3 h-3 mr-1" />
+                                            Attending
+                                          </Badge>
+                                        ) : (
+                                          <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
+                                            <X className="w-3 h-3 mr-1" />
+                                            Not Attending
+                                          </Badge>
+                                        )}
+                                      </TableCell>
+                                      <TableCell className="text-right text-sm text-muted-foreground">
+                                        {invitee.is_attending !== null 
+                                          ? new Date(invitee.created_at).toLocaleDateString('en-US', {
+                                              month: 'short',
+                                              day: 'numeric',
+                                              year: 'numeric'
+                                            })
+                                          : '-'}
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="text-center py-8 text-muted-foreground bg-accent/5 rounded-lg">
+                            <Users className="w-12 h-12 mx-auto mb-2 opacity-30" />
+                            <p>No invitees added to this link yet</p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
               );
             })}
           </div>
