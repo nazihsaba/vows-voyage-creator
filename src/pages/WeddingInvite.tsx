@@ -15,6 +15,8 @@ import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-rea
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -28,6 +30,8 @@ const WeddingInvite = () => {
   const [loading, setLoading] = useState(true);
   const [currentSection, setCurrentSection] = useState(0);
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
+  const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
+  const [submittingRsvp, setSubmittingRsvp] = useState(false);
   const { toast } = useToast();
   
   // Get template configuration if using template system
@@ -161,6 +165,15 @@ const WeddingInvite = () => {
               .eq("invitation_link_id", linkData.id);
 
             setInvitees(inviteesData || []);
+            
+            // Initialize RSVP responses from existing data
+            const responses: Record<string, boolean> = {};
+            inviteesData?.forEach((invitee: any) => {
+              if (invitee.is_attending !== null) {
+                responses[invitee.id] = invitee.is_attending;
+              }
+            });
+            setRsvpResponses(responses);
           }
         }
       } catch (error) {
@@ -172,6 +185,48 @@ const WeddingInvite = () => {
 
     fetchWedding();
   }, [slug, linkSlug, isPreview]);
+
+  const handleRsvpToggle = (inviteeId: string, isAttending: boolean) => {
+    setRsvpResponses(prev => ({
+      ...prev,
+      [inviteeId]: isAttending
+    }));
+  };
+
+  const handleRsvpSubmit = async () => {
+    if (invitees.length === 0) return;
+
+    setSubmittingRsvp(true);
+    try {
+      // Update each invitee's attendance status
+      const updates = Object.entries(rsvpResponses).map(([inviteeId, isAttending]) =>
+        supabase
+          .from("invitees")
+          .update({ is_attending: isAttending })
+          .eq("id", inviteeId)
+      );
+
+      await Promise.all(updates);
+
+      toast({
+        title: "RSVP Submitted",
+        description: "Thank you for your response!",
+      });
+    } catch (error) {
+      console.error("Error submitting RSVP:", error);
+      toast({
+        title: "Error",
+        description: "Failed to submit RSVP. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setSubmittingRsvp(false);
+    }
+  };
+
+  const isRsvpDeadlinePassed = wedding?.rsvp_deadline 
+    ? new Date(wedding.rsvp_deadline) < new Date() 
+    : false;
 
   if (loading) {
     return (
@@ -232,31 +287,67 @@ const WeddingInvite = () => {
           </div>
         </TemplateRenderer>
         
-        {/* Display invitees section if link-specific */}
+        {/* Display invitees section with RSVP if link-specific */}
         {invitees.length > 0 && (
           <div className="bg-gradient-soft py-16 px-4">
-            <div className="max-w-2xl mx-auto text-center">
-              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6">
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6 text-center">
                 We're Delighted to Invite
               </h2>
               <div className="bg-white rounded-lg shadow-lg p-8">
-                <p className="text-lg text-muted-foreground mb-6">
+                <p className="text-lg text-muted-foreground mb-6 text-center">
                   This invitation is specially prepared for:
                 </p>
-                <div className="space-y-3">
-                  {invitees.map((invitee: any, index: number) => (
+                <div className="space-y-4">
+                  {invitees.map((invitee: any) => (
                     <div 
                       key={invitee.id}
-                      className="text-2xl font-serif text-primary py-2 border-b border-border last:border-0"
+                      className="flex items-center justify-between py-3 border-b border-border last:border-0"
                     >
-                      {invitee.name}
+                      <span className="text-xl font-serif text-primary">
+                        {invitee.name}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`rsvp-${invitee.id}`}
+                          checked={rsvpResponses[invitee.id] === true}
+                          onCheckedChange={(checked) => 
+                            handleRsvpToggle(invitee.id, checked as boolean)
+                          }
+                          disabled={isRsvpDeadlinePassed}
+                        />
+                        <Label 
+                          htmlFor={`rsvp-${invitee.id}`}
+                          className={`text-sm cursor-pointer ${isRsvpDeadlinePassed ? 'text-muted-foreground' : ''}`}
+                        >
+                          {rsvpResponses[invitee.id] === true ? "Attending" : "Will Attend?"}
+                        </Label>
+                      </div>
                     </div>
                   ))}
                 </div>
-                <div className="mt-6 pt-6 border-t border-border">
-                  <p className="text-lg font-semibold text-primary">
+                <div className="mt-6 pt-6 border-t border-border space-y-4">
+                  <p className="text-lg font-semibold text-primary text-center">
                     Number of Guests: {numberOfPersons || invitees.length}
                   </p>
+                  {wedding?.rsvp_deadline && (
+                    <p className="text-sm text-muted-foreground text-center">
+                      Please RSVP by {format(new Date(wedding.rsvp_deadline), "MMMM d, yyyy")}
+                    </p>
+                  )}
+                  {isRsvpDeadlinePassed ? (
+                    <p className="text-sm text-red-600 text-center font-medium">
+                      RSVP deadline has passed
+                    </p>
+                  ) : (
+                    <Button 
+                      onClick={handleRsvpSubmit} 
+                      disabled={submittingRsvp || Object.keys(rsvpResponses).length === 0}
+                      className="w-full"
+                    >
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    </Button>
+                  )}
                 </div>
               </div>
             </div>
