@@ -41,7 +41,7 @@ const Dashboard = () => {
       templates: [
         { id: "template1", name: "Classic Elegance", description: "Traditional wedding invitation", image: weddingClassic },
         { id: "template2", name: "Modern Romance", description: "Contemporary design with gallery", image: weddingModern },
-        { id: "template3", name: "Premium", description: "Coming soon", disabled: true },
+        { id: "template6", name: "Cinematic Video", description: "Immersive video background template", image: weddingModern },
       ],
     },
     {
