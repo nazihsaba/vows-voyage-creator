@@ -32,6 +32,8 @@ const WeddingForm = () => {
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" }
   ]);
+  const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
+  const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -113,6 +115,14 @@ const WeddingForm = () => {
 
       if (cardsData && cardsData.length > 0) {
         setGiftCards(cardsData);
+        // Set existing logos as previews
+        const previews: Record<number, string> = {};
+        cardsData.forEach((card, index) => {
+          if (card.logo_url) {
+            previews[index] = card.logo_url;
+          }
+        });
+        setCardIconPreviews(previews);
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -314,12 +324,30 @@ const WeddingForm = () => {
 
       const validCards = giftCards.filter(card => card.card_name && card.card_number);
       if (validCards.length > 0) {
-        const cardInserts = validCards.map((card, index) => ({
-          wedding_id: weddingId,
-          card_name: card.card_name,
-          card_number: card.card_number,
-          card_order: index + 1,
-        }));
+        // Upload card icons if any
+        const cardInserts = await Promise.all(
+          validCards.map(async (card, index) => {
+            let logoUrl = card.logo_url;
+            
+            // Find original index in giftCards array
+            const originalIndex = giftCards.findIndex(c => 
+              c.card_name === card.card_name && c.card_number === card.card_number
+            );
+            
+            // Upload new icon if file exists
+            if (cardIconFiles[originalIndex]) {
+              logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
+            }
+            
+            return {
+              wedding_id: weddingId,
+              card_name: card.card_name,
+              card_number: card.card_number,
+              logo_url: logoUrl,
+              card_order: index + 1,
+            };
+          })
+        );
 
         const { error: cardError } = await supabase
           .from("gift_cards")
@@ -554,40 +582,111 @@ const WeddingForm = () => {
                 </div>
 
                 {giftCards.map((card, index) => (
-                  <div key={index} className="grid md:grid-cols-2 gap-4 p-4 border rounded-lg relative">
-                    <div className="space-y-2">
-                      <Label htmlFor={`card_name_${index}`}>Card Name</Label>
-                      <Input
-                        id={`card_name_${index}`}
-                        value={card.card_name}
-                        onChange={(e) => {
-                          const newCards = [...giftCards];
-                          newCards[index].card_name = e.target.value;
-                          setGiftCards(newCards);
-                        }}
-                        placeholder="e.g., Visa"
-                      />
+                  <div key={index} className="grid gap-4 p-4 border rounded-lg relative">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor={`card_name_${index}`}>Card Name</Label>
+                        <Input
+                          id={`card_name_${index}`}
+                          value={card.card_name}
+                          onChange={(e) => {
+                            const newCards = [...giftCards];
+                            newCards[index].card_name = e.target.value;
+                            setGiftCards(newCards);
+                          }}
+                          placeholder="e.g., Visa"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor={`card_number_${index}`}>Card Number</Label>
+                        <Input
+                          id={`card_number_${index}`}
+                          value={card.card_number}
+                          onChange={(e) => {
+                            const newCards = [...giftCards];
+                            newCards[index].card_number = e.target.value;
+                            setGiftCards(newCards);
+                          }}
+                          placeholder="XXXX-XXXX-XXXX-XXXX"
+                        />
+                      </div>
                     </div>
+                    
                     <div className="space-y-2">
-                      <Label htmlFor={`card_number_${index}`}>Card Number</Label>
-                      <Input
-                        id={`card_number_${index}`}
-                        value={card.card_number}
-                        onChange={(e) => {
-                          const newCards = [...giftCards];
-                          newCards[index].card_number = e.target.value;
-                          setGiftCards(newCards);
-                        }}
-                        placeholder="XXXX-XXXX-XXXX-XXXX"
-                      />
+                      <Label htmlFor={`card_icon_${index}`}>Card Icon/Logo</Label>
+                      <div className="flex items-center gap-4">
+                        {cardIconPreviews[index] ? (
+                          <div className="relative h-16 w-24 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center bg-muted/20">
+                            <img 
+                              src={cardIconPreviews[index]} 
+                              alt="Card icon" 
+                              className="max-h-full max-w-full object-contain"
+                            />
+                            <Button
+                              type="button"
+                              variant="destructive"
+                              size="icon"
+                              className="absolute -top-2 -right-2 h-6 w-6"
+                              onClick={() => {
+                                const newPreviews = { ...cardIconPreviews };
+                                delete newPreviews[index];
+                                setCardIconPreviews(newPreviews);
+                                const newFiles = { ...cardIconFiles };
+                                delete newFiles[index];
+                                setCardIconFiles(newFiles);
+                                const newCards = [...giftCards];
+                                newCards[index].logo_url = undefined;
+                                setGiftCards(newCards);
+                              }}
+                            >
+                              <X className="w-3 h-3" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <label
+                            htmlFor={`card_icon_${index}`}
+                            className="flex flex-col items-center justify-center h-16 w-24 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                          >
+                            <Upload className="w-6 h-6 text-muted-foreground" />
+                            <span className="text-xs text-muted-foreground mt-1">Upload</span>
+                          </label>
+                        )}
+                        <Input
+                          id={`card_icon_${index}`}
+                          type="file"
+                          accept="image/*"
+                          onChange={(e) => {
+                            const file = e.target.files?.[0];
+                            if (file) {
+                              setCardIconFiles({ ...cardIconFiles, [index]: file });
+                              const reader = new FileReader();
+                              reader.onloadend = () => {
+                                setCardIconPreviews({ ...cardIconPreviews, [index]: reader.result as string });
+                              };
+                              reader.readAsDataURL(file);
+                            }
+                          }}
+                          className="hidden"
+                        />
+                      </div>
                     </div>
+                    
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
                         variant="destructive"
                         size="icon"
                         className="absolute top-2 right-2"
-                        onClick={() => setGiftCards(giftCards.filter((_, i) => i !== index))}
+                        onClick={() => {
+                          const newCards = giftCards.filter((_, i) => i !== index);
+                          setGiftCards(newCards);
+                          const newFiles = { ...cardIconFiles };
+                          delete newFiles[index];
+                          setCardIconFiles(newFiles);
+                          const newPreviews = { ...cardIconPreviews };
+                          delete newPreviews[index];
+                          setCardIconPreviews(newPreviews);
+                        }}
                       >
                         <X className="w-4 h-4" />
                       </Button>
