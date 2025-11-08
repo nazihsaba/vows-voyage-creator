@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Cake, PartyPopper, Gift } from "lucide-react";
+import { Heart, Cake, PartyPopper, Gift, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EventTypeSelection = () => {
@@ -47,8 +47,9 @@ const EventTypeSelection = () => {
           <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
             Select Event Type
           </h1>
-          <Button variant="outline" onClick={() => navigate("/dashboard")}>
-            Back to Dashboard
+          <Button variant="outline" onClick={() => navigate(-1)}>
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back
           </Button>
         </div>
       </header>
