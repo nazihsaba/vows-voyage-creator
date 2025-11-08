@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
+import { LinkManagementTable } from "@/components/LinkManagementTable";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -33,6 +36,10 @@ const MyEvents = () => {
   const [weddings, setWeddings] = useState<Wedding[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
+  const [selectedWeddingId, setSelectedWeddingId] = useState<string | null>(null);
+  const [selectedWeddingSlug, setSelectedWeddingSlug] = useState<string | null>(null);
+  const [refreshLinks, setRefreshLinks] = useState(0);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -134,7 +141,7 @@ const MyEvents = () => {
         ) : (
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {weddings.map((wedding) => (
-              <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all">
+              <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all relative">
                 <CardHeader>
                   <CardTitle className="text-xl font-serif">
                     {wedding.bride_name} & {wedding.groom_name}
@@ -157,33 +164,64 @@ const MyEvents = () => {
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="flex flex-col gap-2">
+                  <div className="space-y-4">
                     <Button
                       variant="outline"
                       className="w-full"
-                      onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
+                      onClick={() => {
+                        setSelectedWeddingId(wedding.id);
+                        setSelectedWeddingSlug(wedding.slug);
+                        setGenerateLinkOpen(true);
+                      }}
                     >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
+                      <Link2 className="w-4 h-4 mr-2" />
+                      Generate Link
                     </Button>
-                    {wedding.status === 'published' && (
+
+                    <Collapsible>
+                      <CollapsibleTrigger asChild>
+                        <Button variant="outline" className="w-full">
+                          Manage Links
+                        </Button>
+                      </CollapsibleTrigger>
+                      <CollapsibleContent className="mt-4">
+                        <LinkManagementTable
+                          weddingId={wedding.id}
+                          weddingSlug={wedding.slug}
+                          refresh={refreshLinks}
+                        />
+                      </CollapsibleContent>
+                    </Collapsible>
+
+                    <div className="flex justify-end gap-2 pt-2">
                       <Button
-                        variant="outline"
-                        className="w-full"
-                        onClick={() => window.open(`/invite/${wedding.slug}`, '_blank')}
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
+                        title="Edit"
                       >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        View Invitation
+                        <Edit className="w-4 h-4" />
                       </Button>
-                    )}
-                    <Button
-                      variant="outline"
-                      className="w-full text-destructive hover:text-destructive"
-                      onClick={() => setDeleteId(wedding.id)}
-                    >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
-                    </Button>
+                      {wedding.status === 'published' && (
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => window.open(`/invite/${wedding.slug}`, '_blank')}
+                          title="View Invitation"
+                        >
+                          <ExternalLink className="w-4 h-4" />
+                        </Button>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setDeleteId(wedding.id)}
+                        title="Delete"
+                        className="text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
@@ -212,6 +250,16 @@ const MyEvents = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {selectedWeddingId && selectedWeddingSlug && (
+        <GenerateLinkDialog
+          open={generateLinkOpen}
+          onOpenChange={setGenerateLinkOpen}
+          weddingId={selectedWeddingId}
+          weddingSlug={selectedWeddingSlug}
+          onSuccess={() => setRefreshLinks(prev => prev + 1)}
+        />
+      )}
     </div>
   );
 };
