@@ -63,7 +63,15 @@ const EventTypeSelection = () => {
                 className={`shadow-soft hover:shadow-elegant transition-all ${
                   type.disabled ? "opacity-50" : "cursor-pointer"
                 }`}
-                onClick={() => !type.disabled && navigate(`/dashboard/select-template/${type.id}`)}
+                onClick={() => {
+                  if (!type.disabled) {
+                    if (type.id === "wedding") {
+                      navigate("/dashboard/wedding-templates");
+                    } else {
+                      navigate(`/dashboard/select-template/${type.id}`);
+                    }
+                  }
+                }}
               >
                 <CardHeader className="text-center">
                   <div className="flex justify-center mb-4">

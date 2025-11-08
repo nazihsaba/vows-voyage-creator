@@ -11,6 +11,7 @@ import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
+import WeddingTemplates from "./pages/WeddingTemplates";
 import OTPDemo from "./pages/OTPDemo";
 import NotFound from "./pages/NotFound";
 
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/my-events" element={<MyEvents />} />
           <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
+          <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
