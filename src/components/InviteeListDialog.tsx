@@ -22,12 +22,14 @@ interface InviteeListDialogProps {
   linkId: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  refreshTrigger?: number;
 }
 
 export const InviteeListDialog = ({
   linkId,
   open,
   onOpenChange,
+  refreshTrigger = 0,
 }: InviteeListDialogProps) => {
   const { toast } = useToast();
   const [invitees, setInvitees] = useState<Invitee[]>([]);
@@ -37,7 +39,7 @@ export const InviteeListDialog = ({
     if (linkId && open) {
       fetchInvitees();
     }
-  }, [linkId, open]);
+  }, [linkId, open, refreshTrigger]);
 
   // Set up real-time subscription for invitee updates
   useEffect(() => {

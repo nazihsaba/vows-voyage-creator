@@ -47,10 +47,40 @@ export const LinkManagementTable = ({
   const [loading, setLoading] = useState(true);
   const [selectedLinkId, setSelectedLinkId] = useState<string | null>(null);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [inviteeRefreshTrigger, setInviteeRefreshTrigger] = useState(0);
 
   useEffect(() => {
     fetchLinks();
   }, [weddingId, refresh]);
+
+  // Set up real-time subscription for invitation links
+  useEffect(() => {
+    const channel = supabase
+      .channel('invitation-links-changes')
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'invitation_links',
+          filter: `wedding_id=eq.${weddingId}`
+        },
+        () => {
+          fetchLinks();
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [weddingId]);
+
+  const handleOpenInvitees = (linkId: string) => {
+    setSelectedLinkId(linkId);
+    // Trigger a refresh when opening the dialog
+    setInviteeRefreshTrigger(prev => prev + 1);
+  };
 
   const fetchLinks = async () => {
     try {
@@ -150,7 +180,7 @@ export const LinkManagementTable = ({
                     <Button
                       variant="ghost"
                       size="icon"
-                      onClick={() => setSelectedLinkId(link.id)}
+                      onClick={() => handleOpenInvitees(link.id)}
                       title="View invitees"
                     >
                       <Eye className="w-4 h-4" />
@@ -184,6 +214,7 @@ export const LinkManagementTable = ({
         linkId={selectedLinkId}
         open={!!selectedLinkId}
         onOpenChange={(open) => !open && setSelectedLinkId(null)}
+        refreshTrigger={inviteeRefreshTrigger}
       />
 
       <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
