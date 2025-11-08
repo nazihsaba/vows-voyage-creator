@@ -281,7 +281,7 @@ const WeddingForm = () => {
           .eq("wedding_id", weddingId)
           .order("image_order", { ascending: false })
           .limit(1)
-          .single();
+          .maybeSingle();
         
         const startingOrder = (maxOrderData?.image_order || 0) + 1;
 
