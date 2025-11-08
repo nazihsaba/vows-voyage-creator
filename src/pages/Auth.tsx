@@ -10,6 +10,7 @@ import { Heart, Mail, KeyRound } from "lucide-react";
 
 const Auth = () => {
   const [mode, setMode] = useState<"login" | "signup" | "verify" | "reset" | "newPassword">("login");
+  const [isResetFlow, setIsResetFlow] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -65,6 +66,7 @@ const Auth = () => {
 
       if (error) throw error;
 
+      setIsResetFlow(false);
       toast({
         title: "Verification Code Sent!",
         description: "Check your email for the verification code.",
@@ -98,13 +100,7 @@ const Auth = () => {
       }
 
       // Check if this is password reset or sign up
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("email")
-        .ilike("email", email)
-        .maybeSingle();
-
-      if (existingProfile) {
+      if (isResetFlow) {
         // Password reset flow - show new password form (keep OTP for verification)
         toast({
           title: "Code Verified!",
@@ -179,27 +175,17 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      // Check if user exists
-      const { data: existingProfile } = await supabase
-        .from("profiles")
-        .select("email")
-        .ilike("email", email)
-        .maybeSingle();
-
-      if (!existingProfile) {
-        throw new Error("No account found with this email address");
-      }
-
-      // Send OTP for password reset
+      // Send OTP for password reset (don't reveal if account exists for security)
       const { error } = await supabase.functions.invoke("send-otp", {
         body: { email, userName: "User" },
       });
 
       if (error) throw error;
 
+      setIsResetFlow(true);
       toast({
         title: "Verification Code Sent!",
-        description: "Check your email for the verification code to reset your password.",
+        description: "If an account exists with this email, you'll receive a verification code.",
       });
       
       setMode("verify");
@@ -454,13 +440,7 @@ const Auth = () => {
                   type="button"
                   variant="link"
                   onClick={async () => {
-                    const { data } = await supabase
-                      .from("profiles")
-                      .select("email")
-                      .ilike("email", email)
-                      .maybeSingle();
-                    
-                    if (data) {
+                    if (isResetFlow) {
                       setMode("reset");
                     } else {
                       setMode("signup");
