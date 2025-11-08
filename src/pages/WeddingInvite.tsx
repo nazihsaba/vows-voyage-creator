@@ -631,28 +631,6 @@ const WeddingInvite = () => {
               </div>
             </div>
           )}
-
-          {/* RSVP Section */}
-          {currentSectionType === "rsvp" && wedding.rsvp_deadline && (
-            <div className="h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20 p-8">
-              <div className="text-center max-w-md">
-                <h2 className="text-3xl font-serif text-primary mb-6">
-                  We Can't Wait to Celebrate With You!
-                </h2>
-                <p className="text-lg text-muted-foreground mb-8">
-                  Please enjoy every moment, take lots of pictures, and make wonderful memories with us.
-                </p>
-                <div className="bg-white/80 backdrop-blur p-6 rounded-lg">
-                  <p className="text-xl font-serif text-primary mb-2">
-                    Kindly Confirm Your Presence By
-                  </p>
-                  <p className="text-2xl font-bold text-primary">
-                    {format(new Date(wedding.rsvp_deadline), "MMMM dd, yyyy")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </div>
     </div>
