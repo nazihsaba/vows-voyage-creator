@@ -7,6 +7,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import MyEvents from "./pages/MyEvents";
+import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
@@ -29,6 +30,7 @@ const App = () => (
           <Route path="/otp-demo" element={<OTPDemo />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/dashboard/my-events" element={<MyEvents />} />
+          <Route path="/dashboard/manage-links/:weddingId" element={<ManageLinks />} />
           <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
           <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />

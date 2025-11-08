@@ -6,8 +6,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
-import { LinkManagementTable } from "@/components/LinkManagementTable";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,7 +37,6 @@ const MyEvents = () => {
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [selectedWeddingId, setSelectedWeddingId] = useState<string | null>(null);
   const [selectedWeddingSlug, setSelectedWeddingSlug] = useState<string | null>(null);
-  const [refreshLinks, setRefreshLinks] = useState(0);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -225,20 +222,13 @@ const MyEvents = () => {
                           Generate Link
                         </Button>
 
-                        <Collapsible>
-                          <CollapsibleTrigger asChild>
-                            <Button variant="outline" className="w-full">
-                              Manage Links
-                            </Button>
-                          </CollapsibleTrigger>
-                          <CollapsibleContent className="mt-4">
-                            <LinkManagementTable
-                              weddingId={wedding.id}
-                              weddingSlug={wedding.slug}
-                              refresh={refreshLinks}
-                            />
-                          </CollapsibleContent>
-                        </Collapsible>
+                        <Button
+                          variant="outline"
+                          className="w-full"
+                          onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
+                        >
+                          Manage Links
+                        </Button>
                       </>
                     )}
 
@@ -385,7 +375,12 @@ const MyEvents = () => {
           onOpenChange={setGenerateLinkOpen}
           weddingId={selectedWeddingId}
           weddingSlug={selectedWeddingSlug}
-          onSuccess={() => setRefreshLinks(prev => prev + 1)}
+          onSuccess={() => {
+            toast({
+              title: "Success",
+              description: "Link created successfully! Navigate to Manage Links to view it.",
+            });
+          }}
         />
       )}
     </div>
