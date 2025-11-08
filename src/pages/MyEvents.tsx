@@ -115,10 +115,15 @@ const MyEvents = () => {
               My Events
             </h1>
           </div>
-          <Button variant="outline" onClick={() => navigate("/dashboard")}>
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Templates
-          </Button>
+          <div className="flex items-center gap-3">
+            <Button onClick={() => navigate("/dashboard/select-event-type")}>
+              Create Event
+            </Button>
+            <Button variant="outline" onClick={() => navigate("/dashboard")}>
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back
+            </Button>
+          </div>
         </div>
       </header>
 
@@ -134,7 +139,7 @@ const MyEvents = () => {
             <p className="text-muted-foreground mb-6">
               Create your first event invitation to get started
             </p>
-            <Button onClick={() => navigate("/dashboard")}>
+            <Button onClick={() => navigate("/dashboard/select-event-type")}>
               Create Event
             </Button>
           </div>
