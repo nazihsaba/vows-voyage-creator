@@ -44,7 +44,7 @@ export const InviteeListDialog = ({
 
     setLoading(true);
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("invitees")
         .select("*")
         .eq("invitation_link_id", linkId)

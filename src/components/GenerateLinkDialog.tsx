@@ -72,7 +72,7 @@ export const GenerateLinkDialog = ({
 
     setLoading(true);
     try {
-      const { data: linkData, error: linkError } = await supabase
+      const { data: linkData, error: linkError } = await (supabase as any)
         .from("invitation_links")
         .insert({
           wedding_id: weddingId,
@@ -90,7 +90,7 @@ export const GenerateLinkDialog = ({
         name: name.trim(),
       }));
 
-      const { error: inviteeError } = await supabase
+      const { error: inviteeError } = await (supabase as any)
         .from("invitees")
         .insert(inviteeRecords);
 

@@ -54,7 +54,7 @@ export const LinkManagementTable = ({
 
   const fetchLinks = async () => {
     try {
-      const { data, error } = await supabase
+      const { data, error } = await (supabase as any)
         .from("invitation_links")
         .select("*")
         .eq("wedding_id", weddingId)
@@ -85,7 +85,7 @@ export const LinkManagementTable = ({
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("invitation_links")
         .delete()
         .eq("id", id);
