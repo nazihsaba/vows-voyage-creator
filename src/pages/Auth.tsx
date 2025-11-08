@@ -32,22 +32,29 @@ const Auth = () => {
 
     try {
       if (isLogin) {
-        // For login, we need to find the user by username first
+        // For login, we need to find the user by username first (case-insensitive)
         const { data: profileData, error: profileError } = await supabase
           .from("profiles")
           .select("email")
-          .eq("username", username)
+          .ilike("username", username)
           .maybeSingle();
 
         if (profileError) throw profileError;
-        if (!profileData) throw new Error("Username not found");
+        if (!profileData) {
+          throw new Error("Username not found. Please check your username and try again.");
+        }
 
         const { error } = await supabase.auth.signInWithPassword({
           email: profileData.email,
           password,
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("Invalid login credentials")) {
+            throw new Error("Incorrect password. Please try again.");
+          }
+          throw error;
+        }
 
         toast({
           title: "Welcome back!",
@@ -55,8 +62,19 @@ const Auth = () => {
         });
         navigate("/dashboard");
       } else {
-        // For signup, create a temporary email from username
-        const tempEmail = `${username}@temp.local`;
+        // Check if username already exists (case-insensitive)
+        const { data: existingProfile } = await supabase
+          .from("profiles")
+          .select("username")
+          .ilike("username", username)
+          .maybeSingle();
+
+        if (existingProfile) {
+          throw new Error("This username is already taken. Please choose a different one.");
+        }
+
+        // For signup, create a temporary email from username (lowercase for consistency)
+        const tempEmail = `${username.toLowerCase()}@temp.local`;
         
         const { error } = await supabase.auth.signUp({
           email: tempEmail,
@@ -71,7 +89,12 @@ const Auth = () => {
           },
         });
 
-        if (error) throw error;
+        if (error) {
+          if (error.message.includes("User already registered")) {
+            throw new Error("This username is already taken. Please choose a different one.");
+          }
+          throw error;
+        }
 
         toast({
           title: "Account created!",
