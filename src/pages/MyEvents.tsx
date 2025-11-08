@@ -105,6 +105,34 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
+  const handlePublish = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from("weddings")
+        .update({ status: 'published' })
+        .eq("id", id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Event published successfully! You can now generate invitation links.",
+      });
+      
+      // Update local state
+      setWeddings(weddings.map(w => 
+        w.id === id ? { ...w, status: 'published' } : w
+      ));
+    } catch (error) {
+      console.error("Error publishing wedding:", error);
+      toast({
+        title: "Error",
+        description: "Failed to publish event",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-soft">
       <header className="bg-white shadow-soft">
@@ -292,6 +320,13 @@ const MyEvents = () => {
                             <p className="font-medium">Not published yet</p>
                             <p className="text-xs mt-1">Edit and publish to generate invitation links</p>
                           </div>
+
+                          <Button 
+                            className="w-full" 
+                            onClick={() => handlePublish(wedding.id)}
+                          >
+                            Publish Event
+                          </Button>
 
                           <div className="flex justify-end gap-2 pt-2">
                             <Button
