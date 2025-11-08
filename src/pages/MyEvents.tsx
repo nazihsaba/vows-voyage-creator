@@ -3,8 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, ChevronDown, ChevronUp } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
+import { LinkManagementTable } from "@/components/LinkManagementTable";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +17,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 
 interface Wedding {
   id: string;
@@ -33,6 +36,10 @@ const MyEvents = () => {
   const [weddings, setWeddings] = useState<Wedding[]>([]);
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [generateLinkDialogOpen, setGenerateLinkDialogOpen] = useState(false);
+  const [selectedWeddingId, setSelectedWeddingId] = useState<string | null>(null);
+  const [expandedWeddings, setExpandedWeddings] = useState<Set<string>>(new Set());
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -98,6 +105,25 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
+  const toggleWeddingExpanded = (weddingId: string) => {
+    const newExpanded = new Set(expandedWeddings);
+    if (newExpanded.has(weddingId)) {
+      newExpanded.delete(weddingId);
+    } else {
+      newExpanded.add(weddingId);
+    }
+    setExpandedWeddings(newExpanded);
+  };
+
+  const handleOpenGenerateLink = (weddingId: string) => {
+    setSelectedWeddingId(weddingId);
+    setGenerateLinkDialogOpen(true);
+  };
+
+  const handleLinkGenerated = () => {
+    setRefreshTrigger(prev => prev + 1);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-soft">
       <header className="bg-white shadow-soft">
@@ -132,10 +158,10 @@ const MyEvents = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          <div className="space-y-6">
             {weddings.map((wedding) => (
               <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all">
-                <CardHeader>
+                <CardHeader className="relative pb-16">
                   <CardTitle className="text-xl font-serif">
                     {wedding.bride_name} & {wedding.groom_name}
                   </CardTitle>
@@ -155,36 +181,72 @@ const MyEvents = () => {
                       {wedding.status}
                     </span>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-col gap-2">
+                  
+                  {/* Action Icons at bottom-right */}
+                  <div className="absolute bottom-4 right-4 flex gap-2">
                     <Button
-                      variant="outline"
-                      className="w-full"
+                      variant="ghost"
+                      size="icon"
                       onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
+                      title="Edit"
                     >
-                      <Edit className="w-4 h-4 mr-2" />
-                      Edit
+                      <Edit className="w-4 h-4" />
                     </Button>
                     {wedding.status === 'published' && (
                       <Button
-                        variant="outline"
-                        className="w-full"
+                        variant="ghost"
+                        size="icon"
                         onClick={() => window.open(`/invite/${wedding.slug}`, '_blank')}
+                        title="View Invitation"
                       >
-                        <ExternalLink className="w-4 h-4 mr-2" />
-                        View Invitation
+                        <ExternalLink className="w-4 h-4" />
                       </Button>
                     )}
                     <Button
-                      variant="outline"
-                      className="w-full text-destructive hover:text-destructive"
+                      variant="ghost"
+                      size="icon"
                       onClick={() => setDeleteId(wedding.id)}
+                      title="Delete"
+                      className="text-destructive hover:text-destructive"
                     >
-                      <Trash2 className="w-4 h-4 mr-2" />
-                      Delete
+                      <Trash2 className="w-4 h-4" />
                     </Button>
                   </div>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  {/* Generate Link Button */}
+                  <Button
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleOpenGenerateLink(wedding.id)}
+                  >
+                    <Link2 className="w-4 h-4 mr-2" />
+                    Generate Link
+                  </Button>
+
+                  {/* Collapsible Link Management */}
+                  <Collapsible
+                    open={expandedWeddings.has(wedding.id)}
+                    onOpenChange={() => toggleWeddingExpanded(wedding.id)}
+                  >
+                    <CollapsibleTrigger asChild>
+                      <Button variant="ghost" className="w-full justify-between">
+                        <span>Invitation Links</span>
+                        {expandedWeddings.has(wedding.id) ? (
+                          <ChevronUp className="w-4 h-4" />
+                        ) : (
+                          <ChevronDown className="w-4 h-4" />
+                        )}
+                      </Button>
+                    </CollapsibleTrigger>
+                    <CollapsibleContent className="mt-4">
+                      <LinkManagementTable 
+                        weddingId={wedding.id} 
+                        refreshTrigger={refreshTrigger}
+                      />
+                    </CollapsibleContent>
+                  </Collapsible>
                 </CardContent>
               </Card>
             ))}
@@ -212,6 +274,15 @@ const MyEvents = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {selectedWeddingId && (
+        <GenerateLinkDialog
+          open={generateLinkDialogOpen}
+          onOpenChange={setGenerateLinkDialogOpen}
+          weddingId={selectedWeddingId}
+          onLinkGenerated={handleLinkGenerated}
+        />
+      )}
     </div>
   );
 };
