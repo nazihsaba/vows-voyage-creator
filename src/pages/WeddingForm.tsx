@@ -839,11 +839,11 @@ const WeddingForm = () => {
                       type="button"
                       variant="outline"
                       onClick={() => {
-                        // For existing weddings, open normal preview
+                        // For existing weddings, open read-only preview
                         if (formData.slug) {
-                          setPreviewUrl(`/invite/${formData.slug}?preview=true`);
+                          setPreviewUrl(`/invite/${formData.slug}?readOnly=true`);
                         } else {
-                          // For new weddings, store preview data and open preview
+                          // For new weddings, store preview data and open read-only preview
                           const previewData = {
                             ...formData,
                             locations,
@@ -852,7 +852,7 @@ const WeddingForm = () => {
                             galleryPreviews,
                           };
                           sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
-                          setPreviewUrl(`/invite/preview?draft=true`);
+                          setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
                         }
                         setPreviewModalOpen(true);
                       }}
@@ -905,11 +905,11 @@ const WeddingForm = () => {
       </div>
 
       <Dialog open={previewModalOpen} onOpenChange={setPreviewModalOpen}>
-        <DialogContent className="max-w-[95vw] w-full h-[95vh] p-0">
-          <DialogHeader className="p-6 pb-0">
+        <DialogContent className="max-w-[95vw] w-full h-[95vh] p-0 flex flex-col">
+          <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
             <DialogTitle>Preview Invitation</DialogTitle>
           </DialogHeader>
-          <div className="flex-1 w-full h-full overflow-hidden p-6 pt-2">
+          <div className="flex-1 w-full overflow-hidden px-6 pb-6">
             <iframe
               src={previewUrl}
               className="w-full h-full border-0 rounded-lg"

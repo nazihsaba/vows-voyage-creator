@@ -23,6 +23,8 @@ const WeddingInvite = () => {
   const [searchParams] = useSearchParams();
   const isPreview = searchParams.get("preview") === "true";
   const isDraftPreview = searchParams.get("draft") === "true";
+  const isReadOnly = searchParams.get("readOnly") === "true";
+  const canEdit = isPreview && !isReadOnly && !isDraftPreview;
   const [wedding, setWedding] = useState<any>(null);
   const [locations, setLocations] = useState<any[]>([]);
   const [gallery, setGallery] = useState<any[]>([]);
@@ -39,7 +41,7 @@ const WeddingInvite = () => {
   const template = useTemplate(wedding?.template_type);
 
   const updateFieldCustomization = async (fieldId: string, text: string, style: any) => {
-    if (!wedding?.id || !isPreview || isDraftPreview) return;
+    if (!wedding?.id || !canEdit) return;
 
     try {
       const updatedCustomizations = {
@@ -70,7 +72,7 @@ const WeddingInvite = () => {
   };
 
   const updateMainImage = async (newUrl: string) => {
-    if (!wedding?.id || !isPreview || isDraftPreview) return;
+    if (!wedding?.id || !canEdit) return;
 
     try {
       const { error } = await supabase
@@ -338,7 +340,7 @@ const WeddingInvite = () => {
           locations={locations}
           gallery={gallery}
           giftCards={giftCards}
-          isPreview={isPreview}
+          isPreview={canEdit}
           onFieldUpdate={updateFieldCustomization}
           getFieldValue={getFieldValue}
           getFieldStyle={getFieldStyle}
@@ -466,11 +468,11 @@ const WeddingInvite = () => {
     <div className="relative min-h-screen bg-black overflow-hidden">
       {/* Fixed Background Image */}
       <div className="fixed inset-0 w-full h-full">
-        {isPreview ? (
+        {canEdit ? (
           <EditableImage
             imageUrl={wedding.main_picture_url || heroImage}
             onUpdate={updateMainImage}
-            isPreview={isPreview}
+            isPreview={canEdit}
             className="w-full h-full object-cover"
             alt="Wedding couple"
           />
@@ -533,7 +535,7 @@ const WeddingInvite = () => {
                   style={getFieldStyle("groom_name")}
                   onUpdate={updateFieldCustomization}
                   isLocked={true}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="h1"
                   className="font-serif mb-4"
                 />
@@ -544,7 +546,7 @@ const WeddingInvite = () => {
                   style={getFieldStyle("bride_name")}
                   onUpdate={updateFieldCustomization}
                   isLocked={true}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="h1"
                   className="font-serif mb-8"
                 />
@@ -553,7 +555,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("hero_subtitle", "are getting married")}
                   style={getFieldStyle("hero_subtitle")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="p"
                   className="text-xl tracking-wide"
                 />
@@ -574,7 +576,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("quote_text", wedding.main_description || '"Therefore what God has joined together, let no one separate."')}
                   style={getFieldStyle("quote_text")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   multiline={true}
                   tag="p"
                   className="text-2xl font-serif italic mb-4"
@@ -584,7 +586,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("quote_attribution", "- Mark 10:9")}
                   style={getFieldStyle("quote_attribution")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="p"
                   className="text-lg text-muted-foreground"
                 />
@@ -601,7 +603,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("family_intro", "With joyous hearts,")}
                   style={getFieldStyle("family_intro")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="p"
                   className="text-xl mb-8 text-muted-foreground"
                 />
@@ -610,7 +612,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("groom_family", wedding.groom_family || "Groom's Family")}
                   style={getFieldStyle("groom_family")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="h3"
                   className="text-3xl font-serif mb-2 text-primary"
                 />
@@ -620,7 +622,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("bride_family", wedding.bride_family || "Bride's Family")}
                   style={getFieldStyle("bride_family")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   tag="h3"
                   className="text-3xl font-serif mb-8 text-primary"
                 />
@@ -629,7 +631,7 @@ const WeddingInvite = () => {
                   text={getFieldValue("family_description", "Request the honor of your presence at the wedding of their son and daughter")}
                   style={getFieldStyle("family_description")}
                   onUpdate={updateFieldCustomization}
-                  isPreview={isPreview}
+                  isPreview={canEdit}
                   multiline={true}
                   tag="p"
                   className="text-lg text-muted-foreground"
