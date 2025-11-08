@@ -40,6 +40,7 @@ const WeddingForm = () => {
     groom_family: "",
     bride_family: "",
     wedding_date: "",
+    rsvp_deadline: "",
     main_description: "",
     slug: "",
     status: "draft",
@@ -266,6 +267,17 @@ const WeddingForm = () => {
       // Upload gallery images if template supports gallery
       const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen", "template5", "modern-wedding"];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
+        // Get the highest image_order to append new images
+        const { data: maxOrderData } = await supabase
+          .from("gallery_images")
+          .select("image_order")
+          .eq("wedding_id", weddingId)
+          .order("image_order", { ascending: false })
+          .limit(1)
+          .single();
+        
+        const startingOrder = (maxOrderData?.image_order || 0) + 1;
+
         const galleryUrls = await Promise.all(
           galleryFiles.map((file) => uploadImage(file, user.id))
         );
@@ -273,7 +285,7 @@ const WeddingForm = () => {
         const galleryInserts = galleryUrls.map((url, index) => ({
           wedding_id: weddingId,
           image_url: url,
-          image_order: existingGalleryImages.length + index + 1,
+          image_order: startingOrder + index,
         }));
 
         const { error: galleryError } = await supabase
@@ -356,7 +368,11 @@ const WeddingForm = () => {
       }
 
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
-      navigate("/dashboard");
+      
+      // Navigate to my events page on create, stay on form on update
+      if (!id) {
+        navigate("/dashboard/my-events");
+      }
     } catch (error: any) {
       toast({
         title: "Error",
@@ -433,15 +449,27 @@ const WeddingForm = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="wedding_date">Wedding Date *</Label>
-                <Input
-                  id="wedding_date"
-                  type="date"
-                  value={formData.wedding_date}
-                  onChange={(e) => setFormData({ ...formData, wedding_date: e.target.value })}
-                  required
-                />
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="wedding_date">Wedding Date *</Label>
+                  <Input
+                    id="wedding_date"
+                    type="date"
+                    value={formData.wedding_date}
+                    onChange={(e) => setFormData({ ...formData, wedding_date: e.target.value })}
+                    required
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="rsvp_deadline">Confirmation Deadline</Label>
+                  <p className="text-sm text-muted-foreground">Last date guests can RSVP</p>
+                  <Input
+                    id="rsvp_deadline"
+                    type="date"
+                    value={formData.rsvp_deadline}
+                    onChange={(e) => setFormData({ ...formData, rsvp_deadline: e.target.value })}
+                  />
+                </div>
               </div>
 
               <div className="space-y-2">
@@ -803,13 +831,42 @@ const WeddingForm = () => {
                     Preview
                   </Button>
                 )}
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setFormData({ ...formData, status: formData.status === "published" ? "draft" : "published" })}
-                >
-                  {formData.status === "published" ? "Unpublish" : "Publish"}
-                </Button>
+                {id && (
+                  <Button
+                    type="button"
+                    variant={formData.status === "published" ? "outline" : "default"}
+                    disabled={loading}
+                    onClick={async () => {
+                      if (!id) return;
+                      setLoading(true);
+                      try {
+                        const newStatus = formData.status === "published" ? "draft" : "published";
+                        const { error } = await supabase
+                          .from("weddings")
+                          .update({ status: newStatus })
+                          .eq("id", id);
+                        
+                        if (error) throw error;
+                        
+                        setFormData({ ...formData, status: newStatus });
+                        toast({ 
+                          title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
+                          description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
+                        });
+                      } catch (error: any) {
+                        toast({
+                          title: "Error",
+                          description: error.message,
+                          variant: "destructive",
+                        });
+                      } finally {
+                        setLoading(false);
+                      }
+                    }}
+                  >
+                    {formData.status === "published" ? "Unpublish" : "Publish"}
+                  </Button>
+                )}
               </div>
             </form>
           </CardContent>
