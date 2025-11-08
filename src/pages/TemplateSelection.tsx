@@ -6,6 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { templateConfig, getTemplatesByCategory, getPopularTemplates } from "@/config/templates";
 import { TemplatePreviewLive } from "@/components/templates/TemplatePreviewLive";
 import { TemplateCategory } from "@/types/templates";
+import { Heart } from "lucide-react";
 
 const TemplateSelection = () => {
   const navigate = useNavigate();
@@ -34,13 +35,16 @@ const TemplateSelection = () => {
       <header className="bg-white shadow-soft sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 py-6">
           <div className="flex items-center justify-between mb-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary capitalize">
-                Choose Your {eventType} Template
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                Select a design that matches your style
-              </p>
+            <div className="flex items-center gap-3">
+              <Heart className="w-8 h-8 text-rose-500" />
+              <div>
+                <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
+                  Wedding Templates
+                </h1>
+                <p className="text-muted-foreground mt-1">
+                  Select a design that matches your style
+                </p>
+              </div>
             </div>
             <Button variant="outline" onClick={() => navigate("/dashboard/select-event-type")}>
               Back
