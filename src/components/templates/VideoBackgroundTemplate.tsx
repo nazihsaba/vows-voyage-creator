@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
+import { Play, Pause } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -26,6 +28,7 @@ export const VideoBackgroundTemplate = ({
   getFieldValue,
   getFieldStyle,
 }: VideoBackgroundTemplateProps) => {
+  const [isPlaying, setIsPlaying] = useState(true);
   const [scrollProgress, setScrollProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const ceremony = locations.find(loc => loc.type === 'ceremony');
@@ -44,14 +47,16 @@ export const VideoBackgroundTemplate = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  useEffect(() => {
-    // Ensure video plays automatically on mount
+  const toggleVideo = () => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log('Autoplay prevented:', error);
-      });
+      if (isPlaying) {
+        videoRef.current.pause();
+      } else {
+        videoRef.current.play();
+      }
+      setIsPlaying(!isPlaying);
     }
-  }, []);
+  };
 
   return (
     <div className="relative w-full min-h-screen">
@@ -77,6 +82,15 @@ export const VideoBackgroundTemplate = ({
           style={{ width: `${scrollProgress}%` }}
         />
       </div>
+
+      {/* Video Controls */}
+      <Button
+        onClick={toggleVideo}
+        className="fixed bottom-8 right-8 z-40 bg-white/10 hover:bg-white/20 text-white backdrop-blur-md border border-white/20 w-14 h-14 rounded-full p-0"
+        size="icon"
+      >
+        {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5" />}
+      </Button>
 
       {/* Scrollable Content */}
       <div className="relative z-10">
