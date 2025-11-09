@@ -4,9 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar } from "lucide-react";
-import weddingClassic from "@/assets/template-wedding-classic.jpg";
-import weddingModern from "@/assets/template-wedding-modern.jpg";
+import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock } from "lucide-react";
+import modernRomance from "@/assets/template-modern-romance.jpg";
+import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -39,9 +39,30 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-rose-500",
       templates: [
-        { id: "template1", name: "Classic Elegance", description: "Traditional wedding invitation", image: weddingClassic },
-        { id: "template2", name: "Modern Romance", description: "Contemporary design with gallery", image: weddingModern },
-        { id: "template6", name: "Cinematic Video", description: "Immersive video background template", image: weddingModern },
+        { 
+          id: "template2", 
+          name: "Modern Romance", 
+          description: "Contemporary design with stunning gallery showcase", 
+          image: modernRomance,
+          features: [
+            { icon: Images, text: "Photo Gallery" },
+            { icon: MapPin, text: "Event Locations" },
+            { icon: GiftIcon, text: "Gift Registry" },
+            { icon: Clock, text: "Countdown Timer" }
+          ]
+        },
+        { 
+          id: "template6", 
+          name: "Cinematic Video", 
+          description: "Immersive full-screen video background experience", 
+          image: cinematicVideo,
+          features: [
+            { icon: Video, text: "Video Background" },
+            { icon: MapPin, text: "Event Locations" },
+            { icon: GiftIcon, text: "Gift Registry" },
+            { icon: Clock, text: "Countdown Timer" }
+          ]
+        },
       ],
     },
     {
@@ -103,33 +124,45 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-gradient-soft">
-      <header className="bg-white shadow-soft">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Calendar className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
-              Choose Your Template
-            </h1>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/dashboard/my-events")}>
-              My Events
-            </Button>
-            <Button variant="outline" onClick={handleLogout}>
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </Button>
+      <header className="bg-white shadow-soft sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
+              <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-primary text-center sm:text-left">
+                Choose Your Template
+              </h1>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+              <Button 
+                onClick={() => navigate("/dashboard/my-events")}
+                className="flex-1 sm:flex-none text-sm sm:text-base"
+                size="sm"
+              >
+                My Events
+              </Button>
+              <Button 
+                variant="outline" 
+                onClick={handleLogout}
+                className="flex-1 sm:flex-none text-sm sm:text-base"
+                size="sm"
+              >
+                <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                <span className="hidden sm:inline">Logout</span>
+                <span className="sm:hidden">Exit</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
         {/* Filter Chips */}
-        <div className="mb-8">
+        <div className="mb-6 sm:mb-8">
           <div className="flex flex-wrap gap-2 justify-center">
             <Badge
               variant={selectedCategory === null ? "default" : "outline"}
-              className="cursor-pointer px-4 py-2 text-sm hover:bg-primary/10 transition-colors"
+              className="cursor-pointer px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-primary/10 transition-colors"
               onClick={() => setSelectedCategory(null)}
             >
               All Events
@@ -140,10 +173,10 @@ const Dashboard = () => {
                 <Badge
                   key={category.id}
                   variant={selectedCategory === category.id ? "default" : "outline"}
-                  className="cursor-pointer px-4 py-2 text-sm hover:bg-primary/10 transition-colors"
+                  className="cursor-pointer px-3 sm:px-4 py-1.5 sm:py-2 text-xs sm:text-sm hover:bg-primary/10 transition-colors"
                   onClick={() => setSelectedCategory(category.id)}
                 >
-                  <Icon className={`w-4 h-4 mr-2 ${selectedCategory === category.id ? '' : category.color}`} />
+                  <Icon className={`w-3 h-3 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 ${selectedCategory === category.id ? '' : category.color}`} />
                   {category.name}
                 </Badge>
               );
@@ -151,34 +184,34 @@ const Dashboard = () => {
           </div>
         </div>
         
-        <div className="space-y-12">
+        <div className="space-y-8 sm:space-y-12">
           {templateCategories
             .filter(category => selectedCategory === null || category.id === selectedCategory)
             .map((category) => {
             const Icon = category.icon;
             return (
               <div key={category.id}>
-                <div className="flex items-center gap-3 mb-6">
-                  <Icon className={`w-8 h-8 ${category.color}`} />
-                  <h2 className="text-3xl font-serif font-bold text-foreground">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <Icon className={`w-6 h-6 sm:w-8 sm:h-8 ${category.color}`} />
+                  <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">
                     {category.name}
                   </h2>
                 </div>
                 
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {category.templates.map((template) => (
                     <Card
                       key={template.id}
                       className={`shadow-soft hover:shadow-elegant transition-all ${
-                        template.disabled ? "opacity-50" : "cursor-pointer"
+                        template.disabled ? "opacity-50" : "cursor-pointer hover:scale-[1.02]"
                       }`}
                       onClick={() =>
                         !template.disabled &&
                         navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`)
                       }
                     >
-                      <CardHeader>
-                        <div className="aspect-video rounded-lg overflow-hidden mb-4">
+                      <CardHeader className="p-4 sm:p-6">
+                        <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
                           {template.image ? (
                             <img 
                               src={template.image} 
@@ -187,16 +220,35 @@ const Dashboard = () => {
                             />
                           ) : (
                             <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-                              <Icon className={`w-16 h-16 ${category.color} opacity-50`} />
+                              <Icon className={`w-12 h-12 sm:w-16 sm:h-16 ${category.color} opacity-50`} />
                             </div>
                           )}
                         </div>
-                        <CardTitle className="text-xl font-serif">{template.name}</CardTitle>
-                        <CardDescription>{template.description}</CardDescription>
+                        <CardTitle className="text-lg sm:text-xl font-serif">{template.name}</CardTitle>
+                        <CardDescription className="text-sm sm:text-base">{template.description}</CardDescription>
+                        
+                        {/* Features List */}
+                        {template.features && (
+                          <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
+                            {template.features.map((feature, idx) => {
+                              const FeatureIcon = feature.icon;
+                              return (
+                                <Badge 
+                                  key={idx} 
+                                  variant="secondary" 
+                                  className="text-xs flex items-center gap-1 py-1"
+                                >
+                                  <FeatureIcon className="w-3 h-3" />
+                                  {feature.text}
+                                </Badge>
+                              );
+                            })}
+                          </div>
+                        )}
                       </CardHeader>
-                      <CardContent>
+                      <CardContent className="p-4 sm:p-6 pt-0">
                         {!template.disabled && (
-                          <Button className="w-full">Use This Template</Button>
+                          <Button className="w-full text-sm sm:text-base">Use This Template</Button>
                         )}
                       </CardContent>
                     </Card>
