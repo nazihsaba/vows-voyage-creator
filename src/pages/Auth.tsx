@@ -46,9 +46,12 @@ const Auth = () => {
         return;
       }
 
-      // Send OTP
-      const { error: otpError } = await supabase.functions.invoke('send-otp', {
-        body: { email: email.toLowerCase() }
+      // Use Supabase's built-in OTP (completely free!)
+      const { error: otpError } = await supabase.auth.signInWithOtp({
+        email: email.toLowerCase(),
+        options: {
+          shouldCreateUser: true,
+        }
       });
 
       if (otpError) throw otpError;
@@ -74,34 +77,19 @@ const Auth = () => {
         return;
       }
 
-      // Verify OTP and get session
-      const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-otp', {
-        body: { 
-          email: email.toLowerCase(), 
-          code: otp,
-          markAsUsed: true
-        }
+      // Verify OTP using Supabase's built-in method
+      const { data, error: verifyError } = await supabase.auth.verifyOtp({
+        email: email.toLowerCase(),
+        token: otp,
+        type: 'email'
       });
 
-      if (verifyError || !verifyData?.success) {
-        throw new Error(verifyData?.error || "Invalid or expired verification code");
+      if (verifyError) {
+        throw new Error(verifyError.message || "Invalid or expired verification code");
       }
 
-      // Use the magic link to sign in
-      if (verifyData.session?.properties?.action_link) {
-        const actionLink = verifyData.session.properties.action_link;
-        const url = new URL(actionLink);
-        const token = url.searchParams.get('token');
-        const type = url.searchParams.get('type');
-        
-        if (token && type) {
-          const { error: authError } = await supabase.auth.verifyOtp({
-            token_hash: token,
-            type: type as any,
-          });
-
-          if (authError) throw authError;
-        }
+      if (!data.session) {
+        throw new Error("Failed to create session");
       }
       
       toast.success("Successfully logged in! Redirecting...");
@@ -119,8 +107,11 @@ const Auth = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.functions.invoke('send-otp', {
-        body: { email: email.toLowerCase() }
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.toLowerCase(),
+        options: {
+          shouldCreateUser: true,
+        }
       });
 
       if (error) throw error;
