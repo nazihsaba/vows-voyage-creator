@@ -56,6 +56,7 @@ const WeddingForm = () => {
     main_picture_url: "",
     video_url: "",
     template_type: searchParams.get("template") || "template1",
+    custom_primary_color: "#E2C497",
   });
   
   const template = formData.template_type;
@@ -526,6 +527,29 @@ const WeddingForm = () => {
                   onChange={(e) => setFormData({ ...formData, main_description: e.target.value })}
                   rows={4}
                 />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="custom_primary_color">Primary Color (Gold Tone)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="custom_primary_color"
+                    type="color"
+                    value={formData.custom_primary_color}
+                    onChange={(e) => setFormData({ ...formData, custom_primary_color: e.target.value })}
+                    className="w-20 h-10 p-1 cursor-pointer"
+                  />
+                  <Input
+                    type="text"
+                    value={formData.custom_primary_color}
+                    onChange={(e) => setFormData({ ...formData, custom_primary_color: e.target.value })}
+                    placeholder="#E2C497"
+                    className="flex-1"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  This color will be used for accents and decorative elements throughout the invitation
+                </p>
               </div>
 
               {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}

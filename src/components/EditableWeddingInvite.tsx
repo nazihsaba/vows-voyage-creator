@@ -24,7 +24,7 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
     main_description: wedding?.main_description || "",
   });
   const [colors, setColors] = useState({
-    primary: wedding?.custom_primary_color || "#E0C097",
+    primary: wedding?.custom_primary_color || "#E2C497",
     accent: wedding?.custom_accent_color || "#E6B7B8",
     text: wedding?.custom_text_color || "#2C2C2C",
   });
@@ -125,7 +125,7 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
       main_description: wedding?.main_description || "",
     });
     setColors({
-      primary: wedding?.custom_primary_color || "#E0C097",
+      primary: wedding?.custom_primary_color || "#E2C497",
       accent: wedding?.custom_accent_color || "#E6B7B8",
       text: wedding?.custom_text_color || "#2C2C2C",
     });
