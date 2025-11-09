@@ -5,6 +5,7 @@ import { EditableField } from '@/components/EditableField';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
+import { Clock, MapPin } from 'lucide-react';
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -228,8 +229,8 @@ export const VideoBackgroundTemplate = ({
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                     </div>
                     <div className="flex-1 p-8 space-y-6">
-                      <div className="flex items-center gap-3 text-2xl">
-                        <span>🕐</span>
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-6 h-6" />
                         <p className="text-template-body font-bold">{ceremony.time}</p>
                       </div>
                       <div className="space-y-3">
@@ -243,7 +244,7 @@ export const VideoBackgroundTemplate = ({
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                         >
-                          <span>📍</span>
+                          <MapPin className="w-5 h-5" />
                           <span>Google Maps</span>
                         </a>
                       )}
@@ -256,8 +257,8 @@ export const VideoBackgroundTemplate = ({
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
                     <div className="flex-1 p-8 space-y-6">
-                      <div className="flex items-center gap-3 text-2xl">
-                        <span>🕐</span>
+                      <div className="flex items-center gap-3">
+                        <Clock className="w-6 h-6" />
                         <p className="text-template-body font-bold">{venue.time}</p>
                       </div>
                       <div className="space-y-3">
@@ -271,7 +272,7 @@ export const VideoBackgroundTemplate = ({
                           rel="noopener noreferrer"
                           className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                         >
-                          <span>📍</span>
+                          <MapPin className="w-5 h-5" />
                           <span>Google Maps</span>
                         </a>
                       )}
