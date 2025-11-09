@@ -17,6 +17,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { hexToHSL } from "@/lib/colorUtils";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -105,6 +106,24 @@ const WeddingInvite = () => {
   const getFieldStyle = (fieldId: string) => {
     return fieldCustomizations[fieldId] || {};
   };
+
+  // Apply custom colors from wedding data
+  useEffect(() => {
+    if (wedding) {
+      const root = document.documentElement;
+      
+      // Apply custom colors if they exist
+      if (wedding.custom_primary_color) {
+        root.style.setProperty("--primary", hexToHSL(wedding.custom_primary_color));
+      }
+      if (wedding.custom_accent_color) {
+        root.style.setProperty("--accent", hexToHSL(wedding.custom_accent_color));
+      }
+      if (wedding.custom_text_color) {
+        root.style.setProperty("--foreground", hexToHSL(wedding.custom_text_color));
+      }
+    }
+  }, [wedding]);
 
   useEffect(() => {
     const fetchWedding = async () => {
