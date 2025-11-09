@@ -7,8 +7,11 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
+import omtLogo from "@/assets/omt-logo.jpg";
+import whishLogo from "@/assets/whish-logo.png";
 
 const WeddingForm = () => {
   const { id } = useParams();
@@ -700,16 +703,22 @@ const WeddingForm = () => {
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
-                        <Input
-                          id={`card_name_${index}`}
+                        <Select
                           value={card.card_name}
-                          onChange={(e) => {
+                          onValueChange={(value) => {
                             const newCards = [...giftCards];
-                            newCards[index].card_name = e.target.value;
+                            newCards[index].card_name = value;
                             setGiftCards(newCards);
                           }}
-                          placeholder="e.g., Visa"
-                        />
+                        >
+                          <SelectTrigger id={`card_name_${index}`}>
+                            <SelectValue placeholder="Select card" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="OMT">OMT</SelectItem>
+                            <SelectItem value="Whish">Whish</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
@@ -726,64 +735,18 @@ const WeddingForm = () => {
                       </div>
                     </div>
                     
-                    <div className="space-y-2">
-                      <Label htmlFor={`card_icon_${index}`}>Card Icon/Logo</Label>
-                      <div className="flex items-center gap-4">
-                        {cardIconPreviews[index] ? (
-                          <div className="relative h-16 w-24 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center bg-muted/20">
-                            <img 
-                              src={cardIconPreviews[index]} 
-                              alt="Card icon" 
-                              className="max-h-full max-w-full object-contain"
-                            />
-                            <Button
-                              type="button"
-                              variant="destructive"
-                              size="icon"
-                              className="absolute -top-2 -right-2 h-6 w-6"
-                              onClick={() => {
-                                const newPreviews = { ...cardIconPreviews };
-                                delete newPreviews[index];
-                                setCardIconPreviews(newPreviews);
-                                const newFiles = { ...cardIconFiles };
-                                delete newFiles[index];
-                                setCardIconFiles(newFiles);
-                                const newCards = [...giftCards];
-                                newCards[index].logo_url = undefined;
-                                setGiftCards(newCards);
-                              }}
-                            >
-                              <X className="w-3 h-3" />
-                            </Button>
-                          </div>
-                        ) : (
-                          <label
-                            htmlFor={`card_icon_${index}`}
-                            className="flex flex-col items-center justify-center h-16 w-24 border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                          >
-                            <Upload className="w-6 h-6 text-muted-foreground" />
-                            <span className="text-xs text-muted-foreground mt-1">Upload</span>
-                          </label>
-                        )}
-                        <Input
-                          id={`card_icon_${index}`}
-                          type="file"
-                          accept="image/*"
-                          onChange={(e) => {
-                            const file = e.target.files?.[0];
-                            if (file) {
-                              setCardIconFiles({ ...cardIconFiles, [index]: file });
-                              const reader = new FileReader();
-                              reader.onloadend = () => {
-                                setCardIconPreviews({ ...cardIconPreviews, [index]: reader.result as string });
-                              };
-                              reader.readAsDataURL(file);
-                            }
-                          }}
-                          className="hidden"
-                        />
+                    {card.card_name && (
+                      <div className="space-y-2">
+                        <Label>Card Icon Preview</Label>
+                        <div className="h-16 w-24 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center bg-muted/20 p-2">
+                          <img 
+                            src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
+                            alt={card.card_name} 
+                            className="max-h-full max-w-full object-contain"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
                     
                     {giftCards.length > 1 && (
                       <Button
