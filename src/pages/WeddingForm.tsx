@@ -635,7 +635,7 @@ const WeddingForm = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="ceremony_location_link">Map Link</Label>
+                    <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
                     <Input
                       id="ceremony_location_link"
                       value={locations.ceremony_location_link}
@@ -669,7 +669,7 @@ const WeddingForm = () => {
                     </div>
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="venue_location_link">Map Link</Label>
+                    <Label htmlFor="venue_location_link">Venue map link</Label>
                     <Input
                       id="venue_location_link"
                       value={locations.venue_location_link}
