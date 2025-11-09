@@ -18,6 +18,7 @@ export default {
         sans: ['Inter', 'sans-serif'],
         'dancing': ['Dancing Script', 'cursive'],
         'script': ['Dancing Script', 'cursive'],
+        'cursive': ['Dancing Script', 'cursive'],
         'playfair': ['Playfair Display', 'serif'],
         'cormorant': ['Cormorant Garamond', 'serif'],
         'great-vibes': ['Great Vibes', 'cursive'],

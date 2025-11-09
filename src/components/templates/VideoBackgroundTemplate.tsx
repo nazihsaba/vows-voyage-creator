@@ -223,43 +223,59 @@ export const VideoBackgroundTemplate = ({
 
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
-                  <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
-                    <h3 className="text-template-heading mb-4">Ceremony</h3>
-                    <p className="text-template-body font-bold">{ceremony.time}</p>
-                    <div className="space-y-2">
-                      <p className="text-template-small">Location</p>
-                      <p className="text-template-body">{ceremony.location_name}</p>
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                    <div className="w-32 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                     </div>
-                    {ceremony.location_link && (
-                      <a
-                        href={ceremony.location_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg transition-colors"
-                      >
-                        View on Map
-                      </a>
-                    )}
+                    <div className="flex-1 p-8 space-y-6">
+                      <div className="flex items-center gap-3 text-2xl">
+                        <span>🕐</span>
+                        <p className="text-template-body font-bold">{ceremony.time}</p>
+                      </div>
+                      <div className="space-y-3">
+                        <p className="text-xl font-bold">Event Location</p>
+                        <p className="text-template-body">{ceremony.location_name}</p>
+                      </div>
+                      {ceremony.location_link && (
+                        <a
+                          href={ceremony.location_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        >
+                          <span>📍</span>
+                          <span>Google Maps</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
                 {venue && (
-                  <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
-                    <h3 className="text-template-heading mb-4">Reception</h3>
-                    <p className="text-template-body font-bold">{venue.time}</p>
-                    <div className="space-y-2">
-                      <p className="text-template-small">Location</p>
-                      <p className="text-template-body">{venue.location_name}</p>
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                    <div className="w-32 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
-                    {venue.location_link && (
-                      <a
-                        href={venue.location_link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-block bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-3 rounded-lg transition-colors"
-                      >
-                        View on Map
-                      </a>
-                    )}
+                    <div className="flex-1 p-8 space-y-6">
+                      <div className="flex items-center gap-3 text-2xl">
+                        <span>🕐</span>
+                        <p className="text-template-body font-bold">{venue.time}</p>
+                      </div>
+                      <div className="space-y-3">
+                        <p className="text-xl font-bold">Event Location</p>
+                        <p className="text-template-body">{venue.location_name}</p>
+                      </div>
+                      {venue.location_link && (
+                        <a
+                          href={venue.location_link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        >
+                          <span>📍</span>
+                          <span>Google Maps</span>
+                        </a>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
