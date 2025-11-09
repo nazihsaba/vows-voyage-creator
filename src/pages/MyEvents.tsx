@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2 } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -224,10 +224,11 @@ const MyEvents = () => {
 
                         <Button
                           variant="outline"
-                          className="w-full flex items-center justify-center"
+                          className="w-full flex items-center justify-between"
                           onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                         >
-                          Manage invitation Links
+                          <span>Manage invitation Links</span>
+                          <List className="w-4 h-4" />
                         </Button>
                       </>
                     )}
