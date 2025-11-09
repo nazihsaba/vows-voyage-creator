@@ -211,20 +211,20 @@ const MyEvents = () => {
                       <>
                         <Button
                           variant="outline"
-                          className="w-full"
+                          className="w-full flex flex-col items-center justify-center gap-2"
                           onClick={() => {
                             setSelectedWeddingId(wedding.id);
                             setSelectedWeddingSlug(wedding.slug);
                             setGenerateLinkOpen(true);
                           }}
                         >
-                          <Link2 className="w-4 h-4 mr-2" />
-                          Generate Invitation Link
+                          <Link2 className="w-4 h-4" />
+                          <span>Generate Invitation Link</span>
                         </Button>
 
                         <Button
                           variant="outline"
-                          className="w-full"
+                          className="w-full flex items-center justify-center"
                           onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                         >
                           Manage invitation Links
