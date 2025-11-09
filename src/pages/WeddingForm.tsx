@@ -612,76 +612,86 @@ const WeddingForm = () => {
               )}
 
               {/* Location Fields */}
-              <div className="space-y-4 border-t pt-6">
+              <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-semibold">Event Locations</h3>
                 
-                <div className="space-y-4">
-                  <h4 className="text-md font-medium text-muted-foreground">Ceremony</h4>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="ceremony_location">Location Name</Label>
-                      <Input
-                        id="ceremony_location"
-                        value={locations.ceremony_location}
-                        onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
-                        placeholder="Church or venue name"
-                      />
+                {/* Ceremony Section */}
+                <Card className="border-2">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Ceremony Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="ceremony_location">Location Name</Label>
+                        <Input
+                          id="ceremony_location"
+                          value={locations.ceremony_location}
+                          onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
+                          placeholder="Church or venue name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="ceremony_time">Time</Label>
+                        <Input
+                          id="ceremony_time"
+                          type="time"
+                          value={locations.ceremony_time}
+                          onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="ceremony_time">Time</Label>
+                      <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
                       <Input
-                        id="ceremony_time"
-                        type="time"
-                        value={locations.ceremony_time}
-                        onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                        id="ceremony_location_link"
+                        value={locations.ceremony_location_link}
+                        onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
+                        placeholder="https://maps.google.com/..."
+                        type="url"
                       />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
-                    <Input
-                      id="ceremony_location_link"
-                      value={locations.ceremony_location_link}
-                      onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
-                      placeholder="https://maps.google.com/..."
-                      type="url"
-                    />
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
 
-                <div className="space-y-4">
-                  <h4 className="text-md font-medium text-muted-foreground">Venue</h4>
-                  <div className="grid md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="venue_location">Location Name</Label>
-                      <Input
-                        id="venue_location"
-                        value={locations.venue_location}
-                        onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
-                        placeholder="Reception venue name"
-                      />
+                {/* Venue Section */}
+                <Card className="border-2">
+                  <CardHeader>
+                    <CardTitle className="text-xl">Venue Details</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                    <div className="grid md:grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="venue_location">Location Name</Label>
+                        <Input
+                          id="venue_location"
+                          value={locations.venue_location}
+                          onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
+                          placeholder="Reception venue name"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label htmlFor="venue_time">Time</Label>
+                        <Input
+                          id="venue_time"
+                          type="time"
+                          value={locations.venue_time}
+                          onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
+                        />
+                      </div>
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="venue_time">Time</Label>
+                      <Label htmlFor="venue_location_link">Venue map link</Label>
                       <Input
-                        id="venue_time"
-                        type="time"
-                        value={locations.venue_time}
-                        onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
+                        id="venue_location_link"
+                        value={locations.venue_location_link}
+                        onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
+                        placeholder="https://maps.google.com/..."
+                        type="url"
                       />
                     </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="venue_location_link">Venue map link</Label>
-                    <Input
-                      id="venue_location_link"
-                      value={locations.venue_location_link}
-                      onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
-                      placeholder="https://maps.google.com/..."
-                      type="url"
-                    />
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* Card List Section */}
