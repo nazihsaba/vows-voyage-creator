@@ -154,36 +154,6 @@ export type Database = {
           },
         ]
       }
-      otp_codes: {
-        Row: {
-          created_at: string
-          email: string
-          expires_at: string
-          hashed_otp: string
-          id: string
-          used: boolean
-          user_id: string | null
-        }
-        Insert: {
-          created_at?: string
-          email: string
-          expires_at: string
-          hashed_otp?: string
-          id?: string
-          used?: boolean
-          user_id?: string | null
-        }
-        Update: {
-          created_at?: string
-          email?: string
-          expires_at?: string
-          hashed_otp?: string
-          id?: string
-          used?: boolean
-          user_id?: string | null
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           created_at: string | null
@@ -338,7 +308,6 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      cleanup_expired_otps: { Args: never; Returns: undefined }
       get_masked_card_number: { Args: { card_number: string }; Returns: string }
     }
     Enums: {
