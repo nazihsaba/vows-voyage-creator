@@ -380,37 +380,6 @@ export const VideoBackgroundTemplate = ({
             </div>
           </section>
         )}
-
-        {/* Closing Message */}
-        <section className="min-h-screen flex items-center justify-center px-4 py-8">
-          <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
-            <EditableField
-              fieldId="closing-message"
-              text={getFieldValue("closing-message", "We can't wait to celebrate with you! Thank you for being part of our special day.")}
-              style={getFieldStyle("closing-message")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              multiline={true}
-              tag="p"
-              className="text-lg md:text-xl leading-relaxed"
-            />
-
-            {wedding.rsvp_deadline && (
-              <div className="pt-8 border-t border-border">
-                <p className="text-lg uppercase tracking-widest mb-2 opacity-70">
-                  RSVP By
-                </p>
-                <p className="text-2xl font-script">
-                  {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </p>
-              </div>
-            )}
-          </div>
-        </section>
       </div>
     </div>
   );
