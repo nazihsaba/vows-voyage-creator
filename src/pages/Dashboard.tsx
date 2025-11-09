@@ -136,18 +136,16 @@ const Dashboard = () => {
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
               <Button 
                 onClick={() => navigate("/dashboard/my-events")}
-                className="flex-1 sm:flex-none text-sm sm:text-base"
-                size="sm"
+                className="flex-1 sm:flex-none"
               >
                 My Events
               </Button>
               <Button 
                 variant="outline" 
                 onClick={handleLogout}
-                className="flex-1 sm:flex-none text-sm sm:text-base"
-                size="sm"
+                className="flex-1 sm:flex-none"
               >
-                <LogOut className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
+                <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
                 <span className="sm:hidden">Exit</span>
               </Button>
