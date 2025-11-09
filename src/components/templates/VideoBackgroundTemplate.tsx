@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
-import { CountdownTimer } from '@/components/CountdownTimer';
-import { GiftCards } from '@/components/GiftCards';
-import { EditableField } from '@/components/EditableField';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Clock, MapPin } from 'lucide-react';
+import { useState, useEffect, useRef } from "react";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { GiftCards } from "@/components/GiftCards";
+import { EditableField } from "@/components/EditableField";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import { Clock, MapPin } from "lucide-react";
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -46,8 +46,8 @@ export const VideoBackgroundTemplate = ({
 }: VideoBackgroundTemplateProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const ceremony = locations.find(loc => loc.type === 'ceremony');
-  const venue = locations.find(loc => loc.type === 'venue');
+  const ceremony = locations.find((loc) => loc.type === "ceremony");
+  const venue = locations.find((loc) => loc.type === "venue");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -58,14 +58,14 @@ export const VideoBackgroundTemplate = ({
       setScrollProgress(progress);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch(error => {
-        console.log('Video autoplay prevented:', error);
+      videoRef.current.play().catch((error) => {
+        console.log("Video autoplay prevented:", error);
       });
     }
   }, []);
@@ -74,25 +74,21 @@ export const VideoBackgroundTemplate = ({
     <div className="relative w-full min-h-screen">
       {/* Fixed Video Background */}
       <div className="fixed inset-0 w-full h-full overflow-hidden">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
-          <source src={wedding.video_url || "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4"} type="video/mp4" />
+        <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source
+            src={
+              wedding.video_url ||
+              "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4"
+            }
+            type="video/mp4"
+          />
         </video>
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-white/20 z-50">
-        <div 
-          className="h-full bg-white transition-all duration-300"
-          style={{ width: `${scrollProgress}%` }}
-        />
+        <div className="h-full bg-white transition-all duration-300" style={{ width: `${scrollProgress}%` }} />
       </div>
 
       {/* Scrollable Content */}
@@ -109,7 +105,7 @@ export const VideoBackgroundTemplate = ({
               tag="p"
               className="text-template-small"
             />
-            
+
             <div className="space-y-4">
               <EditableField
                 fieldId="groom-name"
@@ -134,12 +130,15 @@ export const VideoBackgroundTemplate = ({
 
             <EditableField
               fieldId="wedding-date-display"
-              text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              }))}
+              text={getFieldValue(
+                "wedding-date-display",
+                new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }),
+              )}
               style={getFieldStyle("wedding-date-display")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -166,7 +165,7 @@ export const VideoBackgroundTemplate = ({
                     className="text-template-subtitle"
                   />
                 </div>
-                
+
                 <div className="space-y-4">
                   <p className="text-template-small">Bride's Family</p>
                   <EditableField
@@ -184,7 +183,10 @@ export const VideoBackgroundTemplate = ({
               <div className="pt-8 border-t border-border">
                 <EditableField
                   fieldId="invitation-text"
-                  text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding celebration")}
+                  text={getFieldValue(
+                    "invitation-text",
+                    "Request the honor of your presence at the wedding celebration",
+                  )}
                   style={getFieldStyle("invitation-text")}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
@@ -225,8 +227,10 @@ export const VideoBackgroundTemplate = ({
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
                   <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
-                    <div className="w-32 bg-[hsl(54,20%,60%)] flex items-center justify-center">
-                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
+                    <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                        Ceremony
+                      </p>
                     </div>
                     <div className="flex-1 p-8 space-y-6">
                       <div className="flex items-center gap-3">
@@ -253,7 +257,7 @@ export const VideoBackgroundTemplate = ({
                 )}
                 {venue && (
                   <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
-                    <div className="w-32 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                    <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
                     <div className="flex-1 p-8 space-y-6">
@@ -307,10 +311,13 @@ export const VideoBackgroundTemplate = ({
                 tag="h2"
                 className="text-template-subtitle text-center"
               />
-              
+
               <EditableField
                 fieldId="rsvp-message"
-                text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+                text={getFieldValue(
+                  "rsvp-message",
+                  "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+                )}
                 style={getFieldStyle("rsvp-message")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -322,32 +329,26 @@ export const VideoBackgroundTemplate = ({
               {/* Invitees List with Checkboxes */}
               {invitees.length > 0 && (
                 <div className="space-y-6 pt-6 border-t border-border">
-                  <p className="text-lg font-semibold text-center">
-                    This invitation is specially prepared for:
-                  </p>
+                  <p className="text-lg font-semibold text-center">This invitation is specially prepared for:</p>
                   <div className="space-y-4">
                     {invitees.map((invitee: any) => (
-                      <div 
+                      <div
                         key={invitee.id}
                         className="flex items-center justify-between py-4 px-6 bg-accent/5 rounded-lg border border-border hover:bg-accent/10 transition-colors"
                       >
-                        <span className="text-xl font-serif text-primary">
-                          {invitee.name}
-                        </span>
+                        <span className="text-xl font-serif text-primary">{invitee.name}</span>
                         <div className="flex items-center gap-3">
                           <Checkbox
                             id={`rsvp-${invitee.id}`}
                             checked={rsvpResponses[invitee.id] === true}
-                            onCheckedChange={(checked) => 
-                              handleRsvpToggle(invitee.id, checked as boolean)
-                            }
+                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
                             disabled={isRsvpDeadlinePassed}
                             className="h-5 w-5"
                           />
-                          <Label 
+                          <Label
                             htmlFor={`rsvp-${invitee.id}`}
                             className={`text-base cursor-pointer font-medium ${
-                              isRsvpDeadlinePassed ? 'text-muted-foreground' : 'text-foreground'
+                              isRsvpDeadlinePassed ? "text-muted-foreground" : "text-foreground"
                             }`}
                           >
                             {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
@@ -356,19 +357,17 @@ export const VideoBackgroundTemplate = ({
                       </div>
                     ))}
                   </div>
-                  
+
                   <div className="pt-6 border-t border-border space-y-4">
                     <p className="text-lg font-semibold text-center">
                       Number of Guests: {numberOfPersons || invitees.length}
                     </p>
-                    
+
                     {isRsvpDeadlinePassed ? (
-                      <p className="text-sm text-red-600 text-center font-medium">
-                        RSVP deadline has passed
-                      </p>
+                      <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
                     ) : (
-                      <Button 
-                        onClick={handleRsvpSubmit} 
+                      <Button
+                        onClick={handleRsvpSubmit}
                         disabled={submittingRsvp}
                         className="w-full text-lg py-6"
                         size="lg"
@@ -386,10 +385,10 @@ export const VideoBackgroundTemplate = ({
                     {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
                   </p>
                   <p className="text-template-heading text-primary text-center">
-                    {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
+                    {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
                     })}
                   </p>
                 </div>
