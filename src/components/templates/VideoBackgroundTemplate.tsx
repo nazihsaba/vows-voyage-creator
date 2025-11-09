@@ -145,7 +145,7 @@ export const VideoBackgroundTemplate = ({
         </section>
 
         {/* Family Names Section */}
-        <section className="min-h-screen flex items-center justify-center px-4 py-20">
+        <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
@@ -193,7 +193,7 @@ export const VideoBackgroundTemplate = ({
         </section>
 
         {/* Countdown Section */}
-        <section className="min-h-screen flex items-center justify-center px-4 py-20">
+        <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
@@ -201,7 +201,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Wedding Events Section */}
         {(ceremony || venue) && (
-          <section className="min-h-screen flex items-center justify-center px-4 py-20">
+          <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-5xl w-full">
               <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-4xl md:text-5xl font-script mb-6">Wedding Events</h2>
@@ -265,7 +265,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Gift Cards Section */}
         {giftCards.length > 0 && (
-          <section className="min-h-screen flex items-center justify-center px-4 py-20">
+          <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
               <h2 className="text-4xl md:text-5xl font-script text-center mb-12">Wedding Gift</h2>
               <GiftCards giftCards={giftCards} />
@@ -274,7 +274,7 @@ export const VideoBackgroundTemplate = ({
         )}
 
         {/* Closing Message */}
-        <section className="min-h-screen flex items-center justify-center px-4 py-20">
+        <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
             <EditableField
               fieldId="closing-message"
