@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock } from "lucide-react";
+import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
@@ -110,9 +110,9 @@ const Dashboard = () => {
       ],
     },
     {
-      id: "other",
-      name: "Other Events",
-      icon: PartyPopper,
+      id: "bachelor",
+      name: "Bachelor",
+      icon: GlassWater,
       color: "text-indigo-500",
       templates: [
         { id: "template1", name: "Coming soon", description: "Versatile event template", disabled: true },
