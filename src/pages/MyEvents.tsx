@@ -227,7 +227,7 @@ const MyEvents = () => {
                           className="w-full"
                           onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                         >
-                          Manage Links
+                          Manage invitation Links
                         </Button>
                       </>
                     )}
