@@ -106,7 +106,7 @@ export const VideoBackgroundTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="p"
-              className="text-lg md:text-xl tracking-[0.3em] uppercase opacity-90"
+              className="text-template-small"
             />
             
             <div className="space-y-4">
@@ -117,7 +117,7 @@ export const VideoBackgroundTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h1"
-                className="text-6xl md:text-8xl font-script"
+                className="text-template-title"
               />
               <p className="text-4xl md:text-5xl">&</p>
               <EditableField
@@ -127,7 +127,7 @@ export const VideoBackgroundTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h1"
-                className="text-6xl md:text-8xl font-script"
+                className="text-template-title"
               />
             </div>
 
@@ -143,7 +143,7 @@ export const VideoBackgroundTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="p"
-              className="text-xl md:text-2xl tracking-widest"
+              className="text-template-body tracking-widest"
             />
           </div>
         </section>
@@ -154,7 +154,7 @@ export const VideoBackgroundTemplate = ({
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
-                  <p className="text-sm uppercase tracking-widest opacity-70">Groom's Family</p>
+                  <p className="text-template-small">Groom's Family</p>
                   <EditableField
                     fieldId="groom-family"
                     text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")}
@@ -162,12 +162,12 @@ export const VideoBackgroundTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-3xl md:text-4xl font-script"
+                    className="text-template-subtitle"
                   />
                 </div>
                 
                 <div className="space-y-4">
-                  <p className="text-sm uppercase tracking-widest opacity-70">Bride's Family</p>
+                  <p className="text-template-small">Bride's Family</p>
                   <EditableField
                     fieldId="bride-family"
                     text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")}
@@ -175,7 +175,7 @@ export const VideoBackgroundTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-3xl md:text-4xl font-script"
+                    className="text-template-subtitle"
                   />
                 </div>
               </div>
@@ -189,7 +189,7 @@ export const VideoBackgroundTemplate = ({
                   isPreview={isPreview}
                   multiline={true}
                   tag="p"
-                  className="text-lg md:text-xl leading-relaxed text-center"
+                  className="text-template-body text-center"
                 />
               </div>
             </div>
@@ -208,7 +208,7 @@ export const VideoBackgroundTemplate = ({
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-5xl w-full">
               <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
-                <h2 className="text-4xl md:text-5xl font-script mb-6">Wedding Events</h2>
+                <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
                   fieldId="events-subtitle"
                   text={getFieldValue("events-subtitle", "Join us in celebrating this special day")}
@@ -217,18 +217,18 @@ export const VideoBackgroundTemplate = ({
                   isPreview={isPreview}
                   multiline={true}
                   tag="p"
-                  className="text-lg opacity-90"
+                  className="text-template-body opacity-90"
                 />
               </div>
 
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
                   <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
-                    <h3 className="text-3xl font-script mb-4">Ceremony</h3>
-                    <p className="text-2xl font-bold">{ceremony.time}</p>
+                    <h3 className="text-template-heading mb-4">Ceremony</h3>
+                    <p className="text-template-body font-bold">{ceremony.time}</p>
                     <div className="space-y-2">
-                      <p className="text-sm uppercase tracking-wider opacity-70">Location</p>
-                      <p className="text-lg">{ceremony.location_name}</p>
+                      <p className="text-template-small">Location</p>
+                      <p className="text-template-body">{ceremony.location_name}</p>
                     </div>
                     {ceremony.location_link && (
                       <a
@@ -244,11 +244,11 @@ export const VideoBackgroundTemplate = ({
                 )}
                 {venue && (
                   <div className="bg-white p-8 rounded-xl shadow-2xl space-y-6">
-                    <h3 className="text-3xl font-script mb-4">Reception</h3>
-                    <p className="text-2xl font-bold">{venue.time}</p>
+                    <h3 className="text-template-heading mb-4">Reception</h3>
+                    <p className="text-template-body font-bold">{venue.time}</p>
                     <div className="space-y-2">
-                      <p className="text-sm uppercase tracking-wider opacity-70">Location</p>
-                      <p className="text-lg">{venue.location_name}</p>
+                      <p className="text-template-small">Location</p>
+                      <p className="text-template-body">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
                       <a
@@ -271,7 +271,7 @@ export const VideoBackgroundTemplate = ({
         {giftCards.length > 0 && (
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
-              <h2 className="text-4xl md:text-5xl font-script text-center mb-12">Wedding Gift</h2>
+              <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
@@ -288,7 +288,7 @@ export const VideoBackgroundTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-4xl md:text-5xl font-script text-center"
+                className="text-template-subtitle text-center"
               />
               
               <EditableField
@@ -299,7 +299,7 @@ export const VideoBackgroundTemplate = ({
                 isPreview={isPreview}
                 multiline={true}
                 tag="p"
-                className="text-lg md:text-xl leading-relaxed text-center"
+                className="text-template-body text-center"
               />
 
               {/* Invitees List with Checkboxes */}
@@ -365,10 +365,10 @@ export const VideoBackgroundTemplate = ({
 
               {wedding.rsvp_deadline && (
                 <div className="pt-8 border-t border-border">
-                  <p className="text-lg uppercase tracking-widest mb-2 opacity-70 text-center">
+                  <p className="text-template-small text-center mb-2">
                     {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
                   </p>
-                  <p className="text-3xl font-script text-primary text-center">
+                  <p className="text-template-heading text-primary text-center">
                     {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
                       year: 'numeric', 
                       month: 'long', 

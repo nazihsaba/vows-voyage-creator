@@ -81,7 +81,7 @@ export const AnthonyOdileTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-lg md:text-xl tracking-widest uppercase opacity-90"
+            className="text-template-small"
           />
           
           <div className="space-y-2">
@@ -92,7 +92,7 @@ export const AnthonyOdileTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h1"
-              className="text-5xl md:text-7xl font-script"
+              className="text-template-title"
             />
             <p className="text-4xl md:text-5xl">&</p>
             <EditableField
@@ -102,7 +102,7 @@ export const AnthonyOdileTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h1"
-              className="text-5xl md:text-7xl font-script"
+              className="text-template-title"
             />
           </div>
 
@@ -118,7 +118,7 @@ export const AnthonyOdileTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-xl md:text-2xl tracking-wide"
+            className="text-template-body tracking-wide"
           />
 
           {!hasStarted && (
@@ -147,7 +147,7 @@ export const AnthonyOdileTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h2"
-              className="text-3xl md:text-4xl font-script"
+              className="text-template-subtitle"
             />
             
             <p className="text-2xl">&</p>
@@ -159,7 +159,7 @@ export const AnthonyOdileTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h2"
-              className="text-3xl md:text-4xl font-script"
+              className="text-template-subtitle"
             />
           </div>
 
@@ -171,7 +171,7 @@ export const AnthonyOdileTemplate = ({
             isPreview={isPreview}
             multiline={true}
             tag="p"
-            className="text-lg md:text-xl leading-relaxed"
+            className="text-template-body"
           />
         </div>
       </section>
@@ -207,7 +207,7 @@ export const AnthonyOdileTemplate = ({
       <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
-            <h2 className="text-4xl md:text-5xl font-script mb-6 text-[#3e2723]">Wedding Events</h2>
+            <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
             <EditableField
               fieldId="events-subtitle"
               text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
@@ -216,18 +216,18 @@ export const AnthonyOdileTemplate = ({
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-lg max-w-2xl mx-auto whitespace-pre-line"
+              className="text-template-body max-w-2xl mx-auto whitespace-pre-line"
             />
           </div>
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
               <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                <h3 className="text-3xl font-script mb-2 text-[#3e2723]">Ceremony</h3>
-                <p className="text-2xl font-bold text-[#3e2723]">{ceremony.time}</p>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
-                  <p className="text-sm uppercase tracking-wider text-gray-600">Event Location</p>
-                  <p className="text-lg font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                  <p className="text-template-small text-gray-600">Event Location</p>
+                  <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                 </div>
                 {ceremony.location_link && (
                   <a
@@ -243,11 +243,11 @@ export const AnthonyOdileTemplate = ({
             )}
             {venue && (
               <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                <h3 className="text-3xl font-script mb-2 text-[#3e2723]">Venue</h3>
-                <p className="text-2xl font-bold text-[#3e2723]">{venue.time}</p>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
+                <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                 <div className="space-y-2">
-                  <p className="text-sm uppercase tracking-wider text-gray-600">Event Location</p>
-                  <p className="text-lg font-medium text-[#3e2723]">{venue.location_name}</p>
+                  <p className="text-template-small text-gray-600">Event Location</p>
+                  <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                 </div>
                 {venue.location_link && (
                   <a
@@ -269,8 +269,8 @@ export const AnthonyOdileTemplate = ({
       {giftCards.length > 0 && (
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-script text-center mb-12 text-[#3e2723]">Wedding Gift</h2>
-            <p className="text-center text-lg mb-8 text-gray-600">For those who desire a wedding list is available</p>
+            <h2 className="text-template-subtitle text-center mb-12 text-[#3e2723]">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
@@ -287,7 +287,7 @@ export const AnthonyOdileTemplate = ({
             isPreview={isPreview}
             multiline={true}
             tag="p"
-            className="text-lg md:text-xl leading-relaxed"
+            className="text-template-body"
           />
 
           {wedding.rsvp_deadline && (

@@ -145,6 +145,27 @@ All colors MUST be HSL.
     @apply font-serif;
   }
 
+  /* Unified Template Typography */
+  .text-template-title {
+    @apply text-5xl md:text-7xl font-script;
+  }
+  
+  .text-template-subtitle {
+    @apply text-3xl md:text-4xl font-script;
+  }
+  
+  .text-template-heading {
+    @apply text-2xl md:text-3xl font-script;
+  }
+  
+  .text-template-body {
+    @apply text-base md:text-lg leading-relaxed;
+  }
+  
+  .text-template-small {
+    @apply text-sm uppercase tracking-widest opacity-70;
+  }
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;

@@ -70,7 +70,7 @@ export const AnthonyOdileCarouselTemplate = ({
               text={getValue('couple_names', `${wedding.bride_name || 'Bride'} & ${wedding.groom_name || 'Groom'}`)}
               onUpdate={onFieldUpdate || (() => {})}
               isPreview={isPreview}
-              className="font-script text-6xl md:text-8xl mb-6"
+              className="text-template-title mb-6"
               style={{ 
                 fontFamily: "'Dancing Script', cursive",
                 ...getStyle('couple_names')
@@ -85,7 +85,7 @@ export const AnthonyOdileCarouselTemplate = ({
               }))}
               onUpdate={onFieldUpdate || (() => {})}
               isPreview={isPreview}
-              className="text-2xl md:text-3xl tracking-wider"
+              className="text-template-body tracking-wider"
               style={getStyle('wedding_date')}
             />
           </div>
@@ -99,7 +99,7 @@ export const AnthonyOdileCarouselTemplate = ({
           text={getValue('story_title', 'Our Story')}
           onUpdate={onFieldUpdate || (() => {})}
           isPreview={isPreview}
-          className="text-4xl md:text-5xl font-bold mb-8"
+          className="text-template-subtitle mb-8"
           style={{
             color: template.style.colorScheme.primary,
             ...getStyle('story_title')
@@ -110,7 +110,7 @@ export const AnthonyOdileCarouselTemplate = ({
           text={getValue('story_content', wedding.love_story || 'Our beautiful journey together...')}
           onUpdate={onFieldUpdate || (() => {})}
           isPreview={isPreview}
-          className="text-lg leading-relaxed"
+          className="text-template-body"
           style={{
             fontFamily: template.style.fontSecondary,
             ...getStyle('story_content')
@@ -124,7 +124,7 @@ export const AnthonyOdileCarouselTemplate = ({
         <section className="py-20 px-4 bg-gradient-to-b from-transparent via-accent/10 to-transparent">
           <div className="max-w-6xl mx-auto">
             <h2 
-              className="text-4xl md:text-5xl font-bold text-center mb-12"
+              className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
               Our Moments
@@ -156,7 +156,7 @@ export const AnthonyOdileCarouselTemplate = ({
       {/* Countdown Section */}
       <section className="py-20 px-4 text-center">
         <h2 
-          className="text-4xl md:text-5xl font-bold mb-12"
+          className="text-template-subtitle mb-12"
           style={{ color: template.style.colorScheme.primary }}
         >
           Counting Down
@@ -169,7 +169,7 @@ export const AnthonyOdileCarouselTemplate = ({
         <section className="py-20 px-4 bg-accent/5">
           <div className="max-w-6xl mx-auto">
             <h2 
-              className="text-4xl md:text-5xl font-bold text-center mb-12"
+              className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
               Event Details
@@ -193,7 +193,7 @@ export const AnthonyOdileCarouselTemplate = ({
         <section className="py-20 px-4">
           <div className="max-w-4xl mx-auto">
             <h2 
-              className="text-4xl md:text-5xl font-bold text-center mb-12"
+              className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
               Gift Registry
@@ -214,7 +214,7 @@ export const AnthonyOdileCarouselTemplate = ({
             text={getValue('rsvp_title', 'Join Our Celebration')}
             onUpdate={onFieldUpdate || (() => {})}
             isPreview={isPreview}
-            className="text-4xl md:text-5xl font-bold mb-6"
+            className="text-template-subtitle mb-6"
             style={getStyle('rsvp_title')}
           />
           <EditableField
@@ -222,17 +222,17 @@ export const AnthonyOdileCarouselTemplate = ({
             text={getValue('rsvp_message', 'Please let us know if you can join us on our special day')}
             onUpdate={onFieldUpdate || (() => {})}
             isPreview={isPreview}
-            className="text-lg mb-8"
+            className="text-template-body mb-8"
             style={getStyle('rsvp_message')}
             multiline
           />
           
           {wedding.rsvp_deadline && (
             <div className="pt-8 border-t border-white/20 mt-8">
-              <p className="text-lg uppercase tracking-widest mb-2 text-white/90">
+              <p className="text-template-small text-white/90 mb-2">
                 Kindly confirm your attendance before this date:
               </p>
-              <p className="text-3xl font-bold">
+              <p className="text-template-heading">
                 {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
                   year: 'numeric', 
                   month: 'long', 

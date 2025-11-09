@@ -55,7 +55,7 @@ export const ModernTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h1"
-              className="text-6xl md:text-8xl font-bold text-white tracking-tight"
+              className="text-template-title text-white"
             />
             <div className="flex items-center justify-center gap-8">
               <div className="w-24 h-0.5 bg-white"></div>
@@ -69,7 +69,7 @@ export const ModernTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h1"
-              className="text-6xl md:text-8xl font-bold text-white tracking-tight"
+              className="text-template-title text-white"
             />
           </div>
 
@@ -84,7 +84,7 @@ export const ModernTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-2xl md:text-3xl text-white/90 tracking-widest uppercase"
+            className="text-template-body text-white/90 tracking-widest uppercase"
           />
         </div>
       </section>
@@ -94,7 +94,7 @@ export const ModernTemplate = ({
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 text-center">
             <div className="space-y-4">
-              <div className="text-sm uppercase tracking-widest text-gray-500 mb-2">Groom's Family</div>
+              <div className="text-template-small text-gray-500 mb-2">Groom's Family</div>
               <EditableField
                 fieldId="groom-family"
                 text={getFieldValue("groom-family", wedding.groom_family || "The Groom's Family")}
@@ -102,12 +102,12 @@ export const ModernTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-3xl md:text-4xl font-bold text-gray-900"
+                className="text-template-subtitle text-gray-900"
               />
             </div>
             
             <div className="space-y-4">
-              <div className="text-sm uppercase tracking-widest text-gray-500 mb-2">Bride's Family</div>
+              <div className="text-template-small text-gray-500 mb-2">Bride's Family</div>
               <EditableField
                 fieldId="bride-family"
                 text={getFieldValue("bride-family", wedding.bride_family || "The Bride's Family")}
@@ -115,7 +115,7 @@ export const ModernTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-3xl md:text-4xl font-bold text-gray-900"
+                className="text-template-subtitle text-gray-900"
               />
             </div>
           </div>
@@ -129,7 +129,7 @@ export const ModernTemplate = ({
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-xl leading-relaxed text-gray-700"
+              className="text-template-body text-gray-700"
             />
           </div>
         </div>
@@ -139,7 +139,7 @@ export const ModernTemplate = ({
       {gallery.length > 0 && (
         <section className="py-24 px-4 bg-white">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-16 text-gray-900">Our Story</h2>
+            <h2 className="text-template-subtitle text-center mb-16 text-gray-900">Our Story</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {gallery.slice(0, 6).map((image, index) => (
                 <div 
@@ -164,7 +164,7 @@ export const ModernTemplate = ({
       {/* Countdown Section - Minimalist */}
       <section className="py-24 px-4 bg-gray-900 text-white">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-12">Counting The Days</h2>
+          <h2 className="text-template-subtitle mb-12 text-white">Counting The Days</h2>
           <CountdownTimer targetDate={wedding.wedding_date} />
         </div>
       </section>
@@ -173,7 +173,7 @@ export const ModernTemplate = ({
       <section className="py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6 text-gray-900">Wedding Details</h2>
+            <h2 className="text-template-subtitle mb-6 text-gray-900">Wedding Details</h2>
             <EditableField
               fieldId="events-subtitle"
               text={getFieldValue("events-subtitle", "Join us in celebrating this special day")}
@@ -182,7 +182,7 @@ export const ModernTemplate = ({
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-xl text-gray-600 max-w-2xl mx-auto"
+              className="text-template-body text-gray-600 max-w-2xl mx-auto"
             />
           </div>
 
@@ -191,7 +191,7 @@ export const ModernTemplate = ({
               <div className="bg-gray-50 p-10 space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <Calendar className="w-8 h-8 text-gray-900" />
-                  <h3 className="text-3xl font-bold text-gray-900">Ceremony</h3>
+                  <h3 className="text-template-heading text-gray-900">Ceremony</h3>
                 </div>
                 <EventLocation
                   type="ceremony"
@@ -205,7 +205,7 @@ export const ModernTemplate = ({
               <div className="bg-gray-50 p-10 space-y-6">
                 <div className="flex items-center gap-3 mb-4">
                   <MapPin className="w-8 h-8 text-gray-900" />
-                  <h3 className="text-3xl font-bold text-gray-900">Reception</h3>
+                  <h3 className="text-template-heading text-gray-900">Reception</h3>
                 </div>
                 <EventLocation
                   type="venue"
@@ -223,7 +223,7 @@ export const ModernTemplate = ({
       {giftCards.length > 0 && (
         <section className="py-24 px-4 bg-gray-50">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900">Gift Registry</h2>
+            <h2 className="text-template-subtitle text-center mb-12 text-gray-900">Gift Registry</h2>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
@@ -240,15 +240,15 @@ export const ModernTemplate = ({
             isPreview={isPreview}
             multiline={true}
             tag="p"
-            className="text-2xl md:text-3xl leading-relaxed"
+            className="text-template-body"
           />
 
           {wedding.rsvp_deadline && (
             <div className="pt-8 border-t border-white/20">
-              <p className="text-lg uppercase tracking-widest mb-2 text-white/70">
+              <p className="text-template-small text-white/70 mb-2">
                 Kindly confirm your attendance before this date:
               </p>
-              <p className="text-3xl font-bold">
+              <p className="text-template-heading text-white">
                 {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
                   year: 'numeric', 
                   month: 'long', 
