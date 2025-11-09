@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -12,6 +11,16 @@ interface ResetPasswordRequest {
   email: string;
   newPassword: string;
   otpCode: string;
+}
+
+// Hash OTP using Web Crypto API (same method as send-otp)
+async function hashOTP(otp: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(otp);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
 }
 
 const handler = async (req: Request): Promise<Response> => {
@@ -77,9 +86,9 @@ const handler = async (req: Request): Promise<Response> => {
 
     // Find matching OTP by comparing hashes
     let validOtpRecord = null;
+    const codeHash = await hashOTP(otpCode);
     for (const record of otpRecords) {
-      const isMatch = await bcrypt.compare(otpCode, record.hashed_otp);
-      if (isMatch) {
+      if (codeHash === record.hashed_otp) {
         validOtpRecord = record;
         break;
       }

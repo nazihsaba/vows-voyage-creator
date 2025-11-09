@@ -1,7 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "https://esm.sh/resend@4.0.0";
-import * as bcrypt from "https://deno.land/x/bcrypt@v0.2.4/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -21,10 +20,19 @@ function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// Hash OTP using Web Crypto API (native, no dependencies)
+async function hashOTP(otp: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(otp);
+  const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  return hashHex;
+}
+
 // Rate limiting configuration
 const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
 const MAX_REQUESTS_PER_EMAIL = 5; // Max 5 OTP requests per email per hour
-const MAX_REQUESTS_PER_IP = 10; // Max 10 OTP requests per IP per hour
 
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
@@ -103,8 +111,8 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate OTP code
     const otpCode = generateOTP();
     
-    // Hash the OTP before storing (security best practice)
-    const hashedOtp = await bcrypt.hash(otpCode);
+    // Hash the OTP before storing (using Web Crypto API)
+    const hashedOtp = await hashOTP(otpCode);
     
     // Calculate expiration time (5 minutes from now)
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
