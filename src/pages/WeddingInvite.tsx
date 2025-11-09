@@ -356,6 +356,13 @@ const WeddingInvite = () => {
           onFieldUpdate={updateFieldCustomization}
           getFieldValue={getFieldValue}
           getFieldStyle={getFieldStyle}
+          invitees={invitees}
+          rsvpResponses={rsvpResponses}
+          handleRsvpToggle={handleRsvpToggle}
+          handleRsvpSubmit={handleRsvpSubmit}
+          numberOfPersons={numberOfPersons ? parseInt(numberOfPersons) : 0}
+          isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+          submittingRsvp={submittingRsvp}
         >
           {/* Hero content passed as children for templates that need it */}
           <div className="text-center text-white space-y-6">

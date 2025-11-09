@@ -22,6 +22,13 @@ interface TemplateRendererProps {
   getFieldValue: (fieldId: string, defaultValue: string) => string;
   getFieldStyle: (fieldId: string) => any;
   children?: ReactNode;
+  invitees?: any[];
+  rsvpResponses?: Record<string, boolean>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  handleRsvpSubmit?: () => void;
+  numberOfPersons?: number;
+  isRsvpDeadlinePassed?: boolean;
+  submittingRsvp?: boolean;
 }
 
 export const TemplateRenderer = ({
@@ -36,6 +43,13 @@ export const TemplateRenderer = ({
   getFieldValue,
   getFieldStyle,
   children,
+  invitees = [],
+  rsvpResponses = {},
+  handleRsvpToggle = () => {},
+  handleRsvpSubmit = () => {},
+  numberOfPersons = 0,
+  isRsvpDeadlinePassed = false,
+  submittingRsvp = false,
 }: TemplateRendererProps) => {
   // Use custom template component if specified
   if (template.component === 'AnthonyOdileTemplate') {
@@ -99,6 +113,13 @@ export const TemplateRenderer = ({
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
         getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
       />
     );
   }

@@ -2,6 +2,9 @@ import { useState, useEffect, useRef } from 'react';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -13,6 +16,13 @@ interface VideoBackgroundTemplateProps {
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
   getFieldStyle: (fieldId: string) => any;
+  invitees?: any[];
+  rsvpResponses?: Record<string, boolean>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  handleRsvpSubmit?: () => void;
+  numberOfPersons?: number;
+  isRsvpDeadlinePassed?: boolean;
+  submittingRsvp?: boolean;
 }
 
 export const VideoBackgroundTemplate = ({
@@ -25,6 +35,13 @@ export const VideoBackgroundTemplate = ({
   onFieldUpdate,
   getFieldValue,
   getFieldStyle,
+  invitees = [],
+  rsvpResponses = {},
+  handleRsvpToggle = () => {},
+  handleRsvpSubmit = () => {},
+  numberOfPersons = 0,
+  isRsvpDeadlinePassed = false,
+  submittingRsvp = false,
 }: VideoBackgroundTemplateProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -261,9 +278,9 @@ export const VideoBackgroundTemplate = ({
         )}
 
         {/* RSVP Section */}
-        {wedding.rsvp_deadline && (
+        {(wedding.rsvp_deadline || invitees.length > 0) && (
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
-            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
+            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8">
               <EditableField
                 fieldId="rsvp-title"
                 text={getFieldValue("rsvp-title", "Join Our Celebration")}
@@ -271,7 +288,7 @@ export const VideoBackgroundTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-4xl md:text-5xl font-script"
+                className="text-4xl md:text-5xl font-script text-center"
               />
               
               <EditableField
@@ -282,21 +299,84 @@ export const VideoBackgroundTemplate = ({
                 isPreview={isPreview}
                 multiline={true}
                 tag="p"
-                className="text-lg md:text-xl leading-relaxed"
+                className="text-lg md:text-xl leading-relaxed text-center"
               />
 
-              <div className="pt-8 border-t border-border">
-                <p className="text-lg uppercase tracking-widest mb-2 opacity-70">
-                  Kindly confirm your attendance before this date:
-                </p>
-                <p className="text-3xl font-script text-primary">
-                  {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  })}
-                </p>
-              </div>
+              {/* Invitees List with Checkboxes */}
+              {invitees.length > 0 && (
+                <div className="space-y-6 pt-6 border-t border-border">
+                  <p className="text-lg font-semibold text-center">
+                    This invitation is specially prepared for:
+                  </p>
+                  <div className="space-y-4">
+                    {invitees.map((invitee: any) => (
+                      <div 
+                        key={invitee.id}
+                        className="flex items-center justify-between py-4 px-6 bg-accent/5 rounded-lg border border-border hover:bg-accent/10 transition-colors"
+                      >
+                        <span className="text-xl font-serif text-primary">
+                          {invitee.name}
+                        </span>
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id={`rsvp-${invitee.id}`}
+                            checked={rsvpResponses[invitee.id] === true}
+                            onCheckedChange={(checked) => 
+                              handleRsvpToggle(invitee.id, checked as boolean)
+                            }
+                            disabled={isRsvpDeadlinePassed}
+                            className="h-5 w-5"
+                          />
+                          <Label 
+                            htmlFor={`rsvp-${invitee.id}`}
+                            className={`text-base cursor-pointer font-medium ${
+                              isRsvpDeadlinePassed ? 'text-muted-foreground' : 'text-foreground'
+                            }`}
+                          >
+                            {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                          </Label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div className="pt-6 border-t border-border space-y-4">
+                    <p className="text-lg font-semibold text-center">
+                      Number of Guests: {numberOfPersons || invitees.length}
+                    </p>
+                    
+                    {isRsvpDeadlinePassed ? (
+                      <p className="text-sm text-red-600 text-center font-medium">
+                        RSVP deadline has passed
+                      </p>
+                    ) : (
+                      <Button 
+                        onClick={handleRsvpSubmit} 
+                        disabled={submittingRsvp}
+                        className="w-full text-lg py-6"
+                        size="lg"
+                      >
+                        {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {wedding.rsvp_deadline && (
+                <div className="pt-8 border-t border-border">
+                  <p className="text-lg uppercase tracking-widest mb-2 opacity-70 text-center">
+                    {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                  </p>
+                  <p className="text-3xl font-script text-primary text-center">
+                    {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
+                      year: 'numeric', 
+                      month: 'long', 
+                      day: 'numeric' 
+                    })}
+                  </p>
+                </div>
+              )}
             </div>
           </section>
         )}
