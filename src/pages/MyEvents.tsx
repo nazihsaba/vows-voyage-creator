@@ -211,15 +211,15 @@ const MyEvents = () => {
                       <>
                         <Button
                           variant="outline"
-                          className="w-full flex flex-col items-center justify-center gap-1"
+                          className="w-full flex items-center justify-between"
                           onClick={() => {
                             setSelectedWeddingId(wedding.id);
                             setSelectedWeddingSlug(wedding.slug);
                             setGenerateLinkOpen(true);
                           }}
                         >
-                          <Link2 className="w-4 h-4" />
                           <span>Generate Invitation Link</span>
+                          <Link2 className="w-4 h-4" />
                         </Button>
 
                         <Button
