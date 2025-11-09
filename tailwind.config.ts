@@ -15,7 +15,7 @@ export default {
     extend: {
       fontFamily: {
         serif: ['Playfair Display', 'serif'],
-        sans: ['Inter', 'sans-serif'],
+        sans: ['ui-monospace', 'monospace'],
         'dancing': ['Dancing Script', 'cursive'],
         'script': ['Dancing Script', 'cursive'],
         'cursive': ['Dancing Script', 'cursive'],
