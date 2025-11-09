@@ -750,7 +750,7 @@ const WeddingForm = () => {
                             <img 
                               src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
                               alt={card.card_name} 
-                              className="max-h-full max-w-full object-contain rounded-[12px]"
+                              className="max-h-full max-w-full object-contain rounded-[6px]"
                             />
                           </div>
                         </div>

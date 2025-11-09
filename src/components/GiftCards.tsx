@@ -54,7 +54,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
                       <img
                         src={logoSrc}
                         alt={card.card_name}
-                        className="max-h-full max-w-full object-contain rounded-[12px]"
+                        className="max-h-full max-w-full object-contain rounded-[6px]"
                       />
                     </div>
                   )}
