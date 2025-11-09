@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Cake, PartyPopper, Gift, ArrowLeft } from "lucide-react";
+import { Heart, Cake, PartyPopper, GlassWater, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EventTypeSelection = () => {
@@ -31,10 +31,10 @@ const EventTypeSelection = () => {
       disabled: true,
     },
     {
-      id: "other",
-      title: "Other",
+      id: "bachelor",
+      title: "Bachelor",
       description: "Coming soon",
-      icon: Gift,
+      icon: GlassWater,
       color: "text-blue-500",
       disabled: true,
     },
