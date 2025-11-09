@@ -6,15 +6,14 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
 import { Label } from "@/components/ui/label";
-import { Loader2, Mail, Shield, ArrowLeft, CheckCircle2 } from "lucide-react";
+import { Loader2, Mail, Lock, LogIn, UserPlus } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState<"email" | "verify">("email");
+  const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [resendTimer, setResendTimer] = useState(0);
 
   useEffect(() => {
     const checkSession = async () => {
@@ -27,108 +26,35 @@ const Auth = () => {
     checkSession();
   }, [navigate]);
 
-  useEffect(() => {
-    if (resendTimer > 0) {
-      const timer = setTimeout(() => setResendTimer(resendTimer - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [resendTimer]);
 
-  const handleSendOTP = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        toast.error("Please enter a valid email address");
-        return;
+      if (isLogin) {
+        const { error } = await supabase.auth.signInWithPassword({
+          email: email.toLowerCase(),
+          password,
+        });
+
+        if (error) throw error;
+        toast.success("Successfully logged in!");
+        navigate('/dashboard');
+      } else {
+        const { error } = await supabase.auth.signUp({
+          email: email.toLowerCase(),
+          password,
+        });
+
+        if (error) throw error;
+        toast.success("Account created! You can now login.");
+        setIsLogin(true);
+        setPassword("");
       }
-
-      // Send OTP using custom edge function with beautiful email
-      const { error: otpError } = await supabase.functions.invoke('send-otp', {
-        body: { email: email.toLowerCase() }
-      });
-
-      if (otpError) throw otpError;
-
-      setStep('verify');
-      setResendTimer(60);
-      toast.success("Verification code sent! Check your email.");
     } catch (error: any) {
-      console.error("Error sending OTP:", error);
-      toast.error(error.message || "Failed to send verification code");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-
-    try {
-      if (!otp || otp.length !== 6) {
-        toast.error("Please enter a valid 6-digit code");
-        return;
-      }
-
-      // Verify OTP using custom edge function
-      const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-otp', {
-        body: { 
-          email: email.toLowerCase(), 
-          code: otp
-        }
-      });
-
-      if (verifyError || !verifyData?.success) {
-        throw new Error(verifyData?.error || "Invalid or expired verification code");
-      }
-
-      // Use the magic link to sign in
-      if (verifyData.session?.properties?.action_link) {
-        const actionLink = verifyData.session.properties.action_link;
-        const url = new URL(actionLink);
-        const token = url.searchParams.get('token');
-        const type = url.searchParams.get('type');
-        
-        if (token && type) {
-          const { error: authError } = await supabase.auth.verifyOtp({
-            token_hash: token,
-            type: type as any,
-          });
-
-          if (authError) throw authError;
-        }
-      }
-      
-      toast.success("Successfully logged in! Redirecting...");
-      setTimeout(() => navigate('/dashboard'), 1000);
-    } catch (error: any) {
-      console.error("Error verifying OTP:", error);
-      toast.error(error.message || "Invalid or expired code. Please try again.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOTP = async () => {
-    if (resendTimer > 0) return;
-
-    setLoading(true);
-    try {
-      const { error } = await supabase.functions.invoke('send-otp', {
-        body: { email: email.toLowerCase() }
-      });
-
-      if (error) throw error;
-      setResendTimer(60);
-      setOtp("");
-      toast.success("New verification code sent!");
-    } catch (error: any) {
-      console.error("Error resending OTP:", error);
-      toast.error("Failed to resend code. Please try again.");
+      console.error("Auth error:", error);
+      toast.error(error.message || "Authentication failed");
     } finally {
       setLoading(false);
     }
@@ -137,151 +63,88 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-primary/5 via-background to-accent/5 px-4">
       <Card className="w-full max-w-md shadow-2xl border-primary/10">
-        {step === "email" && (
-          <>
-            <CardHeader className="space-y-3 text-center">
-              <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <Mail className="w-8 h-8 text-primary" />
-              </div>
-              <CardTitle className="text-2xl">Secure Login</CardTitle>
-              <CardDescription className="text-base">
-                Enter your email to receive a verification code
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSendOTP} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="email" className="text-sm font-medium">
-                    Email Address
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="you@example.com"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    disabled={loading}
-                    className="h-11"
-                  />
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full h-11 text-base" 
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Sending code...
-                    </>
-                  ) : (
-                    <>
-                      <Mail className="mr-2 h-4 w-4" />
-                      Send Verification Code
-                    </>
-                  )}
-                </Button>
-                <div className="text-center pt-2 space-y-2">
-                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
-                    <span>Secure passwordless authentication</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="h-4 w-4 text-primary" />
-                    <span>Code expires in 5 minutes</span>
-                  </div>
-                </div>
-              </form>
-            </CardContent>
-          </>
-        )}
-
-        {step === "verify" && (
-          <>
-            <CardHeader className="space-y-3 text-center">
+        <CardHeader className="space-y-3 text-center">
+          <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+            {isLogin ? <LogIn className="w-8 h-8 text-primary" /> : <UserPlus className="w-8 h-8 text-primary" />}
+          </div>
+          <CardTitle className="text-2xl">{isLogin ? "Welcome Back" : "Create Account"}</CardTitle>
+          <CardDescription className="text-base">
+            {isLogin ? "Sign in to your account" : "Sign up for a new account"}
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-medium">
+                <Mail className="w-4 h-4 inline mr-2" />
+                Email Address
+              </Label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                disabled={loading}
+                className="h-11"
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="password" className="text-sm font-medium">
+                <Lock className="w-4 h-4 inline mr-2" />
+                Password
+              </Label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={loading}
+                className="h-11"
+                minLength={6}
+              />
+              {!isLogin && (
+                <p className="text-xs text-muted-foreground">
+                  Password must be at least 6 characters
+                </p>
+              )}
+            </div>
+            <Button 
+              type="submit" 
+              className="w-full h-11 text-base" 
+              disabled={loading}
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  {isLogin ? "Signing in..." : "Creating account..."}
+                </>
+              ) : (
+                <>
+                  {isLogin ? <LogIn className="mr-2 h-4 w-4" /> : <UserPlus className="mr-2 h-4 w-4" />}
+                  {isLogin ? "Sign In" : "Sign Up"}
+                </>
+              )}
+            </Button>
+            <div className="text-center pt-2">
               <Button
-                variant="ghost"
-                size="sm"
+                type="button"
+                variant="link"
                 onClick={() => {
-                  setStep("email");
-                  setOtp("");
+                  setIsLogin(!isLogin);
+                  setPassword("");
                 }}
-                className="absolute top-4 left-4"
+                disabled={loading}
+                className="text-sm"
               >
-                <ArrowLeft className="h-4 w-4 mr-2" />
-                Back
+                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
               </Button>
-              <div className="mx-auto w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
-                <Shield className="w-8 h-8 text-primary" />
-              </div>
-              <CardTitle className="text-2xl">Verify Your Email</CardTitle>
-              <CardDescription className="text-base">
-                Enter the 6-digit code sent to<br />
-                <span className="font-medium text-foreground">{email}</span>
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleVerifyOTP} className="space-y-4">
-                <div className="space-y-2">
-                  <Label htmlFor="otp" className="text-sm font-medium">
-                    Verification Code
-                  </Label>
-                  <Input
-                    id="otp"
-                    type="text"
-                    inputMode="numeric"
-                    pattern="[0-9]*"
-                    maxLength={6}
-                    placeholder="000000"
-                    value={otp}
-                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
-                    required
-                    disabled={loading}
-                    className="h-11 text-center text-2xl tracking-widest font-mono"
-                    autoFocus
-                  />
-                  <p className="text-xs text-muted-foreground text-center">
-                    Code expires in 5 minutes
-                  </p>
-                </div>
-                <Button 
-                  type="submit" 
-                  className="w-full h-11 text-base" 
-                  disabled={loading || otp.length !== 6}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Verifying...
-                    </>
-                  ) : (
-                    <>
-                      <Shield className="mr-2 h-4 w-4" />
-                      Verify & Login
-                    </>
-                  )}
-                </Button>
-                <div className="text-center space-y-2">
-                  <p className="text-sm text-muted-foreground">
-                    Didn't receive the code?
-                  </p>
-                  <Button
-                    type="button"
-                    variant="link"
-                    onClick={handleResendOTP}
-                    disabled={loading || resendTimer > 0}
-                    className="text-sm"
-                  >
-                    {resendTimer > 0 
-                      ? `Resend code in ${resendTimer}s` 
-                      : "Resend verification code"}
-                  </Button>
-                </div>
-              </form>
-            </CardContent>
-          </>
-        )}
+            </div>
+          </form>
+        </CardContent>
       </Card>
     </div>
   );
