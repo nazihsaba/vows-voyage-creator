@@ -437,7 +437,7 @@ const WeddingInvite = () => {
       </>
     );
 
-    if (isPreview) {
+    if (canEdit) {
       return (
         <EditableWeddingInvite wedding={wedding} onUpdate={setWedding}>
           {content}
