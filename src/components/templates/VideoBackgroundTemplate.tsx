@@ -44,6 +44,15 @@ export const VideoBackgroundTemplate = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  useEffect(() => {
+    // Ensure video plays automatically on mount
+    if (videoRef.current) {
+      videoRef.current.play().catch(error => {
+        console.log('Autoplay prevented:', error);
+      });
+    }
+  }, []);
+
   return (
     <div className="relative w-full min-h-screen">
       {/* Fixed Video Background */}
