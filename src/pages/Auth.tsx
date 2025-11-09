@@ -46,11 +46,12 @@ const Auth = () => {
         return;
       }
 
-      // Use Supabase's built-in OTP (completely free!)
+      // Use Supabase's built-in OTP - sends 6-digit numeric code
       const { error: otpError } = await supabase.auth.signInWithOtp({
         email: email.toLowerCase(),
         options: {
           shouldCreateUser: true,
+          emailRedirectTo: undefined, // Prevent magic link, force OTP code
         }
       });
 
@@ -111,6 +112,7 @@ const Auth = () => {
         email: email.toLowerCase(),
         options: {
           shouldCreateUser: true,
+          emailRedirectTo: undefined, // Prevent magic link, force OTP code
         }
       });
 
