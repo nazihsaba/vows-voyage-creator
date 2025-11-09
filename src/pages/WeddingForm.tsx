@@ -907,34 +907,35 @@ const WeddingForm = () => {
                 <Button type="submit" disabled={loading || uploading} className="flex-1">
                   {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={() => {
+                    // For existing weddings with slug, open preview
+                    if (id && formData.slug) {
+                      setPreviewUrl(`/invite/${formData.slug}?preview=true&readOnly=true`);
+                    } else {
+                      // For new/unsaved weddings, store preview data
+                      const previewData = {
+                        ...formData,
+                        locations,
+                        giftCards,
+                        imagePreview,
+                        videoPreview,
+                        galleryPreviews,
+                      };
+                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                      setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
+                    }
+                    setPreviewModalOpen(true);
+                  }}
+                  disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
+                >
+                  <Eye className="w-4 h-4 mr-2" />
+                  Preview
+                </Button>
                 {(id || createdWeddingId) && (
                   <>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => {
-                        // For existing weddings, open read-only preview
-                        if (formData.slug) {
-                          setPreviewUrl(`/invite/${formData.slug}?readOnly=true`);
-                        } else {
-                          // For new weddings, store preview data and open read-only preview
-                          const previewData = {
-                            ...formData,
-                            locations,
-                            giftCards,
-                            imagePreview,
-                            galleryPreviews,
-                          };
-                          sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
-                          setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
-                        }
-                        setPreviewModalOpen(true);
-                      }}
-                      disabled={!formData.groom_name || !formData.bride_name || !formData.wedding_date}
-                    >
-                      <Eye className="w-4 h-4 mr-2" />
-                      Preview
-                    </Button>
                     <Button
                       type="button"
                       variant={formData.status === "published" ? "outline" : "default"}

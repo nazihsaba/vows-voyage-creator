@@ -118,11 +118,13 @@ const WeddingInvite = () => {
           if (previewDataStr) {
             const previewData = JSON.parse(previewDataStr);
             
-            // Set wedding data from preview
+            // Set wedding data from preview, mapping preview URLs to expected fields
             setWedding({
               ...previewData,
               id: 'preview-draft',
               status: 'draft',
+              main_picture_url: previewData.imagePreview || previewData.main_picture_url,
+              video_url: previewData.videoPreview || previewData.video_url,
             });
             
             // Set locations from preview
