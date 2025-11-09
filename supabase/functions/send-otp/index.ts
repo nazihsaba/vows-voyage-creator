@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
 import { Resend } from "https://esm.sh/resend@4.0.0";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
 
@@ -48,15 +49,18 @@ const handler = async (req: Request): Promise<Response> => {
     // Generate OTP code
     const otpCode = generateOTP();
     
-    // Calculate expiration time (10 minutes from now)
-    const expiresAt = new Date(Date.now() + 10 * 60 * 1000).toISOString();
+    // Hash the OTP before storing (security best practice)
+    const hashedOtp = await bcrypt.hash(otpCode);
+    
+    // Calculate expiration time (5 minutes from now)
+    const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
 
-    // Store OTP in database
+    // Store hashed OTP in database (never store plain text OTPs)
     const { error: dbError } = await supabase
       .from("otp_codes")
       .insert({
         email: email.toLowerCase(),
-        code: otpCode,
+        hashed_otp: hashedOtp,
         expires_at: expiresAt,
         used: false,
       });
@@ -95,7 +99,7 @@ const handler = async (req: Request): Promise<Response> => {
               <div class="code-box">
                 <div class="code">${otpCode}</div>
               </div>
-              <p>This code will expire in 10 minutes for security reasons.</p>
+              <p>This code will expire in 5 minutes for security reasons.</p>
               <p>If you didn't request this code, please ignore this email.</p>
               <div class="footer">
                 <p>Best regards,<br>The Wedding Invites Team</p>

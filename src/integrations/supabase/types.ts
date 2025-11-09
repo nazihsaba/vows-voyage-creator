@@ -156,28 +156,31 @@ export type Database = {
       }
       otp_codes: {
         Row: {
-          code: string
           created_at: string
           email: string
           expires_at: string
+          hashed_otp: string
           id: string
           used: boolean
+          user_id: string | null
         }
         Insert: {
-          code: string
           created_at?: string
           email: string
           expires_at: string
+          hashed_otp?: string
           id?: string
           used?: boolean
+          user_id?: string | null
         }
         Update: {
-          code?: string
           created_at?: string
           email?: string
           expires_at?: string
+          hashed_otp?: string
           id?: string
           used?: boolean
+          user_id?: string | null
         }
         Relationships: []
       }

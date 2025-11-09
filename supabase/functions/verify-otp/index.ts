@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,21 +39,30 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Find valid OTP
-    const { data: otpData, error: fetchError } = await supabase
+    // Find all unused OTPs for this email that haven't expired
+    const { data: otpRecords, error: fetchError } = await supabase
       .from("otp_codes")
       .select("*")
       .eq("email", email.toLowerCase())
-      .eq("code", code)
       .eq("used", false)
       .gt("expires_at", new Date().toISOString())
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
-
+      .order("created_at", { ascending: false });
+    
     if (fetchError) {
       console.error("Database error:", fetchError);
       throw new Error("Failed to verify OTP");
+    }
+
+    // Find matching OTP by comparing hashed values
+    let otpData = null;
+    if (otpRecords && otpRecords.length > 0) {
+      for (const record of otpRecords) {
+        const isMatch = await bcrypt.compare(code, record.hashed_otp);
+        if (isMatch) {
+          otpData = record;
+          break;
+        }
+      }
     }
 
     if (!otpData) {
@@ -68,8 +78,7 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Mark OTP as used only if requested (for signup flow)
-    // For password reset, we'll mark it as used in the reset-password function
+    // Mark OTP as used
     if (markAsUsed) {
       const { error: updateError } = await supabase
         .from("otp_codes")
@@ -82,11 +91,57 @@ const handler = async (req: Request): Promise<Response> => {
     }
 
     console.log("OTP verified successfully for:", email);
+    
+    // Create or get user account and generate session
+    let userId = otpData.user_id;
+    
+    // If no user_id linked to OTP, check if user exists or create new one
+    if (!userId) {
+      const { data: existingUser } = await supabase.auth.admin.listUsers();
+      const user = existingUser?.users?.find(u => u.email === email.toLowerCase());
+      
+      if (user) {
+        userId = user.id;
+      } else {
+        // Create new user with OTP verification (passwordless)
+        const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
+          email: email.toLowerCase(),
+          email_confirm: true,
+          user_metadata: { auth_method: 'otp' }
+        });
+
+        if (createError) {
+          console.error("Failed to create user:", createError);
+          throw new Error("Failed to create user account");
+        }
+        
+        userId = newUser.user.id;
+      }
+      
+      // Link OTP to user
+      await supabase
+        .from("otp_codes")
+        .update({ user_id: userId })
+        .eq("id", otpData.id);
+    }
+    
+    // Generate session token for the user
+    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+      type: 'magiclink',
+      email: email.toLowerCase(),
+    });
+
+    if (sessionError) {
+      console.error("Failed to generate session:", sessionError);
+      throw new Error("Failed to create session");
+    }
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        message: "OTP verified successfully" 
+        message: "OTP verified successfully",
+        session: sessionData,
+        user_id: userId
       }),
       {
         status: 200,
