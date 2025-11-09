@@ -211,7 +211,7 @@ const MyEvents = () => {
                       <>
                         <Button
                           variant="outline"
-                          className="w-full flex flex-col items-center justify-center gap-2"
+                          className="w-full flex flex-col items-center justify-center gap-1"
                           onClick={() => {
                             setSelectedWeddingId(wedding.id);
                             setSelectedWeddingSlug(wedding.slug);
