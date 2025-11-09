@@ -11,6 +11,7 @@ interface AnthonyOdileTemplateProps {
   locations: any[];
   gallery: any[];
   giftCards: any[];
+  isOwner?: boolean;
   isPreview: boolean;
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
@@ -22,6 +23,7 @@ export const AnthonyOdileTemplate = ({
   locations,
   gallery,
   giftCards,
+  isOwner = false,
   isPreview,
   onFieldUpdate,
   getFieldValue,
@@ -269,7 +271,7 @@ export const AnthonyOdileTemplate = ({
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-script text-center mb-12 text-[#3e2723]">Wedding Gift</h2>
             <p className="text-center text-lg mb-8 text-gray-600">For those who desire a wedding list is available</p>
-            <GiftCards giftCards={giftCards} />
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
       )}

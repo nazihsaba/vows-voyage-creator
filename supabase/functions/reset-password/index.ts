@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.190.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.3";
+import * as bcrypt from "https://deno.land/x/bcrypt@v0.4.1/mod.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -38,24 +39,53 @@ const handler = async (req: Request): Promise<Response> => {
     const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // Verify OTP first
-    const { data: otpData, error: fetchError } = await supabase
+    // Fetch all unused, unexpired OTPs for this email
+    const { data: otpRecords, error: fetchError } = await supabase
       .from("otp_codes")
       .select("*")
       .eq("email", email.toLowerCase())
-      .eq("code", otpCode)
       .eq("used", false)
       .gt("expires_at", new Date().toISOString())
-      .order("created_at", { ascending: false })
-      .limit(1)
-      .maybeSingle();
+      .order("created_at", { ascending: false });
 
     if (fetchError) {
       console.error("Database error:", fetchError);
-      throw new Error("Failed to verify OTP");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Failed to verify OTP" 
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
-    if (!otpData) {
+    if (!otpRecords || otpRecords.length === 0) {
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Invalid or expired OTP code" 
+        }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Find matching OTP by comparing hashes
+    let validOtpRecord = null;
+    for (const record of otpRecords) {
+      const isMatch = await bcrypt.compare(otpCode, record.hashed_otp);
+      if (isMatch) {
+        validOtpRecord = record;
+        break;
+      }
+    }
+
+    if (!validOtpRecord) {
       return new Response(
         JSON.stringify({ 
           success: false, 
@@ -73,7 +103,16 @@ const handler = async (req: Request): Promise<Response> => {
     
     if (userError) {
       console.error("Error fetching users:", userError);
-      throw new Error("Failed to find user");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Failed to find user" 
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     const user = userData.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
@@ -99,14 +138,23 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (updateError) {
       console.error("Failed to update password:", updateError);
-      throw new Error("Failed to update password");
+      return new Response(
+        JSON.stringify({ 
+          success: false, 
+          error: "Failed to update password" 
+        }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     // Mark OTP as used ONLY after successful password reset
     await supabase
       .from("otp_codes")
       .update({ used: true })
-      .eq("id", otpData.id);
+      .eq("id", validOtpRecord.id);
 
     console.log("Password reset successfully for:", email);
 
@@ -125,7 +173,7 @@ const handler = async (req: Request): Promise<Response> => {
     return new Response(
       JSON.stringify({ 
         success: false,
-        error: error.message 
+        error: "An error occurred while processing your request" 
       }),
       {
         status: 500,

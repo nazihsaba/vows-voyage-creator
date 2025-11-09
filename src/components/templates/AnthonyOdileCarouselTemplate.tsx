@@ -18,6 +18,7 @@ interface AnthonyOdileCarouselTemplateProps {
   locations: any[];
   gallery: any[];
   giftCards: any[];
+  isOwner?: boolean;
   isPreview?: boolean;
   onFieldUpdate?: (fieldId: string, value: string, styleOverrides?: any) => void;
   onImageUpdate?: (imageUrl: string) => void;
@@ -31,6 +32,7 @@ export const AnthonyOdileCarouselTemplate = ({
   locations = [],
   gallery = [],
   giftCards = [],
+  isOwner = false,
   isPreview = false,
   onFieldUpdate,
   onImageUpdate,
@@ -196,7 +198,7 @@ export const AnthonyOdileCarouselTemplate = ({
             >
               Gift Registry
             </h2>
-            <GiftCards giftCards={giftCards} />
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
       )}

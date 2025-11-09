@@ -10,6 +10,7 @@ interface VideoBackgroundTemplateProps {
   locations: any[];
   gallery: any[];
   giftCards: any[];
+  isOwner?: boolean;
   isPreview: boolean;
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
@@ -21,6 +22,7 @@ export const VideoBackgroundTemplate = ({
   locations,
   gallery,
   giftCards,
+  isOwner = false,
   isPreview,
   onFieldUpdate,
   getFieldValue,
@@ -268,7 +270,7 @@ export const VideoBackgroundTemplate = ({
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
               <h2 className="text-4xl md:text-5xl font-script text-center mb-12">Wedding Gift</h2>
-              <GiftCards giftCards={giftCards} />
+              <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
         )}

@@ -21,6 +21,11 @@ function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// Rate limiting configuration
+const RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
+const MAX_REQUESTS_PER_EMAIL = 5; // Max 5 OTP requests per email per hour
+const MAX_REQUESTS_PER_IP = 10; // Max 10 OTP requests per IP per hour
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -39,12 +44,61 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    console.log("Generating OTP for:", email);
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        {
+          status: 400,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
+    }
+
+    // Get IP address for rate limiting
+    const clientIP = req.headers.get("x-forwarded-for")?.split(',')[0].trim() || 
+                     req.headers.get("x-real-ip") || 
+                     "unknown";
+
+    console.log(`OTP request from IP: ${clientIP}, Email: ${email}`);
 
     // Initialize Supabase client
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Check rate limiting by email
+    const emailRateLimitTime = new Date(Date.now() - RATE_LIMIT_WINDOW_MS).toISOString();
+    const { data: emailRequests, error: emailCheckError } = await supabase
+      .from("otp_codes")
+      .select("id")
+      .eq("email", email.toLowerCase())
+      .gte("created_at", emailRateLimitTime);
+
+    if (emailCheckError) {
+      console.error("Error checking email rate limit:", emailCheckError);
+    }
+
+    if (emailRequests && emailRequests.length >= MAX_REQUESTS_PER_EMAIL) {
+      console.warn(`Rate limit exceeded for email: ${email}`);
+      return new Response(
+        JSON.stringify({ 
+          error: "Too many requests. Please try again later.",
+          retryAfter: "1 hour"
+        }),
+        {
+          status: 429,
+          headers: { 
+            "Content-Type": "application/json", 
+            "Retry-After": "3600",
+            ...corsHeaders 
+          },
+        }
+      );
+    }
+
+    console.log("Generating OTP for:", email);
 
     // Generate OTP code
     const otpCode = generateOTP();
@@ -67,7 +121,13 @@ const handler = async (req: Request): Promise<Response> => {
 
     if (dbError) {
       console.error("Database error:", dbError);
-      throw new Error("Failed to store OTP code");
+      return new Response(
+        JSON.stringify({ error: "Failed to process request" }),
+        {
+          status: 500,
+          headers: { "Content-Type": "application/json", ...corsHeaders },
+        }
+      );
     }
 
     console.log("OTP stored, sending email to:", email);
@@ -122,7 +182,7 @@ const handler = async (req: Request): Promise<Response> => {
   } catch (error: any) {
     console.error("Error sending OTP email:", error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({ error: "An error occurred while processing your request" }),
       {
         status: 500,
         headers: { "Content-Type": "application/json", ...corsHeaders },

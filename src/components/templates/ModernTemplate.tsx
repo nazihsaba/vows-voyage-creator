@@ -11,6 +11,7 @@ interface ModernTemplateProps {
   locations: any[];
   gallery: any[];
   giftCards: any[];
+  isOwner?: boolean;
   isPreview: boolean;
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
@@ -22,6 +23,7 @@ export const ModernTemplate = ({
   locations,
   gallery,
   giftCards,
+  isOwner = false,
   isPreview,
   onFieldUpdate,
   getFieldValue,
@@ -222,7 +224,7 @@ export const ModernTemplate = ({
         <section className="py-24 px-4 bg-gray-50">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-4xl md:text-5xl font-bold text-center mb-12 text-gray-900">Gift Registry</h2>
-            <GiftCards giftCards={giftCards} />
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
       )}

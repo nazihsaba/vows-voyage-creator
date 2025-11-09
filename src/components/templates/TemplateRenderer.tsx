@@ -16,6 +16,7 @@ interface TemplateRendererProps {
   locations: any[];
   gallery: any[];
   giftCards: any[];
+  isOwner?: boolean;
   isPreview: boolean;
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
@@ -29,6 +30,7 @@ export const TemplateRenderer = ({
   locations,
   gallery,
   giftCards,
+  isOwner = false,
   isPreview,
   onFieldUpdate,
   getFieldValue,
@@ -43,6 +45,7 @@ export const TemplateRenderer = ({
         locations={locations}
         gallery={gallery}
         giftCards={giftCards}
+        isOwner={isOwner}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
@@ -59,6 +62,7 @@ export const TemplateRenderer = ({
         locations={locations}
         gallery={gallery}
         giftCards={giftCards}
+        isOwner={isOwner}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
@@ -74,6 +78,7 @@ export const TemplateRenderer = ({
         locations={locations}
         gallery={gallery}
         giftCards={giftCards}
+        isOwner={isOwner}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
@@ -89,6 +94,7 @@ export const TemplateRenderer = ({
         locations={locations}
         gallery={gallery}
         giftCards={giftCards}
+        isOwner={isOwner}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
@@ -244,7 +250,7 @@ export const TemplateRenderer = ({
             className={baseClasses}
             style={{ backgroundColor: style.colorScheme.background }}
           >
-            <GiftCards giftCards={giftCards} />
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </section>
         ) : null;
 

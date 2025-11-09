@@ -35,6 +35,7 @@ const WeddingInvite = () => {
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
   const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
+  const [isOwner, setIsOwner] = useState(false);
   const { toast } = useToast();
   
   // Get template configuration if using template system
@@ -108,6 +109,9 @@ const WeddingInvite = () => {
   useEffect(() => {
     const fetchWedding = async () => {
       try {
+        // Check if current user is the owner of this wedding
+        const { data: { user } } = await supabase.auth.getUser();
+        
         // Check for draft preview data in sessionStorage
         if (isDraftPreview) {
           const previewDataStr = sessionStorage.getItem('weddingPreviewData');
@@ -178,6 +182,11 @@ const WeddingInvite = () => {
         if (weddingError) throw weddingError;
         setWedding(weddingData);
         setFieldCustomizations(weddingData?.field_customizations || {});
+        
+        // Check if current user is the owner
+        if (user && weddingData) {
+          setIsOwner(user.id === weddingData.user_id);
+        }
 
         // Fetch locations
         const { data: locationsData } = await supabase
@@ -340,6 +349,7 @@ const WeddingInvite = () => {
           locations={locations}
           gallery={gallery}
           giftCards={giftCards}
+          isOwner={isOwner}
           isPreview={canEdit}
           onFieldUpdate={updateFieldCustomization}
           getFieldValue={getFieldValue}
