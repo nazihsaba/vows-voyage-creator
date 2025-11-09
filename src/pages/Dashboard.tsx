@@ -200,7 +200,7 @@ const Dashboard = () => {
                   {category.templates.map((template) => (
                     <Card
                       key={template.id}
-                      className={`shadow-soft hover:shadow-elegant transition-all ${
+                      className={`shadow-soft hover:shadow-elegant transition-all flex flex-col ${
                         template.disabled ? "opacity-50" : "cursor-pointer hover:scale-[1.02]"
                       }`}
                       onClick={() =>
@@ -208,7 +208,7 @@ const Dashboard = () => {
                         navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`)
                       }
                     >
-                      <CardHeader className="p-4 sm:p-6">
+                      <CardHeader className="p-4 sm:p-6 flex-grow">
                         <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
                           {template.image ? (
                             <img 
@@ -244,7 +244,7 @@ const Dashboard = () => {
                           </div>
                         )}
                       </CardHeader>
-                      <CardContent className="p-4 sm:p-6 pt-0">
+                      <CardContent className="p-4 sm:p-6 pt-0 mt-auto">
                         {!template.disabled && (
                           <Button className="w-full text-sm sm:text-base">Use This Template</Button>
                         )}
