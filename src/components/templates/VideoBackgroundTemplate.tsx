@@ -260,6 +260,47 @@ export const VideoBackgroundTemplate = ({
           </section>
         )}
 
+        {/* RSVP Section */}
+        {wedding.rsvp_deadline && (
+          <section className="min-h-screen flex items-center justify-center px-4 py-8">
+            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
+              <EditableField
+                fieldId="rsvp-title"
+                text={getFieldValue("rsvp-title", "Join Our Celebration")}
+                style={getFieldStyle("rsvp-title")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h2"
+                className="text-4xl md:text-5xl font-script"
+              />
+              
+              <EditableField
+                fieldId="rsvp-message"
+                text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+                style={getFieldStyle("rsvp-message")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                multiline={true}
+                tag="p"
+                className="text-lg md:text-xl leading-relaxed"
+              />
+
+              <div className="pt-8 border-t border-border">
+                <p className="text-lg uppercase tracking-widest mb-2 opacity-70">
+                  Kindly confirm your attendance before this date:
+                </p>
+                <p className="text-3xl font-script text-primary">
+                  {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric' 
+                  })}
+                </p>
+              </div>
+            </div>
+          </section>
+        )}
+
         {/* Closing Message */}
         <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 text-center shadow-2xl space-y-8">
