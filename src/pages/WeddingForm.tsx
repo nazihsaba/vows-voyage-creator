@@ -710,7 +710,7 @@ const WeddingForm = () => {
 
                 {giftCards.map((card, index) => (
                   <div key={index} className="grid gap-4 p-4 border rounded-lg relative">
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid md:grid-cols-3 gap-4 items-end">
                       <div className="space-y-2">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
                         <Select
@@ -743,20 +743,19 @@ const WeddingForm = () => {
                           placeholder="XXXX-XXXX-XXXX-XXXX"
                         />
                       </div>
-                    </div>
-                    
-                    {card.card_name && (
-                      <div className="space-y-2">
-                        <Label>Card Icon Preview</Label>
-                        <div className="h-16 w-24 rounded-lg overflow-hidden border-2 border-border flex items-center justify-center bg-muted/20 p-2">
-                          <img 
-                            src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
-                            alt={card.card_name} 
-                            className="max-h-full max-w-full object-contain"
-                          />
+                      {card.card_name && (
+                        <div className="space-y-2">
+                          <Label>Card Icon</Label>
+                          <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
+                            <img 
+                              src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
+                              alt={card.card_name} 
+                              className="max-h-full max-w-full object-contain"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                     
                     {giftCards.length > 1 && (
                       <Button
