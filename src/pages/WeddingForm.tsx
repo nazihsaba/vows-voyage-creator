@@ -616,7 +616,7 @@ const WeddingForm = () => {
                 <h3 className="text-lg font-semibold">Event Locations</h3>
                 
                 {/* Ceremony Section */}
-                <Card className="border-2">
+                <Card className="border">
                   <CardHeader>
                     <CardTitle className="text-xl">Ceremony Details</CardTitle>
                   </CardHeader>
@@ -655,7 +655,7 @@ const WeddingForm = () => {
                 </Card>
 
                 {/* Venue Section */}
-                <Card className="border-2">
+                <Card className="border">
                   <CardHeader>
                     <CardTitle className="text-xl">Venue Details</CardTitle>
                   </CardHeader>
