@@ -219,7 +219,7 @@ const MyEvents = () => {
                           }}
                         >
                           <Link2 className="w-4 h-4 mr-2" />
-                          Generate Link
+                          Generate Invitation Link
                         </Button>
 
                         <Button
