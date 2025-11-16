@@ -4,14 +4,18 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { Mail, Lock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+  const [loginMethod, setLoginMethod] = useState<"password" | "magic">("password");
 
   useEffect(() => {
     // Check if user is already logged in
@@ -31,7 +35,77 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  const handleSignIn = async (e: React.FormEvent) => {
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please enter both email and password");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signUp({
+        email: email.trim().toLowerCase(),
+        password: password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
+      });
+
+      if (error) throw error;
+
+      setEmailSent(true);
+      toast.success("Check your email to verify your account!");
+    } catch (error: any) {
+      console.error("Sign up error:", error);
+      toast.error(error.message || "Failed to create account");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignInWithPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please enter both email and password");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim().toLowerCase(),
+        password: password,
+      });
+
+      if (error) throw error;
+
+      toast.success("Successfully logged in!");
+      navigate("/dashboard");
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      toast.error(error.message || "Failed to sign in");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignInWithMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!email.trim()) {
@@ -39,7 +113,6 @@ const Auth = () => {
       return;
     }
 
-    // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       toast.error("Please enter a valid email address");
@@ -71,6 +144,7 @@ const Auth = () => {
   const handleTryAgain = () => {
     setEmailSent(false);
     setEmail("");
+    setPassword("");
   };
 
   return (
@@ -92,45 +166,173 @@ const Auth = () => {
           <CardDescription className="text-center">
             {emailSent 
               ? `We sent a verification link to ${email}`
-              : "Enter your email to receive a sign-in link"
+              : "Create an account or sign in to continue"
             }
           </CardDescription>
         </CardHeader>
         <CardContent>
           {!emailSent ? (
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10"
-                    disabled={loading}
-                    required
-                  />
+            <Tabs defaultValue="signin" className="w-full">
+              <TabsList className="grid w-full grid-cols-2">
+                <TabsTrigger value="signin">Sign In</TabsTrigger>
+                <TabsTrigger value="signup">Sign Up</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="signin" className="space-y-4 mt-4">
+                <div className="flex gap-2 mb-4">
+                  <Button
+                    type="button"
+                    variant={loginMethod === "password" ? "default" : "outline"}
+                    onClick={() => setLoginMethod("password")}
+                    className="flex-1"
+                    size="sm"
+                  >
+                    Password
+                  </Button>
+                  <Button
+                    type="button"
+                    variant={loginMethod === "magic" ? "default" : "outline"}
+                    onClick={() => setLoginMethod("magic")}
+                    className="flex-1"
+                    size="sm"
+                  >
+                    Magic Link
+                  </Button>
                 </div>
-              </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending Link...
-                  </>
+
+                {loginMethod === "password" ? (
+                  <form onSubmit={handleSignInWithPassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signin-email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-password">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signin-password"
+                          type="password"
+                          placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button type="submit" className="w-full" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Signing In...
+                        </>
+                      ) : (
+                        <>
+                          Sign In
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 ) : (
-                  <>
-                    Send Sign-In Link
-                    <ArrowRight className="ml-2 h-4 w-4" />
-                  </>
+                  <form onSubmit={handleSignInWithMagicLink} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="magic-email">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="magic-email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button type="submit" className="w-full" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Sending Link...
+                        </>
+                      ) : (
+                        <>
+                          Send Sign-In Link
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
                 )}
-              </Button>
-            </form>
+              </TabsContent>
+
+              <TabsContent value="signup" className="space-y-4 mt-4">
+                <form onSubmit={handleSignUp} className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email">Email</Label>
+                    <div className="relative">
+                      <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="Enter your email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="pl-10"
+                        disabled={loading}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        placeholder="Create a password (min. 6 characters)"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="pl-10"
+                        disabled={loading}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <Button type="submit" className="w-full" disabled={loading}>
+                    {loading ? (
+                      <>
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        Creating Account...
+                      </>
+                    ) : (
+                      <>
+                        Create Account
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
+                  </Button>
+                </form>
+              </TabsContent>
+            </Tabs>
           ) : (
             <div className="space-y-4">
               <div className="bg-muted rounded-lg p-4 space-y-3">
@@ -139,7 +341,7 @@ const Auth = () => {
                   <div className="space-y-1">
                     <p className="text-sm font-medium">Verification link sent</p>
                     <p className="text-sm text-muted-foreground">
-                      Click the link in your email to sign in. The link will expire in 1 hour.
+                      Click the link in your email to continue. The link will expire in 1 hour.
                     </p>
                   </div>
                 </div>
@@ -155,7 +357,7 @@ const Auth = () => {
                   onClick={handleTryAgain}
                   className="w-full"
                 >
-                  Try Different Email
+                  Try Again
                 </Button>
               </div>
             </div>
