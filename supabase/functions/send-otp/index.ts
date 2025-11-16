@@ -14,6 +14,15 @@ function generateOTP(): string {
   return Math.floor(100000 + Math.random() * 900000).toString();
 }
 
+// Hash OTP using SHA-256 for secure storage
+async function hashOTP(otp: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(otp);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
 const handler = async (req: Request): Promise<Response> => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -22,30 +31,46 @@ const handler = async (req: Request): Promise<Response> => {
   try {
     const { email } = await req.json();
 
-    if (!email) {
+    // Sanitize and validate email input
+    if (!email || typeof email !== 'string') {
       return new Response(
-        JSON.stringify({ error: "Email is required" }),
+        JSON.stringify({ error: "Valid email is required" }),
         { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    console.log("Generating OTP for:", email);
+    const sanitizedEmail = email.toLowerCase().trim();
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(sanitizedEmail)) {
+      return new Response(
+        JSON.stringify({ error: "Invalid email format" }),
+        { status: 400, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    console.log("Generating OTP for:", sanitizedEmail);
 
     const supabase = createClient(
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
-    // Generate OTP
+    // Clean up expired OTPs
+    await supabase.rpc("cleanup_expired_otps");
+
+    // Generate OTP and hash it before storing
     const otpCode = generateOTP();
+    const hashedOTP = await hashOTP(otpCode);
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString(); // 5 minutes
 
-    // Store OTP in database
+    // Store ONLY the hashed OTP in database (never store plain text)
     const { error: dbError } = await supabase
       .from("otp_codes")
       .insert({
-        email: email.toLowerCase(),
-        code: otpCode,
+        email: sanitizedEmail,
+        code: hashedOTP,
         expires_at: expiresAt,
         used: false,
       });
@@ -58,11 +83,11 @@ const handler = async (req: Request): Promise<Response> => {
       );
     }
 
-    // Send beautiful OTP email
+    // Send OTP via email (plain text OTP only sent to user's email)
     const emailResponse = await resend.emails.send({
       from: "Wedding Invites <onboarding@resend.dev>",
-      to: [email],
-      subject: "Your Login Code",
+      to: [sanitizedEmail],
+      subject: "Your Verification Code",
       html: `
         <!DOCTYPE html>
         <html>
@@ -75,42 +100,36 @@ const handler = async (req: Request): Promise<Response> => {
               <tr>
                 <td align="center">
                   <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <!-- Header -->
                     <tr>
                       <td style="padding: 40px 40px 20px 40px; text-align: center;">
                         <h1 style="margin: 0; font-size: 28px; color: #333; font-weight: 600;">🎊 Wedding Invites</h1>
                       </td>
                     </tr>
-                    
-                    <!-- Body -->
                     <tr>
                       <td style="padding: 0 40px 40px 40px;">
-                        <h2 style="margin: 0 0 20px 0; font-size: 20px; color: #333; font-weight: 500;">Your Login Code</h2>
+                        <h2 style="margin: 0 0 20px 0; font-size: 20px; color: #333; font-weight: 500;">Your Verification Code</h2>
                         <p style="margin: 0 0 30px 0; font-size: 16px; color: #666; line-height: 1.5;">
                           Enter this code to log in to your account:
                         </p>
-                        
-                        <!-- OTP Code Box -->
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; padding: 30px; text-align: center; margin: 30px 0;">
                           <div style="font-size: 42px; font-weight: bold; letter-spacing: 12px; color: #ffffff; font-family: 'Courier New', monospace;">
                             ${otpCode}
                           </div>
                         </div>
-                        
-                        <p style="margin: 20px 0 10px 0; font-size: 14px; color: #666;">
-                          ⏱️ This code expires in <strong>5 minutes</strong>
-                        </p>
-                        <p style="margin: 10px 0 0 0; font-size: 14px; color: #999;">
+                        <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 6px; margin: 20px 0;">
+                          <p style="margin: 0; font-size: 14px; color: #856404;">
+                            ⏱️ <strong>This code expires in 5 minutes</strong>
+                          </p>
+                        </div>
+                        <p style="margin: 20px 0 0 0; font-size: 14px; color: #999; line-height: 1.5;">
                           If you didn't request this code, please ignore this email.
                         </p>
                       </td>
                     </tr>
-                    
-                    <!-- Footer -->
                     <tr>
-                      <td style="padding: 30px 40px; border-top: 1px solid #eee; text-align: center;">
+                      <td style="padding: 20px 40px; background-color: #f8f9fa; border-radius: 0 0 12px 12px; text-align: center;">
                         <p style="margin: 0; font-size: 12px; color: #999;">
-                          Best regards,<br>The Wedding Invites Team
+                          This is an automated message. Please do not reply to this email.
                         </p>
                       </td>
                     </tr>
@@ -126,21 +145,25 @@ const handler = async (req: Request): Promise<Response> => {
     if (emailResponse.error) {
       console.error("Email error:", emailResponse.error);
       return new Response(
-        JSON.stringify({ error: "Failed to send email" }),
+        JSON.stringify({ error: "Failed to send verification code" }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
       );
     }
 
-    console.log("OTP email sent successfully");
+    console.log("OTP sent successfully to:", sanitizedEmail);
 
+    // SECURITY: Never expose OTP or any sensitive data in the response
     return new Response(
-      JSON.stringify({ success: true }),
+      JSON.stringify({ 
+        success: true, 
+        message: "Verification code sent successfully. Please check your email."
+      }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   } catch (error: any) {
-    console.error("Error:", error);
+    console.error("Error in send-otp function:", error);
     return new Response(
-      JSON.stringify({ error: "An error occurred" }),
+      JSON.stringify({ error: "An error occurred while processing your request" }),
       { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );
   }
