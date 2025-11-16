@@ -155,7 +155,7 @@ const ChristmasForm = () => {
       const weddingData = {
         ...formData,
         status: statusOverride || formData.status,
-        main_picture_url: mainPictureUrl,
+        main_picture_url: mainPictureUrl || null, // Use null instead of empty string
         user_id: user.id,
       };
 
