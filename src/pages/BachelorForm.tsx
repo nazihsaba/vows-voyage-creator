@@ -35,6 +35,9 @@ const BachelorForm = () => {
     main_picture_url: "",
     template_type: searchParams.get("template") || "bachelor-leafy",
     custom_primary_color: "#8B7355",
+    welcoming_text: "",
+    middle_text: "",
+    end_text: "",
   });
 
   useEffect(() => {
@@ -52,7 +55,12 @@ const BachelorForm = () => {
         .single();
 
       if (error) throw error;
-      setFormData(data);
+      setFormData({
+        ...data,
+        welcoming_text: data.welcoming_text || "",
+        middle_text: data.middle_text || "",
+        end_text: data.end_text || "",
+      });
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
@@ -291,6 +299,42 @@ const BachelorForm = () => {
                   value={formData.wedding_date}
                   onChange={handleInputChange}
                   required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="welcoming_text">Welcoming Text</Label>
+                <Textarea
+                  id="welcoming_text"
+                  name="welcoming_text"
+                  value={formData.welcoming_text}
+                  onChange={handleInputChange}
+                  rows={2}
+                  placeholder="ONE LAST PARTY WITH THE CREW...BEFORE THEY SAY 'I DO!'"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="middle_text">Middle Text</Label>
+                <Textarea
+                  id="middle_text"
+                  name="middle_text"
+                  value={formData.middle_text}
+                  onChange={handleInputChange}
+                  rows={3}
+                  placeholder="Join us to celebrate with one unforgettable night"
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="end_text">End Text</Label>
+                <Textarea
+                  id="end_text"
+                  name="end_text"
+                  value={formData.end_text}
+                  onChange={handleInputChange}
+                  rows={2}
+                  placeholder="Bring your party spirit; We'll take care of the rest."
                 />
               </div>
             </CardContent>
