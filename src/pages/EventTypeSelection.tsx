@@ -33,10 +33,10 @@ const EventTypeSelection = () => {
     {
       id: "bachelor",
       title: "Bachelor",
-      description: "Coming soon",
+      description: "Create a fun bachelor party invitation",
       icon: GlassWater,
       color: "text-blue-500",
-      disabled: true,
+      disabled: false,
     },
   ];
 
@@ -68,6 +68,8 @@ const EventTypeSelection = () => {
                   if (!type.disabled) {
                     if (type.id === "wedding") {
                       navigate("/dashboard/wedding-templates");
+                    } else if (type.id === "bachelor") {
+                      navigate("/dashboard/bachelor-form?template=bachelor-leafy");
                     } else {
                       navigate(`/dashboard/select-template/${type.id}`);
                     }

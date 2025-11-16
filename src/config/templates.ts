@@ -432,6 +432,41 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  
+  // Bachelor Party Templates
+  {
+    id: 'bachelor-leafy',
+    name: 'Bachelor Leafy',
+    category: 'modern',
+    description: 'Fun bachelor party invitation with botanical design',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: true,
+    component: 'BachelorLeafyTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'countdown', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+      { id: 'gifts', enabled: true, order: 4, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'comfortable',
+      fontPrimary: 'Inter',
+      fontSecondary: 'Dancing Script',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#8B7355',
+        secondary: '#C4B5A0',
+        accent: '#f5f1e8',
+        background: '#ffffff',
+        text: '#2C2C2C',
+      },
+      borderRadius: 'lg',
+      shadows: 'medium',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
