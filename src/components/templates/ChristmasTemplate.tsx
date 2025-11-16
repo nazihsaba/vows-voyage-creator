@@ -1,5 +1,4 @@
 import { EditableField } from "@/components/EditableField";
-import christmasTree from "@/assets/christmas-tree.png";
 import defaultBackground from "@/assets/christmas-default-bg.png";
 
 interface ChristmasTemplateProps {
