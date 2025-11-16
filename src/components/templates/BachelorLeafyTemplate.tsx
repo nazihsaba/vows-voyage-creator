@@ -158,16 +158,6 @@ export const BachelorLeafyTemplate = ({
         </div>
       </section>
 
-      {/* Countdown Section */}
-      {wedding.wedding_date && (
-        <section className="py-16 px-6 bg-white">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2 className="text-4xl font-bold mb-8 text-gray-900">Countdown to the Party</h2>
-            <CountdownTimer targetDate={wedding.wedding_date} />
-          </div>
-        </section>
-      )}
-
       {/* Location Details */}
       {locations.length > 0 && (
         <section className="py-16 px-6 bg-[#f5f1e8]">
