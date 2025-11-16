@@ -28,6 +28,13 @@ interface Wedding {
   created_at: string;
 }
 
+const getEventType = (templateType: string): string => {
+  if (templateType?.includes('bachelor')) return 'Bachelor Party';
+  if (templateType?.includes('christmas')) return 'Christmas Dinner';
+  if (templateType?.includes('birthday')) return 'Birthday Party';
+  return 'Wedding';
+};
+
 const MyEvents = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -188,6 +195,11 @@ const MyEvents = () => {
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
+                            <div className="mb-1">
+                              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                                {getEventType(wedding.template_type)}
+                              </span>
+                            </div>
                             <CardTitle className="text-xl font-serif">
                               {wedding.bride_name} & {wedding.groom_name}
                             </CardTitle>
@@ -288,6 +300,11 @@ const MyEvents = () => {
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
+                            <div className="mb-1">
+                              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                                {getEventType(wedding.template_type)}
+                              </span>
+                            </div>
                             <CardTitle className="text-xl font-serif">
                               {wedding.bride_name} & {wedding.groom_name}
                             </CardTitle>

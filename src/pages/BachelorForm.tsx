@@ -145,7 +145,41 @@ const BachelorForm = () => {
       if (!user) throw new Error("No user found");
 
       let mainPictureUrl = formData.main_picture_url;
-      if (imageFile) {
+      
+      // If no image file and no existing image, generate one using AI
+      if (!imageFile && !mainPictureUrl) {
+        setUploading(true);
+        toast({ title: "Generating card image...", description: "Creating a custom bachelor party card for you" });
+        
+        const { data: aiImageData, error: aiError } = await supabase.functions.invoke(
+          "generate-bachelor-image",
+          {
+            body: {
+              groomName: formData.groom_name,
+              brideName: formData.bride_name,
+              eventDate: new Date(formData.wedding_date).toLocaleDateString('en-US', { 
+                month: 'long', 
+                day: 'numeric', 
+                year: 'numeric' 
+              }),
+              theme: "leafy green bachelor party"
+            }
+          }
+        );
+
+        if (aiError) {
+          console.error("AI image generation error:", aiError);
+          toast({ 
+            title: "Info", 
+            description: "Continuing without generated image. You can upload one later.", 
+            variant: "default" 
+          });
+        } else if (aiImageData?.imageUrl) {
+          mainPictureUrl = aiImageData.imageUrl;
+          toast({ title: "Success", description: "Custom card image generated!" });
+        }
+        setUploading(false);
+      } else if (imageFile) {
         setUploading(true);
         mainPictureUrl = await uploadImage(imageFile, "main");
         setUploading(false);
@@ -343,7 +377,7 @@ const BachelorForm = () => {
           {/* Main Image Card */}
           <Card className="shadow-soft">
             <CardHeader>
-              <CardTitle className="text-2xl font-serif">Main Image</CardTitle>
+              <CardTitle className="text-2xl font-serif">Main Image (Optional)</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -354,6 +388,9 @@ const BachelorForm = () => {
                   accept="image/*"
                   onChange={handleImageUpload}
                 />
+                <p className="text-sm text-muted-foreground">
+                  If you don't upload an image, we'll automatically generate a custom bachelor party card using AI
+                </p>
                 {imagePreview && (
                   <div className="mt-4">
                     <img
