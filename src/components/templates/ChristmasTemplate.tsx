@@ -43,7 +43,7 @@ export const ChristmasTemplate = ({
       >
         {/* Top Decoration */}
         <div className="relative w-full flex justify-center mb-6">
-          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" />
+          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" style={{ mixBlendMode: 'multiply' }} />
           <div className="absolute top-4 left-0 right-0 text-center">
             <div style={{ color: "#b8860b", fontWeight: 500 }}>
               <EditableField
@@ -143,7 +143,7 @@ export const ChristmasTemplate = ({
 
         {/* Bottom Decoration */}
         <div className="w-full flex justify-center mt-8">
-          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" />
+          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" style={{ mixBlendMode: 'multiply' }} />
         </div>
       </div>
     </div>
