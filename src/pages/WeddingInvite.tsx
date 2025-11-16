@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { WeddingGallery } from "@/components/WeddingGallery";
@@ -11,7 +11,7 @@ import { EditableImage } from "@/components/EditableImage";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useTemplate } from "@/hooks/useTemplate";
 import { format } from "date-fns";
-import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight, Download } from "lucide-react";
+import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight, Download, ArrowLeft } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
@@ -23,6 +23,7 @@ import { downloadCardAsImage } from '@/utils/downloadCard';
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const isPreview = searchParams.get("preview") === "true";
   const isDraftPreview = searchParams.get("draft") === "true";
   const isReadOnly = searchParams.get("readOnly") === "true";
@@ -389,6 +390,18 @@ const WeddingInvite = () => {
 
     const content = (
       <>
+        {isOwner && (
+          <div className="fixed top-4 left-4 z-50">
+            <Button
+              onClick={() => navigate('/dashboard/my-events')}
+              variant="outline"
+              className="bg-white/90 hover:bg-white shadow-lg"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              My Events
+            </Button>
+          </div>
+        )}
         {wedding?.template_type?.includes('bachelor') && (
           <div className="fixed top-4 right-4 z-50">
             <Button
