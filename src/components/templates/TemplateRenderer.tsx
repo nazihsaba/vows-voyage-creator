@@ -8,6 +8,7 @@ import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
 import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
+import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -120,6 +121,22 @@ export const TemplateRenderer = ({
         numberOfPersons={numberOfPersons}
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
         submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'BachelorLeafyTemplate') {
+    return (
+      <BachelorLeafyTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
       />
     );
   }
