@@ -259,6 +259,7 @@ export type Database = {
           custom_font_heading: string | null
           custom_primary_color: string | null
           custom_text_color: string | null
+          end_text: string | null
           field_customizations: Json | null
           groom_family: string | null
           groom_name: string
@@ -267,6 +268,7 @@ export type Database = {
           locked_name_style: Json | null
           main_description: string | null
           main_picture_url: string | null
+          middle_text: string | null
           rsvp_deadline: string | null
           slug: string
           status: string | null
@@ -275,6 +277,7 @@ export type Database = {
           user_id: string
           video_url: string | null
           wedding_date: string
+          welcoming_text: string | null
         }
         Insert: {
           bride_family?: string | null
@@ -285,6 +288,7 @@ export type Database = {
           custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
+          end_text?: string | null
           field_customizations?: Json | null
           groom_family?: string | null
           groom_name: string
@@ -293,6 +297,7 @@ export type Database = {
           locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
+          middle_text?: string | null
           rsvp_deadline?: string | null
           slug: string
           status?: string | null
@@ -301,6 +306,7 @@ export type Database = {
           user_id: string
           video_url?: string | null
           wedding_date: string
+          welcoming_text?: string | null
         }
         Update: {
           bride_family?: string | null
@@ -311,6 +317,7 @@ export type Database = {
           custom_font_heading?: string | null
           custom_primary_color?: string | null
           custom_text_color?: string | null
+          end_text?: string | null
           field_customizations?: Json | null
           groom_family?: string | null
           groom_name?: string
@@ -319,6 +326,7 @@ export type Database = {
           locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
+          middle_text?: string | null
           rsvp_deadline?: string | null
           slug?: string
           status?: string | null
@@ -327,6 +335,7 @@ export type Database = {
           user_id?: string
           video_url?: string | null
           wedding_date?: string
+          welcoming_text?: string | null
         }
         Relationships: []
       }
