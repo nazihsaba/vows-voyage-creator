@@ -57,7 +57,7 @@ const handler = async (req: Request): Promise<Response> => {
       .from("otp_codes")
       .select("*")
       .eq("email", sanitizedEmail)
-      .eq("code", hashedCode) // Compare hashed OTP
+      .eq("code", hashedCode)
       .eq("used", false)
       .gt("expires_at", new Date().toISOString())
       .order("created_at", { ascending: false })
