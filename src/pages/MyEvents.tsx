@@ -35,6 +35,21 @@ const getEventType = (templateType: string): string => {
   return 'Wedding';
 };
 
+const groupEventsByType = (events: Wedding[]) => {
+  const grouped: Record<string, Wedding[]> = {
+    'Wedding': [],
+    'Bachelor Party': [],
+    'Christmas Dinner': [],
+  };
+  
+  events.forEach(event => {
+    const type = getEventType(event.template_type);
+    grouped[type].push(event);
+  });
+  
+  return grouped;
+};
+
 const MyEvents = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -177,21 +192,20 @@ const MyEvents = () => {
           </div>
         ) : (
           <div className="space-y-12">
-            {/* Published Events Section */}
-            {weddings.filter(w => w.status === 'published').length > 0 && (
-              <section>
-                <div className="mb-6">
-                  <h2 className="text-2xl font-serif font-bold text-foreground flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-green-500"></span>
-                    Published Invitations
-                  </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Live invitations ready to share with guests
-                  </p>
-                </div>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {weddings.filter(w => w.status === 'published').map((wedding) => (
-                    <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all relative border-l-4 border-l-green-500">
+            {Object.entries(groupEventsByType(weddings)).map(([eventType, events]) => (
+              events.length > 0 && (
+                <section key={eventType}>
+                  <div className="mb-6">
+                    <h2 className="text-2xl font-serif font-bold text-foreground">
+                      {eventType}s
+                    </h2>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      {events.filter(e => e.status === 'published').length} published, {events.filter(e => e.status === 'draft').length} draft
+                    </p>
+                  </div>
+                  <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {events.map((wedding) => (
+                      <Card key={wedding.id} className={`shadow-soft hover:shadow-elegant transition-all relative ${wedding.status === 'published' ? 'border-l-4 border-l-green-500' : 'border-l-4 border-l-amber-500'}`}>
                       <CardHeader>
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
@@ -211,14 +225,30 @@ const MyEvents = () => {
                               })}
                             </CardDescription>
                           </div>
-                          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            Live
+                          <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${wedding.status === 'published' ? 'bg-green-100 text-green-800' : 'bg-amber-100 text-amber-800'}`}>
+                            <span className={`w-1.5 h-1.5 rounded-full ${wedding.status === 'published' ? 'bg-green-500' : 'bg-amber-500'}`}></span>
+                            {wedding.status === 'published' ? 'Live' : 'Draft'}
                           </span>
                         </div>
                       </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
+                    {wedding.status === 'draft' && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-800">
+                        <p className="font-medium">Not published yet</p>
+                        <p className="text-xs mt-1">Edit and publish to generate invitation links</p>
+                      </div>
+                    )}
+
+                    {wedding.status === 'draft' && (
+                      <Button 
+                        className="w-full" 
+                        onClick={() => handlePublish(wedding.id)}
+                      >
+                        Publish Event
+                      </Button>
+                    )}
+
                     {wedding.status === 'published' && (
                       <>
                         {!wedding.template_type?.includes('bachelor') ? (
@@ -300,96 +330,8 @@ const MyEvents = () => {
                   ))}
                 </div>
               </section>
-            )}
-
-            {/* Draft Events Section */}
-            {weddings.filter(w => w.status === 'draft').length > 0 && (
-              <section>
-                <div className="mb-6">
-                  <h2 className="text-2xl font-serif font-bold text-foreground flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-yellow-500"></span>
-                    Draft Invitations
-                  </h2>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Complete and publish these invitations to share with guests
-                  </p>
-                </div>
-                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                  {weddings.filter(w => w.status === 'draft').map((wedding) => (
-                    <Card key={wedding.id} className="shadow-soft hover:shadow-elegant transition-all relative border-l-4 border-l-yellow-500 bg-yellow-50/30">
-                      <CardHeader>
-                        <div className="flex items-start justify-between">
-                          <div className="flex-1">
-                            <div className="mb-1">
-                              <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                                {getEventType(wedding.template_type)}
-                              </span>
-                            </div>
-                            <CardTitle className="text-xl font-serif">
-                              {wedding.bride_name} & {wedding.groom_name}
-                            </CardTitle>
-                            <CardDescription>
-                              {new Date(wedding.wedding_date).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric'
-                              })}
-                            </CardDescription>
-                          </div>
-                          <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full bg-yellow-100 text-yellow-800">
-                            <span className="w-1.5 h-1.5 rounded-full bg-yellow-500"></span>
-                            Draft
-                          </span>
-                        </div>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="space-y-4">
-                          <div className="bg-yellow-50 border border-yellow-200 rounded-md p-3 text-sm text-yellow-800">
-                            <p className="font-medium">Not published yet</p>
-                            <p className="text-xs mt-1">Edit and publish to generate invitation links</p>
-                          </div>
-
-                          <Button 
-                            className="w-full" 
-                            onClick={() => handlePublish(wedding.id)}
-                          >
-                            Publish Event
-                          </Button>
-
-                          <div className="flex justify-end gap-2 pt-2">
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => {
-                                let editPath = `/dashboard/edit/${wedding.id}`;
-                                if (wedding.template_type?.includes('bachelor')) {
-                                  editPath = `/dashboard/edit-bachelor/${wedding.id}`;
-                                } else if (wedding.template_type?.includes('christmas')) {
-                                  editPath = `/dashboard/edit-christmas/${wedding.id}`;
-                                }
-                                navigate(editPath);
-                              }}
-                              title="Edit"
-                            >
-                              <Edit className="w-4 h-4" />
-                            </Button>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              onClick={() => setDeleteId(wedding.id)}
-                              title="Delete"
-                              className="text-destructive hover:text-destructive"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              </section>
-            )}
+              )
+            ))}
           </div>
         )}
       </main>
