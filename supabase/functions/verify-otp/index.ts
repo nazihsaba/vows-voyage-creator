@@ -108,14 +108,27 @@ const handler = async (req: Request): Promise<Response> => {
         });
     }
 
-    // Generate session using magic link
-    const { data: sessionData, error: sessionError } = await supabase.auth.admin.generateLink({
+    // Generate authentication tokens using admin API
+    const { data: linkData, error: linkError } = await supabase.auth.admin.generateLink({
       type: 'magiclink',
       email: sanitizedEmail,
     });
 
-    if (sessionError || !sessionData) {
-      console.error("Failed to create session:", sessionError);
+    if (linkError || !linkData) {
+      console.error("Failed to generate auth link:", linkError);
+      return new Response(
+        JSON.stringify({ success: false, error: "Failed to create session" }),
+        { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
+      );
+    }
+
+    // Extract the token from the action link
+    const actionLink = linkData.properties.action_link;
+    const tokenMatch = actionLink.match(/token=([^&]+)/);
+    const token = tokenMatch ? tokenMatch[1] : null;
+
+    if (!token) {
+      console.error("Failed to extract token from action link");
       return new Response(
         JSON.stringify({ success: false, error: "Failed to create session" }),
         { status: 500, headers: { "Content-Type": "application/json", ...corsHeaders } }
@@ -124,12 +137,16 @@ const handler = async (req: Request): Promise<Response> => {
 
     console.log("OTP verified successfully for:", sanitizedEmail);
 
-    // SECURITY: Return only necessary data, never expose sensitive information
+    // Return the magic link token for client-side verification
     return new Response(
       JSON.stringify({
         success: true,
-        session: sessionData,
-        user: { id: user.id, email: user.email }
+        token: token,
+        type: 'magiclink',
+        user: { 
+          id: user.id, 
+          email: user.email 
+        }
       }),
       { status: 200, headers: { "Content-Type": "application/json", ...corsHeaders } }
     );

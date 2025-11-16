@@ -101,11 +101,11 @@ const Auth = () => {
 
       if (error) throw error;
 
-      if (data?.success && data?.session) {
-        // Set the session
-        const { error: sessionError } = await supabase.auth.setSession({
-          access_token: data.session.properties.access_token,
-          refresh_token: data.session.properties.refresh_token,
+      if (data?.success && data?.token) {
+        // Verify the magic link token to get a session
+        const { error: sessionError } = await supabase.auth.verifyOtp({
+          token_hash: data.token,
+          type: 'magiclink'
         });
 
         if (sessionError) throw sessionError;
