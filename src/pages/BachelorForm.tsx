@@ -57,9 +57,9 @@ const BachelorForm = () => {
       if (error) throw error;
       setFormData({
         ...data,
-        welcoming_text: data.welcoming_text || "",
-        middle_text: data.middle_text || "",
-        end_text: data.end_text || "",
+        welcoming_text: (data as any).welcoming_text || "",
+        middle_text: (data as any).middle_text || "",
+        end_text: (data as any).end_text || "",
       });
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
