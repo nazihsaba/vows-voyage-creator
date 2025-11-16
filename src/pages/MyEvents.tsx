@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -26,6 +26,7 @@ interface Wedding {
   slug: string;
   template_type: string;
   created_at: string;
+  main_picture_url?: string;
 }
 
 const getEventType = (templateType: string): string => {
@@ -221,27 +222,61 @@ const MyEvents = () => {
                   <div className="space-y-4">
                     {wedding.status === 'published' && (
                       <>
-                        <Button
-                          variant="outline"
-                          className="w-full flex items-center justify-between"
-                          onClick={() => {
-                            setSelectedWeddingId(wedding.id);
-                            setSelectedWeddingSlug(wedding.slug);
-                            setGenerateLinkOpen(true);
-                          }}
-                        >
-                          <span>Generate Invitation Link</span>
-                          <Link2 className="w-4 h-4" />
-                        </Button>
+                        {!wedding.template_type?.includes('bachelor') ? (
+                          <>
+                            <Button
+                              variant="outline"
+                              className="w-full flex items-center justify-between"
+                              onClick={() => {
+                                setSelectedWeddingId(wedding.id);
+                                setSelectedWeddingSlug(wedding.slug);
+                                setGenerateLinkOpen(true);
+                              }}
+                            >
+                              <span>Generate Invitation Link</span>
+                              <Link2 className="w-4 h-4" />
+                            </Button>
 
-                        <Button
-                          variant="outline"
-                          className="w-full flex items-center justify-between"
-                          onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
-                        >
-                          <span>Manage invitation Links</span>
-                          <List className="w-4 h-4" />
-                        </Button>
+                            <Button
+                              variant="outline"
+                              className="w-full flex items-center justify-between"
+                              onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
+                            >
+                              <span>Manage invitation Links</span>
+                              <List className="w-4 h-4" />
+                            </Button>
+                          </>
+                        ) : (
+                          <div className="space-y-3">
+                            {wedding.main_picture_url && (
+                              <div className="relative rounded-lg overflow-hidden border border-border">
+                                <img 
+                                  src={wedding.main_picture_url} 
+                                  alt="Bachelor party card"
+                                  className="w-full h-48 object-cover"
+                                />
+                              </div>
+                            )}
+                            <Button
+                              variant="outline"
+                              className="w-full"
+                              onClick={() => {
+                                if (wedding.main_picture_url) {
+                                  const link = document.createElement('a');
+                                  link.href = wedding.main_picture_url;
+                                  link.download = `bachelor-party-${wedding.groom_name}.png`;
+                                  document.body.appendChild(link);
+                                  link.click();
+                                  document.body.removeChild(link);
+                                }
+                              }}
+                              disabled={!wedding.main_picture_url}
+                            >
+                              <Download className="w-4 h-4 mr-2" />
+                              Download Image
+                            </Button>
+                          </div>
+                        )}
                       </>
                     )}
 
