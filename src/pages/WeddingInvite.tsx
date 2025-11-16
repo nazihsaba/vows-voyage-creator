@@ -11,13 +11,14 @@ import { EditableImage } from "@/components/EditableImage";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useTemplate } from "@/hooks/useTemplate";
 import { format } from "date-fns";
-import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, MapPin, Calendar, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import heroImage from "@/assets/wedding-hero.jpg";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { hexToHSL } from "@/lib/colorUtils";
+import { downloadCardAsImage } from '@/utils/downloadCard';
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -37,6 +38,7 @@ const WeddingInvite = () => {
   const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
+  const [downloadingCard, setDownloadingCard] = useState(false);
   const { toast } = useToast();
   
   // Get template configuration if using template system
@@ -327,6 +329,29 @@ const WeddingInvite = () => {
     ? new Date(wedding.rsvp_deadline) < new Date() 
     : false;
 
+  const handleDownloadCard = async () => {
+    setDownloadingCard(true);
+    try {
+      await downloadCardAsImage(
+        'bachelor-card-preview',
+        `bachelor-party-${wedding?.groom_name?.toLowerCase()}.png`
+      );
+      toast({
+        title: "Success",
+        description: "Card downloaded successfully!",
+      });
+    } catch (error) {
+      console.error('Download error:', error);
+      toast({
+        title: "Error",
+        description: "Failed to download card. Please try again.",
+        variant: "destructive",
+      });
+    } finally {
+      setDownloadingCard(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-soft">
@@ -364,35 +389,58 @@ const WeddingInvite = () => {
 
     const content = (
       <>
-        <TemplateRenderer
-          template={template}
-          wedding={wedding}
-          locations={locations}
-          gallery={gallery}
-          giftCards={giftCards}
-          isOwner={isOwner}
-          isPreview={canEdit}
-          onFieldUpdate={updateFieldCustomization}
-          getFieldValue={getFieldValue}
-          getFieldStyle={getFieldStyle}
-          invitees={invitees}
-          rsvpResponses={rsvpResponses}
-          handleRsvpToggle={handleRsvpToggle}
-          handleRsvpSubmit={handleRsvpSubmit}
-          numberOfPersons={numberOfPersons ? parseInt(numberOfPersons) : 0}
-          isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-          submittingRsvp={submittingRsvp}
-        >
-          {/* Hero content passed as children for templates that need it */}
-          <div className="text-center text-white space-y-6">
-            <h1 className="text-5xl md:text-7xl font-script">
-              {wedding.groom_name} & {wedding.bride_name}
-            </h1>
-            <p className="text-xl md:text-2xl tracking-wide">
-              {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
-            </p>
+        {wedding?.template_type?.includes('bachelor') && (
+          <div className="fixed top-4 right-4 z-50">
+            <Button
+              onClick={handleDownloadCard}
+              disabled={downloadingCard}
+              className="bg-primary/90 hover:bg-primary shadow-lg"
+            >
+              {downloadingCard ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Card
+                </>
+              )}
+            </Button>
           </div>
-        </TemplateRenderer>
+        )}
+        <div id="bachelor-card-preview">
+          <TemplateRenderer
+            template={template}
+            wedding={wedding}
+            locations={locations}
+            gallery={gallery}
+            giftCards={giftCards}
+            isOwner={isOwner}
+            isPreview={canEdit}
+            onFieldUpdate={updateFieldCustomization}
+            getFieldValue={getFieldValue}
+            getFieldStyle={getFieldStyle}
+            invitees={invitees}
+            rsvpResponses={rsvpResponses}
+            handleRsvpToggle={handleRsvpToggle}
+            handleRsvpSubmit={handleRsvpSubmit}
+            numberOfPersons={numberOfPersons ? parseInt(numberOfPersons) : 0}
+            isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+            submittingRsvp={submittingRsvp}
+          >
+            {/* Hero content passed as children for templates that need it */}
+            <div className="text-center text-white space-y-6">
+              <h1 className="text-5xl md:text-7xl font-script">
+                {wedding.groom_name} & {wedding.bride_name}
+              </h1>
+              <p className="text-xl md:text-2xl tracking-wide">
+                {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+              </p>
+            </div>
+          </TemplateRenderer>
+        </div>
         
         {/* Display invitees section with RSVP if link-specific */}
         {invitees.length > 0 && (
