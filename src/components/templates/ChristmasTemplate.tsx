@@ -2,6 +2,7 @@ import { EditableField } from '@/components/EditableField';
 import leavesDecor from '@/assets/christmas-leaves-decor.png';
 import christmasTree from '@/assets/christmas-tree.png';
 import textureBackground from '@/assets/christmas-texture.png';
+import defaultBackground from '@/assets/christmas-default-bg.png';
 
 interface ChristmasTemplateProps {
   wedding: any;
@@ -35,9 +36,10 @@ export const ChristmasTemplate = ({
       <div 
         className="w-full max-w-md bg-white p-8 md:p-10 rounded-xl relative shadow-xl"
         style={{
-          border: '2px solid #d8c997',
-          backgroundImage: `url(${textureBackground})`,
+          border: '2px solid #d8c897',
+          backgroundImage: `url(${wedding.main_picture_url || defaultBackground})`,
           backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
         {/* Top Decoration */}
@@ -71,14 +73,16 @@ export const ChristmasTemplate = ({
           />
         </div>
 
-        {/* Christmas Tree */}
-        <div className="flex justify-center my-6">
-          <img 
-            src={wedding.main_picture_url || christmasTree} 
-            alt="Christmas decoration" 
-            className="w-48 h-auto"
-          />
-        </div>
+        {/* Christmas Tree - Hidden when using default background */}
+        {wedding.main_picture_url && (
+          <div className="flex justify-center my-6">
+            <img 
+              src={wedding.main_picture_url} 
+              alt="Christmas decoration" 
+              className="w-48 h-auto"
+            />
+          </div>
+        )}
 
         {/* Title */}
         <div className="text-center mb-4">
