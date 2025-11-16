@@ -253,6 +253,7 @@ export type Database = {
         Row: {
           bride_family: string | null
           bride_name: string
+          closing_message: string | null
           created_at: string | null
           custom_accent_color: string | null
           custom_font_body: string | null
@@ -260,15 +261,18 @@ export type Database = {
           custom_primary_color: string | null
           custom_text_color: string | null
           end_text: string | null
+          event_title: string | null
           field_customizations: Json | null
           groom_family: string | null
           groom_name: string
           heading_font_size: string | null
           id: string
+          invitation_text: string | null
           locked_name_style: Json | null
           main_description: string | null
           main_picture_url: string | null
           middle_text: string | null
+          recipient_name: string | null
           rsvp_deadline: string | null
           slug: string
           status: string | null
@@ -282,6 +286,7 @@ export type Database = {
         Insert: {
           bride_family?: string | null
           bride_name: string
+          closing_message?: string | null
           created_at?: string | null
           custom_accent_color?: string | null
           custom_font_body?: string | null
@@ -289,15 +294,18 @@ export type Database = {
           custom_primary_color?: string | null
           custom_text_color?: string | null
           end_text?: string | null
+          event_title?: string | null
           field_customizations?: Json | null
           groom_family?: string | null
           groom_name: string
           heading_font_size?: string | null
           id?: string
+          invitation_text?: string | null
           locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
           middle_text?: string | null
+          recipient_name?: string | null
           rsvp_deadline?: string | null
           slug: string
           status?: string | null
@@ -311,6 +319,7 @@ export type Database = {
         Update: {
           bride_family?: string | null
           bride_name?: string
+          closing_message?: string | null
           created_at?: string | null
           custom_accent_color?: string | null
           custom_font_body?: string | null
@@ -318,15 +327,18 @@ export type Database = {
           custom_primary_color?: string | null
           custom_text_color?: string | null
           end_text?: string | null
+          event_title?: string | null
           field_customizations?: Json | null
           groom_family?: string | null
           groom_name?: string
           heading_font_size?: string | null
           id?: string
+          invitation_text?: string | null
           locked_name_style?: Json | null
           main_description?: string | null
           main_picture_url?: string | null
           middle_text?: string | null
+          recipient_name?: string | null
           rsvp_deadline?: string | null
           slug?: string
           status?: string | null
