@@ -31,8 +31,7 @@ interface Wedding {
 
 const getEventType = (templateType: string): string => {
   if (templateType?.includes('bachelor')) return 'Bachelor Party';
-  if (templateType?.includes('christmas')) return 'Christmas Dinner';
-  if (templateType?.includes('birthday')) return 'Birthday Party';
+  if (templateType?.includes('christmas') || templateType?.includes('birthday')) return 'Christmas Dinner';
   return 'Wedding';
 };
 
@@ -263,9 +262,12 @@ const MyEvents = () => {
                         variant="ghost"
                         size="icon"
                         onClick={() => {
-                          const editPath = wedding.template_type?.includes('bachelor') 
-                            ? `/dashboard/edit-bachelor/${wedding.id}`
-                            : `/dashboard/edit/${wedding.id}`;
+                          let editPath = `/dashboard/edit/${wedding.id}`;
+                          if (wedding.template_type?.includes('bachelor')) {
+                            editPath = `/dashboard/edit-bachelor/${wedding.id}`;
+                          } else if (wedding.template_type?.includes('christmas')) {
+                            editPath = `/dashboard/edit-christmas/${wedding.id}`;
+                          }
                           navigate(editPath);
                         }}
                         title="Edit"
@@ -359,9 +361,12 @@ const MyEvents = () => {
                               variant="ghost"
                               size="icon"
                               onClick={() => {
-                                const editPath = wedding.template_type?.includes('bachelor') 
-                                  ? `/dashboard/edit-bachelor/${wedding.id}`
-                                  : `/dashboard/edit/${wedding.id}`;
+                                let editPath = `/dashboard/edit/${wedding.id}`;
+                                if (wedding.template_type?.includes('bachelor')) {
+                                  editPath = `/dashboard/edit-bachelor/${wedding.id}`;
+                                } else if (wedding.template_type?.includes('christmas')) {
+                                  editPath = `/dashboard/edit-christmas/${wedding.id}`;
+                                }
                                 navigate(editPath);
                               }}
                               title="Edit"

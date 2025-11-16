@@ -17,10 +17,10 @@ const EventTypeSelection = () => {
     {
       id: "birthday",
       title: "Birthday",
-      description: "Coming soon",
+      description: "Create a festive birthday or holiday invitation",
       icon: Cake,
       color: "text-amber-500",
-      disabled: true,
+      disabled: false,
     },
     {
       id: "party",
@@ -70,6 +70,8 @@ const EventTypeSelection = () => {
                       navigate("/dashboard/wedding-templates");
                     } else if (type.id === "bachelor") {
                       navigate("/dashboard/bachelor-form?template=bachelor-leafy");
+                    } else if (type.id === "birthday") {
+                      navigate("/dashboard/christmas-form?template=christmas-dinner");
                     } else {
                       navigate(`/dashboard/select-template/${type.id}`);
                     }

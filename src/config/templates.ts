@@ -467,6 +467,38 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'christmas-dinner',
+    name: 'Christmas Dinner',
+    category: 'classic',
+    description: 'Elegant Christmas dinner invitation with festive decorations',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: false,
+    component: 'ChristmasTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'details', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'comfortable',
+      fontPrimary: 'Georgia',
+      fontSecondary: 'Inter',
+      headingSize: 'large',
+      colorScheme: {
+        primary: '#8a623a',
+        secondary: '#8a7646',
+        accent: '#d8c997',
+        background: '#f7f7f7',
+        text: '#444',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: false,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
