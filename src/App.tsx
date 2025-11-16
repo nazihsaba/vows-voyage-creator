@@ -36,6 +36,7 @@ const App = () => (
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/bachelor-form" element={<BachelorForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
+          <Route path="/dashboard/edit-bachelor/:id" element={<BachelorForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
