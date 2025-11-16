@@ -262,7 +262,12 @@ const MyEvents = () => {
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
+                        onClick={() => {
+                          const editPath = wedding.template_type?.includes('bachelor') 
+                            ? `/dashboard/edit-bachelor/${wedding.id}`
+                            : `/dashboard/edit/${wedding.id}`;
+                          navigate(editPath);
+                        }}
                         title="Edit"
                       >
                         <Edit className="w-4 h-4" />
@@ -353,7 +358,12 @@ const MyEvents = () => {
                             <Button
                               variant="ghost"
                               size="icon"
-                              onClick={() => navigate(`/dashboard/edit/${wedding.id}`)}
+                              onClick={() => {
+                                const editPath = wedding.template_type?.includes('bachelor') 
+                                  ? `/dashboard/edit-bachelor/${wedding.id}`
+                                  : `/dashboard/edit/${wedding.id}`;
+                                navigate(editPath);
+                              }}
                               title="Edit"
                             >
                               <Edit className="w-4 h-4" />
