@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Heart, Cake, PartyPopper, GlassWater, ArrowLeft } from "lucide-react";
+import { Heart, Cake, PartyPopper, GlassWater, ArrowLeft, Trees } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const EventTypeSelection = () => {
@@ -17,9 +17,17 @@ const EventTypeSelection = () => {
     {
       id: "birthday",
       title: "Birthday",
-      description: "Create a festive birthday or holiday invitation",
+      description: "Coming soon",
       icon: Cake,
       color: "text-amber-500",
+      disabled: true,
+    },
+    {
+      id: "christmas",
+      title: "Christmas",
+      description: "Create a festive Christmas dinner invitation",
+      icon: Trees,
+      color: "text-emerald-500",
       disabled: false,
     },
     {
@@ -70,7 +78,7 @@ const EventTypeSelection = () => {
                       navigate("/dashboard/wedding-templates");
                     } else if (type.id === "bachelor") {
                       navigate("/dashboard/bachelor-form?template=bachelor-leafy");
-                    } else if (type.id === "birthday") {
+                    } else if (type.id === "christmas") {
                       navigate("/dashboard/christmas-form?template=christmas-dinner");
                     } else {
                       navigate(`/dashboard/select-template/${type.id}`);
