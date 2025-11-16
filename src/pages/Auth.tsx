@@ -5,15 +5,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Mail, Lock, ArrowRight, Loader2 } from "lucide-react";
+import { Mail, Lock, ArrowRight, Loader2, CheckCircle2 } from "lucide-react";
 
 const Auth = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
-  const [otp, setOtp] = useState("");
-  const [step, setStep] = useState<"email" | "verify">("email");
   const [loading, setLoading] = useState(false);
-  const [resendCooldown, setResendCooldown] = useState(0);
+  const [emailSent, setEmailSent] = useState(false);
 
   useEffect(() => {
     // Check if user is already logged in
@@ -24,7 +22,8 @@ const Auth = () => {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session) {
+      if (event === 'SIGNED_IN' && session) {
+        toast.success("Successfully logged in!");
         navigate("/dashboard");
       }
     });
@@ -32,15 +31,8 @@ const Auth = () => {
     return () => subscription.unsubscribe();
   }, [navigate]);
 
-  useEffect(() => {
-    if (resendCooldown > 0) {
-      const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
-      return () => clearTimeout(timer);
-    }
-  }, [resendCooldown]);
-
-  const handleSendOTP = async (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
+  const handleSignIn = async (e: React.FormEvent) => {
+    e.preventDefault();
     
     if (!email.trim()) {
       toast.error("Please enter your email address");
@@ -57,83 +49,28 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      const { data, error } = await supabase.functions.invoke("send-otp", {
-        body: { email: email.trim().toLowerCase() },
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: {
+          emailRedirectTo: `${window.location.origin}/dashboard`,
+        },
       });
 
       if (error) throw error;
 
-      if (data?.success) {
-        toast.success("Verification code sent! Check your email.");
-        setStep("verify");
-        setResendCooldown(60);
-        setOtp("");
-      } else {
-        throw new Error(data?.error || "Failed to send verification code");
-      }
+      setEmailSent(true);
+      toast.success("Check your email for the login link!");
     } catch (error: any) {
-      console.error("Send OTP error:", error);
-      toast.error(error.message || "Failed to send verification code");
+      console.error("Sign in error:", error);
+      toast.error(error.message || "Failed to send verification email");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerifyOTP = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!otp.trim()) {
-      toast.error("Please enter the verification code");
-      return;
-    }
-
-    if (!/^\d{6}$/.test(otp.trim())) {
-      toast.error("Please enter a valid 6-digit code");
-      return;
-    }
-
-    setLoading(true);
-
-    try {
-      const { data, error } = await supabase.functions.invoke("verify-otp", {
-        body: { email: email.trim().toLowerCase(), code: otp.trim() },
-      });
-
-      if (error) throw error;
-
-      if (data?.success && data?.token) {
-        // Verify the magic link token to get a session
-        const { error: sessionError } = await supabase.auth.verifyOtp({
-          token_hash: data.token,
-          type: 'magiclink'
-        });
-
-        if (sessionError) throw sessionError;
-
-        toast.success("Successfully logged in!");
-        navigate("/dashboard");
-      } else {
-        throw new Error(data?.error || "Invalid verification code");
-      }
-    } catch (error: any) {
-      console.error("Verify OTP error:", error);
-      toast.error(error.message || "Invalid or expired verification code");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleResendOTP = () => {
-    if (resendCooldown > 0) {
-      toast.error(`Please wait ${resendCooldown} seconds before resending`);
-      return;
-    }
-    handleSendOTP();
-  };
-
-  const handleChangeEmail = () => {
-    setStep("email");
-    setOtp("");
+  const handleTryAgain = () => {
+    setEmailSent(false);
+    setEmail("");
   };
 
   return (
@@ -142,22 +79,26 @@ const Auth = () => {
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Lock className="w-6 h-6 text-primary" />
+              {emailSent ? (
+                <CheckCircle2 className="w-6 h-6 text-primary" />
+              ) : (
+                <Lock className="w-6 h-6 text-primary" />
+              )}
             </div>
           </div>
           <CardTitle className="text-2xl text-center font-serif">
-            {step === "email" ? "Welcome" : "Verify Your Email"}
+            {emailSent ? "Check Your Email" : "Welcome"}
           </CardTitle>
           <CardDescription className="text-center">
-            {step === "email" 
-              ? "Enter your email to receive a verification code"
-              : `We sent a 6-digit code to ${email}`
+            {emailSent 
+              ? `We sent a verification link to ${email}`
+              : "Enter your email to receive a sign-in link"
             }
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {step === "email" ? (
-            <form onSubmit={handleSendOTP} className="space-y-4">
+          {!emailSent ? (
+            <form onSubmit={handleSignIn} className="space-y-4">
               <div className="space-y-2">
                 <div className="relative">
                   <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
@@ -180,71 +121,44 @@ const Auth = () => {
                 {loading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Sending Code...
+                    Sending Link...
                   </>
                 ) : (
                   <>
-                    Continue
+                    Send Sign-In Link
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </>
                 )}
               </Button>
             </form>
           ) : (
-            <form onSubmit={handleVerifyOTP} className="space-y-4">
-              <div className="space-y-2">
-                <Input
-                  type="text"
-                  placeholder="Enter 6-digit code"
-                  value={otp}
-                  onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  className="text-center text-2xl tracking-widest font-mono"
-                  disabled={loading}
-                  maxLength={6}
-                  required
-                />
-                <p className="text-xs text-muted-foreground text-center">
-                  Code expires in 5 minutes
-                </p>
+            <div className="space-y-4">
+              <div className="bg-muted rounded-lg p-4 space-y-3">
+                <div className="flex items-start gap-3">
+                  <Mail className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                  <div className="space-y-1">
+                    <p className="text-sm font-medium">Verification link sent</p>
+                    <p className="text-sm text-muted-foreground">
+                      Click the link in your email to sign in. The link will expire in 1 hour.
+                    </p>
+                  </div>
+                </div>
               </div>
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading || otp.length !== 6}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Verifying...
-                  </>
-                ) : (
-                  "Verify & Login"
-                )}
-              </Button>
-              <div className="flex flex-col gap-2">
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={handleResendOTP}
-                  disabled={resendCooldown > 0 || loading}
-                  className="w-full"
-                >
-                  {resendCooldown > 0 
-                    ? `Resend code in ${resendCooldown}s` 
-                    : "Resend code"
-                  }
-                </Button>
+              
+              <div className="space-y-2">
+                <p className="text-xs text-muted-foreground text-center">
+                  Didn't receive the email? Check your spam folder or try again.
+                </p>
                 <Button
                   type="button"
                   variant="outline"
-                  onClick={handleChangeEmail}
-                  disabled={loading}
+                  onClick={handleTryAgain}
                   className="w-full"
                 >
-                  Change Email
+                  Try Different Email
                 </Button>
               </div>
-            </form>
+            </div>
           )}
         </CardContent>
       </Card>
