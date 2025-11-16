@@ -35,8 +35,9 @@ export const ChristmasTemplate = ({
         style={{
           border: "3px solid #d4af37",
           backgroundImage: `url(${defaultBackground})`,
-          backgroundSize: "cover",
+          backgroundSize: "contain",
           backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
         }}
       >
         {/* Top Section */}
