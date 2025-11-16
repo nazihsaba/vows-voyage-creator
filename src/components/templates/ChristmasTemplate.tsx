@@ -1,4 +1,5 @@
 import { EditableField } from "@/components/EditableField";
+import leavesDecor from "@/assets/christmas-leaves-decor.png";
 import christmasTree from "@/assets/christmas-tree.png";
 import defaultBackground from "@/assets/christmas-default-bg.png";
 
@@ -40,29 +41,32 @@ export const ChristmasTemplate = ({
           backgroundPosition: "center",
         }}
       >
-        {/* Top Section */}
-        <div className="text-center mb-6">
-          <div style={{ color: "#b8860b", fontWeight: 500 }}>
-            <EditableField
-              fieldId="recipient-name"
-              text={getFieldValue("recipient-name", "DEAR SHINTA")}
-              style={getFieldStyle("recipient-name")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-xs tracking-[0.3em] mb-1 uppercase"
-            />
-          </div>
-          <div style={{ color: "#b8860b", fontWeight: 500 }}>
-            <EditableField
-              fieldId="invitation-text"
-              text={getFieldValue("invitation-text", "PLEASE JOIN US")}
-              style={getFieldStyle("invitation-text")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-xs tracking-[0.3em] uppercase"
-            />
+        {/* Top Decoration */}
+        <div className="relative w-full flex justify-center mb-6">
+          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" />
+          <div className="absolute top-4 left-0 right-0 text-center">
+            <div style={{ color: "#b8860b", fontWeight: 500 }}>
+              <EditableField
+                fieldId="recipient-name"
+                text={getFieldValue("recipient-name", "DEAR SHINTA")}
+                style={getFieldStyle("recipient-name")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-xs tracking-[0.3em] mb-1 uppercase"
+              />
+            </div>
+            <div style={{ color: "#b8860b", fontWeight: 500 }}>
+              <EditableField
+                fieldId="invitation-text"
+                text={getFieldValue("invitation-text", "PLEASE JOIN US")}
+                style={getFieldStyle("invitation-text")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-xs tracking-[0.3em] uppercase"
+              />
+            </div>
           </div>
         </div>
 
@@ -137,6 +141,10 @@ export const ChristmasTemplate = ({
           </div>
         </div>
 
+        {/* Bottom Decoration */}
+        <div className="w-full flex justify-center mt-8">
+          <img src={leavesDecor} alt="Decorative leaves" className="w-full opacity-90" />
+        </div>
       </div>
     </div>
   );
