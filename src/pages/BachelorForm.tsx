@@ -7,9 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
-import omtLogo from "@/assets/omt-logo.jpg";
-import whishLogo from "@/assets/whish-logo.png";
+import { ArrowLeft, Loader2, Eye, Upload } from "lucide-react";
 
 const BachelorForm = () => {
   const { id } = useParams();
@@ -26,20 +24,13 @@ const BachelorForm = () => {
     ceremony_time: "",
     ceremony_location_link: "",
   });
-  const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
-    { card_name: "", card_number: "" }
-  ]);
-  const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
-  const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
     groom_family: "",
     bride_family: "",
     wedding_date: "",
-    rsvp_deadline: "",
-    main_description: "",
-    slug: "",
+    slug: `bachelor-${Date.now()}`,
     status: "draft",
     main_picture_url: "",
     template_type: searchParams.get("template") || "bachelor-leafy",
@@ -83,36 +74,14 @@ const BachelorForm = () => {
         }
       }
 
-      // Fetch existing gift cards
-      const { data: cardsData } = await supabase
-        .from("gift_cards")
-        .select("*")
-        .eq("wedding_id", id)
-        .order("card_order");
-
-      if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData.map(card => ({
-          card_name: card.card_name,
-          card_number: card.card_number,
-          logo_url: card.logo_url || undefined
-        })));
-        // Set icon previews for existing cards
-        const previews: Record<number, string> = {};
-        cardsData.forEach((card, index) => {
-          if (card.logo_url) {
-            previews[index] = card.logo_url;
-          }
-        });
-        setCardIconPreviews(previews);
-      }
     } catch (error: any) {
       console.error("Error fetching event:", error);
       toast({ title: "Error", description: "Failed to load event", variant: "destructive" });
     }
   };
 
-  const generateSlug = (groomName: string, brideName: string) => {
-    const slug = `${groomName}-${brideName}`.toLowerCase().replace(/\s+/g, "-");
+  const generateSlug = (groomName: string) => {
+    const slug = `bachelor-${groomName}`.toLowerCase().replace(/\s+/g, "-");
     return slug;
   };
 
@@ -120,12 +89,8 @@ const BachelorForm = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    if (name === "groom_name" || name === "bride_name") {
-      const groomName = name === "groom_name" ? value : formData.groom_name;
-      const brideName = name === "bride_name" ? value : formData.bride_name;
-      if (groomName && brideName) {
-        setFormData((prev) => ({ ...prev, slug: generateSlug(groomName, brideName) }));
-      }
+    if (name === "groom_name" && !id && value) {
+      setFormData((prev) => ({ ...prev, slug: generateSlug(value) }));
     }
   };
 
@@ -140,38 +105,6 @@ const BachelorForm = () => {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleCardChange = (index: number, field: string, value: string) => {
-    const updatedCards = [...giftCards];
-    updatedCards[index] = { ...updatedCards[index], [field]: value };
-    setGiftCards(updatedCards);
-  };
-
-  const addCard = () => {
-    setGiftCards([...giftCards, { card_name: "", card_number: "" }]);
-  };
-
-  const removeCard = (index: number) => {
-    setGiftCards(giftCards.filter((_, i) => i !== index));
-    const updatedIconFiles = { ...cardIconFiles };
-    delete updatedIconFiles[index];
-    setCardIconFiles(updatedIconFiles);
-    const updatedIconPreviews = { ...cardIconPreviews };
-    delete updatedIconPreviews[index];
-    setCardIconPreviews(updatedIconPreviews);
-  };
-
-  const handleCardIconUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setCardIconFiles(prev => ({ ...prev, [index]: file }));
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCardIconPreviews(prev => ({ ...prev, [index]: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
@@ -269,30 +202,6 @@ const BachelorForm = () => {
           }
         }
 
-        // Save gift cards
-        if (id) {
-          await supabase.from("gift_cards").delete().eq("wedding_id", weddingId);
-        }
-
-        const validCards = giftCards.filter(card => card.card_name && card.card_number);
-        if (validCards.length > 0) {
-          const cardsToInsert = await Promise.all(
-            validCards.map(async (card, index) => {
-              let logoUrl = card.logo_url;
-              if (cardIconFiles[index]) {
-                logoUrl = await uploadImage(cardIconFiles[index]!, "card-icons");
-              }
-              return {
-                wedding_id: weddingId,
-                card_name: card.card_name,
-                card_number: card.card_number,
-                logo_url: logoUrl,
-                card_order: index + 1,
-              };
-            })
-          );
-          await supabase.from("gift_cards").insert(cardsToInsert);
-        }
       }
 
       toast({ title: "Success", description: id ? "Event updated successfully" : "Event created successfully" });
@@ -373,55 +282,16 @@ const BachelorForm = () => {
                 </div>
               </div>
 
-              <div className="grid gap-6 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label htmlFor="wedding_date">Event Date *</Label>
-                  <Input
-                    type="date"
-                    id="wedding_date"
-                    name="wedding_date"
-                    value={formData.wedding_date}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rsvp_deadline">RSVP Deadline</Label>
-                  <Input
-                    type="date"
-                    id="rsvp_deadline"
-                    name="rsvp_deadline"
-                    value={formData.rsvp_deadline}
-                    onChange={handleInputChange}
-                  />
-                </div>
-              </div>
-
               <div className="space-y-2">
-                <Label htmlFor="main_description">Event Description</Label>
-                <Textarea
-                  id="main_description"
-                  name="main_description"
-                  value={formData.main_description}
-                  onChange={handleInputChange}
-                  rows={4}
-                  placeholder="with one unforgettable night of fun, friends, and questionable decisions."
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="slug">Event URL Slug *</Label>
+                <Label htmlFor="wedding_date">Event Date *</Label>
                 <Input
-                  id="slug"
-                  name="slug"
-                  value={formData.slug}
+                  type="date"
+                  id="wedding_date"
+                  name="wedding_date"
+                  value={formData.wedding_date}
                   onChange={handleInputChange}
                   required
-                  placeholder="groom-bride"
                 />
-                <p className="text-sm text-muted-foreground">
-                  Your event will be accessible at: {window.location.origin}/invite/{formData.slug}
-                </p>
               </div>
             </CardContent>
           </Card>
@@ -491,67 +361,6 @@ const BachelorForm = () => {
             </CardContent>
           </Card>
 
-          {/* Gift Cards */}
-          <Card className="shadow-soft">
-            <CardHeader>
-              <CardTitle className="text-2xl font-serif">Gift Cards (Optional)</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              {giftCards.map((card, index) => (
-                <div key={index} className="p-4 border border-border rounded-lg space-y-4">
-                  <div className="flex justify-between items-center">
-                    <h3 className="font-semibold">Card {index + 1}</h3>
-                    {giftCards.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => removeCard(index)}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-2">
-                    <div className="space-y-2">
-                      <Label>Card Name</Label>
-                      <Input
-                        value={card.card_name}
-                        onChange={(e) => handleCardChange(index, "card_name", e.target.value)}
-                        placeholder="e.g., OMT, Whish"
-                      />
-                    </div>
-                    <div className="space-y-2">
-                      <Label>Card Number</Label>
-                      <Input
-                        value={card.card_number}
-                        onChange={(e) => handleCardChange(index, "card_number", e.target.value)}
-                        placeholder="e.g., 03123456"
-                      />
-                    </div>
-                  </div>
-                  <div className="space-y-2">
-                    <Label>Card Logo (Optional)</Label>
-                    <Input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleCardIconUpload(index, e)}
-                    />
-                    {cardIconPreviews[index] && (
-                      <img
-                        src={cardIconPreviews[index]}
-                        alt={`Card ${index + 1} logo`}
-                        className="h-16 object-contain mt-2"
-                      />
-                    )}
-                  </div>
-                </div>
-              ))}
-              <Button type="button" variant="outline" onClick={addCard} className="w-full">
-                Add Another Card
-              </Button>
-            </CardContent>
-          </Card>
 
           {/* Action Buttons */}
           <div className="flex gap-4 flex-wrap">
