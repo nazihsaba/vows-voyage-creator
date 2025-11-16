@@ -246,37 +246,15 @@ const MyEvents = () => {
                               <List className="w-4 h-4" />
                             </Button>
                           </>
-                        ) : (
-                          <div className="space-y-3">
-                            {wedding.main_picture_url && (
-                              <div className="relative rounded-lg overflow-hidden border border-border">
-                                <img 
-                                  src={wedding.main_picture_url} 
-                                  alt="Bachelor party card"
-                                  className="w-full h-48 object-cover"
-                                />
-                              </div>
-                            )}
-                            <Button
-                              variant="outline"
-                              className="w-full"
-                              onClick={() => {
-                                if (wedding.main_picture_url) {
-                                  const link = document.createElement('a');
-                                  link.href = wedding.main_picture_url;
-                                  link.download = `bachelor-party-${wedding.groom_name}.png`;
-                                  document.body.appendChild(link);
-                                  link.click();
-                                  document.body.removeChild(link);
-                                }
-                              }}
-                              disabled={!wedding.main_picture_url}
-                            >
-                              <Download className="w-4 h-4 mr-2" />
-                              Download Image
-                            </Button>
+                        ) : wedding.main_picture_url ? (
+                          <div className="relative rounded-lg overflow-hidden border border-border">
+                            <img 
+                              src={wedding.main_picture_url} 
+                              alt="Bachelor party card"
+                              className="w-full h-48 object-cover"
+                            />
                           </div>
-                        )}
+                        ) : null}
                       </>
                     )}
 
