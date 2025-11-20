@@ -17,6 +17,7 @@ const MultipageSlideshowForm = () => {
     groomName: '',
     brideName: '',
     weddingDate: '',
+    slug: '',
     mainDescription: '',
     ceremonyLocation: '',
     ceremonyTime: '',
@@ -46,7 +47,7 @@ const MultipageSlideshowForm = () => {
         return;
       }
 
-      const slug = generateSlug(formData.groomName, formData.brideName);
+      const slug = formData.slug || generateSlug(formData.groomName, formData.brideName);
 
       // Create the wedding
       const { data: wedding, error: weddingError } = await supabase
@@ -155,6 +156,19 @@ const MultipageSlideshowForm = () => {
                 value={formData.weddingDate}
                 onChange={(e) => setFormData({ ...formData, weddingDate: e.target.value })}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Custom URL Slug</Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                placeholder="e.g., john-jane-2024"
+              />
+              <p className="text-xs text-muted-foreground">
+                Leave empty to auto-generate from names
+              </p>
             </div>
 
             <div className="space-y-2">
