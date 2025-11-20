@@ -45,7 +45,7 @@ export const ChristmasTemplate = ({
           <div style={{ color: "#b8860b", fontWeight: 500 }}>
             <EditableField
               fieldId="recipient-name"
-              text={getFieldValue("recipient-name", "DEAR SHINTA")}
+              text={getFieldValue("recipient-name", wedding.recipient_name || "DEAR GUEST")}
               style={getFieldStyle("recipient-name")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -56,7 +56,7 @@ export const ChristmasTemplate = ({
           <div style={{ color: "#b8860b", fontWeight: 500 }}>
             <EditableField
               fieldId="invitation-text"
-              text={getFieldValue("invitation-text", "PLEASE JOIN US")}
+              text={getFieldValue("invitation-text", wedding.invitation_text || "PLEASE JOIN US")}
               style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -71,7 +71,7 @@ export const ChristmasTemplate = ({
           <div style={{ color: "#b8860b" }}>
             <EditableField
               fieldId="event-title"
-              text={getFieldValue("event-title", "Christmas Dinner")}
+              text={getFieldValue("event-title", wedding.event_title || "Christmas Dinner")}
               style={getFieldStyle("event-title")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -126,7 +126,7 @@ export const ChristmasTemplate = ({
               fieldId="closing-message"
               text={getFieldValue(
                 "closing-message",
-                `With Love, ${wedding.groom_name || wedding.bride_name || "Emely"}`,
+                wedding.closing_message || `With Love, ${wedding.groom_name || wedding.bride_name || "Host"}`,
               )}
               style={getFieldStyle("closing-message")}
               onUpdate={onFieldUpdate}
