@@ -85,7 +85,7 @@ const ElegantVideoForm = () => {
 
         <div className="bg-card rounded-lg shadow-lg p-8">
           <h1 className="text-3xl font-serif font-bold text-center mb-8">
-            Elegant Video Invitation
+            Cinematic Monogram Invitation
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">

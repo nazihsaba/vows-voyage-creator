@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import elegantVideo from "@/assets/template-elegant-video.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
@@ -12,9 +13,9 @@ const WeddingTemplates = () => {
   const weddingTemplates = [
     { 
       id: "elegant-video", 
-      name: "Elegant Video Intro", 
-      description: "Full-screen video with monogram and countdown", 
-      image: cinematicVideo,
+      name: "Cinematic Monogram", 
+      description: "Full-screen video with elegant monogram and countdown", 
+      image: elegantVideo,
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Clock, text: "Countdown Timer" },
