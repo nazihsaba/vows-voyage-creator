@@ -399,10 +399,10 @@ export const templates: Template[] = [
   },
   {
     id: 'elegant-video',
-    name: 'Elegant Video Intro',
+    name: 'Cinematic Monogram',
     category: 'modern',
-    description: 'Full-screen video with monogram and countdown',
-    thumbnail: '/src/assets/template-cinematic-video.jpg',
+    description: 'Full-screen video with elegant monogram and countdown',
+    thumbnail: '/src/assets/template-elegant-video.jpg',
     isPremium: true,
     isPopular: true,
     component: 'ElegantVideoTemplate',
