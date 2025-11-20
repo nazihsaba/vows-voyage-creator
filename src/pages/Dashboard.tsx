@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import elegantVideo from "@/assets/template-elegant-video.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -40,17 +39,6 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-rose-500",
       templates: [
-        { 
-          id: "elegant-video", 
-          name: "Cinematic Monogram", 
-          description: "Full-screen video with elegant monogram and countdown", 
-          image: elegantVideo,
-          features: [
-            { icon: Video, text: "Video Background" },
-            { icon: Clock, text: "Countdown Timer" },
-            { icon: Heart, text: "Monogram Design" }
-          ]
-        },
         { 
           id: "template2",
           name: "Modern Romance",
