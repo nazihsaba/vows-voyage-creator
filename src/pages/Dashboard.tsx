@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import elegantMonogram from "@/assets/template-elegant-monogram.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -41,18 +40,7 @@ const Dashboard = () => {
       color: "text-rose-500",
       templates: [
         { 
-          id: "elegant-monogram", 
-          name: "Elegant Monogram", 
-          description: "Sophisticated full-screen design with monogram and countdown", 
-          image: elegantMonogram,
-          features: [
-            { icon: Heart, text: "Monogram Design" },
-            { icon: Clock, text: "Countdown Timer" },
-            { icon: MapPin, text: "Event Details" }
-          ]
-        },
-        { 
-          id: "template2", 
+          id: "template2",
           name: "Modern Romance", 
           description: "Contemporary design with stunning gallery showcase", 
           image: modernRomance,
