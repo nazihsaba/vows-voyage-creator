@@ -10,6 +10,7 @@ import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
+import ElegantMonogramTemplate from './ElegantMonogramTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -153,6 +154,16 @@ export const TemplateRenderer = ({
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
         getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
+  if (template.component === 'ElegantMonogramTemplate') {
+    return (
+      <ElegantMonogramTemplate
+        wedding={wedding}
+        onFieldUpdate={onFieldUpdate}
+        isPreview={isPreview}
       />
     );
   }
