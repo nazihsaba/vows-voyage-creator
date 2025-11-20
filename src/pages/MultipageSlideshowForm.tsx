@@ -159,19 +159,6 @@ const MultipageSlideshowForm = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="slug">Custom URL Slug</Label>
-              <Input
-                id="slug"
-                value={formData.slug}
-                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                placeholder="e.g., john-jane-2024"
-              />
-              <p className="text-xs text-muted-foreground">
-                Leave empty to auto-generate from names
-              </p>
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="mainDescription">Your Story</Label>
               <Textarea
                 id="mainDescription"
@@ -235,6 +222,19 @@ const MultipageSlideshowForm = () => {
                 placeholder="We cannot wait to celebrate with you!"
                 rows={2}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Custom URL Slug</Label>
+              <Input
+                id="slug"
+                value={formData.slug}
+                onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                placeholder="e.g., john-jane-2024"
+              />
+              <p className="text-xs text-muted-foreground">
+                Leave empty to auto-generate from names
+              </p>
             </div>
 
             <div className="flex gap-4 pt-4">
