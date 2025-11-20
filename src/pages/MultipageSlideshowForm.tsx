@@ -17,7 +17,6 @@ const MultipageSlideshowForm = () => {
     groomName: '',
     brideName: '',
     weddingDate: '',
-    slug: '',
     mainDescription: '',
     ceremonyLocation: '',
     ceremonyTime: '',
@@ -25,6 +24,10 @@ const MultipageSlideshowForm = () => {
     venueTime: '',
     closingMessage: '',
   });
+
+  const generateSlug = (groomName: string, brideName: string) => {
+    return `${groomName}-${brideName}`.toLowerCase().replace(/\s+/g, '-');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -43,6 +46,8 @@ const MultipageSlideshowForm = () => {
         return;
       }
 
+      const slug = generateSlug(formData.groomName, formData.brideName);
+
       // Create the wedding
       const { data: wedding, error: weddingError } = await supabase
         .from('weddings')
@@ -50,7 +55,7 @@ const MultipageSlideshowForm = () => {
           groom_name: formData.groomName,
           bride_name: formData.brideName,
           wedding_date: formData.weddingDate,
-          slug: formData.slug,
+          slug,
           main_description: formData.mainDescription,
           closing_message: formData.closingMessage,
           user_id: user.id,
@@ -150,21 +155,6 @@ const MultipageSlideshowForm = () => {
                 value={formData.weddingDate}
                 onChange={(e) => setFormData({ ...formData, weddingDate: e.target.value })}
               />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="slug">Invitation URL *</Label>
-              <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">yoursite.com/invite/</span>
-                <Input
-                  id="slug"
-                  required
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value.toLowerCase().replace(/\s+/g, '-') })}
-                  placeholder="your-wedding"
-                  className="flex-1"
-                />
-              </div>
             </div>
 
             <div className="space-y-2">
