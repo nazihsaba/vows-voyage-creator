@@ -6,24 +6,104 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import { ArrowLeft, Upload, Video } from "lucide-react";
 
 const ElegantVideoForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreviewUrl, setVideoPreviewUrl] = useState<string>("");
 
   const [formData, setFormData] = useState({
     groomName: "",
     brideName: "",
     weddingDate: "",
     weddingTime: "",
-    videoUrl: "",
     mainDescription: "",
   });
 
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      // Check file size (max 500MB)
+      if (file.size > 524288000) {
+        toast({
+          title: "File too large",
+          description: "Video must be under 500MB",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Check file type
+      const validTypes = ['video/mp4', 'video/quicktime', 'video/x-msvideo', 'video/webm'];
+      if (!validTypes.includes(file.type)) {
+        toast({
+          title: "Invalid file type",
+          description: "Please upload MP4, MOV, AVI, or WEBM video files",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      setVideoFile(file);
+      setVideoPreviewUrl(URL.createObjectURL(file));
+    }
+  };
+
+  const uploadVideo = async (userId: string) => {
+    if (!videoFile) return null;
+
+    setUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const fileExt = videoFile.name.split('.').pop();
+      const fileName = `${userId}/${Date.now()}.${fileExt}`;
+
+      const { error: uploadError, data } = await supabase.storage
+        .from('wedding-videos')
+        .upload(fileName, videoFile, {
+          cacheControl: '3600',
+          upsert: false,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('wedding-videos')
+        .getPublicUrl(fileName);
+
+      setUploadProgress(100);
+      return publicUrl;
+    } catch (error: any) {
+      toast({
+        title: "Upload failed",
+        description: error.message,
+        variant: "destructive",
+      });
+      return null;
+    } finally {
+      setUploading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (!videoFile) {
+      toast({
+        title: "Video required",
+        description: "Please upload a video file",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
 
     try {
@@ -38,6 +118,13 @@ const ElegantVideoForm = () => {
         return;
       }
 
+      // Upload video first
+      const videoUrl = await uploadVideo(user.id);
+      if (!videoUrl) {
+        setLoading(false);
+        return;
+      }
+
       const slug = `${formData.groomName.toLowerCase()}-${formData.brideName.toLowerCase()}-${Date.now()}`.replace(/\s+/g, '-');
       const weddingDateTime = `${formData.weddingDate}T${formData.weddingTime || '00:00'}`;
 
@@ -48,7 +135,7 @@ const ElegantVideoForm = () => {
         wedding_date: weddingDateTime,
         slug: slug,
         template_type: "elegant-video",
-        video_url: formData.videoUrl,
+        video_url: videoUrl,
         main_description: formData.mainDescription,
       });
 
@@ -135,18 +222,60 @@ const ElegantVideoForm = () => {
             </div>
 
             <div>
-              <Label htmlFor="videoUrl">Background Video URL *</Label>
-              <Input
-                id="videoUrl"
-                type="url"
-                placeholder="https://example.com/video.mp4"
-                value={formData.videoUrl}
-                onChange={(e) => setFormData({ ...formData, videoUrl: e.target.value })}
-                required
-              />
-              <p className="text-sm text-muted-foreground mt-1">
-                Direct link to an MP4 video file
-              </p>
+              <Label htmlFor="videoFile">Background Video *</Label>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => document.getElementById('videoFile')?.click()}
+                    className="w-full"
+                  >
+                    <Upload className="w-4 h-4 mr-2" />
+                    {videoFile ? 'Change Video' : 'Upload Video'}
+                  </Button>
+                  <input
+                    id="videoFile"
+                    type="file"
+                    accept="video/mp4,video/quicktime,video/x-msvideo,video/webm"
+                    onChange={handleVideoChange}
+                    className="hidden"
+                  />
+                </div>
+                
+                {videoFile && (
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                      <Video className="w-4 h-4" />
+                      <span>{videoFile.name}</span>
+                      <span className="text-xs">
+                        ({(videoFile.size / 1024 / 1024).toFixed(2)} MB)
+                      </span>
+                    </div>
+                    
+                    {videoPreviewUrl && (
+                      <video
+                        src={videoPreviewUrl}
+                        className="w-full h-48 rounded-lg object-cover"
+                        controls
+                      />
+                    )}
+                  </div>
+                )}
+                
+                {uploading && (
+                  <div className="space-y-2">
+                    <Progress value={uploadProgress} />
+                    <p className="text-sm text-center text-muted-foreground">
+                      Uploading... {uploadProgress}%
+                    </p>
+                  </div>
+                )}
+                
+                <p className="text-sm text-muted-foreground">
+                  Accepted formats: MP4, MOV, AVI, WEBM (max 500MB)
+                </p>
+              </div>
             </div>
 
             <div>
@@ -163,9 +292,9 @@ const ElegantVideoForm = () => {
             <Button
               type="submit"
               className="w-full"
-              disabled={loading}
+              disabled={loading || uploading || !videoFile}
             >
-              {loading ? "Creating..." : "Create Invitation"}
+              {loading ? "Creating..." : uploading ? "Uploading..." : "Create Invitation"}
             </Button>
           </form>
         </div>
