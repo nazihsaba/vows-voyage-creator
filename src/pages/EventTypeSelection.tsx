@@ -79,7 +79,7 @@ const EventTypeSelection = () => {
                     } else if (type.id === "bachelor") {
                       navigate("/dashboard/bachelor-form?template=bachelor-leafy");
                     } else if (type.id === "christmas") {
-                      navigate("/dashboard/christmas-form?template=christmas-dinner");
+                      navigate("/dashboard/christmas-templates");
                     } else {
                       navigate(`/dashboard/select-template/${type.id}`);
                     }
