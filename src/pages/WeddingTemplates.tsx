@@ -5,25 +5,13 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import elegantMonogram from "@/assets/template-elegant-monogram.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
 
   const weddingTemplates = [
     { 
-      id: "elegant-monogram", 
-      name: "Elegant Monogram", 
-      description: "Sophisticated full-screen design with monogram and countdown", 
-      image: elegantMonogram,
-      features: [
-        { icon: Heart, text: "Monogram Design" },
-        { icon: Clock, text: "Countdown Timer" },
-        { icon: MapPin, text: "Event Details" }
-      ]
-    },
-    { 
-      id: "template2", 
+      id: "template2",
       name: "Modern Romance", 
       description: "Contemporary design with stunning gallery showcase", 
       image: modernRomance,
