@@ -11,8 +11,19 @@ const WeddingTemplates = () => {
 
   const weddingTemplates = [
     { 
+      id: "elegant-video", 
+      name: "Elegant Video Intro", 
+      description: "Full-screen video with monogram and countdown", 
+      image: cinematicVideo,
+      features: [
+        { icon: Video, text: "Video Background" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Heart, text: "Monogram Design" }
+      ]
+    },
+    { 
       id: "template2",
-      name: "Modern Romance", 
+      name: "Modern Romance",
       description: "Contemporary design with stunning gallery showcase", 
       image: modernRomance,
       features: [
@@ -67,9 +78,13 @@ const WeddingTemplates = () => {
             <Card
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
-              onClick={() =>
-                navigate(`/dashboard/create?eventType=weddings&template=${template.id}`)
-              }
+              onClick={() => {
+                if (template.id === 'elegant-video') {
+                  navigate('/dashboard/elegant-video-form');
+                } else {
+                  navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
+                }
+              }}
             >
               <CardHeader className="p-4 sm:p-6 flex-grow">
                 <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">

@@ -10,6 +10,7 @@ import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
+import { ElegantVideoTemplate } from './ElegantVideoTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -148,6 +149,19 @@ export const TemplateRenderer = ({
         wedding={wedding}
         locations={locations}
         giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
+  if (template.component === 'ElegantVideoTemplate') {
+    return (
+      <ElegantVideoTemplate
+        wedding={wedding}
         isOwner={isOwner}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
