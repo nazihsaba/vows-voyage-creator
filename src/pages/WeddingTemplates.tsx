@@ -6,6 +6,7 @@ import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock } from "lucide-rea
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import elegantVideo from "@/assets/template-elegant-video.jpg";
+import multipageSlideshow from "@/assets/template-multipage-slideshow.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
@@ -20,6 +21,17 @@ const WeddingTemplates = () => {
         { icon: Video, text: "Video Background" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Heart, text: "Monogram Design" }
+      ]
+    },
+    { 
+      id: "multipage-slideshow", 
+      name: "Multipage Slideshow", 
+      description: "Multi-page invitation with fading background slideshow", 
+      image: multipageSlideshow,
+      features: [
+        { icon: Images, text: "Background Slideshow" },
+        { icon: Heart, text: "6 Pages" },
+        { icon: Clock, text: "Smooth Transitions" }
       ]
     },
     { 
@@ -82,6 +94,8 @@ const WeddingTemplates = () => {
               onClick={() => {
                 if (template.id === 'elegant-video') {
                   navigate('/dashboard/elegant-video-form');
+                } else if (template.id === 'multipage-slideshow') {
+                  navigate('/dashboard/multipage-slideshow-form');
                 } else {
                   navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                 }

@@ -563,6 +563,41 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'multipage-slideshow',
+    name: 'Multipage Slideshow',
+    category: 'modern',
+    description: 'Multi-page invitation with fading background slideshow and elegant page navigation',
+    thumbnail: '/src/assets/template-multipage-slideshow.jpg',
+    isPremium: true,
+    isPopular: true,
+    component: 'MultipageSlideshowTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'countdown', enabled: true, order: 2, customizable: true },
+      { id: 'story', enabled: true, order: 3, customizable: true },
+      { id: 'details', enabled: true, order: 4, customizable: true },
+      { id: 'gifts', enabled: true, order: 5, customizable: true },
+      { id: 'rsvp', enabled: true, order: 6, customizable: true },
+    ],
+    style: {
+      layout: 'multi-page',
+      spacing: 'spacious',
+      fontPrimary: 'Playfair Display',
+      fontSecondary: 'Inter',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#ffffff',
+        secondary: '#f0f0f0',
+        accent: '#ffffff',
+        background: 'transparent',
+        text: '#ffffff',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
