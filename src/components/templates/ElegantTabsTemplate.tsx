@@ -123,7 +123,7 @@ export const ElegantTabsTemplate = ({
     switch (pageId) {
       case "cover":
         return (
-          <div className="flex flex-col items-center justify-center h-full space-y-8 text-center">
+          <div className="flex flex-col items-center justify-center h-full space-y-8 text-center text-white">
             <div className="space-y-8 animate-fade-in">
               <EditableField
                 fieldId="hero-subtitle"
