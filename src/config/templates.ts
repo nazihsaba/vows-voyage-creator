@@ -499,6 +499,39 @@ export const templates: Template[] = [
       animations: false,
     },
   },
+  {
+    id: 'rose-gold-tabs',
+    name: 'Rose Gold Tabs',
+    category: 'elegant',
+    description: 'Elegant tabbed invitation with rose gold accents and swappable sections',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: true,
+    component: 'ElegantTabsTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'details', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+      { id: 'rsvp', enabled: true, order: 4, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'comfortable',
+      fontPrimary: 'Inter',
+      fontSecondary: 'Inter',
+      headingSize: 'large',
+      colorScheme: {
+        primary: '#fb7185',
+        secondary: '#fbbf24',
+        accent: '#fdf7f2',
+        background: '#ffffff',
+        text: '#475569',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {

@@ -10,6 +10,7 @@ import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
+import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -156,6 +157,23 @@ export const TemplateRenderer = ({
       />
     );
   }
+
+  if (template.component === 'ElegantTabsTemplate') {
+    return (
+      <ElegantTabsTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
 
   // Sort sections by order
   const sortedSections = [...template.sections].sort((a, b) => a.order - b.order);
