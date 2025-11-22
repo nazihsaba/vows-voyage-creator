@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { EditableField } from '@/components/EditableField';
 import { EventLocation } from '@/components/EventLocation';
 import { CountdownTimer } from '@/components/CountdownTimer';
-import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
@@ -261,47 +261,72 @@ export const ElegantTabsTemplate = ({
         );
       case "location":
         return (
-          <div className="space-y-6 text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <h3 className="text-sm font-semibold tracking-[0.2em] uppercase text-white/80 mb-4">
-                Venue
-              </h3>
-              {venue ? (
-                <div className="space-y-2">
-                  <EventLocation
-                    type="venue"
-                    locationName={venue.location_name}
-                    locationLink={venue.location_link}
-                    time={venue.time}
-                  />
-                  <EditableField
-                    fieldId="venue-note"
-                    text={getFieldValue("venue-note", "Exact address and directions will be provided with your final invitation.")}
-                    style={getFieldStyle("venue-note")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    multiline={true}
-                    tag="p"
-                    className="mt-2 text-sm text-white/70"
-                  />
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Wedding Events</h2>
+              <p className="text-white/80">Join us in celebrating this special day</p>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-6">
+              {ceremony && (
+                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                  <div className="w-24 bg-[hsl(340,82%,52%)] flex items-center justify-center">
+                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                      Ceremony
+                    </p>
+                  </div>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-foreground" />
+                      <p className="text-foreground font-bold">{ceremony.time}</p>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-foreground">Event Location</p>
+                      <p className="text-foreground">{ceremony.location_name}</p>
+                    </div>
+                    {ceremony.location_link && (
+                      <a
+                        href={ceremony.location_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(340,82%,52%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(340,82%,52%)] hover:text-white"
+                      >
+                        <MapPin className="w-5 h-5" />
+                        <span>Google Maps</span>
+                      </a>
+                    )}
+                  </div>
                 </div>
-              ) : (
-                <p className="text-sm text-white/70">No venue details available</p>
+              )}
+              {venue && (
+                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                  <div className="w-24 bg-[hsl(340,82%,52%)] flex items-center justify-center">
+                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
+                  </div>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-foreground" />
+                      <p className="text-foreground font-bold">{venue.time}</p>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-foreground">Event Location</p>
+                      <p className="text-foreground">{venue.location_name}</p>
+                    </div>
+                    {venue.location_link && (
+                      <a
+                        href={venue.location_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(340,82%,52%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(340,82%,52%)] hover:text-white"
+                      >
+                        <MapPin className="w-5 h-5" />
+                        <span>Google Maps</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
               )}
             </div>
-            {venue?.location_link && (
-              <div className="h-64 rounded-2xl border border-white/20 bg-white/10 overflow-hidden">
-                <iframe
-                  src={`https://maps.google.com/maps?q=${encodeURIComponent(venue.location_name)}&output=embed`}
-                  width="100%"
-                  height="100%"
-                  style={{ border: 0 }}
-                  allowFullScreen
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            )}
           </div>
         );
       case "rsvp":
