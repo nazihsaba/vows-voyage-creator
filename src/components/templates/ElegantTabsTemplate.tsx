@@ -53,13 +53,12 @@ export const ElegantTabsTemplate = ({
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
 
-  // Build pages dynamically - only include RSVP if there are invitees or deadline
+  // Build pages dynamically - RSVP page removed per user request
   const PAGES = [
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
     { id: "details", label: "Details" },
     { id: "location", label: "Location" },
-    ...((wedding.rsvp_deadline || invitees.length > 0) ? [{ id: "rsvp", label: "RSVP" }] : []),
   ];
 
   const goToNextPage = () => {
@@ -300,164 +299,6 @@ export const ElegantTabsTemplate = ({
                   loading="lazy"
                   referrerPolicy="no-referrer-when-downgrade"
                 />
-              </div>
-            )}
-          </div>
-        );
-      case "rsvp":
-        return (
-          <div className="space-y-8 text-white bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 max-w-3xl mx-auto">
-            {/* Invitation Section */}
-            <div className="space-y-6 text-center pb-6 border-b border-white/20">
-              <p className="text-sm tracking-[0.25em] uppercase text-white/80">
-                Wedding Invitation
-              </p>
-              <p className="text-lg text-white/90">
-                Together with their families,
-              </p>
-              <div className="text-3xl md:text-4xl space-y-2">
-                <div>
-                  <EditableField
-                    fieldId="groom-name"
-                    text={getFieldValue("groom-name", wedding.groom_name)}
-                    style={getFieldStyle("groom-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="span"
-                    className="font-light tracking-wide"
-                  />
-                </div>
-                <div className="text-2xl">&amp;</div>
-                <div>
-                  <EditableField
-                    fieldId="bride-name"
-                    text={getFieldValue("bride-name", wedding.bride_name)}
-                    style={getFieldStyle("bride-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="span"
-                    className="font-light tracking-wide"
-                  />
-                </div>
-              </div>
-              <div className="pt-4 space-y-3 max-w-2xl mx-auto">
-                <EditableField
-                  fieldId="invitation-text-1"
-                  text={getFieldValue("invitation-text-1", "kindly request the pleasure of your company to celebrate their wedding.")}
-                  style={getFieldStyle("invitation-text-1")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  multiline={true}
-                  tag="p"
-                  className="text-white/90 text-lg"
-                />
-                <EditableField
-                  fieldId="invitation-text-2"
-                  text={getFieldValue("invitation-text-2", "Join us for an evening of love, joy, and celebration.")}
-                  style={getFieldStyle("invitation-text-2")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  multiline={true}
-                  tag="p"
-                  className="text-white/80"
-                />
-              </div>
-            </div>
-
-            {/* RSVP Section */}
-            <EditableField
-              fieldId="rsvp-title"
-              text={getFieldValue("rsvp-title", "Join Our Celebration")}
-              style={getFieldStyle("rsvp-title")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h2"
-              className="text-3xl md:text-4xl text-center font-light tracking-wide"
-            />
-
-            <EditableField
-              fieldId="rsvp-message"
-              text={getFieldValue(
-                "rsvp-message",
-                "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-              )}
-              style={getFieldStyle("rsvp-message")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              multiline={true}
-              tag="p"
-              className="text-center text-white/90"
-            />
-
-            {/* Invitees List with Checkboxes */}
-            <div className="space-y-6 pt-6 border-t border-white/20">
-              <p className="text-lg font-semibold text-center">This invitation is specially prepared for:</p>
-              {invitees.length > 0 ? (
-                <>
-                  <div className="space-y-4">
-                    {invitees.map((invitee: any) => (
-                      <div
-                        key={invitee.id}
-                        className="flex items-center justify-between py-4 px-6 bg-white/5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
-                      >
-                        <span className="text-xl font-light text-white">{invitee.name}</span>
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            id={`rsvp-${invitee.id}`}
-                            checked={rsvpResponses[invitee.id] === true}
-                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
-                            disabled={isRsvpDeadlinePassed}
-                            className="h-5 w-5 border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-primary"
-                          />
-                          <Label
-                            htmlFor={`rsvp-${invitee.id}`}
-                            className={`text-base cursor-pointer font-medium ${
-                              isRsvpDeadlinePassed ? "text-white/50" : "text-white"
-                            }`}
-                          >
-                            {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
-                          </Label>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-6 border-t border-white/20 space-y-4">
-                    <p className="text-lg font-semibold text-center">
-                      Number of Guests: {numberOfPersons || invitees.length}
-                    </p>
-
-                    {isRsvpDeadlinePassed ? (
-                      <p className="text-sm text-red-400 text-center font-medium">RSVP deadline has passed</p>
-                    ) : (
-                      <Button
-                        onClick={handleRsvpSubmit}
-                        disabled={submittingRsvp}
-                        className="w-full text-lg py-6 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 rounded-full"
-                        size="lg"
-                      >
-                        {submittingRsvp ? "Submitting..." : "Submit RSVP"}
-                      </Button>
-                    )}
-                  </div>
-                </>
-              ) : (
-                <p className="text-center text-white/70">No guests specified for this invitation.</p>
-              )}
-            </div>
-
-            {wedding.rsvp_deadline && (
-              <div className="pt-8 border-t border-white/20">
-                <p className="text-sm text-white/80 text-center mb-2">
-                  {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
-                </p>
-                <p className="text-xl text-white text-center font-light">
-                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
               </div>
             )}
           </div>
