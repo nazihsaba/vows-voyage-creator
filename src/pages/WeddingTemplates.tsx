@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock } from "lucide-react";
+import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 
@@ -32,6 +32,18 @@ const WeddingTemplates = () => {
         { icon: MapPin, text: "Event Locations" },
         { icon: Gift, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" }
+      ]
+    },
+    { 
+      id: "rose-gold-tabs", 
+      name: "Rose Gold Tabs", 
+      description: "Elegant tabbed invitation with rose gold accents", 
+      image: modernRomance, // Using existing image as placeholder
+      features: [
+        { icon: Sparkles, text: "Tabbed Sections" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Gift, text: "RSVP Form" },
+        { icon: Clock, text: "Save the Date" }
       ]
     },
   ];
@@ -67,9 +79,13 @@ const WeddingTemplates = () => {
             <Card
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
-              onClick={() =>
-                navigate(`/dashboard/create?eventType=weddings&template=${template.id}`)
-              }
+              onClick={() => {
+                if (template.id === 'rose-gold-tabs') {
+                  navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
+                } else {
+                  navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
+                }
+              }}
             >
               <CardHeader className="p-4 sm:p-6 flex-grow">
                 <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">

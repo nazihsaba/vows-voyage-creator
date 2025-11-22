@@ -11,6 +11,7 @@ import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
 import BachelorForm from "./pages/BachelorForm";
 import ChristmasForm from "./pages/ChristmasForm";
+import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
 import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
@@ -37,9 +38,11 @@ const App = () => (
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/bachelor-form" element={<BachelorForm />} />
           <Route path="/dashboard/christmas-form" element={<ChristmasForm />} />
+          <Route path="/dashboard/rose-gold-tabs-form" element={<RoseGoldTabsForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/dashboard/edit-bachelor/:id" element={<BachelorForm />} />
           <Route path="/dashboard/edit-christmas/:id" element={<ChristmasForm />} />
+          <Route path="/dashboard/edit-rose-gold-tabs/:id" element={<RoseGoldTabsForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
