@@ -53,12 +53,13 @@ export const ElegantTabsTemplate = ({
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
 
-  // Build pages dynamically - RSVP page removed per user request
+  // Build pages dynamically
   const PAGES = [
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
     { id: "details", label: "Details" },
     { id: "location", label: "Location" },
+    { id: "rsvp", label: "RSVP" },
   ];
 
   const goToNextPage = () => {
@@ -301,6 +302,108 @@ export const ElegantTabsTemplate = ({
                 />
               </div>
             )}
+          </div>
+        );
+      case "rsvp":
+        return (
+          <div className="space-y-8 text-white">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
+              <EditableField
+                fieldId="rsvp-title"
+                text={getFieldValue("rsvp-title", "Join Our Celebration")}
+                style={getFieldStyle("rsvp-title")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h2"
+                className="text-3xl md:text-4xl font-light text-center text-white"
+              />
+
+              <EditableField
+                fieldId="rsvp-message"
+                text={getFieldValue(
+                  "rsvp-message",
+                  "Please let us know if you can join us on our special day. Your presence would mean the world to us."
+                )}
+                style={getFieldStyle("rsvp-message")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                multiline={true}
+                tag="p"
+                className="text-center text-white/90"
+              />
+
+              {/* Invitees List with Checkboxes */}
+              {invitees.length > 0 && (
+                <div className="space-y-6 pt-6 border-t border-white/20">
+                  <p className="text-lg font-semibold text-center text-white">
+                    This invitation is specially prepared for:
+                  </p>
+                  <div className="space-y-4">
+                    {invitees.map((invitee: any) => (
+                      <div
+                        key={invitee.id}
+                        className="flex items-center justify-between py-4 px-6 bg-white/5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
+                      >
+                        <span className="text-xl font-serif text-white">{invitee.name}</span>
+                        <div className="flex items-center gap-3">
+                          <Checkbox
+                            id={`rsvp-${invitee.id}`}
+                            checked={rsvpResponses[invitee.id] === true}
+                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
+                            disabled={isRsvpDeadlinePassed}
+                            className="h-5 w-5"
+                          />
+                          <Label
+                            htmlFor={`rsvp-${invitee.id}`}
+                            className={`text-base cursor-pointer font-medium ${
+                              isRsvpDeadlinePassed ? "text-white/50" : "text-white"
+                            }`}
+                          >
+                            {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                          </Label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  <div className="pt-6 border-t border-white/20 space-y-4">
+                    <p className="text-lg font-semibold text-center text-white">
+                      Number of Guests: {numberOfPersons || invitees.length}
+                    </p>
+
+                    {isRsvpDeadlinePassed ? (
+                      <p className="text-sm text-red-400 text-center font-medium">
+                        RSVP deadline has passed
+                      </p>
+                    ) : (
+                      <Button
+                        onClick={handleRsvpSubmit}
+                        disabled={submittingRsvp}
+                        className="w-full text-lg py-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+                        size="lg"
+                      >
+                        {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {wedding.rsvp_deadline && (
+                <div className="pt-8 border-t border-white/20">
+                  <p className="text-sm text-center mb-2 text-white/80">
+                    {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                  </p>
+                  <p className="text-xl font-semibold text-white text-center">
+                    {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              )}
+            </div>
           </div>
         );
       default:
