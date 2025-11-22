@@ -503,7 +503,7 @@ export const templates: Template[] = [
     id: 'rose-gold-tabs',
     name: 'Rose Gold Tabs',
     category: 'elegant',
-    description: 'Elegant tabbed invitation with rose gold accents and swappable sections',
+    description: 'Fullscreen video background with swappable pages and elegant transitions',
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
