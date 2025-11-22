@@ -26,13 +26,7 @@ interface ElegantTabsTemplateProps {
   submittingRsvp?: boolean;
 }
 
-const PAGES = [
-  { id: "cover", label: "Cover" },
-  { id: "invitation", label: "Invitation" },
-  { id: "details", label: "Details" },
-  { id: "location", label: "Location" },
-  { id: "rsvp", label: "RSVP" },
-];
+// PAGES array is now dynamic and built in the component
 
 export const ElegantTabsTemplate = ({
   wedding,
@@ -58,6 +52,15 @@ export const ElegantTabsTemplate = ({
   const touchEndX = useRef(0);
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
+
+  // Build pages dynamically - only include RSVP if there are invitees or deadline
+  const PAGES = [
+    { id: "cover", label: "Cover" },
+    { id: "invitation", label: "Invitation" },
+    { id: "details", label: "Details" },
+    { id: "location", label: "Location" },
+    ...((wedding.rsvp_deadline || invitees.length > 0) ? [{ id: "rsvp", label: "RSVP" }] : []),
+  ];
 
   const goToNextPage = () => {
     if (currentPage < PAGES.length - 1 && !isTransitioning) {
