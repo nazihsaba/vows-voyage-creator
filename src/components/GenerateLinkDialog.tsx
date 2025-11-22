@@ -286,45 +286,87 @@ export const GenerateLinkDialog = ({
           </div>
           </TabsContent>
 
-          <TabsContent value="automatic" className="space-y-4 py-4">
-            <div className="space-y-4">
-              <div className="space-y-2">
-                <Label>Upload Excel File</Label>
-                <p className="text-sm text-muted-foreground">
-                  Upload an .xlsx or .xls file containing your invitee information
-                </p>
-                <div className="flex items-center gap-4">
-                  <Input
-                    type="file"
-                    accept=".xlsx,.xls"
-                    onChange={handleFileChange}
-                    className="cursor-pointer"
-                  />
-                  {selectedFile && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => setSelectedFile(null)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
+          <TabsContent value="automatic" className="space-y-6 py-4">
+            <div className="space-y-6">
+              {/* Upload Area */}
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <Upload className="w-5 h-5 text-primary mt-0.5" />
+                  <div>
+                    <Label className="text-base font-semibold">Upload Your Guest List</Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Select an Excel file (.xlsx or .xls) with your invitee information
+                    </p>
+                  </div>
                 </div>
-                {selectedFile && (
-                  <Card className="p-3 bg-muted">
-                    <div className="flex items-center gap-2">
-                      <Upload className="w-4 h-4 text-muted-foreground" />
-                      <p className="text-sm font-medium">{selectedFile.name}</p>
+                
+                {!selectedFile ? (
+                  <label htmlFor="file-upload" className="block">
+                    <Card className="p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50">
+                      <div className="flex flex-col items-center justify-center gap-3 text-center">
+                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                          <Upload className="w-6 h-6 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">Click to upload</p>
+                          <p className="text-sm text-muted-foreground mt-1">Excel files only (.xlsx, .xls)</p>
+                        </div>
+                      </div>
+                    </Card>
+                    <Input
+                      id="file-upload"
+                      type="file"
+                      accept=".xlsx,.xls"
+                      onChange={handleFileChange}
+                      className="hidden"
+                    />
+                  </label>
+                ) : (
+                  <Card className="p-4 bg-primary/5 border-primary/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                          <Upload className="w-5 h-5 text-primary" />
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">{selectedFile.name}</p>
+                          <p className="text-xs text-muted-foreground">Ready to process</p>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="icon"
+                        onClick={() => setSelectedFile(null)}
+                        className="hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
                     </div>
                   </Card>
                 )}
               </div>
 
-              <Card className="p-4 bg-muted/50 border-dashed">
-                <p className="text-sm text-muted-foreground">
-                  The Excel file will be processed to automatically generate invitation links for all invitees listed in the file.
-                </p>
+              {/* Information Card */}
+              <Card className="p-5 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/10">
+                <div className="space-y-3">
+                  <div className="flex items-start gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-primary">✓</span>
+                    </div>
+                    <p className="text-sm text-foreground">
+                      Your Excel file will be automatically processed to generate personalized invitation links for all invitees
+                    </p>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-xs font-bold text-primary">✓</span>
+                    </div>
+                    <p className="text-sm text-foreground">
+                      Each invitee will receive a unique link based on the information in your file
+                    </p>
+                  </div>
+                </div>
               </Card>
             </div>
           </TabsContent>
