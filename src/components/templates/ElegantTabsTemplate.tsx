@@ -190,7 +190,7 @@ export const ElegantTabsTemplate = ({
       case "invitation":
         return (
           <div className="space-y-6 text-center text-white">
-            <div className="py-8 bg-white rounded-xl p-4">
+            <div className="py-8 bg-white rounded-xl p-2">
               <CountdownTimer targetDate={wedding.wedding_date} />
             </div>
           </div>
