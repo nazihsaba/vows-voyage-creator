@@ -303,6 +303,75 @@ export const ElegantTabsTemplate = ({
             )}
           </div>
         );
+      case "rsvp":
+          return(
+             {/* Display invitees section with RSVP if link-specific */}
+        {invitees.length > 0 && (
+          <div className="bg-gradient-soft py-16 px-4">
+            <div className="max-w-2xl mx-auto">
+              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6 text-center">
+                We're Delighted to Invite
+              </h2>
+              <div className="bg-white rounded-lg shadow-lg p-8">
+                <p className="text-lg text-muted-foreground mb-6 text-center">
+                  This invitation is specially prepared for:
+                </p>
+                <div className="space-y-4">
+                  {invitees.map((invitee: any) => (
+                    <div 
+                      key={invitee.id}
+                      className="flex items-center justify-between py-3 border-b border-border last:border-0"
+                    >
+                      <span className="text-xl font-serif text-primary">
+                        {invitee.name}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <Checkbox
+                          id={`rsvp-${invitee.id}`}
+                          checked={rsvpResponses[invitee.id] === true}
+                          onCheckedChange={(checked) => 
+                            handleRsvpToggle(invitee.id, checked as boolean)
+                          }
+                          disabled={isRsvpDeadlinePassed}
+                        />
+                        <Label 
+                          htmlFor={`rsvp-${invitee.id}`}
+                          className={`text-sm cursor-pointer ${isRsvpDeadlinePassed ? 'text-muted-foreground' : ''}`}
+                        >
+                          {rsvpResponses[invitee.id] === true ? "Attending" : "Will Attend?"}
+                        </Label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-6 pt-6 border-t border-border space-y-4">
+                  <p className="text-lg font-semibold text-primary text-center">
+                    Number of Guests: {numberOfPersons || invitees.length}
+                  </p>
+                  {wedding?.rsvp_deadline && (
+                    <p className="text-sm text-muted-foreground text-center">
+                      Please RSVP by {format(new Date(wedding.rsvp_deadline), "MMMM d, yyyy")}
+                    </p>
+                  )}
+                  {isRsvpDeadlinePassed ? (
+                    <p className="text-sm text-red-600 text-center font-medium">
+                      RSVP deadline has passed
+                    </p>
+                  ) : (
+                    <Button 
+                      onClick={handleRsvpSubmit} 
+                      disabled={submittingRsvp}
+                      className="w-full"
+                    >
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+          )
       default:
         return null;
     }
