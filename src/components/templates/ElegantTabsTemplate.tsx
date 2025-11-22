@@ -1,9 +1,11 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { EditableField } from '@/components/EditableField';
 import { EventLocation } from '@/components/EventLocation';
 import { CountdownTimer } from '@/components/CountdownTimer';
 import { ChevronLeft, ChevronRight, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Label } from '@/components/ui/label';
 
 interface ElegantTabsTemplateProps {
   wedding: any;
@@ -15,6 +17,13 @@ interface ElegantTabsTemplateProps {
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
   getFieldStyle: (fieldId: string) => any;
+  invitees?: any[];
+  rsvpResponses?: Record<string, boolean>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  handleRsvpSubmit?: () => void;
+  numberOfPersons?: number;
+  isRsvpDeadlinePassed?: boolean;
+  submittingRsvp?: boolean;
 }
 
 const PAGES = [
@@ -35,9 +44,18 @@ export const ElegantTabsTemplate = ({
   onFieldUpdate,
   getFieldValue,
   getFieldStyle,
+  invitees = [],
+  rsvpResponses = {},
+  handleRsvpToggle = () => {},
+  handleRsvpSubmit = () => {},
+  numberOfPersons = 0,
+  isRsvpDeadlinePassed = false,
+  submittingRsvp = false,
 }: ElegantTabsTemplateProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
 
@@ -60,6 +78,42 @@ export const ElegantTabsTemplate = ({
       }, 300);
     }
   };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isTransitioning) {
+      const swipeDistance = touchStartX.current - touchEndX.current;
+      const minSwipeDistance = 50;
+
+      if (swipeDistance > minSwipeDistance) {
+        // Swiped left - go to next page
+        goToNextPage();
+      } else if (swipeDistance < -minSwipeDistance) {
+        // Swiped right - go to previous page
+        goToPreviousPage();
+      }
+    }
+  };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'ArrowRight') {
+        goToNextPage();
+      } else if (e.key === 'ArrowLeft') {
+        goToPreviousPage();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [currentPage, isTransitioning]);
 
   const renderPage = () => {
     const pageId = PAGES[currentPage].id;
@@ -296,60 +350,98 @@ export const ElegantTabsTemplate = ({
         );
       case "rsvp":
         return (
-          <div className="space-y-6 text-white bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20">
-            {wedding.rsvp_deadline && (
-              <EditableField
-                fieldId="rsvp-deadline-text"
-                text={getFieldValue("rsvp-deadline-text", `Kindly confirm your presence by ${new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}.`)}
-                style={getFieldStyle("rsvp-deadline-text")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-              />
+          <div className="space-y-6 text-white bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 max-w-3xl mx-auto">
+            <EditableField
+              fieldId="rsvp-title"
+              text={getFieldValue("rsvp-title", "Join Our Celebration")}
+              style={getFieldStyle("rsvp-title")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="h2"
+              className="text-3xl md:text-4xl text-center font-light tracking-wide"
+            />
+
+            <EditableField
+              fieldId="rsvp-message"
+              text={getFieldValue(
+                "rsvp-message",
+                "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+              )}
+              style={getFieldStyle("rsvp-message")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              multiline={true}
+              tag="p"
+              className="text-center text-white/90"
+            />
+
+            {/* Invitees List with Checkboxes */}
+            {invitees.length > 0 && (
+              <div className="space-y-6 pt-6 border-t border-white/20">
+                <p className="text-lg font-semibold text-center">This invitation is specially prepared for:</p>
+                <div className="space-y-4">
+                  {invitees.map((invitee: any) => (
+                    <div
+                      key={invitee.id}
+                      className="flex items-center justify-between py-4 px-6 bg-white/5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
+                    >
+                      <span className="text-xl font-light text-white">{invitee.name}</span>
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id={`rsvp-${invitee.id}`}
+                          checked={rsvpResponses[invitee.id] === true}
+                          onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
+                          disabled={isRsvpDeadlinePassed}
+                          className="h-5 w-5 border-white/30 data-[state=checked]:bg-white data-[state=checked]:text-primary"
+                        />
+                        <Label
+                          htmlFor={`rsvp-${invitee.id}`}
+                          className={`text-base cursor-pointer font-medium ${
+                            isRsvpDeadlinePassed ? "text-white/50" : "text-white"
+                          }`}
+                        >
+                          {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                        </Label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-6 border-t border-white/20 space-y-4">
+                  <p className="text-lg font-semibold text-center">
+                    Number of Guests: {numberOfPersons || invitees.length}
+                  </p>
+
+                  {isRsvpDeadlinePassed ? (
+                    <p className="text-sm text-red-400 text-center font-medium">RSVP deadline has passed</p>
+                  ) : (
+                    <Button
+                      onClick={handleRsvpSubmit}
+                      disabled={submittingRsvp}
+                      className="w-full text-lg py-6 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 rounded-full"
+                      size="lg"
+                    >
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    </Button>
+                  )}
+                </div>
+              </div>
             )}
-            <form
-              onSubmit={(e) => e.preventDefault()}
-              className="space-y-4 max-w-md mx-auto"
-            >
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-white/90">
-                  Full Name
-                </label>
-                <input
-                  type="text"
-                  className="w-full rounded-xl border border-white/30 bg-white/5 backdrop-blur-sm px-4 py-3 text-white placeholder-white/50 outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
-                  placeholder="Your full name"
-                />
+
+            {wedding.rsvp_deadline && (
+              <div className="pt-8 border-t border-white/20">
+                <p className="text-sm text-white/80 text-center mb-2">
+                  {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                </p>
+                <p className="text-xl text-white text-center font-light">
+                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
               </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-white/90">
-                  Number of Guests
-                </label>
-                <input
-                  type="number"
-                  min={1}
-                  className="w-full rounded-xl border border-white/30 bg-white/5 backdrop-blur-sm px-4 py-3 text-white placeholder-white/50 outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
-                  placeholder="e.g. 2"
-                />
-              </div>
-              <div className="space-y-2">
-                <label className="block text-sm font-medium text-white/90">
-                  Message (optional)
-                </label>
-                <textarea
-                  rows={3}
-                  className="w-full rounded-xl border border-white/30 bg-white/5 backdrop-blur-sm px-4 py-3 text-white placeholder-white/50 outline-none focus:border-white/50 focus:ring-2 focus:ring-white/20"
-                  placeholder="Any notes or dietary preferences"
-                />
-              </div>
-              <Button
-                type="submit"
-                className="w-full mt-4 bg-white/20 backdrop-blur-sm border border-white/30 text-white hover:bg-white/30 rounded-full py-6 text-base font-medium"
-              >
-                Send RSVP
-              </Button>
-            </form>
+            )}
           </div>
         );
       default:
@@ -385,11 +477,16 @@ export const ElegantTabsTemplate = ({
       </div>
 
       {/* Content Container */}
-      <div className={`relative z-10 w-full h-full transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}>
+      <div 
+        className={`relative z-10 w-full h-full transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         <div className="w-full h-full flex flex-col">
           {/* Page Content */}
-          <div className="flex-1 flex items-center justify-center px-4 md:px-8">
-            <div className="max-w-3xl w-full">
+          <div className="flex-1 flex items-center justify-center px-4 md:px-8 overflow-y-auto">
+            <div className="max-w-3xl w-full py-8">
               {renderPage()}
             </div>
           </div>
