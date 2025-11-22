@@ -83,36 +83,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    console.log('Checking if unique_slug already exists:', unique_slug);
-
-    // Check if unique_slug already exists
-    const { data: existingLink, error: checkError } = await supabase
-      .from('invitation_links')
-      .select('id')
-      .eq('unique_slug', unique_slug)
-      .maybeSingle();
-
-    if (checkError) {
-      console.error('Error checking unique_slug:', checkError);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Database error', 
-          message: 'Failed to check unique_slug availability' 
-        }),
-        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    if (existingLink) {
-      console.error('unique_slug already exists:', unique_slug);
-      return new Response(
-        JSON.stringify({ 
-          error: 'Duplicate slug', 
-          message: `The unique_slug '${unique_slug}' already exists` 
-        }),
-        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
+    // Note: Duplicate slugs are now allowed in invitation_links table
 
     console.log('Inserting invitation link with slug:', unique_slug);
 
