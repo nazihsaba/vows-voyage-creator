@@ -81,11 +81,7 @@ const WeddingTemplates = () => {
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
               onClick={() => {
-                if (template.id === 'elegant-tabs' || template.id === 'elegant-tabs-2') {
-                  navigate(`/create/${template.id}`);
-                } else {
-                  navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
-                }
+                navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
               }}
             >
               <CardHeader className="p-4 sm:p-6 flex-grow">
