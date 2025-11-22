@@ -1,0 +1,181 @@
+import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.38.4";
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type, x-api-key',
+};
+
+interface InvitationLinkRequest {
+  wedding_id: string;
+  link_name: string;
+  number_of_persons?: number;
+}
+
+serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    // Validate API Key
+    const apiKey = req.headers.get('x-api-key');
+    const validApiKey = Deno.env.get('N8N_API_KEY');
+
+    if (!apiKey || apiKey !== validApiKey) {
+      console.error('Invalid or missing API key');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized: Invalid API key' }),
+        {
+          status: 401,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Parse request body
+    const body: InvitationLinkRequest = await req.json();
+    const { wedding_id, link_name, number_of_persons = 1 } = body;
+
+    // Validate required fields
+    if (!wedding_id || !link_name) {
+      console.error('Missing required fields:', { wedding_id, link_name });
+      return new Response(
+        JSON.stringify({ error: 'Missing required fields: wedding_id and link_name are required' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Validate field lengths
+    if (link_name.length > 200) {
+      return new Response(
+        JSON.stringify({ error: 'link_name must be less than 200 characters' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    if (number_of_persons < 1 || number_of_persons > 100) {
+      return new Response(
+        JSON.stringify({ error: 'number_of_persons must be between 1 and 100' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Initialize Supabase client with service role
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseServiceKey);
+
+    // Verify wedding exists
+    const { data: wedding, error: weddingError } = await supabase
+      .from('weddings')
+      .select('id')
+      .eq('id', wedding_id)
+      .single();
+
+    if (weddingError || !wedding) {
+      console.error('Wedding not found:', weddingError);
+      return new Response(
+        JSON.stringify({ error: 'Wedding not found' }),
+        {
+          status: 404,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Generate unique slug
+    const generateSlug = () => {
+      return Math.random().toString(36).substring(2, 15) + 
+             Math.random().toString(36).substring(2, 15);
+    };
+
+    let slug = generateSlug();
+    let attempts = 0;
+    const maxAttempts = 5;
+
+    // Ensure slug is unique
+    while (attempts < maxAttempts) {
+      const { data: existingLink } = await supabase
+        .from('invitation_links')
+        .select('id')
+        .eq('unique_slug', slug)
+        .single();
+
+      if (!existingLink) break;
+      
+      slug = generateSlug();
+      attempts++;
+    }
+
+    if (attempts === maxAttempts) {
+      console.error('Failed to generate unique slug after maximum attempts');
+      return new Response(
+        JSON.stringify({ error: 'Failed to generate unique link' }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // Insert invitation link
+    const { data: invitationLink, error: insertError } = await supabase
+      .from('invitation_links')
+      .insert({
+        wedding_id,
+        link_name,
+        unique_slug: slug,
+        number_of_persons,
+      })
+      .select()
+      .single();
+
+    if (insertError) {
+      console.error('Error creating invitation link:', insertError);
+      return new Response(
+        JSON.stringify({ error: 'Failed to create invitation link', details: insertError.message }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    console.log('Invitation link created successfully:', invitationLink);
+
+    // Return success response with the created link
+    return new Response(
+      JSON.stringify({
+        success: true,
+        invitation_link: invitationLink,
+        url: `${supabaseUrl.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://your-domain.com')}/invite/${slug}`
+      }),
+      {
+        status: 201,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+
+  } catch (error) {
+    console.error('Unexpected error in n8n-create-invitation-link:', error);
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    return new Response(
+      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      {
+        status: 500,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
+  }
+});
