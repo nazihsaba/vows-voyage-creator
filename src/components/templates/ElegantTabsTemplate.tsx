@@ -1,11 +1,11 @@
-import { useState, useRef, useEffect } from 'react';
-import { EditableField } from '@/components/EditableField';
-import { EventLocation } from '@/components/EventLocation';
-import { CountdownTimer } from '@/components/CountdownTimer';
-import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Label } from '@/components/ui/label';
+import { useState, useRef, useEffect } from "react";
+import { EditableField } from "@/components/EditableField";
+import { EventLocation } from "@/components/EventLocation";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface ElegantTabsTemplateProps {
   wedding: any;
@@ -50,8 +50,8 @@ export const ElegantTabsTemplate = ({
   const [isTransitioning, setIsTransitioning] = useState(false);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
-  const ceremony = locations.find(loc => loc.type === 'ceremony');
-  const venue = locations.find(loc => loc.type === 'venue');
+  const ceremony = locations.find((loc) => loc.type === "ceremony");
+  const venue = locations.find((loc) => loc.type === "venue");
 
   // Build pages dynamically
   const PAGES = [
@@ -107,20 +107,20 @@ export const ElegantTabsTemplate = ({
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') {
+      if (e.key === "ArrowRight") {
         goToNextPage();
-      } else if (e.key === 'ArrowLeft') {
+      } else if (e.key === "ArrowLeft") {
         goToPreviousPage();
       }
     };
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentPage, isTransitioning]);
 
   const renderPage = () => {
     const pageId = PAGES[currentPage].id;
-    
+
     switch (pageId) {
       case "cover":
         return (
@@ -147,10 +147,6 @@ export const ElegantTabsTemplate = ({
               </div>
             </div>
 
-            <div className="py-8">
-              <CountdownTimer targetDate={wedding.wedding_date} />
-            </div>
-
             <Button
               onClick={goToNextPage}
               size="lg"
@@ -161,35 +157,33 @@ export const ElegantTabsTemplate = ({
             </Button>
           </div>
         );
-      
+
       case "invitation":
         return (
           <div className="space-y-6 text-center text-white">
-            <p className="text-sm tracking-[0.25em] uppercase text-white/80">
-              Wedding Invitation
-            </p>
-            <p className="text-lg text-white/90">
-              You are cordially invited to celebrate with us
-            </p>
+            <div className="py-8">
+              <CountdownTimer targetDate={wedding.wedding_date} />
+            </div>
           </div>
         );
       case "details":
         return (
           <div className="grid gap-8 md:grid-cols-2 text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <h3 className="text-sm font-semibold tracking-[0.2em] uppercase text-white/80 mb-4">
-                Ceremony
-              </h3>
+              <h3 className="text-sm font-semibold tracking-[0.2em] uppercase text-white/80 mb-4">Ceremony</h3>
               {ceremony ? (
                 <div className="space-y-2">
                   <EditableField
                     fieldId="ceremony-date"
-                    text={getFieldValue("ceremony-date", new Date(wedding.wedding_date).toLocaleDateString('en-US', { 
-                      weekday: 'long',
-                      year: 'numeric', 
-                      month: 'long', 
-                      day: 'numeric' 
-                    }))}
+                    text={getFieldValue(
+                      "ceremony-date",
+                      new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      }),
+                    )}
                     style={getFieldStyle("ceremony-date")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -220,9 +214,7 @@ export const ElegantTabsTemplate = ({
               )}
             </div>
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
-              <h3 className="text-sm font-semibold tracking-[0.2em] uppercase text-white/80 mb-4">
-                Reception
-              </h3>
+              <h3 className="text-sm font-semibold tracking-[0.2em] uppercase text-white/80 mb-4">Reception</h3>
               {venue ? (
                 <div className="space-y-2">
                   <EditableField
@@ -271,9 +263,7 @@ export const ElegantTabsTemplate = ({
               {ceremony && (
                 <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
                   <div className="w-24 bg-[hsl(340,82%,52%)] flex items-center justify-center">
-                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                      Ceremony
-                    </p>
+                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
@@ -347,7 +337,7 @@ export const ElegantTabsTemplate = ({
                 fieldId="rsvp-message"
                 text={getFieldValue(
                   "rsvp-message",
-                  "Please let us know if you can join us on our special day. Your presence would mean the world to us."
+                  "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
                 )}
                 style={getFieldStyle("rsvp-message")}
                 onUpdate={onFieldUpdate}
@@ -397,9 +387,7 @@ export const ElegantTabsTemplate = ({
                     </p>
 
                     {isRsvpDeadlinePassed ? (
-                      <p className="text-sm text-red-400 text-center font-medium">
-                        RSVP deadline has passed
-                      </p>
+                      <p className="text-sm text-red-400 text-center font-medium">RSVP deadline has passed</p>
                     ) : (
                       <Button
                         onClick={handleRsvpSubmit}
@@ -441,21 +429,11 @@ export const ElegantTabsTemplate = ({
       {/* Video/Image Background */}
       <div className="absolute inset-0 z-0">
         {wedding.video_url ? (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-full object-cover"
-          >
+          <video autoPlay loop muted playsInline className="w-full h-full object-cover">
             <source src={wedding.video_url} type="video/mp4" />
           </video>
         ) : wedding.main_picture_url ? (
-          <img
-            src={wedding.main_picture_url}
-            alt="Wedding background"
-            className="w-full h-full object-cover"
-          />
+          <img src={wedding.main_picture_url} alt="Wedding background" className="w-full h-full object-cover" />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-rose-100 via-pink-50 to-amber-50" />
         )}
@@ -464,8 +442,8 @@ export const ElegantTabsTemplate = ({
       </div>
 
       {/* Content Container */}
-      <div 
-        className={`relative z-10 w-full h-full transition-opacity duration-300 ${isTransitioning ? 'opacity-0' : 'opacity-100'}`}
+      <div
+        className={`relative z-10 w-full h-full transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
@@ -473,9 +451,7 @@ export const ElegantTabsTemplate = ({
         <div className="w-full h-full flex flex-col">
           {/* Page Content */}
           <div className="flex-1 flex items-center justify-center px-4 md:px-8 overflow-y-auto">
-            <div className="max-w-3xl w-full py-8">
-              {renderPage()}
-            </div>
+            <div className="max-w-3xl w-full py-8">{renderPage()}</div>
           </div>
 
           {/* Navigation */}
@@ -505,9 +481,7 @@ export const ElegantTabsTemplate = ({
                       }
                     }}
                     className={`w-2 h-2 rounded-full transition-all ${
-                      index === currentPage
-                        ? 'bg-white w-8'
-                        : 'bg-white/40 hover:bg-white/60'
+                      index === currentPage ? "bg-white w-8" : "bg-white/40 hover:bg-white/60"
                     }`}
                     disabled={isTransitioning}
                   />
