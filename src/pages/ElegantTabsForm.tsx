@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,12 @@ import { toast } from "sonner";
 
 export default function ElegantTabsForm() {
   const navigate = useNavigate();
+  const location = useLocation();
   const [isLoading, setIsLoading] = useState(false);
+  
+  // Determine template type based on route
+  const templateType = location.pathname.includes('elegant-tabs-2') ? 'elegant-tabs-2' : 'elegant-tabs';
+  
   const [formData, setFormData] = useState({
     groomName: "",
     brideName: "",
@@ -58,7 +63,7 @@ export default function ElegantTabsForm() {
           middle_text: formData.middleText,
           closing_message: formData.closingMessage || `Kindly confirm your presence by ${formData.rsvpDeadline}.`,
           slug,
-          template_type: "elegant-tabs",
+          template_type: templateType,
           status: "draft",
         })
         .select()

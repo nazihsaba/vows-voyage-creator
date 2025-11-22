@@ -23,6 +23,18 @@ const WeddingTemplates = () => {
       ]
     },
     { 
+      id: "elegant-tabs-2",
+      name: "Elegant Tabs Premium",
+      description: "Premium tabbed design with full RSVP functionality", 
+      image: elegantTabs,
+      features: [
+        { icon: LayoutGrid, text: "Tabbed Layout" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Heart, text: "RSVP System" }
+      ]
+    },
+    { 
       id: "template2",
       name: "Modern Romance",
       description: "Contemporary design with stunning gallery showcase", 
@@ -80,8 +92,8 @@ const WeddingTemplates = () => {
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
               onClick={() => {
-                if (template.id === 'elegant-tabs') {
-                  navigate('/create/elegant-tabs');
+                if (template.id === 'elegant-tabs' || template.id === 'elegant-tabs-2') {
+                  navigate(`/create/${template.id}`);
                 } else {
                   navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                 }
