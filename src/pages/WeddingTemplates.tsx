@@ -2,29 +2,17 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, LayoutGrid } from "lucide-react";
+import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import elegantTabs from "@/assets/template-elegant-tabs.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
 
   const weddingTemplates = [
     { 
-      id: "elegant-tabs",
-      name: "Elegant Tabs",
-      description: "Modern tabbed interface with rose gold accents", 
-      image: elegantTabs,
-      features: [
-        { icon: LayoutGrid, text: "Tabbed Layout" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" }
-      ]
-    },
-    { 
-      id: "template2",
-      name: "Modern Romance",
+      id: "template2", 
+      name: "Modern Romance", 
       description: "Contemporary design with stunning gallery showcase", 
       image: modernRomance,
       features: [
@@ -79,13 +67,9 @@ const WeddingTemplates = () => {
             <Card
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
-              onClick={() => {
-                if (template.id === 'elegant-tabs') {
-                  navigate('/create/elegant-tabs');
-                } else {
-                  navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
-                }
-              }}
+              onClick={() =>
+                navigate(`/dashboard/create?eventType=weddings&template=${template.id}`)
+              }
             >
               <CardHeader className="p-4 sm:p-6 flex-grow">
                 <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">

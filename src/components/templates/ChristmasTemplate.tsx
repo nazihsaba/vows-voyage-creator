@@ -1,5 +1,8 @@
-import { EditableField } from "@/components/EditableField";
-import defaultBackground from "@/assets/christmas-default-bg.png";
+import { EditableField } from '@/components/EditableField';
+import leavesDecor from '@/assets/christmas-leaves-decor.png';
+import christmasTree from '@/assets/christmas-tree.png';
+import textureBackground from '@/assets/christmas-texture.png';
+import defaultBackground from '@/assets/christmas-default-bg.png';
 
 interface ChristmasTemplateProps {
   wedding: any;
@@ -20,123 +23,125 @@ export const ChristmasTemplate = ({
   getFieldValue,
   getFieldStyle,
 }: ChristmasTemplateProps) => {
-  const venue = locations.find((loc) => loc.type === "ceremony");
+  const venue = locations.find(loc => loc.type === 'ceremony');
 
   return (
-    <div
+    <div 
       className="w-full min-h-screen flex items-center justify-center p-8"
-      style={{
-        background: "#f7f7f7",
-        fontFamily: "Georgia, serif",
+      style={{ 
+        background: '#f7f7f7',
+        fontFamily: 'Georgia, serif'
       }}
     >
-      <div
+      <div 
         className="w-full max-w-md bg-white p-8 md:p-10 rounded-xl relative shadow-xl"
         style={{
-          border: "3px solid #d4af37",
-          backgroundImage: `url(${defaultBackground})`,
-          backgroundSize: "contain",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
+          border: '2px solid #d8c897',
+          backgroundImage: `url(${wedding.main_picture_url || defaultBackground})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
         }}
       >
-        {/* Top Section */}
-        <div className="text-center mb-6">
-          <div style={{ color: "#b8860b", fontWeight: 500 }}>
-            <EditableField
-              fieldId="recipient-name"
-              text={getFieldValue("recipient-name", wedding.recipient_name || "DEAR GUEST")}
-              style={getFieldStyle("recipient-name")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-xs tracking-[0.3em] mb-1 uppercase"
-            />
-          </div>
-          <div style={{ color: "#b8860b", fontWeight: 500 }}>
-            <EditableField
-              fieldId="invitation-text"
-              text={getFieldValue("invitation-text", wedding.invitation_text || "PLEASE JOIN US")}
-              style={getFieldStyle("invitation-text")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-xs tracking-[0.3em] uppercase"
-            />
-          </div>
+        {/* Top Decoration */}
+        <div className="w-full flex justify-center mb-4">
+          <img 
+            src={leavesDecor} 
+            alt="Decorative leaves" 
+            className="w-4/5 opacity-90"
+          />
         </div>
+
+        {/* Heading */}
+        <div className="text-center mb-6">
+          <EditableField
+            fieldId="recipient-name"
+            text={getFieldValue("recipient-name", "DEAR GUEST")}
+            style={getFieldStyle("recipient-name")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-sm tracking-widest mb-2"
+          />
+          <EditableField
+            fieldId="invitation-text"
+            text={getFieldValue("invitation-text", "PLEASE JOIN US")}
+            style={getFieldStyle("invitation-text")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-sm tracking-widest"
+          />
+        </div>
+
+        {/* Christmas Tree - Hidden when using default background */}
+        {wedding.main_picture_url && (
+          <div className="flex justify-center my-6">
+            <img 
+              src={wedding.main_picture_url} 
+              alt="Christmas decoration" 
+              className="w-48 h-auto"
+            />
+          </div>
+        )}
 
         {/* Title */}
-        <div className="text-center mb-6 mt-8">
-          <div style={{ color: "#b8860b" }}>
-            <EditableField
-              fieldId="event-title"
-              text={getFieldValue("event-title", wedding.event_title || "Christmas Dinner")}
-              style={getFieldStyle("event-title")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h1"
-              className="text-6xl mb-4 font-script"
-            />
-          </div>
-        </div>
-
-        {/* Decorative Line */}
-        <div className="flex justify-center mb-4">
-          <div className="w-48 h-px" style={{ backgroundColor: "#8a7646" }}></div>
+        <div className="text-center mb-4">
+          <EditableField
+            fieldId="event-title"
+            text={getFieldValue("event-title", "Christmas Dinner")}
+            style={getFieldStyle("event-title")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="h1"
+            className="text-4xl mb-2 font-serif"
+          />
         </div>
 
         {/* Details */}
-        <div className="text-center mb-6 space-y-2">
-          <div style={{ color: "#2c2c2c" }}>
+        <div className="text-center mb-6 text-gray-700">
+          <EditableField
+            fieldId="event-date"
+            text={getFieldValue("event-date", new Date(wedding.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + " at " + (venue?.time || "6 P.M."))}
+            style={getFieldStyle("event-date")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-base leading-relaxed"
+          />
+          {venue && (
             <EditableField
-              fieldId="event-date"
-              text={getFieldValue(
-                "event-date",
-                new Date(wedding.wedding_date).toLocaleDateString("en-US", { month: "long", day: "numeric" }) +
-                  "st at " +
-                  (venue?.time || "6 P.M."),
-              )}
-              style={getFieldStyle("event-date")}
+              fieldId="event-location"
+              text={getFieldValue("event-location", venue.location_name || "123 Street Name, City, Country")}
+              style={getFieldStyle("event-location")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="p"
-              className="text-base font-serif"
+              className="text-base leading-relaxed"
             />
-          </div>
-          {venue && (
-            <div style={{ color: "#2c2c2c" }}>
-              <EditableField
-                fieldId="event-location"
-                text={getFieldValue("event-location", venue.location_name || "123 Street Name, City, Country")}
-                style={getFieldStyle("event-location")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-base font-serif"
-              />
-            </div>
           )}
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
-          <div style={{ color: "#b8860b" }}>
-            <EditableField
-              fieldId="closing-message"
-              text={getFieldValue(
-                "closing-message",
-                wedding.closing_message || `With Love, ${wedding.groom_name || wedding.bride_name || "Host"}`,
-              )}
-              style={getFieldStyle("closing-message")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-lg"
-            />
-          </div>
+        <div className="text-center mt-6">
+          <EditableField
+            fieldId="closing-message"
+            text={getFieldValue("closing-message", `With Love, ${wedding.groom_name || wedding.bride_name || 'The Host'}`)}
+            style={getFieldStyle("closing-message")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-base text-[#8a7646]"
+          />
         </div>
 
+        {/* Bottom Decoration */}
+        <div className="w-full flex justify-center mt-6">
+          <img 
+            src={leavesDecor} 
+            alt="Decorative leaves" 
+            className="w-4/5 opacity-90"
+          />
+        </div>
       </div>
     </div>
   );

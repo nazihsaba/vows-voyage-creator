@@ -10,7 +10,6 @@ import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
-import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -154,17 +153,6 @@ export const TemplateRenderer = ({
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
         getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'ElegantTabsTemplate') {
-    return (
-      <ElegantTabsTemplate
-        wedding={wedding}
-        locations={locations}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
       />
     );
   }

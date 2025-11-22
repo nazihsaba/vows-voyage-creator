@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Upload } from "lucide-react";
 
 const ChristmasForm = () => {
   const { id } = useParams();
@@ -14,7 +15,10 @@ const ChristmasForm = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [createdEventId, setCreatedEventId] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imagePreview, setImagePreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -57,6 +61,9 @@ const ChristmasForm = () => {
         event_title: (data as any).event_title || "",
         closing_message: (data as any).closing_message || "",
       });
+      if (data.main_picture_url) {
+        setImagePreview(data.main_picture_url);
+      }
 
       const { data: locationsData } = await supabase
         .from("wedding_locations")
@@ -100,6 +107,36 @@ const ChristmasForm = () => {
     setLocations((prev) => ({ ...prev, [field]: value }));
   };
 
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImageFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImagePreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const uploadImage = async (file: File, path: string): Promise<string> => {
+    const fileExt = file.name.split('.').pop();
+    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+    const filePath = `${path}/${fileName}`;
+
+    const { error: uploadError, data } = await supabase.storage
+      .from('wedding-images')
+      .upload(filePath, file);
+
+    if (uploadError) throw uploadError;
+
+    const { data: urlData } = supabase.storage
+      .from('wedding-images')
+      .getPublicUrl(filePath);
+
+    return urlData.publicUrl;
+  };
+
   const handleSubmit = async (e: React.FormEvent, statusOverride?: string) => {
     e.preventDefault();
     setLoading(true);
@@ -108,10 +145,17 @@ const ChristmasForm = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error("No user found");
 
+      let mainPictureUrl = formData.main_picture_url;
+      if (imageFile) {
+        setUploading(true);
+        mainPictureUrl = await uploadImage(imageFile, "main");
+        setUploading(false);
+      }
+
       const weddingData = {
         ...formData,
         status: statusOverride || formData.status,
-        main_picture_url: null, // Always use default image
+        main_picture_url: mainPictureUrl,
         user_id: user.id,
       };
 
@@ -179,6 +223,7 @@ const ChristmasForm = () => {
       toast({ title: "Error", description: error.message || "Failed to save event", variant: "destructive" });
     } finally {
       setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -292,6 +337,36 @@ const ChristmasForm = () => {
             </CardContent>
           </Card>
 
+          {/* Main Image Card */}
+          <Card className="shadow-soft">
+            <CardHeader>
+              <CardTitle className="text-2xl font-serif">Decoration Image (Optional)</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="main_image">Upload Custom Image</Label>
+                <Input
+                  id="main_image"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                />
+                <p className="text-sm text-muted-foreground">
+                  Leave empty to use the default Christmas tree decoration
+                </p>
+                {imagePreview && (
+                  <div className="mt-4">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="max-w-full h-auto rounded-lg shadow-soft"
+                    />
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Location Card */}
           <Card className="shadow-soft">
             <CardHeader>
@@ -334,7 +409,7 @@ const ChristmasForm = () => {
           <div className="flex gap-4 flex-wrap">
             <Button
               type="submit"
-              disabled={loading}
+              disabled={loading || uploading}
               className="flex-1"
             >
               {loading ? (
@@ -349,7 +424,7 @@ const ChristmasForm = () => {
             <Button
               type="button"
               onClick={(e) => handleSubmit(e, "published")}
-              disabled={loading}
+              disabled={loading || uploading}
               className="flex-1"
               variant="default"
             >

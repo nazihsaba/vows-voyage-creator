@@ -4,10 +4,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater, LayoutGrid } from "lucide-react";
+import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import elegantTabs from "@/assets/template-elegant-tabs.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -41,19 +40,8 @@ const Dashboard = () => {
       color: "text-rose-500",
       templates: [
         { 
-          id: "elegant-tabs",
-          name: "Elegant Tabs",
-          description: "Modern tabbed interface with rose gold accents", 
-          image: elegantTabs,
-          features: [
-            { icon: LayoutGrid, text: "Tabbed Layout" },
-            { icon: MapPin, text: "Event Locations" },
-            { icon: Clock, text: "Countdown Timer" }
-          ]
-        },
-        { 
-          id: "template2",
-          name: "Modern Romance",
+          id: "template2", 
+          name: "Modern Romance", 
           description: "Contemporary design with stunning gallery showcase", 
           image: modernRomance,
           features: [
@@ -215,18 +203,10 @@ const Dashboard = () => {
                       className={`shadow-soft hover:shadow-elegant transition-all flex flex-col ${
                         template.disabled ? "opacity-50" : "cursor-pointer hover:scale-[1.02]"
                       }`}
-                      onClick={() => {
-                        if (template.disabled) return;
-                        
-                        // Handle special templates with dedicated forms
-                        if (template.id === 'elegant-tabs') {
-                          navigate('/create/elegant-tabs');
-                        } else if (template.id === 'elegant-video') {
-                          navigate('/dashboard/elegant-video-form');
-                        } else {
-                          navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`);
-                        }
-                      }}
+                      onClick={() =>
+                        !template.disabled &&
+                        navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`)
+                      }
                     >
                       <CardHeader className="p-4 sm:p-6 flex-grow">
                         <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">

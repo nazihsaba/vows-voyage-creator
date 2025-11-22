@@ -1,5 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -130,6 +128,8 @@ All colors MUST be HSL.
     --sidebar-ring: 36 57% 68%;
   }
 }
+
+@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
 
 @layer base {
   * {

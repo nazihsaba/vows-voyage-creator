@@ -17,7 +17,7 @@ export default {
         serif: ['Playfair Display', 'serif'],
         sans: ['Inter', 'sans-serif'],
         'dancing': ['Dancing Script', 'cursive'],
-        'script': ['Great Vibes', 'cursive'],
+        'script': ['Dancing Script', 'cursive'],
         'cursive': ['Dancing Script', 'cursive'],
         'playfair': ['Playfair Display', 'serif'],
         'cormorant': ['Cormorant Garamond', 'serif'],
