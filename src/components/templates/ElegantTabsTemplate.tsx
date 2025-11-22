@@ -169,55 +169,8 @@ export const ElegantTabsTemplate = ({
               Wedding Invitation
             </p>
             <p className="text-lg text-white/90">
-              Together with their families,
+              You are cordially invited to celebrate with us
             </p>
-            <div className="text-3xl md:text-4xl space-y-2">
-              <div>
-                <EditableField
-                  fieldId="groom-name"
-                  text={getFieldValue("groom-name", wedding.groom_name)}
-                  style={getFieldStyle("groom-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="span"
-                  className="font-light tracking-wide"
-                />
-              </div>
-              <div className="text-2xl">&amp;</div>
-              <div>
-                <EditableField
-                  fieldId="bride-name"
-                  text={getFieldValue("bride-name", wedding.bride_name)}
-                  style={getFieldStyle("bride-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="span"
-                  className="font-light tracking-wide"
-                />
-              </div>
-            </div>
-            <div className="pt-4 space-y-3 max-w-2xl mx-auto">
-              <EditableField
-                fieldId="invitation-text-1"
-                text={getFieldValue("invitation-text-1", "kindly request the pleasure of your company to celebrate their wedding.")}
-                style={getFieldStyle("invitation-text-1")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-white/90 text-lg"
-              />
-              <EditableField
-                fieldId="invitation-text-2"
-                text={getFieldValue("invitation-text-2", "Join us for an evening of love, joy, and celebration.")}
-                style={getFieldStyle("invitation-text-2")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-white/80"
-              />
-            </div>
           </div>
         );
       case "details":
@@ -353,7 +306,65 @@ export const ElegantTabsTemplate = ({
         );
       case "rsvp":
         return (
-          <div className="space-y-6 text-white bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 max-w-3xl mx-auto">
+          <div className="space-y-8 text-white bg-white/10 backdrop-blur-sm rounded-2xl p-6 md:p-8 border border-white/20 max-w-3xl mx-auto">
+            {/* Invitation Section */}
+            <div className="space-y-6 text-center pb-6 border-b border-white/20">
+              <p className="text-sm tracking-[0.25em] uppercase text-white/80">
+                Wedding Invitation
+              </p>
+              <p className="text-lg text-white/90">
+                Together with their families,
+              </p>
+              <div className="text-3xl md:text-4xl space-y-2">
+                <div>
+                  <EditableField
+                    fieldId="groom-name"
+                    text={getFieldValue("groom-name", wedding.groom_name)}
+                    style={getFieldStyle("groom-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="span"
+                    className="font-light tracking-wide"
+                  />
+                </div>
+                <div className="text-2xl">&amp;</div>
+                <div>
+                  <EditableField
+                    fieldId="bride-name"
+                    text={getFieldValue("bride-name", wedding.bride_name)}
+                    style={getFieldStyle("bride-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="span"
+                    className="font-light tracking-wide"
+                  />
+                </div>
+              </div>
+              <div className="pt-4 space-y-3 max-w-2xl mx-auto">
+                <EditableField
+                  fieldId="invitation-text-1"
+                  text={getFieldValue("invitation-text-1", "kindly request the pleasure of your company to celebrate their wedding.")}
+                  style={getFieldStyle("invitation-text-1")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  multiline={true}
+                  tag="p"
+                  className="text-white/90 text-lg"
+                />
+                <EditableField
+                  fieldId="invitation-text-2"
+                  text={getFieldValue("invitation-text-2", "Join us for an evening of love, joy, and celebration.")}
+                  style={getFieldStyle("invitation-text-2")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  multiline={true}
+                  tag="p"
+                  className="text-white/80"
+                />
+              </div>
+            </div>
+
+            {/* RSVP Section */}
             <EditableField
               fieldId="rsvp-title"
               text={getFieldValue("rsvp-title", "Join Our Celebration")}
