@@ -531,6 +531,40 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'elegant-tabs',
+    name: 'Elegant Tabs',
+    category: 'elegant',
+    description: 'Modern tabbed interface with rose gold accents',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: true,
+    component: 'ElegantTabsTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'countdown', enabled: true, order: 2, customizable: false },
+      { id: 'details', enabled: true, order: 3, customizable: true },
+      { id: 'location', enabled: true, order: 4, customizable: true },
+      { id: 'rsvp', enabled: true, order: 5, customizable: false },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'comfortable',
+      fontPrimary: 'Inter',
+      fontSecondary: 'Inter',
+      headingSize: 'large',
+      colorScheme: {
+        primary: '#FB7185',
+        secondary: '#FCD34D',
+        accent: '#FDF7F2',
+        background: '#FFFFFF',
+        text: '#475569',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {

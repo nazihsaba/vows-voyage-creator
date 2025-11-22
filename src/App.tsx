@@ -16,6 +16,7 @@ import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import ChristmasTemplates from "./pages/ChristmasTemplates";
+import ElegantTabsForm from "./pages/ElegantTabsForm";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -42,6 +43,7 @@ const App = () => (
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/dashboard/edit-bachelor/:id" element={<BachelorForm />} />
           <Route path="/dashboard/edit-christmas/:id" element={<ChristmasForm />} />
+          <Route path="/create/elegant-tabs" element={<ElegantTabsForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
