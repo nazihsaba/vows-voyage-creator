@@ -371,7 +371,7 @@ export const ElegantTabsTemplate = ({
             </div>
           </div>
         )}
-          )
+          );
       default:
         return null;
     }
