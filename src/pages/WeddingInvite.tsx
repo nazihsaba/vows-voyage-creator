@@ -18,7 +18,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { hexToHSL } from "@/lib/colorUtils";
-import { downloadCardAsImage } from '@/utils/downloadCard';
+import { downloadCardAsImage } from "@/utils/downloadCard";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -41,7 +41,7 @@ const WeddingInvite = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [downloadingCard, setDownloadingCard] = useState(false);
   const { toast } = useToast();
-  
+
   // Get template configuration if using template system
   const template = useTemplate(wedding?.template_type);
 
@@ -80,10 +80,7 @@ const WeddingInvite = () => {
     if (!wedding?.id || !canEdit) return;
 
     try {
-      const { error } = await supabase
-        .from("weddings")
-        .update({ main_picture_url: newUrl })
-        .eq("id", wedding.id);
+      const { error } = await supabase.from("weddings").update({ main_picture_url: newUrl }).eq("id", wedding.id);
 
       if (error) throw error;
 
@@ -114,7 +111,7 @@ const WeddingInvite = () => {
   useEffect(() => {
     if (wedding) {
       const root = document.documentElement;
-      
+
       // Apply custom colors if they exist
       if (wedding.custom_primary_color) {
         root.style.setProperty("--primary", hexToHSL(wedding.custom_primary_color));
@@ -132,28 +129,30 @@ const WeddingInvite = () => {
     const fetchWedding = async () => {
       try {
         // Check if current user is the owner of this wedding
-        const { data: { user } } = await supabase.auth.getUser();
-        
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
         // Check for draft preview data in sessionStorage
         if (isDraftPreview) {
-          const previewDataStr = sessionStorage.getItem('weddingPreviewData');
+          const previewDataStr = sessionStorage.getItem("weddingPreviewData");
           if (previewDataStr) {
             const previewData = JSON.parse(previewDataStr);
-            
+
             // Set wedding data from preview, mapping preview URLs to expected fields
             setWedding({
               ...previewData,
-              id: 'preview-draft',
-              status: 'draft',
+              id: "preview-draft",
+              status: "draft",
               main_picture_url: previewData.imagePreview || previewData.main_picture_url,
               video_url: previewData.videoPreview || previewData.video_url,
             });
-            
+
             // Set locations from preview
             const locationData = [];
             if (previewData.locations?.ceremony_location) {
               locationData.push({
-                type: 'ceremony',
+                type: "ceremony",
                 location_name: previewData.locations.ceremony_location,
                 time: previewData.locations.ceremony_time,
                 location_link: previewData.locations.ceremony_location_link,
@@ -161,14 +160,14 @@ const WeddingInvite = () => {
             }
             if (previewData.locations?.venue_location) {
               locationData.push({
-                type: 'venue',
+                type: "venue",
                 location_name: previewData.locations.venue_location,
                 time: previewData.locations.venue_time,
                 location_link: previewData.locations.venue_location_link,
               });
             }
             setLocations(locationData);
-            
+
             // Set gallery from preview
             if (previewData.galleryPreviews && previewData.galleryPreviews.length > 0) {
               const galleryData = previewData.galleryPreviews.map((url: string, index: number) => ({
@@ -178,12 +177,12 @@ const WeddingInvite = () => {
               }));
               setGallery(galleryData);
             }
-            
+
             // Set gift cards from preview
             if (previewData.giftCards) {
               setGiftCards(previewData.giftCards.filter((card: any) => card.card_name && card.card_number));
             }
-            
+
             setLoading(false);
             return;
           }
@@ -192,21 +191,18 @@ const WeddingInvite = () => {
         if (!slug) return;
 
         // Fetch wedding data (allow preview for draft status)
-        let query = supabase
-          .from("weddings")
-          .select("*")
-          .eq("slug", slug);
-        
+        let query = supabase.from("weddings").select("*").eq("slug", slug);
+
         if (!isPreview) {
           query = query.eq("status", "published");
         }
-        
+
         const { data: weddingData, error: weddingError } = await query.maybeSingle();
 
         if (weddingError) throw weddingError;
         setWedding(weddingData);
         setFieldCustomizations(weddingData?.field_customizations || {});
-        
+
         // Check if current user is the owner
         if (user && weddingData) {
           setIsOwner(user.id === weddingData.user_id);
@@ -254,7 +250,7 @@ const WeddingInvite = () => {
               .eq("invitation_link_id", linkData.id);
 
             setInvitees(inviteesData || []);
-            
+
             // Initialize RSVP responses from existing data
             const responses: Record<string, boolean> = {};
             inviteesData?.forEach((invitee: any) => {
@@ -276,9 +272,9 @@ const WeddingInvite = () => {
   }, [slug, linkSlug, isPreview, isDraftPreview]);
 
   const handleRsvpToggle = (inviteeId: string, isAttending: boolean) => {
-    setRsvpResponses(prev => ({
+    setRsvpResponses((prev) => ({
       ...prev,
-      [inviteeId]: isAttending
+      [inviteeId]: isAttending,
     }));
   };
 
@@ -292,21 +288,21 @@ const WeddingInvite = () => {
         supabase
           .from("invitees")
           .update({ is_attending: rsvpResponses[invitee.id] === true })
-          .eq("id", invitee.id)
+          .eq("id", invitee.id),
       );
 
       const results = await Promise.all(updates);
-      
+
       // Check if any updates failed
-      const hasError = results.some(result => result.error);
+      const hasError = results.some((result) => result.error);
       if (hasError) {
         throw new Error("Failed to update some invitees");
       }
 
       // Refresh invitees data to show updated status
-      const updatedInvitees = invitees.map(invitee => ({
+      const updatedInvitees = invitees.map((invitee) => ({
         ...invitee,
-        is_attending: rsvpResponses[invitee.id] === true
+        is_attending: rsvpResponses[invitee.id] === true,
       }));
       setInvitees(updatedInvitees);
 
@@ -326,23 +322,18 @@ const WeddingInvite = () => {
     }
   };
 
-  const isRsvpDeadlinePassed = wedding?.rsvp_deadline 
-    ? new Date(wedding.rsvp_deadline) < new Date() 
-    : false;
+  const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
   const handleDownloadCard = async () => {
     setDownloadingCard(true);
     try {
-      await downloadCardAsImage(
-        'bachelor-card-preview',
-        `bachelor-party-${wedding?.groom_name?.toLowerCase()}.png`
-      );
+      await downloadCardAsImage("bachelor-card-preview", `bachelor-party-${wedding?.groom_name?.toLowerCase()}.png`);
       toast({
         title: "Success",
         description: "Card downloaded successfully!",
       });
     } catch (error) {
-      console.error('Download error:', error);
+      console.error("Download error:", error);
       toast({
         title: "Error",
         description: "Failed to download card. Please try again.",
@@ -393,7 +384,7 @@ const WeddingInvite = () => {
         {isOwner && (
           <div className="fixed top-4 left-4 z-50">
             <Button
-              onClick={() => navigate('/dashboard/my-events')}
+              onClick={() => navigate("/dashboard/my-events")}
               variant="outline"
               className="bg-white/90 hover:bg-white shadow-lg"
             >
@@ -402,7 +393,7 @@ const WeddingInvite = () => {
             </Button>
           </div>
         )}
-        {wedding?.template_type?.includes('bachelor') && (
+        {wedding?.template_type?.includes("bachelor") && (
           <div className="fixed top-4 right-4 z-50">
             <Button
               onClick={handleDownloadCard}
@@ -454,73 +445,6 @@ const WeddingInvite = () => {
             </div>
           </TemplateRenderer>
         </div>
-        
-        {/* Display invitees section with RSVP if link-specific */}
-        {invitees.length > 0 && (
-          <div className="bg-gradient-soft py-16 px-4">
-            <div className="max-w-2xl mx-auto">
-              <h2 className="text-3xl md:text-4xl font-serif text-primary mb-6 text-center">
-                We're Delighted to Invite
-              </h2>
-              <div className="bg-white rounded-lg shadow-lg p-8">
-                <p className="text-lg text-muted-foreground mb-6 text-center">
-                  This invitation is specially prepared for:
-                </p>
-                <div className="space-y-4">
-                  {invitees.map((invitee: any) => (
-                    <div 
-                      key={invitee.id}
-                      className="flex items-center justify-between py-3 border-b border-border last:border-0"
-                    >
-                      <span className="text-xl font-serif text-primary">
-                        {invitee.name}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <Checkbox
-                          id={`rsvp-${invitee.id}`}
-                          checked={rsvpResponses[invitee.id] === true}
-                          onCheckedChange={(checked) => 
-                            handleRsvpToggle(invitee.id, checked as boolean)
-                          }
-                          disabled={isRsvpDeadlinePassed}
-                        />
-                        <Label 
-                          htmlFor={`rsvp-${invitee.id}`}
-                          className={`text-sm cursor-pointer ${isRsvpDeadlinePassed ? 'text-muted-foreground' : ''}`}
-                        >
-                          {rsvpResponses[invitee.id] === true ? "Attending" : "Will Attend?"}
-                        </Label>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="mt-6 pt-6 border-t border-border space-y-4">
-                  <p className="text-lg font-semibold text-primary text-center">
-                    Number of Guests: {numberOfPersons || invitees.length}
-                  </p>
-                  {wedding?.rsvp_deadline && (
-                    <p className="text-sm text-muted-foreground text-center">
-                      Please RSVP by {format(new Date(wedding.rsvp_deadline), "MMMM d, yyyy")}
-                    </p>
-                  )}
-                  {isRsvpDeadlinePassed ? (
-                    <p className="text-sm text-red-600 text-center font-medium">
-                      RSVP deadline has passed
-                    </p>
-                  ) : (
-                    <Button 
-                      onClick={handleRsvpSubmit} 
-                      disabled={submittingRsvp}
-                      className="w-full"
-                    >
-                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </>
     );
 
@@ -672,7 +596,10 @@ const WeddingInvite = () => {
               <div className="text-center text-foreground max-w-md">
                 <EditableField
                   fieldId="quote_text"
-                  text={getFieldValue("quote_text", wedding.main_description || '"Therefore what God has joined together, let no one separate."')}
+                  text={getFieldValue(
+                    "quote_text",
+                    wedding.main_description || '"Therefore what God has joined together, let no one separate."',
+                  )}
                   style={getFieldStyle("quote_text")}
                   onUpdate={updateFieldCustomization}
                   isPreview={canEdit}
@@ -727,7 +654,10 @@ const WeddingInvite = () => {
                 />
                 <EditableField
                   fieldId="family_description"
-                  text={getFieldValue("family_description", "Request the honor of your presence at the wedding of their son and daughter")}
+                  text={getFieldValue(
+                    "family_description",
+                    "Request the honor of your presence at the wedding of their son and daughter",
+                  )}
                   style={getFieldStyle("family_description")}
                   onUpdate={updateFieldCustomization}
                   isPreview={canEdit}
@@ -781,15 +711,9 @@ const WeddingInvite = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-center gap-3 text-muted-foreground">
                     <Calendar className="w-6 h-6" />
-                    <p className="text-lg">
-                      {format(new Date(wedding.wedding_date), "EEEE, MMMM d, yyyy")}
-                    </p>
+                    <p className="text-lg">{format(new Date(wedding.wedding_date), "EEEE, MMMM d, yyyy")}</p>
                   </div>
-                  {ceremony.time && (
-                    <p className="text-2xl font-semibold text-primary">
-                      {ceremony.time}
-                    </p>
-                  )}
+                  {ceremony.time && <p className="text-2xl font-semibold text-primary">{ceremony.time}</p>}
                   <div className="flex items-start justify-center gap-3 text-muted-foreground mt-6">
                     <MapPin className="w-6 h-6 mt-1 flex-shrink-0" />
                     <div>
@@ -819,15 +743,9 @@ const WeddingInvite = () => {
                 <div className="space-y-6">
                   <div className="flex items-center justify-center gap-3 text-muted-foreground">
                     <Calendar className="w-6 h-6" />
-                    <p className="text-lg">
-                      {format(new Date(wedding.wedding_date), "EEEE, MMMM d, yyyy")}
-                    </p>
+                    <p className="text-lg">{format(new Date(wedding.wedding_date), "EEEE, MMMM d, yyyy")}</p>
                   </div>
-                  {venue.time && (
-                    <p className="text-2xl font-semibold text-primary">
-                      {venue.time}
-                    </p>
-                  )}
+                  {venue.time && <p className="text-2xl font-semibold text-primary">{venue.time}</p>}
                   <div className="flex items-start justify-center gap-3 text-muted-foreground mt-6">
                     <MapPin className="w-6 h-6 mt-1 flex-shrink-0" />
                     <div>
@@ -860,9 +778,7 @@ const WeddingInvite = () => {
                 <div className="space-y-4">
                   {giftCards.map((card) => (
                     <div key={card.id} className="p-6 rounded-lg border-2 border-primary/20 bg-gradient-soft">
-                      {card.logo_url && (
-                        <img src={card.logo_url} alt={card.card_name} className="h-12 mb-4" />
-                      )}
+                      {card.logo_url && <img src={card.logo_url} alt={card.card_name} className="h-12 mb-4" />}
                       <h3 className="text-xl font-semibold text-primary mb-2">{card.card_name}</h3>
                       <p className="text-lg font-mono">{card.card_number}</p>
                     </div>
