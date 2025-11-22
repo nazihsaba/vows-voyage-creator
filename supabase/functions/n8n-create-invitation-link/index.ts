@@ -94,40 +94,13 @@ serve(async (req) => {
       );
     }
 
-    // Generate unique slug
+    // Generate slug (duplicates are now allowed)
     const generateSlug = () => {
       return Math.random().toString(36).substring(2, 15) + 
              Math.random().toString(36).substring(2, 15);
     };
 
-    let slug = generateSlug();
-    let attempts = 0;
-    const maxAttempts = 5;
-
-    // Ensure slug is unique
-    while (attempts < maxAttempts) {
-      const { data: existingLink } = await supabase
-        .from('invitation_links')
-        .select('id')
-        .eq('unique_slug', slug)
-        .single();
-
-      if (!existingLink) break;
-      
-      slug = generateSlug();
-      attempts++;
-    }
-
-    if (attempts === maxAttempts) {
-      console.error('Failed to generate unique slug after maximum attempts');
-      return new Response(
-        JSON.stringify({ error: 'Failed to generate unique link' }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
+    const slug = generateSlug();
 
     // Insert invitation link
     const { data: invitationLink, error: insertError } = await supabase
