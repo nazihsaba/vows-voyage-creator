@@ -29,22 +29,43 @@ export const ModernTemplate = ({
   getFieldValue,
   getFieldStyle,
 }: ModernTemplateProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
 
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch((error) => {
+        console.log("Video autoplay prevented:", error);
+      });
+    }
+  }, []);
+
   return (
-    <div className="w-full bg-white text-gray-900 font-sans">
+    <div className="relative w-full bg-white text-gray-900 font-sans">
+      {/* Fixed Video Background */}
+      <div className="fixed inset-0 w-full h-full overflow-hidden -z-10">
+        <video 
+          ref={videoRef} 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="absolute inset-0 w-full h-full object-cover"
+        >
+          <source
+            src={
+              wedding.video_url ||
+              "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4"
+            }
+            type="video/mp4"
+          />
+        </video>
+        <div className="absolute inset-0 bg-black/40" />
+      </div>
       {/* Hero Section - Modern Full Width */}
       <section 
         className="relative min-h-screen flex flex-col items-center justify-center text-center"
-        style={{
-          backgroundImage: wedding.main_picture_url 
-            ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${wedding.main_picture_url})` 
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
-        }}
       >
         <div className="relative z-10 space-y-8 px-4 max-w-4xl">
           <div className="space-y-4">
@@ -90,7 +111,7 @@ export const ModernTemplate = ({
       </section>
 
       {/* Family Names Section - Clean Layout */}
-      <section className="py-24 px-4 bg-gray-50">
+      <section className="relative py-24 px-4 bg-white/90 backdrop-blur-sm">
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 text-center">
             <div className="space-y-4">
@@ -137,7 +158,7 @@ export const ModernTemplate = ({
 
       {/* Photo Gallery Section - Grid Layout */}
       {gallery.length > 0 && (
-        <section className="py-24 px-4 bg-white">
+        <section className="relative py-24 px-4 bg-gray-50/90 backdrop-blur-sm">
           <div className="max-w-7xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-16 text-gray-900">Our Story</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -162,7 +183,7 @@ export const ModernTemplate = ({
       )}
 
       {/* Countdown Section - Minimalist */}
-      <section className="py-24 px-4 bg-gray-900 text-white">
+      <section className="relative py-24 px-4 bg-gray-900/90 backdrop-blur-sm text-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-template-subtitle mb-12 text-white">Counting The Days</h2>
           <CountdownTimer targetDate={wedding.wedding_date} />
@@ -170,7 +191,7 @@ export const ModernTemplate = ({
       </section>
 
       {/* Wedding Events Section - Card Layout */}
-      <section className="py-24 px-4 bg-white">
+      <section className="relative py-24 px-4 bg-white/90 backdrop-blur-sm">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-template-subtitle mb-6 text-gray-900">Wedding Details</h2>
@@ -221,7 +242,7 @@ export const ModernTemplate = ({
 
       {/* Gift Cards Section */}
       {giftCards.length > 0 && (
-        <section className="py-24 px-4 bg-gray-50">
+        <section className="relative py-24 px-4 bg-gray-50/90 backdrop-blur-sm">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-gray-900">Gift Registry</h2>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
@@ -230,7 +251,7 @@ export const ModernTemplate = ({
       )}
 
       {/* Closing Message - Modern Footer */}
-      <section className="py-24 px-4 bg-gray-900 text-white text-center">
+      <section className="relative py-24 px-4 bg-gray-900/90 backdrop-blur-sm text-white text-center">
         <div className="max-w-3xl mx-auto space-y-8">
           <EditableField
             fieldId="closing-message"
