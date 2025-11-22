@@ -1,11 +1,19 @@
-import { useEffect, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Clock, MapPin } from "lucide-react";
+import { Clock, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -44,9 +52,23 @@ export const VideoBackgroundTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: VideoBackgroundTemplateProps) => {
+  const [api, setApi] = useState<CarouselApi>();
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   const videoRef = useRef<HTMLVideoElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+
+  useEffect(() => {
+    if (!api) return;
+
+    setCount(api.scrollSnapList().length);
+    setCurrent(api.selectedScrollSnap());
+
+    api.on("select", () => {
+      setCurrent(api.selectedScrollSnap());
+    });
+  }, [api]);
 
   useEffect(() => {
     if (videoRef.current) {
@@ -56,10 +78,37 @@ export const VideoBackgroundTemplate = ({
     }
   }, []);
 
+  // Build slides array based on available content
+  const slides = [];
+  
+  // Hero slide (always present)
+  slides.push('hero');
+  
+  // Family names slide (always present)
+  slides.push('family');
+  
+  // Countdown slide (always present)
+  slides.push('countdown');
+  
+  // Events slide (if ceremony or venue exists)
+  if (ceremony || venue) {
+    slides.push('events');
+  }
+  
+  // Gift cards slide (if gift cards exist)
+  if (giftCards.length > 0) {
+    slides.push('gifts');
+  }
+  
+  // RSVP slide (if deadline or invitees exist)
+  if (wedding.rsvp_deadline || invitees.length > 0) {
+    slides.push('rsvp');
+  }
+
   return (
-    <div className="relative w-full bg-white text-gray-900 font-sans">
+    <div className="relative w-full h-screen overflow-hidden">
       {/* Fixed Video Background */}
-      <div className="fixed inset-0 w-full h-full overflow-hidden -z-10">
+      <div className="fixed inset-0 w-full h-full overflow-hidden">
         <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
           <source
             src={
@@ -72,9 +121,27 @@ export const VideoBackgroundTemplate = ({
         <div className="absolute inset-0 bg-black/40" />
       </div>
 
-      {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center justify-center px-4 text-center text-white">
-          <div className="space-y-8 animate-fade-in relative z-10">
+      {/* Slide Progress Dots */}
+      <div className="fixed bottom-8 left-1/2 transform -translate-x-1/2 z-50 flex gap-2">
+        {Array.from({ length: count }).map((_, index) => (
+          <button
+            key={index}
+            onClick={() => api?.scrollTo(index)}
+            className={`h-2 rounded-full transition-all duration-300 ${
+              index === current ? 'w-8 bg-white' : 'w-2 bg-white/40 hover:bg-white/60'
+            }`}
+            aria-label={`Go to slide ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      {/* Carousel Content */}
+      <div className="relative z-10 h-full">
+        <Carousel setApi={setApi} className="h-full" opts={{ loop: false, align: "start" }}>
+          <CarouselContent className="h-screen">
+            {/* Hero Slide */}
+            <CarouselItem className="h-screen flex items-center justify-center px-4 text-center text-white">
+          <div className="space-y-8 animate-fade-in">
             <EditableField
               fieldId="hero-subtitle"
               text={getFieldValue("hero-subtitle", "The Wedding Of")}
@@ -125,11 +192,11 @@ export const VideoBackgroundTemplate = ({
               className="text-template-body tracking-widest"
             />
           </div>
-      </section>
+        </CarouselItem>
 
-      {/* Family Names Section */}
-      <section className="relative py-24 px-4 bg-white/80 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-gray-900">
+        {/* Family Names Slide */}
+        <CarouselItem className="h-screen flex items-center justify-center px-4">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
@@ -176,19 +243,19 @@ export const VideoBackgroundTemplate = ({
               </div>
             </div>
           </div>
-      </section>
+        </CarouselItem>
 
-      {/* Countdown Section */}
-      <section className="relative py-24 px-4 bg-gray-900/70 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto text-white">
-          <CountdownTimer targetDate={wedding.wedding_date} />
-        </div>
-      </section>
+        {/* Countdown Slide */}
+        <CarouselItem className="h-screen flex items-center justify-center px-4">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+            <CountdownTimer targetDate={wedding.wedding_date} />
+          </div>
+        </CarouselItem>
 
-      {/* Wedding Events Section */}
-      {(ceremony || venue) && (
-        <section className="relative py-24 px-4 bg-white/75 backdrop-blur-sm">
-          <div className="max-w-5xl mx-auto text-gray-900">
+        {/* Wedding Events Slide */}
+        {(ceremony || venue) && (
+          <CarouselItem className="h-screen flex items-center justify-center px-4">
+            <div className="max-w-5xl w-full">
               <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
@@ -264,23 +331,23 @@ export const VideoBackgroundTemplate = ({
                 )}
               </div>
             </div>
-        </section>
-      )}
+          </CarouselItem>
+        )}
 
-      {/* Gift Cards Section */}
-      {giftCards.length > 0 && (
-        <section className="relative py-24 px-4 bg-gray-900/70 backdrop-blur-sm">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-white">Wedding Gift</h2>
-            <GiftCards giftCards={giftCards} isOwner={isOwner} />
-          </div>
-        </section>
-      )}
+        {/* Gift Cards Slide */}
+        {giftCards.length > 0 && (
+          <CarouselItem className="h-screen flex items-center justify-center px-4">
+            <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+              <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2>
+              <GiftCards giftCards={giftCards} isOwner={isOwner} />
+            </div>
+          </CarouselItem>
+        )}
 
-      {/* RSVP Section */}
-      {(wedding.rsvp_deadline || invitees.length > 0) && (
-        <section className="relative py-24 px-4 bg-white/80 backdrop-blur-sm">
-          <div className="max-w-3xl mx-auto space-y-8 text-gray-900">
+        {/* RSVP Slide */}
+        {(wedding.rsvp_deadline || invitees.length > 0) && (
+          <CarouselItem className="h-screen flex items-center justify-center px-4">
+            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8">
               <EditableField
                 fieldId="rsvp-title"
                 text={getFieldValue("rsvp-title", "Join Our Celebration")}
@@ -373,8 +440,15 @@ export const VideoBackgroundTemplate = ({
                 </div>
               )}
             </div>
-        </section>
-      )}
+          </CarouselItem>
+        )}
+          </CarouselContent>
+
+          {/* Navigation Arrows */}
+          <CarouselPrevious className="left-4 h-12 w-12 border-2 border-white bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white" />
+          <CarouselNext className="right-4 h-12 w-12 border-2 border-white bg-white/10 hover:bg-white/20 backdrop-blur-sm text-white" />
+        </Carousel>
+      </div>
     </div>
   );
 };

@@ -3,15 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Upload, FileSpreadsheet, Loader2 } from "lucide-react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -65,11 +57,8 @@ const MyEvents = () => {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState<string | null>(null);
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
-  const [generateOptionsOpen, setGenerateOptionsOpen] = useState(false);
   const [selectedWeddingId, setSelectedWeddingId] = useState<string | null>(null);
   const [selectedWeddingSlug, setSelectedWeddingSlug] = useState<string | null>(null);
-  const [uploadingFile, setUploadingFile] = useState(false);
-  const [dragActive, setDragActive] = useState(false);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -160,97 +149,6 @@ const MyEvents = () => {
         description: "Failed to publish event",
         variant: "destructive",
       });
-    }
-  };
-
-  const handleFileUpload = async (file: File) => {
-    if (!selectedWeddingId || !selectedWeddingSlug) return;
-
-    setUploadingFile(true);
-    try {
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('weddingId', selectedWeddingId);
-      formData.append('weddingSlug', selectedWeddingSlug);
-
-      console.log("Uploading file to n8n workflow:", {
-        fileName: file.name,
-        fileSize: file.size,
-        weddingId: selectedWeddingId,
-        weddingSlug: selectedWeddingSlug
-      });
-
-      const response = await fetch('https://aurea-invites.app.n8n.cloud/webhook-test/read-invitees-csv', {
-        method: 'POST',
-        body: formData,
-        mode: 'cors',
-      });
-
-      console.log("Upload response:", response.status, response.statusText);
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Upload error response:", errorText);
-        throw new Error(`Failed to upload file: ${response.statusText}`);
-      }
-
-      const result = await response.json();
-      console.log("Upload result:", result);
-
-      toast({
-        title: "Success",
-        description: "File uploaded successfully. Links are being generated automatically.",
-      });
-
-      setGenerateOptionsOpen(false);
-      
-      // Refresh to show new links after a delay
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
-    } catch (error) {
-      console.error("Error uploading file:", error);
-      
-      let errorMessage = "Failed to upload file. ";
-      if (error instanceof TypeError && error.message.includes("fetch")) {
-        errorMessage += "Cannot connect to the workflow. Please check:\n1. Is the n8n workflow running?\n2. Is the webhook URL correct?\n3. Does the workflow allow CORS requests?";
-      } else {
-        errorMessage += (error as Error).message || "Please try again.";
-      }
-      
-      toast({
-        title: "Upload Error",
-        description: errorMessage,
-        variant: "destructive",
-      });
-    } finally {
-      setUploadingFile(false);
-    }
-  };
-
-  const handleDrag = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (e.type === "dragenter" || e.type === "dragover") {
-      setDragActive(true);
-    } else if (e.type === "dragleave") {
-      setDragActive(false);
-    }
-  };
-
-  const handleDrop = (e: React.DragEvent) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setDragActive(false);
-
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      handleFileUpload(e.dataTransfer.files[0]);
-    }
-  };
-
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      handleFileUpload(e.target.files[0]);
     }
   };
 
@@ -361,7 +259,7 @@ const MyEvents = () => {
                               onClick={() => {
                                 setSelectedWeddingId(wedding.id);
                                 setSelectedWeddingSlug(wedding.slug);
-                                setGenerateOptionsOpen(true);
+                                setGenerateLinkOpen(true);
                               }}
                             >
                               <span>Generate Invitation Link</span>
@@ -458,110 +356,6 @@ const MyEvents = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      <Dialog open={generateOptionsOpen} onOpenChange={setGenerateOptionsOpen}>
-        <DialogContent className="max-w-3xl max-h-[85vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle>Generate Invitation Links</DialogTitle>
-            <DialogDescription>
-              Choose how you'd like to generate invitation links
-            </DialogDescription>
-          </DialogHeader>
-
-          <Tabs defaultValue="manual" className="w-full">
-            <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="manual">Manual Generation</TabsTrigger>
-              <TabsTrigger value="automated">Automated Upload</TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="manual" className="space-y-4">
-              <div className="py-4">
-                <p className="text-sm text-muted-foreground mb-4">
-                  Manually create individual invitation links with specific guests
-                </p>
-                <Button 
-                  onClick={() => {
-                    setGenerateOptionsOpen(false);
-                    setGenerateLinkOpen(true);
-                  }}
-                  className="w-full"
-                >
-                  Create Manual Link
-                </Button>
-              </div>
-            </TabsContent>
-
-            <TabsContent value="automated" className="space-y-4">
-              <div className="py-4 space-y-4">
-                <div>
-                  <h3 className="font-semibold mb-2">Upload CSV or XLSX File</h3>
-                  <p className="text-sm text-muted-foreground mb-4">
-                    Upload a CSV or Excel file containing your guest list. The file will be processed automatically by our workflow.
-                  </p>
-                </div>
-
-                <div
-                  onDragEnter={handleDrag}
-                  onDragLeave={handleDrag}
-                  onDragOver={handleDrag}
-                  onDrop={handleDrop}
-                  className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
-                    dragActive 
-                      ? 'border-primary bg-primary/5' 
-                      : 'border-border hover:border-primary/50'
-                  }`}
-                >
-                  <input
-                    type="file"
-                    id="file-upload"
-                    accept=".csv,.xlsx,.xls"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                    disabled={uploadingFile}
-                  />
-                  
-                  {uploadingFile ? (
-                    <div className="flex flex-col items-center gap-4">
-                      <Loader2 className="w-12 h-12 text-primary animate-spin" />
-                      <p className="text-sm text-muted-foreground">Uploading and processing file...</p>
-                    </div>
-                  ) : (
-                    <>
-                      <FileSpreadsheet className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                      <p className="text-lg font-semibold mb-2">
-                        Drag and drop your file here
-                      </p>
-                      <p className="text-sm text-muted-foreground mb-4">
-                        or
-                      </p>
-                      <Button
-                        onClick={() => document.getElementById('file-upload')?.click()}
-                        variant="outline"
-                      >
-                        <Upload className="w-4 h-4 mr-2" />
-                        Browse Files
-                      </Button>
-                      <p className="text-xs text-muted-foreground mt-4">
-                        Supported formats: CSV, XLSX
-                      </p>
-                    </>
-                  )}
-                </div>
-
-                <div className="bg-muted p-4 rounded-lg">
-                  <h4 className="text-sm font-semibold mb-2">File Format Requirements:</h4>
-                  <ul className="text-xs text-muted-foreground space-y-1 list-disc list-inside">
-                    <li>CSV or XLSX format</li>
-                    <li>Include columns for: Link Name, Slug, Guest Names</li>
-                    <li>One row per invitation link</li>
-                    <li>Separate multiple guests with commas or use multiple columns</li>
-                  </ul>
-                </div>
-              </div>
-            </TabsContent>
-          </Tabs>
-        </DialogContent>
-      </Dialog>
 
       {selectedWeddingId && selectedWeddingSlug && (
         <GenerateLinkDialog

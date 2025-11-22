@@ -11,8 +11,6 @@ import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
-import { ElegantTabsTemplate2 } from './ElegantTabsTemplate2';
-import RoseGoldTabsTemplate from './RoseGoldTabsTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -167,43 +165,6 @@ export const TemplateRenderer = ({
         locations={locations}
         isPreview={isPreview}
         onFieldUpdate={onFieldUpdate}
-      />
-    );
-  }
-
-  if (template.component === 'ElegantTabsTemplate2') {
-    return (
-      <ElegantTabsTemplate2
-        wedding={wedding}
-        locations={locations}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'RoseGoldTabsTemplate') {
-    return (
-      <RoseGoldTabsTemplate
-        wedding={wedding}
-        locations={locations}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        onRsvpToggle={(inviteeId: string) => handleRsvpToggle?.(inviteeId, !rsvpResponses[inviteeId])}
-        onRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        submittingRsvp={submittingRsvp}
       />
     );
   }

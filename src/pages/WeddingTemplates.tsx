@@ -12,15 +12,14 @@ const WeddingTemplates = () => {
 
   const weddingTemplates = [
     { 
-      id: "rose-gold-tabs",
-      name: "Rose Gold Tabs",
-      description: "Elegant tabbed invitation with rose gold accents and RSVP", 
+      id: "elegant-tabs",
+      name: "Elegant Tabs",
+      description: "Modern tabbed interface with rose gold accents", 
       image: elegantTabs,
       features: [
         { icon: LayoutGrid, text: "Tabbed Layout" },
         { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-        { icon: Heart, text: "RSVP System" }
+        { icon: Clock, text: "Countdown Timer" }
       ]
     },
     { 
@@ -81,7 +80,11 @@ const WeddingTemplates = () => {
               key={template.id}
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
               onClick={() => {
-                navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
+                if (template.id === 'elegant-tabs') {
+                  navigate('/create/elegant-tabs');
+                } else {
+                  navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
+                }
               }}
             >
               <CardHeader className="p-4 sm:p-6 flex-grow">
