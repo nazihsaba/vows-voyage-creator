@@ -12,6 +12,7 @@ import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { ElegantTabsTemplate2 } from './ElegantTabsTemplate2';
+import RoseGoldTabsTemplate from './RoseGoldTabsTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -185,6 +186,23 @@ export const TemplateRenderer = ({
         handleRsvpSubmit={handleRsvpSubmit}
         numberOfPersons={numberOfPersons}
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'RoseGoldTabsTemplate') {
+    return (
+      <RoseGoldTabsTemplate
+        wedding={wedding}
+        locations={locations}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        onRsvpToggle={(inviteeId: string) => handleRsvpToggle?.(inviteeId, !rsvpResponses[inviteeId])}
+        onRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
         submittingRsvp={submittingRsvp}
       />
     );
