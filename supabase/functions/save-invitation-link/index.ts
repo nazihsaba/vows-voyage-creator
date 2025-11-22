@@ -10,6 +10,7 @@ interface SaveInvitationRequest {
   link_name: string;
   unique_slug: string;
   number_of_persons: number;
+  invitation_url: string;
 }
 
 Deno.serve(async (req) => {
@@ -33,14 +34,14 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const body: SaveInvitationRequest = await req.json();
-    const { wedding_id, link_name, unique_slug, number_of_persons } = body;
+    const { wedding_id, link_name, unique_slug, number_of_persons, invitation_url } = body;
 
     // Validate required fields
-    if (!wedding_id || !link_name || !unique_slug || !number_of_persons) {
+    if (!wedding_id || !link_name || !unique_slug || !number_of_persons || !invitation_url) {
       return new Response(
         JSON.stringify({ 
           error: 'Validation error', 
-          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons' 
+          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons, invitation_url' 
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -122,7 +123,8 @@ Deno.serve(async (req) => {
         wedding_id,
         link_name,
         unique_slug,
-        number_of_persons
+        number_of_persons,
+        invitation_url
       })
       .select()
       .single();
@@ -150,7 +152,8 @@ Deno.serve(async (req) => {
           wedding_id: invitationLink.wedding_id,
           link_name: invitationLink.link_name,
           unique_slug: invitationLink.unique_slug,
-          number_of_persons: invitationLink.number_of_persons
+          number_of_persons: invitationLink.number_of_persons,
+          invitation_url: invitationLink.invitation_url
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
