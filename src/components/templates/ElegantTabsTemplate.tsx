@@ -57,7 +57,6 @@ export const ElegantTabsTemplate = ({
   const PAGES = [
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
-    { id: "details", label: "Details" },
     { id: "location", label: "Location" },
     { id: "rsvp", label: "RSVP" },
   ];
