@@ -12,29 +12,6 @@ const WeddingTemplates = () => {
 
   const weddingTemplates = [
     { 
-      id: "elegant-tabs",
-      name: "Elegant Tabs",
-      description: "Modern tabbed interface with rose gold accents", 
-      image: elegantTabs,
-      features: [
-        { icon: LayoutGrid, text: "Tabbed Layout" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" }
-      ]
-    },
-    { 
-      id: "elegant-tabs-2",
-      name: "Elegant Tabs Premium",
-      description: "Premium tabbed design with full RSVP functionality", 
-      image: elegantTabs,
-      features: [
-        { icon: LayoutGrid, text: "Tabbed Layout" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-        { icon: Heart, text: "RSVP System" }
-      ]
-    },
-    { 
       id: "template2",
       name: "Modern Romance",
       description: "Contemporary design with stunning gallery showcase", 
