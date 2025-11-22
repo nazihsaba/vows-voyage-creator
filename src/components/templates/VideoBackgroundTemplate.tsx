@@ -74,7 +74,7 @@ export const VideoBackgroundTemplate = ({
 
       {/* Hero Section */}
       <section className="relative min-h-screen flex items-center justify-center px-4 text-center text-white">
-          <div className="space-y-8 animate-fade-in">
+          <div className="space-y-8 animate-fade-in relative z-10">
             <EditableField
               fieldId="hero-subtitle"
               text={getFieldValue("hero-subtitle", "The Wedding Of")}
@@ -128,8 +128,8 @@ export const VideoBackgroundTemplate = ({
       </section>
 
       {/* Family Names Section */}
-      <section className="relative py-24 px-4 bg-white/90 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-24 px-4 bg-white/80 backdrop-blur-sm">
+        <div className="max-w-4xl mx-auto text-gray-900">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
@@ -179,16 +179,16 @@ export const VideoBackgroundTemplate = ({
       </section>
 
       {/* Countdown Section */}
-      <section className="relative py-24 px-4 bg-gray-50/90 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto">
+      <section className="relative py-24 px-4 bg-gray-900/70 backdrop-blur-sm">
+        <div className="max-w-4xl mx-auto text-white">
           <CountdownTimer targetDate={wedding.wedding_date} />
         </div>
       </section>
 
       {/* Wedding Events Section */}
       {(ceremony || venue) && (
-        <section className="relative py-24 px-4 bg-white/90 backdrop-blur-sm">
-          <div className="max-w-5xl mx-auto">
+        <section className="relative py-24 px-4 bg-white/75 backdrop-blur-sm">
+          <div className="max-w-5xl mx-auto text-gray-900">
               <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
@@ -269,9 +269,9 @@ export const VideoBackgroundTemplate = ({
 
       {/* Gift Cards Section */}
       {giftCards.length > 0 && (
-        <section className="relative py-24 px-4 bg-gray-50/90 backdrop-blur-sm">
+        <section className="relative py-24 px-4 bg-gray-900/70 backdrop-blur-sm">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-gray-900">Wedding Gift</h2>
+            <h2 className="text-template-subtitle text-center mb-12 text-white">Wedding Gift</h2>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
@@ -279,8 +279,8 @@ export const VideoBackgroundTemplate = ({
 
       {/* RSVP Section */}
       {(wedding.rsvp_deadline || invitees.length > 0) && (
-        <section className="relative py-24 px-4 bg-white/90 backdrop-blur-sm">
-          <div className="max-w-3xl mx-auto space-y-8">
+        <section className="relative py-24 px-4 bg-white/80 backdrop-blur-sm">
+          <div className="max-w-3xl mx-auto space-y-8 text-gray-900">
               <EditableField
                 fieldId="rsvp-title"
                 text={getFieldValue("rsvp-title", "Join Our Celebration")}
