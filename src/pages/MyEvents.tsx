@@ -173,14 +173,29 @@ const MyEvents = () => {
       formData.append('weddingId', selectedWeddingId);
       formData.append('weddingSlug', selectedWeddingSlug);
 
+      console.log("Uploading file to n8n workflow:", {
+        fileName: file.name,
+        fileSize: file.size,
+        weddingId: selectedWeddingId,
+        weddingSlug: selectedWeddingSlug
+      });
+
       const response = await fetch('https://aurea-invites.app.n8n.cloud/webhook-test/read-invitees-csv', {
         method: 'POST',
         body: formData,
+        mode: 'cors',
       });
 
+      console.log("Upload response:", response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error('Failed to upload file to workflow');
+        const errorText = await response.text();
+        console.error("Upload error response:", errorText);
+        throw new Error(`Failed to upload file: ${response.statusText}`);
       }
+
+      const result = await response.json();
+      console.log("Upload result:", result);
 
       toast({
         title: "Success",
@@ -188,11 +203,24 @@ const MyEvents = () => {
       });
 
       setGenerateOptionsOpen(false);
+      
+      // Refresh to show new links after a delay
+      setTimeout(() => {
+        window.location.reload();
+      }, 3000);
     } catch (error) {
       console.error("Error uploading file:", error);
+      
+      let errorMessage = "Failed to upload file. ";
+      if (error instanceof TypeError && error.message.includes("fetch")) {
+        errorMessage += "Cannot connect to the workflow. Please check:\n1. Is the n8n workflow running?\n2. Is the webhook URL correct?\n3. Does the workflow allow CORS requests?";
+      } else {
+        errorMessage += (error as Error).message || "Please try again.";
+      }
+      
       toast({
-        title: "Error",
-        description: "Failed to upload file. Please try again.",
+        title: "Upload Error",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
