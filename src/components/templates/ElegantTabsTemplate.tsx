@@ -124,26 +124,56 @@ export const ElegantTabsTemplate = ({
       case "cover":
         return (
           <div className="flex flex-col items-center justify-center h-full space-y-8 text-center">
-            <div className="space-y-4">
-              <div className="text-6xl md:text-8xl font-light tracking-wider text-white">
+            <div className="space-y-8 animate-fade-in">
+              <EditableField
+                fieldId="hero-subtitle"
+                text={getFieldValue("hero-subtitle", "The Wedding Of")}
+                style={getFieldStyle("hero-subtitle")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-template-small"
+              />
+
+              <div className="space-y-4">
                 <EditableField
-                  fieldId="cover-groom-initial"
-                  text={getFieldValue("cover-groom-initial", wedding.groom_name?.[0] || "E")}
-                  style={getFieldStyle("cover-groom-initial")}
+                  fieldId="groom-name"
+                  text={getFieldValue("groom-name", wedding.groom_name)}
+                  style={getFieldStyle("groom-name")}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
-                  tag="span"
+                  tag="h1"
+                  className="text-template-title"
                 />
-                <Heart className="inline-block mx-4 w-12 h-12 md:w-16 md:h-16" fill="white" />
+                <p className="text-4xl md:text-5xl">&</p>
                 <EditableField
-                  fieldId="cover-bride-initial"
-                  text={getFieldValue("cover-bride-initial", wedding.bride_name?.[0] || "M")}
-                  style={getFieldStyle("cover-bride-initial")}
+                  fieldId="bride-name"
+                  text={getFieldValue("bride-name", wedding.bride_name)}
+                  style={getFieldStyle("bride-name")}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
-                  tag="span"
+                  tag="h1"
+                  className="text-template-title"
                 />
               </div>
+
+              <EditableField
+                fieldId="wedding-date-display"
+                text={getFieldValue(
+                  "wedding-date-display",
+                  new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }),
+                )}
+                style={getFieldStyle("wedding-date-display")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-template-body tracking-widest"
+              />
             </div>
 
             <Button
