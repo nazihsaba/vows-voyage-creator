@@ -25,6 +25,8 @@ const RoseGoldTabsForm = () => {
   const [previewUrl, setPreviewUrl] = useState("");
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [videoFile, setVideoFile] = useState<File | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -49,6 +51,7 @@ const RoseGoldTabsForm = () => {
     slug: "",
     status: "draft",
     main_picture_url: "",
+    video_url: "",
     template_type: searchParams.get("template") || "rose-gold-tabs",
     custom_primary_color: "#fb7185",
   });
@@ -71,6 +74,9 @@ const RoseGoldTabsForm = () => {
       setFormData(data);
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
+      }
+      if (data.video_url) {
+        setVideoPreview(data.video_url);
       }
 
       const { data: locationsData } = await supabase
@@ -133,6 +139,24 @@ const RoseGoldTabsForm = () => {
     setFormData({ ...formData, main_picture_url: "" });
   };
 
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setVideoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setVideoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeVideo = () => {
+    setVideoFile(null);
+    setVideoPreview("");
+    setFormData({ ...formData, video_url: "" });
+  };
+
   const uploadImage = async (file: File, userId: string, index?: number) => {
     const fileExt = file.name.split('.').pop();
     const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ''}`;
@@ -161,10 +185,16 @@ const RoseGoldTabsForm = () => {
       if (!user) throw new Error("Not authenticated");
 
       let imageUrl = formData.main_picture_url;
+      let videoUrl = formData.video_url;
 
       // Upload new image if selected
       if (imageFile) {
         imageUrl = await uploadImage(imageFile, user.id);
+      }
+
+      // Upload new video if selected
+      if (videoFile) {
+        videoUrl = await uploadImage(videoFile, user.id);
       }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
@@ -174,21 +204,21 @@ const RoseGoldTabsForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ ...formData, slug, main_picture_url: imageUrl })
+          .update({ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl })
           .eq("id", id);
 
         if (error) throw error;
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ ...formData, slug, main_picture_url: imageUrl, user_id: user.id }])
+          .insert([{ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl, user_id: user.id }])
           .select()
           .single();
 
         if (error) throw error;
         weddingId = data.id;
         setCreatedWeddingId(data.id);
-        setFormData({ ...formData, slug: data.slug, main_picture_url: imageUrl });
+        setFormData({ ...formData, slug: data.slug, main_picture_url: imageUrl, video_url: videoUrl });
       }
 
       // Save locations
@@ -396,9 +426,29 @@ const RoseGoldTabsForm = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="main_picture">Main Wedding Photo</Label>
+                <Label htmlFor="main_picture">Background Photo or Video</Label>
+                <p className="text-sm text-muted-foreground">
+                  Upload a photo or video to display as the fullscreen background
+                </p>
                 <div className="flex flex-col gap-4">
-                  {imagePreview ? (
+                  {videoPreview ? (
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                      <video 
+                        src={videoPreview} 
+                        className="w-full h-full object-cover"
+                        controls
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={removeVideo}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : imagePreview ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
                       <img 
                         src={imagePreview} 
@@ -416,15 +466,33 @@ const RoseGoldTabsForm = () => {
                       </Button>
                     </div>
                   ) : (
-                    <label
-                      htmlFor="main_picture"
-                      className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                    >
-                      <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">Click to upload image</span>
-                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
-                    </label>
+                    <>
+                      <label
+                        htmlFor="main_video"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload video (recommended)</span>
+                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
+                      </label>
+                      <div className="text-center text-sm text-muted-foreground">or</div>
+                      <label
+                        htmlFor="main_picture"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload image</span>
+                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                      </label>
+                    </>
                   )}
+                  <Input
+                    id="main_video"
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoChange}
+                    className="hidden"
+                  />
                   <Input
                     id="main_picture"
                     type="file"

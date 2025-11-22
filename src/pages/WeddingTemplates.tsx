@@ -37,13 +37,13 @@ const WeddingTemplates = () => {
     { 
       id: "rose-gold-tabs", 
       name: "Rose Gold Tabs", 
-      description: "Elegant tabbed invitation with rose gold accents", 
+      description: "Fullscreen video background with elegant page transitions", 
       image: modernRomance, // Using existing image as placeholder
       features: [
-        { icon: Sparkles, text: "Tabbed Sections" },
+        { icon: Video, text: "Video Background" },
+        { icon: Sparkles, text: "Page Transitions" },
         { icon: MapPin, text: "Event Locations" },
-        { icon: Gift, text: "RSVP Form" },
-        { icon: Clock, text: "Save the Date" }
+        { icon: Clock, text: "Countdown Timer" }
       ]
     },
   ];
