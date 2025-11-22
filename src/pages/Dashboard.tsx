@@ -4,9 +4,10 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater } from "lucide-react";
+import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater, LayoutGrid } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import elegantTabs from "@/assets/template-elegant-tabs.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -39,6 +40,17 @@ const Dashboard = () => {
       icon: Heart,
       color: "text-rose-500",
       templates: [
+        { 
+          id: "elegant-tabs",
+          name: "Elegant Tabs",
+          description: "Modern tabbed interface with rose gold accents", 
+          image: elegantTabs,
+          features: [
+            { icon: LayoutGrid, text: "Tabbed Layout" },
+            { icon: MapPin, text: "Event Locations" },
+            { icon: Clock, text: "Countdown Timer" }
+          ]
+        },
         { 
           id: "template2",
           name: "Modern Romance",
@@ -207,7 +219,9 @@ const Dashboard = () => {
                         if (template.disabled) return;
                         
                         // Handle special templates with dedicated forms
-                        if (template.id === 'elegant-video') {
+                        if (template.id === 'elegant-tabs') {
+                          navigate('/create/elegant-tabs');
+                        } else if (template.id === 'elegant-video') {
                           navigate('/dashboard/elegant-video-form');
                         } else {
                           navigate(`/dashboard/create?eventType=${category.id}&template=${template.id}`);

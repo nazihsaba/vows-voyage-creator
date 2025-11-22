@@ -536,7 +536,7 @@ export const templates: Template[] = [
     name: 'Elegant Tabs',
     category: 'elegant',
     description: 'Modern tabbed interface with rose gold accents',
-    thumbnail: '/placeholder.svg',
+    thumbnail: '/src/assets/template-elegant-tabs.jpg',
     isPremium: false,
     isPopular: true,
     component: 'ElegantTabsTemplate',
