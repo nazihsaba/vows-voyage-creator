@@ -160,7 +160,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Family Names Section */}
         <section className="flex items-center justify-center px-4 py-8">
-          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="fade-up">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="zoom-in"">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
