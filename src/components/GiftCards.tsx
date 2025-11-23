@@ -16,14 +16,14 @@ interface GiftCardsProps {
 }
 
 const maskCardNumber = (cardNumber: string): string => {
-  if (cardNumber.length <= 4) return '****';
-  return '****' + cardNumber.slice(-4);
+  if (cardNumber.length <= 4) return "****";
+  return "****" + cardNumber.slice(-4);
 };
 
 const getCardLogo = (cardName: string): string | undefined => {
   const normalizedName = cardName.toLowerCase().trim();
-  if (normalizedName.includes('omt')) return omtLogo;
-  if (normalizedName.includes('whish')) return whishLogo;
+  if (normalizedName.includes("omt")) return omtLogo;
+  if (normalizedName.includes("whish")) return whishLogo;
   return undefined;
 };
 
@@ -35,12 +35,8 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <Gift className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-primary mb-4">
-            Wedding Gift
-          </h2>
-          <p className="text-lg text-muted-foreground">
-            For those who desire a wedding list is available
-          </p>
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-primary mb-4">Wedding Gift</h2>
+          <p className="text-lg text-muted-foreground">For those who desire a wedding list is available</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
@@ -49,24 +45,31 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
             return (
               <Card key={card.id} className="shadow-soft">
                 <CardContent className="p-6">
-                  {logoSrc && (
-                    <div className="mb-4 h-12 flex items-center justify-center">
-                      <img
-                        src={logoSrc}
-                        alt={card.card_name}
-                        className="max-h-full max-w-full object-contain rounded-[6px]"
-                      />
+                  <div className="flex items-center gap-4">
+                    {/* LEFT – Logo */}
+                    {logoSrc && (
+                      <div className="h-16 w-16 flex items-center justify-center">
+                        <img
+                          src={logoSrc}
+                          alt={card.card_name}
+                          className="max-h-full max-w-full object-contain rounded-[6px]"
+                        />
+                      </div>
+                    )}
+
+                    {/* RIGHT – Name + Number */}
+                    <div className="flex-1 flex flex-col justify-center">
+                      <h3 className="text-lg font-semibold mb-1 text-foreground">{card.card_name}</h3>
+
+                      <p className="text-sm md:text-base font-mono bg-wedding-ivory px-4 py-2 rounded-lg inline-flex items-center justify-center md:justify-start">
+                        {isOwner ? card.card_number : maskCardNumber(card.card_number)}
+                      </p>
+
+                      {!isOwner && (
+                        <p className="text-xs text-muted-foreground mt-2">Only showing last 4 digits for security</p>
+                      )}
                     </div>
-                  )}
-                  <h3 className="text-xl font-semibold mb-2 text-center">{card.card_name}</h3>
-                <p className="text-center text-lg font-mono bg-wedding-ivory p-3 rounded-lg">
-                  {isOwner ? card.card_number : maskCardNumber(card.card_number)}
-                </p>
-                {!isOwner && (
-                  <p className="text-xs text-muted-foreground text-center mt-2">
-                    Only showing last 4 digits for security
-                  </p>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             );
