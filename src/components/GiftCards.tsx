@@ -26,7 +26,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
   if (!giftCards || giftCards.length === 0) return null;
 
   return (
-    <section className="py-16 px-4 bg-wedding-blush/20">
+    <section className="py-4 px-2 bg-wedding-blush/20">
       <div className="max-w-4xl mx-auto">
         <div className="grid gap-6 md:grid-cols-2">
           {giftCards.map((card) => {
