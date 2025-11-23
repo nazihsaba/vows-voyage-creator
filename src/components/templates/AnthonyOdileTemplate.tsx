@@ -5,6 +5,8 @@ import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 interface AnthonyOdileTemplateProps {
   wedding: any;
@@ -16,6 +18,13 @@ interface AnthonyOdileTemplateProps {
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
   getFieldValue: (fieldId: string, defaultValue: string) => string;
   getFieldStyle: (fieldId: string) => any;
+  invitees?: any[];
+  rsvpResponses?: Record<string, boolean>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  handleRsvpSubmit?: () => void;
+  numberOfPersons?: number;
+  isRsvpDeadlinePassed?: boolean;
+  submittingRsvp?: boolean;
 }
 
 export const AnthonyOdileTemplate = ({
@@ -28,6 +37,13 @@ export const AnthonyOdileTemplate = ({
   onFieldUpdate,
   getFieldValue,
   getFieldStyle,
+  invitees = [],
+  rsvpResponses = {},
+  handleRsvpToggle = () => {},
+  handleRsvpSubmit = () => {},
+  numberOfPersons = 0,
+  isRsvpDeadlinePassed = false,
+  submittingRsvp = false,
 }: AnthonyOdileTemplateProps) => {
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -284,6 +300,104 @@ export const AnthonyOdileTemplate = ({
         </section>
       )}
 
+      {/* RSVP Section */}
+      {(wedding.rsvp_deadline || invitees.length > 0) && (
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <EditableField
+              fieldId="rsvp-title"
+              text={getFieldValue("rsvp-title", "Join Our Celebration")}
+              style={getFieldStyle("rsvp-title")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="h2"
+              className="text-template-subtitle text-center text-primary"
+            />
+
+            <EditableField
+              fieldId="rsvp-message"
+              text={getFieldValue(
+                "rsvp-message",
+                "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+              )}
+              style={getFieldStyle("rsvp-message")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              multiline={true}
+              tag="p"
+              className="text-template-body text-center text-gray-600"
+            />
+
+            {/* Invitees List with Checkboxes */}
+            {invitees.length > 0 && (
+              <div className="space-y-6 pt-6 border-t border-gray-300">
+                <div className="space-y-4">
+                  {invitees.map((invitee: any) => (
+                    <div
+                      key={invitee.id}
+                      className="flex items-center justify-between py-4 px-6 bg-[#faf8f5] rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors"
+                    >
+                      <span className="text-xl font-serif text-primary">{invitee.name}</span>
+                      <div className="flex items-center gap-3">
+                        <Checkbox
+                          id={`rsvp-${invitee.id}`}
+                          checked={rsvpResponses[invitee.id] === true}
+                          onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
+                          disabled={isRsvpDeadlinePassed}
+                          className="h-5 w-5"
+                        />
+                        <Label
+                          htmlFor={`rsvp-${invitee.id}`}
+                          className={`text-base cursor-pointer font-medium ${
+                            isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"
+                          }`}
+                        >
+                          {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                        </Label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-6 border-t border-gray-300 space-y-4">
+                  <p className="text-lg font-semibold text-center text-[#3e2723]">
+                    Number of Guests: {numberOfPersons || invitees.length}
+                  </p>
+
+                  {isRsvpDeadlinePassed ? (
+                    <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
+                  ) : (
+                    <Button
+                      onClick={handleRsvpSubmit}
+                      disabled={submittingRsvp}
+                      className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90"
+                      size="lg"
+                    >
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {wedding.rsvp_deadline && (
+              <div className="pt-8 border-t border-gray-300">
+                <p className="text-template-small text-center mb-2 text-gray-600">
+                  {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                </p>
+                <p className="text-template-heading text-primary text-center">
+                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  })}
+                </p>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
       {/* Closing Message */}
       <section className="py-16 px-4 bg-[#faf8f5] text-center">
         <div className="max-w-3xl mx-auto space-y-8">
@@ -300,21 +414,6 @@ export const AnthonyOdileTemplate = ({
             tag="p"
             className="text-template-body"
           />
-
-          {wedding.rsvp_deadline && (
-            <div className="pt-8 border-t border-gray-300">
-              <p className="text-xl font-semibold mb-2 text-[#3e2723]">
-                Kindly confirm your attendance before this date:
-              </p>
-              <p className="text-2xl font-script text-primary">
-                {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-          )}
         </div>
       </section>
     </div>
