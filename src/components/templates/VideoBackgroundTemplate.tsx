@@ -389,7 +389,7 @@ export const VideoBackgroundTemplate = ({
                       <Button
                         onClick={handleRsvpSubmit}
                         disabled={submittingRsvp}
-                        className="w-full text-lg py-6"
+                        className="w-full text-lg py-6 text-white"
                         size="lg"
                       >
                         {submittingRsvp ? "Submitting..." : "Submit RSVP"}
