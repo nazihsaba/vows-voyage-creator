@@ -38,7 +38,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
   return (
     <section className="py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12" data-aos="fade-up">
+        <div className="text-center mb-12">
           <Gift className="w-12 h-12 text-white mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-4">Wedding Gift</h2>
           <p className="text-lg text-white">For those who desire a wedding list is available</p>
@@ -48,8 +48,8 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
           {giftCards.map((card, index) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (
-              <Card 
-                key={card.id} 
+              <Card
+                key={card.id}
                 className="shadow-soft bg-white/10 backdrop-blur-sm"
                 data-aos="fade-up"
                 data-aos-delay={index * 100}
