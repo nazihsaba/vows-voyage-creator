@@ -200,11 +200,11 @@ export const VideoBackgroundTemplate = ({
         </section>
 
         {/* Countdown Section */}
-        <section className="min-h-screen flex items-center justify-center px-4 py-8">
+        {/* <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
-        </section>
+        </section> */}
 
         {/* Wedding Events Section */}
         {(ceremony || venue) && (
