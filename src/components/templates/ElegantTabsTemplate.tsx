@@ -236,17 +236,17 @@ export const ElegantTabsTemplate = ({
                 </div>
               )}
               {venue && (
-                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex opacity-25">
+                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex opacity-50">
                   <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                     <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
-                      <Clock className="w-6 h-6 text-foreground" />
+                      <Clock className="w-6 h-6" />
                       <p className="text-foreground font-bold">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-xl font-bold text-foreground">Event Location</p>
+                      <p className="text-xl font-bold">Event Location</p>
                       <p className="text-foreground">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
@@ -254,7 +254,7 @@ export const ElegantTabsTemplate = ({
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                       >
                         <MapPin className="w-5 h-5" />
                         <span>Google Maps</span>
