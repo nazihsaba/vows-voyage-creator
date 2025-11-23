@@ -1,0 +1,184 @@
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.77.0';
+import * as XLSX from 'https://esm.sh/xlsx@0.18.5';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+interface InviteeRow {
+  'Link Name': string;
+  'Guest Name': string;
+}
+
+Deno.serve(async (req) => {
+  // Handle CORS preflight requests
+  if (req.method === 'OPTIONS') {
+    return new Response(null, { headers: corsHeaders });
+  }
+
+  try {
+    console.log('Processing invitees file upload');
+
+    // Parse multipart form data
+    const formData = await req.formData();
+    const file = formData.get('file') as File;
+    const weddingId = formData.get('weddingId') as string;
+    const weddingSlug = formData.get('weddingSlug') as string;
+
+    if (!file || !weddingId || !weddingSlug) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Missing required fields', 
+          message: 'File, weddingId, and weddingSlug are required' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log(`Processing file: ${file.name} for wedding ${weddingId}`);
+
+    // Read file as ArrayBuffer
+    const arrayBuffer = await file.arrayBuffer();
+    const data = new Uint8Array(arrayBuffer);
+
+    // Parse Excel file
+    const workbook = XLSX.read(data, { type: 'array' });
+    const firstSheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows: InviteeRow[] = XLSX.utils.sheet_to_json(firstSheet);
+
+    console.log(`Found ${rows.length} rows in Excel file`);
+
+    if (rows.length === 0) {
+      return new Response(
+        JSON.stringify({ 
+          error: 'Empty file', 
+          message: 'The Excel file contains no data' 
+        }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Initialize Supabase client
+    const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
+    const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+    const supabase = createClient(supabaseUrl, supabaseKey);
+
+    // Verify wedding exists
+    const { data: wedding, error: weddingError } = await supabase
+      .from('weddings')
+      .select('id')
+      .eq('id', weddingId)
+      .single();
+
+    if (weddingError || !wedding) {
+      console.error('Wedding not found:', weddingError);
+      return new Response(
+        JSON.stringify({ 
+          error: 'Wedding not found', 
+          message: `No wedding found with id: ${weddingId}` 
+        }),
+        { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Group invitees by Link Name
+    const groupedInvitees = rows.reduce((acc, row) => {
+      const linkName = row['Link Name']?.trim();
+      const guestName = row['Guest Name']?.trim();
+
+      if (!linkName || !guestName) {
+        console.warn('Skipping row with missing data:', row);
+        return acc;
+      }
+
+      if (!acc[linkName]) {
+        acc[linkName] = [];
+      }
+      acc[linkName].push(guestName);
+      return acc;
+    }, {} as Record<string, string[]>);
+
+    console.log(`Grouped into ${Object.keys(groupedInvitees).length} invitation links`);
+
+    // Create invitation links and invitees
+    let createdCount = 0;
+    let failedCount = 0;
+
+    for (const [linkName, guestNames] of Object.entries(groupedInvitees)) {
+      try {
+        // Generate unique slug
+        const baseSlug = linkName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const uniqueSlug = `${weddingSlug}-${baseSlug}-${Date.now()}-${createdCount}`;
+
+        console.log(`Creating link: ${linkName} with ${guestNames.length} guests`);
+
+        // Create invitation link
+        const { data: linkData, error: linkError } = await supabase
+          .from('invitation_links')
+          .insert({
+            wedding_id: weddingId,
+            link_name: linkName,
+            unique_slug: uniqueSlug,
+            number_of_persons: guestNames.length,
+          })
+          .select()
+          .single();
+
+        if (linkError) {
+          console.error(`Error creating link ${linkName}:`, linkError);
+          failedCount++;
+          continue;
+        }
+
+        // Create invitees
+        const inviteeRecords = guestNames.map(name => ({
+          invitation_link_id: linkData.id,
+          name: name,
+        }));
+
+        const { error: inviteeError } = await supabase
+          .from('invitees')
+          .insert(inviteeRecords);
+
+        if (inviteeError) {
+          console.error(`Error creating invitees for ${linkName}:`, inviteeError);
+          failedCount++;
+          continue;
+        }
+
+        createdCount++;
+        console.log(`Successfully created link: ${linkName}`);
+      } catch (error) {
+        console.error(`Error processing link ${linkName}:`, error);
+        failedCount++;
+      }
+    }
+
+    console.log(`Processing complete: ${createdCount} succeeded, ${failedCount} failed`);
+
+    return new Response(
+      JSON.stringify({
+        success: true,
+        message: `Successfully processed ${createdCount} invitation links`,
+        details: {
+          created: createdCount,
+          failed: failedCount,
+          total: Object.keys(groupedInvitees).length,
+        }
+      }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+
+  } catch (error) {
+    console.error('Unexpected error processing file:', error);
+    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
+    return new Response(
+      JSON.stringify({ 
+        error: 'Internal server error', 
+        message: errorMessage 
+      }),
+      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
+  }
+});
