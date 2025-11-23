@@ -43,7 +43,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
           {giftCards.map((card) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (
-              <Card key={card.id} className="shadow-soft opacity-25">
+              <Card key={card.id} className="shadow-soft opacity-75">
                 <CardContent className="p-6">
                   {logoSrc && (
                     <div className="mb-4 h-12 flex items-center justify-center">
