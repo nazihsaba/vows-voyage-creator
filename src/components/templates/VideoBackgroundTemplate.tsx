@@ -275,7 +275,7 @@ export const VideoBackgroundTemplate = ({
                     data-aos="fade-left"
                     data-aos-delay="200"
                   >
-                    <div className="w-24 bg-primary flex items-center justify-center">
+                    <div className="w-24 bg-primary/90 flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
                     <div className="flex-1 p-6 space-y-6">
