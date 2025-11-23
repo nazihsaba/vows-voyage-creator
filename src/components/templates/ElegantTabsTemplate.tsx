@@ -218,7 +218,7 @@ export const ElegantTabsTemplate = ({
 
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
-                <div 
+                <div
                   className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
                   data-aos="fade-up"
                   data-aos-delay="100"
@@ -252,7 +252,7 @@ export const ElegantTabsTemplate = ({
                 </div>
               )}
               {venue && (
-                <div 
+                <div
                   className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
                   data-aos="fade-up"
                   data-aos-delay="200"
@@ -290,14 +290,14 @@ export const ElegantTabsTemplate = ({
         );
       case "gifts":
         return (
-          <div className="space-y-6">
+          <div className="space-y-6" data-aos="fade-left" data-aos-delay="100">
             <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} />
           </div>
         );
       case "rsvp":
         return (
           <div className="space-y-8 text-white">
-            <div 
+            <div
               className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8"
               data-aos="fade-up"
             >
