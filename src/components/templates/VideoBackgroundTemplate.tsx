@@ -94,7 +94,7 @@ export const VideoBackgroundTemplate = ({
       {/* Scrollable Content */}
       <div className="relative z-10">
         {/* Hero Section */}
-        <section className="flex flex-col items-center justify-center px-4 text-center text-white">
+        <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center text-white">
           <div className="space-y-8 animate-fade-in">
             <EditableField
               fieldId="hero-subtitle"
