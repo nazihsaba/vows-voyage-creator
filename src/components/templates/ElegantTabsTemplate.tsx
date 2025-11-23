@@ -209,8 +209,10 @@ export const ElegantTabsTemplate = ({
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
                 <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
-                  <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
-                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                      Ceremony
+                    </p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
@@ -237,8 +239,10 @@ export const ElegantTabsTemplate = ({
               )}
               {venue && (
                 <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
-                  <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
-                    <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                      Venue
+                    </p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
