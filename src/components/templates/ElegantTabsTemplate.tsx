@@ -268,8 +268,8 @@ export const ElegantTabsTemplate = ({
         );
       case "gifts":
         return (
-          <div className="space-y-6 text-white">
-            <GiftCards giftCards={giftCards} isOwner={isOwner} />
+          <div className="space-y-6">
+            <GiftCards giftCards={giftCards} isOwner={isOwner} className="text-white" />
           </div>
         );
       case "rsvp":
