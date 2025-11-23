@@ -316,6 +316,7 @@ export const VideoBackgroundTemplate = ({
             <p className="text-center text-template-body mb-8 text-gray-600">
               For those who desire a wedding list is available
             </p>
+            </div>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
               
