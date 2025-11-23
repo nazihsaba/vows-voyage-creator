@@ -6,6 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin } from "lucide-react";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface VideoBackgroundTemplateProps {
   wedding: any;
@@ -70,6 +72,14 @@ export const VideoBackgroundTemplate = ({
     }
   }, []);
 
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-out",
+    });
+  }, []);
+
   return (
     <div className="relative w-full min-h-screen">
       {/* Fixed Video Background */}
@@ -95,7 +105,7 @@ export const VideoBackgroundTemplate = ({
       <div className="relative z-10">
         {/* Hero Section */}
         <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center text-white">
-          <div className="space-y-8 animate-fade-in">
+          <div className="space-y-8 animate-fade-in" data-aos="fade-up">
             <EditableField
               fieldId="hero-subtitle"
               text={getFieldValue("hero-subtitle", "The Wedding Of")}
@@ -150,7 +160,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Family Names Section */}
         <section className="flex items-center justify-center px-4 py-8">
-          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="fade-up">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
@@ -201,7 +211,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* Countdown Section */}
         <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
-          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="fade-up">
             <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
         </section>
@@ -210,7 +220,7 @@ export const VideoBackgroundTemplate = ({
         {(ceremony || venue) && (
           <section className="flex items-center justify-center px-4 py-8">
             <div className="max-w-5xl w-full">
-              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
+              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl" data-aos="fade-up">
                 <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
                   fieldId="events-subtitle"
@@ -226,7 +236,7 @@ export const VideoBackgroundTemplate = ({
 
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
-                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex" data-aos="fade-up" data-aos-delay="100">
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                         Ceremony
@@ -256,7 +266,7 @@ export const VideoBackgroundTemplate = ({
                   </div>
                 )}
                 {venue && (
-                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex" data-aos="fade-up" data-aos-delay="200">
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
@@ -291,7 +301,7 @@ export const VideoBackgroundTemplate = ({
         {/* Gift Cards Section */}
         {giftCards.length > 0 && (
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
-            <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
+            <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="fade-up">
               {/* <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2> */}
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
@@ -301,7 +311,7 @@ export const VideoBackgroundTemplate = ({
         {/* RSVP Section */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
           <section className="flex items-center justify-center px-4 py-8">
-            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8">
+            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8" data-aos="fade-up">
               <EditableField
                 fieldId="rsvp-title"
                 text={getFieldValue("rsvp-title", "Join Our Celebration")}
