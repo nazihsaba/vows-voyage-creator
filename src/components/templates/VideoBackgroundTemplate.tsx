@@ -310,17 +310,10 @@ export const VideoBackgroundTemplate = ({
         {giftCards.length > 0 && (
           <section className="min-h-screen flex items-center justify-center px-4 py-8">
             <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="zoom-in">
-
-
-               <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">
-              For those who desire a wedding list is available
-            </p>
-            </div>
-            <GiftCards giftCards={giftCards} isOwner={isOwner} />
-          </div>
-              
-              {/* <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2> */}
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+              <p className="text-center text-template-body mb-8 text-gray-600">
+                For those who desire a wedding list is available
+              </p>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
