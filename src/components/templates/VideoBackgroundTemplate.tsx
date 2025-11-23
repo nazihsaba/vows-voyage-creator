@@ -252,7 +252,7 @@ export const VideoBackgroundTemplate = ({
                         <p className="text-template-body font-bold">{ceremony.time}</p>
                       </div>
                       <div className="space-y-3">
-                        <p className="text-xl font-bold">Event Location</p>
+                        <p className="text-base font-bold">Event Location</p>
                         <p className="text-template-body">{ceremony.location_name}</p>
                       </div>
                       {ceremony.location_link && (
@@ -347,7 +347,6 @@ export const VideoBackgroundTemplate = ({
               {/* Invitees List with Checkboxes */}
               {invitees.length > 0 && (
                 <div className="space-y-6 pt-6 border-t border-border">
-                  <p className="text-lg font-semibold text-center">This invitation is specially prepared for:</p>
                   <div className="space-y-4">
                     {invitees.map((invitee: any) => (
                       <div
