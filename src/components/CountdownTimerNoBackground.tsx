@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from "date-fns";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface CountdownTimerNoBackgroundProps {
   targetDate: Date;
@@ -12,6 +14,13 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
     minutes: 0,
     seconds: 0,
   });
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -39,10 +48,18 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
 
   return (
     <div className="flex items-center justify-center gap-4 md:gap-8 py-12">
-      <TimeUnit value={timeRemaining.days} label="Days" />
-      <TimeUnit value={timeRemaining.hours} label="Hours" />
-      <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-      <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+      <div data-aos="fade-up" data-aos-delay="0">
+        <TimeUnit value={timeRemaining.days} label="Days" />
+      </div>
+      <div data-aos="fade-up" data-aos-delay="100">
+        <TimeUnit value={timeRemaining.hours} label="Hours" />
+      </div>
+      <div data-aos="fade-up" data-aos-delay="200">
+        <TimeUnit value={timeRemaining.minutes} label="Minutes" />
+      </div>
+      <div data-aos="fade-up" data-aos-delay="300">
+        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+      </div>
     </div>
   );
 };
