@@ -7,6 +7,8 @@ import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface ElegantTabsTemplateProps {
   wedding: any;
@@ -105,6 +107,14 @@ export const ElegantTabsTemplate = ({
       }
     }
   };
+
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-out",
+    });
+  }, []);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -208,7 +218,11 @@ export const ElegantTabsTemplate = ({
 
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
-                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
+                <div 
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
+                  data-aos="fade-up"
+                  data-aos-delay="100"
+                >
                   <div className="w-24 bg-white flex items-center justify-center">
                     <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Ceremony
@@ -238,7 +252,11 @@ export const ElegantTabsTemplate = ({
                 </div>
               )}
               {venue && (
-                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
+                <div 
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
+                  data-aos="fade-up"
+                  data-aos-delay="200"
+                >
                   <div className="w-24 bg-white flex items-center justify-center">
                     <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Venue
@@ -279,7 +297,10 @@ export const ElegantTabsTemplate = ({
       case "rsvp":
         return (
           <div className="space-y-8 text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
+            <div 
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8"
+              data-aos="fade-up"
+            >
               <EditableField
                 fieldId="rsvp-title"
                 text={getFieldValue("rsvp-title", "Join Our Celebration")}
