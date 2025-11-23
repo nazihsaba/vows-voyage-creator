@@ -7,6 +7,8 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface AnthonyOdileTemplateProps {
   wedding: any;
@@ -60,6 +62,13 @@ export const AnthonyOdileTemplate = ({
   };
 
   useEffect(() => {
+    // Initialize AOS
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-out",
+    });
+
     // Pause audio when component unmounts
     return () => {
       if (audioRef.current) {
@@ -156,7 +165,7 @@ export const AnthonyOdileTemplate = ({
       </section>
 
       {/* Family Names Section */}
-      <section id="family-section" className="py-16 px-4 text-center bg-white">
+      <section id="family-section" className="py-16 px-4 text-center bg-white" data-aos="fade-up">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="space-y-4">
             <EditableField
@@ -200,7 +209,7 @@ export const AnthonyOdileTemplate = ({
 
       {/* Photo Gallery Section */}
       {gallery.length > 0 && (
-        <section className="py-16 px-4 bg-[#faf8f5]">
+        <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up" data-aos-delay="100">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.slice(0, 4).map((image, index) => (
@@ -218,12 +227,12 @@ export const AnthonyOdileTemplate = ({
       )}
 
       {/* Countdown Section */}
-      <section className="py-16 px-4 bg-white">
+      <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="200">
         <CountdownTimer targetDate={wedding.wedding_date} />
       </section>
 
       {/* Wedding Events Section */}
-      <section className="py-16 px-4 bg-[#faf8f5]">
+      <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up" data-aos-delay="300">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
             <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
@@ -244,7 +253,7 @@ export const AnthonyOdileTemplate = ({
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="400">
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
@@ -264,7 +273,7 @@ export const AnthonyOdileTemplate = ({
               </div>
             )}
             {venue && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="500">
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
                 <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                 <div className="space-y-2">
@@ -289,7 +298,7 @@ export const AnthonyOdileTemplate = ({
 
       {/* Gift Cards Section */}
       {giftCards.length > 0 && (
-        <section className="py-16 px-4 bg-white">
+        <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="600">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
             <p className="text-center text-template-body mb-8 text-gray-600">
@@ -302,7 +311,7 @@ export const AnthonyOdileTemplate = ({
 
       {/* RSVP Section */}
       {(wedding.rsvp_deadline || invitees.length > 0) && (
-        <section className="py-16 px-4 bg-white">
+        <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="700">
           <div className="max-w-3xl mx-auto space-y-8">
             <EditableField
               fieldId="rsvp-title"
@@ -399,7 +408,7 @@ export const AnthonyOdileTemplate = ({
       )}
 
       {/* Closing Message */}
-      <section className="py-16 px-4 bg-[#faf8f5] text-center">
+      <section className="py-16 px-4 bg-[#faf8f5] text-center" data-aos="fade-up" data-aos-delay="800">
         <div className="max-w-3xl mx-auto space-y-8">
           <EditableField
             fieldId="closing-message"
