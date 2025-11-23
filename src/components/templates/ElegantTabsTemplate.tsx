@@ -428,7 +428,7 @@ export const ElegantTabsTemplate = ({
       >
         <div className="w-full h-full flex flex-col">
           {/* Page Content */}
-          <div className="flex-1 flex items-center justify-center px-4 md:px-8 overflow-y-auto">
+          <div className="flex-1 flex items-center justify-center px-4 md:px-8 overflow-y-hidden">
             <div className="max-w-3xl w-full py-8">{renderPage()}</div>
           </div>
 
