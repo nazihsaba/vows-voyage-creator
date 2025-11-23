@@ -241,7 +241,7 @@ export const VideoBackgroundTemplate = ({
                     data-aos="fade-left"
                     data-aos-delay="100"
                   >
-                    <div className="w-24 bg-primary/80 flex items-center justify-center">
+                    <div className="w-24 bg-primary/10 flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                         Ceremony
                       </p>
