@@ -163,18 +163,17 @@ export const GenerateLinkDialog = ({
       formData.append('weddingSlug', weddingSlug);
       formData.append('weddingId', weddingId);
 
-      const response = await fetch('https://aurea-invites.app.n8n.cloud/webhook-test/read-invitees-csv', {
-        method: 'POST',
+      const { data, error } = await supabase.functions.invoke('process-invitees-file', {
         body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to process file');
+      if (error) {
+        throw error;
       }
 
       toast({
         title: "Success",
-        description: "Invitations are being generated automatically",
+        description: data?.message || "Invitations generated successfully",
       });
 
       setSelectedFile(null);
@@ -184,7 +183,7 @@ export const GenerateLinkDialog = ({
       console.error("Error uploading file:", error);
       toast({
         title: "Error",
-        description: "Failed to process the file",
+        description: "Failed to process the file. Please check the file format.",
         variant: "destructive",
       });
     } finally {
