@@ -154,7 +154,7 @@ export const VideoBackgroundTemplate = ({
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
-                  <p className="text-template-small">Groom's Familyyyyy</p>
+                  <p className="text-template-small">Groom's Family</p>
                   <EditableField
                     fieldId="groom-family"
                     text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")}
@@ -200,11 +200,11 @@ export const VideoBackgroundTemplate = ({
         </section>
 
         {/* Countdown Section */}
-        {/* <section className="min-h-screen flex items-center justify-center px-4 py-8">
+        <section className="min-h-screen flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
-        </section> */}
+        </section>
 
         {/* Wedding Events Section */}
         {(ceremony || venue) && (
