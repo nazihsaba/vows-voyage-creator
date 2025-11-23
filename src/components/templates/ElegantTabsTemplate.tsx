@@ -246,7 +246,7 @@ export const ElegantTabsTemplate = ({
                       <p className="text-foreground font-bold">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-xl font-bold">Event Location</p>
+                      <p className="text-xl font-bold text-black">Event Location</p>
                       <p className="text-foreground">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
