@@ -39,6 +39,7 @@ export const GenerateLinkDialog = ({
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState("manual");
+  const [n8nWebhookUrl, setN8nWebhookUrl] = useState("");
 
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
@@ -156,6 +157,15 @@ export const GenerateLinkDialog = ({
       return;
     }
 
+    if (!n8nWebhookUrl.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter your n8n webhook URL",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
       const formData = new FormData();
@@ -163,27 +173,31 @@ export const GenerateLinkDialog = ({
       formData.append('weddingSlug', weddingSlug);
       formData.append('weddingId', weddingId);
 
-      const { data, error } = await supabase.functions.invoke('process-invitees-file', {
+      console.log("Sending file to n8n workflow:", n8nWebhookUrl);
+
+      const response = await fetch(n8nWebhookUrl, {
+        method: 'POST',
         body: formData,
       });
 
-      if (error) {
-        throw error;
+      if (!response.ok) {
+        throw new Error(`Failed to process file: ${response.statusText}`);
       }
 
       toast({
         title: "Success",
-        description: data?.message || "Invitations generated successfully",
+        description: "File sent to n8n workflow. Invitations are being generated.",
       });
 
       setSelectedFile(null);
+      setN8nWebhookUrl("");
       onSuccess();
       onOpenChange(false);
     } catch (error) {
-      console.error("Error uploading file:", error);
+      console.error("Error sending file to n8n:", error);
       toast({
         title: "Error",
-        description: "Failed to process the file. Please check the file format.",
+        description: "Failed to send file to n8n workflow. Please check the webhook URL.",
         variant: "destructive",
       });
     } finally {
@@ -287,6 +301,29 @@ export const GenerateLinkDialog = ({
 
           <TabsContent value="automatic" className="space-y-6 py-4">
             <div className="space-y-6">
+              {/* n8n Webhook URL */}
+              <div className="space-y-3">
+                <div className="flex items-start gap-2">
+                  <Upload className="w-5 h-5 text-primary mt-0.5" />
+                  <div className="flex-1">
+                    <Label htmlFor="n8n-webhook" className="text-base font-semibold">
+                      n8n Webhook URL
+                    </Label>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Enter your n8n workflow webhook URL to process the invitations
+                    </p>
+                    <Input
+                      id="n8n-webhook"
+                      type="url"
+                      placeholder="https://your-n8n-instance.app.n8n.cloud/webhook/..."
+                      value={n8nWebhookUrl}
+                      onChange={(e) => setN8nWebhookUrl(e.target.value)}
+                      className="mt-2"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Upload Area */}
               <div className="space-y-3">
                 <div className="flex items-start gap-2">
@@ -380,8 +417,8 @@ export const GenerateLinkDialog = ({
               {loading ? "Creating..." : "Create Link"}
             </Button>
           ) : (
-            <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile}>
-              {loading ? "Processing..." : "Generate Automatically"}
+            <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile || !n8nWebhookUrl.trim()}>
+              {loading ? "Processing..." : "Send to n8n Workflow"}
             </Button>
           )}
         </DialogFooter>
