@@ -246,14 +246,14 @@ export const VideoBackgroundTemplate = ({
                         Ceremony
                       </p>
                     </div>
-                    <div className="flex-1 p-8 space-y-6">
+                    <div className="flex-1 p-6 space-y-6">
                       <div className="flex items-center gap-3">
-                        <Clock className="w-6 h-6" />
-                        <p className="text-template-body font-bold">{ceremony.time}</p>
+                        <Clock className="w-5 h-5" />
+                        <p className="text-template-body font-bold text-base">{ceremony.time}</p>
                       </div>
-                      <div className="space-y-3">
+                      <div className="space-y-2">
                         <p className="text-base font-bold">Event Location</p>
-                        <p className="text-template-body">{ceremony.location_name}</p>
+                        <p className="text-template-body text-base">{ceremony.location_name}</p>
                       </div>
                       {ceremony.location_link && (
                         <a
