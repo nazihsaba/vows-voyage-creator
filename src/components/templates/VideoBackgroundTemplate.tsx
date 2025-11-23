@@ -238,7 +238,7 @@ export const VideoBackgroundTemplate = ({
                 {ceremony && (
                   <div
                     className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
-                    data-aos="zoom-in"
+                    data-aos="fade-left"
                     data-aos-delay="100"
                   >
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
@@ -272,7 +272,7 @@ export const VideoBackgroundTemplate = ({
                 {venue && (
                   <div
                     className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
-                    data-aos="zoom-in"
+                    data-aos="fade-left"
                     data-aos-delay="200"
                   >
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
