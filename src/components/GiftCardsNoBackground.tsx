@@ -54,12 +54,12 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                       />
                     </div>
                   )}
-                  <h3 className="text-xl font-semibold mb-2 text-center">{card.card_name}</h3>
-                  <p className="text-center text-lg font-mono bg-wedding-ivory p-3 rounded-lg">
+                  <h3 className="text-xl font-semibold mb-2 text-center text-white">{card.card_name}</h3>
+                  <p className="text-center text-lg font-mono bg-wedding-ivory p-3 rounded-lg text-white">
                     {isOwner ? card.card_number : maskCardNumber(card.card_number)}
                   </p>
                   {!isOwner && (
-                    <p className="text-xs text-muted-foreground text-center mt-2">
+                    <p className="text-xs text-muted-foreground text-center mt-2 text-white">
                       Only showing last 4 digits for security
                     </p>
                   )}
