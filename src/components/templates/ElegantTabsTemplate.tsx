@@ -242,7 +242,7 @@ export const ElegantTabsTemplate = ({
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
-                      <Clock className="w-6 h-6" />
+                      <Clock className="w-6 h-6 text-white" />
                       <p className="text-white font-bold">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
