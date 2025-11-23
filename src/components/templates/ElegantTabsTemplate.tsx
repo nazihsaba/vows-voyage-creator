@@ -243,21 +243,21 @@ export const ElegantTabsTemplate = ({
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
                       <Clock className="w-6 h-6" />
-                      <p className="text-foreground font-bold">{venue.time}</p>
+                      <p className="text-black font-bold">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
                       <p className="text-xl font-bold text-black">Event Location</p>
-                      <p className="text-foreground">{venue.location_name}</p>
+                      <p className="text-black">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
                       <a
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white text-black"
                       >
                         <MapPin className="w-5 h-5" />
-                        <span>Google Maps</span>
+                        <span className="text-black">Google Maps</span>
                       </a>
                     )}
                   </div>
