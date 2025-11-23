@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { CountdownTimer } from '@/components/CountdownTimer';
-import { EventLocation } from '@/components/EventLocation';
-import { GiftCards } from '@/components/GiftCards';
-import { EditableField } from '@/components/EditableField';
-import { ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from "react";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { EventLocation } from "@/components/EventLocation";
+import { GiftCards } from "@/components/GiftCards";
+import { EditableField } from "@/components/EditableField";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface AnthonyOdileTemplateProps {
   wedding: any;
@@ -31,8 +31,8 @@ export const AnthonyOdileTemplate = ({
 }: AnthonyOdileTemplateProps) => {
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
-  const ceremony = locations.find(loc => loc.type === 'ceremony');
-  const venue = locations.find(loc => loc.type === 'venue');
+  const ceremony = locations.find((loc) => loc.type === "ceremony");
+  const venue = locations.find((loc) => loc.type === "venue");
 
   const handleStart = () => {
     setHasStarted(true);
@@ -40,7 +40,7 @@ export const AnthonyOdileTemplate = ({
       audioRef.current.play();
     }
     // Smooth scroll to next section
-    document.getElementById('family-section')?.scrollIntoView({ behavior: 'smooth' });
+    document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -61,18 +61,18 @@ export const AnthonyOdileTemplate = ({
       </audio>
 
       {/* Hero Section - Fullscreen */}
-      <section 
+      <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
         style={{
-          backgroundImage: wedding.main_picture_url 
-            ? `url(${wedding.main_picture_url})` 
-            : 'linear-gradient(135deg, #c9a6a6 0%, #e8c4c4 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
+          backgroundImage: wedding.main_picture_url
+            ? `url(${wedding.main_picture_url})`
+            : "linear-gradient(135deg, #c9a6a6 0%, #e8c4c4 100%)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
         }}
       >
         <div className="absolute inset-0 bg-black/30" />
-        
+
         <div className="relative z-10 space-y-6 px-4 max-w-2xl">
           <EditableField
             fieldId="hero-subtitle"
@@ -83,7 +83,7 @@ export const AnthonyOdileTemplate = ({
             tag="p"
             className="text-template-small"
           />
-          
+
           <div className="space-y-2">
             <EditableField
               fieldId="groom-name"
@@ -108,12 +108,15 @@ export const AnthonyOdileTemplate = ({
 
           <EditableField
             fieldId="wedding-date-display"
-            text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString('en-US', { 
-              weekday: 'long', 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            }))}
+            text={getFieldValue(
+              "wedding-date-display",
+              new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+            )}
             style={getFieldStyle("wedding-date-display")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -149,9 +152,9 @@ export const AnthonyOdileTemplate = ({
               tag="h2"
               className="text-template-subtitle"
             />
-            
+
             <p className="text-2xl">&</p>
-            
+
             <EditableField
               fieldId="bride-family"
               text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")}
@@ -165,7 +168,10 @@ export const AnthonyOdileTemplate = ({
 
           <EditableField
             fieldId="invitation-text"
-            text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding of their Son and Daughter")}
+            text={getFieldValue(
+              "invitation-text",
+              "Request the honor of your presence at the wedding of their Son and Daughter",
+            )}
             style={getFieldStyle("invitation-text")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -182,12 +188,9 @@ export const AnthonyOdileTemplate = ({
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.slice(0, 4).map((image, index) => (
-                <div 
-                  key={image.id} 
-                  className="aspect-square overflow-hidden rounded-lg shadow-lg"
-                >
-                  <img 
-                    src={image.image_url} 
+                <div key={image.id} className="aspect-square overflow-hidden rounded-lg shadow-lg">
+                  <img
+                    src={image.image_url}
                     alt={`Gallery ${index + 1}`}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
                   />
@@ -210,7 +213,10 @@ export const AnthonyOdileTemplate = ({
             <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
             <EditableField
               fieldId="events-subtitle"
-              text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
+              text={getFieldValue(
+                "events-subtitle",
+                "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:",
+              )}
               style={getFieldStyle("events-subtitle")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -234,7 +240,7 @@ export const AnthonyOdileTemplate = ({
                     href={ceremony.location_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-[#c9a6a6] hover:bg-[#b89595] text-white px-6 py-2 rounded-md transition-colors"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
                     View on Map
                   </a>
@@ -254,7 +260,7 @@ export const AnthonyOdileTemplate = ({
                     href={venue.location_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-[#c9a6a6] hover:bg-[#b89595] text-white px-6 py-2 rounded-md transition-colors"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
                     View on Map
                   </a>
@@ -269,8 +275,10 @@ export const AnthonyOdileTemplate = ({
       {giftCards.length > 0 && (
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-[#3e2723]">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         </section>
@@ -281,7 +289,10 @@ export const AnthonyOdileTemplate = ({
         <div className="max-w-3xl mx-auto space-y-8">
           <EditableField
             fieldId="closing-message"
-            text={getFieldValue("closing-message", "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.")}
+            text={getFieldValue(
+              "closing-message",
+              "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
+            )}
             style={getFieldStyle("closing-message")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -295,11 +306,11 @@ export const AnthonyOdileTemplate = ({
               <p className="text-xl font-semibold mb-2 text-[#3e2723]">
                 Kindly confirm your attendance before this date:
               </p>
-              <p className="text-2xl font-script text-[#c9a6a6]">
-                {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+              <p className="text-2xl font-script text-primary">
+                {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
                 })}
               </p>
             </div>
