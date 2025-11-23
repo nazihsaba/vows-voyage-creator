@@ -241,7 +241,7 @@ export const VideoBackgroundTemplate = ({
                     data-aos="fade-left"
                     data-aos-delay="100"
                   >
-                    <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                    <div className="w-24 bg-primary flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                         Ceremony
                       </p>
@@ -275,7 +275,7 @@ export const VideoBackgroundTemplate = ({
                     data-aos="fade-left"
                     data-aos-delay="200"
                   >
-                    <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
+                    <div className="w-24 bg-primary flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
                     <div className="flex-1 p-8 space-y-6">
@@ -292,7 +292,7 @@ export const VideoBackgroundTemplate = ({
                           href={venue.location_link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                          className="inline-flex items-center gap-2 border-2 border-primary text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                         >
                           <MapPin className="w-5 h-5" />
                           <span>Google Maps</span>
