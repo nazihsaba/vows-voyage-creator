@@ -7,8 +7,10 @@ const corsHeaders = {
 };
 
 interface InviteeRow {
-  'Link Name': string;
-  'Guest Name': string;
+  DisplayName?: string;
+  invitees?: string;
+  nbOfPersons?: number;
+  side?: string;
 }
 
 Deno.serve(async (req) => {
@@ -82,22 +84,33 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Group invitees by Link Name
+    // Group invitees by DisplayName
     const groupedInvitees = rows.reduce((acc, row) => {
-      const linkName = row['Link Name']?.trim();
-      const guestName = row['Guest Name']?.trim();
+      const displayName = row.DisplayName?.trim();
+      const inviteeName = row.invitees?.trim();
+      const nbOfPersons = row.nbOfPersons || 1;
 
-      if (!linkName || !guestName) {
-        console.warn('Skipping row with missing data:', row);
+      // Skip rows without DisplayName
+      if (!displayName) {
+        console.warn('Skipping row without DisplayName:', row);
         return acc;
       }
 
-      if (!acc[linkName]) {
-        acc[linkName] = [];
+      // Initialize the group if it doesn't exist
+      if (!acc[displayName]) {
+        acc[displayName] = {
+          guests: [],
+          totalPersons: nbOfPersons,
+        };
       }
-      acc[linkName].push(guestName);
+
+      // Add invitee name if present
+      if (inviteeName) {
+        acc[displayName].guests.push(inviteeName);
+      }
+
       return acc;
-    }, {} as Record<string, string[]>);
+    }, {} as Record<string, { guests: string[]; totalPersons: number }>);
 
     console.log(`Grouped into ${Object.keys(groupedInvitees).length} invitation links`);
 
@@ -105,52 +118,71 @@ Deno.serve(async (req) => {
     let createdCount = 0;
     let failedCount = 0;
 
-    for (const [linkName, guestNames] of Object.entries(groupedInvitees)) {
+    for (const [displayName, linkData] of Object.entries(groupedInvitees)) {
       try {
         // Generate unique slug
-        const baseSlug = linkName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+        const baseSlug = displayName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
         const uniqueSlug = `${weddingSlug}-${baseSlug}-${Date.now()}-${createdCount}`;
 
-        console.log(`Creating link: ${linkName} with ${guestNames.length} guests`);
+        const guestCount = linkData.guests.length > 0 ? linkData.guests.length : linkData.totalPersons;
+        console.log(`Creating link: ${displayName} with ${guestCount} person(s)`);
 
         // Create invitation link
-        const { data: linkData, error: linkError } = await supabase
+        const { data: invitationLink, error: linkError } = await supabase
           .from('invitation_links')
           .insert({
             wedding_id: weddingId,
-            link_name: linkName,
+            link_name: displayName,
             unique_slug: uniqueSlug,
-            number_of_persons: guestNames.length,
+            number_of_persons: guestCount,
           })
           .select()
           .single();
 
         if (linkError) {
-          console.error(`Error creating link ${linkName}:`, linkError);
+          console.error(`Error creating link ${displayName}:`, linkError);
           failedCount++;
           continue;
         }
 
-        // Create invitees
-        const inviteeRecords = guestNames.map(name => ({
-          invitation_link_id: linkData.id,
-          name: name,
-        }));
+        // Create invitees if guest names are provided
+        if (linkData.guests.length > 0) {
+          const inviteeRecords = linkData.guests.map(name => ({
+            invitation_link_id: invitationLink.id,
+            name: name,
+          }));
 
-        const { error: inviteeError } = await supabase
-          .from('invitees')
-          .insert(inviteeRecords);
+          const { error: inviteeError } = await supabase
+            .from('invitees')
+            .insert(inviteeRecords);
 
-        if (inviteeError) {
-          console.error(`Error creating invitees for ${linkName}:`, inviteeError);
-          failedCount++;
-          continue;
+          if (inviteeError) {
+            console.error(`Error creating invitees for ${displayName}:`, inviteeError);
+            failedCount++;
+            continue;
+          }
+        } else {
+          // If no individual guest names, create placeholder invitees based on nbOfPersons
+          const placeholderInvitees = Array.from({ length: linkData.totalPersons }, (_, i) => ({
+            invitation_link_id: invitationLink.id,
+            name: `Guest ${i + 1}`,
+          }));
+
+          const { error: inviteeError } = await supabase
+            .from('invitees')
+            .insert(placeholderInvitees);
+
+          if (inviteeError) {
+            console.error(`Error creating placeholder invitees for ${displayName}:`, inviteeError);
+            failedCount++;
+            continue;
+          }
         }
 
         createdCount++;
-        console.log(`Successfully created link: ${linkName}`);
+        console.log(`Successfully created link: ${displayName}`);
       } catch (error) {
-        console.error(`Error processing link ${linkName}:`, error);
+        console.error(`Error processing link ${displayName}:`, error);
         failedCount++;
       }
     }
