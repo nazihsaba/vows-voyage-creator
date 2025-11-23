@@ -58,11 +58,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                   <p className="text-center text-lg font-mono bg-wedding-ivory p-3 rounded-lg">
                     {isOwner ? card.card_number : maskCardNumber(card.card_number)}
                   </p>
-                  {!isOwner && (
-                    <p className="text-xs text-muted-foreground text-center mt-2">
-                      Only showing last 4 digits for security
-                    </p>
-                  )}
+                  {!isOwner && <p className="text-xs text-center mt-2">Only showing last 4 digits for security</p>}
                 </CardContent>
               </Card>
             );
