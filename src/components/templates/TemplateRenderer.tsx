@@ -67,6 +67,13 @@ export const TemplateRenderer = ({
         onFieldUpdate={onFieldUpdate}
         getFieldValue={getFieldValue}
         getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
       />
     );
   }
