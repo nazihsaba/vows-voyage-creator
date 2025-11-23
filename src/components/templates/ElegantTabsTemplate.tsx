@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { EditableField } from "@/components/EditableField";
 import { EventLocation } from "@/components/EventLocation";
 import { CountdownTimer } from "@/components/CountdownTimer";
+import { GiftCards } from "@/components/GiftCards";
 import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -58,6 +59,7 @@ export const ElegantTabsTemplate = ({
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
     { id: "location", label: "Location" },
+    ...(giftCards && giftCards.length > 0 ? [{ id: "gifts", label: "Gifts" }] : []),
     { id: "rsvp", label: "RSVP" },
   ];
 
@@ -262,6 +264,12 @@ export const ElegantTabsTemplate = ({
                 </div>
               )}
             </div>
+          </div>
+        );
+      case "gifts":
+        return (
+          <div className="space-y-6">
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
         );
       case "rsvp":
