@@ -328,9 +328,6 @@ export const ElegantTabsTemplate = ({
               {/* Invitees List with Checkboxes */}
               {invitees.length > 0 && (
                 <div className="space-y-6 pt-6 border-t border-white/20">
-                  <p className="text-lg font-semibold text-center text-white">
-                    This invitation is specially prepared for:
-                  </p>
                   <div className="space-y-4">
                     {invitees.map((invitee: any) => (
                       <div
