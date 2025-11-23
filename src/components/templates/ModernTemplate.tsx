@@ -1,10 +1,10 @@
-import { useState, useEffect, useRef } from 'react';
-import { CountdownTimer } from '@/components/CountdownTimer';
-import { EventLocation } from '@/components/EventLocation';
-import { GiftCards } from '@/components/GiftCards';
-import { EditableField } from '@/components/EditableField';
-import { Calendar, MapPin } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { useState, useEffect, useRef } from "react";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { EventLocation } from "@/components/EventLocation";
+import { GiftCards } from "@/components/GiftCards";
+import { EditableField } from "@/components/EditableField";
+import { Calendar, MapPin } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface ModernTemplateProps {
   wedding: any;
@@ -29,21 +29,21 @@ export const ModernTemplate = ({
   getFieldValue,
   getFieldStyle,
 }: ModernTemplateProps) => {
-  const ceremony = locations.find(loc => loc.type === 'ceremony');
-  const venue = locations.find(loc => loc.type === 'venue');
+  const ceremony = locations.find((loc) => loc.type === "ceremony");
+  const venue = locations.find((loc) => loc.type === "venue");
 
   return (
     <div className="w-full bg-white text-gray-900 font-sans">
       {/* Hero Section - Modern Full Width */}
-      <section 
+      <section
         className="relative min-h-screen flex flex-col items-center justify-center text-center"
         style={{
-          backgroundImage: wedding.main_picture_url 
-            ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${wedding.main_picture_url})` 
-            : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundAttachment: 'fixed',
+          backgroundImage: wedding.main_picture_url
+            ? `linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url(${wedding.main_picture_url})`
+            : "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundAttachment: "fixed",
         }}
       >
         <div className="relative z-10 space-y-8 px-4 max-w-4xl">
@@ -75,11 +75,14 @@ export const ModernTemplate = ({
 
           <EditableField
             fieldId="wedding-date-display"
-            text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString('en-US', { 
-              year: 'numeric', 
-              month: 'long', 
-              day: 'numeric' 
-            }))}
+            text={getFieldValue(
+              "wedding-date-display",
+              new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+            )}
             style={getFieldStyle("wedding-date-display")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -94,7 +97,7 @@ export const ModernTemplate = ({
         <div className="max-w-4xl mx-auto">
           <div className="grid md:grid-cols-2 gap-16 text-center">
             <div className="space-y-4">
-              <div className="text-template-small text-gray-500 mb-2">Groom's Family</div>
+              <div className="text-template-small text-gray-500 mb-2">Groom's Familyyyy</div>
               <EditableField
                 fieldId="groom-family"
                 text={getFieldValue("groom-family", wedding.groom_family || "The Groom's Family")}
@@ -105,7 +108,7 @@ export const ModernTemplate = ({
                 className="text-template-subtitle text-gray-900"
               />
             </div>
-            
+
             <div className="space-y-4">
               <div className="text-template-small text-gray-500 mb-2">Bride's Family</div>
               <EditableField
@@ -123,7 +126,10 @@ export const ModernTemplate = ({
           <div className="mt-16 max-w-2xl mx-auto text-center">
             <EditableField
               fieldId="invitation-text"
-              text={getFieldValue("invitation-text", "Together with their families, request the honor of your presence at the celebration of their marriage")}
+              text={getFieldValue(
+                "invitation-text",
+                "Together with their families, request the honor of your presence at the celebration of their marriage",
+              )}
               style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -142,17 +148,12 @@ export const ModernTemplate = ({
             <h2 className="text-template-subtitle text-center mb-16 text-gray-900">Our Story</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {gallery.slice(0, 6).map((image, index) => (
-                <div 
-                  key={image.id} 
-                  className={`overflow-hidden ${
-                    index === 0 ? 'md:col-span-2 md:row-span-2' : ''
-                  }`}
-                >
-                  <img 
-                    src={image.image_url} 
+                <div key={image.id} className={`overflow-hidden ${index === 0 ? "md:col-span-2 md:row-span-2" : ""}`}>
+                  <img
+                    src={image.image_url}
                     alt={`Gallery ${index + 1}`}
                     className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    style={{ minHeight: index === 0 ? '500px' : '250px' }}
+                    style={{ minHeight: index === 0 ? "500px" : "250px" }}
                   />
                 </div>
               ))}
@@ -245,14 +246,12 @@ export const ModernTemplate = ({
 
           {wedding.rsvp_deadline && (
             <div className="pt-8 border-t border-white/20">
-              <p className="text-template-small text-white/70 mb-2">
-                Kindly confirm your attendance before this date:
-              </p>
+              <p className="text-template-small text-white/70 mb-2">Kindly confirm your attendance before this date:</p>
               <p className="text-template-heading text-white">
-                {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
-                  year: 'numeric', 
-                  month: 'long', 
-                  day: 'numeric' 
+                {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
                 })}
               </p>
             </div>
