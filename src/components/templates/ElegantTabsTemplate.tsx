@@ -201,7 +201,7 @@ export const ElegantTabsTemplate = ({
 
       case "invitation":
         return (
-          <div className="space-y-6 text-center text-white" data-aos="fade-up" data-aos-delay="100">
+          <div className="space-y-6 text-center text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl">
               <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
@@ -290,8 +290,8 @@ export const ElegantTabsTemplate = ({
         );
       case "gifts":
         return (
-          <div className="space-y-6" data-aos="fade-up" data-aos-delay="100">
-            <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} />
+          <div className="space-y-6">
+            <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} data-aos="fade-up" data-aos-delay="100" />
           </div>
         );
       case "rsvp":
