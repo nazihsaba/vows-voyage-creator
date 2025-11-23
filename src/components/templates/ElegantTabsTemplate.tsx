@@ -208,28 +208,28 @@ export const ElegantTabsTemplate = ({
 
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
-                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex opacity-75">
+                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
                   <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                     <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
                       <Clock className="w-6 h-6 text-foreground" />
-                      <p className="text-black font-bold">{ceremony.time}</p>
+                      <p className="text-white font-bold">{ceremony.time}</p>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-xl font-bold text-black">Event Location</p>
-                      <p className="text-black">{ceremony.location_name}</p>
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{ceremony.location_name}</p>
                     </div>
                     {ceremony.location_link && (
                       <a
                         href={ceremony.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-black px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-white px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                       >
                         <MapPin className="w-5 h-5" />
-                        <span className="text-black">Google Maps</span>
+                        <span className="text-white">Google Maps</span>
                       </a>
                     )}
                   </div>
@@ -243,21 +243,21 @@ export const ElegantTabsTemplate = ({
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
                       <Clock className="w-6 h-6" />
-                      <p className="text-black font-bold">{venue.time}</p>
+                      <p className="text-white font-bold">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
-                      <p className="text-xl font-bold text-black">Event Location</p>
-                      <p className="text-black">{venue.location_name}</p>
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
                       <a
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white text-black"
+                        className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white text-white"
                       >
                         <MapPin className="w-5 h-5" />
-                        <span className="text-black">Google Maps</span>
+                        <span className="text-white">Google Maps</span>
                       </a>
                     )}
                   </div>
