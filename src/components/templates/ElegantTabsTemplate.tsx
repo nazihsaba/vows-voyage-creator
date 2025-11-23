@@ -202,7 +202,7 @@ export const ElegantTabsTemplate = ({
       case "invitation":
         return (
           <div className="space-y-6 text-center text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl" data-aos="fade-up" data-aos-delay="100">
               <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
           </div>
@@ -291,7 +291,9 @@ export const ElegantTabsTemplate = ({
       case "gifts":
         return (
           <div className="space-y-6">
-            <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} data-aos="fade-up" data-aos-delay="100" />
+            <div data-aos="fade-up" data-aos-delay="100">
+              <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} />
+            </div>
           </div>
         );
       case "rsvp":
@@ -421,7 +423,9 @@ export const ElegantTabsTemplate = ({
 
       {/* Content Container */}
       <div
-        className={`relative z-10 w-full h-full transition-opacity duration-300 ${isTransitioning ? "opacity-0" : "opacity-100"}`}
+        className={`relative z-10 w-full h-full transition-opacity duration-300 ${
+          isTransitioning ? "opacity-0" : "opacity-100"
+        }`}
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
