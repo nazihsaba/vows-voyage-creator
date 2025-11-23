@@ -58,7 +58,7 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
         <TimeUnit value={timeRemaining.minutes} label="Minutes" />
       </div>
       <div data-aos="fade-up" data-aos-delay="300">
-        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+        <TimeUnit value={timeRemaining.seconds} label="Seconds" className="text-xs" />
       </div>
     </div>
   );
