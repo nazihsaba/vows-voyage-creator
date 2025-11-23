@@ -260,7 +260,7 @@ export const VideoBackgroundTemplate = ({
                           href={ceremony.location_link}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 border-2 border-[hsl(54,20%,60%)] text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                          className="inline-flex items-center gap-2 border-2 border-primary text-foreground px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
                         >
                           <MapPin className="w-5 h-5" />
                           <span>Google Maps</span>
@@ -278,14 +278,14 @@ export const VideoBackgroundTemplate = ({
                     <div className="w-24 bg-primary flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
-                    <div className="flex-1 p-8 space-y-6">
+                    <div className="flex-1 p-6 space-y-6">
                       <div className="flex items-center gap-3">
-                        <Clock className="w-6 h-6" />
-                        <p className="text-template-body font-bold">{venue.time}</p>
+                        <Clock className="w-5 h-5" />
+                        <p className="text-template-body font-bold text-base">{venue.time}</p>
                       </div>
-                      <div className="space-y-3">
-                        <p className="text-xl font-bold">Event Location</p>
-                        <p className="text-template-body">{venue.location_name}</p>
+                      <div className="space-y-2">
+                        <p className="text-base font-bold">Event Location</p>
+                        <p className="text-template-body text-base">{venue.location_name}</p>
                       </div>
                       {venue.location_link && (
                         <a
