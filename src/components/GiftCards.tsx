@@ -54,9 +54,9 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
 
                     {/* RIGHT – Name + Number */}
                     <div className="flex-1 flex flex-col justify-center">
-                      <h3 className="text-lg font-semibold text-white">{card.card_name}</h3>
+                      <h3 className="text-lg font-semibold mb-1 text-foreground">{card.card_name}</h3>
 
-                      <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white mt-1 text-center">
+                      <p className="text-sm md:text-base font-mono bg-wedding-ivory rounded-lg inline-flex items-center justify-center md:justify-start">
                         {card.card_number}
                       </p>
                     </div>
