@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { EditableField } from "@/components/EditableField";
 import { EventLocation } from "@/components/EventLocation";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { GiftCards } from "@/components/GiftCards";
+import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Heart, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
