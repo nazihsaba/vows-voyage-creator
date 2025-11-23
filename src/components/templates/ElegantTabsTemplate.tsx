@@ -238,7 +238,7 @@ export const ElegantTabsTemplate = ({
                 </div>
               )}
               {venue && (
-                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/70 backdrop-blur-sm">
+                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
                   <div className="w-24 bg-white flex items-center justify-center">
                     <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Venue
