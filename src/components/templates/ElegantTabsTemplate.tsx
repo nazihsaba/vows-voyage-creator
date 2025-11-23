@@ -290,7 +290,7 @@ export const ElegantTabsTemplate = ({
         );
       case "gifts":
         return (
-          <div className="space-y-6" data-aos="fade-left" data-aos-delay="100">
+          <div className="space-y-6" data-aos="fade-up" data-aos-delay="100">
             <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} />
           </div>
         );
