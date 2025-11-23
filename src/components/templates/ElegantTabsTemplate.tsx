@@ -410,7 +410,7 @@ export const ElegantTabsTemplate = ({
           {/* Navigation */}
           {currentPage > 0 && (
             <div className="absolute bottom-8 left-0 right-0 flex justify-center items-center gap-4 px-4">
-              <Button
+              {/* <Button
                 onClick={goToPreviousPage}
                 variant="ghost"
                 size="icon"
@@ -418,7 +418,7 @@ export const ElegantTabsTemplate = ({
                 disabled={isTransitioning}
               >
                 <ChevronLeft className="w-6 h-6" />
-              </Button>
+              </Button> */}
 
               <div className="flex gap-2">
                 {PAGES.map((_, index) => (
@@ -440,7 +440,7 @@ export const ElegantTabsTemplate = ({
                   />
                 ))}
               </div>
-
+              {/* 
               {currentPage < PAGES.length - 1 && (
                 <Button
                   onClick={goToNextPage}
@@ -451,7 +451,7 @@ export const ElegantTabsTemplate = ({
                 >
                   <ChevronRight className="w-6 h-6" />
                 </Button>
-              )}
+              )} */}
             </div>
           )}
         </div>
