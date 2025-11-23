@@ -36,7 +36,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
         <div className="text-center mb-12">
           <Gift className="w-12 h-12 text-white mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-4">Wedding Gift</h2>
-          <p className="text-lg text-muted-foreground">For those who desire a wedding list is available</p>
+          <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
