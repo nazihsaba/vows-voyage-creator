@@ -154,7 +154,7 @@ export const VideoBackgroundTemplate = ({
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
                 <div className="space-y-4">
-                  <p className="text-template-small">Groom's Family</p>
+                  <p className="text-template-small">Groom's Familyyyyy</p>
                   <EditableField
                     fieldId="groom-family"
                     text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")}
