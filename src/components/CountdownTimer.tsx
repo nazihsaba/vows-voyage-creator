@@ -32,12 +32,8 @@ export const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center justify-center min-w-[80px] md:min-w-[100px]">
-      <div className="text-4xl md:text-6xl font-serif font-bold text-primary mb-2">
-        {value}
-      </div>
-      <div className="text-sm md:text-base uppercase tracking-widest text-muted-foreground">
-        {label}
-      </div>
+      <div className="text-4xl md:text-6xl font-serif font-bold text-white mb-2">{value}</div>
+      <div className="text-sm md:text-base uppercase tracking-widest text-muted-foreground">{label}</div>
     </div>
   );
 
