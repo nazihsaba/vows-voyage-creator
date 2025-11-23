@@ -228,7 +228,7 @@ export const ElegantTabsTemplate = ({
                         href={ceremony.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white"
+                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors"
                       >
                         <MapPin className="w-5 h-5" />
                         <span className="text-white">Google Maps</span>
@@ -258,7 +258,7 @@ export const ElegantTabsTemplate = ({
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors hover:bg-[hsl(54,20%,60%)] hover:text-white text-white"
+                        className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors text-white"
                       >
                         <MapPin className="w-5 h-5" />
                         <span className="text-white">Google Maps</span>
