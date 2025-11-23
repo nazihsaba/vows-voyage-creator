@@ -1,7 +1,10 @@
+import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Gift } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 interface GiftCard {
   id: string;
@@ -23,22 +26,34 @@ const getCardLogo = (cardName: string): string | undefined => {
 };
 
 export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsNoBackgroundProps) => {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+    });
+  }, []);
+
   if (!giftCards || giftCards.length === 0) return null;
 
   return (
     <section className="py-16 px-4">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
+        <div className="text-center mb-12" data-aos="fade-up">
           <Gift className="w-12 h-12 text-white mx-auto mb-4" />
           <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-4">Wedding Gift</h2>
           <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
-          {giftCards.map((card) => {
+          {giftCards.map((card, index) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (
-              <Card key={card.id} className="shadow-soft bg-white/10 backdrop-blur-sm">
+              <Card 
+                key={card.id} 
+                className="shadow-soft bg-white/10 backdrop-blur-sm"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
+              >
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
                     {/* LEFT — Image */}
