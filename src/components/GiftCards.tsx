@@ -28,10 +28,6 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
   return (
     <section className="py-16 px-4 bg-wedding-blush/20">
       <div className="max-w-4xl mx-auto">
-        <div className="text-center mb-12">
-          <p className="text-lg text-muted-foreground">For those who desire a wedding list is available</p>
-        </div>
-
         <div className="grid gap-6 md:grid-cols-2">
           {giftCards.map((card) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
