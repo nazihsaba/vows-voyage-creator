@@ -208,7 +208,7 @@ export const ElegantTabsTemplate = ({
 
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
-                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
+                <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex opacity-75">
                   <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                     <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                   </div>
