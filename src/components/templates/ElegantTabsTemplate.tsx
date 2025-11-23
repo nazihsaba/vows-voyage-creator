@@ -254,7 +254,7 @@ export const ElegantTabsTemplate = ({
               {venue && (
                 <div
                   className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
-                  data-aos="fade-up"
+                  data-aos="fade-left"
                   data-aos-delay="200"
                 >
                   <div className="w-24 bg-white flex items-center justify-center">
