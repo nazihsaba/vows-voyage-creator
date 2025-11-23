@@ -15,11 +15,6 @@ interface GiftCardsProps {
   isOwner?: boolean;
 }
 
-const maskCardNumber = (cardNumber: string): string => {
-  if (cardNumber.length <= 4) return "****";
-  return "****" + cardNumber.slice(-4);
-};
-
 const getCardLogo = (cardName: string): string | undefined => {
   const normalizedName = cardName.toLowerCase().trim();
   if (normalizedName.includes("omt")) return omtLogo;
@@ -61,13 +56,9 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
                     <div className="flex-1 flex flex-col justify-center">
                       <h3 className="text-lg font-semibold mb-1 text-foreground">{card.card_name}</h3>
 
-                      <p className="text-sm md:text-base font-mono bg-wedding-ivory px-4 py-2 rounded-lg inline-flex items-center justify-center md:justify-start">
-                        {isOwner ? card.card_number : maskCardNumber(card.card_number)}
+                      <p className="text-sm md:text-base font-mono bg-wedding-ivory rounded-lg inline-flex items-center justify-center md:justify-start">
+                        {card.card_number}
                       </p>
-
-                      {!isOwner && (
-                        <p className="text-xs text-muted-foreground mt-2">Only showing last 4 digits for security</p>
-                      )}
                     </div>
                   </div>
                 </CardContent>
