@@ -220,7 +220,7 @@ export const VideoBackgroundTemplate = ({
         {(ceremony || venue) && (
           <section className="flex items-center justify-center px-4 py-8">
             <div className="max-w-5xl w-full">
-              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl" data-aos="fade-up">
+              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
                   fieldId="events-subtitle"
@@ -236,7 +236,11 @@ export const VideoBackgroundTemplate = ({
 
               <div className="grid md:grid-cols-2 gap-6">
                 {ceremony && (
-                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex" data-aos="fade-up" data-aos-delay="100">
+                  <div
+                    className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
+                    data-aos="fade-left"
+                    data-aos-delay="100"
+                  >
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                         Ceremony
@@ -266,7 +270,11 @@ export const VideoBackgroundTemplate = ({
                   </div>
                 )}
                 {venue && (
-                  <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex" data-aos="fade-up" data-aos-delay="200">
+                  <div
+                    className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
+                    data-aos="fade-left"
+                    data-aos-delay="200"
+                  >
                     <div className="w-24 bg-[hsl(54,20%,60%)] flex items-center justify-center">
                       <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                     </div>
