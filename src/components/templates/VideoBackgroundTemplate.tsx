@@ -210,7 +210,7 @@ export const VideoBackgroundTemplate = ({
         {(ceremony || venue) && (
           <section className="flex items-center justify-center px-4 py-8">
             <div className="max-w-5xl w-full">
-              <div className="text-center mb-12 bg-white rounded-2xl px-4 shadow-2xl">
+              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
                 <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
                 <EditableField
                   fieldId="events-subtitle"
