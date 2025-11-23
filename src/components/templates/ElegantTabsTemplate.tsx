@@ -12,7 +12,7 @@ interface ElegantTabsTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
-  GiftCardsNoBackground: any[];
+  giftCards: any[];
   isOwner?: boolean;
   isPreview: boolean;
   onFieldUpdate: (fieldId: string, text: string, style: any) => void;
