@@ -29,8 +29,6 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
     <section className="py-16 px-4 bg-wedding-blush/20">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <Gift className="w-12 h-12 text-primary mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-primary mb-4">Wedding Gift</h2>
           <p className="text-lg text-muted-foreground">For those who desire a wedding list is available</p>
         </div>
 
