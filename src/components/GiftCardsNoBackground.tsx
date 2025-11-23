@@ -15,11 +15,6 @@ interface GiftCardsNoBackgroundProps {
   isOwner?: boolean;
 }
 
-const maskCardNumber = (cardNumber: string): string => {
-  if (cardNumber.length <= 4) return "****";
-  return "****" + cardNumber.slice(-4);
-};
-
 const getCardLogo = (cardName: string): string | undefined => {
   const normalizedName = cardName.toLowerCase().trim();
   if (normalizedName.includes("omt")) return omtLogo;
