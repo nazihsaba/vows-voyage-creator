@@ -300,7 +300,7 @@ export const VideoBackgroundTemplate = ({
 
         {/* RSVP Section */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <section className="min-h-screen flex items-center justify-center px-4 py-8">
+          <section className="flex items-center justify-center px-4 py-8">
             <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8">
               <EditableField
                 fieldId="rsvp-title"
