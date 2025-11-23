@@ -45,22 +45,33 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
             return (
               <Card key={card.id} className="shadow-soft bg-white/10 backdrop-blur-sm">
                 <CardContent className="p-6">
-                  {logoSrc && (
-                    <div className="mb-4 h-12 flex items-center justify-center">
-                      <img
-                        src={logoSrc}
-                        alt={card.card_name}
-                        className="max-h-full max-w-full object-contain rounded-[6px]"
-                      />
+                  <div className="flex items-center gap-4">
+                    {/* LEFT — Image */}
+                    {logoSrc && (
+                      <div className="h-16 w-16 flex items-center justify-center">
+                        <img
+                          src={logoSrc}
+                          alt={card.card_name}
+                          className="max-h-full max-w-full object-contain rounded-[6px]"
+                        />
+                      </div>
+                    )}
+
+                    {/* RIGHT — Title + Number */}
+                    <div className="flex flex-col justify-center">
+                      <h3 className="text-lg font-semibold text-white">{card.card_name}</h3>
+
+                      <p className="text-sm font-mono bg-wedding-ivory p-2 px-3 rounded-lg text-white mt-1 text-center">
+                        {isOwner ? card.card_number : maskCardNumber(card.card_number)}
+                      </p>
+
+                      {!isOwner && (
+                        <p className="text-[10px] text-white text-center mt-1">
+                          Only showing last 4 digits for security
+                        </p>
+                      )}
                     </div>
-                  )}
-                  <h3 className="text-xl font-semibold mb-2 text-center text-white">{card.card_name}</h3>
-                  <p className="text-center text-lg font-mono bg-wedding-ivory p-3 rounded-lg text-white">
-                    {isOwner ? card.card_number : maskCardNumber(card.card_number)}
-                  </p>
-                  {!isOwner && (
-                    <p className="text-xs text-center mt-2 text-white">Only showing last 4 digits for security</p>
-                  )}
+                  </div>
                 </CardContent>
               </Card>
             );
