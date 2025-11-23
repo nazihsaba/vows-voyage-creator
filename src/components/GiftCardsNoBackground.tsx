@@ -61,7 +61,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                     <div className="flex flex-col justify-center">
                       <h3 className="text-lg font-semibold text-white">{card.card_name}</h3>
 
-                      <p className="text-sm font-mono bg-wedding-ivory p-2 px-3 rounded-lg text-white mt-1 text-center">
+                      <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white mt-1 text-center">
                         {card.card_number}
                       </p>
                     </div>
