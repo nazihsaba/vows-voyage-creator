@@ -16,7 +16,6 @@ import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
-import BachelorTemplates from "./pages/BachelorTemplates";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,7 +34,6 @@ const App = () => (
           <Route path="/dashboard/manage-links/:weddingId" element={<ManageLinks />} />
           <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
           <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
-          <Route path="/dashboard/bachelor-templates" element={<BachelorTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
           <Route path="/dashboard/bachelor-form" element={<BachelorForm />} />
