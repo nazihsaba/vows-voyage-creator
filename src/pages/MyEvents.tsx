@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -308,7 +308,7 @@ const MyEvents = () => {
                                       onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
                                       title="View Invitation"
                                     >
-                                      <ExternalLink className="h-4 w-4" />
+                                      <Eye className="h-4 w-4" />
                                     </Button>
                                   )}
 
