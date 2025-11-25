@@ -244,7 +244,7 @@ const MyEvents = () => {
                                     <>
                                       <Button
                                         variant="outline"
-                                        className="w-full flex items-center justify-between"
+                                        className="w-full flex items-center justify-between rounded-full"
                                         onClick={() => {
                                           setSelectedWeddingId(wedding.id);
                                           setSelectedWeddingSlug(wedding.slug);
