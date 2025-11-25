@@ -9,6 +9,7 @@ import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
+import { BachelorFloralTemplate } from './BachelorFloralTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { ReactNode } from 'react';
@@ -137,6 +138,22 @@ export const TemplateRenderer = ({
   if (template.component === 'BachelorLeafyTemplate') {
     return (
       <BachelorLeafyTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+      />
+    );
+  }
+
+  if (template.component === 'BachelorFloralTemplate') {
+    return (
+      <BachelorFloralTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
