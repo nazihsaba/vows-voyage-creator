@@ -279,44 +279,52 @@ const MyEvents = () => {
                                 </>
                               )}
 
-                              <div className="flex justify-end gap-2 pt-2">
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => {
-                                    let editPath = `/dashboard/edit/${wedding.id}`;
-                                    if (wedding.template_type?.includes("bachelor")) {
-                                      editPath = `/dashboard/edit-bachelor/${wedding.id}`;
-                                    } else if (wedding.template_type?.includes("christmas")) {
-                                      editPath = `/dashboard/edit-christmas/${wedding.id}`;
-                                    } else if (wedding.template_type === "rose-gold-tabs") {
-                                      editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
-                                    }
-                                    navigate(editPath);
-                                  }}
-                                  title="Edit"
-                                >
-                                  <Edit className="w-4 h-4" />
-                                </Button>
-                                {wedding.status === "published" && (
+                              <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-dashed border-border/60 pt-3">
+                                <div className="inline-flex items-center gap-1 rounded-full bg-muted/70 px-2 py-1">
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
-                                    title="View Invitation"
+                                    className="h-8 w-8 rounded-full"
+                                    onClick={() => {
+                                      let editPath = `/dashboard/edit/${wedding.id}`;
+
+                                      if (wedding.template_type?.includes("bachelor")) {
+                                        editPath = `/dashboard/edit-bachelor/${wedding.id}`;
+                                      } else if (wedding.template_type?.includes("christmas")) {
+                                        editPath = `/dashboard/edit-christmas/${wedding.id}`;
+                                      } else if (wedding.template_type === "rose-gold-tabs") {
+                                        editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
+                                      }
+
+                                      navigate(editPath);
+                                    }}
+                                    title="Edit"
                                   >
-                                    <ExternalLink className="w-4 h-4" />
+                                    <Edit className="h-4 w-4" />
                                   </Button>
-                                )}
-                                <Button
-                                  variant="ghost"
-                                  size="icon"
-                                  onClick={() => setDeleteId(wedding.id)}
-                                  title="Delete"
-                                  className="text-destructive hover:text-destructive"
-                                >
-                                  <Trash2 className="w-4 h-4" />
-                                </Button>
+
+                                  {wedding.status === "published" && (
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 rounded-full"
+                                      onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
+                                      title="View Invitation"
+                                    >
+                                      <ExternalLink className="h-4 w-4" />
+                                    </Button>
+                                  )}
+
+                                  <Button
+                                    variant="ghost"
+                                    size="icon"
+                                    onClick={() => setDeleteId(wedding.id)}
+                                    title="Delete"
+                                    className="h-8 w-8 rounded-full text-destructive hover:text-destructive"
+                                  >
+                                    <Trash2 className="h-4 w-4" />
+                                  </Button>
+                                </div>
                               </div>
                             </div>
                           </CardContent>
