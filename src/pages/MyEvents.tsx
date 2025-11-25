@@ -193,7 +193,10 @@ const MyEvents = () => {
                     </div>
                     <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                       {events.map((wedding) => (
-                        <Card key={wedding.id} className={`shadow-soft hover:shadow-elegant transition-all relative`}>
+                        <Card
+                          key={wedding.id}
+                          className="shadow-soft hover:shadow-elegant transition-all relative rounded-[20px]"
+                        >
                           <CardHeader>
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
