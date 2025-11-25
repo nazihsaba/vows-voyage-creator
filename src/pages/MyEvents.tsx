@@ -195,162 +195,128 @@ const MyEvents = () => {
                       {events.map((wedding) => (
                         <Card
                           key={wedding.id}
-                          className={`group relative overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-background via-background to-muted/40 shadow-sm hover:-translate-y-0.5 hover:shadow-xl transition-all ${
-                            wedding.status === "published"
-                              ? "border-l-4 border-l-emerald-500"
-                              : "border-l-4 border-l-amber-500"
-                          }`}
+                          className={`shadow-soft hover:shadow-elegant transition-all relative ${wedding.status === "published" ? "border-l-4 border-l-green-500" : "border-l-4 border-l-amber-500"}`}
                         >
-                          <CardHeader className="pb-3">
-                            <div className="flex items-start justify-between gap-4">
-                              <div className="flex-1 space-y-2">
-                                <div className="inline-flex items-center gap-2 rounded-full bg-primary/5 px-3 py-1">
-                                  <span className="h-1.5 w-1.5 rounded-full bg-primary" />
-                                  <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-primary">
+                          <CardHeader>
+                            <div className="flex items-start justify-between">
+                              <div className="flex-1">
+                                <div className="mb-1">
+                                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
                                     {getEventType(wedding.template_type)}
                                   </span>
                                 </div>
-
-                                <CardTitle className="text-2xl font-serif tracking-tight">
-                                  {wedding.bride_name} &amp; {wedding.groom_name}
+                                <CardTitle className="text-xl font-serif">
+                                  {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
-
-                                <CardDescription className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
-                                  <span className="inline-flex items-center rounded-full bg-background/80 px-2.5 py-1">
-                                    {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-                                      year: "numeric",
-                                      month: "long",
-                                      day: "numeric",
-                                    })}
-                                  </span>
+                                <CardDescription>
+                                  {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                  })}
                                 </CardDescription>
                               </div>
-
                               <span
-                                className={`inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-medium ${
-                                  wedding.status === "published"
-                                    ? "border-emerald-200 bg-emerald-50 text-emerald-700"
-                                    : "border-amber-200 bg-amber-50 text-amber-700"
-                                }`}
+                                className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${wedding.status === "published" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}
                               >
                                 <span
-                                  className={`h-1.5 w-1.5 rounded-full ${
-                                    wedding.status === "published" ? "bg-emerald-500" : "bg-amber-500"
-                                  }`}
-                                />
-                                {wedding.status === "published" ? "Live Invitation" : "Draft"}
+                                  className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
+                                ></span>
+                                {wedding.status === "published" ? "Live" : "Draft"}
                               </span>
                             </div>
                           </CardHeader>
-
-                          <CardContent className="pb-4">
+                          <CardContent>
                             <div className="space-y-4">
-                              {/* Draft notice */}
                               {wedding.status === "draft" && (
-                                <div className="rounded-lg border border-amber-200 bg-amber-50/70 p-3 text-sm text-amber-900">
+                                <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-800">
                                   <p className="font-medium">Not published yet</p>
-                                  <p className="mt-1 text-xs text-amber-800/90">
-                                    Edit the details and publish to generate your invitation link.
-                                  </p>
+                                  <p className="text-xs mt-1">Edit and publish to generate invitation links</p>
                                 </div>
                               )}
 
-                              {/* Draft publish button */}
                               {wedding.status === "draft" && (
-                                <Button
-                                  className="w-full rounded-xl font-medium"
-                                  onClick={() => handlePublish(wedding.id)}
-                                >
+                                <Button className="w-full" onClick={() => handlePublish(wedding.id)}>
                                   Publish Event
                                 </Button>
                               )}
 
-                              {/* Published actions / bachelor preview */}
                               {wedding.status === "published" && (
                                 <>
                                   {!wedding.template_type?.includes("bachelor") ? (
-                                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                                    <>
                                       <Button
                                         variant="outline"
-                                        className="flex w-full items-center justify-between rounded-xl border-dashed"
+                                        className="w-full flex items-center justify-between"
                                         onClick={() => {
                                           setSelectedWeddingId(wedding.id);
                                           setSelectedWeddingSlug(wedding.slug);
                                           setGenerateLinkOpen(true);
                                         }}
                                       >
-                                        <span className="text-sm font-medium">Generate Invitation Link</span>
-                                        <Link2 className="h-4 w-4" />
+                                        <span>Generate Invitation Link</span>
+                                        <Link2 className="w-4 h-4" />
                                       </Button>
 
                                       <Button
                                         variant="outline"
-                                        className="flex w-full items-center justify-between rounded-xl"
+                                        className="w-full flex items-center justify-between"
                                         onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                                       >
-                                        <span className="text-sm font-medium">Manage Invitation Links</span>
-                                        <List className="h-4 w-4" />
+                                        <span>Manage invitation Links</span>
+                                        <List className="w-4 h-4" />
                                       </Button>
-                                    </div>
+                                    </>
                                   ) : wedding.main_picture_url ? (
-                                    <div className="relative overflow-hidden rounded-xl border border-border/70 bg-background/60">
+                                    <div className="relative rounded-lg overflow-hidden border border-border">
                                       <img
                                         src={wedding.main_picture_url}
                                         alt="Bachelor party card"
-                                        className="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                                        className="w-full h-48 object-cover"
                                       />
                                     </div>
                                   ) : null}
                                 </>
                               )}
 
-                              {/* Footer actions */}
-                              <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-dashed border-border/60 pt-3">
-                                <div className="inline-flex items-center gap-1 rounded-full bg-muted/70 px-2 py-1">
+                              <div className="flex justify-end gap-2 pt-2">
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => {
+                                    let editPath = `/dashboard/edit/${wedding.id}`;
+                                    if (wedding.template_type?.includes("bachelor")) {
+                                      editPath = `/dashboard/edit-bachelor/${wedding.id}`;
+                                    } else if (wedding.template_type?.includes("christmas")) {
+                                      editPath = `/dashboard/edit-christmas/${wedding.id}`;
+                                    } else if (wedding.template_type === "rose-gold-tabs") {
+                                      editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
+                                    }
+                                    navigate(editPath);
+                                  }}
+                                  title="Edit"
+                                >
+                                  <Edit className="w-4 h-4" />
+                                </Button>
+                                {wedding.status === "published" && (
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 rounded-full"
-                                    onClick={() => {
-                                      let editPath = `/dashboard/edit/${wedding.id}`;
-
-                                      if (wedding.template_type?.includes("bachelor")) {
-                                        editPath = `/dashboard/edit-bachelor/${wedding.id}`;
-                                      } else if (wedding.template_type?.includes("christmas")) {
-                                        editPath = `/dashboard/edit-christmas/${wedding.id}`;
-                                      } else if (wedding.template_type === "rose-gold-tabs") {
-                                        editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
-                                      }
-
-                                      navigate(editPath);
-                                    }}
-                                    title="Edit"
+                                    onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
+                                    title="View Invitation"
                                   >
-                                    <Edit className="h-4 w-4" />
+                                    <ExternalLink className="w-4 h-4" />
                                   </Button>
-
-                                  {wedding.status === "published" && (
-                                    <Button
-                                      variant="ghost"
-                                      size="icon"
-                                      className="h-8 w-8 rounded-full"
-                                      onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
-                                      title="View Invitation"
-                                    >
-                                      <ExternalLink className="h-4 w-4" />
-                                    </Button>
-                                  )}
-
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setDeleteId(wedding.id)}
-                                    title="Delete"
-                                    className="h-8 w-8 rounded-full text-destructive hover:text-destructive"
-                                  >
-                                    <Trash2 className="h-4 w-4" />
-                                  </Button>
-                                </div>
+                                )}
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  onClick={() => setDeleteId(wedding.id)}
+                                  title="Delete"
+                                  className="text-destructive hover:text-destructive"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </Button>
                               </div>
                             </div>
                           </CardContent>
