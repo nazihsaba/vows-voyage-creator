@@ -148,73 +148,73 @@ export const GenerateLinkDialog = ({
   };
 
   const handleDownloadTemplate = () => {
-    // Create sample data matching the user's format
+    // Create sample data with random example names
     const templateData = [
       {
-        DisplayName: "Hassan slim family",
+        DisplayName: "Smith Family",
         nbOfPersons: 3,
-        invitees: "marc",
+        invitees: "John Smith",
         side: "GROOM"
       },
       {
         DisplayName: "",
         nbOfPersons: "",
-        invitees: "mario",
+        invitees: "Sarah Smith",
         side: ""
       },
       {
         DisplayName: "",
         nbOfPersons: "",
-        invitees: "rita",
+        invitees: "Emily Smith",
         side: ""
       },
       {
-        DisplayName: "nibal slim",
+        DisplayName: "Johnson Couple",
         nbOfPersons: 2,
-        invitees: "nibal",
+        invitees: "Michael Johnson",
+        side: "BRIDE"
+      },
+      {
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "Lisa Johnson",
+        side: ""
+      },
+      {
+        DisplayName: "Williams Family",
+        nbOfPersons: 4,
+        invitees: "David Williams",
         side: "GROOM"
       },
       {
         DisplayName: "",
         nbOfPersons: "",
-        invitees: "slim",
-        side: ""
-      },
-      {
-        DisplayName: "mohamad el hout family",
-        nbOfPersons: 4,
-        invitees: "mohamad",
-        side: "BRIDE"
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "ali",
+        invitees: "Emma Williams",
         side: ""
       },
       {
         DisplayName: "",
         nbOfPersons: "",
-        invitees: "maki",
+        invitees: "Oliver Williams",
         side: ""
       },
       {
         DisplayName: "",
         nbOfPersons: "",
-        invitees: "mira",
+        invitees: "Sophia Williams",
         side: ""
       },
       {
-        DisplayName: "Ziad El hout",
+        DisplayName: "Robert Brown",
         nbOfPersons: 1,
-        invitees: "ziad",
+        invitees: "Robert Brown",
         side: "BRIDE"
       },
       {
-        DisplayName: "Saleem El Jundi",
+        DisplayName: "Jennifer Davis",
         nbOfPersons: 1,
-        invitees: "saleem",
-        side: "BRIDE"
+        invitees: "Jennifer Davis",
+        side: "GROOM"
       }
     ];
 
