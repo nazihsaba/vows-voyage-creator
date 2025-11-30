@@ -8,10 +8,8 @@ const corsHeaders = {
 
 interface InviteeRequest {
   invitation_link_id: string;
-  invitees: Array<{
-    name: string;
-    is_attending?: boolean;
-  }>;
+  name: string;
+  is_attending?: boolean;
 }
 
 serve(async (req) => {
@@ -38,14 +36,14 @@ serve(async (req) => {
 
     // Parse request body
     const body: InviteeRequest = await req.json();
-    const { invitation_link_id, invitees } = body;
+    const { invitation_link_id, name, is_attending } = body;
 
     // Validate required fields
-    if (!invitation_link_id || !invitees || !Array.isArray(invitees)) {
-      console.error('Missing required fields:', { invitation_link_id, invitees });
+    if (!invitation_link_id || !name) {
+      console.error('Missing required fields:', { invitation_link_id, name });
       return new Response(
         JSON.stringify({ 
-          error: 'Missing required fields: invitation_link_id and invitees array are required' 
+          error: 'Missing required fields: invitation_link_id and name are required' 
         }),
         {
           status: 400,
@@ -54,10 +52,10 @@ serve(async (req) => {
       );
     }
 
-    // Validate invitees array
-    if (invitees.length === 0) {
+    // Validate name
+    if (typeof name !== 'string' || name.trim().length === 0) {
       return new Response(
-        JSON.stringify({ error: 'invitees array cannot be empty' }),
+        JSON.stringify({ error: 'name must be a non-empty string' }),
         {
           status: 400,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -65,17 +63,14 @@ serve(async (req) => {
       );
     }
 
-    // Validate each invitee
-    for (const invitee of invitees) {
-      if (!invitee.name || typeof invitee.name !== 'string') {
-        return new Response(
-          JSON.stringify({ error: 'Each invitee must have a valid name' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
-      }
+    if (name.length > 200) {
+      return new Response(
+        JSON.stringify({ error: 'name must be less than 200 characters' }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        }
+      );
     }
 
     // Initialize Supabase client with service role
@@ -101,26 +96,27 @@ serve(async (req) => {
       );
     }
 
-    // Prepare invitees data for insertion
-    const inviteesData = invitees.map(invitee => ({
+    // Prepare invitee data for insertion
+    const inviteeData = {
       invitation_link_id,
-      name: invitee.name,
-      is_attending: invitee.is_attending ?? null,
-    }));
+      name: name.trim(),
+      is_attending: is_attending ?? null,
+    };
 
-    console.log(`Inserting ${inviteesData.length} invitees for link ${invitation_link_id}`);
+    console.log(`Inserting invitee ${name} for link ${invitation_link_id}`);
 
-    // Insert invitees into the database
-    const { data: insertedInvitees, error: insertError } = await supabase
+    // Insert invitee into the database
+    const { data: insertedInvitee, error: insertError } = await supabase
       .from('invitees')
-      .insert(inviteesData)
-      .select();
+      .insert([inviteeData])
+      .select()
+      .single();
 
     if (insertError) {
-      console.error('Error creating invitees:', insertError);
+      console.error('Error creating invitee:', insertError);
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to create invitees', 
+          error: 'Failed to create invitee', 
           details: insertError.message 
         }),
         {
@@ -130,14 +126,13 @@ serve(async (req) => {
       );
     }
 
-    console.log(`Successfully created ${insertedInvitees?.length || 0} invitees`);
+    console.log(`Successfully created invitee: ${insertedInvitee?.id}`);
 
     // Return success response
     return new Response(
       JSON.stringify({
         success: true,
-        created_count: insertedInvitees?.length || 0,
-        invitees: insertedInvitees,
+        invitee: insertedInvitee,
       }),
       {
         status: 200,
