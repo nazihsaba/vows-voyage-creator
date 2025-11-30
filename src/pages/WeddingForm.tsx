@@ -307,7 +307,9 @@ const WeddingForm = () => {
 
       // Upload new audio if selected
       if (audioFile) {
-        audioUrl = await uploadImage(audioFile as File, user.id);
+        // Convert Blob to File with a proper name
+        const audioFileWithName = new File([audioFile], 'audio.wav', { type: 'audio/wav' });
+        audioUrl = await uploadImage(audioFileWithName, user.id);
       }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
