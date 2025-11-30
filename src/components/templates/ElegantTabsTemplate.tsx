@@ -239,14 +239,16 @@ export const ElegantTabsTemplate = ({
               />
             </div>
 
-            <Button
-              onClick={handleStartClick}
-              size="lg"
-              variant="outline"
-              className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-12 py-6 text-lg rounded-full"
-            >
-              START
-            </Button>
+            {!hasStarted && (
+              <Button
+                onClick={handleStartClick}
+                size="lg"
+                variant="outline"
+                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-12 py-6 text-lg rounded-full"
+              >
+                START
+              </Button>
+            )}
           </div>
         );
 
