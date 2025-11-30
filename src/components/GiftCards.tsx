@@ -37,7 +37,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
                   <div className="flex items-center gap-4">
                     {/* LEFT – Logo */}
                     {logoSrc && (
-                      <div className="h-16 w-16 flex items-center justify-center">
+                      <div className="h-8 w-8 flex items-center justify-center">
                         <img
                           src={logoSrc}
                           alt={card.card_name}
