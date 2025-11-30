@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift } from "lucide-react";
+import { Gift, Copy } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AOS from "aos";
 import "aos/dist/aos.css";
+import { useToast } from "@/hooks/use-toast";
 
 interface GiftCard {
   id: string;
@@ -26,6 +27,8 @@ const getCardLogo = (cardName: string): string | undefined => {
 };
 
 export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsNoBackgroundProps) => {
+  const { toast } = useToast();
+  
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -34,6 +37,14 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
   }, []);
 
   if (!giftCards || giftCards.length === 0) return null;
+
+  const copyToClipboard = (cardNumber: string, cardName: string) => {
+    navigator.clipboard.writeText(cardNumber);
+    toast({
+      title: "Copied!",
+      description: `${cardName} number copied to clipboard`,
+    });
+  };
 
   return (
     <section className="py-16 px-4">
@@ -68,12 +79,18 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                     )}
 
                     {/* RIGHT — Title + Number */}
-                    <div className="flex flex-col justify-center">
+                    <div className="flex-1 flex flex-col justify-center">
                       <div className="text-sm font-semibold text-white">{card.card_name}</div>
 
-                      <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white mt-1 text-center">
-                        {card.card_number}
-                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white">
+                          {card.card_number}
+                        </p>
+                        <Copy 
+                          className="h-4 w-4 cursor-pointer text-white/70 hover:text-white transition-colors" 
+                          onClick={() => copyToClipboard(card.card_number, card.card_name)}
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
