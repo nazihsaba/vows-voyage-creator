@@ -54,8 +54,13 @@ export const AnthonyOdileTemplate = ({
 
   const handleStart = () => {
     setHasStarted(true);
-    if (audioRef.current) {
-      audioRef.current.play();
+    if (audioRef.current && wedding.audio_url) {
+      const audio = audioRef.current;
+      // Set start time if specified
+      if (wedding.audio_start_time) {
+        audio.currentTime = wedding.audio_start_time;
+      }
+      audio.play().catch(err => console.error('Error playing audio:', err));
     }
     // Smooth scroll to next section
     document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
@@ -77,13 +82,28 @@ export const AnthonyOdileTemplate = ({
     };
   }, []);
 
+  // Handle audio time updates to loop within trimmed range
+  const handleTimeUpdate = () => {
+    if (audioRef.current && wedding.audio_end_time) {
+      if (audioRef.current.currentTime >= wedding.audio_end_time) {
+        audioRef.current.currentTime = wedding.audio_start_time || 0;
+      }
+    }
+  };
+
   return (
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif">
       {/* Hidden audio element */}
-      <audio ref={audioRef} loop>
-        <source src="/wedding-music.mp3" type="audio/mpeg" />
-        Your browser does not support the audio element.
-      </audio>
+      {wedding.audio_url && (
+        <audio 
+          ref={audioRef} 
+          loop 
+          onTimeUpdate={handleTimeUpdate}
+        >
+          <source src={wedding.audio_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      )}
 
       {/* Hero Section - Fullscreen */}
       <section
