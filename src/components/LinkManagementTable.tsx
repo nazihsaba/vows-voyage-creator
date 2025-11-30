@@ -105,7 +105,11 @@ export const LinkManagementTable = ({
   };
 
   const handleCopyLink = (link: InvitationLink) => {
-    const url = `${window.location.origin}/invite/${weddingSlug}/${link.unique_slug}/${link.number_of_persons}`;
+    const sanitizedLinkName = link.link_name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    const url = `${window.location.origin}/invite/${link.unique_slug}/${sanitizedLinkName}/${link.number_of_persons}`;
     navigator.clipboard.writeText(url);
     toast({
       title: "Success",
