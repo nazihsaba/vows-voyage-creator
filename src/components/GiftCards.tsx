@@ -33,7 +33,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (
               <Card key={card.id} className="shadow-soft">
-                <CardContent className="p-6">
+                <CardContent className="p-3">
                   <div className="flex items-center gap-4">
                     {/* LEFT – Logo */}
                     {logoSrc && (
@@ -48,7 +48,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
 
                     {/* RIGHT – Name + Number */}
                     <div className="flex-1 flex flex-col justify-center">
-                      <div className="text-lg font-semibold mb-1 text-foreground">{card.card_name}</div>
+                      <div className="text-md font-semibold mb-1 text-foreground">{card.card_name}</div>
 
                       <p className="text-sm md:text-base font-mono bg-wedding-ivory rounded-lg inline-flex items-center">
                         {card.card_number}
