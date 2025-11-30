@@ -127,6 +127,14 @@ export const VideoBackgroundTemplate = ({
         console.log("Audio playback failed:", err);
       }
     }
+
+    // Smooth scroll to next section
+    setTimeout(() => {
+      document.getElementById("family-section")?.scrollIntoView({ 
+        behavior: "smooth",
+        block: "start"
+      });
+    }, 300);
   };
 
   return (
@@ -229,7 +237,7 @@ export const VideoBackgroundTemplate = ({
         </section>
 
         {/* Family Names Section */}
-        <section className="flex items-center justify-center px-4 py-8">
+        <section id="family-section" className="flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl op" data-aos="zoom-in">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
