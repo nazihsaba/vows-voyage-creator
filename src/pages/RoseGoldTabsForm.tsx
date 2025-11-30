@@ -208,9 +208,12 @@ const RoseGoldTabsForm = () => {
         videoUrl = await uploadImage(videoFile, user.id);
       }
 
-      // Upload new audio if selected
+      // Upload new audio if selected, or clear if removed
       if (audioFile) {
         uploadedAudioUrl = await uploadImage(audioFile, user.id);
+      } else if (!audioUrl) {
+        // Audio was removed, clear it
+        uploadedAudioUrl = null;
       }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
@@ -226,8 +229,8 @@ const RoseGoldTabsForm = () => {
             main_picture_url: imageUrl, 
             video_url: videoUrl,
             audio_url: uploadedAudioUrl,
-            audio_start_time: audioStartTime,
-            audio_end_time: audioEndTime
+            audio_start_time: uploadedAudioUrl ? audioStartTime : null,
+            audio_end_time: uploadedAudioUrl ? audioEndTime : null
           })
           .eq("id", id);
 
@@ -552,6 +555,12 @@ const RoseGoldTabsForm = () => {
                     setAudioUrl(url);
                     setAudioStartTime(startTime);
                     setAudioEndTime(endTime);
+                  }}
+                  onAudioRemoved={() => {
+                    setAudioFile(null);
+                    setAudioUrl("");
+                    setAudioStartTime(0);
+                    setAudioEndTime(0);
                   }}
                   initialAudioUrl={audioUrl}
                   initialStartTime={audioStartTime}

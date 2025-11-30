@@ -6,6 +6,7 @@ import { Loader2, Upload, X } from "lucide-react";
 
 interface AudioTrimFieldProps {
   onAudioTrimmed: (blob: Blob, startTime: number, endTime: number) => void;
+  onAudioRemoved?: () => void;
   initialAudioUrl?: string;
   initialStartTime?: number;
   initialEndTime?: number;
@@ -13,6 +14,7 @@ interface AudioTrimFieldProps {
 
 const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
   onAudioTrimmed,
+  onAudioRemoved,
   initialAudioUrl,
   initialStartTime = 0,
   initialEndTime = 0,
@@ -169,6 +171,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
     setDuration(0);
     setStartTime(0);
     setEndTime(0);
+    onAudioRemoved?.();
   };
 
   return (
