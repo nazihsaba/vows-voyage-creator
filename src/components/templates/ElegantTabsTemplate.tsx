@@ -127,29 +127,19 @@ export const ElegantTabsTemplate = ({
   };
 
   // Handle start button click
-  const handleStartClick = () => {
+  const handleStartClick = async () => {
     setHasStarted(true);
     goToNextPage();
     
     // Play audio if available
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
-      audio.load(); // Ensure audio is loaded
       audio.currentTime = wedding.audio_start_time || 0;
       
-      // Wait for audio to be ready before playing
-      const playAudio = () => {
-        audio.play().catch(err => {
-          console.log("Audio playback failed:", err);
-        });
-      };
-      
-      if (audio.readyState >= 2) {
-        // Audio is already loaded enough to play
-        playAudio();
-      } else {
-        // Wait for audio to be ready
-        audio.addEventListener('canplay', playAudio, { once: true });
+      try {
+        await audio.play();
+      } catch (err) {
+        console.log("Audio playback failed:", err);
       }
     }
   };
