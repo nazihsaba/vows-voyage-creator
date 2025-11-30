@@ -1,7 +1,8 @@
 import { Card, CardContent } from "@/components/ui/card";
-import { Gift } from "lucide-react";
+import { Gift, Copy } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
+import { useToast } from "@/hooks/use-toast";
 
 interface GiftCard {
   id: string;
@@ -23,7 +24,17 @@ const getCardLogo = (cardName: string): string | undefined => {
 };
 
 export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
+  const { toast } = useToast();
+  
   if (!giftCards || giftCards.length === 0) return null;
+
+  const copyToClipboard = (cardNumber: string, cardName: string) => {
+    navigator.clipboard.writeText(cardNumber);
+    toast({
+      title: "Copied!",
+      description: `${cardName} number copied to clipboard`,
+    });
+  };
 
   return (
     <section className="py-4 px-2 bg-wedding-blush/20">
@@ -50,9 +61,15 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
                     <div className="flex-1 flex flex-col justify-center">
                       <div className="text-md font-semibold mb-1 text-foreground">{card.card_name}</div>
 
-                      <p className="text-sm md:text-sm font-mono bg-wedding-ivory rounded-lg inline-flex items-center">
-                        {card.card_number}
-                      </p>
+                      <div className="flex items-center gap-2">
+                        <p className="text-sm md:text-sm font-mono bg-wedding-ivory rounded-lg inline-flex items-center">
+                          {card.card_number}
+                        </p>
+                        <Copy 
+                          className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors" 
+                          onClick={() => copyToClipboard(card.card_number, card.card_name)}
+                        />
+                      </div>
                     </div>
                   </div>
                 </CardContent>
