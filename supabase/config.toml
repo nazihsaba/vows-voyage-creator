@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.n8n-create-invitees]
 verify_jwt = false
+
+[functions.create-invitation-link]
+verify_jwt = false
