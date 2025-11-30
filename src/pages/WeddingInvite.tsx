@@ -236,12 +236,22 @@ const WeddingInvite = () => {
 
         // Fetch invitees if linkSlug is provided
         if (linkSlug && weddingData?.id) {
-          const { data: linkData } = await (supabase as any)
+          // For personalized links with slug/linkSlug/numberOfPersons format
+          // First get all links for this wedding with matching unique_slug
+          const { data: allLinks } = await (supabase as any)
             .from("invitation_links")
-            .select("id")
+            .select("*")
             .eq("wedding_id", weddingData.id)
-            .eq("unique_slug", linkSlug)
-            .single();
+            .eq("unique_slug", slug);
+
+          // Find the link that matches the sanitized link name
+          const linkData = allLinks?.find((link: any) => {
+            const sanitizedLinkName = link.link_name
+              .toLowerCase()
+              .replace(/[^a-z0-9]+/g, '-')
+              .replace(/^-+|-+$/g, '');
+            return sanitizedLinkName === linkSlug;
+          });
 
           if (linkData) {
             const { data: inviteesData } = await (supabase as any)
