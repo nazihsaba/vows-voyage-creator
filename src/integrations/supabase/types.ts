@@ -91,7 +91,6 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          invitation_url: string | null
           link_name: string
           number_of_persons: number
           unique_slug: string
@@ -100,7 +99,6 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          invitation_url?: string | null
           link_name: string
           number_of_persons?: number
           unique_slug: string
@@ -109,7 +107,6 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          invitation_url?: string | null
           link_name?: string
           number_of_persons?: number
           unique_slug?: string

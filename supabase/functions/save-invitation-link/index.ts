@@ -82,20 +82,6 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Sanitize link_name for URL (remove spaces and special characters)
-    const sanitizedLinkName = link_name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
-
-    // Generate invitation URL: /invite/unique_slug/sanitized_link_name/number_of_persons
-    const baseUrl = Deno.env.get('SUPABASE_URL')?.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://vows-voyage-creator.lovable.app') || 'https://vows-voyage-creator.lovable.app';
-    const invitation_url = `${baseUrl}/invite/${unique_slug}/${sanitizedLinkName}/${number_of_persons}`;
-    
-    console.log('Generated invitation URL:', invitation_url);
-
-    // Note: Duplicate slugs are now allowed in invitation_links table
-
     console.log('Inserting invitation link with slug:', unique_slug);
 
     // Insert invitation link
@@ -105,8 +91,7 @@ Deno.serve(async (req) => {
         wedding_id,
         link_name,
         unique_slug,
-        number_of_persons,
-        invitation_url
+        number_of_persons
       })
       .select()
       .single();
@@ -136,8 +121,7 @@ Deno.serve(async (req) => {
           wedding_id: invitationLink.wedding_id,
           link_name: invitationLink.link_name,
           unique_slug: invitationLink.unique_slug,
-          number_of_persons: invitationLink.number_of_persons,
-          invitation_url: invitationLink.invitation_url
+          number_of_persons: invitationLink.number_of_persons
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
