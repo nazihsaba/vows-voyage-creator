@@ -201,9 +201,9 @@ const MyEvents = () => {
                             <div className="flex items-start justify-between">
                               <div className="flex-1">
                                 <div className="mb-1">
-                                  <span className="text-xs font-semibold text-primary uppercase tracking-wide">
+                                  {/* <span className="text-xs font-semibold text-primary uppercase tracking-wide">
                                     {getEventType(wedding.template_type)}
-                                  </span>
+                                  </span> */}
                                 </div>
                                 <CardTitle className="text-xl font-serif">
                                   {wedding.bride_name} & {wedding.groom_name}
