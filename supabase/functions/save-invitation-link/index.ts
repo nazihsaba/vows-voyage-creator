@@ -10,7 +10,6 @@ interface SaveInvitationRequest {
   link_name: string;
   unique_slug: string;
   number_of_persons: number;
-  invitation_url: string;
 }
 
 Deno.serve(async (req) => {
@@ -34,14 +33,14 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const body: SaveInvitationRequest = await req.json();
-    const { wedding_id, link_name, unique_slug, number_of_persons, invitation_url } = body;
+    const { wedding_id, link_name, unique_slug, number_of_persons } = body;
 
     // Validate required fields
-    if (!wedding_id || !link_name || !unique_slug || !number_of_persons || !invitation_url) {
+    if (!wedding_id || !link_name || !unique_slug || !number_of_persons) {
       return new Response(
         JSON.stringify({ 
           error: 'Validation error', 
-          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons, invitation_url' 
+          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons' 
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -65,10 +64,10 @@ Deno.serve(async (req) => {
 
     console.log('Validating wedding_id:', wedding_id);
 
-    // Verify wedding exists
+    // Verify wedding exists and get its slug
     const { data: wedding, error: weddingError } = await supabase
       .from('weddings')
-      .select('id')
+      .select('id, slug')
       .eq('id', wedding_id)
       .single();
 
@@ -82,6 +81,12 @@ Deno.serve(async (req) => {
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
+
+    // Generate invitation URL
+    const baseUrl = Deno.env.get('SUPABASE_URL')?.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://vows-voyage-creator.lovable.app') || 'https://vows-voyage-creator.lovable.app';
+    const invitation_url = `${baseUrl}/invite/${wedding.slug}/${link_name}/${unique_slug}`;
+    
+    console.log('Generated invitation URL:', invitation_url);
 
     // Note: Duplicate slugs are now allowed in invitation_links table
 
