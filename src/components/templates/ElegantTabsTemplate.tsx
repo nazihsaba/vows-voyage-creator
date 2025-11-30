@@ -51,6 +51,7 @@ export const ElegantTabsTemplate = ({
 }: ElegantTabsTemplateProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
@@ -95,7 +96,7 @@ export const ElegantTabsTemplate = ({
   };
 
   const handleTouchEnd = () => {
-    if (!isTransitioning) {
+    if (!isTransitioning && hasStarted) {
       const swipeDistance = touchStartX.current - touchEndX.current;
       const minSwipeDistance = 50;
 
@@ -117,42 +118,55 @@ export const ElegantTabsTemplate = ({
     });
   }, []);
 
-  // Audio playback effect
-  useEffect(() => {
-    const startButton = document.getElementById("start-button");
-    
-    const handleStartClick = () => {
-      if (wedding.audio_url && audioRef.current) {
-        audioRef.current.currentTime = wedding.audio_start_time || 0;
-        audioRef.current.play().catch(err => {
-          console.log("Audio playback failed:", err);
-        });
-      }
-    };
+  // Handle audio time updates to loop within trimmed range
+  const handleTimeUpdate = () => {
+    const audio = audioRef.current;
+    if (audio && wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
+      audio.currentTime = wedding.audio_start_time || 0;
+    }
+  };
 
-    if (startButton) {
-      startButton.addEventListener("click", handleStartClick);
+  // Handle start button click
+  const handleStartClick = () => {
+    setHasStarted(true);
+    goToNextPage();
+    
+    // Play audio if available
+    if (wedding.audio_url && audioRef.current) {
+      audioRef.current.currentTime = wedding.audio_start_time || 0;
+      audioRef.current.play().catch(err => {
+        console.log("Audio playback failed:", err);
+      });
+    }
+  };
+
+  // Lock/unlock scroll based on hasStarted
+  useEffect(() => {
+    if (!hasStarted) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
     }
 
     return () => {
-      if (startButton) {
-        startButton.removeEventListener("click", handleStartClick);
-      }
+      document.body.style.overflow = 'auto';
     };
-  }, [wedding.audio_url, wedding.audio_start_time]);
+  }, [hasStarted]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "ArrowRight") {
-        goToNextPage();
-      } else if (e.key === "ArrowLeft") {
-        goToPreviousPage();
+      if (hasStarted) {
+        if (e.key === "ArrowRight") {
+          goToNextPage();
+        } else if (e.key === "ArrowLeft") {
+          goToPreviousPage();
+        }
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [currentPage, isTransitioning]);
+  }, [currentPage, isTransitioning, hasStarted]);
 
   const renderPage = () => {
     const pageId = PAGES[currentPage].id;
@@ -214,11 +228,10 @@ export const ElegantTabsTemplate = ({
             </div>
 
             <Button
-              onClick={goToNextPage}
+              onClick={handleStartClick}
               size="lg"
               variant="outline"
               className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-12 py-6 text-lg rounded-full"
-              id="start-button"
             >
               START
             </Button>
@@ -432,13 +445,7 @@ export const ElegantTabsTemplate = ({
         <audio
           ref={audioRef}
           src={wedding.audio_url}
-          loop
-          onTimeUpdate={(e) => {
-            const audio = e.currentTarget;
-            if (wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
-              audio.currentTime = wedding.audio_start_time || 0;
-            }
-          }}
+          onTimeUpdate={handleTimeUpdate}
         />
       )}
       
