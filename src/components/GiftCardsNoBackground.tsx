@@ -58,7 +58,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                   <div className="flex items-center gap-4">
                     {/* LEFT — Image */}
                     {logoSrc && (
-                      <div className="h-16 w-16 flex items-center justify-center">
+                      <div className="h-8 w-8 flex items-center justify-center">
                         <img
                           src={logoSrc}
                           alt={card.card_name}
@@ -69,7 +69,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
 
                     {/* RIGHT — Title + Number */}
                     <div className="flex flex-col justify-center">
-                      <h3 className="text-lg font-semibold text-white">{card.card_name}</h3>
+                      <div className="text-md font-semibold text-white">{card.card_name}</div>
 
                       <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white mt-1 text-center">
                         {card.card_number}
