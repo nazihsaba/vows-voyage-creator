@@ -88,9 +88,9 @@ Deno.serve(async (req) => {
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
 
-    // Generate invitation URL using number_of_persons
+    // Generate invitation URL: /invite/unique_slug/sanitized_link_name/number_of_persons
     const baseUrl = Deno.env.get('SUPABASE_URL')?.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://vows-voyage-creator.lovable.app') || 'https://vows-voyage-creator.lovable.app';
-    const invitation_url = `${baseUrl}/invite/${wedding.slug}/${sanitizedLinkName}/${number_of_persons}`;
+    const invitation_url = `${baseUrl}/invite/${unique_slug}/${sanitizedLinkName}/${number_of_persons}`;
     
     console.log('Generated invitation URL:', invitation_url);
 
