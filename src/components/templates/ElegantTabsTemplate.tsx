@@ -130,20 +130,20 @@ export const ElegantTabsTemplate = ({
   const handleStartClick = async () => {
     setHasStarted(true);
     goToNextPage();
-    
+
     // Play audio if available
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
       const startTime = wedding.audio_start_time || 0;
-      
+
       // If we need to seek, wait for the seek to complete before playing
       if (startTime > 0) {
         audio.currentTime = startTime;
         await new Promise<void>((resolve) => {
-          audio.addEventListener('seeked', () => resolve(), { once: true });
+          audio.addEventListener("seeked", () => resolve(), { once: true });
         });
       }
-      
+
       try {
         await audio.play();
       } catch (err) {
@@ -155,13 +155,13 @@ export const ElegantTabsTemplate = ({
   // Lock/unlock scroll based on hasStarted
   useEffect(() => {
     if (!hasStarted) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [hasStarted]);
 
@@ -305,7 +305,7 @@ export const ElegantTabsTemplate = ({
               {venue && (
                 <div
                   className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
-                  data-aos="fade-left"
+                  data-aos="fade-right"
                   data-aos-delay="200"
                 >
                   <div className="w-24 bg-white flex items-center justify-center">
@@ -454,14 +454,9 @@ export const ElegantTabsTemplate = ({
     <div className="relative w-full h-screen overflow-hidden">
       {/* Hidden audio element for background music */}
       {wedding.audio_url && (
-        <audio
-          ref={audioRef}
-          src={wedding.audio_url}
-          preload="auto"
-          onTimeUpdate={handleTimeUpdate}
-        />
+        <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
-      
+
       {/* Video/Image Background */}
       <div className="absolute inset-0 z-0">
         {wedding.video_url ? (
