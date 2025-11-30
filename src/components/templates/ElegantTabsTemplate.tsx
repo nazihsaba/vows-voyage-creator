@@ -134,7 +134,15 @@ export const ElegantTabsTemplate = ({
     // Play audio if available
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
-      audio.currentTime = wedding.audio_start_time || 0;
+      const startTime = wedding.audio_start_time || 0;
+      
+      // If we need to seek, wait for the seek to complete before playing
+      if (startTime > 0) {
+        audio.currentTime = startTime;
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('seeked', () => resolve(), { once: true });
+        });
+      }
       
       try {
         await audio.play();

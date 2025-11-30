@@ -43,7 +43,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Number.isFinite(d) ? d : 0);
+      setEndTime(Number.isFinite(d) ? Math.max(0, d - 1) : 0);
     }
   };
 
