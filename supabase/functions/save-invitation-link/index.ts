@@ -119,7 +119,9 @@ Deno.serve(async (req) => {
       JSON.stringify({
         success: true,
         message: 'Invitation link saved successfully',
+        link_id: invitationLink.id,
         data: {
+          id: invitationLink.id,
           wedding_id: invitationLink.wedding_id,
           link_name: invitationLink.link_name,
           unique_slug: invitationLink.unique_slug,
