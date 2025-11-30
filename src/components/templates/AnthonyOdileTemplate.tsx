@@ -52,14 +52,20 @@ export const AnthonyOdileTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  const handleStart = () => {
+  const handleStart = async () => {
     setHasStarted(true);
     if (audioRef.current && wedding.audio_url) {
       const audio = audioRef.current;
-      // Set start time if specified
-      if (wedding.audio_start_time) {
-        audio.currentTime = wedding.audio_start_time;
+      const startTime = wedding.audio_start_time || 0;
+      
+      // If we need to seek, wait for the seek to complete before playing
+      if (startTime > 0) {
+        audio.currentTime = startTime;
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('seeked', () => resolve(), { once: true });
+        });
       }
+      
       audio.play().catch(err => console.error('Error playing audio:', err));
     }
     // Smooth scroll to next section
