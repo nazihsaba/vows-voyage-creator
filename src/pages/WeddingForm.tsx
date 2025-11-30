@@ -685,6 +685,7 @@ const WeddingForm = () => {
 
               {/* Audio Trim Field */}
               <AudioTrimField
+                key={`audio-${id}-${formData.audio_url}`}
                 onAudioTrimmed={(blob, startTime, endTime) => {
                   setAudioFile(blob);
                   setAudioTrimSettings({ startTime, endTime });
