@@ -305,11 +305,14 @@ const WeddingForm = () => {
         videoUrl = await uploadImage(videoFile, user.id);
       }
 
-      // Upload new audio if selected
+      // Upload new audio if selected, or clear if removed
       if (audioFile) {
         // Convert Blob to File with a proper name
         const audioFileWithName = new File([audioFile], 'audio.wav', { type: 'audio/wav' });
         audioUrl = await uploadImage(audioFileWithName, user.id);
+      } else if (!formData.audio_url) {
+        // Audio was removed, clear it
+        audioUrl = null;
       }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
@@ -325,8 +328,8 @@ const WeddingForm = () => {
             main_picture_url: imageUrl, 
             video_url: videoUrl,
             audio_url: audioUrl,
-            audio_start_time: audioTrimSettings?.startTime || 0,
-            audio_end_time: audioTrimSettings?.endTime || 0,
+            audio_start_time: audioUrl ? (audioTrimSettings?.startTime || 0) : null,
+            audio_end_time: audioUrl ? (audioTrimSettings?.endTime || 0) : null,
           })
           .eq("id", id);
 
@@ -689,6 +692,11 @@ const WeddingForm = () => {
                 onAudioTrimmed={(blob, startTime, endTime) => {
                   setAudioFile(blob);
                   setAudioTrimSettings({ startTime, endTime });
+                }}
+                onAudioRemoved={() => {
+                  setAudioFile(null);
+                  setAudioTrimSettings(null);
+                  setFormData({ ...formData, audio_url: "" });
                 }}
                 initialAudioUrl={formData.audio_url}
                 initialStartTime={formData.audio_start_time}
