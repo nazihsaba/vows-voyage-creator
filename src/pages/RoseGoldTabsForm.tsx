@@ -543,6 +543,7 @@ const RoseGoldTabsForm = () => {
                   Upload an audio file and trim it to play in the background
                 </p>
                 <AudioTrimField
+                  key={`audio-${id}-${audioUrl}`}
                   onAudioTrimmed={(blob, startTime, endTime) => {
                     // Convert Blob to File
                     const file = new File([blob], "audio.wav", { type: "audio/wav" });
