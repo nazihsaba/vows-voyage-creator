@@ -47,7 +47,9 @@ export const VideoBackgroundTemplate = ({
   submittingRsvp = false,
 }: VideoBackgroundTemplateProps) => {
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
@@ -80,8 +82,67 @@ export const VideoBackgroundTemplate = ({
     });
   }, []);
 
+  // Lock/unlock scroll based on hasStarted
+  useEffect(() => {
+    if (!hasStarted) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [hasStarted]);
+
+  // Handle audio time updates to loop within trimmed range
+  const handleTimeUpdate = () => {
+    if (audioRef.current && wedding.audio_end_time) {
+      if (audioRef.current.currentTime >= wedding.audio_end_time) {
+        audioRef.current.currentTime = wedding.audio_start_time || 0;
+      }
+    }
+  };
+
+  // Handle start button click
+  const handleStartClick = async () => {
+    setHasStarted(true);
+    
+    // Play audio if available
+    if (wedding.audio_url && audioRef.current) {
+      const audio = audioRef.current;
+      const startTime = wedding.audio_start_time || 0;
+      
+      // If we need to seek, wait for the seek to complete before playing
+      if (startTime > 0) {
+        audio.currentTime = startTime;
+        await new Promise<void>((resolve) => {
+          audio.addEventListener('seeked', () => resolve(), { once: true });
+        });
+      }
+      
+      try {
+        await audio.play();
+      } catch (err) {
+        console.log("Audio playback failed:", err);
+      }
+    }
+  };
+
   return (
     <div className="relative w-full min-h-screen">
+      {/* Hidden audio element */}
+      {wedding.audio_url && (
+        <audio 
+          ref={audioRef} 
+          preload="auto"
+          onTimeUpdate={handleTimeUpdate}
+        >
+          <source src={wedding.audio_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
+      )}
+
       {/* Fixed Video Background */}
       <div className="fixed inset-0 w-full h-full overflow-hidden">
         <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
@@ -155,6 +216,15 @@ export const VideoBackgroundTemplate = ({
               tag="p"
               className="text-template-body tracking-widest"
             />
+
+            {!hasStarted && (
+              <Button
+                onClick={handleStartClick}
+                className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm animate-fade-in"
+              >
+                Tap To Start
+              </Button>
+            )}
           </div>
         </section>
 
