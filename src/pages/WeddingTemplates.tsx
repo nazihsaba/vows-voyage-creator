@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
@@ -38,7 +39,7 @@ const WeddingTemplates = () => {
       id: "rose-gold-tabs", 
       name: "Rose Gold Tabs", 
       description: "Fullscreen video background with elegant page transitions", 
-      image: modernRomance, // Using existing image as placeholder
+      image: roseGoldTabs,
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Sparkles, text: "Page Transitions" },
