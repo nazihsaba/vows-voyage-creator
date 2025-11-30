@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater, Sparkles } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
 import birthdayTemplate from "@/assets/template-birthday.jpg";
 import christmasTemplate from "@/assets/template-christmas.jpg";
 import baptismTemplate from "@/assets/template-baptism.jpg";
@@ -67,7 +68,7 @@ const Dashboard = () => {
           id: "rose-gold-tabs", 
           name: "Rose Gold Tabs", 
           description: "Fullscreen video background with elegant page transitions", 
-          image: modernRomance,
+          image: roseGoldTabs,
           features: [
             { icon: Video, text: "Video Background" },
             { icon: Sparkles, text: "Page Transitions" },
