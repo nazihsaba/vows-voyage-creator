@@ -148,25 +148,73 @@ export const GenerateLinkDialog = ({
   };
 
   const handleDownloadTemplate = () => {
-    // Create sample data
+    // Create sample data matching the user's format
     const templateData = [
       {
-        DisplayName: "Family Smith",
-        invitees: "John Smith",
-        nbOfPersons: 2,
-        side: "bride"
+        DisplayName: "Hassan slim family",
+        nbOfPersons: 3,
+        invitees: "marc",
+        side: "GROOM"
       },
       {
-        DisplayName: "Family Smith",
-        invitees: "Jane Smith",
-        nbOfPersons: 2,
-        side: "bride"
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "mario",
+        side: ""
       },
       {
-        DisplayName: "Work Colleagues",
-        invitees: "Mike Johnson",
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "rita",
+        side: ""
+      },
+      {
+        DisplayName: "nibal slim",
+        nbOfPersons: 2,
+        invitees: "nibal",
+        side: "GROOM"
+      },
+      {
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "slim",
+        side: ""
+      },
+      {
+        DisplayName: "mohamad el hout family",
+        nbOfPersons: 4,
+        invitees: "mohamad",
+        side: "BRIDE"
+      },
+      {
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "ali",
+        side: ""
+      },
+      {
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "maki",
+        side: ""
+      },
+      {
+        DisplayName: "",
+        nbOfPersons: "",
+        invitees: "mira",
+        side: ""
+      },
+      {
+        DisplayName: "Ziad El hout",
         nbOfPersons: 1,
-        side: "groom"
+        invitees: "ziad",
+        side: "BRIDE"
+      },
+      {
+        DisplayName: "Saleem El Jundi",
+        nbOfPersons: 1,
+        invitees: "saleem",
+        side: "BRIDE"
       }
     ];
 
@@ -175,9 +223,9 @@ export const GenerateLinkDialog = ({
     
     // Set column widths
     worksheet['!cols'] = [
-      { wch: 20 }, // DisplayName
-      { wch: 20 }, // invitees
+      { wch: 25 }, // DisplayName
       { wch: 15 }, // nbOfPersons
+      { wch: 20 }, // invitees
       { wch: 10 }  // side
     ];
 
