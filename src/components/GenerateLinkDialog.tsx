@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -12,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, X, Upload, Download } from "lucide-react";
+import { Plus, X, Upload, Download, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as XLSX from 'xlsx';
@@ -33,6 +34,7 @@ export const GenerateLinkDialog = ({
   onSuccess,
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [invitees, setInvitees] = useState<string[]>([""]);
@@ -271,19 +273,36 @@ export const GenerateLinkDialog = ({
         throw new Error(`Failed to process file: ${response.statusText}`);
       }
 
+      // Wait for the response data
+      const result = await response.json();
+      console.log("n8n workflow response:", result);
+
       toast({
-        title: "Success",
-        description: "File sent to n8n workflow. Invitations are being generated.",
+        title: "Success!",
+        description: "Your invitation links have been generated successfully.",
+        action: (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              navigate(`/dashboard/manage-links/${weddingId}`);
+              onOpenChange(false);
+            }}
+          >
+            View Links
+          </Button>
+        ),
       });
 
       setSelectedFile(null);
       onSuccess();
-      onOpenChange(false);
+      // Don't close the dialog immediately so users can see the success message
+      setTimeout(() => onOpenChange(false), 500);
     } catch (error) {
       console.error("Error sending file to n8n:", error);
       toast({
         title: "Error",
-        description: "Failed to send file to n8n workflow. Please try again.",
+        description: "Failed to generate invitation links. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -503,15 +522,17 @@ export const GenerateLinkDialog = ({
         </Tabs>
 
         <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)}>
+          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
             Cancel
           </Button>
           {activeTab === "manual" ? (
             <Button onClick={handleSubmit} disabled={loading}>
+              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {loading ? "Creating..." : "Create Link"}
             </Button>
           ) : (
             <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile}>
+              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               {loading ? "Processing..." : "Generate Automatically"}
             </Button>
           )}
