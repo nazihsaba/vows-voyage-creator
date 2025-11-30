@@ -8,3 +8,6 @@ verify_jwt = false
 
 [functions.create-invitation-link]
 verify_jwt = false
+
+[functions.create-invitees]
+verify_jwt = false
