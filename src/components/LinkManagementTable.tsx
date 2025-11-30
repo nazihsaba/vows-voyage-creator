@@ -29,7 +29,6 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   created_at: string;
-  side?: string;
 }
 
 interface LinkManagementTableProps {
@@ -162,7 +161,6 @@ export const LinkManagementTable = ({
           <TableHeader>
             <TableRow>
               <TableHead>Link Name</TableHead>
-              <TableHead>Side</TableHead>
               <TableHead>Invitees</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -172,11 +170,6 @@ export const LinkManagementTable = ({
             {links.map((link) => (
               <TableRow key={link.id}>
                 <TableCell className="font-medium">{link.link_name}</TableCell>
-                <TableCell>
-                  <span className="capitalize text-muted-foreground">
-                    {link.side || "—"}
-                  </span>
-                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Users className="w-4 h-4" />

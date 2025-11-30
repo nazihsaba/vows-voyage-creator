@@ -33,7 +33,6 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   created_at: string;
-  side?: string;
 }
 
 interface Invitee {
@@ -282,7 +281,6 @@ const ManageLinks = () => {
                       <TableRow className="bg-accent/30">
                         <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold">Invitation Link</TableHead>
-                        <TableHead className="font-semibold">Side</TableHead>
                         <TableHead className="font-semibold">Created</TableHead>
                         <TableHead className="font-semibold">Guests</TableHead>
                         <TableHead className="font-semibold">RSVP Summary</TableHead>
@@ -292,7 +290,7 @@ const ManageLinks = () => {
                     <TableBody>
                       {filteredLinks.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                             {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
                           </TableCell>
                         </TableRow>
@@ -324,11 +322,6 @@ const ManageLinks = () => {
                                 </TableCell>
                                 <TableCell className="font-semibold text-foreground">
                                   {link.link_name}
-                                </TableCell>
-                                <TableCell>
-                                  <span className="text-sm capitalize text-muted-foreground">
-                                    {link.side || "—"}
-                                  </span>
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
                                   {new Date(link.created_at).toLocaleDateString('en-US', {
@@ -407,7 +400,7 @@ const ManageLinks = () => {
                                   className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} border-l-4 border-l-primary/20`}
                                 >
                                   <TableCell></TableCell>
-                                  <TableCell colSpan={3} className="pl-8 font-medium">
+                                  <TableCell colSpan={2} className="pl-8 font-medium">
                                     {invitee.name}
                                   </TableCell>
                                   <TableCell>
