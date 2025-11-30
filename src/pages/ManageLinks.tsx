@@ -128,8 +128,12 @@ const ManageLinks = () => {
     }
   };
 
-  const copyToClipboard = async (linkSlug: string, numberOfPersons: number) => {
-    const fullUrl = `${window.location.origin}/invite/${wedding?.slug}/${linkSlug}/${numberOfPersons}`;
+  const copyToClipboard = async (linkSlug: string, linkName: string, numberOfPersons: number) => {
+    const sanitizedLinkName = linkName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+    const fullUrl = `${window.location.origin}/invite/${linkSlug}/${sanitizedLinkName}/${numberOfPersons}`;
     await navigator.clipboard.writeText(fullUrl);
     toast({
       title: "Copied!",
@@ -355,7 +359,7 @@ const ManageLinks = () => {
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      onClick={() => copyToClipboard(link.unique_slug, link.number_of_persons)}
+                                      onClick={() => copyToClipboard(link.unique_slug, link.link_name, link.number_of_persons)}
                                       title="Copy Link"
                                       className="h-8 w-8"
                                     >
@@ -364,7 +368,13 @@ const ManageLinks = () => {
                                     <Button
                                       size="icon"
                                       variant="ghost"
-                                      onClick={() => window.open(`/invite/${wedding.slug}/${link.unique_slug}/${link.number_of_persons}`, '_blank')}
+                                      onClick={() => {
+                                        const sanitizedLinkName = link.link_name
+                                          .toLowerCase()
+                                          .replace(/[^a-z0-9]+/g, '-')
+                                          .replace(/^-+|-+$/g, '');
+                                        window.open(`/invite/${link.unique_slug}/${sanitizedLinkName}/${link.number_of_persons}`, '_blank');
+                                      }}
                                       title="Open Link"
                                       className="h-8 w-8"
                                     >
