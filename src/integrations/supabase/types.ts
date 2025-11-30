@@ -254,6 +254,9 @@ export type Database = {
       }
       weddings: {
         Row: {
+          audio_end_time: number | null
+          audio_start_time: number | null
+          audio_url: string | null
           bride_family: string | null
           bride_name: string
           closing_message: string | null
@@ -287,6 +290,9 @@ export type Database = {
           welcoming_text: string | null
         }
         Insert: {
+          audio_end_time?: number | null
+          audio_start_time?: number | null
+          audio_url?: string | null
           bride_family?: string | null
           bride_name: string
           closing_message?: string | null
@@ -320,6 +326,9 @@ export type Database = {
           welcoming_text?: string | null
         }
         Update: {
+          audio_end_time?: number | null
+          audio_start_time?: number | null
+          audio_url?: string | null
           bride_family?: string | null
           bride_name?: string
           closing_message?: string | null

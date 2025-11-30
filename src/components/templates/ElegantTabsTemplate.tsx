@@ -51,6 +51,7 @@ export const ElegantTabsTemplate = ({
 }: ElegantTabsTemplateProps) => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -115,6 +116,30 @@ export const ElegantTabsTemplate = ({
       easing: "ease-out",
     });
   }, []);
+
+  // Audio playback effect
+  useEffect(() => {
+    const startButton = document.getElementById("start-button");
+    
+    const handleStartClick = () => {
+      if (wedding.audio_url && audioRef.current) {
+        audioRef.current.currentTime = wedding.audio_start_time || 0;
+        audioRef.current.play().catch(err => {
+          console.log("Audio playback failed:", err);
+        });
+      }
+    };
+
+    if (startButton) {
+      startButton.addEventListener("click", handleStartClick);
+    }
+
+    return () => {
+      if (startButton) {
+        startButton.removeEventListener("click", handleStartClick);
+      }
+    };
+  }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -193,6 +218,7 @@ export const ElegantTabsTemplate = ({
               size="lg"
               variant="outline"
               className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-12 py-6 text-lg rounded-full"
+              id="start-button"
             >
               START
             </Button>
@@ -401,6 +427,21 @@ export const ElegantTabsTemplate = ({
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
+      {/* Hidden audio element for background music */}
+      {wedding.audio_url && (
+        <audio
+          ref={audioRef}
+          src={wedding.audio_url}
+          loop
+          onTimeUpdate={(e) => {
+            const audio = e.currentTarget;
+            if (wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
+              audio.currentTime = wedding.audio_start_time || 0;
+            }
+          }}
+        />
+      )}
+      
       {/* Video/Image Background */}
       <div className="absolute inset-0 z-0">
         {wedding.video_url ? (
