@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
+import AudioTrimField from "@/components/AudioTrimField";
 
 const WeddingForm = () => {
   const { id } = useParams();
@@ -43,6 +44,8 @@ const WeddingForm = () => {
   ]);
   const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
+  const [audioFile, setAudioFile] = useState<Blob | null>(null);
+  const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -57,6 +60,9 @@ const WeddingForm = () => {
     video_url: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
+    audio_url: "",
+    audio_start_time: 0,
+    audio_end_time: 0,
   });
   
   const template = formData.template_type;
@@ -90,6 +96,15 @@ const WeddingForm = () => {
       }
       if (data.video_url) {
         setVideoPreview(data.video_url);
+      }
+      if (data.audio_url) {
+        // Audio is already uploaded, just show it in the preview
+      }
+      if (data.audio_start_time !== undefined) {
+        setAudioTrimSettings({
+          startTime: data.audio_start_time,
+          endTime: data.audio_end_time,
+        });
       }
 
       // Fetch existing gallery images
@@ -278,6 +293,7 @@ const WeddingForm = () => {
 
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
+      let audioUrl = formData.audio_url;
 
       // Upload new image if selected
       if (imageFile) {
@@ -289,6 +305,11 @@ const WeddingForm = () => {
         videoUrl = await uploadImage(videoFile, user.id);
       }
 
+      // Upload new audio if selected
+      if (audioFile) {
+        audioUrl = await uploadImage(audioFile as File, user.id);
+      }
+
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       let weddingId = id;
@@ -296,21 +317,46 @@ const WeddingForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl })
+          .update({ 
+            ...formData, 
+            slug, 
+            main_picture_url: imageUrl, 
+            video_url: videoUrl,
+            audio_url: audioUrl,
+            audio_start_time: audioTrimSettings?.startTime || 0,
+            audio_end_time: audioTrimSettings?.endTime || 0,
+          })
           .eq("id", id);
 
         if (error) throw error;
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl, user_id: user.id }])
+          .insert([{ 
+            ...formData, 
+            slug, 
+            main_picture_url: imageUrl, 
+            video_url: videoUrl,
+            audio_url: audioUrl,
+            audio_start_time: audioTrimSettings?.startTime || 0,
+            audio_end_time: audioTrimSettings?.endTime || 0,
+            user_id: user.id 
+          }])
           .select()
           .single();
 
         if (error) throw error;
         weddingId = data.id;
         setCreatedWeddingId(data.id);
-        setFormData({ ...formData, slug: data.slug, main_picture_url: imageUrl, video_url: videoUrl });
+        setFormData({ 
+          ...formData, 
+          slug: data.slug, 
+          main_picture_url: imageUrl, 
+          video_url: videoUrl,
+          audio_url: audioUrl,
+          audio_start_time: audioTrimSettings?.startTime || 0,
+          audio_end_time: audioTrimSettings?.endTime || 0,
+        });
       }
 
       // Upload gallery images if template supports gallery
@@ -634,6 +680,17 @@ const WeddingForm = () => {
                   </div>
                 </div>
               )}
+
+              {/* Audio Trim Field */}
+              <AudioTrimField
+                onAudioTrimmed={(blob, startTime, endTime) => {
+                  setAudioFile(blob);
+                  setAudioTrimSettings({ startTime, endTime });
+                }}
+                initialAudioUrl={formData.audio_url}
+                initialStartTime={formData.audio_start_time}
+                initialEndTime={formData.audio_end_time}
+              />
 
               {/* Location Fields */}
               <div className="space-y-6 border-t pt-6">
