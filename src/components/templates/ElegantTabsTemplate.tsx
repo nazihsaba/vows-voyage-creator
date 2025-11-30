@@ -133,10 +133,24 @@ export const ElegantTabsTemplate = ({
     
     // Play audio if available
     if (wedding.audio_url && audioRef.current) {
-      audioRef.current.currentTime = wedding.audio_start_time || 0;
-      audioRef.current.play().catch(err => {
-        console.log("Audio playback failed:", err);
-      });
+      const audio = audioRef.current;
+      audio.load(); // Ensure audio is loaded
+      audio.currentTime = wedding.audio_start_time || 0;
+      
+      // Wait for audio to be ready before playing
+      const playAudio = () => {
+        audio.play().catch(err => {
+          console.log("Audio playback failed:", err);
+        });
+      };
+      
+      if (audio.readyState >= 2) {
+        // Audio is already loaded enough to play
+        playAudio();
+      } else {
+        // Wait for audio to be ready
+        audio.addEventListener('canplay', playAudio, { once: true });
+      }
     }
   };
 
@@ -445,6 +459,7 @@ export const ElegantTabsTemplate = ({
         <audio
           ref={audioRef}
           src={wedding.audio_url}
+          preload="auto"
           onTimeUpdate={handleTimeUpdate}
         />
       )}
