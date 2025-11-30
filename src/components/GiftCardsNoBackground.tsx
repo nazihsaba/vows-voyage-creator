@@ -28,7 +28,7 @@ const getCardLogo = (cardName: string): string | undefined => {
 
 export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsNoBackgroundProps) => {
   const { toast } = useToast();
-  
+
   useEffect(() => {
     AOS.init({
       duration: 1000,
@@ -82,12 +82,10 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                     <div className="flex-1 flex flex-col justify-center">
                       <div className="text-sm font-semibold text-white">{card.card_name}</div>
 
-                      <div className="flex items-center gap-2 mt-1">
-                        <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white">
-                          {card.card_number}
-                        </p>
-                        <Copy 
-                          className="h-4 w-4 cursor-pointer text-white/70 hover:text-white transition-colors" 
+                      <div className="flex items-center gap-2 mt-1 justify-between">
+                        <p className="text-sm font-mono bg-wedding-ivory rounded-lg text-white">{card.card_number}</p>
+                        <Copy
+                          className="h-4 w-4 cursor-pointer text-white/70 hover:text-white transition-colors"
                           onClick={() => copyToClipboard(card.card_number, card.card_name)}
                         />
                       </div>
