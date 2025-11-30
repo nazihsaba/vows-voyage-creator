@@ -94,7 +94,7 @@ serve(async (req) => {
       );
     }
 
-    // Generate slug (duplicates are now allowed)
+    // Generate slug for the link
     const generateSlug = () => {
       return Math.random().toString(36).substring(2, 15) + 
              Math.random().toString(36).substring(2, 15);
@@ -102,40 +102,26 @@ serve(async (req) => {
 
     const slug = generateSlug();
 
-    // Insert invitation link
-    const { data: invitationLink, error: insertError } = await supabase
-      .from('invitation_links')
-      .insert({
-        wedding_id,
-        link_name,
-        unique_slug: slug,
-        number_of_persons,
-      })
-      .select()
-      .single();
+    // Prepare the data to be returned to n8n
+    // n8n will handle the actual database insertion
+    const linkData = {
+      wedding_id,
+      link_name,
+      unique_slug: slug,
+      number_of_persons,
+    };
 
-    if (insertError) {
-      console.error('Error creating invitation link:', insertError);
-      return new Response(
-        JSON.stringify({ error: 'Failed to create invitation link', details: insertError.message }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
-    }
+    console.log('Link data validated and prepared for n8n:', linkData);
 
-    console.log('Invitation link created successfully:', invitationLink);
-
-    // Return success response with the created link
+    // Return success response with the link data for n8n to create
     return new Response(
       JSON.stringify({
         success: true,
-        invitation_link: invitationLink,
+        link_data: linkData,
         url: `${supabaseUrl.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://your-domain.com')}/invite/${slug}`
       }),
       {
-        status: 201,
+        status: 200,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
