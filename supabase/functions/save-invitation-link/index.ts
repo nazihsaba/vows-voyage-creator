@@ -82,9 +82,15 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Generate invitation URL
+    // Sanitize link_name for URL (remove spaces and special characters)
+    const sanitizedLinkName = link_name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-+|-+$/g, '');
+
+    // Generate invitation URL using number_of_persons
     const baseUrl = Deno.env.get('SUPABASE_URL')?.replace('https://zpwnpxkznlgdgkticiem.supabase.co', 'https://vows-voyage-creator.lovable.app') || 'https://vows-voyage-creator.lovable.app';
-    const invitation_url = `${baseUrl}/invite/${wedding.slug}/${link_name}/${unique_slug}`;
+    const invitation_url = `${baseUrl}/invite/${wedding.slug}/${sanitizedLinkName}/${number_of_persons}`;
     
     console.log('Generated invitation URL:', invitation_url);
 
