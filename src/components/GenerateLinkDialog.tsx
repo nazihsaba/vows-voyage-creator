@@ -12,9 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, X, Upload } from "lucide-react";
+import { Plus, X, Upload, Download } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import * as XLSX from 'xlsx';
 
 interface GenerateLinkDialogProps {
   open: boolean;
@@ -144,6 +145,53 @@ export const GenerateLinkDialog = ({
         });
       }
     }
+  };
+
+  const handleDownloadTemplate = () => {
+    // Create sample data
+    const templateData = [
+      {
+        DisplayName: "Family Smith",
+        invitees: "John Smith",
+        nbOfPersons: 2,
+        side: "bride"
+      },
+      {
+        DisplayName: "Family Smith",
+        invitees: "Jane Smith",
+        nbOfPersons: 2,
+        side: "bride"
+      },
+      {
+        DisplayName: "Work Colleagues",
+        invitees: "Mike Johnson",
+        nbOfPersons: 1,
+        side: "groom"
+      }
+    ];
+
+    // Create worksheet
+    const worksheet = XLSX.utils.json_to_sheet(templateData);
+    
+    // Set column widths
+    worksheet['!cols'] = [
+      { wch: 20 }, // DisplayName
+      { wch: 20 }, // invitees
+      { wch: 15 }, // nbOfPersons
+      { wch: 10 }  // side
+    ];
+
+    // Create workbook
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Invitees");
+
+    // Download file
+    XLSX.writeFile(workbook, "invitation_template.xlsx");
+
+    toast({
+      title: "Success",
+      description: "Template downloaded successfully",
+    });
   };
 
   const handleAutomaticGeneration = async () => {
@@ -296,6 +344,32 @@ export const GenerateLinkDialog = ({
 
           <TabsContent value="automatic" className="space-y-6 py-4">
             <div className="space-y-6">
+              {/* Download Template Button */}
+              <Card className="p-4 bg-accent/5 border-accent/20">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-start gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                      <Download className="w-5 h-5 text-accent-foreground" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">Download Template</p>
+                      <p className="text-sm text-muted-foreground mt-0.5">
+                        Get a pre-formatted Excel file with example data
+                      </p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleDownloadTemplate}
+                  >
+                    <Download className="w-4 h-4 mr-2" />
+                    Download
+                  </Button>
+                </div>
+              </Card>
+
               {/* Upload Area */}
               <div className="space-y-3">
                 <div className="flex items-start gap-2">
