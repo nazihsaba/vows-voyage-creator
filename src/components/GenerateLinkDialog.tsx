@@ -195,8 +195,13 @@ export const GenerateLinkDialog = ({
     }
   };
 
-  const previewUrl = uniqueSlug 
-    ? `${window.location.origin}/invite/${weddingSlug}/${uniqueSlug}/${invitees.filter(n => n.trim()).length}`
+  const sanitizedLinkName = linkName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '');
+  
+  const previewUrl = uniqueSlug && linkName
+    ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter(n => n.trim()).length}`
     : "";
 
   return (
