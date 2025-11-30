@@ -12,6 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
+import AudioTrimField from "@/components/AudioTrimField";
 
 const RoseGoldTabsForm = () => {
   const { id } = useParams();
@@ -27,6 +28,10 @@ const RoseGoldTabsForm = () => {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
+  const [audioFile, setAudioFile] = useState<File | null>(null);
+  const [audioUrl, setAudioUrl] = useState<string>("");
+  const [audioStartTime, setAudioStartTime] = useState<number>(0);
+  const [audioEndTime, setAudioEndTime] = useState<number>(0);
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -77,6 +82,11 @@ const RoseGoldTabsForm = () => {
       }
       if (data.video_url) {
         setVideoPreview(data.video_url);
+      }
+      if (data.audio_url) {
+        setAudioUrl(data.audio_url);
+        setAudioStartTime(data.audio_start_time || 0);
+        setAudioEndTime(data.audio_end_time || 0);
       }
 
       const { data: locationsData } = await supabase
@@ -186,6 +196,7 @@ const RoseGoldTabsForm = () => {
 
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
+      let uploadedAudioUrl = audioUrl;
 
       // Upload new image if selected
       if (imageFile) {
@@ -197,6 +208,11 @@ const RoseGoldTabsForm = () => {
         videoUrl = await uploadImage(videoFile, user.id);
       }
 
+      // Upload new audio if selected
+      if (audioFile) {
+        uploadedAudioUrl = await uploadImage(audioFile, user.id);
+      }
+
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       let weddingId = id;
@@ -204,14 +220,31 @@ const RoseGoldTabsForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl })
+          .update({ 
+            ...formData, 
+            slug, 
+            main_picture_url: imageUrl, 
+            video_url: videoUrl,
+            audio_url: uploadedAudioUrl,
+            audio_start_time: audioStartTime,
+            audio_end_time: audioEndTime
+          })
           .eq("id", id);
 
         if (error) throw error;
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ ...formData, slug, main_picture_url: imageUrl, video_url: videoUrl, user_id: user.id }])
+          .insert([{ 
+            ...formData, 
+            slug, 
+            main_picture_url: imageUrl, 
+            video_url: videoUrl,
+            audio_url: uploadedAudioUrl,
+            audio_start_time: audioStartTime,
+            audio_end_time: audioEndTime,
+            user_id: user.id 
+          }])
           .select()
           .single();
 
@@ -501,6 +534,28 @@ const RoseGoldTabsForm = () => {
                     className="hidden"
                   />
                 </div>
+              </div>
+
+              {/* Audio Background Section */}
+              <div className="space-y-2 border-t pt-6">
+                <Label>Background Music</Label>
+                <p className="text-sm text-muted-foreground">
+                  Upload an audio file and trim it to play in the background
+                </p>
+                <AudioTrimField
+                  onAudioTrimmed={(blob, startTime, endTime) => {
+                    // Convert Blob to File
+                    const file = new File([blob], "audio.wav", { type: "audio/wav" });
+                    const url = URL.createObjectURL(blob);
+                    setAudioFile(file);
+                    setAudioUrl(url);
+                    setAudioStartTime(startTime);
+                    setAudioEndTime(endTime);
+                  }}
+                  initialAudioUrl={audioUrl}
+                  initialStartTime={audioStartTime}
+                  initialEndTime={audioEndTime}
+                />
               </div>
 
               {/* Location Fields */}
