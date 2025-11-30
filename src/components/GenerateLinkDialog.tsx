@@ -273,8 +273,14 @@ export const GenerateLinkDialog = ({
         throw new Error(`Failed to process file: ${response.statusText}`);
       }
 
-      // Wait for the response data
-      const result = await response.json();
+      // Wait for the response data (handle both JSON and text responses)
+      const contentType = response.headers.get("content-type");
+      let result;
+      if (contentType && contentType.includes("application/json")) {
+        result = await response.json();
+      } else {
+        result = await response.text();
+      }
       console.log("n8n workflow response:", result);
 
       toast({
