@@ -82,6 +82,22 @@ export const AnthonyOdileTemplate = ({
     };
   }, []);
 
+  // Lock/unlock scroll based on hasStarted
+  useEffect(() => {
+    if (!hasStarted) {
+      // Disable scrolling
+      document.body.style.overflow = 'hidden';
+    } else {
+      // Enable scrolling
+      document.body.style.overflow = 'auto';
+    }
+
+    // Cleanup: ensure scroll is enabled when component unmounts
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [hasStarted]);
+
   // Handle audio time updates to loop within trimmed range
   const handleTimeUpdate = () => {
     if (audioRef.current && wedding.audio_end_time) {
