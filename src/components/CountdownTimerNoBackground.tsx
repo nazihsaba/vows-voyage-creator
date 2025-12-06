@@ -47,19 +47,24 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
   );
 
   return (
-    <div className="flex items-center justify-center gap-4 md:gap-8 py-12">
-      <div data-aos="fade-up" data-aos-delay="0">
-        <TimeUnit value={timeRemaining.days} label="Days" />
+    <div className="flex flex-col items-center justify-center py-12">
+      <div className="flex items-center justify-center gap-4 md:gap-8">
+        <div data-aos="fade-up" data-aos-delay="0">
+          <TimeUnit value={timeRemaining.days} label="Days" />
+        </div>
+        <div data-aos="fade-up" data-aos-delay="100">
+          <TimeUnit value={timeRemaining.hours} label="Hours" />
+        </div>
+        <div data-aos="fade-up" data-aos-delay="200">
+          <TimeUnit value={timeRemaining.minutes} label="Minutes" />
+        </div>
+        <div data-aos="fade-up" data-aos-delay="300">
+          <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+        </div>
       </div>
-      <div data-aos="fade-up" data-aos-delay="100">
-        <TimeUnit value={timeRemaining.hours} label="Hours" />
-      </div>
-      <div data-aos="fade-up" data-aos-delay="200">
-        <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-      </div>
-      <div data-aos="fade-up" data-aos-delay="300">
-        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
-      </div>
+      <p data-aos="fade-up" data-aos-delay="400" className="text-sm md:text-base text-white/80 mt-4 text-center">
+        Until the big day arrives
+      </p>
     </div>
   );
 };
