@@ -3,7 +3,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { EventLocation } from "@/components/EventLocation";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -57,16 +57,16 @@ export const AnthonyOdileTemplate = ({
     if (audioRef.current && wedding.audio_url) {
       const audio = audioRef.current;
       const startTime = wedding.audio_start_time || 0;
-      
+
       // If we need to seek, wait for the seek to complete before playing
       if (startTime > 0) {
         audio.currentTime = startTime;
         await new Promise<void>((resolve) => {
-          audio.addEventListener('seeked', () => resolve(), { once: true });
+          audio.addEventListener("seeked", () => resolve(), { once: true });
         });
       }
-      
-      audio.play().catch(err => console.error('Error playing audio:', err));
+
+      audio.play().catch((err) => console.error("Error playing audio:", err));
     }
     // Smooth scroll to next section
     document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
@@ -92,15 +92,15 @@ export const AnthonyOdileTemplate = ({
   useEffect(() => {
     if (!hasStarted) {
       // Disable scrolling
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
       // Enable scrolling
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     // Cleanup: ensure scroll is enabled when component unmounts
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [hasStarted]);
 
@@ -117,11 +117,7 @@ export const AnthonyOdileTemplate = ({
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif">
       {/* Hidden audio element */}
       {wedding.audio_url && (
-        <audio 
-          ref={audioRef} 
-          loop 
-          onTimeUpdate={handleTimeUpdate}
-        >
+        <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
@@ -297,6 +293,8 @@ export const AnthonyOdileTemplate = ({
             {ceremony && (
               <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="400">
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                <PartyPopper />
+
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
                   <p className="text-template-small text-gray-600">Event Location</p>
