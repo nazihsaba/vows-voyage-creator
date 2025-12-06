@@ -16,6 +16,7 @@ import WeddingInvite from "./pages/WeddingInvite";
 import EventTypeSelection from "./pages/EventTypeSelection";
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -30,6 +31,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard/settings" element={<Settings />} />
           <Route path="/dashboard/my-events" element={<MyEvents />} />
           <Route path="/dashboard/manage-links/:weddingId" element={<ManageLinks />} />
           <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
