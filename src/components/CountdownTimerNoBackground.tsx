@@ -47,7 +47,9 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
   );
 
   return (
-    <div className="flex items-center justify-center gap-4 md:gap-8 py-12">
+    <div className="flex flex-col items-center justify-center py-12">
+      <h3 className="text-lg md:text-2xl font-serif text-white mb-6">Counting down to our big day</h3>
+      <div className="flex items-center justify-center gap-4 md:gap-8">
       <div data-aos="fade-up" data-aos-delay="0">
         <TimeUnit value={timeRemaining.days} label="Days" />
       </div>
@@ -59,6 +61,7 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
       </div>
       <div data-aos="fade-up" data-aos-delay="300">
         <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+      </div>
       </div>
     </div>
   );
