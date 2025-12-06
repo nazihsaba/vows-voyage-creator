@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye, Settings } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -161,15 +161,6 @@ const MyEvents = () => {
             <Button variant="outline" onClick={() => navigate("/dashboard")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
-            </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => navigate("/dashboard/settings")}
-              title="Settings"
-              className="rounded-full"
-            >
-              <Settings className="w-5 h-5" />
             </Button>
           </div>
         </div>

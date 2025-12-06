@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater, Sparkles } from "lucide-react";
+import { Heart, LogOut, Cake, PartyPopper, Gift, TreePine, Baby, Calendar, Video, Images, MapPin, Gift as GiftIcon, Clock, GlassWater, Sparkles, Settings } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
@@ -161,6 +161,15 @@ const Dashboard = () => {
                 <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
                 <span className="sm:hidden">Exit</span>
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => navigate("/dashboard/settings")}
+                title="Settings"
+                className="rounded-full"
+              >
+                <Settings className="w-5 h-5" />
               </Button>
             </div>
           </div>
