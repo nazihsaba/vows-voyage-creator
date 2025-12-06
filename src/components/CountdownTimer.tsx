@@ -38,11 +38,16 @@ export const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
   );
 
   return (
-    <div className="flex items-center justify-center gap-4 md:gap-8 py-12">
-      <TimeUnit value={timeRemaining.days} label="Days" />
-      <TimeUnit value={timeRemaining.hours} label="Hours" />
-      <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-      <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+    <div className="flex flex-col items-center justify-center py-12">
+      <div className="flex items-center justify-center gap-4 md:gap-8">
+        <TimeUnit value={timeRemaining.days} label="Days" />
+        <TimeUnit value={timeRemaining.hours} label="Hours" />
+        <TimeUnit value={timeRemaining.minutes} label="Minutes" />
+        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+      </div>
+      <p className="text-sm md:text-base text-muted-foreground mt-4 text-center">
+        Until the big day arrives
+      </p>
     </div>
   );
 };
