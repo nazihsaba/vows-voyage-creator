@@ -171,6 +171,51 @@ export const AnthonyOdileCarouselTemplate = ({
               className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
+              {t.ourMoments}
+            </h2>
+            <Carousel className="w-full">
+              <CarouselContent>
+                {gallery.map((image, index) => (
+                  <CarouselItem key={image.id} className="md:basis-1/2 lg:basis-1/3">
+                    <div className="p-2">
+                      <div className="aspect-square overflow-hidden rounded-lg">
+                        <img
+                          src={image.image_url}
+                          alt={image.alt_text || `Gallery photo ${index + 1}`}
+                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                          loading="lazy"
+                        />
+                      </div>
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2" />
+              <CarouselNext className="right-2" />
+            </Carousel>
+          </div>
+        </section>
+      )}
+
+      {/* Countdown Section */}
+      <section className="py-20 px-4 text-center">
+        <h2 
+          className="text-template-subtitle mb-12"
+          style={{ color: template.style.colorScheme.primary }}
+        >
+          {t.countingDown}
+        </h2>
+        <CountdownTimer targetDate={new Date(wedding.wedding_date)} />
+      </section>
+
+      {/* Location Section */}
+      {locations && locations.length > 0 && (
+        <section className="py-20 px-4 bg-accent/5">
+          <div className="max-w-6xl mx-auto">
+            <h2 
+              className="text-template-subtitle text-center mb-12"
+              style={{ color: template.style.colorScheme.primary }}
+            >
               {t.eventDetails}
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
