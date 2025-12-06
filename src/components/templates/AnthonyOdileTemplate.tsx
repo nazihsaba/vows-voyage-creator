@@ -293,7 +293,7 @@ export const AnthonyOdileTemplate = ({
             {ceremony && (
               <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="400">
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
-                <PartyPopper className="w-8 h-8 text-primary align-center"/>
+                <PartyPopper className="w-8 h-8 text-primary"/>
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
                   <p className="text-template-small text-gray-600">Event Location</p>
