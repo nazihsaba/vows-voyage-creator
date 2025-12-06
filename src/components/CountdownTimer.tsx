@@ -31,41 +31,18 @@ export const CountdownTimer = ({ targetDate }: CountdownTimerProps) => {
   }, [targetDate]);
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center justify-center">
-      <div className="relative">
-        <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-primary/10 backdrop-blur-sm border border-primary/20 flex items-center justify-center shadow-lg">
-          <span className="text-2xl md:text-4xl font-serif font-bold text-primary">
-            {value.toString().padStart(2, '0')}
-          </span>
-        </div>
-      </div>
-      <span className="text-[10px] md:text-xs uppercase tracking-[0.2em] text-muted-foreground mt-3 font-medium">
-        {label}
-      </span>
-    </div>
-  );
-
-  const Separator = () => (
-    <div className="flex flex-col items-center justify-center gap-2 h-16 md:h-24">
-      <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
-      <div className="w-1.5 h-1.5 rounded-full bg-primary/40" />
+    <div className="flex flex-col items-center justify-center min-w-[80px] md:min-w-[100px]">
+      <div className="text-3xl md:text-6xl font-serif font-bold text-primary mb-2">{value}</div>
+      <div className="text-[10px] md:text-base uppercase tracking-widest text-muted-foreground">{label}</div>
     </div>
   );
 
   return (
-    <div className="flex flex-col items-center justify-center py-10 md:py-16">
-      <div className="flex items-center justify-center gap-2 md:gap-4">
-        <TimeUnit value={timeRemaining.days} label="Days" />
-        <Separator />
-        <TimeUnit value={timeRemaining.hours} label="Hours" />
-        <Separator />
-        <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-        <Separator />
-        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
-      </div>
-      <p className="text-xs md:text-sm text-muted-foreground mt-6 text-center italic tracking-wide">
-        Until the big day arrives
-      </p>
+    <div className="flex items-center justify-center gap-4 md:gap-8 py-12">
+      <TimeUnit value={timeRemaining.days} label="Days" />
+      <TimeUnit value={timeRemaining.hours} label="Hours" />
+      <TimeUnit value={timeRemaining.minutes} label="Minutes" />
+      <TimeUnit value={timeRemaining.seconds} label="Seconds" />
     </div>
   );
 };
