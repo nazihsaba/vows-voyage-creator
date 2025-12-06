@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { Template, TemplateSectionConfig } from '@/types/templates';
 import { EditableField } from '@/components/EditableField';
 import { EditableImage } from '@/components/EditableImage';
 import { EventLocation } from '@/components/EventLocation';
 import { GiftCards } from '@/components/GiftCards';
 import { CountdownTimer } from '@/components/CountdownTimer';
+import { Switch } from '@/components/ui/switch';
+import { Label } from '@/components/ui/label';
 import {
   Carousel,
   CarouselContent,
@@ -11,6 +14,29 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+
+const translations = {
+  en: {
+    ourStory: 'Our Story',
+    ourMoments: 'Our Moments',
+    countingDown: 'Counting Down',
+    eventDetails: 'Event Details',
+    giftRegistry: 'Gift Registry',
+    joinCelebration: 'Join Our Celebration',
+    rsvpMessage: 'Please let us know if you can join us on our special day',
+    confirmBefore: 'Kindly confirm your attendance before this date:',
+  },
+  ar: {
+    ourStory: 'قصتنا',
+    ourMoments: 'لحظاتنا',
+    countingDown: 'العد التنازلي',
+    eventDetails: 'تفاصيل الحدث',
+    giftRegistry: 'سجل الهدايا',
+    joinCelebration: 'انضموا إلى احتفالنا',
+    rsvpMessage: 'يرجى إعلامنا إذا كنتم ستنضمون إلينا في يومنا المميز',
+    confirmBefore: 'يرجى تأكيد حضوركم قبل هذا التاريخ:',
+  }
+};
 
 interface AnthonyOdileCarouselTemplateProps {
   template: Template;
@@ -39,6 +65,9 @@ export const AnthonyOdileCarouselTemplate = ({
   getFieldValue,
   getFieldStyle,
 }: AnthonyOdileCarouselTemplateProps) => {
+  const [isArabic, setIsArabic] = useState(false);
+  const t = translations[isArabic ? 'ar' : 'en'];
+
   const getValue = (fieldId: string, fallback: string) => 
     getFieldValue ? getFieldValue(fieldId, fallback) : fallback;
 
@@ -52,8 +81,23 @@ export const AnthonyOdileCarouselTemplate = ({
         fontFamily: template.style.fontPrimary,
         backgroundColor: template.style.colorScheme.background,
         color: template.style.colorScheme.text,
+        direction: isArabic ? 'rtl' : 'ltr',
       }}
     >
+      {/* Language Toggle */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-lg">
+        <Label htmlFor="arabic-toggle" className="text-sm font-medium text-gray-700">
+          {isArabic ? 'العربية' : 'EN'}
+        </Label>
+        <Switch
+          id="arabic-toggle"
+          checked={isArabic}
+          onCheckedChange={setIsArabic}
+        />
+        <Label htmlFor="arabic-toggle" className="text-sm font-medium text-gray-700">
+          {isArabic ? 'EN' : 'العربية'}
+        </Label>
+      </div>
       {/* Hero Section */}
       <section className="relative h-screen">
         <EditableImage
@@ -96,7 +140,7 @@ export const AnthonyOdileCarouselTemplate = ({
       <section className="py-20 px-4 max-w-4xl mx-auto text-center">
         <EditableField
           fieldId="story_title"
-          text={getValue('story_title', 'Our Story')}
+          text={getValue('story_title', t.ourStory)}
           onUpdate={onFieldUpdate || (() => {})}
           isPreview={isPreview}
           className="text-template-subtitle mb-8"
@@ -127,52 +171,7 @@ export const AnthonyOdileCarouselTemplate = ({
               className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
-              Our Moments
-            </h2>
-            <Carousel className="w-full">
-              <CarouselContent>
-                {gallery.map((image, index) => (
-                  <CarouselItem key={image.id} className="md:basis-1/2 lg:basis-1/3">
-                    <div className="p-2">
-                      <div className="aspect-square overflow-hidden rounded-lg">
-                        <img
-                          src={image.image_url}
-                          alt={image.alt_text || `Gallery photo ${index + 1}`}
-                          className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                      </div>
-                    </div>
-                  </CarouselItem>
-                ))}
-              </CarouselContent>
-              <CarouselPrevious className="left-2" />
-              <CarouselNext className="right-2" />
-            </Carousel>
-          </div>
-        </section>
-      )}
-
-      {/* Countdown Section */}
-      <section className="py-20 px-4 text-center">
-        <h2 
-          className="text-template-subtitle mb-12"
-          style={{ color: template.style.colorScheme.primary }}
-        >
-          Counting Down
-        </h2>
-        <CountdownTimer targetDate={new Date(wedding.wedding_date)} />
-      </section>
-
-      {/* Location Section */}
-      {locations && locations.length > 0 && (
-        <section className="py-20 px-4 bg-accent/5">
-          <div className="max-w-6xl mx-auto">
-            <h2 
-              className="text-template-subtitle text-center mb-12"
-              style={{ color: template.style.colorScheme.primary }}
-            >
-              Event Details
+              {t.eventDetails}
             </h2>
             <div className="grid md:grid-cols-2 gap-8">
               {locations.map((location) => (
@@ -196,7 +195,7 @@ export const AnthonyOdileCarouselTemplate = ({
               className="text-template-subtitle text-center mb-12"
               style={{ color: template.style.colorScheme.primary }}
             >
-              Gift Registry
+              {t.giftRegistry}
             </h2>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
@@ -211,7 +210,7 @@ export const AnthonyOdileCarouselTemplate = ({
         <div className="max-w-2xl mx-auto">
           <EditableField
             fieldId="rsvp_title"
-            text={getValue('rsvp_title', 'Join Our Celebration')}
+            text={getValue('rsvp_title', t.joinCelebration)}
             onUpdate={onFieldUpdate || (() => {})}
             isPreview={isPreview}
             className="text-template-subtitle mb-6"
@@ -219,7 +218,7 @@ export const AnthonyOdileCarouselTemplate = ({
           />
           <EditableField
             fieldId="rsvp_message"
-            text={getValue('rsvp_message', 'Please let us know if you can join us on our special day')}
+            text={getValue('rsvp_message', t.rsvpMessage)}
             onUpdate={onFieldUpdate || (() => {})}
             isPreview={isPreview}
             className="text-template-body mb-8"
@@ -230,7 +229,7 @@ export const AnthonyOdileCarouselTemplate = ({
           {wedding.rsvp_deadline && (
             <div className="pt-8 border-t border-white/20 mt-8">
               <p className="text-template-small text-white/90 mb-2">
-                Kindly confirm your attendance before this date:
+                {t.confirmBefore}
               </p>
               <p className="text-template-heading">
                 {new Date(wedding.rsvp_deadline).toLocaleDateString('en-US', { 
