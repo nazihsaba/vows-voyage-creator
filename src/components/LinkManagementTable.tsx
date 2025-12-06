@@ -28,6 +28,7 @@ interface InvitationLink {
   link_name: string;
   unique_slug: string;
   number_of_persons: number;
+  side: string | null;
   created_at: string;
 }
 
@@ -161,6 +162,7 @@ export const LinkManagementTable = ({
           <TableHeader>
             <TableRow>
               <TableHead>Link Name</TableHead>
+              <TableHead>Side</TableHead>
               <TableHead>Invitees</TableHead>
               <TableHead>Created</TableHead>
               <TableHead className="text-right">Actions</TableHead>
@@ -170,6 +172,19 @@ export const LinkManagementTable = ({
             {links.map((link) => (
               <TableRow key={link.id}>
                 <TableCell className="font-medium">{link.link_name}</TableCell>
+                <TableCell>
+                  {link.side ? (
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                      link.side === 'GROOM' 
+                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' 
+                        : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'
+                    }`}>
+                      {link.side === 'GROOM' ? 'Groom' : 'Bride'}
+                    </span>
+                  ) : (
+                    <span className="text-muted-foreground text-xs">—</span>
+                  )}
+                </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1">
                     <Users className="w-4 h-4" />
