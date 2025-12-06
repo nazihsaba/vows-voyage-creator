@@ -7,64 +7,8 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import AOS from "aos";
 import "aos/dist/aos.css";
-
-const translations = {
-  en: {
-    theWeddingOf: "The Wedding Of",
-    tapToStart: "Tap To Start",
-    invitationText: "Request the honor of your presence at the wedding of their Son and Daughter",
-    weddingEvents: "Wedding Events",
-    eventsSubtitle: "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:",
-    ceremony: "Ceremony",
-    venue: "Venue",
-    eventLocation: "Event Location",
-    viewOnMap: "View on Map",
-    weddingGift: "Wedding Gift",
-    giftMessage: "For those who desire a wedding list is available",
-    joinCelebration: "Join Our Celebration",
-    rsvpMessage: "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-    attending: "Attending ✓",
-    willAttend: "Will Attend?",
-    numberOfGuests: "Number of Guests",
-    rsvpDeadlinePassed: "RSVP deadline has passed",
-    submitting: "Submitting...",
-    submitRsvp: "Submit RSVP",
-    pleaseRsvpBy: "Please RSVP by:",
-    kindlyConfirm: "Kindly confirm your attendance before this date:",
-    closingMessage: "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
-    arabic: "عربي",
-    english: "EN",
-  },
-  ar: {
-    theWeddingOf: "حفل زفاف",
-    tapToStart: "اضغط للبدء",
-    invitationText: "يتشرفون بدعوتكم لحضور حفل زفاف ابنهم وابنتهم",
-    weddingEvents: "مناسبات الزفاف",
-    eventsSubtitle: "بكل تواضع، نود\n\nدعوتكم جميعاً لحضور حفل زفافنا\n\nالذي سيقام في:",
-    ceremony: "مراسم الزفاف",
-    venue: "مكان الحفل",
-    eventLocation: "موقع الحدث",
-    viewOnMap: "عرض على الخريطة",
-    weddingGift: "هدية الزفاف",
-    giftMessage: "لمن يرغب، قائمة الهدايا متاحة",
-    joinCelebration: "انضموا إلى احتفالنا",
-    rsvpMessage: "يرجى إعلامنا إذا كنتم ستنضمون إلينا في يومنا المميز. حضوركم سيعني لنا الكثير.",
-    attending: "سأحضر ✓",
-    willAttend: "هل ستحضر؟",
-    numberOfGuests: "عدد الضيوف",
-    rsvpDeadlinePassed: "انتهى موعد تأكيد الحضور",
-    submitting: "جاري الإرسال...",
-    submitRsvp: "تأكيد الحضور",
-    pleaseRsvpBy: "يرجى تأكيد الحضور قبل:",
-    kindlyConfirm: "يرجى تأكيد حضوركم قبل هذا التاريخ:",
-    closingMessage: "نحن متحمسون جداً لمشاركة هذا اليوم المميز معكم! استمتعوا بكل لحظة، والتقطوا الكثير من الصور، واصنعوا ذكريات رائعة معنا.",
-    arabic: "عربي",
-    english: "EN",
-  },
-};
 
 interface AnthonyOdileTemplateProps {
   wedding: any;
@@ -104,12 +48,9 @@ export const AnthonyOdileTemplate = ({
   submittingRsvp = false,
 }: AnthonyOdileTemplateProps) => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [isArabic, setIsArabic] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
-  
-  const t = translations[isArabic ? "ar" : "en"];
 
   const handleStart = async () => {
     setHasStarted(true);
@@ -173,17 +114,7 @@ export const AnthonyOdileTemplate = ({
   };
 
   return (
-    <div className={`w-full bg-[#faf8f5] text-[#3e2723] font-serif ${isArabic ? "rtl" : "ltr"}`} dir={isArabic ? "rtl" : "ltr"}>
-      {/* Language Toggle */}
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2 bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full shadow-lg">
-        <span className={`text-sm font-medium ${!isArabic ? "text-primary" : "text-gray-500"}`}>{t.english}</span>
-        <Switch
-          checked={isArabic}
-          onCheckedChange={setIsArabic}
-          className="data-[state=checked]:bg-primary"
-        />
-        <span className={`text-sm font-medium ${isArabic ? "text-primary" : "text-gray-500"}`}>{t.arabic}</span>
-      </div>
+    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif">
       {/* Hidden audio element */}
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
@@ -261,7 +192,7 @@ export const AnthonyOdileTemplate = ({
               onClick={handleStart}
               className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
             >
-              {t.tapToStart}
+              Tap To Start
             </Button>
           )}
         </div>
@@ -342,7 +273,7 @@ export const AnthonyOdileTemplate = ({
       <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
-            <h2 className="text-template-subtitle mb-6 text-[#3e2723]">{t.weddingEvents}</h2>
+            <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
             <EditableField
               fieldId="events-subtitle"
               text={getFieldValue(
@@ -364,11 +295,11 @@ export const AnthonyOdileTemplate = ({
                 <div className="flex items-center justify-center w-full">
                   <Church className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">{t.ceremony}</h3>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
 
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">{t.eventLocation}</p>
+                  <p className="text-template-small text-gray-600">Event Location</p>
                   <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                 </div>
                 {ceremony.location_link && (
@@ -378,7 +309,7 @@ export const AnthonyOdileTemplate = ({
                     rel="noopener noreferrer"
                     className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
-                    {t.viewOnMap}
+                    View on Map
                   </a>
                 )}
               </div>
@@ -388,11 +319,11 @@ export const AnthonyOdileTemplate = ({
                 <div className="flex items-center justify-center w-full">
                   <PartyPopper className="w-8 h-8 text-primary" />
                 </div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">{t.venue}</h3>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
 
                 <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                 <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">{t.eventLocation}</p>
+                  <p className="text-template-small text-gray-600">Event Location</p>
                   <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                 </div>
                 {venue.location_link && (
@@ -402,7 +333,7 @@ export const AnthonyOdileTemplate = ({
                     rel="noopener noreferrer"
                     className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
-                    {t.viewOnMap}
+                    View on Map
                   </a>
                 )}
               </div>
@@ -415,9 +346,9 @@ export const AnthonyOdileTemplate = ({
       {giftCards.length > 0 && (
         <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="600">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">{t.weddingGift}</h2>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
             <p className="text-center text-template-body mb-8 text-gray-600">
-              {t.giftMessage}
+              For those who desire a wedding list is available
             </p>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
           </div>
@@ -476,7 +407,7 @@ export const AnthonyOdileTemplate = ({
                             isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"
                           }`}
                         >
-                          {rsvpResponses[invitee.id] === true ? t.attending : t.willAttend}
+                          {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
                         </Label>
                       </div>
                     </div>
@@ -485,11 +416,11 @@ export const AnthonyOdileTemplate = ({
 
                 <div className="pt-6 border-t border-gray-300 space-y-4">
                   <p className="text-lg font-semibold text-center text-[#3e2723]">
-                    {t.numberOfGuests}: {numberOfPersons || invitees.length}
+                    Number of Guests: {numberOfPersons || invitees.length}
                   </p>
 
                   {isRsvpDeadlinePassed ? (
-                    <p className="text-sm text-red-600 text-center font-medium">{t.rsvpDeadlinePassed}</p>
+                    <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
                   ) : (
                     <Button
                       onClick={handleRsvpSubmit}
@@ -497,7 +428,7 @@ export const AnthonyOdileTemplate = ({
                       className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90"
                       size="lg"
                     >
-                      {submittingRsvp ? t.submitting : t.submitRsvp}
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
                     </Button>
                   )}
                 </div>
@@ -507,7 +438,7 @@ export const AnthonyOdileTemplate = ({
             {wedding.rsvp_deadline && (
               <div className="pt-8 border-t border-gray-300">
                 <p className="text-template-small text-center mb-2 text-gray-600">
-                  {invitees.length > 0 ? t.pleaseRsvpBy : t.kindlyConfirm}
+                  {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
                 </p>
                 <p className="text-template-heading text-primary text-center">
                   {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
