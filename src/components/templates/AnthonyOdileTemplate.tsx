@@ -303,7 +303,7 @@ export const AnthonyOdileTemplate = ({
                     href={ceremony.location_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-className="w-8 h-8 text-white" text-white px-6 py-2 rounded-md transition-colors"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
                     View on Map
                   </a>
