@@ -3,7 +3,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { EventLocation } from "@/components/EventLocation";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -293,6 +293,7 @@ export const AnthonyOdileTemplate = ({
             {ceremony && (
               <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="400">
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                <PartyPopper className="w-8 h-8 text-primary" />
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
                   <p className="text-template-small text-gray-600">Event Location</p>
