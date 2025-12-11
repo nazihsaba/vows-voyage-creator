@@ -20,16 +20,22 @@ const Auth = () => {
   const [resetEmailSent, setResetEmailSent] = useState(false);
 
   useEffect(() => {
-    // Check if user is already logged in
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (session) {
+    // Set up auth state listener FIRST
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      console.log("Auth state change:", event, session?.user?.email);
+      if (event === 'SIGNED_IN' && session) {
+        toast.success("Successfully logged in!");
         navigate("/dashboard");
+      }
+      if (event === 'PASSWORD_RECOVERY') {
+        // User clicked password reset link - stay on auth page
+        toast.info("Please enter your new password");
       }
     });
 
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN' && session) {
-        toast.success("Successfully logged in!");
+    // THEN check for existing session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
         navigate("/dashboard");
       }
     });
@@ -63,7 +69,7 @@ const Auth = () => {
         email: email.trim().toLowerCase(),
         password: password,
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
 
@@ -127,7 +133,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim().toLowerCase(),
         options: {
-          emailRedirectTo: `${window.location.origin}/dashboard`,
+          emailRedirectTo: `${window.location.origin}/auth`,
         },
       });
 
