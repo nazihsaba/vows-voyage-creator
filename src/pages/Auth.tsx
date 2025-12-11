@@ -18,6 +18,7 @@ const Auth = () => {
   const [loginMethod, setLoginMethod] = useState<"password" | "magic">("password");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
+  const [isProcessingCallback, setIsProcessingCallback] = useState(true);
 
   useEffect(() => {
     // Set up auth state listener FIRST
@@ -28,7 +29,7 @@ const Auth = () => {
         navigate("/dashboard");
       }
       if (event === 'PASSWORD_RECOVERY') {
-        // User clicked password reset link - stay on auth page
+        setIsProcessingCallback(false);
         toast.info("Please enter your new password");
       }
     });
@@ -37,6 +38,9 @@ const Auth = () => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       if (session) {
         navigate("/dashboard");
+      } else {
+        // No session and no callback being processed, show the form
+        setIsProcessingCallback(false);
       }
     });
 
@@ -192,6 +196,18 @@ const Auth = () => {
     setEmail("");
     setPassword("");
   };
+
+  // Show loading screen while processing auth callback
+  if (isProcessingCallback) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-soft px-4">
+        <div className="flex flex-col items-center gap-4">
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <p className="text-muted-foreground">Signing you in...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-soft px-4">
