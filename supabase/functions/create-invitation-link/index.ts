@@ -75,8 +75,8 @@ Deno.serve(async (req) => {
       console.error('Wedding not found:', weddingError);
       return new Response(
         JSON.stringify({ 
-          error: 'Wedding not found', 
-          message: `No wedding found with id: ${wedding_id}` 
+          error: 'Invalid request', 
+          message: 'The requested resource could not be found' 
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -100,9 +100,8 @@ Deno.serve(async (req) => {
       console.error('Error inserting invitation link:', insertError);
       return new Response(
         JSON.stringify({ 
-          error: 'Database error', 
-          message: 'Failed to create invitation link',
-          details: insertError.message 
+          error: 'Server error', 
+          message: 'Failed to create invitation link'
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -128,11 +127,10 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Unexpected error in create-invitation-link function:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error', 
-        message: errorMessage 
+        message: 'An error occurred processing your request'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
