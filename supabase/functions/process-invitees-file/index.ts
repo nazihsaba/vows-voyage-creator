@@ -77,8 +77,8 @@ Deno.serve(async (req) => {
       console.error('Wedding not found:', weddingError);
       return new Response(
         JSON.stringify({ 
-          error: 'Wedding not found', 
-          message: `No wedding found with id: ${weddingId}` 
+          error: 'Invalid request', 
+          message: 'The requested resource could not be found' 
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -204,11 +204,10 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Unexpected error processing file:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error', 
-        message: errorMessage 
+        message: 'An error occurred processing your request' 
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );

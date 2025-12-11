@@ -88,7 +88,7 @@ serve(async (req) => {
     if (linkError || !link) {
       console.error('Invitation link not found:', linkError);
       return new Response(
-        JSON.stringify({ error: 'Invitation link not found' }),
+        JSON.stringify({ error: 'Invalid request' }),
         {
           status: 404,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -116,8 +116,7 @@ serve(async (req) => {
       console.error('Error creating invitee:', insertError);
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to create invitee', 
-          details: insertError.message 
+          error: 'Failed to create invitee'
         }),
         {
           status: 500,
@@ -142,9 +141,8 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Unexpected error in n8n-create-invitees:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
     return new Response(
-      JSON.stringify({ error: 'Internal server error', details: errorMessage }),
+      JSON.stringify({ error: 'Internal server error' }),
       {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },

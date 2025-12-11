@@ -62,8 +62,8 @@ Deno.serve(async (req) => {
       console.error('Invitation link not found:', linkError);
       return new Response(
         JSON.stringify({ 
-          error: 'Invitation link not found', 
-          message: `No invitation link found with id: ${invitation_link_id}` 
+          error: 'Invalid request', 
+          message: 'The requested resource could not be found' 
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -87,9 +87,8 @@ Deno.serve(async (req) => {
       console.error('Error inserting invitees:', insertError);
       return new Response(
         JSON.stringify({ 
-          error: 'Database error', 
-          message: 'Failed to create invitees',
-          details: insertError.message 
+          error: 'Server error', 
+          message: 'Failed to create invitees'
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -110,11 +109,10 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Unexpected error in create-invitees function:', error);
-    const errorMessage = error instanceof Error ? error.message : 'An unexpected error occurred';
     return new Response(
       JSON.stringify({ 
         error: 'Internal server error', 
-        message: errorMessage 
+        message: 'An error occurred processing your request'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
