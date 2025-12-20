@@ -229,7 +229,7 @@ export const RoseGoldTabsPreview = () => {
       case "gifts":
         return (
           <div className="space-y-6">
-            <GiftCardsNoBackground giftCards={giftCards} isOwner={false} />
+            <GiftCardsNoBackground giftCards={giftCards} isOwner={true} />
           </div>
         );
 
