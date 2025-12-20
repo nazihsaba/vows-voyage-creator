@@ -1,61 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
+import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
-// Static Countdown Timer component matching the original
-const StaticCountdownTimerNoBackground = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
-
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeRemaining({ days, hours, minutes, seconds });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <div className="space-y-6 text-center p-6">
-      <div className="space-y-2">
-        <p className="text-sm text-white/80 tracking-wider uppercase">Counting Down To</p>
-        <h2 className="text-2xl md:text-3xl font-serif text-white">Our Special Day</h2>
-      </div>
-      <div className="flex justify-center gap-3 md:gap-6">
-        {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Min" },
-          { value: timeRemaining.seconds, label: "Sec" },
-        ].map((item, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
-              <span className="text-xl md:text-3xl font-bold text-white">
-                {String(item.value).padStart(2, "0")}
-              </span>
-            </div>
-            <span className="text-xs md:text-sm text-white/80 mt-2">{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export const RoseGoldTabsPreview = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -88,8 +35,8 @@ export const RoseGoldTabsPreview = () => {
   };
 
   const giftCards = [
-    { id: "1", card_name: "Bank Account", card_number: "123456789" },
-    { id: "2", card_name: "Gift Registry", card_number: "987654321" },
+    { id: "1", card_name: "OMT", card_number: "123456789" },
+    { id: "2", card_name: "Whish", card_number: "987654321" },
   ];
 
   const PAGES = [
@@ -204,7 +151,7 @@ export const RoseGoldTabsPreview = () => {
         return (
           <div className="space-y-6 text-center text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl">
-              <StaticCountdownTimerNoBackground targetDate={wedding.wedding_date} />
+              <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
           </div>
         );
@@ -278,21 +225,7 @@ export const RoseGoldTabsPreview = () => {
       case "gifts":
         return (
           <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Wedding Gift</h2>
-              <p className="text-white/80">For those who desire a wedding list is available</p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {giftCards.map((card) => (
-                <div
-                  key={card.id}
-                  className="p-6 border border-white/20 rounded-xl bg-white/10 backdrop-blur-sm"
-                >
-                  <h3 className="font-semibold text-lg mb-2 text-white">{card.card_name}</h3>
-                  <p className="text-white/80">{card.card_number}</p>
-                </div>
-              ))}
-            </div>
+            <GiftCardsNoBackground giftCards={giftCards} isOwner={false} />
           </div>
         );
 
