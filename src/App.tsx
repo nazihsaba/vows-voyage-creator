@@ -18,6 +18,7 @@ import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
+import ModernRomancePreview from "./components/templates/ModernRomancePreview";
 
 const queryClient = new QueryClient();
 
@@ -48,6 +49,7 @@ const App = () => (
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
+          <Route path="/preview/modern-romance" element={<ModernRomancePreview />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

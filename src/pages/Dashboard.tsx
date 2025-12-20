@@ -16,6 +16,7 @@ import {
   GlassWater,
   Sparkles,
   UserCog,
+  Eye,
 } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
@@ -128,14 +129,7 @@ const Dashboard = () => {
               {weddingTemplates.map((template) => (
                 <Card
                   key={template.id}
-                  className="shadow-soft hover:shadow-elegant transition-all flex flex-col cursor-pointer hover:scale-[1.02]"
-                  onClick={() => {
-                    if (template.id === "rose-gold-tabs") {
-                      navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
-                    } else {
-                      navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
-                    }
-                  }}
+                  className="shadow-soft hover:shadow-elegant transition-all flex flex-col"
                 >
                   <CardHeader className="p-4 sm:p-6 flex-grow">
                     <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
@@ -158,8 +152,32 @@ const Dashboard = () => {
                       </div>
                     )}
                   </CardHeader>
-                  <CardContent className="p-4 sm:p-6 pt-0 mt-auto">
-                    <Button className="w-full text-sm sm:text-base">Use This Template</Button>
+                  <CardContent className="p-4 sm:p-6 pt-0 mt-auto space-y-2">
+                    {template.id === "template2" && (
+                      <Button
+                        variant="outline"
+                        className="w-full text-sm sm:text-base"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          window.open("/preview/modern-romance", "_blank");
+                        }}
+                      >
+                        <Eye className="w-4 h-4 mr-2" />
+                        Preview
+                      </Button>
+                    )}
+                    <Button
+                      className="w-full text-sm sm:text-base"
+                      onClick={() => {
+                        if (template.id === "rose-gold-tabs") {
+                          navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
+                        } else {
+                          navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
+                        }
+                      }}
+                    >
+                      Use This Template
+                    </Button>
                   </CardContent>
                 </Card>
               ))}
