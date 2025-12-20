@@ -1,8 +1,12 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import weddingHero from "@/assets/wedding-hero.jpg";
 
 export const RoseGoldTabsPreview = () => {
@@ -43,11 +47,12 @@ export const RoseGoldTabsPreview = () => {
     { id: "2", card_name: "Whish", card_number: "987654321" },
   ];
 
+  // Build pages dynamically (same as ElegantTabsTemplate)
   const PAGES = [
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
     { id: "location", label: "Location" },
-    { id: "gifts", label: "Gifts" },
+    ...(giftCards && giftCards.length > 0 ? [{ id: "gifts", label: "Gifts" }] : []),
     { id: "rsvp", label: "RSVP" },
   ];
 
@@ -92,10 +97,31 @@ export const RoseGoldTabsPreview = () => {
     }
   };
 
+  useEffect(() => {
+    AOS.init({
+      duration: 1000,
+      once: true,
+      easing: "ease-out",
+    });
+  }, []);
+
   const handleStartClick = () => {
     setHasStarted(true);
     goToNextPage();
   };
+
+  // Lock/unlock scroll based on hasStarted
+  useEffect(() => {
+    if (!hasStarted) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [hasStarted]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -169,59 +195,74 @@ export const RoseGoldTabsPreview = () => {
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
-                <div className="w-24 bg-white flex items-center justify-center">
-                  <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                    Ceremony
-                  </p>
-                </div>
-                <div className="flex-1 p-8 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-6 h-6 text-white" />
-                    <p className="text-white font-bold">{ceremony.time}</p>
+              {ceremony && (
+                <div
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
+                  data-aos="fade-left"
+                  data-aos-delay="100"
+                >
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                      Ceremony
+                    </p>
                   </div>
-                  <div className="space-y-3">
-                    <p className="text-xl font-bold text-white">Event Location</p>
-                    <p className="text-white">{ceremony.location_name}</p>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-white" />
+                      <p className="text-white font-bold">{ceremony.time}</p>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{ceremony.location_name}</p>
+                    </div>
+                    {ceremony.location_link && (
+                      <a
+                        href={ceremony.location_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors"
+                      >
+                        <MapPin className="w-5 h-5" />
+                        <span className="text-white">Google Maps</span>
+                      </a>
+                    )}
                   </div>
-                  <a
-                    href={ceremony.location_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    <span className="text-white">Google Maps</span>
-                  </a>
                 </div>
-              </div>
-
-              <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm">
-                <div className="w-24 bg-white flex items-center justify-center">
-                  <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                    Venue
-                  </p>
-                </div>
-                <div className="flex-1 p-8 space-y-6">
-                  <div className="flex items-center gap-3">
-                    <Clock className="w-6 h-6 text-white" />
-                    <p className="text-white font-bold">{venue.time}</p>
+              )}
+              {venue && (
+                <div
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
+                  data-aos="fade-right"
+                  data-aos-delay="200"
+                >
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                      Venue
+                    </p>
                   </div>
-                  <div className="space-y-3">
-                    <p className="text-xl font-bold text-white">Event Location</p>
-                    <p className="text-white">{venue.location_name}</p>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-white" />
+                      <p className="text-white font-bold">{venue.time}</p>
+                    </div>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{venue.location_name}</p>
+                    </div>
+                    {venue.location_link && (
+                      <a
+                        href={venue.location_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors text-white"
+                      >
+                        <MapPin className="w-5 h-5" />
+                        <span className="text-white">Google Maps</span>
+                      </a>
+                    )}
                   </div>
-                  <a
-                    href={venue.location_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors text-white"
-                  >
-                    <MapPin className="w-5 h-5" />
-                    <span className="text-white">Google Maps</span>
-                  </a>
                 </div>
-              </div>
+              )}
             </div>
           </div>
         );
@@ -236,25 +277,30 @@ export const RoseGoldTabsPreview = () => {
       case "rsvp":
         return (
           <div className="space-y-8 text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
+            <div
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8"
+              data-aos="fade-up"
+            >
               <h2 className="text-3xl md:text-4xl font-light text-center text-white">Join Our Celebration</h2>
 
               <p className="text-center text-white/90">
                 Please let us know if you can join us on our special day. Your presence would mean the world to us.
               </p>
 
-              <div className="pt-8 border-t border-white/20">
-                <p className="text-sm text-center mb-2 text-white/80">
-                  Kindly confirm your attendance before this date:
-                </p>
-                <p className="text-xl font-semibold text-white text-center">
-                  {wedding.rsvp_deadline.toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                </p>
-              </div>
+              {wedding.rsvp_deadline && (
+                <div className="pt-8 border-t border-white/20">
+                  <p className="text-sm text-center mb-2 text-white/80">
+                    Kindly confirm your attendance before this date:
+                  </p>
+                  <p className="text-xl font-semibold text-white text-center">
+                    {wedding.rsvp_deadline.toLocaleDateString("en-US", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              )}
             </div>
           </div>
         );
@@ -265,12 +311,7 @@ export const RoseGoldTabsPreview = () => {
   };
 
   return (
-    <div
-      className="relative w-full h-full overflow-hidden"
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-    >
+    <div className="relative w-full h-screen overflow-hidden">
       {/* Image Background */}
       <div className="absolute inset-0 z-0">
         <img src={wedding.main_picture_url} alt="Wedding background" className="w-full h-full object-cover" />
@@ -282,6 +323,9 @@ export const RoseGoldTabsPreview = () => {
         className={`relative z-10 h-full flex flex-col transition-opacity duration-300 ${
           isTransitioning ? "opacity-0" : "opacity-100"
         }`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <div className="flex-1 overflow-y-auto px-4 py-8 md:px-8 md:py-12 flex items-center">
           <div className="w-full max-w-5xl mx-auto">{renderPage()}</div>
