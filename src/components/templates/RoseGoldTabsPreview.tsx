@@ -1,58 +1,47 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Static Countdown Timer component
-const StaticCountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 45,
-    hours: 12,
-    minutes: 30,
+// Static Countdown Timer component matching the original
+const StaticCountdownTimerNoBackground = ({ targetDate }: { targetDate: Date }) => {
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
     seconds: 0,
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { days, hours, minutes, seconds } = prev;
-        seconds--;
-        if (seconds < 0) {
-          seconds = 59;
-          minutes--;
-        }
-        if (minutes < 0) {
-          minutes = 59;
-          hours--;
-        }
-        if (hours < 0) {
-          hours = 23;
-          days--;
-        }
-        if (days < 0) {
-          days = 0;
-          hours = 0;
-          minutes = 0;
-          seconds = 0;
-        }
-        return { days, hours, minutes, seconds };
-      });
-    }, 1000);
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
 
-    return () => clearInterval(timer);
-  }, []);
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeRemaining({ days, hours, minutes, seconds });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
 
   return (
-    <div className="space-y-6 text-center">
+    <div className="space-y-6 text-center p-6">
       <div className="space-y-2">
         <p className="text-sm text-white/80 tracking-wider uppercase">Counting Down To</p>
         <h2 className="text-2xl md:text-3xl font-serif text-white">Our Special Day</h2>
       </div>
       <div className="flex justify-center gap-3 md:gap-6">
         {[
-          { value: timeLeft.days, label: "Days" },
-          { value: timeLeft.hours, label: "Hours" },
-          { value: timeLeft.minutes, label: "Min" },
-          { value: timeLeft.seconds, label: "Sec" },
+          { value: timeRemaining.days, label: "Days" },
+          { value: timeRemaining.hours, label: "Hours" },
+          { value: timeRemaining.minutes, label: "Min" },
+          { value: timeRemaining.seconds, label: "Sec" },
         ].map((item, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-14 h-14 md:w-20 md:h-20 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center">
@@ -72,14 +61,16 @@ export const RoseGoldTabsPreview = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   // Static data
   const wedding = {
     groom_name: "Anthony",
     bride_name: "Odile",
-    wedding_date: "2025-03-15",
+    wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
     video_url: "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4",
-    rsvp_deadline: "2025-03-01",
+    rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   };
 
   const ceremony = {
@@ -97,8 +88,8 @@ export const RoseGoldTabsPreview = () => {
   };
 
   const giftCards = [
-    { id: "1", card_name: "Bank Account", card_number: "****1234" },
-    { id: "2", card_name: "Gift Registry", card_number: "****5678" },
+    { id: "1", card_name: "Bank Account", card_number: "123456789" },
+    { id: "2", card_name: "Gift Registry", card_number: "987654321" },
   ];
 
   const PAGES = [
@@ -129,10 +120,46 @@ export const RoseGoldTabsPreview = () => {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+  };
+
+  const handleTouchEnd = () => {
+    if (!isTransitioning && hasStarted) {
+      const swipeDistance = touchStartX.current - touchEndX.current;
+      const minSwipeDistance = 50;
+
+      if (swipeDistance > minSwipeDistance) {
+        goToNextPage();
+      } else if (swipeDistance < -minSwipeDistance) {
+        goToPreviousPage();
+      }
+    }
+  };
+
   const handleStartClick = () => {
     setHasStarted(true);
     goToNextPage();
   };
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (hasStarted) {
+        if (e.key === "ArrowRight") {
+          goToNextPage();
+        } else if (e.key === "ArrowLeft") {
+          goToPreviousPage();
+        }
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentPage, isTransitioning, hasStarted]);
 
   const renderPage = () => {
     const pageId = PAGES[currentPage].id;
@@ -151,7 +178,7 @@ export const RoseGoldTabsPreview = () => {
               </div>
 
               <p className="text-template-body tracking-widest">
-                {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                {wedding.wedding_date.toLocaleDateString("en-US", {
                   weekday: "long",
                   year: "numeric",
                   month: "long",
@@ -176,8 +203,8 @@ export const RoseGoldTabsPreview = () => {
       case "invitation":
         return (
           <div className="space-y-6 text-center text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6">
-              <StaticCountdownTimer />
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl">
+              <StaticCountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
           </div>
         );
@@ -287,7 +314,7 @@ export const RoseGoldTabsPreview = () => {
                   Kindly confirm your attendance before this date:
                 </p>
                 <p className="text-xl font-semibold text-white text-center">
-                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                  {wedding.rsvp_deadline.toLocaleDateString("en-US", {
                     year: "numeric",
                     month: "long",
                     day: "numeric",
@@ -304,7 +331,12 @@ export const RoseGoldTabsPreview = () => {
   };
 
   return (
-    <div className="relative w-full h-full overflow-hidden">
+    <div 
+      className="relative w-full h-full overflow-hidden"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+    >
       {/* Video Background */}
       <div className="absolute inset-0 z-0">
         <video autoPlay loop muted playsInline className="w-full h-full object-cover">

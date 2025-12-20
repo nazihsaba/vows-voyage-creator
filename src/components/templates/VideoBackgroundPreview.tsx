@@ -2,44 +2,33 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin } from "lucide-react";
 
-// Static Countdown Timer component
-const StaticCountdownTimer = () => {
-  const [timeLeft, setTimeLeft] = useState({
-    days: 45,
-    hours: 12,
-    minutes: 30,
+// Static Countdown Timer component matching the original
+const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
     seconds: 0,
   });
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        let { days, hours, minutes, seconds } = prev;
-        seconds--;
-        if (seconds < 0) {
-          seconds = 59;
-          minutes--;
-        }
-        if (minutes < 0) {
-          minutes = 59;
-          hours--;
-        }
-        if (hours < 0) {
-          hours = 23;
-          days--;
-        }
-        if (days < 0) {
-          days = 0;
-          hours = 0;
-          minutes = 0;
-          seconds = 0;
-        }
-        return { days, hours, minutes, seconds };
-      });
-    }, 1000);
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
 
-    return () => clearInterval(timer);
-  }, []);
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeRemaining({ days, hours, minutes, seconds });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
 
   return (
     <div className="space-y-8 text-center">
@@ -49,10 +38,10 @@ const StaticCountdownTimer = () => {
       </div>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
-          { value: timeLeft.days, label: "Days" },
-          { value: timeLeft.hours, label: "Hours" },
-          { value: timeLeft.minutes, label: "Minutes" },
-          { value: timeLeft.seconds, label: "Seconds" },
+          { value: timeRemaining.days, label: "Days" },
+          { value: timeRemaining.hours, label: "Hours" },
+          { value: timeRemaining.minutes, label: "Minutes" },
+          { value: timeRemaining.seconds, label: "Seconds" },
         ].map((item, index) => (
           <div key={index} className="flex flex-col items-center">
             <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-primary/10 flex items-center justify-center">
@@ -78,11 +67,11 @@ export const VideoBackgroundPreview = () => {
   const wedding = {
     groom_name: "Anthony",
     bride_name: "Odile",
-    wedding_date: "2025-03-15",
+    wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
     groom_family: "The Johnson Family",
     bride_family: "The Williams Family",
     video_url: "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4",
-    rsvp_deadline: "2025-03-01",
+    rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   };
 
   const ceremony = {
@@ -100,8 +89,8 @@ export const VideoBackgroundPreview = () => {
   };
 
   const giftCards = [
-    { id: "1", card_name: "Bank Account", card_number: "****1234", logo_url: null },
-    { id: "2", card_name: "Gift Registry", card_number: "****5678", logo_url: null },
+    { id: "1", card_name: "Bank Account", card_number: "123456789" },
+    { id: "2", card_name: "Gift Registry", card_number: "987654321" },
   ];
 
   useEffect(() => {
@@ -130,7 +119,7 @@ export const VideoBackgroundPreview = () => {
   const handleStartClick = () => {
     setHasStarted(true);
     setTimeout(() => {
-      document.getElementById("family-section-preview")?.scrollIntoView({
+      document.getElementById("family-section-video-preview")?.scrollIntoView({
         behavior: "smooth",
         block: "start",
       });
@@ -176,7 +165,7 @@ export const VideoBackgroundPreview = () => {
             </div>
 
             <p className="text-template-body tracking-widest">
-              {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+              {wedding.wedding_date.toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",
                 month: "long",
@@ -197,7 +186,7 @@ export const VideoBackgroundPreview = () => {
 
         {/* Family Names Section */}
         <section
-          id="family-section-preview"
+          id="family-section-video-preview"
           className="flex items-center justify-center px-4 py-8"
         >
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
@@ -226,7 +215,7 @@ export const VideoBackgroundPreview = () => {
         {/* Countdown Section */}
         <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
-            <StaticCountdownTimer />
+            <StaticCountdownTimer targetDate={wedding.wedding_date} />
           </div>
         </section>
 
@@ -332,7 +321,7 @@ export const VideoBackgroundPreview = () => {
             <div className="pt-8 border-t border-border">
               <p className="text-sm text-center mb-2">Kindly confirm your attendance before:</p>
               <p className="text-xl font-semibold text-center">
-                {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
+                {wedding.rsvp_deadline.toLocaleDateString("en-US", {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
