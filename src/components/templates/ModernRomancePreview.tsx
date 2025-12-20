@@ -5,8 +5,8 @@ import weddingHero from "@/assets/wedding-hero.jpg";
 
 // Static demo data
 const staticWedding = {
-  groom_name: "Anthony",
-  bride_name: "Odile",
+  groom_name: "Chris",
+  bride_name: "Adele",
   groom_family: "The Johnson Family",
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
