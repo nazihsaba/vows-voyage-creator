@@ -17,7 +17,7 @@ export const VideoBackgroundPreview = () => {
     wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
     groom_family: "The Johnson Family",
     bride_family: "The Williams Family",
-    video_url: "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4",
+    video_url: "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4",
     rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   };
 
