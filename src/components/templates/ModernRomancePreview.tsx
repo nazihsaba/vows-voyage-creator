@@ -18,16 +18,16 @@ const staticLocations = [
   {
     id: "1",
     type: "ceremony",
-    location_name: "St. Mary's Cathedral",
-    time: "2:00 PM",
-    location_link: "",
+    location_name: "St.Michel Church",
+    time: "6:00 PM",
+    location_link: "https://maps.app.goo.gl/m9pqWpFKT1yVdkVVA",
   },
   {
     id: "2",
     type: "venue",
-    location_name: "The Grand Ballroom",
-    time: "6:00 PM",
-    location_link: "",
+    location_name: "Le Petit Paradis",
+    time: "8:00 PM",
+    location_link: "https://maps.app.goo.gl/FTzJ5FYp5tHdJGyA8",
   },
 ];
 
