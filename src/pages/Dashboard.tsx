@@ -29,10 +29,12 @@ import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
+import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
+import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const [showPreview, setShowPreview] = useState(false);
+  const [showPreview, setShowPreview] = useState<string | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -162,19 +164,17 @@ const Dashboard = () => {
                     )}
                   </CardHeader>
                   <CardContent className="p-4 sm:p-6 pt-0 mt-auto space-y-2">
-                    {template.id === "template2" && (
-                      <Button
-                        variant="outline"
-                        className="w-full text-sm sm:text-base"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          setShowPreview(true);
-                        }}
-                      >
-                        <Eye className="w-4 h-4 mr-2" />
-                        Preview
-                      </Button>
-                    )}
+                    <Button
+                      variant="outline"
+                      className="w-full text-sm sm:text-base"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setShowPreview(template.id);
+                      }}
+                    >
+                      <Eye className="w-4 h-4 mr-2" />
+                      Preview
+                    </Button>
                     <Button
                       className="w-full text-sm sm:text-base"
                       onClick={() => {
@@ -219,20 +219,22 @@ const Dashboard = () => {
       </main>
 
       {/* Preview Modal */}
-      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+      <Dialog open={showPreview !== null} onOpenChange={(open) => !open && setShowPreview(null)}>
         <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 overflow-hidden">
           <DialogHeader className="absolute top-4 right-4 z-50">
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setShowPreview(false)}
+              onClick={() => setShowPreview(null)}
               className="bg-black/50 hover:bg-black/70 text-white rounded-full"
             >
               <X className="w-5 h-5" />
             </Button>
           </DialogHeader>
           <div className="w-full h-full overflow-y-auto">
-            <ModernRomancePreview />
+            {showPreview === "template2" && <ModernRomancePreview />}
+            {showPreview === "template6" && <VideoBackgroundPreview />}
+            {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
           </div>
         </DialogContent>
       </Dialog>
