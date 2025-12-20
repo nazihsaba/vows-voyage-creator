@@ -13,12 +13,15 @@ export const RoseGoldTabsPreview = () => {
   const touchEndX = useRef(0);
 
   // Static data
+  const weddingDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
+  const rsvpDeadline = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
+  
   const wedding = {
     groom_name: "Anthony",
     bride_name: "Odile",
-    wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+    wedding_date: weddingDate,
     main_picture_url: weddingHero,
-    rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+    rsvp_deadline: rsvpDeadline,
   };
 
   const ceremony = {
