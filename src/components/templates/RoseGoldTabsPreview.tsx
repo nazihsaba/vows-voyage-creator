@@ -3,6 +3,7 @@ import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackgro
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import weddingHero from "@/assets/wedding-hero.jpg";
 
 export const RoseGoldTabsPreview = () => {
   const [currentPage, setCurrentPage] = useState(0);
@@ -16,7 +17,7 @@ export const RoseGoldTabsPreview = () => {
     groom_name: "Anthony",
     bride_name: "Odile",
     wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-    video_url: "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4",
+    main_picture_url: weddingHero,
     rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   };
 
@@ -270,11 +271,13 @@ export const RoseGoldTabsPreview = () => {
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
     >
-      {/* Video Background */}
+      {/* Image Background */}
       <div className="absolute inset-0 z-0">
-        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
-          <source src={wedding.video_url} type="video/mp4" />
-        </video>
+        <img 
+          src={wedding.main_picture_url} 
+          alt="Wedding background" 
+          className="w-full h-full object-cover" 
+        />
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
