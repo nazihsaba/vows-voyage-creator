@@ -39,8 +39,8 @@ const staticGallery = [
 ];
 
 const staticGiftCards = [
-  { id: "1", card_name: "OMT", card_number: "****1234" },
-  { id: "2", card_name: "Whish", card_number: "****5678" },
+  { id: "1", card_name: "OMT", card_number: "123456789" },
+  { id: "2", card_name: "Whish", card_number: "123456789" },
 ];
 
 // Static Countdown Timer Component
@@ -56,7 +56,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
     const updateCountdown = () => {
       const now = new Date();
       const diff = targetDate.getTime() - now.getTime();
-      
+
       if (diff > 0) {
         const days = Math.floor(diff / (1000 * 60 * 60 * 24));
         const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
