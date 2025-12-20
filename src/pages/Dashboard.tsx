@@ -1,9 +1,15 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Heart,
   LogOut,
@@ -17,13 +23,16 @@ import {
   Sparkles,
   UserCog,
   Eye,
+  X,
 } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
+import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
+  const [showPreview, setShowPreview] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -159,7 +168,7 @@ const Dashboard = () => {
                         className="w-full text-sm sm:text-base"
                         onClick={(e) => {
                           e.stopPropagation();
-                          window.open("/preview/modern-romance", "_blank");
+                          setShowPreview(true);
                         }}
                       >
                         <Eye className="w-4 h-4 mr-2" />
@@ -208,6 +217,25 @@ const Dashboard = () => {
           </div>
         </div>
       </main>
+
+      {/* Preview Modal */}
+      <Dialog open={showPreview} onOpenChange={setShowPreview}>
+        <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 overflow-hidden">
+          <DialogHeader className="absolute top-4 right-4 z-50">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setShowPreview(false)}
+              className="bg-black/50 hover:bg-black/70 text-white rounded-full"
+            >
+              <X className="w-5 h-5" />
+            </Button>
+          </DialogHeader>
+          <div className="w-full h-full overflow-y-auto">
+            <ModernRomancePreview />
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
