@@ -1,10 +1,6 @@
-import { useState, useEffect, useRef } from "react";
-import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
-import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
+import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import weddingHero from "@/assets/wedding-hero.jpg";
 
 // Static demo data
@@ -13,8 +9,8 @@ const staticWedding = {
   bride_name: "Odile",
   groom_family: "The Johnson Family",
   bride_family: "The Williams Family",
-  wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000).toISOString(), // 90 days from now
-  rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000).toISOString(), // 60 days from now
+  wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
+  rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
   main_picture_url: weddingHero,
 };
 
@@ -43,9 +39,57 @@ const staticGallery = [
 ];
 
 const staticGiftCards = [
-  { id: "1", card_name: "OMT", card_number: "****1234", logo_url: null },
-  { id: "2", card_name: "Whish", card_number: "****5678", logo_url: null },
+  { id: "1", card_name: "OMT", card_number: "****1234" },
+  { id: "2", card_name: "Whish", card_number: "****5678" },
 ];
+
+// Static Countdown Timer Component
+const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
+  const [timeRemaining, setTimeRemaining] = useState({
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+  });
+
+  useEffect(() => {
+    const updateCountdown = () => {
+      const now = new Date();
+      const diff = targetDate.getTime() - now.getTime();
+      
+      if (diff > 0) {
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        setTimeRemaining({ days, hours, minutes, seconds });
+      }
+    };
+
+    updateCountdown();
+    const interval = setInterval(updateCountdown, 1000);
+    return () => clearInterval(interval);
+  }, [targetDate]);
+
+  return (
+    <div className="text-center">
+      <h2 className="text-2xl md:text-3xl font-serif mb-8 text-[#3e2723]">Counting Down To Our Special Day</h2>
+      <div className="flex justify-center gap-4 md:gap-8">
+        {[
+          { value: timeRemaining.days, label: "Days" },
+          { value: timeRemaining.hours, label: "Hours" },
+          { value: timeRemaining.minutes, label: "Minutes" },
+          { value: timeRemaining.seconds, label: "Seconds" },
+        ].map((item) => (
+          <div key={item.label} className="text-center">
+            <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
+            <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
 
 export const ModernRomancePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
@@ -54,28 +98,10 @@ export const ModernRomancePreview = () => {
 
   const handleStart = () => {
     setHasStarted(true);
-    document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
+    setTimeout(() => {
+      document.getElementById("family-section-modal")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
-
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-out",
-    });
-  }, []);
-
-  useEffect(() => {
-    if (!hasStarted) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "auto";
-    }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
-  }, [hasStarted]);
 
   return (
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif">
@@ -124,7 +150,7 @@ export const ModernRomancePreview = () => {
       </section>
 
       {/* Family Names Section */}
-      <section id="family-section" className="py-16 px-4 text-center bg-white" data-aos="fade-up">
+      <section id="family-section-modal" className="py-16 px-4 text-center bg-white">
         <div className="max-w-3xl mx-auto space-y-8">
           <div className="space-y-4">
             <h2 className="text-template-subtitle">{staticWedding.groom_family}</h2>
@@ -139,7 +165,7 @@ export const ModernRomancePreview = () => {
       </section>
 
       {/* Photo Gallery Section */}
-      <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up" data-aos-delay="100">
+      <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {staticGallery.map((image, index) => (
@@ -156,8 +182,8 @@ export const ModernRomancePreview = () => {
       </section>
 
       {/* Countdown Section */}
-      <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="200">
-        <CountdownTimerNoBackground targetDate={new Date(staticWedding.wedding_date)} />
+      <section className="py-16 px-4 bg-white">
+        <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
       </section>
 
       {/* Wedding Events Section */}
@@ -172,7 +198,7 @@ export const ModernRomancePreview = () => {
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="400">
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
                 <div className="flex items-center justify-center w-full">
                   <Church className="w-8 h-8 text-primary" />
                 </div>
@@ -194,7 +220,7 @@ export const ModernRomancePreview = () => {
               </div>
             )}
             {venue && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="500">
+              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
                 <div className="flex items-center justify-center w-full">
                   <PartyPopper className="w-8 h-8 text-primary" />
                 </div>
@@ -220,18 +246,25 @@ export const ModernRomancePreview = () => {
       </section>
 
       {/* Gift Cards Section */}
-      <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="600">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
           <p className="text-center text-template-body mb-8 text-gray-600">
             For those who desire a wedding list is available
           </p>
-          <GiftCardsNoBackground giftCards={staticGiftCards} isOwner={false} />
+          <div className="grid gap-4 md:grid-cols-2">
+            {staticGiftCards.map((card) => (
+              <div key={card.id} className="bg-[#faf8f5] p-6 rounded-lg text-center">
+                <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+                <p className="text-gray-600 mt-2">{card.card_number}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* RSVP Section */}
-      <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="700">
+      <section className="py-16 px-4 bg-white">
         <div className="max-w-3xl mx-auto space-y-8">
           <h2 className="text-center text-primary text-3xl md:text-4xl">Join Our Celebration</h2>
 
@@ -244,7 +277,7 @@ export const ModernRomancePreview = () => {
               Kindly confirm your attendance before this date:
             </p>
             <p className="text-template-heading text-primary text-center">
-              {new Date(staticWedding.rsvp_deadline).toLocaleDateString("en-US", {
+              {staticWedding.rsvp_deadline.toLocaleDateString("en-US", {
                 year: "numeric",
                 month: "long",
                 day: "numeric",
@@ -255,7 +288,7 @@ export const ModernRomancePreview = () => {
       </section>
 
       {/* Closing Message */}
-      <section className="py-16 px-4 bg-[#faf8f5] text-center" data-aos="fade-up" data-aos-delay="800">
+      <section className="py-16 px-4 bg-[#faf8f5] text-center">
         <div className="max-w-3xl mx-auto space-y-8">
           <p className="text-template-body">
             We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and
