@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
+import { CountdownTimer } from "@/components/CountdownTimer";
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,7 @@ export const RoseGoldTabsPreview = () => {
   // Static data
   const weddingDate = new Date(Date.now() + 90 * 24 * 60 * 60 * 1000);
   const rsvpDeadline = new Date(Date.now() + 60 * 24 * 60 * 60 * 1000);
-  
+
   const wedding = {
     groom_name: "Anthony",
     bride_name: "Odile",
@@ -155,7 +155,7 @@ export const RoseGoldTabsPreview = () => {
         return (
           <div className="space-y-6 text-center text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl">
-              <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
+              <CountdownTimer targetDate={wedding.wedding_date} />
             </div>
           </div>
         );
@@ -237,13 +237,10 @@ export const RoseGoldTabsPreview = () => {
         return (
           <div className="space-y-8 text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
-              <h2 className="text-3xl md:text-4xl font-light text-center text-white">
-                Join Our Celebration
-              </h2>
+              <h2 className="text-3xl md:text-4xl font-light text-center text-white">Join Our Celebration</h2>
 
               <p className="text-center text-white/90">
-                Please let us know if you can join us on our special day. Your presence would
-                mean the world to us.
+                Please let us know if you can join us on our special day. Your presence would mean the world to us.
               </p>
 
               <div className="pt-8 border-t border-white/20">
@@ -268,7 +265,7 @@ export const RoseGoldTabsPreview = () => {
   };
 
   return (
-    <div 
+    <div
       className="relative w-full h-full overflow-hidden"
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
@@ -276,11 +273,7 @@ export const RoseGoldTabsPreview = () => {
     >
       {/* Image Background */}
       <div className="absolute inset-0 z-0">
-        <img 
-          src={wedding.main_picture_url} 
-          alt="Wedding background" 
-          className="w-full h-full object-cover" 
-        />
+        <img src={wedding.main_picture_url} alt="Wedding background" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
