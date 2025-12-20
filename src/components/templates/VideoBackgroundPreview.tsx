@@ -1,61 +1,8 @@
 import { useState, useEffect, useRef } from "react";
+import { CountdownTimer } from "@/components/CountdownTimer";
+import { GiftCards } from "@/components/GiftCards";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin } from "lucide-react";
-
-// Static Countdown Timer component matching the original
-const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
-
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeRemaining({ days, hours, minutes, seconds });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <div className="space-y-8 text-center">
-      <div className="space-y-3">
-        <p className="text-lg text-muted-foreground tracking-wider uppercase">Counting Down To</p>
-        <h2 className="text-4xl md:text-5xl font-serif text-primary">Our Special Day</h2>
-      </div>
-      <div className="flex justify-center gap-4 md:gap-8">
-        {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
-        ].map((item, index) => (
-          <div key={index} className="flex flex-col items-center">
-            <div className="w-16 h-16 md:w-24 md:h-24 rounded-xl bg-primary/10 flex items-center justify-center">
-              <span className="text-2xl md:text-4xl font-bold text-primary">
-                {String(item.value).padStart(2, "0")}
-              </span>
-            </div>
-            <span className="text-sm md:text-base text-muted-foreground mt-2">{item.label}</span>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 export const VideoBackgroundPreview = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -89,8 +36,8 @@ export const VideoBackgroundPreview = () => {
   };
 
   const giftCards = [
-    { id: "1", card_name: "Bank Account", card_number: "123456789" },
-    { id: "2", card_name: "Gift Registry", card_number: "987654321" },
+    { id: "1", card_name: "OMT", card_number: "123456789" },
+    { id: "2", card_name: "Whish", card_number: "987654321" },
   ];
 
   useEffect(() => {
@@ -215,7 +162,7 @@ export const VideoBackgroundPreview = () => {
         {/* Countdown Section */}
         <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
-            <StaticCountdownTimer targetDate={wedding.wedding_date} />
+            <CountdownTimer targetDate={wedding.wedding_date} />
           </div>
         </section>
 
@@ -294,17 +241,7 @@ export const VideoBackgroundPreview = () => {
             <p className="text-center text-template-body mb-8 text-gray-600">
               For those who desire a wedding list is available
             </p>
-            <div className="grid gap-4 md:grid-cols-2">
-              {giftCards.map((card) => (
-                <div
-                  key={card.id}
-                  className="p-6 border border-border rounded-xl bg-accent/5"
-                >
-                  <h3 className="font-semibold text-lg mb-2">{card.card_name}</h3>
-                  <p className="text-muted-foreground">{card.card_number}</p>
-                </div>
-              ))}
-            </div>
+            <GiftCards giftCards={giftCards} isOwner={false} />
           </div>
         </section>
 
