@@ -203,20 +203,12 @@ export const ModernRomancePreview = () => {
                   <Church className="w-8 h-8 text-primary" />
                 </div>
                 <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
-
                 <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                 <div className="space-y-2">
                   <p className="text-template-small text-gray-600">Event Location</p>
                   <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                 </div>
-                <a
-                  href={ceremony.location_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
-                >
-                  View on Map
-                </a>
+                View on Map
               </div>
             )}
             {venue && (
