@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { CountdownTimer } from "@/components/CountdownTimer";
+import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -155,7 +155,7 @@ export const RoseGoldTabsPreview = () => {
         return (
           <div className="space-y-6 text-center text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl">
-              <CountdownTimer targetDate={wedding.wedding_date} />
+              <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
           </div>
         );
