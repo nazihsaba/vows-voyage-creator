@@ -1,13 +1,10 @@
 import { useState, useRef, useEffect } from "react";
-import { EditableField } from "@/components/EditableField";
 import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
 import { ChevronLeft, ChevronRight, Clock, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import AOS from "aos";
-import "aos/dist/aos.css";
 import weddingHero from "@/assets/wedding-hero.jpg";
 
 interface RoseGoldTabsPreviewProps {
@@ -16,10 +13,6 @@ interface RoseGoldTabsPreviewProps {
   gallery?: any[];
   giftCards?: any[];
   isOwner?: boolean;
-  isPreview?: boolean;
-  onFieldUpdate?: (fieldId: string, text: string, style: any) => void;
-  getFieldValue?: (fieldId: string, defaultValue: string) => string;
-  getFieldStyle?: (fieldId: string) => any;
   invitees?: any[];
   rsvpResponses?: Record<string, boolean>;
   handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
@@ -35,10 +28,6 @@ export const RoseGoldTabsPreview = ({
   gallery = [],
   giftCards: giftCardsProp,
   isOwner = false,
-  isPreview = true,
-  onFieldUpdate: onFieldUpdateProp,
-  getFieldValue: getFieldValueProp,
-  getFieldStyle: getFieldStyleProp,
   invitees = [],
   rsvpResponses = {},
   handleRsvpToggle = () => {},
@@ -98,11 +87,6 @@ export const RoseGoldTabsPreview = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  // Default field handlers for preview
-  const onFieldUpdate = onFieldUpdateProp || (() => {});
-  const getFieldValue = getFieldValueProp || ((fieldId: string, defaultValue: string) => defaultValue);
-  const getFieldStyle = getFieldStyleProp || (() => ({}));
-
   // Build pages dynamically
   const PAGES = [
     { id: "cover", label: "Cover" },
@@ -153,13 +137,6 @@ export const RoseGoldTabsPreview = ({
     }
   };
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-out",
-    });
-  }, []);
 
   // Handle audio time updates to loop within trimmed range
   const handleTimeUpdate = () => {
@@ -230,55 +207,22 @@ export const RoseGoldTabsPreview = ({
         return (
           <div className="flex flex-col items-center justify-center h-full space-y-8 text-center text-white">
             <div className="space-y-8 animate-fade-in">
-              <EditableField
-                fieldId="hero-subtitle"
-                text={getFieldValue("hero-subtitle", "The Wedding Of")}
-                style={getFieldStyle("hero-subtitle")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-small"
-              />
+              <p className="text-template-small">The Wedding Of</p>
 
               <div className="space-y-4">
-                <EditableField
-                  fieldId="groom-name"
-                  text={getFieldValue("groom-name", wedding.groom_name)}
-                  style={getFieldStyle("groom-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h1"
-                  className="text-template-title"
-                />
+                <h1 className="text-template-title">{wedding.groom_name}</h1>
                 <p className="text-4xl md:text-5xl">&</p>
-                <EditableField
-                  fieldId="bride-name"
-                  text={getFieldValue("bride-name", wedding.bride_name)}
-                  style={getFieldStyle("bride-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h1"
-                  className="text-template-title"
-                />
+                <h1 className="text-template-title">{wedding.bride_name}</h1>
               </div>
 
-              <EditableField
-                fieldId="wedding-date-display"
-                text={getFieldValue(
-                  "wedding-date-display",
-                  new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  }),
-                )}
-                style={getFieldStyle("wedding-date-display")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-body tracking-widest"
-              />
+              <p className="text-template-body tracking-widest">
+                {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
             </div>
 
             {!hasStarted && (
@@ -385,34 +329,15 @@ export const RoseGoldTabsPreview = ({
 
       case "rsvp":
         return (
-          <div className="space-y-8 text-white">
-            <div
-              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8"
-              data-aos="fade-up"
-            >
-              <EditableField
-                fieldId="rsvp-title"
-                text={getFieldValue("rsvp-title", "Join Our Celebration")}
-                style={getFieldStyle("rsvp-title")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h2"
-                className="text-3xl md:text-4xl font-light text-center text-white"
-              />
+          <div className="space-y-8 text-white animate-fade-in">
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
+              <h2 className="text-3xl md:text-4xl font-light text-center text-white">
+                Join Our Celebration
+              </h2>
 
-              <EditableField
-                fieldId="rsvp-message"
-                text={getFieldValue(
-                  "rsvp-message",
-                  "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-                )}
-                style={getFieldStyle("rsvp-message")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-center text-white/90"
-              />
+              <p className="text-center text-white/90">
+                Please let us know if you can join us on our special day. Your presence would mean the world to us.
+              </p>
 
               {/* Invitees List with Checkboxes */}
               {invitees.length > 0 && (
