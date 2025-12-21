@@ -448,21 +448,31 @@ export const RoseGoldTabsPreview = ({
           <div className="w-full max-w-5xl mx-auto">{renderPage()}</div>
         </div>
 
-        {/* Navigation */}
+        {/* Hidden Navigation Arrows - Middle of screen */}
         {hasStarted && (
-          <div className="absolute bottom-8 left-0 right-0 flex items-center justify-between px-4 md:px-8">
-            <Button
+          <>
+            {/* Left Arrow */}
+            <button
               onClick={goToPreviousPage}
               disabled={currentPage === 0 || isTransitioning}
-              variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 disabled:opacity-30"
+              className="absolute left-0 top-1/2 -translate-y-1/2 w-12 h-24 flex items-center justify-center opacity-0 hover:opacity-20 transition-opacity disabled:pointer-events-none z-20"
+              aria-label="Previous page"
             >
-              <ChevronLeft className="w-6 h-6" />
-            </Button>
+              <ChevronLeft className="w-6 h-6 text-white" />
+            </button>
+
+            {/* Right Arrow */}
+            <button
+              onClick={goToNextPage}
+              disabled={currentPage === PAGES.length - 1 || isTransitioning}
+              className="absolute right-0 top-1/2 -translate-y-1/2 w-12 h-24 flex items-center justify-center opacity-0 hover:opacity-20 transition-opacity disabled:pointer-events-none z-20"
+              aria-label="Next page"
+            >
+              <ChevronRight className="w-6 h-6 text-white" />
+            </button>
 
             {/* Page Dots */}
-            <div className="flex gap-2">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
               {PAGES.map((page, index) => (
                 <button
                   key={page.id}
@@ -481,17 +491,7 @@ export const RoseGoldTabsPreview = ({
                 />
               ))}
             </div>
-
-            <Button
-              onClick={goToNextPage}
-              disabled={currentPage === PAGES.length - 1 || isTransitioning}
-              variant="ghost"
-              size="icon"
-              className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 disabled:opacity-30"
-            >
-              <ChevronRight className="w-6 h-6" />
-            </Button>
-          </div>
+          </>
         )}
       </div>
     </div>
