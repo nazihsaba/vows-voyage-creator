@@ -40,28 +40,26 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
   }, [targetDate]);
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[100px]">
-      <div className="text-2xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-1 md:mb-2">{value}</div>
-      <div className="text-[9px] md:text-sm uppercase tracking-widest text-white drop-shadow-md">{label}</div>
+    <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[100px] px-2">
+      <span className="text-2xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-1 md:mb-2">
+        {value}
+      </span>
+      <span className="text-[9px] md:text-sm uppercase tracking-widest text-white drop-shadow-md">
+        {label}
+      </span>
     </div>
   );
 
   return (
     <div className="flex flex-col items-center justify-center py-8 md:py-12">
-      <h3 className="text-base md:text-2xl font-serif text-white drop-shadow-lg mb-4 md:mb-6">Counting down to our big day</h3>
-      <div className="flex items-center justify-center gap-2 md:gap-8">
-      <div data-aos="fade-up" data-aos-delay="0">
+      <h3 className="text-base md:text-2xl font-serif text-white drop-shadow-lg mb-4 md:mb-6">
+        Counting down to our big day
+      </h3>
+      <div className="flex flex-row items-center justify-center gap-4 md:gap-8">
         <TimeUnit value={timeRemaining.days} label="Days" />
-      </div>
-      <div data-aos="fade-up" data-aos-delay="100">
         <TimeUnit value={timeRemaining.hours} label="Hours" />
-      </div>
-      <div data-aos="fade-up" data-aos-delay="200">
         <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-      </div>
-      <div data-aos="fade-up" data-aos-delay="300">
         <TimeUnit value={timeRemaining.seconds} label="Seconds" />
-      </div>
       </div>
     </div>
   );
