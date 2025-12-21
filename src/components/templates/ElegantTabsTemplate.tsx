@@ -186,8 +186,8 @@ export const ElegantTabsTemplate = ({
     switch (pageId) {
       case "cover":
         return (
-          <div className="flex flex-col items-center justify-center h-full space-y-4 sm:space-y-6 md:space-y-8 text-center text-white">
-            <div className="space-y-4 sm:space-y-6 md:space-y-8 animate-fade-in">
+          <div className="flex flex-col items-center justify-center h-full space-y-8 text-center text-white">
+            <div className="space-y-8 animate-fade-in">
               <EditableField
                 fieldId="hero-subtitle"
                 text={getFieldValue("hero-subtitle", "The Wedding Of")}
@@ -195,10 +195,10 @@ export const ElegantTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-xs sm:text-sm md:text-base tracking-widest"
+                className="text-template-small"
               />
 
-              <div className="space-y-2 sm:space-y-4">
+              <div className="space-y-4">
                 <EditableField
                   fieldId="groom-name"
                   text={getFieldValue("groom-name", wedding.groom_name)}
@@ -206,9 +206,9 @@ export const ElegantTabsTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="h1"
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light"
+                  className="text-template-title"
                 />
-                <p className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl">&</p>
+                <p className="text-4xl md:text-5xl">&</p>
                 <EditableField
                   fieldId="bride-name"
                   text={getFieldValue("bride-name", wedding.bride_name)}
@@ -216,7 +216,7 @@ export const ElegantTabsTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="h1"
-                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light"
+                  className="text-template-title"
                 />
               </div>
 
@@ -235,7 +235,7 @@ export const ElegantTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-sm sm:text-base md:text-lg tracking-widest"
+                className="text-template-body tracking-widest"
               />
             </div>
 
@@ -244,7 +244,7 @@ export const ElegantTabsTemplate = ({
                 onClick={handleStartClick}
                 size="lg"
                 variant="outline"
-                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-8 sm:px-10 md:px-12 py-4 sm:py-5 md:py-6 text-base sm:text-lg rounded-full"
+                className="bg-white/10 backdrop-blur-sm border-white/30 text-white hover:bg-white/20 px-12 py-6 text-lg rounded-full"
               >
                 START
               </Button>
@@ -254,8 +254,8 @@ export const ElegantTabsTemplate = ({
 
       case "invitation":
         return (
-          <div className="space-y-4 sm:space-y-6 text-center text-white">
-            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-4 sm:p-6">
+          <div className="space-y-6 text-center text-white">
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl">
               <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
             </div>
           </div>
@@ -263,41 +263,41 @@ export const ElegantTabsTemplate = ({
 
       case "location":
         return (
-          <div className="space-y-4 sm:space-y-6">
-            <div className="text-center mb-4 sm:mb-6 md:mb-8">
-              <h2 className="text-2xl sm:text-3xl md:text-4xl font-light text-white mb-2 sm:mb-4">Wedding Events</h2>
-              <p className="text-sm sm:text-base text-white/80">Join us in celebrating this special day</p>
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Wedding Events</h2>
+              <p className="text-white/80">Join us in celebrating this special day</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+            <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
                 <div
-                  className="rounded-xl shadow-2xl overflow-hidden flex flex-col sm:flex-row bg-white/10 backdrop-blur-sm"
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
                   data-aos="fade-left"
                   data-aos-delay="100"
                 >
-                  <div className="w-full sm:w-20 md:w-24 h-12 sm:h-auto bg-white flex items-center justify-center py-2 sm:py-0">
-                    <p className="text-[hsl(54,20%,60%)] text-xl sm:text-2xl md:text-4xl font-cursive sm:transform sm:-rotate-90 whitespace-nowrap">
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Ceremony
                     </p>
                   </div>
-                  <div className="flex-1 p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4 md:space-y-6">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                      <p className="text-white font-bold text-sm sm:text-base">{ceremony.time}</p>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-white" />
+                      <p className="text-white font-bold">{ceremony.time}</p>
                     </div>
-                    <div className="space-y-1 sm:space-y-2 md:space-y-3">
-                      <p className="text-base sm:text-lg md:text-xl font-bold text-white">Event Location</p>
-                      <p className="text-sm sm:text-base text-white">{ceremony.location_name}</p>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{ceremony.location_name}</p>
                     </div>
                     {ceremony.location_link && (
                       <a
                         href={ceremony.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white text-white px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-colors text-sm sm:text-base"
+                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors"
                       >
-                        <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <MapPin className="w-5 h-5" />
                         <span className="text-white">Google Maps</span>
                       </a>
                     )}
@@ -306,32 +306,32 @@ export const ElegantTabsTemplate = ({
               )}
               {venue && (
                 <div
-                  className="rounded-xl shadow-2xl overflow-hidden flex flex-col sm:flex-row bg-white/10 backdrop-blur-sm"
+                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
                   data-aos="fade-right"
                   data-aos-delay="200"
                 >
-                  <div className="w-full sm:w-20 md:w-24 h-12 sm:h-auto bg-white flex items-center justify-center py-2 sm:py-0">
-                    <p className="text-[hsl(54,20%,60%)] text-xl sm:text-2xl md:text-4xl font-cursive sm:transform sm:-rotate-90 whitespace-nowrap">
+                  <div className="w-24 bg-white flex items-center justify-center">
+                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Venue
                     </p>
                   </div>
-                  <div className="flex-1 p-4 sm:p-6 md:p-8 space-y-3 sm:space-y-4 md:space-y-6">
-                    <div className="flex items-center gap-2 sm:gap-3">
-                      <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
-                      <p className="text-white font-bold text-sm sm:text-base">{venue.time}</p>
+                  <div className="flex-1 p-8 space-y-6">
+                    <div className="flex items-center gap-3">
+                      <Clock className="w-6 h-6 text-white" />
+                      <p className="text-white font-bold">{venue.time}</p>
                     </div>
-                    <div className="space-y-1 sm:space-y-2 md:space-y-3">
-                      <p className="text-base sm:text-lg md:text-xl font-bold text-white">Event Location</p>
-                      <p className="text-sm sm:text-base text-white">{venue.location_name}</p>
+                    <div className="space-y-3">
+                      <p className="text-xl font-bold text-white">Event Location</p>
+                      <p className="text-white">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
                       <a
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white px-4 sm:px-6 py-2 sm:py-3 rounded-full transition-colors text-white text-sm sm:text-base"
+                        className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors text-white"
                       >
-                        <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                        <MapPin className="w-5 h-5" />
                         <span className="text-white">Google Maps</span>
                       </a>
                     )}
@@ -343,15 +343,15 @@ export const ElegantTabsTemplate = ({
         );
       case "gifts":
         return (
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-6">
             <GiftCardsNoBackground giftCards={giftCards} isOwner={isOwner} />
           </div>
         );
       case "rsvp":
         return (
-          <div className="space-y-4 sm:space-y-6 md:space-y-8 text-white">
+          <div className="space-y-8 text-white">
             <div
-              className="bg-white/10 backdrop-blur-sm rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 border border-white/20 space-y-4 sm:space-y-6 md:space-y-8"
+              className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8"
               data-aos="fade-up"
             >
               <EditableField
@@ -361,7 +361,7 @@ export const ElegantTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-2xl sm:text-3xl md:text-4xl font-light text-center text-white"
+                className="text-3xl md:text-4xl font-light text-center text-white"
               />
 
               <EditableField
@@ -375,30 +375,30 @@ export const ElegantTabsTemplate = ({
                 isPreview={isPreview}
                 multiline={true}
                 tag="p"
-                className="text-center text-sm sm:text-base text-white/90"
+                className="text-center text-white/90"
               />
 
               {/* Invitees List with Checkboxes */}
               {invitees.length > 0 && (
-                <div className="space-y-4 sm:space-y-6 pt-4 sm:pt-6 border-t border-white/20">
-                  <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-6 pt-6 border-t border-white/20">
+                  <div className="space-y-4">
                     {invitees.map((invitee: any) => (
                       <div
                         key={invitee.id}
-                        className="flex items-center justify-between py-3 sm:py-4 px-4 sm:px-6 bg-white/5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
+                        className="flex items-center justify-between py-4 px-6 bg-white/5 rounded-lg border border-white/20 hover:bg-white/10 transition-colors"
                       >
-                        <span className="text-base sm:text-lg md:text-xl font-serif text-white">{invitee.name}</span>
-                        <div className="flex items-center gap-2 sm:gap-3">
+                        <span className="text-xl font-serif text-white">{invitee.name}</span>
+                        <div className="flex items-center gap-3">
                           <Checkbox
                             id={`rsvp-${invitee.id}`}
                             checked={rsvpResponses[invitee.id] === true}
                             onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
                             disabled={isRsvpDeadlinePassed}
-                            className="h-4 w-4 sm:h-5 sm:w-5"
+                            className="h-5 w-5"
                           />
                           <Label
                             htmlFor={`rsvp-${invitee.id}`}
-                            className={`text-sm sm:text-base cursor-pointer font-medium ${
+                            className={`text-base cursor-pointer font-medium ${
                               isRsvpDeadlinePassed ? "text-white/50" : "text-white"
                             }`}
                           >
@@ -409,18 +409,18 @@ export const ElegantTabsTemplate = ({
                     ))}
                   </div>
 
-                  <div className="pt-4 sm:pt-6 border-t border-white/20 space-y-3 sm:space-y-4">
-                    <p className="text-base sm:text-lg font-semibold text-center text-white">
+                  <div className="pt-6 border-t border-white/20 space-y-4">
+                    <p className="text-lg font-semibold text-center text-white">
                       Number of Guests: {numberOfPersons || invitees.length}
                     </p>
 
                     {isRsvpDeadlinePassed ? (
-                      <p className="text-xs sm:text-sm text-red-400 text-center font-medium">RSVP deadline has passed</p>
+                      <p className="text-sm text-red-400 text-center font-medium">RSVP deadline has passed</p>
                     ) : (
                       <Button
                         onClick={handleRsvpSubmit}
                         disabled={submittingRsvp}
-                        className="w-full text-base sm:text-lg py-4 sm:py-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
+                        className="w-full text-lg py-6 bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30"
                         size="lg"
                       >
                         {submittingRsvp ? "Submitting..." : "Submit RSVP"}
@@ -431,11 +431,11 @@ export const ElegantTabsTemplate = ({
               )}
 
               {wedding.rsvp_deadline && (
-                <div className="pt-4 sm:pt-6 md:pt-8 border-t border-white/20">
-                  <p className="text-xs sm:text-sm text-center mb-1 sm:mb-2 text-white/80">
+                <div className="pt-8 border-t border-white/20">
+                  <p className="text-sm text-center mb-2 text-white/80">
                     {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
                   </p>
-                  <p className="text-lg sm:text-xl font-semibold text-white text-center">
+                  <p className="text-xl font-semibold text-white text-center">
                     {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",

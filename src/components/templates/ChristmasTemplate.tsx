@@ -27,14 +27,14 @@ export const ChristmasTemplate = ({
 
   return (
     <div 
-      className="w-full min-h-screen flex items-center justify-center p-4 sm:p-6 md:p-8"
+      className="w-full min-h-screen flex items-center justify-center p-8"
       style={{ 
         background: '#f7f7f7',
         fontFamily: 'Georgia, serif'
       }}
     >
       <div 
-        className="w-full max-w-sm sm:max-w-md bg-white p-4 sm:p-6 md:p-10 rounded-xl relative shadow-xl"
+        className="w-full max-w-md bg-white p-8 md:p-10 rounded-xl relative shadow-xl"
         style={{
           border: '2px solid #d8c897',
           backgroundImage: `url(${wedding.main_picture_url || defaultBackground})`,
@@ -43,16 +43,16 @@ export const ChristmasTemplate = ({
         }}
       >
         {/* Top Decoration */}
-        <div className="w-full flex justify-center mb-3 sm:mb-4">
+        <div className="w-full flex justify-center mb-4">
           <img 
             src={leavesDecor} 
             alt="Decorative leaves" 
-            className="w-4/5 sm:w-3/4 opacity-90"
+            className="w-4/5 opacity-90"
           />
         </div>
 
         {/* Heading */}
-        <div className="text-center mb-4 sm:mb-6">
+        <div className="text-center mb-6">
           <EditableField
             fieldId="recipient-name"
             text={getFieldValue("recipient-name", "DEAR GUEST")}
@@ -60,7 +60,7 @@ export const ChristmasTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-xs sm:text-sm tracking-widest mb-2"
+            className="text-sm tracking-widest mb-2"
           />
           <EditableField
             fieldId="invitation-text"
@@ -69,23 +69,23 @@ export const ChristmasTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-xs sm:text-sm tracking-widest"
+            className="text-sm tracking-widest"
           />
         </div>
 
         {/* Christmas Tree - Hidden when using default background */}
         {wedding.main_picture_url && (
-          <div className="flex justify-center my-4 sm:my-6">
+          <div className="flex justify-center my-6">
             <img 
               src={wedding.main_picture_url} 
               alt="Christmas decoration" 
-              className="w-32 sm:w-40 md:w-48 h-auto"
+              className="w-48 h-auto"
             />
           </div>
         )}
 
         {/* Title */}
-        <div className="text-center mb-3 sm:mb-4">
+        <div className="text-center mb-4">
           <EditableField
             fieldId="event-title"
             text={getFieldValue("event-title", "Christmas Dinner")}
@@ -93,12 +93,12 @@ export const ChristmasTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="h1"
-            className="text-2xl sm:text-3xl md:text-4xl mb-2 font-serif"
+            className="text-4xl mb-2 font-serif"
           />
         </div>
 
         {/* Details */}
-        <div className="text-center mb-4 sm:mb-6 text-gray-700">
+        <div className="text-center mb-6 text-gray-700">
           <EditableField
             fieldId="event-date"
             text={getFieldValue("event-date", new Date(wedding.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric' }) + " at " + (venue?.time || "6 P.M."))}
@@ -106,7 +106,7 @@ export const ChristmasTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-sm sm:text-base leading-relaxed"
+            className="text-base leading-relaxed"
           />
           {venue && (
             <EditableField
@@ -116,13 +116,13 @@ export const ChristmasTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="p"
-              className="text-sm sm:text-base leading-relaxed"
+              className="text-base leading-relaxed"
             />
           )}
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-4 sm:mt-6">
+        <div className="text-center mt-6">
           <EditableField
             fieldId="closing-message"
             text={getFieldValue("closing-message", `With Love, ${wedding.groom_name || wedding.bride_name || 'The Host'}`)}
@@ -130,16 +130,16 @@ export const ChristmasTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-sm sm:text-base text-[#8a7646]"
+            className="text-base text-[#8a7646]"
           />
         </div>
 
         {/* Bottom Decoration */}
-        <div className="w-full flex justify-center mt-4 sm:mt-6">
+        <div className="w-full flex justify-center mt-6">
           <img 
             src={leavesDecor} 
             alt="Decorative leaves" 
-            className="w-4/5 sm:w-3/4 opacity-90"
+            className="w-4/5 opacity-90"
           />
         </div>
       </div>
