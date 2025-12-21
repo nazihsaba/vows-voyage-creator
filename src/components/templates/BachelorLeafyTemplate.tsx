@@ -33,14 +33,14 @@ export const BachelorLeafyTemplate = ({
     <div className="w-full min-h-screen bg-[#f5f1e8]">
       {/* Hero Section */}
       <section 
-        className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16"
+        className="relative min-h-screen flex flex-col items-center justify-center px-4 sm:px-6 py-8 sm:py-16"
         style={{
           backgroundImage: wedding.main_picture_url ? `url(${wedding.main_picture_url})` : `url(${bachelorBg})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
       >
-        <div className="max-w-3xl w-full text-center space-y-8 bg-white/90 backdrop-blur-sm p-12 rounded-lg shadow-2xl">
+        <div className="max-w-3xl w-full text-center space-y-4 sm:space-y-6 md:space-y-8 bg-white/90 backdrop-blur-sm p-6 sm:p-8 md:p-12 rounded-lg shadow-2xl">
           {/* Main Heading */}
           <EditableField
             fieldId="main-heading"
@@ -49,7 +49,7 @@ export const BachelorLeafyTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="h1"
-            className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight"
+            className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold text-gray-900 leading-tight"
           />
 
           {/* Subtitle */}
@@ -60,11 +60,11 @@ export const BachelorLeafyTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-xl md:text-2xl text-gray-700"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-700"
           />
 
           {/* Names */}
-          <div className="py-6">
+          <div className="py-3 sm:py-4 md:py-6">
             <EditableField
               fieldId="names"
               text={getFieldValue("names", `${wedding.groom_name} & ${wedding.bride_name}`)}
@@ -72,7 +72,7 @@ export const BachelorLeafyTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h2"
-              className="text-5xl md:text-6xl lg:text-7xl text-gray-900"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl text-gray-900"
             />
           </div>
 
@@ -84,16 +84,16 @@ export const BachelorLeafyTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-lg md:text-xl text-gray-700 leading-relaxed"
+            className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-700 leading-relaxed"
           />
 
           {/* Event Details */}
-          <div className="space-y-4 pt-6 text-left">
+          <div className="space-y-3 sm:space-y-4 pt-4 sm:pt-6 text-left">
             {/* Date */}
-            <div className="flex items-start gap-4">
-              <Calendar className="w-6 h-6 text-gray-700 mt-1 flex-shrink-0" />
+            <div className="flex items-start gap-3 sm:gap-4">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 mt-1 flex-shrink-0" />
               <div>
-                <p className="font-bold text-lg text-gray-900">Date:</p>
+                <p className="font-bold text-sm sm:text-base md:text-lg text-gray-900">Date:</p>
                 <EditableField
                   fieldId="event-date"
                   text={getFieldValue("event-date", new Date(wedding.wedding_date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' }))}
@@ -101,16 +101,16 @@ export const BachelorLeafyTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
-                  className="text-lg text-gray-700"
+                  className="text-sm sm:text-base md:text-lg text-gray-700"
                 />
               </div>
             </div>
 
             {/* Time */}
-            <div className="flex items-start gap-4">
-              <Clock className="w-6 h-6 text-gray-700 mt-1 flex-shrink-0" />
+            <div className="flex items-start gap-3 sm:gap-4">
+              <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 mt-1 flex-shrink-0" />
               <div>
-                <p className="font-bold text-lg text-gray-900">Time:</p>
+                <p className="font-bold text-sm sm:text-base md:text-lg text-gray-900">Time:</p>
                 <EditableField
                   fieldId="event-time"
                   text={getFieldValue("event-time", ceremony?.time || "5:30 PM for Ladies and 8:00 PM for Gents")}
@@ -118,17 +118,17 @@ export const BachelorLeafyTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
-                  className="text-lg text-gray-700"
+                  className="text-sm sm:text-base md:text-lg text-gray-700"
                 />
               </div>
             </div>
 
             {/* Location */}
             {ceremony && (
-              <div className="flex items-start gap-4">
-                <MapPin className="w-6 h-6 text-gray-700 mt-1 flex-shrink-0" />
+              <div className="flex items-start gap-3 sm:gap-4">
+                <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-gray-700 mt-1 flex-shrink-0" />
                 <div>
-                  <p className="font-bold text-lg text-gray-900">Location:</p>
+                  <p className="font-bold text-sm sm:text-base md:text-lg text-gray-900">Location:</p>
                   <EditableField
                     fieldId="event-location"
                     text={getFieldValue("event-location", ceremony.location_name || "")}
@@ -136,7 +136,7 @@ export const BachelorLeafyTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-lg text-gray-700"
+                    className="text-sm sm:text-base md:text-lg text-gray-700"
                   />
                 </div>
               </div>
@@ -144,7 +144,7 @@ export const BachelorLeafyTemplate = ({
           </div>
 
           {/* Footer Message */}
-          <div className="pt-8 border-t border-gray-300">
+          <div className="pt-4 sm:pt-6 md:pt-8 border-t border-gray-300">
             <EditableField
               fieldId="footer-message"
               text={getFieldValue("footer-message", "Bring your party spirit; We'll take care of the rest.")}
@@ -152,7 +152,7 @@ export const BachelorLeafyTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="p"
-              className="text-xl md:text-2xl font-bold text-gray-900"
+              className="text-base sm:text-lg md:text-xl lg:text-2xl font-bold text-gray-900"
             />
           </div>
         </div>
@@ -160,9 +160,9 @@ export const BachelorLeafyTemplate = ({
 
       {/* Location Details */}
       {locations.length > 0 && (
-        <section className="py-16 px-6 bg-[#f5f1e8]">
-          <div className="max-w-4xl mx-auto space-y-6">
-            <h2 className="text-4xl font-bold text-center mb-12 text-gray-900">Event Location</h2>
+        <section className="py-8 sm:py-12 md:py-16 px-4 sm:px-6 bg-[#f5f1e8]">
+          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-6 sm:mb-8 md:mb-12 text-gray-900">Event Location</h2>
             {locations.map((location) => (
               <EventLocation
                 key={location.id}
