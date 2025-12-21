@@ -298,7 +298,7 @@ export const RoseGoldTabsPreview = ({
         return (
           <div className="space-y-6 text-center text-white">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl">
-              <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
+              <CountdownTimerNoBackground targetDate={new Date(wedding.wedding_date)} />
             </div>
           </div>
         );
