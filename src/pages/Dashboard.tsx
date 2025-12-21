@@ -9,7 +9,9 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
 } from "@/components/ui/dialog";
+import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   Heart,
   LogOut,
@@ -221,6 +223,10 @@ const Dashboard = () => {
       {/* Preview Modal */}
       <Dialog open={showPreview !== null} onOpenChange={(open) => !open && setShowPreview(null)}>
         <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 overflow-hidden">
+          <VisuallyHidden>
+            <DialogTitle>Template Preview</DialogTitle>
+            <DialogDescription>Preview of the selected wedding template</DialogDescription>
+          </VisuallyHidden>
           <DialogHeader className="absolute top-4 right-4 z-50">
             <Button
               variant="ghost"
