@@ -52,7 +52,7 @@ export const RoseGoldTabsPreview = () => {
     { id: "cover", label: "Cover" },
     { id: "invitation", label: "Invitation" },
     { id: "location", label: "Location" },
-    { id: "gifts", label: "Gifts" },
+    ...(giftCards && giftCards.length > 0 ? [{ id: "gifts", label: "Gifts" }] : []),
     { id: "rsvp", label: "RSVP" },
   ];
 
