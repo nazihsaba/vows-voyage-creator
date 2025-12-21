@@ -305,7 +305,7 @@ export const RoseGoldTabsPreview = ({
 
       case "location":
         return (
-          <div className="space-y-6">
+          <div className="space-y-6 animate-fade-in">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Wedding Events</h2>
               <p className="text-white/80">Join us in celebrating this special day</p>
@@ -313,68 +313,60 @@ export const RoseGoldTabsPreview = ({
 
             <div className="grid md:grid-cols-2 gap-6">
               {ceremony && (
-                <div
-                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
-                  data-aos="fade-left"
-                  data-aos-delay="100"
-                >
+                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm border border-white/20">
                   <div className="w-24 bg-white flex items-center justify-center">
-                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                    <p className="text-amber-600 text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Ceremony
                     </p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
                       <Clock className="w-6 h-6 text-white" />
-                      <p className="text-white font-bold">{ceremony.time}</p>
+                      <p className="text-white font-bold text-lg">{ceremony.time}</p>
                     </div>
                     <div className="space-y-3">
                       <p className="text-xl font-bold text-white">Event Location</p>
-                      <p className="text-white">{ceremony.location_name}</p>
+                      <p className="text-white/90 text-lg">{ceremony.location_name}</p>
                     </div>
                     {ceremony.location_link && (
                       <a
                         href={ceremony.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full transition-colors"
+                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full hover:bg-white/20 transition-colors"
                       >
                         <MapPin className="w-5 h-5" />
-                        <span className="text-white">Google Maps</span>
+                        <span>Google Maps</span>
                       </a>
                     )}
                   </div>
                 </div>
               )}
               {venue && (
-                <div
-                  className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm"
-                  data-aos="fade-right"
-                  data-aos-delay="200"
-                >
+                <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm border border-white/20">
                   <div className="w-24 bg-white flex items-center justify-center">
-                    <p className="text-[hsl(54,20%,60%)] text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
+                    <p className="text-amber-600 text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
                       Venue
                     </p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
                       <Clock className="w-6 h-6 text-white" />
-                      <p className="text-white font-bold">{venue.time}</p>
+                      <p className="text-white font-bold text-lg">{venue.time}</p>
                     </div>
                     <div className="space-y-3">
                       <p className="text-xl font-bold text-white">Event Location</p>
-                      <p className="text-white">{venue.location_name}</p>
+                      <p className="text-white/90 text-lg">{venue.location_name}</p>
                     </div>
                     {venue.location_link && (
                       <a
                         href={venue.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center gap-2 border-2 border-white px-6 py-3 rounded-full transition-colors text-white"
+                        className="inline-flex items-center gap-2 border-2 border-white text-white px-6 py-3 rounded-full hover:bg-white/20 transition-colors"
                       >
                         <MapPin className="w-5 h-5" />
-                        <span className="text-white">Google Maps</span>
+                        <span>Google Maps</span>
                       </a>
                     )}
                   </div>
