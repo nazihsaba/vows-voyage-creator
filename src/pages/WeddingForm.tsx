@@ -73,7 +73,8 @@ const WeddingForm = () => {
     template === 'template4' ||
     template === 'elegant-fullscreen' ||
     template === 'template5' ||
-    template === 'modern-wedding';
+    template === 'modern-wedding' ||
+    template === 'classic-romance';
 
   useEffect(() => {
     if (id) {
@@ -365,7 +366,7 @@ const WeddingForm = () => {
       }
 
       // Upload gallery images if template supports gallery
-      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen", "template5", "modern-wedding"];
+      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen", "template5", "modern-wedding", "classic-romance"];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
         const { data: maxOrderData } = await supabase
