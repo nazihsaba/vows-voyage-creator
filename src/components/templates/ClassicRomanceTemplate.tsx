@@ -235,21 +235,15 @@ export const ClassicRomanceTemplate = ({
         </div>
       </section>
 
-      {/* Photo Gallery Section */}
-      {gallery.length > 0 && (
-        <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up" data-aos-delay="100">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {gallery.slice(0, 4).map((image, index) => (
-                <div key={image.id} className="aspect-square overflow-hidden rounded-lg shadow-lg">
-                  <img
-                    src={image.image_url}
-                    alt={`Gallery ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                  />
-                </div>
-              ))}
-            </div>
+      {/* Gallery Image 1 - Full Width */}
+      {gallery[0] && (
+        <section className="w-full" data-aos="fade-up">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img
+              src={gallery[0].image_url}
+              alt="Gallery 1"
+              className="w-full h-full object-cover"
+            />
           </div>
         </section>
       )}
@@ -258,6 +252,19 @@ export const ClassicRomanceTemplate = ({
       <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="200">
         <CountdownTimer targetDate={wedding.wedding_date} />
       </section>
+
+      {/* Gallery Image 2 - Full Width */}
+      {gallery[1] && (
+        <section className="w-full" data-aos="fade-up">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img
+              src={gallery[1].image_url}
+              alt="Gallery 2"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </section>
+      )}
 
       {/* Wedding Events Section */}
       <section className="py-16 px-4 bg-[#faf8f5]">
@@ -332,6 +339,19 @@ export const ClassicRomanceTemplate = ({
         </div>
       </section>
 
+      {/* Gallery Image 3 - Full Width */}
+      {gallery[2] && (
+        <section className="w-full" data-aos="fade-up">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img
+              src={gallery[2].image_url}
+              alt="Gallery 3"
+              className="w-full h-full object-cover"
+            />
+          </div>
+        </section>
+      )}
+
       {/* Gift Cards Section */}
       {giftCards.length > 0 && (
         <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="600">
@@ -341,6 +361,19 @@ export const ClassicRomanceTemplate = ({
               For those who desire a wedding list is available
             </p>
             <GiftCards giftCards={giftCards} isOwner={isOwner} />
+          </div>
+        </section>
+      )}
+
+      {/* Gallery Image 4 - Full Width */}
+      {gallery[3] && (
+        <section className="w-full" data-aos="fade-up">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img
+              src={gallery[3].image_url}
+              alt="Gallery 4"
+              className="w-full h-full object-cover"
+            />
           </div>
         </section>
       )}
