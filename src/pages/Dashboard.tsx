@@ -4,13 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import {
   Heart,
@@ -72,12 +66,12 @@ const Dashboard = () => {
       ],
     },
     {
-      id: "template6",
-      name: "Cinematic Video",
-      description: "Immersive full-screen video background experience",
-      image: cinematicVideo,
+      id: "classic-romance",
+      name: "Classic Romance",
+      description: "Elegant scrollable design with photo gallery and RSVP",
+      image: classicRomance,
       features: [
-        { icon: Video, text: "Video Background" },
+        { icon: Images, text: "Photo Gallery" },
         { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
@@ -95,13 +89,14 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
+
     {
-      id: "classic-romance",
-      name: "Classic Romance",
-      description: "Elegant scrollable design with photo gallery and RSVP",
-      image: classicRomance,
+      id: "template6",
+      name: "Cinematic Video",
+      description: "Immersive full-screen video background experience",
+      image: cinematicVideo,
       features: [
-        { icon: Images, text: "Photo Gallery" },
+        { icon: Video, text: "Video Background" },
         { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
@@ -154,10 +149,7 @@ const Dashboard = () => {
 
             <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {weddingTemplates.map((template) => (
-                <Card
-                  key={template.id}
-                  className="shadow-soft hover:shadow-elegant transition-all flex flex-col"
-                >
+                <Card key={template.id} className="shadow-soft hover:shadow-elegant transition-all flex flex-col">
                   <CardHeader className="p-4 sm:p-6 flex-grow">
                     <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
                       <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
@@ -214,7 +206,9 @@ const Dashboard = () => {
             <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
               <GlassWater className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-500" />
               <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Bachelor</h2>
-              <Badge variant="secondary" className="ml-2">Coming Soon</Badge>
+              <Badge variant="secondary" className="ml-2">
+                Coming Soon
+              </Badge>
             </div>
 
             <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
@@ -226,7 +220,9 @@ const Dashboard = () => {
                     </div>
                   </div>
                   <CardTitle className="text-lg sm:text-xl font-serif">Bachelor Template</CardTitle>
-                  <CardDescription className="text-sm sm:text-base">Celebrate your bachelor party in style</CardDescription>
+                  <CardDescription className="text-sm sm:text-base">
+                    Celebrate your bachelor party in style
+                  </CardDescription>
                 </CardHeader>
               </Card>
             </div>
