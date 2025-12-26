@@ -236,15 +236,12 @@ export const ClassicRomanceTemplate = ({
       </section>
 
       {/* Gallery Image 1 - Full Width */}
-     <section className="relative w-full" data-aos="fade-up">
-  <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-[40px]">
-    <img
-      src={gallery[0].image_url}
-      alt="Gallery"
-      className="w-full h-full object-cover"
-    />
-  </div>
-</section>
+      {gallery[0] && (
+        <section className="w-full" data-aos="fade-up">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={gallery[0].image_url} alt="Gallery 1" className="w-full h-full object-cover" />
+          </div>
+        </section>
       )}
 
       {/* Countdown Section */}
