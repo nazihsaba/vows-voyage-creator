@@ -118,10 +118,12 @@ const BachelorForm = () => {
     }
   };
 
-  const uploadImage = async (file: File, path: string): Promise<string> => {
+  const uploadImage = async (file: File, userId: string): Promise<string> => {
     const fileExt = file.name.split('.').pop();
-    const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-    const filePath = `${path}/${fileName}`;
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+    const fileName = `${uniqueId}.${fileExt}`;
+    // Use user-scoped path for secure storage policy compliance
+    const filePath = `${userId}/${fileName}`;
 
     const { error: uploadError, data } = await supabase.storage
       .from('wedding-images')
@@ -181,7 +183,7 @@ const BachelorForm = () => {
         setUploading(false);
       } else if (imageFile) {
         setUploading(true);
-        mainPictureUrl = await uploadImage(imageFile, "main");
+        mainPictureUrl = await uploadImage(imageFile, user.id);
         setUploading(false);
       }
 

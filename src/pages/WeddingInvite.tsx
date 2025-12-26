@@ -225,9 +225,9 @@ const WeddingInvite = () => {
 
         setGallery(galleryData || []);
 
-        // Fetch gift cards
+        // Fetch gift cards from public view (masks card numbers for non-owners)
         const { data: giftCardsData } = await supabase
-          .from("gift_cards")
+          .from("public_gift_cards")
           .select("*")
           .eq("wedding_id", weddingData.id)
           .order("card_order");

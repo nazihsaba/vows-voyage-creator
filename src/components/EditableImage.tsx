@@ -30,9 +30,17 @@ export const EditableImage = ({
   const handleUpload = async (file: File) => {
     setIsUploading(true);
     try {
+      // Get the current user for user-scoped storage path
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw new Error("You must be logged in to upload images");
+      }
+
       const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `${fileName}`;
+      const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
+      const fileName = `${uniqueId}.${fileExt}`;
+      // Use user-scoped path for secure storage policy compliance
+      const filePath = `${user.id}/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("wedding-images")
