@@ -165,13 +165,25 @@ export const ClassicRomancePreview = () => {
       </section>
 
       {/* Gallery Image 1 - Full Width */}
-      <section className="w-full">
+      <section className="relative w-full">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
+        </div>
+
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img
             src={staticGallery[0].image_url}
             alt="Gallery 1"
             className="w-full h-full object-cover"
           />
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
         </div>
       </section>
 
@@ -181,13 +193,25 @@ export const ClassicRomancePreview = () => {
       </section>
 
       {/* Gallery Image 2 - Full Width */}
-      <section className="w-full">
+      <section className="relative w-full">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
+        </div>
+
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img
             src={staticGallery[1].image_url}
             alt="Gallery 2"
             className="w-full h-full object-cover"
           />
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
         </div>
       </section>
 
@@ -251,13 +275,25 @@ export const ClassicRomancePreview = () => {
       </section>
 
       {/* Gallery Image 3 - Full Width */}
-      <section className="w-full">
+      <section className="relative w-full">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
+        </div>
+
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img
             src={staticGallery[2].image_url}
             alt="Gallery 3"
             className="w-full h-full object-cover"
           />
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
         </div>
       </section>
 
@@ -280,13 +316,25 @@ export const ClassicRomancePreview = () => {
       </section>
 
       {/* Gallery Image 4 - Full Width */}
-      <section className="w-full">
+      <section className="relative w-full">
+        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
+        </div>
+
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
           <img
             src={staticGallery[3].image_url}
             alt="Gallery 4"
             className="w-full h-full object-cover"
           />
+        </div>
+
+        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+          <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+          </svg>
         </div>
       </section>
 
