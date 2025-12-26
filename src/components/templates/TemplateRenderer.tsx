@@ -11,6 +11,7 @@ import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
+import { ClassicRomanceTemplate } from './ClassicRomanceTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -168,6 +169,29 @@ export const TemplateRenderer = ({
   if (template.component === 'ElegantTabsTemplate') {
     return (
       <ElegantTabsTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'ClassicRomanceTemplate') {
+    return (
+      <ClassicRomanceTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
