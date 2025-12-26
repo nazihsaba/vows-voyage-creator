@@ -267,7 +267,7 @@ export const ClassicRomanceTemplate = ({
       {gallery[1] && (
         <section className="w-full" data-aos="fade-up">
           <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
@@ -279,7 +279,7 @@ export const ClassicRomanceTemplate = ({
 
           {/* Bottom torn edge */}
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
@@ -363,7 +363,7 @@ export const ClassicRomanceTemplate = ({
       {gallery[2] && (
         <section className="w-full" data-aos="fade-up">
           <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
@@ -375,7 +375,7 @@ export const ClassicRomanceTemplate = ({
 
           {/* Bottom torn edge */}
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
@@ -399,7 +399,7 @@ export const ClassicRomanceTemplate = ({
       {gallery[3] && (
         <section className="w-full" data-aos="fade-up">
           <div className="absolute top-0 left-0 w-full overflow-hidden leading-none">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
@@ -411,7 +411,7 @@ export const ClassicRomanceTemplate = ({
 
           {/* Bottom torn edge */}
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180">
-            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-16 fill-white">
+            <svg viewBox="0 0 1200 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
               <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
             </svg>
           </div>
