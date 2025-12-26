@@ -164,26 +164,31 @@ export const ClassicRomancePreview = () => {
         </div>
       </section>
 
-      {/* Photo Gallery Section */}
-      <section className="py-16 px-4 bg-[#faf8f5]">
-        <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {staticGallery.map((image, index) => (
-              <div key={image.id} className="aspect-square overflow-hidden rounded-lg shadow-lg">
-                <img
-                  src={image.image_url}
-                  alt={`Gallery ${index + 1}`}
-                  className="w-full h-full object-cover hover:scale-110 transition-transform duration-300"
-                />
-              </div>
-            ))}
-          </div>
+      {/* Gallery Image 1 - Full Width */}
+      <section className="w-full">
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <img
+            src={staticGallery[0].image_url}
+            alt="Gallery 1"
+            className="w-full h-full object-cover"
+          />
         </div>
       </section>
 
       {/* Countdown Section */}
       <section className="py-16 px-4 bg-white">
         <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
+      </section>
+
+      {/* Gallery Image 2 - Full Width */}
+      <section className="w-full">
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <img
+            src={staticGallery[1].image_url}
+            alt="Gallery 2"
+            className="w-full h-full object-cover"
+          />
+        </div>
       </section>
 
       {/* Wedding Events Section */}
@@ -245,6 +250,17 @@ export const ClassicRomancePreview = () => {
         </div>
       </section>
 
+      {/* Gallery Image 3 - Full Width */}
+      <section className="w-full">
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <img
+            src={staticGallery[2].image_url}
+            alt="Gallery 3"
+            className="w-full h-full object-cover"
+          />
+        </div>
+      </section>
+
       {/* Gift Cards Section */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
@@ -260,6 +276,17 @@ export const ClassicRomancePreview = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Gallery Image 4 - Full Width */}
+      <section className="w-full">
+        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <img
+            src={staticGallery[3].image_url}
+            alt="Gallery 4"
+            className="w-full h-full object-cover"
+          />
         </div>
       </section>
 
