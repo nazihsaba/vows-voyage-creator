@@ -30,6 +30,7 @@ import {
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
+import classicRomance from "@/assets/template-wedding-classic.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
@@ -98,7 +99,7 @@ const Dashboard = () => {
       id: "classic-romance",
       name: "Classic Romance",
       description: "Elegant scrollable design with photo gallery and RSVP",
-      image: modernRomance,
+      image: classicRomance,
       features: [
         { icon: Images, text: "Photo Gallery" },
         { icon: MapPin, text: "Event Locations" },
