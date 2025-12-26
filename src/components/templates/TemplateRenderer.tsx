@@ -5,7 +5,6 @@ import { EventLocation } from '@/components/EventLocation';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
 import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
-import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { ModernTemplate } from './ModernTemplate';
 import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
@@ -77,24 +76,6 @@ export const TemplateRenderer = ({
       />
     );
   }
-
-  if (template.component === 'AnthonyOdileCarouselTemplate') {
-    return (
-      <AnthonyOdileCarouselTemplate
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
   if (template.component === 'ModernTemplate') {
     return (
       <ModernTemplate

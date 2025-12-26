@@ -1,4 +1,4 @@
-export type TemplateCategory = 'classic' | 'modern' | 'elegant' | 'minimalist' | 'romantic' | 'rustic';
+export type TemplateCategory = 'classic' | 'modern' | 'elegant';
 
 export type TemplateSection = 
   | 'hero'
