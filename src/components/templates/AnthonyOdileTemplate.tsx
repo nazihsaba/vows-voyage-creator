@@ -265,9 +265,9 @@ export const AnthonyOdileTemplate = ({
       )}
 
       {/* Countdown Section */}
-      {/* <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="200">
+      <section className="py-16 px-4 bg-white" data-aos="fade-up" data-aos-delay="200">
         <CountdownTimer targetDate={wedding.wedding_date} />
-      </section> */}
+      </section>
 
       {/* Wedding Events Section */}
       <section className="py-16 px-4 bg-[#faf8f5]">
