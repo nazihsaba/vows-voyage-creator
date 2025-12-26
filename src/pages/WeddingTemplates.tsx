@@ -47,6 +47,18 @@ const WeddingTemplates = () => {
         { icon: Clock, text: "Countdown Timer" }
       ]
     },
+    { 
+      id: "classic-romance", 
+      name: "Classic Romance", 
+      description: "Elegant scrollable design with photo gallery and RSVP", 
+      image: modernRomance,
+      features: [
+        { icon: Images, text: "Photo Gallery" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Gift, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" }
+      ]
+    },
   ];
 
   return (

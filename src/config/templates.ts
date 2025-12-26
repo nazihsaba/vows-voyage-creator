@@ -532,6 +532,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'classic-romance',
+    name: 'Classic Romance',
+    category: 'romantic',
+    description: 'Elegant scrollable design with photo gallery, countdown, and RSVP sections',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: true,
+    component: 'ClassicRomanceTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'gallery', enabled: true, order: 3, customizable: true },
+      { id: 'countdown', enabled: true, order: 4, customizable: true },
+      { id: 'location', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Dancing Script',
+      fontSecondary: 'Inter',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#c9a6a6',
+        secondary: '#e8c4c4',
+        accent: '#faf8f5',
+        background: '#ffffff',
+        text: '#3e2723',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
