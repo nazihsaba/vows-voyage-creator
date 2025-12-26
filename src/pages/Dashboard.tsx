@@ -33,6 +33,7 @@ import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
+import { ClassicRomancePreview } from "@/components/templates/ClassicRomancePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -90,6 +91,18 @@ const Dashboard = () => {
         { icon: Video, text: "Video Background" },
         { icon: Sparkles, text: "Page Transitions" },
         { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
+    {
+      id: "classic-romance",
+      name: "Classic Romance",
+      description: "Elegant scrollable design with photo gallery and RSVP",
+      image: modernRomance,
+      features: [
+        { icon: Images, text: "Photo Gallery" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
@@ -241,6 +254,7 @@ const Dashboard = () => {
             {showPreview === "template2" && <ModernRomancePreview />}
             {showPreview === "template6" && <VideoBackgroundPreview />}
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
+            {showPreview === "classic-romance" && <ClassicRomancePreview />}
           </div>
         </DialogContent>
       </Dialog>
