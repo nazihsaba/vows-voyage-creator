@@ -21,9 +21,9 @@ import {
   Eye,
   X,
 } from "lucide-react";
-import modernRomance from "@/assets/template-wedding-modern.jpg";
+import modernRomance from "@/assets/template-modern-romance-new.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import roseGoldTabs from "@/assets/wedding-hero.jpg";
+import roseGoldTabs from "@/assets/template-rose-gold-new.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
