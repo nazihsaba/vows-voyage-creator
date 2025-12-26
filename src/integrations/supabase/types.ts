@@ -365,7 +365,44 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_gift_cards: {
+        Row: {
+          card_name: string | null
+          card_number: string | null
+          card_order: number | null
+          created_at: string | null
+          id: string | null
+          logo_url: string | null
+          wedding_id: string | null
+        }
+        Insert: {
+          card_name?: string | null
+          card_number?: never
+          card_order?: number | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          wedding_id?: string | null
+        }
+        Update: {
+          card_name?: string | null
+          card_number?: never
+          card_order?: number | null
+          created_at?: string | null
+          id?: string | null
+          logo_url?: string | null
+          wedding_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gift_cards_wedding_id_fkey"
+            columns: ["wedding_id"]
+            isOneToOne: false
+            referencedRelation: "weddings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       cleanup_expired_otps: { Args: never; Returns: undefined }
