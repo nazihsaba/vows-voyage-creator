@@ -73,8 +73,7 @@ const WeddingForm = () => {
     template === 'template4' ||
     template === 'elegant-fullscreen' ||
     template === 'template5' ||
-    template === 'modern-wedding' ||
-    template === 'gallery-grid';
+    template === 'modern-wedding';
 
   useEffect(() => {
     if (id) {

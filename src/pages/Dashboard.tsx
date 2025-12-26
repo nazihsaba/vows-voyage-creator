@@ -26,7 +26,6 @@ import {
   UserCog,
   Eye,
   X,
-  LayoutGrid,
 } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
@@ -92,18 +91,6 @@ const Dashboard = () => {
         { icon: Sparkles, text: "Page Transitions" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
-    {
-      id: "gallery-grid",
-      name: "Gallery Grid",
-      description: "Elegant design with all photos displayed together in a beautiful grid",
-      image: modernRomance,
-      features: [
-        { icon: LayoutGrid, text: "Grid Gallery" },
-        { icon: Images, text: "All Photos Together" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: GiftIcon, text: "Gift Registry" },
       ],
     },
   ];
@@ -254,7 +241,6 @@ const Dashboard = () => {
             {showPreview === "template2" && <ModernRomancePreview />}
             {showPreview === "template6" && <VideoBackgroundPreview />}
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
-            {showPreview === "gallery-grid" && <ModernRomancePreview />}
           </div>
         </DialogContent>
       </Dialog>

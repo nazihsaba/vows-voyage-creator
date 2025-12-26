@@ -15,7 +15,6 @@ export const reverseTemplateMapping: Record<string, string> = {
   'elegant-fullscreen': 'template4',
   'modern-wedding': 'template5',
   'video-cinematic': 'template6',
-  'gallery-grid': 'gallery-grid',
 };
 
 /**
