@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import modernRomance from "@/assets/template-modern-romance-new.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import roseGoldTabs from "@/assets/template-rose-gold-elegant.jpg";
+import roseGoldTabs from "@/assets/template-rose-gold-classic.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
