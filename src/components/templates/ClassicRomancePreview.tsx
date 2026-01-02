@@ -208,7 +208,7 @@ export const ClassicRomancePreview = () => {
       </section>
 
       {/* Wedding Events Section */}
-      <section className="py-16 px-4 bg-[#faf8f5]">
+      <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
             <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
