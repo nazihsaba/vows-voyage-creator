@@ -104,7 +104,7 @@ export const ClassicRomancePreview = () => {
   };
 
   return (
-    <div className="w-full bg-[#f5f5f5] text-[#3e2723] font-serif">
+    <div className="w-full bg-white text-[#3e2723] font-serif">
       {/* Hero Section - Fullscreen */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
