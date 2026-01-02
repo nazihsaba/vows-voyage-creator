@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronDown, Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
+import { ChevronDown, Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 
 const TABS = [
   { id: "intro", label: "Intro" },
@@ -181,21 +181,55 @@ export const BibleVerseTabsPreview = () => {
   };
 
   const renderGiftsTab = () => (
-    <div className="min-h-[80vh] px-6 py-12">
-      <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-12">
-        Gift Registry
-      </h2>
-      <div className="max-w-md mx-auto space-y-4">
-        <div className="bg-[#faf8f5] rounded-xl p-6 text-center">
-          <div className="w-16 h-16 bg-white rounded-full mx-auto mb-4 flex items-center justify-center shadow-sm">
-            <span className="text-2xl">🎁</span>
-          </div>
-          <h3 className="text-lg font-semibold text-gray-800 mb-2">Your presence is our gift</h3>
-          <p className="text-gray-600 text-sm">
-            If you wish to bless us with a gift, we have registered at the following stores.
-          </p>
+    <div className="min-h-screen h-screen flex flex-col px-8 py-10 relative overflow-hidden">
+      {/* Heading */}
+      <div className="text-center mt-8 mb-8">
+        <h2 className="text-4xl md:text-5xl font-cursive text-gray-800 mb-8">
+          Gift Registry
+        </h2>
+        
+        {/* Welcome Message */}
+        <p className="text-lg md:text-xl text-[#7a4c4c] max-w-sm mx-auto leading-relaxed mb-10">
+          We're so excited to celebrate this special day with you.
+        </p>
+        
+        {/* Registry Info */}
+        <p className="text-base md:text-lg text-gray-800 italic max-w-sm mx-auto mb-8">
+          For those who wish, a wedding registry is available:
+        </p>
+        
+        {/* Wish Account */}
+        <div className="flex flex-col items-center">
+          <p className="text-base font-medium text-gray-800 mb-3">Wish account:</p>
+          <button 
+            className="inline-flex items-center gap-3 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            onClick={() => navigator.clipboard.writeText("30278878")}
+          >
+            <span className="text-base text-gray-800"># 30278878</span>
+            <Copy className="w-5 h-5 text-gray-600" />
+          </button>
         </div>
       </div>
+
+      {/* Decorative Botanical Elements - Bottom Left */}
+      <div className="absolute bottom-20 left-8 opacity-40">
+        <svg width="80" height="130" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
+          <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
+          <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
+          <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
+          <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+        </svg>
+      </div>
+
+      {/* Swipe Up Indicator */}
+      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
+        <ChevronDown className="w-7 h-7 rotate-180" />
+        <span className="text-sm mt-1">Swipe up</span>
+      </div>
+
+      {/* Corner Decoration */}
+      <div className="absolute bottom-0 right-0 w-28 h-28 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
     </div>
   );
 
