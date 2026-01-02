@@ -12,7 +12,7 @@ export type TemplateSection =
 
 export interface TemplateStyle {
   // Layout
-  layout: 'single-page' | 'multi-page' | 'parallax';
+  layout: 'single-page' | 'multi-page' | 'parallax' | 'tabs';
   spacing: 'compact' | 'comfortable' | 'spacious';
   
   // Typography
