@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { ChevronUp, Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
+import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 
 const TABS = [
   { id: "intro", label: "Intro" },
@@ -107,17 +107,6 @@ export const BibleVerseTabsPreview = () => {
         </div>
       </div>
 
-      {/* Swipe Up Indicator - Fixed at bottom with dedicated space */}
-      {currentTab < TABS.length - 1 && (
-        <button 
-          onClick={goToNextTab}
-          className="flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors py-2"
-        >
-          <ChevronUp className="w-6 h-6" />
-          <span className="text-xs">Swipe up</span>
-        </button>
-      )}
-
       {/* Corner Decorations */}
       <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
     </div>
@@ -209,17 +198,6 @@ export const BibleVerseTabsPreview = () => {
           </svg>
         </div>
 
-        {/* Swipe Up Indicator - Fixed at bottom with dedicated space */}
-        {currentTab < TABS.length - 1 && (
-          <button 
-            onClick={goToNextTab}
-            className="flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors py-2"
-          >
-            <ChevronUp className="w-6 h-6" />
-            <span className="text-xs">Swipe up</span>
-          </button>
-        )}
-
         {/* Corner Decoration */}
         <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
       </div>
@@ -268,17 +246,6 @@ export const BibleVerseTabsPreview = () => {
           <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
         </svg>
       </div>
-
-      {/* Swipe Up Indicator - Fixed at bottom with dedicated space */}
-      {currentTab < TABS.length - 1 && (
-        <button 
-          onClick={goToNextTab}
-          className="flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors py-2"
-        >
-          <ChevronUp className="w-6 h-6" />
-          <span className="text-xs">Swipe up</span>
-        </button>
-      )}
 
       {/* Corner Decoration */}
       <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
