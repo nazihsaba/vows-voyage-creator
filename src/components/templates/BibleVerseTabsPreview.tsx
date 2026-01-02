@@ -108,56 +108,58 @@ export const BibleVerseTabsPreview = () => {
     ];
 
     return (
-      <div className="min-h-[80vh] px-6 py-8 relative">
+      <div className="min-h-screen h-screen flex flex-col px-8 py-10 relative overflow-hidden">
         {/* Date Header */}
-        <div className="flex items-center justify-center gap-3 mb-12">
-          <Calendar className="w-6 h-6 text-gray-600" />
-          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">
+        <div className="flex items-center justify-center gap-4 mb-8">
+          <Calendar className="w-8 h-8 text-gray-600" />
+          <h2 className="text-4xl md:text-5xl font-cursive text-gray-800 italic">
             16 August
           </h2>
         </div>
 
-        {/* Vertical Timeline */}
-        <div className="relative max-w-md mx-auto">
-          {/* Vertical Line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2" />
+        {/* Vertical Timeline - Centered and expanded */}
+        <div className="relative flex-1 flex items-center justify-center">
+          <div className="relative w-full max-w-lg">
+            {/* Vertical Line */}
+            <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2" />
 
-          {/* Timeline Events */}
-          <div className="space-y-12">
-            {timelineEvents.map((event) => (
-              <div 
-                key={event.id} 
-                className="relative flex items-start"
-              >
-                {/* Left Side - Event Name & Time */}
-                <div className="flex-1 text-right pr-8">
-                  <h3 className="font-medium text-gray-800">{event.title}</h3>
-                  <p className="text-sm font-semibold text-gray-700">{event.time}</p>
+            {/* Timeline Events */}
+            <div className="space-y-16">
+              {timelineEvents.map((event) => (
+                <div 
+                  key={event.id} 
+                  className="relative flex items-start"
+                >
+                  {/* Left Side - Event Name & Time */}
+                  <div className="flex-1 text-right pr-10">
+                    <h3 className="text-lg font-medium text-gray-800">{event.title}</h3>
+                    <p className="text-base font-semibold text-gray-700">{event.time}</p>
+                  </div>
+
+                  {/* Center Dot */}
+                  <div className="absolute left-1/2 -translate-x-1/2 w-4 h-4 bg-gray-800 rounded-full z-10" />
+
+                  {/* Right Side - Icon, Location & Link */}
+                  <div className="flex-1 pl-10">
+                    <event.icon className="w-7 h-7 text-gray-700 mb-2" />
+                    <p className="text-base text-gray-600 leading-snug">{event.location}</p>
+                    <a
+                      href="#"
+                      className="inline-flex items-center gap-1.5 text-base text-gray-800 underline mt-3 hover:text-gray-600 transition-colors"
+                    >
+                      <MapPin className="w-5 h-5" />
+                      Location
+                    </a>
+                  </div>
                 </div>
-
-                {/* Center Dot */}
-                <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rounded-full z-10" />
-
-                {/* Right Side - Icon, Location & Link */}
-                <div className="flex-1 pl-8">
-                  <event.icon className="w-6 h-6 text-gray-700 mb-2" />
-                  <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
-                  <a
-                    href="#"
-                    className="inline-flex items-center gap-1 text-sm text-gray-800 underline mt-2 hover:text-gray-600 transition-colors"
-                  >
-                    <MapPin className="w-4 h-4" />
-                    Location
-                  </a>
-                </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
 
         {/* Decorative Botanical Elements - Bottom Left */}
-        <div className="absolute bottom-16 left-6 opacity-40">
-          <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className="absolute bottom-20 left-8 opacity-40">
+          <svg width="80" height="130" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
             <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
             <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
@@ -167,13 +169,13 @@ export const BibleVerseTabsPreview = () => {
         </div>
 
         {/* Swipe Up Indicator */}
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
-          <ChevronDown className="w-6 h-6 rotate-180" />
-          <span className="text-xs mt-1">Swipe up</span>
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
+          <ChevronDown className="w-7 h-7 rotate-180" />
+          <span className="text-sm mt-1">Swipe up</span>
         </div>
 
         {/* Corner Decoration */}
-        <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
+        <div className="absolute bottom-0 right-0 w-28 h-28 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
       </div>
     );
   };
