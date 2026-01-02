@@ -3,7 +3,7 @@ import { EditableField } from "@/components/EditableField";
 import { EventLocation } from "@/components/EventLocation";
 import { CountdownTimerNoBackground } from "@/components/CountdownTimerNoBackground";
 import { GiftCardsNoBackground } from "@/components/GiftCardsNoBackground";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown, Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -255,57 +255,117 @@ export const BibleVerseTabsTemplate = ({
     </div>
   );
 
-  const renderTimelineTab = () => (
-    <div className="min-h-[80vh] px-6 py-12">
-      <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-12" data-aos="fade-down">
-        Wedding Timeline
-      </h2>
+  const renderTimelineTab = () => {
+    // Get formatted date
+    const weddingDate = new Date(wedding.wedding_date);
+    const dateFormatted = weddingDate.toLocaleDateString("en-US", {
+      day: "numeric",
+      month: "long",
+    });
 
-      {/* Countdown */}
-      <div className="mb-12 bg-[#faf8f5] rounded-xl p-6" data-aos="fade-up">
-        <CountdownTimerNoBackground targetDate={wedding.wedding_date} />
-      </div>
+    // Build timeline events from locations
+    const timelineEvents = [
+      ...(ceremony ? [{
+        id: "ceremony",
+        title: "Ceremony",
+        time: ceremony.time || "7:00 PM",
+        location: ceremony.location_name,
+        link: ceremony.location_link,
+        icon: Church,
+      }] : []),
+      ...(venue ? [{
+        id: "welcome",
+        title: "Welcome Drink",
+        time: "8:00 PM",
+        location: venue.location_name,
+        link: venue.location_link,
+        icon: Wine,
+      }, {
+        id: "dinner",
+        title: "Dinner & Party",
+        time: "9:00 PM",
+        location: venue.location_name,
+        link: venue.location_link,
+        icon: PartyPopper,
+      }] : []),
+    ];
 
-      {/* Events */}
-      <div className="space-y-6">
-        {ceremony && (
-          <div className="bg-[#faf8f5] rounded-xl p-6" data-aos="fade-up" data-aos-delay="100">
-            <h3 className="text-xl font-semibold text-[#7a4c4c] mb-4">The Ceremony</h3>
-            <p className="text-gray-700 mb-2">{ceremony.time}</p>
-            <p className="text-gray-600">{ceremony.location_name}</p>
-            {ceremony.location_link && (
-              <a
-                href={ceremony.location_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-4 px-6 py-2 bg-[#a78b71] text-white rounded-full text-sm hover:bg-[#8b725c] transition-colors"
+    return (
+      <div className="min-h-[80vh] px-6 py-8 relative">
+        {/* Date Header */}
+        <div className="flex items-center justify-center gap-3 mb-12" data-aos="fade-down">
+          <Calendar className="w-6 h-6 text-gray-600" />
+          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">
+            {dateFormatted}
+          </h2>
+        </div>
+
+        {/* Vertical Timeline */}
+        <div className="relative max-w-md mx-auto">
+          {/* Vertical Line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2" />
+
+          {/* Timeline Events */}
+          <div className="space-y-12">
+            {timelineEvents.map((event, index) => (
+              <div 
+                key={event.id} 
+                className="relative flex items-start"
+                data-aos="fade-up"
+                data-aos-delay={index * 100}
               >
-                View Location
-              </a>
-            )}
-          </div>
-        )}
+                {/* Left Side - Event Name & Time */}
+                <div className="flex-1 text-right pr-8">
+                  <h3 className="font-medium text-gray-800">{event.title}</h3>
+                  <p className="text-sm font-semibold text-gray-700">{event.time}</p>
+                </div>
 
-        {venue && (
-          <div className="bg-[#faf8f5] rounded-xl p-6" data-aos="fade-up" data-aos-delay="200">
-            <h3 className="text-xl font-semibold text-[#7a4c4c] mb-4">The Reception</h3>
-            <p className="text-gray-700 mb-2">{venue.time}</p>
-            <p className="text-gray-600">{venue.location_name}</p>
-            {venue.location_link && (
-              <a
-                href={venue.location_link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-block mt-4 px-6 py-2 bg-[#a78b71] text-white rounded-full text-sm hover:bg-[#8b725c] transition-colors"
-              >
-                View Location
-              </a>
-            )}
+                {/* Center Dot */}
+                <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rounded-full z-10" />
+
+                {/* Right Side - Icon, Location & Link */}
+                <div className="flex-1 pl-8">
+                  <event.icon className="w-6 h-6 text-gray-700 mb-2" />
+                  <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
+                  {event.link && (
+                    <a
+                      href={event.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-sm text-gray-800 underline mt-2 hover:text-gray-600 transition-colors"
+                    >
+                      <MapPin className="w-4 h-4" />
+                      Location
+                    </a>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
-        )}
+        </div>
+
+        {/* Decorative Botanical Elements - Bottom Left */}
+        <div className="absolute bottom-16 left-6 opacity-40">
+          <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
+            <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
+            <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
+            <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
+            <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+          </svg>
+        </div>
+
+        {/* Swipe Up Indicator */}
+        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
+          <ChevronDown className="w-6 h-6 rotate-180" />
+          <span className="text-xs mt-1">Swipe up</span>
+        </div>
+
+        {/* Corner Decoration */}
+        <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
       </div>
-    </div>
-  );
+    );
+  };
 
   const renderGiftsTab = () => (
     <div className="min-h-[80vh] px-6 py-12">
