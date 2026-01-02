@@ -18,6 +18,12 @@ export const BibleVerseTabsPreview = () => {
     }
   };
 
+  const goToPrevTab = () => {
+    if (currentTab > 0) {
+      setCurrentTab(currentTab - 1);
+    }
+  };
+
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartY.current = e.touches[0].clientY;
   };
@@ -27,14 +33,19 @@ export const BibleVerseTabsPreview = () => {
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartY.current - touchEndY;
     
-    // Swipe up (positive diff means swiped up)
+    // Swipe up - go to next tab
     if (diff > 50) {
       goToNextTab();
     }
+    // Swipe down - go to previous tab
+    if (diff < -50) {
+      goToPrevTab();
+    }
     touchStartY.current = null;
   };
+
   const renderIntroTab = () => (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-12 text-center relative">
+    <div className="h-[calc(100vh-57px)] flex flex-col items-center justify-center px-6 py-8 text-center relative overflow-hidden">
       {/* Bible Verse Quote */}
       <div className="mb-12 animate-fade-in">
         <p className="text-lg md:text-xl italic text-[#7a4c4c] font-serif max-w-md mx-auto">
@@ -135,7 +146,7 @@ export const BibleVerseTabsPreview = () => {
     ];
 
     return (
-      <div className="min-h-screen h-screen flex flex-col px-8 py-10 relative overflow-hidden">
+      <div className="h-[calc(100vh-57px)] flex flex-col px-8 py-6 relative overflow-hidden">
         {/* Date Header */}
         <div className="flex items-center justify-center gap-4 mb-8">
           <Calendar className="w-8 h-8 text-gray-600" />
@@ -213,7 +224,7 @@ export const BibleVerseTabsPreview = () => {
   };
 
   const renderGiftsTab = () => (
-    <div className="min-h-screen h-screen flex flex-col items-center justify-center px-8 py-10 relative overflow-hidden">
+    <div className="h-[calc(100vh-57px)] flex flex-col items-center justify-center px-8 py-6 relative overflow-hidden">
       {/* Content Container - Centered */}
       <div className="text-center flex-1 flex flex-col items-center justify-center">
         {/* Heading */}
@@ -272,7 +283,7 @@ export const BibleVerseTabsPreview = () => {
   );
 
   const renderRsvpTab = () => (
-    <div className="min-h-screen h-screen flex flex-col items-center justify-center px-8 py-10 relative overflow-hidden">
+    <div className="h-[calc(100vh-57px)] flex flex-col items-center justify-center px-8 py-6 relative overflow-hidden">
       {/* Content Container - Centered */}
       <div className="text-center flex-1 flex flex-col items-center justify-center max-w-md mx-auto">
         {/* Monogram */}
@@ -359,9 +370,9 @@ export const BibleVerseTabsPreview = () => {
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-white">
+    <div className="relative w-full h-screen bg-white overflow-hidden">
       {/* Watercolor Header Effect */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none z-10" />
 
       {/* Tab Navigation */}
       <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
@@ -382,9 +393,9 @@ export const BibleVerseTabsPreview = () => {
         </div>
       </nav>
 
-      {/* Tab Content */}
+      {/* Tab Content - Fixed height, no scroll */}
       <main 
-        className="transition-opacity duration-300"
+        className="h-[calc(100vh-57px)] overflow-hidden transition-opacity duration-300"
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
       >
