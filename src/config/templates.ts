@@ -568,6 +568,40 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'bible-verse-tabs',
+    name: 'Bible Verse Tabs',
+    category: 'elegant',
+    description: 'Elegant tab-based design with Bible verse quote, family names, and botanical decorations',
+    thumbnail: '/placeholder.svg',
+    isPremium: false,
+    isPopular: true,
+    component: 'BibleVerseTabsTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'countdown', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+      { id: 'gifts', enabled: true, order: 4, customizable: true },
+      { id: 'rsvp', enabled: true, order: 5, customizable: true },
+    ],
+    style: {
+      layout: 'tabs',
+      spacing: 'comfortable',
+      fontPrimary: 'Dancing Script',
+      fontSecondary: 'Inter',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#7a4c4c',
+        secondary: '#c4a35a',
+        accent: '#faf8f5',
+        background: '#ffffff',
+        text: '#374151',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
