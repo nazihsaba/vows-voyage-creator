@@ -235,33 +235,74 @@ export const BibleVerseTabsPreview = () => {
   );
 
   const renderRsvpTab = () => (
-    <div className="min-h-[80vh] px-6 py-12">
-      <div className="max-w-md mx-auto">
-        <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
-          RSVP
-        </h2>
-
-        <div className="bg-[#faf8f5] rounded-xl p-6">
-          <p className="text-center text-gray-600 mb-6">
-            Please let us know if you can join us on our special day. Your presence would mean the world to us.
-          </p>
-
-          <div className="space-y-4">
-            <div className="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-200">
-              <span className="text-gray-800 font-medium">Guest Name</span>
-              <div className="flex items-center gap-2">
-                <input type="checkbox" className="w-4 h-4" />
-                <span className="text-sm text-gray-600">Will Attend?</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-            <p className="text-sm text-gray-500">Please RSVP by:</p>
-            <p className="text-lg font-medium text-[#7a4c4c]">July 15, 2025</p>
-          </div>
+    <div className="min-h-screen h-screen flex flex-col items-center justify-center px-8 py-10 relative overflow-hidden">
+      {/* Content Container - Centered */}
+      <div className="text-center flex-1 flex flex-col items-center justify-center max-w-md mx-auto">
+        {/* Monogram */}
+        <div className="w-16 h-16 rounded-full border-2 border-gray-400 flex items-center justify-center mb-8">
+          <span className="text-lg text-gray-600 font-serif">S <span className="text-sm">&</span> C</span>
         </div>
+
+        {/* Heading */}
+        <h2 className="text-2xl md:text-3xl text-gray-700 mb-6 leading-relaxed">
+          Your presence means the<br />world to us
+        </h2>
+        
+        {/* Couple Names */}
+        <p className="text-3xl md:text-4xl font-cursive text-gray-800 italic mb-6">
+          Elie & Maya
+        </p>
+        
+        {/* Reply Deadline */}
+        <p className="text-base text-[#7a4c4c] mb-4">
+          Please reply before 1 August, 2025
+        </p>
+        
+        {/* Number of Persons */}
+        <p className="text-base text-gray-700 mb-6">
+          Number of persons invited: <span className="font-semibold">2</span>
+        </p>
+        
+        {/* Attending Question */}
+        <p className="text-lg font-medium text-gray-800 mb-4">Are you attending?</p>
+        <div className="flex items-center justify-center gap-8 mb-8">
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="attending" value="yes" className="w-5 h-5" />
+            <span className="text-base text-gray-700">Yes</span>
+          </label>
+          <label className="flex items-center gap-2 cursor-pointer">
+            <input type="radio" name="attending" value="no" className="w-5 h-5" />
+            <span className="text-base text-gray-700">No</span>
+          </label>
+        </div>
+        
+        {/* Wishes */}
+        <p className="text-base text-gray-700 mb-3">Share your love & wishes:</p>
+        <textarea 
+          placeholder="Write here (Optional)"
+          className="w-full max-w-sm border border-gray-300 rounded-lg px-4 py-3 text-base text-gray-700 placeholder-gray-400 resize-none mb-6"
+          rows={3}
+        />
+        
+        {/* Submit Button */}
+        <button className="px-12 py-3 bg-gray-200 text-gray-500 rounded-lg text-base hover:bg-gray-300 transition-colors">
+          Submit
+        </button>
       </div>
+
+      {/* Decorative Botanical Elements - Bottom Left */}
+      <div className="absolute bottom-20 left-8 opacity-40">
+        <svg width="80" height="130" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
+          <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
+          <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
+          <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
+          <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+        </svg>
+      </div>
+
+      {/* Corner Decoration */}
+      <div className="absolute bottom-0 right-0 w-28 h-28 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
     </div>
   );
 
