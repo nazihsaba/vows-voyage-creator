@@ -110,7 +110,8 @@ export const LinkManagementTable = ({
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
-    const url = `${window.location.origin}/invite/${link.unique_slug}/${sanitizedLinkName}/${link.number_of_persons}`;
+    // Use weddingSlug (the wedding's slug) as the first parameter, not the link's unique_slug
+    const url = `${window.location.origin}/invite/${weddingSlug}/${sanitizedLinkName}/${link.number_of_persons}`;
     navigator.clipboard.writeText(url);
     toast({
       title: "Success",
