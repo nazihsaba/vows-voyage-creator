@@ -29,6 +29,7 @@ import { ModernRomancePreview } from "@/components/templates/ModernRomancePrevie
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
 import { ClassicRomancePreview } from "@/components/templates/ClassicRomancePreview";
+import { BibleVerseTabsPreview } from "@/components/templates/BibleVerseTabsPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -89,7 +90,18 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
-
+    {
+      id: "bible-verse-tabs",
+      name: "Bible Verse Tabs",
+      description: "Elegant tab design with Bible verse, family names & botanical decor",
+      image: classicRomance, // Using classic romance image temporarily
+      features: [
+        { icon: Sparkles, text: "Bible Verse" },
+        { icon: Heart, text: "Family Names" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
     {
       id: "template6",
       name: "Cinematic Video",
@@ -186,7 +198,7 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm sm:text-base"
                       onClick={() => {
-                        if (template.id === "rose-gold-tabs") {
+                        if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
                           navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
@@ -252,6 +264,7 @@ const Dashboard = () => {
             {showPreview === "template6" && <VideoBackgroundPreview />}
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
             {showPreview === "classic-romance" && <ClassicRomancePreview />}
+            {showPreview === "bible-verse-tabs" && <BibleVerseTabsPreview />}
           </div>
         </DialogContent>
       </Dialog>
