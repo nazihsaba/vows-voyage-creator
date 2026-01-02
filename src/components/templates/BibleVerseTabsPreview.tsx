@@ -181,31 +181,32 @@ export const BibleVerseTabsPreview = () => {
   };
 
   const renderGiftsTab = () => (
-    <div className="min-h-screen h-screen flex flex-col px-8 py-10 relative overflow-hidden">
-      {/* Heading */}
-      <div className="text-center mt-8 mb-8">
-        <h2 className="text-4xl md:text-5xl font-cursive text-gray-800 mb-8">
+    <div className="min-h-screen h-screen flex flex-col items-center justify-center px-8 py-10 relative overflow-hidden">
+      {/* Content Container - Centered */}
+      <div className="text-center flex-1 flex flex-col items-center justify-center">
+        {/* Heading */}
+        <h2 className="text-4xl md:text-5xl font-cursive text-gray-800 mb-10">
           Gift Registry
         </h2>
         
         {/* Welcome Message */}
-        <p className="text-lg md:text-xl text-[#7a4c4c] max-w-sm mx-auto leading-relaxed mb-10">
+        <p className="text-xl md:text-2xl text-[#7a4c4c] max-w-md mx-auto leading-relaxed mb-12">
           We're so excited to celebrate this special day with you.
         </p>
         
         {/* Registry Info */}
-        <p className="text-base md:text-lg text-gray-800 italic max-w-sm mx-auto mb-8">
+        <p className="text-lg md:text-xl text-gray-800 italic max-w-sm mx-auto mb-10">
           For those who wish, a wedding registry is available:
         </p>
         
         {/* Wish Account */}
         <div className="flex flex-col items-center">
-          <p className="text-base font-medium text-gray-800 mb-3">Wish account:</p>
+          <p className="text-lg font-medium text-gray-800 mb-4">Wish account:</p>
           <button 
-            className="inline-flex items-center gap-3 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+            className="inline-flex items-center gap-4 px-8 py-4 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
             onClick={() => navigator.clipboard.writeText("30278878")}
           >
-            <span className="text-base text-gray-800"># 30278878</span>
+            <span className="text-lg text-gray-800"># 30278878</span>
             <Copy className="w-5 h-5 text-gray-600" />
           </button>
         </div>
