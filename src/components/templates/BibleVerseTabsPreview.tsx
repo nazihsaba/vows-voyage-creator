@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { ChevronDown, Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
+import { useState, useRef } from "react";
+import { ChevronUp, Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 
 const TABS = [
   { id: "intro", label: "Intro" },
@@ -10,7 +10,29 @@ const TABS = [
 
 export const BibleVerseTabsPreview = () => {
   const [currentTab, setCurrentTab] = useState(0);
+  const touchStartY = useRef<number | null>(null);
 
+  const goToNextTab = () => {
+    if (currentTab < TABS.length - 1) {
+      setCurrentTab(currentTab + 1);
+    }
+  };
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStartY.current === null) return;
+    const touchEndY = e.changedTouches[0].clientY;
+    const diff = touchStartY.current - touchEndY;
+    
+    // Swipe up (positive diff means swiped up)
+    if (diff > 50) {
+      goToNextTab();
+    }
+    touchStartY.current = null;
+  };
   const renderIntroTab = () => (
     <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-12 text-center relative">
       {/* Bible Verse Quote */}
@@ -71,11 +93,16 @@ export const BibleVerseTabsPreview = () => {
         </svg>
       </div>
 
-      {/* Swipe Up Indicator */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
-        <ChevronDown className="w-6 h-6 rotate-180" />
-        <span className="text-xs mt-1">Swipe up</span>
-      </div>
+      {/* Swipe Up Indicator - Clickable */}
+      {currentTab < TABS.length - 1 && (
+        <button 
+          onClick={goToNextTab}
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors"
+        >
+          <ChevronUp className="w-6 h-6" />
+          <span className="text-xs">Swipe up</span>
+        </button>
+      )}
 
       {/* Corner Decorations */}
       <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
@@ -168,11 +195,16 @@ export const BibleVerseTabsPreview = () => {
           </svg>
         </div>
 
-        {/* Swipe Up Indicator */}
-        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
-          <ChevronDown className="w-7 h-7 rotate-180" />
-          <span className="text-sm mt-1">Swipe up</span>
-        </div>
+        {/* Swipe Up Indicator - Clickable */}
+        {currentTab < TABS.length - 1 && (
+          <button 
+            onClick={goToNextTab}
+            className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors"
+          >
+            <ChevronUp className="w-7 h-7" />
+            <span className="text-sm">Swipe up</span>
+          </button>
+        )}
 
         {/* Corner Decoration */}
         <div className="absolute bottom-0 right-0 w-28 h-28 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
@@ -223,11 +255,16 @@ export const BibleVerseTabsPreview = () => {
         </svg>
       </div>
 
-      {/* Swipe Up Indicator */}
-      <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
-        <ChevronDown className="w-7 h-7 rotate-180" />
-        <span className="text-sm mt-1">Swipe up</span>
-      </div>
+      {/* Swipe Up Indicator - Clickable */}
+      {currentTab < TABS.length - 1 && (
+        <button 
+          onClick={goToNextTab}
+          className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce cursor-pointer hover:text-gray-600 transition-colors"
+        >
+          <ChevronUp className="w-7 h-7" />
+          <span className="text-sm">Swipe up</span>
+        </button>
+      )}
 
       {/* Corner Decoration */}
       <div className="absolute bottom-0 right-0 w-28 h-28 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
@@ -346,7 +383,11 @@ export const BibleVerseTabsPreview = () => {
       </nav>
 
       {/* Tab Content */}
-      <main className="transition-opacity duration-300">
+      <main 
+        className="transition-opacity duration-300"
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         {renderTabContent()}
       </main>
     </div>
