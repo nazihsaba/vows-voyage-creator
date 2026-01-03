@@ -141,7 +141,7 @@ export const BibleVerseTabsTemplate = ({
 
       {/* Parents Names */}
       <div
-        className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-10"
+        className="flex flex-col md:flex-row items-center justify-center gap-3 md:gap-12 mb-10"
         data-aos="fade-up"
         data-aos-delay="200"
       >
