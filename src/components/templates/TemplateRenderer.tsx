@@ -13,6 +13,7 @@ import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { ClassicRomanceTemplate } from './ClassicRomanceTemplate';
 import { BibleVerseTabsTemplate } from './BibleVerseTabsTemplate';
+import { EnvelopeTemplate } from './EnvelopeTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -216,6 +217,29 @@ export const TemplateRenderer = ({
   if (template.component === 'BibleVerseTabsTemplate') {
     return (
       <BibleVerseTabsTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'EnvelopeTemplate') {
+    return (
+      <EnvelopeTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
