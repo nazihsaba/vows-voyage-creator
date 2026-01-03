@@ -21,16 +21,19 @@ export const EnvelopeTemplatePreview = ({
   brideName = "Jessica",
   weddingDate = "2025-06-15",
 }: EnvelopeTemplatePreviewProps) => {
-  const [envelopeState, setEnvelopeState] = useState<"closed" | "fading" | "open">("closed");
+  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "fading" | "open">("closed");
   const [currentTab, setCurrentTab] = useState(0);
   const touchStartY = useRef(0);
 
   const handleEnvelopeClick = () => {
     if (envelopeState === "closed") {
-      setEnvelopeState("fading");
+      setEnvelopeState("opening");
+      setTimeout(() => {
+        setEnvelopeState("fading");
+      }, 500);
       setTimeout(() => {
         setEnvelopeState("open");
-      }, 600);
+      }, 1100);
     }
   };
 
@@ -53,6 +56,7 @@ export const EnvelopeTemplatePreview = ({
   const groomInitial = groomName?.charAt(0)?.toUpperCase() || "M";
   const brideInitial = brideName?.charAt(0)?.toUpperCase() || "J";
 
+  const isOpening = envelopeState === "opening" || envelopeState === "fading";
   const isFading = envelopeState === "fading";
 
   const renderEnvelopeScreen = () => (
@@ -85,13 +89,16 @@ export const EnvelopeTemplatePreview = ({
           }}
         />
 
-        {/* Envelope flap (closed triangle) */}
+        {/* Envelope flap (opens slightly) */}
         <div 
           className="absolute top-0 left-0 right-0 h-[50%]"
           style={{
             background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.12)" : "0 4px 12px rgba(0,0,0,0.08)",
+            transformOrigin: "top center",
+            transform: isOpening ? "rotateX(-45deg)" : "rotateX(0deg)",
+            transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease",
             zIndex: 10,
           }}
         />
