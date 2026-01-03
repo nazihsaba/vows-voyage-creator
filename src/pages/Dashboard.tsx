@@ -70,6 +70,18 @@ const Dashboard = () => {
       ],
     },
     {
+      id: "envelope-invitation",
+      name: "Épure",
+      description: "Elegant envelope opening animation with wax seal and tab navigation",
+      image: ivoireTemplate,
+      features: [
+        { icon: Sparkles, text: "Envelope Animation" },
+        { icon: Heart, text: "Wax Seal" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
+    {
       id: "template2",
       name: "Vérité",
       description: "Contemporary design with stunning gallery showcase",
@@ -101,18 +113,6 @@ const Dashboard = () => {
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Sparkles, text: "Page Transitions" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
-    {
-      id: "envelope-invitation",
-      name: "Épure",
-      description: "Elegant envelope opening animation with wax seal and tab navigation",
-      image: ivoireTemplate,
-      features: [
-        { icon: Sparkles, text: "Envelope Animation" },
-        { icon: Heart, text: "Wax Seal" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
       ],
