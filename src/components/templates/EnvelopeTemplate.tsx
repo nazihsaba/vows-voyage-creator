@@ -52,7 +52,7 @@ export const EnvelopeTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: EnvelopeTemplateProps) => {
-  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "open">("closed");
+  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "fading" | "open">("closed");
   const [currentTab, setCurrentTab] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartY = useRef(0);
@@ -85,10 +85,14 @@ export const EnvelopeTemplate = ({
   const handleEnvelopeClick = () => {
     if (envelopeState === "closed") {
       setEnvelopeState("opening");
-      // After animation completes, show content
+      // After flap opens, start fading
+      setTimeout(() => {
+        setEnvelopeState("fading");
+      }, 800);
+      // After fade completes, show content
       setTimeout(() => {
         setEnvelopeState("open");
-      }, 1500);
+      }, 1400);
     }
   };
 
@@ -123,14 +127,17 @@ export const EnvelopeTemplate = ({
   const groomInitial = wedding.groom_name?.charAt(0)?.toUpperCase() || "M";
   const brideInitial = wedding.bride_name?.charAt(0)?.toUpperCase() || "J";
 
-  const isOpening = envelopeState === "opening";
+  const isOpening = envelopeState === "opening" || envelopeState === "fading";
+  const isFading = envelopeState === "fading";
 
   const renderEnvelopeScreen = () => (
     <div 
       className={`fixed inset-0 z-50 flex items-center justify-center ${envelopeState === "closed" ? "cursor-pointer" : ""}`}
       onClick={handleEnvelopeClick}
       style={{ 
-        background: "linear-gradient(145deg, #f5f3f0 0%, #ebe8e3 50%, #e5e2dc 100%)"
+        background: "linear-gradient(145deg, #f5f3f0 0%, #ebe8e3 50%, #e5e2dc 100%)",
+        opacity: isFading ? 0 : 1,
+        transition: "opacity 0.6s ease-out",
       }}
     >
       {/* Paper texture overlay */}
@@ -144,27 +151,6 @@ export const EnvelopeTemplate = ({
       {/* Envelope Container */}
       <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]" style={{ perspective: "1500px" }}>
         
-        {/* Letter/Card inside envelope - slides up and OUT of envelope */}
-        <div 
-          className="absolute left-[8%] right-[8%] top-[10%] bottom-[18%] bg-white rounded-lg shadow-lg flex items-center justify-center"
-          style={{
-            transform: isOpening ? "translateY(-130%) scale(1.02)" : "translateY(0) scale(1)",
-            opacity: 1,
-            zIndex: isOpening ? 20 : 5,
-            transition: "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease",
-          }}
-        >
-          <div className="text-center p-6">
-            <p 
-              className="text-2xl md:text-3xl mb-2"
-              style={{ fontFamily: "'Dancing Script', cursive", color: "#7a4c4c" }}
-            >
-              {wedding.groom_name} & {wedding.bride_name}
-            </p>
-            <p className="text-sm text-gray-500">Wedding Invitation</p>
-          </div>
-        </div>
-
         {/* Envelope back/bottom layer */}
         <div 
           className="absolute inset-0 rounded-sm"
