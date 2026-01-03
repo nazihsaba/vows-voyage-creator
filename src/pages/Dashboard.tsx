@@ -59,7 +59,7 @@ const Dashboard = () => {
   const weddingTemplates = [
     {
       id: "template2",
-      name: "Modern Romance",
+      name: "Vérité",
       description: "Contemporary design with stunning gallery showcase",
       image: modernRomance,
       features: [
