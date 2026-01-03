@@ -157,7 +157,7 @@ const MyEvents = () => {
             <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">My Events</h1>
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/dashboard/select-event-type")}>Create Event</Button>
+            <Button onClick={() => navigate("/dashboard")}>Create Event</Button>
             <Button variant="outline" onClick={() => navigate("/dashboard")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back

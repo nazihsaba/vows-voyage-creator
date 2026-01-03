@@ -13,7 +13,7 @@ import BachelorForm from "./pages/BachelorForm";
 import ChristmasForm from "./pages/ChristmasForm";
 import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
 import WeddingInvite from "./pages/WeddingInvite";
-import EventTypeSelection from "./pages/EventTypeSelection";
+
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
@@ -35,7 +35,7 @@ const App = () => (
           <Route path="/dashboard/settings" element={<Settings />} />
           <Route path="/dashboard/my-events" element={<MyEvents />} />
           <Route path="/dashboard/manage-links/:weddingId" element={<ManageLinks />} />
-          <Route path="/dashboard/select-event-type" element={<EventTypeSelection />} />
+          
           <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
