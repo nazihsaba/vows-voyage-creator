@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import veriteTemplate from "@/assets/template-verite.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import roseGoldTabs from "@/assets/template-rose-gold-classic.jpg";
+import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
@@ -85,7 +85,7 @@ const Dashboard = () => {
       id: "rose-gold-tabs",
       name: "Lumière",
       description: "Fullscreen video background with elegant page transitions",
-      image: roseGoldTabs,
+      image: lumiereTemplate,
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Sparkles, text: "Page Transitions" },
