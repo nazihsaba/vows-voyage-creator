@@ -178,21 +178,23 @@ export const EnvelopeTemplate = ({
           style={{ zIndex: 20 }}
         >
           <div 
-            className="w-20 h-20 rounded-full flex items-center justify-center shadow-xl"
+            className="w-32 h-32 rounded-full flex items-center justify-center shadow-xl"
             style={{
               background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
               boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
             }}
           >
             <div 
-              className="w-16 h-16 rounded-full flex items-center justify-center"
+              className="rounded-full flex items-center justify-center"
               style={{
+                width: "104px",
+                height: "104px",
                 background: "radial-gradient(circle at 40% 40%, #e0d7c8 0%, #d0c7b8 50%, #c5bca8 100%)",
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
               <span 
-                className="text-xl tracking-wide"
+                className="text-2xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: "#8a7a6a",
