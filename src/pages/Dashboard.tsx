@@ -83,7 +83,7 @@ const Dashboard = () => {
     },
     {
       id: "rose-gold-tabs",
-      name: "Rose Gold Tabs",
+      name: "Lumière",
       description: "Fullscreen video background with elegant page transitions",
       image: roseGoldTabs,
       features: [
