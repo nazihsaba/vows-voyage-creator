@@ -94,13 +94,17 @@ export const BibleVerseTabsTemplate = ({
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartX.current - touchEndY;
 
-    if (diff > 50) {
-      // Swiped up - could trigger scroll indicator
+    if (diff > 50 && currentTab < activeTabs.length - 1) {
+      // Swiped up - go to next tab
+      setCurrentTab(currentTab + 1);
+    } else if (diff < -50 && currentTab > 0) {
+      // Swiped down - go to previous tab
+      setCurrentTab(currentTab - 1);
     }
   };
 
   const renderIntroTab = () => (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-12 text-center relative">
+    <div className="h-full flex flex-col items-center justify-center px-6 py-12 text-center relative overflow-hidden">
       {/* Bible Verse Quote */}
       <div className="mb-6" data-aos="fade-down">
         <EditableField
@@ -364,7 +368,7 @@ export const BibleVerseTabsTemplate = ({
     ];
 
     return (
-      <div className="h-screen px-6 py-8 relative flex flex-col">
+      <div className="h-full px-6 py-8 relative flex flex-col overflow-hidden">
         {/* Date Header */}
         <div className="flex items-center justify-center gap-3 mb-12" data-aos="fade-down">
           <Calendar className="w-6 h-6 text-gray-600" />
@@ -476,7 +480,7 @@ export const BibleVerseTabsTemplate = ({
   };
 
   const renderGiftsTab = () => (
-    <div className="min-h-[80vh] px-6 py-12">
+    <div className="h-full px-6 py-12 flex flex-col items-center justify-center overflow-hidden">
       <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-12" data-aos="fade-down">
         Gift Registry
       </h2>
@@ -485,7 +489,7 @@ export const BibleVerseTabsTemplate = ({
   );
 
   const renderRsvpTab = () => (
-    <div className="min-h-[80vh] px-6 py-12">
+    <div className="h-full px-6 py-12 flex flex-col items-center justify-center overflow-hidden">
       <div className="max-w-md mx-auto">
         <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8" data-aos="fade-down">
           RSVP
@@ -584,17 +588,17 @@ export const BibleVerseTabsTemplate = ({
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-white">
+    <div className="relative w-full h-screen overflow-hidden bg-white flex flex-col">
       {/* Hidden audio element */}
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
 
       {/* Watercolor Header Effect */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none" />
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none z-10" />
 
       {/* Tab Navigation */}
-      <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
+      <nav className="flex-shrink-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-100">
         <div className="flex justify-center gap-4 md:gap-8 px-4 py-4">
           {activeTabs.map((tab, index) => (
             <button
@@ -610,8 +614,12 @@ export const BibleVerseTabsTemplate = ({
         </div>
       </nav>
 
-      {/* Tab Content */}
-      <main onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} className="transition-opacity duration-300">
+      {/* Tab Content - Fixed height, no scroll */}
+      <main 
+        onTouchStart={handleTouchStart} 
+        onTouchEnd={handleTouchEnd} 
+        className="flex-1 overflow-hidden transition-opacity duration-300"
+      >
         {renderTabContent()}
       </main>
     </div>
