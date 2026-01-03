@@ -21,12 +21,18 @@ export const EnvelopeTemplatePreview = ({
   brideName = "Jessica",
   weddingDate = "2025-06-15",
 }: EnvelopeTemplatePreviewProps) => {
-  const [isEnvelopeOpen, setIsEnvelopeOpen] = useState(false);
+  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "open">("closed");
   const [currentTab, setCurrentTab] = useState(0);
   const touchStartY = useRef(0);
 
   const handleEnvelopeClick = () => {
-    setIsEnvelopeOpen(true);
+    if (envelopeState === "closed") {
+      setEnvelopeState("opening");
+      // After animation completes, show content
+      setTimeout(() => {
+        setEnvelopeState("open");
+      }, 1500);
+    }
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -48,9 +54,11 @@ export const EnvelopeTemplatePreview = ({
   const groomInitial = groomName?.charAt(0)?.toUpperCase() || "M";
   const brideInitial = brideName?.charAt(0)?.toUpperCase() || "J";
 
+  const isOpening = envelopeState === "opening";
+
   const renderEnvelopeScreen = () => (
     <div 
-      className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer"
+      className={`fixed inset-0 z-50 flex items-center justify-center ${envelopeState === "closed" ? "cursor-pointer" : ""}`}
       onClick={handleEnvelopeClick}
       style={{ 
         background: "linear-gradient(145deg, #f5f3f0 0%, #ebe8e3 50%, #e5e2dc 100%)"
@@ -64,8 +72,29 @@ export const EnvelopeTemplatePreview = ({
         }}
       />
 
-      {/* Envelope */}
-      <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]">
+      {/* Envelope Container */}
+      <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]" style={{ perspective: "1000px" }}>
+        
+        {/* Letter/Card that slides out */}
+        <div 
+          className="absolute inset-[8%] bg-white rounded-lg shadow-md flex items-center justify-center transition-all duration-1000 ease-out"
+          style={{
+            transform: isOpening ? "translateY(-120%)" : "translateY(0)",
+            opacity: isOpening ? 1 : 0.95,
+            zIndex: 5,
+          }}
+        >
+          <div className="text-center p-6">
+            <p 
+              className="text-2xl md:text-3xl mb-2"
+              style={{ fontFamily: "'Dancing Script', cursive", color: "#7a4c4c" }}
+            >
+              {groomName} & {brideName}
+            </p>
+            <p className="text-sm text-gray-500">Wedding Invitation</p>
+          </div>
+        </div>
+
         {/* Envelope body */}
         <div 
           className="absolute inset-0 bg-[#f8f6f3] shadow-2xl"
@@ -74,13 +103,16 @@ export const EnvelopeTemplatePreview = ({
           }}
         />
         
-        {/* Top flap (triangle) */}
+        {/* Top flap (triangle) - animates open */}
         <div 
-          className="absolute top-0 left-0 right-0 h-[45%]"
+          className="absolute top-0 left-0 right-0 h-[45%] transition-all duration-700 ease-out"
           style={{
             background: "linear-gradient(180deg, #f0ede8 0%, #e8e5e0 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            transformOrigin: "top center",
+            transform: isOpening ? "rotateX(180deg)" : "rotateX(0deg)",
+            zIndex: isOpening ? 1 : 10,
           }}
         />
 
@@ -102,9 +134,15 @@ export const EnvelopeTemplatePreview = ({
           }}
         />
 
-        {/* Wax Seal */}
+        {/* Wax Seal - fades and moves with flap */}
         <div 
-          className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10"
+          className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 transition-all duration-500"
+          style={{
+            opacity: isOpening ? 0 : 1,
+            transform: isOpening 
+              ? "translate(-50%, -50%) scale(0.8) rotate(45deg)" 
+              : "translate(-50%, -50%) scale(1) rotate(0deg)",
+          }}
         >
           <div 
             className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg"
@@ -136,7 +174,10 @@ export const EnvelopeTemplatePreview = ({
         </div>
 
         {/* Exclusive invitation text */}
-        <div className="absolute bottom-[20%] left-0 right-0 text-center px-8">
+        <div 
+          className="absolute bottom-[20%] left-0 right-0 text-center px-8 transition-opacity duration-300"
+          style={{ opacity: isOpening ? 0 : 1 }}
+        >
           <p 
             className="text-xl md:text-2xl leading-relaxed"
             style={{
@@ -149,7 +190,10 @@ export const EnvelopeTemplatePreview = ({
         </div>
 
         {/* Tap to open hint */}
-        <div className="absolute bottom-6 left-0 right-0 text-center">
+        <div 
+          className="absolute bottom-6 left-0 right-0 text-center transition-opacity duration-300"
+          style={{ opacity: isOpening ? 0 : 1 }}
+        >
           <p className="text-xs text-gray-400 animate-pulse">
             Tap to open
           </p>
@@ -419,11 +463,11 @@ export const EnvelopeTemplatePreview = ({
 
   return (
     <div className="min-h-screen bg-[#faf8f5] relative">
-      {/* Envelope Screen - Only show if not opened */}
-      {!isEnvelopeOpen && renderEnvelopeScreen()}
+      {/* Envelope Screen - Show if not fully open */}
+      {envelopeState !== "open" && renderEnvelopeScreen()}
 
       {/* Main Content - Only show after envelope is opened */}
-      {isEnvelopeOpen && (
+      {envelopeState === "open" && (
         <div 
           className="min-h-screen"
           onTouchStart={handleTouchStart}
