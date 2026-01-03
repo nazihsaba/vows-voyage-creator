@@ -21,7 +21,7 @@ import {
   Eye,
   X,
 } from "lucide-react";
-import modernRomance from "@/assets/template-modern-romance-new.jpg";
+import veriteTemplate from "@/assets/template-verite.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-classic.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
@@ -61,7 +61,7 @@ const Dashboard = () => {
       id: "template2",
       name: "Vérité",
       description: "Contemporary design with stunning gallery showcase",
-      image: modernRomance,
+      image: veriteTemplate,
       features: [
         { icon: Images, text: "Photo Gallery" },
         { icon: MapPin, text: "Event Locations" },
