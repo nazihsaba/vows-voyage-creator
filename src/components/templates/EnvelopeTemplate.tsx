@@ -221,7 +221,7 @@ export const EnvelopeTemplate = ({
   );
 
   const renderIntroTab = () => (
-    <div className="flex flex-col h-[calc(100vh-57px)] overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 text-center relative overflow-hidden">
         {/* Bible Verse Quote */}
         <div className="mb-8">
@@ -404,7 +404,7 @@ export const EnvelopeTemplate = ({
     ];
 
     return (
-      <div className="flex flex-col h-[calc(100vh-57px)] overflow-hidden">
+      <div className="flex flex-col h-full overflow-hidden">
         <div className="flex-1 px-6 py-8 relative overflow-hidden">
           {/* Date Header */}
           <div className="flex items-center justify-center gap-3 mb-12">
@@ -459,7 +459,7 @@ export const EnvelopeTemplate = ({
   };
 
   const renderGiftsTab = () => (
-    <div className="flex flex-col h-[calc(100vh-57px)] overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 px-6 py-12 overflow-hidden">
         <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-12">
           Gift Registry
@@ -470,7 +470,7 @@ export const EnvelopeTemplate = ({
   );
 
   const renderRsvpTab = () => (
-    <div className="flex flex-col h-[calc(100vh-57px)] overflow-hidden">
+    <div className="flex flex-col h-full overflow-hidden">
       <div className="flex-1 px-6 py-12 overflow-auto">
         <div className="max-w-md mx-auto">
           <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
@@ -572,7 +572,7 @@ export const EnvelopeTemplate = ({
   };
 
   return (
-    <div className="min-h-screen bg-[#faf8f5]">
+    <div className="h-screen overflow-hidden bg-[#faf8f5]">
       {/* Audio Element */}
       {wedding.audio_url && (
         <audio
@@ -589,12 +589,12 @@ export const EnvelopeTemplate = ({
       {/* Main Content - Only show after envelope is opened */}
       {envelopeState === "open" && (
         <div 
-          className="min-h-screen"
+          className="h-screen flex flex-col overflow-hidden"
           onTouchStart={handleTouchStart}
           onTouchEnd={handleTouchEnd}
         >
           {/* Tab Navigation */}
-          <nav className="sticky top-0 z-40 bg-[#faf8f5]/95 backdrop-blur-sm border-b border-gray-200">
+          <nav className="flex-shrink-0 z-40 bg-[#faf8f5]/95 backdrop-blur-sm border-b border-gray-200">
             <div className="flex justify-center gap-1 p-2">
               {activeTabs.map((tab, index) => (
                 <button
@@ -613,7 +613,7 @@ export const EnvelopeTemplate = ({
           </nav>
 
           {/* Tab Content */}
-          <main className="h-[calc(100vh-57px)] overflow-hidden">
+          <main className="flex-1 overflow-hidden">
             {renderCurrentTab()}
           </main>
         </div>
