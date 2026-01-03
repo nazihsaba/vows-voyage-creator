@@ -307,9 +307,15 @@ export const BibleVerseTabsTemplate = ({
       </div>
 
       {/* Swipe Up Indicator */}
-      <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
+      {/* <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex flex-col items-center text-gray-400 animate-bounce">
         <ChevronDown className="w-6 h-6 rotate-180" />
         <span className="text-xs mt-1">Swipe up</span>
+      </div> */}
+      <div className="absolute bottom-2 inset-x-0 flex justify-center">
+        <div className="flex flex-col items-center text-gray-400 animate-bounce">
+          <ChevronDown className="w-6 h-6 rotate-180" />
+          <span className="text-xs mt-1">Swipe up</span>
+        </div>
       </div>
 
       {/* Corner Decorations */}
