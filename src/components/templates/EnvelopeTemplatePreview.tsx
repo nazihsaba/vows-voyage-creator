@@ -77,8 +77,8 @@ export const EnvelopeTemplatePreview = ({
         }}
       />
 
-      {/* Closed Envelope */}
-      <div className="relative w-[90vw] max-w-[400px] aspect-[4/3]">
+      {/* Closed Envelope - Full Screen */}
+      <div className="relative w-full h-full">
         
         {/* Envelope body */}
         <div 
@@ -103,9 +103,9 @@ export const EnvelopeTemplatePreview = ({
           }}
         />
 
-        {/* Wax Seal */}
+        {/* Wax Seal - Centered */}
         <div 
-          className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
           style={{ zIndex: 20 }}
         >
           <div 
@@ -138,10 +138,10 @@ export const EnvelopeTemplatePreview = ({
 
         {/* Tap to open hint */}
         <div 
-          className="absolute bottom-6 left-0 right-0 text-center"
+          className="absolute bottom-16 left-0 right-0 text-center"
           style={{ zIndex: 12 }}
         >
-          <p className="text-xs text-[#8a7a6a] animate-pulse">
+          <p className="text-sm text-[#8a7a6a] animate-pulse">
             Toca para abrir
           </p>
         </div>
