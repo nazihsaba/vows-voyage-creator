@@ -52,7 +52,7 @@ export const EnvelopeTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: EnvelopeTemplateProps) => {
-  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "fading" | "open">("closed");
+  const [envelopeState, setEnvelopeState] = useState<"closed" | "fading" | "open">("closed");
   const [currentTab, setCurrentTab] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const touchStartY = useRef(0);
@@ -84,15 +84,10 @@ export const EnvelopeTemplate = ({
 
   const handleEnvelopeClick = () => {
     if (envelopeState === "closed") {
-      setEnvelopeState("opening");
-      // After flap opens, start fading
-      setTimeout(() => {
-        setEnvelopeState("fading");
-      }, 800);
-      // After fade completes, show content
+      setEnvelopeState("fading");
       setTimeout(() => {
         setEnvelopeState("open");
-      }, 1400);
+      }, 600);
     }
   };
 
@@ -127,110 +122,65 @@ export const EnvelopeTemplate = ({
   const groomInitial = wedding.groom_name?.charAt(0)?.toUpperCase() || "M";
   const brideInitial = wedding.bride_name?.charAt(0)?.toUpperCase() || "J";
 
-  const isOpening = envelopeState === "opening" || envelopeState === "fading";
   const isFading = envelopeState === "fading";
 
   const renderEnvelopeScreen = () => (
     <div 
-      className={`fixed inset-0 z-50 flex items-center justify-center ${envelopeState === "closed" ? "cursor-pointer" : ""}`}
+      className={`fixed inset-0 z-50 flex items-center justify-center cursor-pointer`}
       onClick={handleEnvelopeClick}
       style={{ 
-        background: "linear-gradient(145deg, #faf9f7 0%, #f5f3f0 50%, #f0ede8 100%)",
+        background: "linear-gradient(145deg, #f5f0e6 0%, #e8dfd0 50%, #ddd4c5 100%)",
         opacity: isFading ? 0 : 1,
         transition: "opacity 0.6s ease-out",
       }}
     >
       {/* Paper texture overlay */}
       <div 
-        className="absolute inset-0 opacity-20"
+        className="absolute inset-0 opacity-15"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
       />
 
-      {/* Envelope Container */}
-      <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]" style={{ perspective: "1500px" }}>
+      {/* Closed Envelope */}
+      <div className="relative w-[90vw] max-w-[400px] aspect-[4/3]">
         
-        {/* Envelope back/bottom layer */}
+        {/* Envelope body */}
         <div 
-          className="absolute inset-0 rounded-sm"
+          className="absolute inset-0 rounded-md"
           style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #f8f6f2 100%)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
+            background: "linear-gradient(180deg, #f0e6d8 0%, #e5d9c8 50%, #d8cbb8 100%)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)",
           }}
         />
 
-        {/* Envelope body front face */}
+        {/* Envelope flap (closed triangle) */}
         <div 
-          className="absolute inset-0"
+          className="absolute top-0 left-0 right-0 h-[50%]"
           style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #faf8f5 100%)",
-            clipPath: "polygon(0 35%, 50% 55%, 100% 35%, 100% 100%, 0 100%)",
+            background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
+            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
             zIndex: 10,
           }}
         />
 
-        {/* Bottom fold V shape */}
+        {/* Wax Seal */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[65%]"
-          style={{
-            background: "linear-gradient(180deg, #fdfcfa 0%, #f5f2ed 100%)",
-            clipPath: "polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%)",
-            zIndex: 11,
-            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.03)",
-          }}
-        />
-        
-        {/* Top flap (triangle) - opens like a real envelope lid */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-[40%]"
-          style={{
-            background: "linear-gradient(180deg, #ffffff 0%, #f8f5f0 100%)",
-            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.08)",
-            transformOrigin: "top center",
-            transform: isOpening ? "rotateX(-180deg)" : "rotateX(0deg)",
-            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease",
-            zIndex: isOpening ? 1 : 15,
-            backfaceVisibility: "hidden",
-          }}
-        />
-
-        {/* Flap backside - visible when flap opens */}
-        <div 
-          className="absolute top-0 left-0 right-0 h-[40%]"
-          style={{
-            background: "linear-gradient(0deg, #f0ebe5 0%, #e8e3dc 100%)",
-            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            transformOrigin: "top center",
-            transform: isOpening ? "rotateX(0deg)" : "rotateX(180deg)",
-            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
-            zIndex: isOpening ? 14 : 0,
-            backfaceVisibility: "hidden",
-          }}
-        />
-
-        {/* Wax Seal - positioned on flap, moves with it initially then fades */}
-        <div 
-          className="absolute top-[32%] left-1/2 -translate-x-1/2 transition-all duration-600"
-          style={{
-            opacity: isOpening ? 0 : 1,
-            transform: `translate(-50%, -50%) ${isOpening ? "scale(0.5) rotate(180deg)" : "scale(1) rotate(0deg)"}`,
-            transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
-            zIndex: isOpening ? 0 : 20,
-          }}
+          className="absolute top-[45%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ zIndex: 20 }}
         >
           <div 
             className="w-20 h-20 rounded-full flex items-center justify-center shadow-xl"
             style={{
-              background: "radial-gradient(circle at 35% 35%, #f5f0e8 0%, #e8e0d5 30%, #d8d0c5 70%, #c8c0b5 100%)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.4)",
+              background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
             }}
           >
             <div 
               className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{
-                background: "radial-gradient(circle at 40% 40%, #f0ebe3 0%, #e0d8ce 50%, #d5cdc3 100%)",
+                background: "radial-gradient(circle at 40% 40%, #e0d7c8 0%, #d0c7b8 50%, #c5bca8 100%)",
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
@@ -238,8 +188,8 @@ export const EnvelopeTemplate = ({
                 className="text-xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
-                  color: "#a09080",
-                  textShadow: "0 1px 1px rgba(255,255,255,0.5)",
+                  color: "#8a7a6a",
+                  textShadow: "0 1px 1px rgba(255,255,255,0.4)",
                 }}
               >
                 {groomInitial}&{brideInitial}
@@ -248,28 +198,12 @@ export const EnvelopeTemplate = ({
           </div>
         </div>
 
-        {/* Exclusive invitation text */}
-        <div 
-          className="absolute bottom-[18%] left-0 right-0 text-center px-8 transition-opacity duration-300"
-          style={{ opacity: isOpening ? 0 : 1, zIndex: 12 }}
-        >
-          <p 
-            className="text-lg md:text-xl leading-relaxed"
-            style={{
-              fontFamily: "'Dancing Script', cursive",
-              color: "#8a7a6a",
-            }}
-          >
-            Esta invitación es<br />exclusiva para ti
-          </p>
-        </div>
-
         {/* Tap to open hint */}
         <div 
-          className="absolute bottom-4 left-0 right-0 text-center transition-opacity duration-300"
-          style={{ opacity: isOpening ? 0 : 1, zIndex: 12 }}
+          className="absolute bottom-6 left-0 right-0 text-center"
+          style={{ zIndex: 12 }}
         >
-          <p className="text-xs text-gray-400 animate-pulse">
+          <p className="text-xs text-[#8a7a6a] animate-pulse">
             Toca para abrir
           </p>
         </div>
