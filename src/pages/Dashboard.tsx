@@ -25,6 +25,7 @@ import modernRomance from "@/assets/template-modern-romance-new.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-classic.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
+import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
@@ -95,7 +96,7 @@ const Dashboard = () => {
       id: "bible-verse-tabs",
       name: "Bible Verse Tabs",
       description: "Elegant tab design with Bible verse, family names & botanical decor",
-      image: classicRomance, // Using classic romance image temporarily
+      image: bibleVerseTabs,
       features: [
         { icon: Sparkles, text: "Bible Verse" },
         { icon: Heart, text: "Family Names" },
