@@ -100,7 +100,7 @@ export const BibleVerseTabsTemplate = ({
   };
 
   const renderIntroTab = () => (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-1 text-center relative">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-12 text-center relative">
       {/* Bible Verse Quote */}
       <div className="mb-12" data-aos="fade-down">
         <EditableField
