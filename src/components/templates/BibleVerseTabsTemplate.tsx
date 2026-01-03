@@ -364,7 +364,7 @@ export const BibleVerseTabsTemplate = ({
     ];
 
     return (
-      <div className="min-h-[80vh] px-6 py-8 relative">
+      <div className="h-screen px-6 py-8 relative flex flex-col">
         {/* Date Header */}
         <div className="flex items-center justify-center gap-3 mb-12" data-aos="fade-down">
           <Calendar className="w-6 h-6 text-gray-600" />
@@ -372,7 +372,7 @@ export const BibleVerseTabsTemplate = ({
         </div>
 
         {/* Vertical Timeline */}
-        <div className="relative max-w-md mx-auto">
+        <div className="relative max-w-md mx-auto flex-1 flex flex-col justify-center">
           {/* Vertical Line */}
           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2" />
 
