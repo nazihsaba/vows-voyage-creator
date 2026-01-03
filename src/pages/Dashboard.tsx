@@ -26,7 +26,7 @@ import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/template-rose-gold-classic.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
-import envelopeTemplate from "@/assets/template-envelope.jpg";
+import ivoireTemplate from "@/assets/template-ivoire.jpg";
 import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
 import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
@@ -109,7 +109,7 @@ const Dashboard = () => {
       id: "envelope-invitation",
       name: "Ivoire",
       description: "Elegant envelope opening animation with wax seal and tab navigation",
-      image: envelopeTemplate,
+      image: ivoireTemplate,
       features: [
         { icon: Sparkles, text: "Envelope Animation" },
         { icon: Heart, text: "Wax Seal" },
