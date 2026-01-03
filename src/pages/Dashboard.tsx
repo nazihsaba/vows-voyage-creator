@@ -71,7 +71,7 @@ const Dashboard = () => {
     },
     {
       id: "classic-romance",
-      name: "Classic Romance",
+      name: "Éclat",
       description: "Elegant scrollable design with photo gallery and RSVP",
       image: classicRomance,
       features: [
