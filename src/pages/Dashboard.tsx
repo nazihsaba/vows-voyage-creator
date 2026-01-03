@@ -119,7 +119,7 @@ const Dashboard = () => {
     },
     {
       id: "template6",
-      name: "Cinematic Video",
+      name: "Grâce",
       description: "Immersive full-screen video background experience",
       image: cinematicVideo,
       features: [
