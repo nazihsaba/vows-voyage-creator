@@ -121,7 +121,7 @@ export const BibleVerseTabsTemplate = ({
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none z-10" />
 
       {/* Scrollable Content */}
-      <div className="px-6 py-12">
+      <div className="px-6">
         {/* ===== INTRO SECTION ===== */}
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
@@ -298,7 +298,12 @@ export const BibleVerseTabsTemplate = ({
             {/* Timeline Events */}
             <div className="space-y-12">
               {timelineEvents.map((event, index) => (
-                <div key={event.id} className="relative flex items-start" data-aos="fade-up" data-aos-delay={index * 100}>
+                <div
+                  key={event.id}
+                  className="relative flex items-start"
+                  data-aos="fade-up"
+                  data-aos-delay={index * 100}
+                >
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
                     <h3 className="font-medium text-gray-800">{event.title}</h3>
