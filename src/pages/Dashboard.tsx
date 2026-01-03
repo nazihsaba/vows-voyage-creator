@@ -95,7 +95,7 @@ const Dashboard = () => {
     },
     {
       id: "bible-verse-tabs",
-      name: "Bible Verse Tabs",
+      name: "Aura",
       description: "Elegant tab design with Bible verse, family names & botanical decor",
       image: bibleVerseTabs,
       features: [
