@@ -415,7 +415,7 @@ export const BibleVerseTabsTemplate = ({
         </div>
 
         {/* Decorative Botanical Elements - Bottom Left */}
-        <div className="absolute bottom-16 left-6 opacity-40">
+        <div className="absolute bottom-8 left-6 opacity-40">
           <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
               d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30"
