@@ -107,7 +107,7 @@ const Dashboard = () => {
     },
     {
       id: "envelope-invitation",
-      name: "Ivory",
+      name: "Ivoire",
       description: "Elegant envelope opening animation with wax seal and tab navigation",
       image: envelopeTemplate,
       features: [
