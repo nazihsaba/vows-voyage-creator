@@ -58,6 +58,18 @@ const Dashboard = () => {
 
   const weddingTemplates = [
     {
+      id: "bible-verse-tabs",
+      name: "Aura",
+      description: "Elegant tab design with Bible verse, family names & botanical decor",
+      image: bibleVerseTabs,
+      features: [
+        { icon: Sparkles, text: "Bible Verse" },
+        { icon: Heart, text: "Family Names" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
+    {
       id: "template2",
       name: "Vérité",
       description: "Contemporary design with stunning gallery showcase",
@@ -89,18 +101,6 @@ const Dashboard = () => {
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Sparkles, text: "Page Transitions" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
-    {
-      id: "bible-verse-tabs",
-      name: "Aura",
-      description: "Elegant tab design with Bible verse, family names & botanical decor",
-      image: bibleVerseTabs,
-      features: [
-        { icon: Sparkles, text: "Bible Verse" },
-        { icon: Heart, text: "Family Names" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
       ],
