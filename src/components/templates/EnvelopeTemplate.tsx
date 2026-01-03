@@ -142,15 +142,16 @@ export const EnvelopeTemplate = ({
       />
 
       {/* Envelope Container */}
-      <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]" style={{ perspective: "1000px" }}>
+      <div className="relative w-[90vw] max-w-[400px] aspect-[4/5]" style={{ perspective: "1500px" }}>
         
-        {/* Letter/Card that slides out */}
+        {/* Letter/Card inside envelope - slides up and OUT of envelope */}
         <div 
-          className="absolute inset-[8%] bg-white rounded-lg shadow-md flex items-center justify-center transition-all duration-1000 ease-out"
+          className="absolute left-[8%] right-[8%] top-[10%] bottom-[18%] bg-white rounded-lg shadow-lg flex items-center justify-center"
           style={{
-            transform: isOpening ? "translateY(-120%)" : "translateY(0)",
-            opacity: isOpening ? 1 : 0.95,
-            zIndex: 5,
+            transform: isOpening ? "translateY(-130%) scale(1.02)" : "translateY(0) scale(1)",
+            opacity: 1,
+            zIndex: isOpening ? 20 : 5,
+            transition: "transform 1.2s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease",
           }}
         >
           <div className="text-center p-6">
@@ -164,72 +165,91 @@ export const EnvelopeTemplate = ({
           </div>
         </div>
 
-        {/* Envelope body */}
+        {/* Envelope back/bottom layer */}
         <div 
-          className="absolute inset-0 bg-[#f8f6f3] shadow-2xl"
+          className="absolute inset-0 rounded-sm"
           style={{
-            clipPath: "polygon(0 0, 100% 0, 100% 100%, 50% 85%, 0 100%)",
+            background: "linear-gradient(180deg, #ebe7e0 0%, #e0dbd3 100%)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+          }}
+        />
+
+        {/* Envelope body front face */}
+        <div 
+          className="absolute inset-0"
+          style={{
+            background: "linear-gradient(180deg, #f8f5f0 0%, #efe9e0 100%)",
+            clipPath: "polygon(0 35%, 50% 55%, 100% 35%, 100% 100%, 0 100%)",
+            zIndex: 10,
+          }}
+        />
+
+        {/* Bottom fold V shape */}
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[65%]"
+          style={{
+            background: "linear-gradient(180deg, #f5f1eb 0%, #ebe5dc 100%)",
+            clipPath: "polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%)",
+            zIndex: 11,
+            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.05)",
           }}
         />
         
-        {/* Top flap (triangle) - animates open */}
+        {/* Top flap (triangle) - opens like a real envelope lid */}
         <div 
-          className="absolute top-0 left-0 right-0 h-[45%] transition-all duration-700 ease-out"
+          className="absolute top-0 left-0 right-0 h-[40%]"
           style={{
-            background: "linear-gradient(180deg, #f0ede8 0%, #e8e5e0 100%)",
+            background: "linear-gradient(180deg, #f0ece5 0%, #e8e2d8 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.1)",
             transformOrigin: "top center",
-            transform: isOpening ? "rotateX(180deg)" : "rotateX(0deg)",
-            zIndex: isOpening ? 1 : 10,
+            transform: isOpening ? "rotateX(-180deg)" : "rotateX(0deg)",
+            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease",
+            zIndex: isOpening ? 1 : 15,
+            backfaceVisibility: "hidden",
           }}
         />
 
-        {/* Left side fold line */}
+        {/* Flap backside - visible when flap opens */}
         <div 
-          className="absolute bottom-0 left-0 w-[50%] h-[55%]"
+          className="absolute top-0 left-0 right-0 h-[40%]"
           style={{
-            background: "linear-gradient(135deg, transparent 0%, rgba(0,0,0,0.02) 100%)",
-            clipPath: "polygon(0 0, 100% 100%, 0 100%)",
+            background: "linear-gradient(0deg, #e5e0d8 0%, #d8d3cb 100%)",
+            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+            transformOrigin: "top center",
+            transform: isOpening ? "rotateX(0deg)" : "rotateX(180deg)",
+            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+            zIndex: isOpening ? 14 : 0,
+            backfaceVisibility: "hidden",
           }}
         />
 
-        {/* Right side fold line */}
+        {/* Wax Seal - positioned on flap, moves with it initially then fades */}
         <div 
-          className="absolute bottom-0 right-0 w-[50%] h-[55%]"
-          style={{
-            background: "linear-gradient(-135deg, transparent 0%, rgba(0,0,0,0.02) 100%)",
-            clipPath: "polygon(100% 0, 100% 100%, 0 100%)",
-          }}
-        />
-
-        {/* Wax Seal - fades and moves with flap */}
-        <div 
-          className="absolute top-[38%] left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 transition-all duration-500"
+          className="absolute top-[32%] left-1/2 -translate-x-1/2 transition-all duration-600"
           style={{
             opacity: isOpening ? 0 : 1,
-            transform: isOpening 
-              ? "translate(-50%, -50%) scale(0.8) rotate(45deg)" 
-              : "translate(-50%, -50%) scale(1) rotate(0deg)",
+            transform: `translate(-50%, -50%) ${isOpening ? "scale(0.5) rotate(180deg)" : "scale(1) rotate(0deg)"}`,
+            transition: "all 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+            zIndex: isOpening ? 0 : 20,
           }}
         >
           <div 
-            className="w-24 h-24 rounded-full flex items-center justify-center shadow-lg"
+            className="w-20 h-20 rounded-full flex items-center justify-center shadow-xl"
             style={{
               background: "radial-gradient(circle at 35% 35%, #f5f0e8 0%, #e8e0d5 30%, #d8d0c5 70%, #c8c0b5 100%)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.15), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.4)",
             }}
           >
-            {/* Inner circle */}
             <div 
-              className="w-20 h-20 rounded-full flex items-center justify-center"
+              className="w-16 h-16 rounded-full flex items-center justify-center"
               style={{
                 background: "radial-gradient(circle at 40% 40%, #f0ebe3 0%, #e0d8ce 50%, #d5cdc3 100%)",
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
               <span 
-                className="text-2xl tracking-wide"
+                className="text-xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: "#a09080",
@@ -244,11 +264,11 @@ export const EnvelopeTemplate = ({
 
         {/* Exclusive invitation text */}
         <div 
-          className="absolute bottom-[20%] left-0 right-0 text-center px-8 transition-opacity duration-300"
-          style={{ opacity: isOpening ? 0 : 1 }}
+          className="absolute bottom-[18%] left-0 right-0 text-center px-8 transition-opacity duration-300"
+          style={{ opacity: isOpening ? 0 : 1, zIndex: 12 }}
         >
           <p 
-            className="text-xl md:text-2xl leading-relaxed"
+            className="text-lg md:text-xl leading-relaxed"
             style={{
               fontFamily: "'Dancing Script', cursive",
               color: "#8a7a6a",
@@ -260,11 +280,11 @@ export const EnvelopeTemplate = ({
 
         {/* Tap to open hint */}
         <div 
-          className="absolute bottom-6 left-0 right-0 text-center transition-opacity duration-300"
-          style={{ opacity: isOpening ? 0 : 1 }}
+          className="absolute bottom-4 left-0 right-0 text-center transition-opacity duration-300"
+          style={{ opacity: isOpening ? 0 : 1, zIndex: 12 }}
         >
           <p className="text-xs text-gray-400 animate-pulse">
-            Tap to open
+            Toca para abrir
           </p>
         </div>
       </div>
