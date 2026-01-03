@@ -30,6 +30,7 @@ import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPr
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
 import { ClassicRomancePreview } from "@/components/templates/ClassicRomancePreview";
 import { BibleVerseTabsPreview } from "@/components/templates/BibleVerseTabsPreview";
+import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -98,6 +99,18 @@ const Dashboard = () => {
       features: [
         { icon: Sparkles, text: "Bible Verse" },
         { icon: Heart, text: "Family Names" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
+    {
+      id: "envelope-invitation",
+      name: "Envelope Invitation",
+      description: "Elegant envelope opening animation with wax seal and tab navigation",
+      image: classicRomance, // Using classic romance image temporarily
+      features: [
+        { icon: Sparkles, text: "Envelope Animation" },
+        { icon: Heart, text: "Wax Seal" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
       ],
@@ -265,6 +278,7 @@ const Dashboard = () => {
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
             {showPreview === "classic-romance" && <ClassicRomancePreview />}
             {showPreview === "bible-verse-tabs" && <BibleVerseTabsPreview />}
+            {showPreview === "envelope-invitation" && <EnvelopeTemplatePreview />}
           </div>
         </DialogContent>
       </Dialog>
