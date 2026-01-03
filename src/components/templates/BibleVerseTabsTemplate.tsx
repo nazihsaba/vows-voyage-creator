@@ -336,6 +336,33 @@ export const BibleVerseTabsTemplate = ({
         </section>
 
         {/* Divider */}
+        {gallery && gallery.length > 0 && <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />}
+
+        {/* ===== GALLERY SECTION ===== */}
+        {gallery && gallery.length > 0 && (
+          <section className="mb-16" data-aos="fade-up">
+            <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
+              Our Moments
+            </h2>
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+              {gallery.map((image, index) => (
+                <div
+                  key={image.id || index}
+                  className="aspect-square overflow-hidden rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                >
+                  <img
+                    src={image.image_url}
+                    alt={image.alt_text || `Gallery image ${index + 1}`}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Divider */}
         {hasGiftCards && <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />}
 
         {/* ===== GIFTS SECTION ===== */}

@@ -32,6 +32,9 @@ const RoseGoldTabsForm = () => {
   const [audioUrl, setAudioUrl] = useState<string>("");
   const [audioStartTime, setAudioStartTime] = useState<number>(0);
   const [audioEndTime, setAudioEndTime] = useState<number>(0);
+  const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -45,6 +48,9 @@ const RoseGoldTabsForm = () => {
   ]);
   const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
+  
+  const templateType = searchParams.get("template") || "rose-gold-tabs";
+  const isBibleVerseTabs = templateType === "bible-verse-tabs";
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -108,6 +114,17 @@ const RoseGoldTabsForm = () => {
         });
       }
 
+      // Fetch existing gallery images
+      const { data: galleryData } = await supabase
+        .from("gallery_images")
+        .select("*")
+        .eq("wedding_id", id)
+        .order("image_order");
+      
+      if (galleryData) {
+        setExistingGalleryImages(galleryData);
+      }
+
       const { data: giftCardsData } = await supabase
         .from("gift_cards")
         .select("*")
@@ -165,6 +182,56 @@ const RoseGoldTabsForm = () => {
     setVideoFile(null);
     setVideoPreview("");
     setFormData({ ...formData, video_url: "" });
+  };
+
+  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
+    
+    if (totalImages > 6) {
+      toast({
+        title: "Maximum 6 images",
+        description: `You can only upload ${6 - existingGalleryImages.length - galleryFiles.length} more image(s)`,
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setGalleryFiles([...galleryFiles, ...files]);
+    
+    // Create previews
+    files.forEach((file) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setGalleryPreviews((prev) => [...prev, reader.result as string]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const removeGalleryFile = (index: number) => {
+    setGalleryFiles(galleryFiles.filter((_, i) => i !== index));
+    setGalleryPreviews(galleryPreviews.filter((_, i) => i !== index));
+  };
+
+  const removeExistingGalleryImage = async (imageId: string) => {
+    try {
+      const { error } = await supabase
+        .from("gallery_images")
+        .delete()
+        .eq("id", imageId);
+
+      if (error) throw error;
+
+      setExistingGalleryImages(existingGalleryImages.filter((img) => img.id !== imageId));
+      toast({ title: "Image removed successfully" });
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    }
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
@@ -329,6 +396,33 @@ const RoseGoldTabsForm = () => {
         if (cardError) throw cardError;
       }
 
+      // Upload gallery images for bible-verse-tabs template
+      if (isBibleVerseTabs && galleryFiles.length > 0) {
+        // Get the highest image_order to append new images
+        const { data: maxOrderData } = await supabase
+          .from("gallery_images")
+          .select("image_order")
+          .eq("wedding_id", weddingId)
+          .order("image_order", { ascending: false })
+          .limit(1);
+
+        const startOrder = (maxOrderData?.[0]?.image_order || 0) + 1;
+
+        const galleryInserts = await Promise.all(
+          galleryFiles.map(async (file, index) => ({
+            wedding_id: weddingId,
+            image_url: await uploadImage(file, user.id, index),
+            image_order: startOrder + index,
+          }))
+        );
+
+        const { error: galleryError } = await supabase
+          .from("gallery_images")
+          .insert(galleryInserts);
+
+        if (galleryError) throw galleryError;
+      }
+
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
     } catch (error: any) {
       toast({
@@ -461,83 +555,166 @@ const RoseGoldTabsForm = () => {
                 </p>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="main_picture">Background Photo or Video</Label>
-                <p className="text-sm text-muted-foreground">
-                  Upload a photo or video to display as the fullscreen background
-                </p>
-                <div className="flex flex-col gap-4">
-                  {videoPreview ? (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <video 
-                        src={videoPreview} 
-                        className="w-full h-full object-cover"
-                        controls
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2"
-                        onClick={removeVideo}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+              {/* Background Photo or Video - only for rose-gold-tabs */}
+              {!isBibleVerseTabs && (
+                <div className="space-y-2">
+                  <Label htmlFor="main_picture">Background Photo or Video</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Upload a photo or video to display as the fullscreen background
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    {videoPreview ? (
+                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                        <video 
+                          src={videoPreview} 
+                          className="w-full h-full object-cover"
+                          controls
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={removeVideo}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : imagePreview ? (
+                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                        <img 
+                          src={imagePreview} 
+                          alt="Wedding preview" 
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={removeImage}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <label
+                          htmlFor="main_video"
+                          className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                        >
+                          <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">Click to upload video (recommended)</span>
+                          <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
+                        </label>
+                        <div className="text-center text-sm text-muted-foreground">or</div>
+                        <label
+                          htmlFor="main_picture"
+                          className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                        >
+                          <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                          <span className="text-sm text-muted-foreground">Click to upload image</span>
+                          <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                        </label>
+                      </>
+                    )}
+                    <Input
+                      id="main_video"
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                      className="hidden"
+                    />
+                    <Input
+                      id="main_picture"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Gallery Images Section - for bible-verse-tabs */}
+              {isBibleVerseTabs && (
+                <div className="space-y-2">
+                  <Label>Gallery Images (up to 6)</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Upload images to showcase in your wedding gallery
+                  </p>
+                  
+                  {/* Existing Gallery Images */}
+                  {existingGalleryImages.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {existingGalleryImages.map((image) => (
+                        <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
+                          <img 
+                            src={image.image_url} 
+                            alt={image.alt_text || "Gallery image"} 
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeExistingGalleryImage(image.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  ) : imagePreview ? (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <img 
-                        src={imagePreview} 
-                        alt="Wedding preview" 
-                        className="w-full h-full object-cover"
-                      />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2"
-                        onClick={removeImage}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
+                  )}
+
+                  {/* New Gallery Images */}
+                  {galleryPreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {galleryPreviews.map((preview, index) => (
+                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
+                          <img 
+                            src={preview} 
+                            alt={`New gallery image ${index + 1}`} 
+                            className="w-full h-full object-cover"
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeGalleryFile(index)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
                     </div>
-                  ) : (
+                  )}
+
+                  {/* Upload Button */}
+                  {(existingGalleryImages.length + galleryFiles.length) < 6 && (
                     <>
                       <label
-                        htmlFor="main_video"
+                        htmlFor="gallery_images"
                         className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
                       >
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Click to upload video (recommended)</span>
-                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
+                        <span className="text-sm text-muted-foreground">Click to upload images</span>
+                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each</span>
                       </label>
-                      <div className="text-center text-sm text-muted-foreground">or</div>
-                      <label
-                        htmlFor="main_picture"
-                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                      >
-                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Click to upload image</span>
-                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
-                      </label>
+                      <Input
+                        id="gallery_images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGalleryChange}
+                        className="hidden"
+                      />
                     </>
                   )}
-                  <Input
-                    id="main_video"
-                    type="file"
-                    accept="video/*"
-                    onChange={handleVideoChange}
-                    className="hidden"
-                  />
-                  <Input
-                    id="main_picture"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
                 </div>
-              </div>
+              )}
 
               {/* Audio Background Section */}
               <div className="space-y-2 border-t pt-6">

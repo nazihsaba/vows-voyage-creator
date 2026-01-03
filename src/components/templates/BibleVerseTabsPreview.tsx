@@ -137,6 +137,28 @@ export const BibleVerseTabsPreview = () => {
         {/* Divider */}
         <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
+        {/* ===== GALLERY SECTION ===== */}
+        <section className="mb-16">
+          <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
+            Our Moments
+          </h2>
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+            {[1, 2, 3, 4, 5, 6].map((index) => (
+              <div
+                key={index}
+                className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200"
+              >
+                <div className="w-full h-full flex items-center justify-center text-gray-400">
+                  <span className="text-sm">Photo {index}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Divider */}
+        <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+
         {/* ===== GIFTS SECTION ===== */}
         <section className="mb-16 text-center">
           {/* Heading */}
