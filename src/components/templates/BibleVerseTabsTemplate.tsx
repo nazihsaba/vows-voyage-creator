@@ -93,19 +93,22 @@ export const BibleVerseTabsTemplate = ({
   const handleTouchEnd = (e: React.TouchEvent) => {
     const touchEndY = e.changedTouches[0].clientY;
     const diff = touchStartX.current - touchEndY;
-    
+
     if (diff > 50) {
       // Swiped up - could trigger scroll indicator
     }
   };
 
   const renderIntroTab = () => (
-    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-12 text-center relative">
+    <div className="flex flex-col items-center justify-center min-h-[80vh] px-6 py-0 text-center relative">
       {/* Bible Verse Quote */}
       <div className="mb-12" data-aos="fade-down">
         <EditableField
           fieldId="bible-verse"
-          text={getFieldValue("bible-verse", '"Two are better than one. For if they fall, one will lift up the other."')}
+          text={getFieldValue(
+            "bible-verse",
+            '"Two are better than one. For if they fall, one will lift up the other."',
+          )}
           style={getFieldStyle("bible-verse")}
           onUpdate={onFieldUpdate}
           isPreview={isPreview}
@@ -137,12 +140,19 @@ export const BibleVerseTabsTemplate = ({
       </div>
 
       {/* Parents Names */}
-      <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-10" data-aos="fade-up" data-aos-delay="200">
+      <div
+        className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-12 mb-10"
+        data-aos="fade-up"
+        data-aos-delay="200"
+      >
         {/* Groom's Parents */}
         <div className="text-center">
           <EditableField
             fieldId="groom-parents"
-            text={getFieldValue("groom-parents", `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(' ').pop()}`)}
+            text={getFieldValue(
+              "groom-parents",
+              `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`,
+            )}
             style={getFieldStyle("groom-parents")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -151,7 +161,10 @@ export const BibleVerseTabsTemplate = ({
           />
           <EditableField
             fieldId="groom-family-name"
-            text={getFieldValue("groom-family-name", wedding.groom_family || wedding.groom_name.split(' ').pop() || "Family")}
+            text={getFieldValue(
+              "groom-family-name",
+              wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
+            )}
             style={getFieldStyle("groom-family-name")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -166,7 +179,10 @@ export const BibleVerseTabsTemplate = ({
         <div className="text-center">
           <EditableField
             fieldId="bride-parents"
-            text={getFieldValue("bride-parents", `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(' ').pop()}`)}
+            text={getFieldValue(
+              "bride-parents",
+              `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`,
+            )}
             style={getFieldStyle("bride-parents")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -175,7 +191,10 @@ export const BibleVerseTabsTemplate = ({
           />
           <EditableField
             fieldId="bride-family-name"
-            text={getFieldValue("bride-family-name", wedding.bride_family || wedding.bride_name.split(' ').pop() || "Family")}
+            text={getFieldValue(
+              "bride-family-name",
+              wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
+            )}
             style={getFieldStyle("bride-family-name")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -189,7 +208,10 @@ export const BibleVerseTabsTemplate = ({
       <div className="mb-8" data-aos="fade-up" data-aos-delay="300">
         <EditableField
           fieldId="invitation-line"
-          text={getFieldValue("invitation-line", "joyfully invite you to the wedding of their\nbeloved son and daughter")}
+          text={getFieldValue(
+            "invitation-line",
+            "joyfully invite you to the wedding of their\nbeloved son and daughter",
+          )}
           style={getFieldStyle("invitation-line")}
           onUpdate={onFieldUpdate}
           isPreview={isPreview}
@@ -223,7 +245,7 @@ export const BibleVerseTabsTemplate = ({
               month: "long",
               day: "numeric",
               year: "numeric",
-            })
+            }),
           )}
           style={getFieldStyle("wedding-date-formatted")}
           onUpdate={onFieldUpdate}
@@ -236,11 +258,51 @@ export const BibleVerseTabsTemplate = ({
       {/* Decorative Botanical Elements */}
       <div className="absolute bottom-16 left-6 opacity-40">
         <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
-          <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
-          <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
-          <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
-          <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+          <path
+            d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30"
+            stroke="#9ca3af"
+            strokeWidth="1.5"
+          />
+          <ellipse
+            cx="5"
+            cy="28"
+            rx="8"
+            ry="12"
+            fill="none"
+            stroke="#9ca3af"
+            strokeWidth="1"
+            transform="rotate(-30 5 28)"
+          />
+          <ellipse
+            cx="15"
+            cy="38"
+            rx="6"
+            ry="10"
+            fill="none"
+            stroke="#9ca3af"
+            strokeWidth="1"
+            transform="rotate(-20 15 38)"
+          />
+          <ellipse
+            cx="45"
+            cy="38"
+            rx="6"
+            ry="10"
+            fill="none"
+            stroke="#9ca3af"
+            strokeWidth="1"
+            transform="rotate(20 45 38)"
+          />
+          <ellipse
+            cx="55"
+            cy="28"
+            rx="8"
+            ry="12"
+            fill="none"
+            stroke="#9ca3af"
+            strokeWidth="1"
+            transform="rotate(30 55 28)"
+          />
         </svg>
       </div>
 
@@ -265,29 +327,38 @@ export const BibleVerseTabsTemplate = ({
 
     // Build timeline events from locations
     const timelineEvents = [
-      ...(ceremony ? [{
-        id: "ceremony",
-        title: "Ceremony",
-        time: ceremony.time || "7:00 PM",
-        location: ceremony.location_name,
-        link: ceremony.location_link,
-        icon: Church,
-      }] : []),
-      ...(venue ? [{
-        id: "welcome",
-        title: "Welcome Drink",
-        time: "8:00 PM",
-        location: venue.location_name,
-        link: venue.location_link,
-        icon: Wine,
-      }, {
-        id: "dinner",
-        title: "Dinner & Party",
-        time: "9:00 PM",
-        location: venue.location_name,
-        link: venue.location_link,
-        icon: PartyPopper,
-      }] : []),
+      ...(ceremony
+        ? [
+            {
+              id: "ceremony",
+              title: "Ceremony",
+              time: ceremony.time || "7:00 PM",
+              location: ceremony.location_name,
+              link: ceremony.location_link,
+              icon: Church,
+            },
+          ]
+        : []),
+      ...(venue
+        ? [
+            {
+              id: "welcome",
+              title: "Welcome Drink",
+              time: "8:00 PM",
+              location: venue.location_name,
+              link: venue.location_link,
+              icon: Wine,
+            },
+            {
+              id: "dinner",
+              title: "Dinner & Party",
+              time: "9:00 PM",
+              location: venue.location_name,
+              link: venue.location_link,
+              icon: PartyPopper,
+            },
+          ]
+        : []),
     ];
 
     return (
@@ -295,9 +366,7 @@ export const BibleVerseTabsTemplate = ({
         {/* Date Header */}
         <div className="flex items-center justify-center gap-3 mb-12" data-aos="fade-down">
           <Calendar className="w-6 h-6 text-gray-600" />
-          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">
-            {dateFormatted}
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">{dateFormatted}</h2>
         </div>
 
         {/* Vertical Timeline */}
@@ -308,12 +377,7 @@ export const BibleVerseTabsTemplate = ({
           {/* Timeline Events */}
           <div className="space-y-12">
             {timelineEvents.map((event, index) => (
-              <div 
-                key={event.id} 
-                className="relative flex items-start"
-                data-aos="fade-up"
-                data-aos-delay={index * 100}
-              >
+              <div key={event.id} className="relative flex items-start" data-aos="fade-up" data-aos-delay={index * 100}>
                 {/* Left Side - Event Name & Time */}
                 <div className="flex-1 text-right pr-8">
                   <h3 className="font-medium text-gray-800">{event.title}</h3>
@@ -347,11 +411,51 @@ export const BibleVerseTabsTemplate = ({
         {/* Decorative Botanical Elements - Bottom Left */}
         <div className="absolute bottom-16 left-6 opacity-40">
           <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
-            <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
-            <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
-            <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
-            <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+            <path
+              d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30"
+              stroke="#9ca3af"
+              strokeWidth="1.5"
+            />
+            <ellipse
+              cx="5"
+              cy="28"
+              rx="8"
+              ry="12"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(-30 5 28)"
+            />
+            <ellipse
+              cx="15"
+              cy="38"
+              rx="6"
+              ry="10"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(-20 15 38)"
+            />
+            <ellipse
+              cx="45"
+              cy="38"
+              rx="6"
+              ry="10"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(20 45 38)"
+            />
+            <ellipse
+              cx="55"
+              cy="28"
+              rx="8"
+              ry="12"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(30 55 28)"
+            />
           </svg>
         </div>
 
@@ -388,7 +492,7 @@ export const BibleVerseTabsTemplate = ({
             fieldId="rsvp-message"
             text={getFieldValue(
               "rsvp-message",
-              "Please let us know if you can join us on our special day. Your presence would mean the world to us."
+              "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
             )}
             style={getFieldStyle("rsvp-message")}
             onUpdate={onFieldUpdate}
@@ -424,9 +528,7 @@ export const BibleVerseTabsTemplate = ({
               ))}
 
               <div className="pt-4 border-t border-gray-200">
-                <p className="text-center text-gray-600 mb-4">
-                  Number of Guests: {numberOfPersons || invitees.length}
-                </p>
+                <p className="text-center text-gray-600 mb-4">Number of Guests: {numberOfPersons || invitees.length}</p>
 
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-500 text-center">RSVP deadline has passed</p>
@@ -495,9 +597,7 @@ export const BibleVerseTabsTemplate = ({
               key={tab.id}
               onClick={() => setCurrentTab(index)}
               className={`text-sm md:text-base transition-colors ${
-                currentTab === index
-                  ? "text-gray-900 font-medium"
-                  : "text-gray-500 hover:text-gray-700"
+                currentTab === index ? "text-gray-900 font-medium" : "text-gray-500 hover:text-gray-700"
               }`}
             >
               {tab.label}
@@ -507,11 +607,7 @@ export const BibleVerseTabsTemplate = ({
       </nav>
 
       {/* Tab Content */}
-      <main
-        onTouchStart={handleTouchStart}
-        onTouchEnd={handleTouchEnd}
-        className="transition-opacity duration-300"
-      >
+      <main onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} className="transition-opacity duration-300">
         {renderTabContent()}
       </main>
     </div>
