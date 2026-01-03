@@ -65,14 +65,14 @@ export const EnvelopeTemplatePreview = ({
       className={`fixed inset-0 z-50 flex items-center justify-center ${envelopeState === "closed" ? "cursor-pointer" : ""}`}
       onClick={handleEnvelopeClick}
       style={{ 
-        background: "linear-gradient(145deg, #f5f3f0 0%, #ebe8e3 50%, #e5e2dc 100%)",
+        background: "linear-gradient(145deg, #faf9f7 0%, #f5f3f0 50%, #f0ede8 100%)",
         opacity: isFading ? 0 : 1,
         transition: "opacity 0.6s ease-out",
       }}
     >
       {/* Paper texture overlay */}
       <div 
-        className="absolute inset-0 opacity-30"
+        className="absolute inset-0 opacity-20"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
         }}
@@ -85,17 +85,8 @@ export const EnvelopeTemplatePreview = ({
         <div 
           className="absolute inset-0 rounded-sm"
           style={{
-            background: "linear-gradient(180deg, #ebe7e0 0%, #e0dbd3 100%)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
-          }}
-        />
-
-        {/* Envelope back/bottom layer */}
-        <div 
-          className="absolute inset-0 rounded-sm"
-          style={{
-            background: "linear-gradient(180deg, #ebe7e0 0%, #e0dbd3 100%)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.15)",
+            background: "linear-gradient(180deg, #ffffff 0%, #f8f6f2 100%)",
+            boxShadow: "0 10px 40px rgba(0,0,0,0.12)",
           }}
         />
 
@@ -103,7 +94,7 @@ export const EnvelopeTemplatePreview = ({
         <div 
           className="absolute inset-0"
           style={{
-            background: "linear-gradient(180deg, #f8f5f0 0%, #efe9e0 100%)",
+            background: "linear-gradient(180deg, #ffffff 0%, #faf8f5 100%)",
             clipPath: "polygon(0 35%, 50% 55%, 100% 35%, 100% 100%, 0 100%)",
             zIndex: 10,
           }}
@@ -113,10 +104,10 @@ export const EnvelopeTemplatePreview = ({
         <div 
           className="absolute bottom-0 left-0 right-0 h-[65%]"
           style={{
-            background: "linear-gradient(180deg, #f5f1eb 0%, #ebe5dc 100%)",
+            background: "linear-gradient(180deg, #fdfcfa 0%, #f5f2ed 100%)",
             clipPath: "polygon(0 0, 50% 40%, 100% 0, 100% 100%, 0 100%)",
             zIndex: 11,
-            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.05)",
+            boxShadow: "inset 0 2px 8px rgba(0,0,0,0.03)",
           }}
         />
         
@@ -124,9 +115,9 @@ export const EnvelopeTemplatePreview = ({
         <div 
           className="absolute top-0 left-0 right-0 h-[40%]"
           style={{
-            background: "linear-gradient(180deg, #f0ece5 0%, #e8e2d8 100%)",
+            background: "linear-gradient(180deg, #ffffff 0%, #f8f5f0 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.2)" : "0 2px 8px rgba(0,0,0,0.1)",
+            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.15)" : "0 2px 8px rgba(0,0,0,0.08)",
             transformOrigin: "top center",
             transform: isOpening ? "rotateX(-180deg)" : "rotateX(0deg)",
             transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease",
@@ -139,7 +130,7 @@ export const EnvelopeTemplatePreview = ({
         <div 
           className="absolute top-0 left-0 right-0 h-[40%]"
           style={{
-            background: "linear-gradient(0deg, #e5e0d8 0%, #d8d3cb 100%)",
+            background: "linear-gradient(0deg, #f0ebe5 0%, #e8e3dc 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             transformOrigin: "top center",
             transform: isOpening ? "rotateX(0deg)" : "rotateX(180deg)",
