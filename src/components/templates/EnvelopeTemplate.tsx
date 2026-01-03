@@ -87,10 +87,10 @@ export const EnvelopeTemplate = ({
       setEnvelopeState("opening");
       setTimeout(() => {
         setEnvelopeState("fading");
-      }, 500);
+      }, 1000);
       setTimeout(() => {
         setEnvelopeState("open");
-      }, 1100);
+      }, 2000);
     }
   };
 
@@ -160,14 +160,14 @@ export const EnvelopeTemplate = ({
 
         {/* Envelope flap (opens slightly) */}
         <div 
-          className="absolute top-0 left-0 right-0 h-[50%]"
+          className="absolute top-0 left-0 right-0 h-[55%]"
           style={{
             background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
             clipPath: "polygon(0 0, 100% 0, 50% 100%)",
             boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.12)" : "0 4px 12px rgba(0,0,0,0.08)",
             transformOrigin: "top center",
             transform: isOpening ? "rotateX(-45deg)" : "rotateX(0deg)",
-            transition: "transform 0.5s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease",
+            transition: "transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease",
             zIndex: 10,
           }}
         />
@@ -178,7 +178,7 @@ export const EnvelopeTemplate = ({
           style={{ zIndex: 20 }}
         >
           <div 
-            className="w-32 h-32 rounded-full flex items-center justify-center shadow-xl"
+            className="w-40 h-40 rounded-full flex items-center justify-center shadow-xl"
             style={{
               background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
               boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
@@ -187,14 +187,14 @@ export const EnvelopeTemplate = ({
             <div 
               className="rounded-full flex items-center justify-center"
               style={{
-                width: "104px",
-                height: "104px",
+                width: "128px",
+                height: "128px",
                 background: "radial-gradient(circle at 40% 40%, #e0d7c8 0%, #d0c7b8 50%, #c5bca8 100%)",
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
               <span 
-                className="text-2xl tracking-wide"
+                className="text-3xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: "#8a7a6a",
@@ -213,7 +213,7 @@ export const EnvelopeTemplate = ({
           style={{ zIndex: 12 }}
         >
           <p className="text-sm text-[#8a7a6a] animate-pulse">
-            Toca para abrir
+            Tap to open
           </p>
         </div>
       </div>
