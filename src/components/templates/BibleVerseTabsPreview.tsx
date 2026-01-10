@@ -1,4 +1,5 @@
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 export const BibleVerseTabsPreview = () => {
   const timelineEvents = [
@@ -79,6 +80,11 @@ export const BibleVerseTabsPreview = () => {
           {/* Wedding Date */}
           <div>
             <p className="text-template-body text-primary">Saturday, August 16th, 2025</p>
+          </div>
+
+          {/* Countdown Timer */}
+          <div className="mt-8 w-full max-w-xl">
+            <CountdownTimer targetDate={new Date("2025-08-16")} />
           </div>
         </section>
 

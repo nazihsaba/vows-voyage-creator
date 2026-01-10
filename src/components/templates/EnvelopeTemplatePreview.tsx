@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import { CountdownTimer } from "@/components/CountdownTimer";
 
 interface EnvelopeTemplatePreviewProps {
   groomName?: string;
@@ -226,6 +227,11 @@ export const EnvelopeTemplatePreview = ({
                     year: "numeric",
                   })}
                 </p>
+              </div>
+
+              {/* Countdown Timer */}
+              <div className="mt-8 w-full max-w-xl">
+                <CountdownTimer targetDate={new Date(weddingDate)} />
               </div>
             </section>
 
