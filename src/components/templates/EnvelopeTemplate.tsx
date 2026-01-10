@@ -379,6 +379,37 @@ export const EnvelopeTemplate = ({
             {/* Divider */}
             <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
+            {/* ===== GALLERY SECTION ===== */}
+            {gallery && gallery.length > 0 && (
+              <>
+                <section className="mb-16">
+                  <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
+                    Our Moments
+                  </h2>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                    {gallery.map((image: any, index: number) => (
+                      <div
+                        key={image.id || index}
+                        className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200"
+                      >
+                        <img
+                          src={image.image_url}
+                          alt={image.alt_text || `Wedding moment ${index + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </section>
+
+                {/* Divider */}
+                <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+              </>
+            )}
+
+            {/* Divider */}
+            <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+
             {/* ===== TIMELINE SECTION ===== */}
             <section className="mb-16">
               {/* Date Header */}
