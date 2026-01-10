@@ -250,7 +250,7 @@ export const RoseGoldTabsPreview = ({
         return (
           <div className="space-y-6 animate-fade-in">
             <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-light text-white mb-4">Wedding Events</h2>
+              <h2 className="text-template-subtitle mb-6 text-white">Wedding Events</h2>
               <p className="text-white/80">Join us in celebrating this special day</p>
             </div>
 
