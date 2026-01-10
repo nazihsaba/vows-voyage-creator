@@ -48,9 +48,7 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
 
   return (
     <div className="flex flex-col items-center justify-center py-8 md:py-12">
-      <h3 className="font-serif text-white drop-shadow-lg mb-4 md:mb-6 text-template-subtitle">
-        Counting down to our big day
-      </h3>
+      <h3 className="text-template-subtitle mb-6 text-white">Counting down to our big day</h3>
       <div className="flex flex-row items-center justify-center gap-4 md:gap-8">
         <TimeUnit value={timeRemaining.days} label="Days" />
         <TimeUnit value={timeRemaining.hours} label="Hours" />
