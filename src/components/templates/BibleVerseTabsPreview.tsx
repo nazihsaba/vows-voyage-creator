@@ -51,7 +51,7 @@ export const BibleVerseTabsPreview = () => {
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mb-6">
             {/* Groom's Parents */}
             <div className="text-center">
-              <p className="text-template-small text-primary">Mr. Pierre & Mrs. Nayla</p>
+              <p className="text-primary">Mr. Pierre & Mrs. Nayla</p>
               <p className="text-template-subtitle">Nawfal</p>
             </div>
 
@@ -59,7 +59,7 @@ export const BibleVerseTabsPreview = () => {
 
             {/* Bride's Parents */}
             <div className="text-center">
-              <p className="text-template-small text-primary">Mr. Michel & Mrs. Layla</p>
+              <p className="text-primary">Mr. Michel & Mrs. Layla</p>
               <p className="text-template-subtitle">Assaker</p>
             </div>
           </div>
