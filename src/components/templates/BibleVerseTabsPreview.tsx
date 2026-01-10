@@ -44,7 +44,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Together with their families */}
           <div className="mb-6">
-            <p className="text-xl md:text-2xl text-gray-800 font-[Roboto]">Together with their families</p>
+            <p className="text-xl md:text-2xl  font-[Roboto]">Together with their families</p>
           </div>
 
           {/* Parents Names */}
@@ -52,7 +52,7 @@ export const BibleVerseTabsPreview = () => {
             {/* Groom's Parents */}
             <div className="text-center">
               <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Pierre & Mrs. Nayla</p>
-              <p className="text-2xl md:text-3xl font-cursive text-gray-800">Nawfal</p>
+              <p className="text-2xl md:text-3xl font-cursive ">Nawfal</p>
             </div>
 
             <span className="text-2xl text-gray-400 font-[Roboto]">&</span>
@@ -60,7 +60,7 @@ export const BibleVerseTabsPreview = () => {
             {/* Bride's Parents */}
             <div className="text-center">
               <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Michel & Mrs. Layla</p>
-              <p className="text-2xl md:text-3xl font-cursive text-gray-800">Assaker</p>
+              <p className="text-2xl md:text-3xl font-cursive ">Assaker</p>
             </div>
           </div>
 
@@ -73,7 +73,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Couple Names */}
           <div className="mb-6">
-            <h1 className="text-4xl md:text-6xl font-cursive text-gray-800">Stephan & Chadia</h1>
+            <h1 className="text-4xl md:text-6xl font-cursive ">Stephan & Chadia</h1>
           </div>
 
           {/* Wedding Date */}
@@ -90,7 +90,7 @@ export const BibleVerseTabsPreview = () => {
           {/* Date Header */}
           <div className="flex items-center justify-center gap-4 mb-12">
             <Calendar className="w-7 h-7 text-gray-600" />
-            <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">16 August</h2>
+            <h2 className="text-3xl md:text-4xl font-cursive  italic">16 August</h2>
           </div>
 
           {/* Vertical Timeline */}
@@ -104,7 +104,7 @@ export const BibleVerseTabsPreview = () => {
                 <div key={event.id} className="relative flex items-start">
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
-                    <h3 className="text-base font-medium text-gray-800">{event.title}</h3>
+                    <h3 className="text-base font-medium ">{event.title}</h3>
                     <p className="text-sm font-semibold text-gray-700">{event.time}</p>
                   </div>
 
@@ -117,7 +117,7 @@ export const BibleVerseTabsPreview = () => {
                     <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
                     <a
                       href="#"
-                      className="inline-flex items-center gap-1 text-sm text-gray-800 underline mt-1 hover:text-gray-600 transition-colors"
+                      className="inline-flex items-center gap-1 text-sm  underline mt-1 hover:text-gray-600 transition-colors"
                     >
                       <MapPin className="w-4 h-4" />
                       Location
@@ -134,7 +134,7 @@ export const BibleVerseTabsPreview = () => {
 
         {/* ===== GALLERY SECTION ===== */}
         <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">Our Moments</h2>
+          <h2 className="text-3xl md:text-4xl font-cursive text-center  mb-8">Our Moments</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
               "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
@@ -157,7 +157,7 @@ export const BibleVerseTabsPreview = () => {
         {/* ===== GIFTS SECTION ===== */}
         <section className="mb-16 text-center">
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">Gift Registry</h2>
+          <h2 className="text-3xl md:text-4xl font-cursive  mb-6">Gift Registry</h2>
 
           {/* Welcome Message */}
           <p className="text-lg md:text-xl  max-w-md mx-auto leading-relaxed mb-8 font-[Roboto]">
@@ -165,18 +165,18 @@ export const BibleVerseTabsPreview = () => {
           </p>
 
           {/* Registry Info */}
-          <p className="text-base md:text-lg text-gray-800 font-[Roboto] max-w-sm mx-auto mb-6">
+          <p className="text-base md:text-lg  font-[Roboto] max-w-sm mx-auto mb-6">
             For those who wish, a wedding registry is available:
           </p>
 
           {/* Wish Account */}
           <div className="flex flex-col items-center">
-            <p className="text-base font-medium text-gray-800 mb-3">Wish account:</p>
+            <p className="text-base font-medium  mb-3">Wish account:</p>
             <button
               className="inline-flex items-center gap-4 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               onClick={() => navigator.clipboard.writeText("30278878")}
             >
-              <span className="text-base text-gray-800"># 30278878</span>
+              <span className="text-base "># 30278878</span>
               <Copy className="w-5 h-5 text-gray-600" />
             </button>
           </div>
@@ -202,7 +202,7 @@ export const BibleVerseTabsPreview = () => {
           </h2>
 
           {/* Couple Names */}
-          <p className="text-2xl md:text-3xl font-cursive text-gray-800 italic mb-4">Elie & Maya</p>
+          <p className="text-2xl md:text-3xl font-cursive  italic mb-4">Elie & Maya</p>
 
           {/* Reply Deadline */}
           <p className="text-sm  mb-2">Please reply before 1 August, 2025</p>
@@ -213,7 +213,7 @@ export const BibleVerseTabsPreview = () => {
           </p>
 
           {/* Attending Question */}
-          <p className="text-base font-medium text-gray-800 mb-2">Are you attending?</p>
+          <p className="text-base font-medium  mb-2">Are you attending?</p>
           <div className="flex items-center justify-center gap-6 mb-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="radio" name="attending" value="yes" className="w-4 h-4" />
