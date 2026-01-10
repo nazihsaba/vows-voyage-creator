@@ -36,7 +36,7 @@ export const BibleVerseTabsPreview = () => {
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
           <div className="mb-8 animate-fade-in">
-            <p className="text-lg md:text-xl  max-w-md mx-auto">
+            <p className="text-lg md:text-xl  font-[Roboto] max-w-md mx-auto">
               "Two are better than one. For if they fall, one will lift up the other."
             </p>
             <p className="text-sm text-gray-600 mt-2 font-[Roboto]">- Ecclesiastes 4:9-12</p>
