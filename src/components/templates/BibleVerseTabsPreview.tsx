@@ -155,30 +155,23 @@ export const BibleVerseTabsPreview = () => {
         <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
         {/* ===== GIFTS SECTION ===== */}
-        <section className="mb-16 text-center">
-          {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-cursive  mb-6">Gift Registry</h2>
-
-          {/* Welcome Message */}
-          <p className="text-lg md:text-xl  max-w-md mx-auto leading-relaxed mb-8 font-[Roboto]">
-            We're so excited to celebrate this special day with you.
-          </p>
-
-          {/* Registry Info */}
-          <p className="text-base md:text-lg  font-[Roboto] max-w-sm mx-auto mb-6">
-            For those who wish, a wedding registry is available:
-          </p>
-
-          {/* Wish Account */}
-          <div className="flex flex-col items-center">
-            <p className="text-base font-medium  mb-3">Wish account:</p>
-            <button
-              className="inline-flex items-center gap-4 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              onClick={() => navigator.clipboard.writeText("30278878")}
-            >
-              <span className="text-base "># 30278878</span>
-              <Copy className="w-5 h-5 text-gray-600" />
-            </button>
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                { id: "1", card_name: "OMT", card_number: "123456789" },
+                { id: "2", card_name: "Whish", card_number: "123456789" },
+              ].map((card) => (
+                <div key={card.id} className="bg-[#faf8f5] p-6 rounded-lg text-center">
+                  <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+                  <p className="text-gray-600 mt-2">{card.card_number}</p>
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -186,57 +179,23 @@ export const BibleVerseTabsPreview = () => {
         <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
         {/* ===== RSVP SECTION ===== */}
-        <section className="mb-16 text-center max-w-md mx-auto">
-          {/* Monogram */}
-          <div className="w-14 h-14 rounded-full border-2 border-gray-400 flex items-center justify-center mb-4 mx-auto">
-            <span className="text-base text-gray-600 font-serif">
-              S <span className="text-xs">&</span> C
-            </span>
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <h2 className="text-center text-primary text-3xl md:text-4xl">Join Our Celebration</h2>
+
+            <p className="text-template-body text-center text-gray-600">
+              Please let us know if you can join us on our special day. Your presence would mean the world to us.
+            </p>
+
+            <div className="pt-8 border-t border-gray-300">
+              <p className="text-template-small text-center mb-2 text-gray-600">
+                Kindly confirm your attendance before this date:
+              </p>
+              <p className="text-template-heading text-primary text-center">
+                August 1, 2025
+              </p>
+            </div>
           </div>
-
-          {/* Heading */}
-          <h2 className="text-xl md:text-2xl mb-4 leading-relaxed">
-            Your presence means the
-            <br />
-            world to us
-          </h2>
-
-          {/* Couple Names */}
-          <p className="text-2xl md:text-3xl font-cursive  italic mb-4">Elie & Maya</p>
-
-          {/* Reply Deadline */}
-          <p className="text-sm  mb-2">Please reply before 1 August, 2025</p>
-
-          {/* Number of Persons */}
-          <p className="text-sm mb-4">
-            Number of persons invited: <span className="font-semibold">2</span>
-          </p>
-
-          {/* Attending Question */}
-          <p className="text-base font-medium  mb-2">Are you attending?</p>
-          <div className="flex items-center justify-center gap-6 mb-4">
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="attending" value="yes" className="w-4 h-4" />
-              <span className="text-sm">Yes</span>
-            </label>
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input type="radio" name="attending" value="no" className="w-4 h-4" />
-              <span className="text-sm">No</span>
-            </label>
-          </div>
-
-          {/* Wishes */}
-          <p className="text-sm mb-2">Share your love & wishes:</p>
-          <textarea
-            placeholder="Write here (Optional)"
-            className="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder-gray-400 resize-none mb-4 mx-auto block"
-            rows={2}
-          />
-
-          {/* Submit Button */}
-          <button className="px-10 py-2 bg-gray-200 text-gray-500 rounded-lg text-sm hover:bg-gray-300 transition-colors">
-            Submit
-          </button>
         </section>
 
         {/* Decorative Botanical Elements */}
