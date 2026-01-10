@@ -77,14 +77,7 @@ export const VideoBackgroundPreview = () => {
     <div ref={containerRef} className="relative w-full h-full overflow-y-auto">
       {/* Fixed Video Background */}
       <div className="fixed inset-0 w-full h-full overflow-hidden pointer-events-none">
-        <video
-          ref={videoRef}
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="absolute inset-0 w-full h-full object-cover"
-        >
+        <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
           <source src={wedding.video_url} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
@@ -92,10 +85,7 @@ export const VideoBackgroundPreview = () => {
 
       {/* Scroll Progress Bar */}
       <div className="fixed top-0 left-0 w-full h-1 bg-white/20 z-50">
-        <div
-          className="h-full bg-white transition-all duration-300"
-          style={{ width: `${scrollProgress}%` }}
-        />
+        <div className="h-full bg-white transition-all duration-300" style={{ width: `${scrollProgress}%` }} />
       </div>
 
       {/* Scrollable Content */}
@@ -132,10 +122,7 @@ export const VideoBackgroundPreview = () => {
         </section>
 
         {/* Family Names Section */}
-        <section
-          id="family-section-video-preview"
-          className="flex items-center justify-center px-4 py-8"
-        >
+        <section id="family-section-video-preview" className="flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl">
             <div className="space-y-12">
               <div className="grid md:grid-cols-2 gap-8 text-center">
@@ -171,17 +158,13 @@ export const VideoBackgroundPreview = () => {
           <div className="max-w-5xl w-full">
             <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
               <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
-              <p className="text-template-body opacity-90">
-                Join us in celebrating this special day
-              </p>
+              <p className="text-template-body opacity-90">Join us in celebrating this special day</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
                 <div className="w-24 bg-primary/90 flex items-center justify-center">
-                  <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                    Ceremony
-                  </p>
+                  <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Ceremony</p>
                 </div>
                 <div className="flex-1 p-6 space-y-6">
                   <div className="flex items-center gap-3">
@@ -206,9 +189,7 @@ export const VideoBackgroundPreview = () => {
 
               <div className="bg-white rounded-xl shadow-2xl overflow-hidden flex">
                 <div className="w-24 bg-primary/90 flex items-center justify-center">
-                  <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                    Venue
-                  </p>
+                  <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                 </div>
                 <div className="flex-1 p-6 space-y-6">
                   <div className="flex items-center gap-3">
@@ -248,11 +229,10 @@ export const VideoBackgroundPreview = () => {
         {/* RSVP Section */}
         <section className="flex items-center justify-center px-4 py-8 pb-16">
           <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8">
-            <h2 className="text-template-subtitle text-center">Join Our Celebration</h2>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
 
             <p className="text-template-body text-center">
-              Please let us know if you can join us on our special day. Your presence would
-              mean the world to us.
+              Please let us know if you can join us on our special day. Your presence would mean the world to us.
             </p>
 
             <div className="pt-8 border-t border-border">

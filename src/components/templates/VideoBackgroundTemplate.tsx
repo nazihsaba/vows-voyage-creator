@@ -85,13 +85,13 @@ export const VideoBackgroundTemplate = ({
   // Lock/unlock scroll based on hasStarted
   useEffect(() => {
     if (!hasStarted) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     }
 
     return () => {
-      document.body.style.overflow = 'auto';
+      document.body.style.overflow = "auto";
     };
   }, [hasStarted]);
 
@@ -107,20 +107,20 @@ export const VideoBackgroundTemplate = ({
   // Handle start button click
   const handleStartClick = async () => {
     setHasStarted(true);
-    
+
     // Play audio if available
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
       const startTime = wedding.audio_start_time || 0;
-      
+
       // If we need to seek, wait for the seek to complete before playing
       if (startTime > 0) {
         audio.currentTime = startTime;
         await new Promise<void>((resolve) => {
-          audio.addEventListener('seeked', () => resolve(), { once: true });
+          audio.addEventListener("seeked", () => resolve(), { once: true });
         });
       }
-      
+
       try {
         await audio.play();
       } catch (err) {
@@ -130,9 +130,9 @@ export const VideoBackgroundTemplate = ({
 
     // Smooth scroll to next section
     setTimeout(() => {
-      document.getElementById("family-section")?.scrollIntoView({ 
+      document.getElementById("family-section")?.scrollIntoView({
         behavior: "smooth",
-        block: "start"
+        block: "start",
       });
     }, 300);
   };
@@ -141,11 +141,7 @@ export const VideoBackgroundTemplate = ({
     <div className="relative w-full min-h-screen">
       {/* Hidden audio element */}
       {wedding.audio_url && (
-        <audio 
-          ref={audioRef} 
-          preload="auto"
-          onTimeUpdate={handleTimeUpdate}
-        >
+        <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
           Your browser does not support the audio element.
         </audio>
@@ -408,7 +404,7 @@ export const VideoBackgroundTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-template-subtitle text-center"
+                className="text-template-subtitle text-center mb-12 text-primary"
               />
 
               <EditableField

@@ -325,7 +325,7 @@ export const ClassicRomancePreview = () => {
       {/* RSVP Section */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-center text-primary text-3xl md:text-4xl">Join Our Celebration</h2>
+          <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
 
           <p className="text-template-body text-center text-gray-600">
             Please let us know if you can join us on our special day. Your presence would mean the world to us.

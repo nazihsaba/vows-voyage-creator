@@ -361,7 +361,7 @@ export const ElegantTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="h2"
-                className="text-3xl md:text-4xl font-light text-center text-white"
+                className="text-template-subtitle text-center mb-12 text-primary"
               />
 
               <EditableField

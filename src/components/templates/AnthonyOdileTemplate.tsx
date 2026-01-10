@@ -366,7 +366,7 @@ export const AnthonyOdileTemplate = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h2"
-              className="text-center text-primary text-3xl md:text-4xl"
+              className="text-template-subtitle text-center mb-12 text-primary"
             />
 
             <EditableField

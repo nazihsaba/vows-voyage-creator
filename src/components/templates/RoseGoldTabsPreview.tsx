@@ -137,7 +137,6 @@ export const RoseGoldTabsPreview = ({
     }
   };
 
-
   // Handle audio time updates to loop within trimmed range
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
@@ -289,9 +288,7 @@ export const RoseGoldTabsPreview = ({
               {venue && (
                 <div className="rounded-xl shadow-2xl overflow-hidden flex bg-white/10 backdrop-blur-sm border border-white/20">
                   <div className="w-24 bg-white flex items-center justify-center">
-                    <p className="text-amber-600 text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                      Venue
-                    </p>
+                    <p className="text-amber-600 text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
                   </div>
                   <div className="flex-1 p-8 space-y-6">
                     <div className="flex items-center gap-3">
@@ -331,9 +328,7 @@ export const RoseGoldTabsPreview = ({
         return (
           <div className="space-y-8 text-white animate-fade-in">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
-              <h2 className="text-3xl md:text-4xl font-light text-center text-white">
-                Join Our Celebration
-              </h2>
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
 
               <p className="text-center text-white/90">
                 Please let us know if you can join us on our special day. Your presence would mean the world to us.
