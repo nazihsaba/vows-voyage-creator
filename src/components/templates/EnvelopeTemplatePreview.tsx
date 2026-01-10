@@ -342,57 +342,6 @@ export const EnvelopeTemplatePreview = ({
                 </div>
               </div>
             </section>
-
-            {/* Decorative Botanical Elements */}
-            <div className="flex justify-center opacity-40 pb-8">
-              <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30"
-                  stroke="#9ca3af"
-                  strokeWidth="1.5"
-                />
-                <ellipse
-                  cx="5"
-                  cy="28"
-                  rx="8"
-                  ry="12"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="1"
-                  transform="rotate(-30 5 28)"
-                />
-                <ellipse
-                  cx="15"
-                  cy="38"
-                  rx="6"
-                  ry="10"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="1"
-                  transform="rotate(-20 15 38)"
-                />
-                <ellipse
-                  cx="45"
-                  cy="38"
-                  rx="6"
-                  ry="10"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="1"
-                  transform="rotate(20 45 38)"
-                />
-                <ellipse
-                  cx="55"
-                  cy="28"
-                  rx="8"
-                  ry="12"
-                  fill="none"
-                  stroke="#9ca3af"
-                  strokeWidth="1"
-                  transform="rotate(30 55 28)"
-                />
-              </svg>
-            </div>
           </div>
         </div>
       )}
