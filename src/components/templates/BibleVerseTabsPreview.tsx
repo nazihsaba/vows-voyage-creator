@@ -160,7 +160,7 @@ export const BibleVerseTabsPreview = () => {
           <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">Gift Registry</h2>
 
           {/* Welcome Message */}
-          <p className="text-lg md:text-xl text-[#7a4c4c] max-w-md mx-auto leading-relaxed mb-8">
+          <p className="text-lg md:text-xl text-[#7a4c4c] max-w-md mx-auto leading-relaxed mb-8 font-[Roboto]">
             We're so excited to celebrate this special day with you.
           </p>
 
