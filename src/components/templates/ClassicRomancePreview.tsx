@@ -73,7 +73,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-2xl md:text-3xl font-serif mb-8">Counting Down To Our Special Day</h2>
+      <h2 className="text-template-subtitle text-center mb-12">Counting Down To Our Special Day</h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
           { value: timeRemaining.days, label: "Days" },
@@ -211,7 +211,7 @@ export const ClassicRomancePreview = () => {
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <div>
-            <h2 className="text-template-subtitle mb-6 text-[#3e2723]">Wedding Events</h2>
+            <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
             <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
               {"With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"}
             </p>
