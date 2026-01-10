@@ -66,7 +66,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Invitation Text */}
           <div className="mb-6">
-            <p className="text-base md:text-lg whitespace-pre-line font-[Roboto]">
+            <p className="text-lg md:text-lg whitespace-pre-line font-[Roboto]">
               joyfully invite you to the wedding of their{"\n"}beloved son and daughter
             </p>
           </div>
