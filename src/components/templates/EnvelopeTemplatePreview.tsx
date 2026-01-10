@@ -76,17 +76,17 @@ export const EnvelopeTemplatePreview = ({
   };
 
   const renderEnvelopeScreen = () => (
-    <div 
+    <div
       className={`fixed inset-0 z-50 flex items-center justify-center cursor-pointer`}
       onClick={handleEnvelopeClick}
-      style={{ 
+      style={{
         background: "linear-gradient(145deg, #f5f0e6 0%, #e8dfd0 50%, #ddd4c5 100%)",
         opacity: isFading ? 0 : 1,
         transition: "opacity 0.6s ease-out",
       }}
     >
       {/* Paper texture overlay */}
-      <div 
+      <div
         className="absolute inset-0 opacity-15"
         style={{
           backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`,
@@ -95,9 +95,8 @@ export const EnvelopeTemplatePreview = ({
 
       {/* Closed Envelope - Full Screen */}
       <div className="relative w-full h-full">
-        
         {/* Envelope body */}
-        <div 
+        <div
           className="absolute inset-0 rounded-md"
           style={{
             background: "linear-gradient(180deg, #f0e6d8 0%, #e5d9c8 50%, #d8cbb8 100%)",
@@ -106,7 +105,7 @@ export const EnvelopeTemplatePreview = ({
         />
 
         {/* Envelope flap (opens slightly) */}
-        <div 
+        <div
           className="absolute top-0 left-0 right-0 h-[55%]"
           style={{
             background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
@@ -120,18 +119,16 @@ export const EnvelopeTemplatePreview = ({
         />
 
         {/* Wax Seal - Centered */}
-        <div 
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
-          style={{ zIndex: 20 }}
-        >
-          <div 
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 20 }}>
+          <div
             className="w-40 h-40 rounded-full flex items-center justify-center shadow-xl"
             style={{
               background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
+              boxShadow:
+                "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
             }}
           >
-            <div 
+            <div
               className="rounded-full flex items-center justify-center"
               style={{
                 width: "128px",
@@ -140,7 +137,7 @@ export const EnvelopeTemplatePreview = ({
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
-              <span 
+              <span
                 className="text-3xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
@@ -155,13 +152,8 @@ export const EnvelopeTemplatePreview = ({
         </div>
 
         {/* Tap to open hint */}
-        <div 
-          className="absolute bottom-16 left-0 right-0 text-center"
-          style={{ zIndex: 12 }}
-        >
-          <p className="text-sm text-[#8a7a6a] animate-pulse">
-            Tap to open
-          </p>
+        <div className="absolute bottom-16 left-0 right-0 text-center" style={{ zIndex: 12 }}>
+          <p className="text-sm text-[#8a7a6a] animate-pulse">Tap to open</p>
         </div>
       </div>
     </div>
@@ -234,17 +226,6 @@ export const EnvelopeTemplatePreview = ({
                     year: "numeric",
                   })}
                 </p>
-              </div>
-
-              {/* Decorative Botanical Elements */}
-              <div className="absolute bottom-4 left-6 opacity-40">
-                <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
-                  <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
-                  <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
-                  <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
-                  <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
-                </svg>
               </div>
 
               {/* Corner Decorations */}
