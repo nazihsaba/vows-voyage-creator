@@ -280,6 +280,14 @@ export const EnvelopeTemplatePreview = ({
             {/* Divider */}
             <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
+            {/* ===== COUNTDOWN SECTION ===== */}
+            <section className="py-16 px-4 bg-white">
+              <StaticCountdownTimer targetDate={new Date(weddingDate)} />
+            </section>
+
+            {/* Divider */}
+            <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+
             {/* ===== TIMELINE SECTION ===== */}
             <section className="mb-16">
               {/* Date Header */}
@@ -322,14 +330,6 @@ export const EnvelopeTemplatePreview = ({
                   ))}
                 </div>
               </div>
-            </section>
-
-            {/* Divider */}
-            <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
-
-            {/* ===== COUNTDOWN SECTION ===== */}
-            <section className="py-16 px-4 bg-white">
-              <StaticCountdownTimer targetDate={new Date(weddingDate)} />
             </section>
 
             {/* Divider */}
