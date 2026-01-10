@@ -178,8 +178,44 @@ const Dashboard = () => {
               {weddingTemplates.map((template) => (
                 <Card key={template.id} className="shadow-soft hover:shadow-elegant transition-all flex flex-col">
                   <CardHeader className="p-4 sm:p-6 flex-grow">
-                    <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
-                      <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
+                    <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4 relative">
+                      {template.id === "envelope-invitation" ? (
+                        <div className="w-full h-full relative group cursor-pointer">
+                          {/* Envelope flap (top) */}
+                          <div 
+                            className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber-100 to-amber-50 origin-top transition-transform duration-700 ease-in-out group-hover:[transform:rotateX(180deg)] z-20"
+                            style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
+                          >
+                            <div className="absolute inset-0 flex items-center justify-center">
+                              <div className="w-8 h-8 rounded-full bg-rose-400/80 flex items-center justify-center shadow-md">
+                                <Heart className="w-4 h-4 text-white fill-white" />
+                              </div>
+                            </div>
+                            {/* Envelope flap triangle */}
+                            <div 
+                              className="absolute bottom-0 left-0 w-full overflow-hidden"
+                              style={{ height: '60%' }}
+                            >
+                              <div 
+                                className="w-[141%] h-full bg-amber-200/80 origin-top-left rotate-[25deg]"
+                                style={{ marginLeft: '-20%' }}
+                              />
+                            </div>
+                          </div>
+                          {/* Envelope body with image revealed */}
+                          <div className="absolute inset-0 bg-amber-50">
+                            <img 
+                              src={template.image} 
+                              alt={template.name} 
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                            />
+                          </div>
+                          {/* Bottom envelope edge */}
+                          <div className="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-t from-amber-200 to-transparent z-10" />
+                        </div>
+                      ) : (
+                        <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
+                      )}
                     </div>
                     <CardTitle className="text-lg sm:text-xl font-serif">{template.name}</CardTitle>
                     <CardDescription className="text-sm sm:text-base">{template.description}</CardDescription>
