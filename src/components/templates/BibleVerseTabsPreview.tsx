@@ -44,7 +44,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Together with their families */}
           <div className="mb-6">
-            <p className="text-xl md:text-2xl text-gray-800">Together with their families</p>
+            <p className="text-xl md:text-2xl text-gray-800 font-sans">Together with their families</p>
           </div>
 
           {/* Parents Names */}
@@ -90,9 +90,7 @@ export const BibleVerseTabsPreview = () => {
           {/* Date Header */}
           <div className="flex items-center justify-center gap-4 mb-12">
             <Calendar className="w-7 h-7 text-gray-600" />
-            <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">
-              16 August
-            </h2>
+            <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 italic">16 August</h2>
           </div>
 
           {/* Vertical Timeline */}
@@ -103,10 +101,7 @@ export const BibleVerseTabsPreview = () => {
             {/* Timeline Events */}
             <div className="space-y-12">
               {timelineEvents.map((event) => (
-                <div 
-                  key={event.id} 
-                  className="relative flex items-start"
-                >
+                <div key={event.id} className="relative flex items-start">
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
                     <h3 className="text-base font-medium text-gray-800">{event.title}</h3>
@@ -139,9 +134,7 @@ export const BibleVerseTabsPreview = () => {
 
         {/* ===== GALLERY SECTION ===== */}
         <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
-            Our Moments
-          </h2>
+          <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">Our Moments</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
               "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
@@ -149,17 +142,10 @@ export const BibleVerseTabsPreview = () => {
               "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
               "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
               "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop"
+              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
             ].map((src, index) => (
-              <div
-                key={index}
-                className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200"
-              >
-                <img
-                  src={src}
-                  alt={`Wedding moment ${index + 1}`}
-                  className="w-full h-full object-cover"
-                />
+              <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200">
+                <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}
           </div>
@@ -171,24 +157,22 @@ export const BibleVerseTabsPreview = () => {
         {/* ===== GIFTS SECTION ===== */}
         <section className="mb-16 text-center">
           {/* Heading */}
-          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">
-            Gift Registry
-          </h2>
-          
+          <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">Gift Registry</h2>
+
           {/* Welcome Message */}
           <p className="text-lg md:text-xl text-[#7a4c4c] max-w-md mx-auto leading-relaxed mb-8">
             We're so excited to celebrate this special day with you.
           </p>
-          
+
           {/* Registry Info */}
           <p className="text-base md:text-lg text-gray-800 italic max-w-sm mx-auto mb-6">
             For those who wish, a wedding registry is available:
           </p>
-          
+
           {/* Wish Account */}
           <div className="flex flex-col items-center">
             <p className="text-base font-medium text-gray-800 mb-3">Wish account:</p>
-            <button 
+            <button
               className="inline-flex items-center gap-4 px-6 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               onClick={() => navigator.clipboard.writeText("30278878")}
             >
@@ -205,29 +189,29 @@ export const BibleVerseTabsPreview = () => {
         <section className="mb-16 text-center max-w-md mx-auto">
           {/* Monogram */}
           <div className="w-14 h-14 rounded-full border-2 border-gray-400 flex items-center justify-center mb-4 mx-auto">
-            <span className="text-base text-gray-600 font-serif">S <span className="text-xs">&</span> C</span>
+            <span className="text-base text-gray-600 font-serif">
+              S <span className="text-xs">&</span> C
+            </span>
           </div>
 
           {/* Heading */}
           <h2 className="text-xl md:text-2xl text-gray-700 mb-4 leading-relaxed">
-            Your presence means the<br />world to us
+            Your presence means the
+            <br />
+            world to us
           </h2>
-          
+
           {/* Couple Names */}
-          <p className="text-2xl md:text-3xl font-cursive text-gray-800 italic mb-4">
-            Elie & Maya
-          </p>
-          
+          <p className="text-2xl md:text-3xl font-cursive text-gray-800 italic mb-4">Elie & Maya</p>
+
           {/* Reply Deadline */}
-          <p className="text-sm text-[#7a4c4c] mb-2">
-            Please reply before 1 August, 2025
-          </p>
-          
+          <p className="text-sm text-[#7a4c4c] mb-2">Please reply before 1 August, 2025</p>
+
           {/* Number of Persons */}
           <p className="text-sm text-gray-700 mb-4">
             Number of persons invited: <span className="font-semibold">2</span>
           </p>
-          
+
           {/* Attending Question */}
           <p className="text-base font-medium text-gray-800 mb-2">Are you attending?</p>
           <div className="flex items-center justify-center gap-6 mb-4">
@@ -240,15 +224,15 @@ export const BibleVerseTabsPreview = () => {
               <span className="text-sm text-gray-700">No</span>
             </label>
           </div>
-          
+
           {/* Wishes */}
           <p className="text-sm text-gray-700 mb-2">Share your love & wishes:</p>
-          <textarea 
+          <textarea
             placeholder="Write here (Optional)"
             className="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 placeholder-gray-400 resize-none mb-4 mx-auto block"
             rows={2}
           />
-          
+
           {/* Submit Button */}
           <button className="px-10 py-2 bg-gray-200 text-gray-500 rounded-lg text-sm hover:bg-gray-300 transition-colors">
             Submit
@@ -258,11 +242,51 @@ export const BibleVerseTabsPreview = () => {
         {/* Decorative Botanical Elements */}
         <div className="flex justify-center opacity-40 pb-8">
           <svg width="60" height="100" viewBox="0 0 60 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30" stroke="#9ca3af" strokeWidth="1.5"/>
-            <ellipse cx="5" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-30 5 28)"/>
-            <ellipse cx="15" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(-20 15 38)"/>
-            <ellipse cx="45" cy="38" rx="6" ry="10" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(20 45 38)"/>
-            <ellipse cx="55" cy="28" rx="8" ry="12" fill="none" stroke="#9ca3af" strokeWidth="1" transform="rotate(30 55 28)"/>
+            <path
+              d="M30 100V50M30 50C20 40 10 35 5 30M30 50C25 45 20 42 15 40M30 50C35 45 40 42 45 40M30 50C40 40 50 35 55 30"
+              stroke="#9ca3af"
+              strokeWidth="1.5"
+            />
+            <ellipse
+              cx="5"
+              cy="28"
+              rx="8"
+              ry="12"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(-30 5 28)"
+            />
+            <ellipse
+              cx="15"
+              cy="38"
+              rx="6"
+              ry="10"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(-20 15 38)"
+            />
+            <ellipse
+              cx="45"
+              cy="38"
+              rx="6"
+              ry="10"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(20 45 38)"
+            />
+            <ellipse
+              cx="55"
+              cy="28"
+              rx="8"
+              ry="12"
+              fill="none"
+              stroke="#9ca3af"
+              strokeWidth="1"
+              transform="rotate(30 55 28)"
+            />
           </svg>
         </div>
       </div>
