@@ -180,38 +180,63 @@ const Dashboard = () => {
                   <CardHeader className="p-4 sm:p-6 flex-grow">
                     <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4 relative">
                       {template.id === "envelope-invitation" ? (
-                        <div className="w-full h-full relative group cursor-pointer">
-                          {/* Envelope flap (top) */}
-                          <div 
-                            className="absolute top-0 left-0 w-full h-1/2 bg-gradient-to-b from-amber-100 to-amber-50 origin-top transition-transform duration-700 ease-in-out group-hover:[transform:rotateX(180deg)] z-20"
-                            style={{ transformStyle: 'preserve-3d', backfaceVisibility: 'hidden' }}
-                          >
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <div className="w-8 h-8 rounded-full bg-rose-400/80 flex items-center justify-center shadow-md">
-                                <Heart className="w-4 h-4 text-white fill-white" />
-                              </div>
-                            </div>
-                            {/* Envelope flap triangle */}
-                            <div 
-                              className="absolute bottom-0 left-0 w-full overflow-hidden"
-                              style={{ height: '60%' }}
-                            >
-                              <div 
-                                className="w-[141%] h-full bg-amber-200/80 origin-top-left rotate-[25deg]"
-                                style={{ marginLeft: '-20%' }}
+                        <div className="w-full h-full relative group cursor-pointer" style={{ perspective: '1000px' }}>
+                          {/* Card/Letter that slides up */}
+                          <div className="absolute inset-x-2 top-4 bottom-2 z-10 transition-all duration-700 ease-out group-hover:-translate-y-8 group-hover:scale-[0.85]">
+                            <div className="w-full h-full rounded-sm bg-white shadow-xl overflow-hidden border border-amber-100">
+                              <img 
+                                src={template.image} 
+                                alt={template.name} 
+                                className="w-full h-full object-cover" 
                               />
                             </div>
                           </div>
-                          {/* Envelope body with image revealed */}
-                          <div className="absolute inset-0 bg-amber-50">
-                            <img 
-                              src={template.image} 
-                              alt={template.name} 
-                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                          
+                          {/* Envelope back */}
+                          <div className="absolute inset-0 bg-gradient-to-b from-amber-50 via-amber-100 to-amber-200 rounded-lg shadow-inner" />
+                          
+                          {/* Envelope side flaps (left & right) */}
+                          <div className="absolute left-0 top-0 w-1/4 h-full bg-gradient-to-r from-amber-200 to-transparent z-20 opacity-60" />
+                          <div className="absolute right-0 top-0 w-1/4 h-full bg-gradient-to-l from-amber-200 to-transparent z-20 opacity-60" />
+                          
+                          {/* Envelope top flap with 3D rotation */}
+                          <div 
+                            className="absolute top-0 left-0 w-full h-[55%] origin-top z-30 transition-transform duration-700 ease-out group-hover:[transform:rotateX(-180deg)]"
+                            style={{ transformStyle: 'preserve-3d' }}
+                          >
+                            {/* Front of flap (visible initially) */}
+                            <div 
+                              className="absolute inset-0 bg-gradient-to-b from-amber-100 via-amber-50 to-amber-100 rounded-t-lg"
+                              style={{ backfaceVisibility: 'hidden' }}
+                            >
+                              {/* Triangular fold pattern */}
+                              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 55" preserveAspectRatio="none">
+                                <polygon 
+                                  points="0,0 100,0 50,55" 
+                                  fill="url(#flapGradient)" 
+                                  className="drop-shadow-sm"
+                                />
+                                <defs>
+                                  <linearGradient id="flapGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                    <stop offset="0%" stopColor="#fef3c7" />
+                                    <stop offset="100%" stopColor="#fde68a" />
+                                  </linearGradient>
+                                </defs>
+                              </svg>
+                              {/* Wax seal */}
+                              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-br from-rose-400 to-rose-600 shadow-lg flex items-center justify-center border-2 border-rose-300">
+                                <Heart className="w-5 h-5 text-rose-100 fill-rose-100 drop-shadow" />
+                              </div>
+                            </div>
+                            {/* Back of flap (visible when opened) */}
+                            <div 
+                              className="absolute inset-0 bg-gradient-to-t from-amber-200 to-amber-100 rounded-t-lg"
+                              style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
                             />
                           </div>
-                          {/* Bottom envelope edge */}
-                          <div className="absolute bottom-0 left-0 w-full h-4 bg-gradient-to-t from-amber-200 to-transparent z-10" />
+                          
+                          {/* Bottom fold shadow line */}
+                          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-t from-amber-300 to-transparent z-20" />
                         </div>
                       ) : (
                         <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
