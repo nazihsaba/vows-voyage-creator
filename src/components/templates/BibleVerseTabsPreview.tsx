@@ -66,7 +66,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Invitation Text */}
           <div className="mb-6">
-            <p className="text-base md:text-lg text-gray-700 whitespace-pre-line font-[Roboto]">
+            <p className="text-base md:text-lg whitespace-pre-line font-[Roboto]">
               joyfully invite you to the wedding of their{"\n"}beloved son and daughter
             </p>
           </div>
@@ -105,7 +105,7 @@ export const BibleVerseTabsPreview = () => {
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
                     <h3 className="text-base font-medium ">{event.title}</h3>
-                    <p className="text-sm font-semibold text-gray-700">{event.time}</p>
+                    <p className="text-sm font-semibold">{event.time}</p>
                   </div>
 
                   {/* Center Dot */}
@@ -113,7 +113,7 @@ export const BibleVerseTabsPreview = () => {
 
                   {/* Right Side - Icon, Location & Link */}
                   <div className="flex-1 pl-8">
-                    <event.icon className="w-6 h-6 text-gray-700 mb-1" />
+                    <event.icon className="w-6 h-6 mb-1" />
                     <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
                     <a
                       href="#"
@@ -195,7 +195,7 @@ export const BibleVerseTabsPreview = () => {
           </div>
 
           {/* Heading */}
-          <h2 className="text-xl md:text-2xl text-gray-700 mb-4 leading-relaxed">
+          <h2 className="text-xl md:text-2xl mb-4 leading-relaxed">
             Your presence means the
             <br />
             world to us
@@ -208,7 +208,7 @@ export const BibleVerseTabsPreview = () => {
           <p className="text-sm  mb-2">Please reply before 1 August, 2025</p>
 
           {/* Number of Persons */}
-          <p className="text-sm text-gray-700 mb-4">
+          <p className="text-sm mb-4">
             Number of persons invited: <span className="font-semibold">2</span>
           </p>
 
@@ -217,19 +217,19 @@ export const BibleVerseTabsPreview = () => {
           <div className="flex items-center justify-center gap-6 mb-4">
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="radio" name="attending" value="yes" className="w-4 h-4" />
-              <span className="text-sm text-gray-700">Yes</span>
+              <span className="text-sm">Yes</span>
             </label>
             <label className="flex items-center gap-2 cursor-pointer">
               <input type="radio" name="attending" value="no" className="w-4 h-4" />
-              <span className="text-sm text-gray-700">No</span>
+              <span className="text-sm">No</span>
             </label>
           </div>
 
           {/* Wishes */}
-          <p className="text-sm text-gray-700 mb-2">Share your love & wishes:</p>
+          <p className="text-sm mb-2">Share your love & wishes:</p>
           <textarea
             placeholder="Write here (Optional)"
-            className="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm text-gray-700 placeholder-gray-400 resize-none mb-4 mx-auto block"
+            className="w-full max-w-sm border border-gray-300 rounded-lg px-3 py-2 text-sm placeholder-gray-400 resize-none mb-4 mx-auto block"
             rows={2}
           />
 
