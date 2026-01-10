@@ -157,7 +157,7 @@ export const VideoBackgroundPreview = () => {
         <section className="flex items-center justify-center px-4 py-8">
           <div className="max-w-5xl w-full">
             <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
-              <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
+              <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
               <p className="text-template-body opacity-90">Join us in celebrating this special day</p>
             </div>
 
@@ -218,7 +218,7 @@ export const VideoBackgroundPreview = () => {
         {/* Gift Cards Section */}
         <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
           <div className="max-w-4xl w-full bg-white rounded-2xl px-2 py-8 md:p-8 shadow-2xl">
-            <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
             <p className="text-center text-template-body mb-8 text-gray-600">
               For those who desire a wedding list is available
             </p>
