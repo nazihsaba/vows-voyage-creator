@@ -126,40 +126,40 @@ export const BibleVerseTabsTemplate = ({
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
           <div className="mb-6" data-aos="fade-down">
-              <EditableField
-                fieldId="bible-verse"
-                text={getFieldValue(
-                  "bible-verse",
-                  '"Two are better than one. For if they fall, one will lift up the other."',
-                )}
-                style={getFieldStyle("bible-verse")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-lg md:text-xl italic text-[#7a4c4c] font-cursive max-w-md mx-auto"
-              />
-              <EditableField
-                fieldId="bible-verse-reference"
-                text={getFieldValue("bible-verse-reference", "- Ecclesiastes 4:9-12")}
-                style={getFieldStyle("bible-verse-reference")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-sm text-gray-600 mt-2 font-serif"
-              />
+            <EditableField
+              fieldId="bible-verse"
+              text={getFieldValue(
+                "bible-verse",
+                '"Two are better than one. For if they fall, one will lift up the other."',
+              )}
+              style={getFieldStyle("bible-verse")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-lg md:text-xl italic text-[#7a4c4c] font-serif max-w-md mx-auto"
+            />
+            <EditableField
+              fieldId="bible-verse-reference"
+              text={getFieldValue("bible-verse-reference", "- Ecclesiastes 4:9-12")}
+              style={getFieldStyle("bible-verse-reference")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-sm text-gray-600 mt-2"
+            />
           </div>
 
           {/* Together with their families */}
           <div className="mb-10" data-aos="fade-up" data-aos-delay="100">
-              <EditableField
-                fieldId="together-text"
-                text={getFieldValue("together-text", "Together with their families")}
-                style={getFieldStyle("together-text")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-xl md:text-2xl text-gray-800 font-serif"
-              />
+            <EditableField
+              fieldId="together-text"
+              text={getFieldValue("together-text", "Together with their families")}
+              style={getFieldStyle("together-text")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-xl md:text-2xl text-gray-800"
+            />
           </div>
 
           {/* Parents Names */}
@@ -180,7 +180,7 @@ export const BibleVerseTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-sm md:text-base text-[#c4a35a] italic font-serif"
+                className="text-sm md:text-base text-[#c4a35a] italic"
               />
               <EditableField
                 fieldId="groom-family-name"
@@ -210,7 +210,7 @@ export const BibleVerseTabsTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-sm md:text-base text-[#c4a35a] italic font-serif"
+                className="text-sm md:text-base text-[#c4a35a] italic"
               />
               <EditableField
                 fieldId="bride-family-name"
@@ -229,19 +229,19 @@ export const BibleVerseTabsTemplate = ({
 
           {/* Invitation Text */}
           <div className="mb-8" data-aos="fade-up" data-aos-delay="300">
-              <EditableField
-                fieldId="invitation-line"
-                text={getFieldValue(
-                  "invitation-line",
-                  "joyfully invite you to the wedding of their\nbeloved son and daughter",
-                )}
-                style={getFieldStyle("invitation-line")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-base md:text-lg text-gray-700 whitespace-pre-line font-serif"
-              />
+            <EditableField
+              fieldId="invitation-line"
+              text={getFieldValue(
+                "invitation-line",
+                "joyfully invite you to the wedding of their\nbeloved son and daughter",
+              )}
+              style={getFieldStyle("invitation-line")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              multiline={true}
+              tag="p"
+              className="text-base md:text-lg text-gray-700 whitespace-pre-line"
+            />
           </div>
 
           {/* Couple Names */}
@@ -259,23 +259,23 @@ export const BibleVerseTabsTemplate = ({
 
           {/* Wedding Date */}
           <div data-aos="fade-up" data-aos-delay="500">
-              <EditableField
-                fieldId="wedding-date-formatted"
-                text={getFieldValue(
-                  "wedding-date-formatted",
-                  new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  }),
-                )}
-                style={getFieldStyle("wedding-date-formatted")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-lg md:text-xl text-[#c4a35a] font-serif"
-              />
+            <EditableField
+              fieldId="wedding-date-formatted"
+              text={getFieldValue(
+                "wedding-date-formatted",
+                new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                  weekday: "long",
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                }),
+              )}
+              style={getFieldStyle("wedding-date-formatted")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-lg md:text-xl text-[#c4a35a]"
+            />
           </div>
         </section>
 
@@ -306,8 +306,8 @@ export const BibleVerseTabsTemplate = ({
                 >
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
-                    <h3 className="font-serif font-medium text-gray-800">{event.title}</h3>
-                    <p className="text-sm font-serif font-semibold text-gray-700">{event.time}</p>
+                    <h3 className="font-medium text-gray-800">{event.title}</h3>
+                    <p className="text-sm font-semibold text-gray-700">{event.time}</p>
                   </div>
 
                   {/* Center Dot */}
@@ -316,7 +316,7 @@ export const BibleVerseTabsTemplate = ({
                   {/* Right Side - Icon, Location & Link */}
                   <div className="flex-1 pl-8">
                     <event.icon className="w-6 h-6 text-gray-700 mb-2" />
-                    <p className="text-sm text-gray-600 leading-snug font-serif">{event.location}</p>
+                    <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
                     {event.link && (
                       <a
                         href={event.link}
@@ -325,7 +325,7 @@ export const BibleVerseTabsTemplate = ({
                         className="inline-flex items-center gap-1 text-sm text-gray-800 underline mt-2 hover:text-gray-600 transition-colors"
                       >
                         <MapPin className="w-4 h-4" />
-                        <span className="font-serif">Location</span>
+                        Location
                       </a>
                     )}
                   </div>
@@ -407,7 +407,7 @@ export const BibleVerseTabsTemplate = ({
                       key={invitee.id}
                       className="flex items-center justify-between py-3 px-4 bg-white rounded-lg border border-gray-200"
                     >
-                      <span className="text-gray-800 font-serif font-medium">{invitee.name}</span>
+                      <span className="text-gray-800 font-medium">{invitee.name}</span>
 
                       <div className="flex items-center gap-6">
                         <div className="flex items-center space-x-2">
@@ -417,7 +417,7 @@ export const BibleVerseTabsTemplate = ({
                             onCheckedChange={() => handleRsvpToggle(invitee.id, true)}
                             disabled={isRsvpDeadlinePassed}
                           />
-                          <Label htmlFor={`attending-${invitee.id}`} className="text-sm text-gray-600 font-serif">
+                          <Label htmlFor={`attending-${invitee.id}`} className="text-sm text-gray-600">
                             Yes
                           </Label>
                         </div>
@@ -428,7 +428,7 @@ export const BibleVerseTabsTemplate = ({
                             onCheckedChange={() => handleRsvpToggle(invitee.id, false)}
                             disabled={isRsvpDeadlinePassed}
                           />
-                          <Label htmlFor={`not-attending-${invitee.id}`} className="text-sm text-gray-600 font-serif">
+                          <Label htmlFor={`not-attending-${invitee.id}`} className="text-sm text-gray-600">
                             No
                           </Label>
                         </div>
@@ -449,13 +449,13 @@ export const BibleVerseTabsTemplate = ({
               )}
 
               {isRsvpDeadlinePassed && (
-                <p className="mt-4 text-sm text-red-600 text-center font-serif">The RSVP deadline has passed.</p>
+                <p className="mt-4 text-sm text-red-600 text-center">The RSVP deadline has passed.</p>
               )}
 
               {wedding.rsvp_deadline && (
                 <div className="mt-6 pt-4 border-t border-gray-200 text-center">
-                  <p className="text-sm text-gray-500 font-serif">Please RSVP by:</p>
-                  <p className="text-lg font-serif font-medium text-[#7a4c4c]">
+                  <p className="text-sm text-gray-500">Please RSVP by:</p>
+                  <p className="text-lg font-medium text-[#7a4c4c]">
                     {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
                       year: "numeric",
                       month: "long",
