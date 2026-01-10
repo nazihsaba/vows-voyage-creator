@@ -36,7 +36,7 @@ export const BibleVerseTabsPreview = () => {
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
           <div className="mb-8 animate-fade-in">
-            <p className="text-lg md:text-xl text-[#7a4c4c] font-[Roboto] max-w-md mx-auto">
+            <p className="text-lg md:text-xl  font-[Roboto] max-w-md mx-auto">
               "Two are better than one. For if they fall, one will lift up the other."
             </p>
             <p className="text-sm text-gray-600 mt-2 font-[Roboto]">- Ecclesiastes 4:9-12</p>
@@ -160,7 +160,7 @@ export const BibleVerseTabsPreview = () => {
           <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">Gift Registry</h2>
 
           {/* Welcome Message */}
-          <p className="text-lg md:text-xl text-[#7a4c4c] max-w-md mx-auto leading-relaxed mb-8 font-[Roboto]">
+          <p className="text-lg md:text-xl  max-w-md mx-auto leading-relaxed mb-8 font-[Roboto]">
             We're so excited to celebrate this special day with you.
           </p>
 
@@ -205,7 +205,7 @@ export const BibleVerseTabsPreview = () => {
           <p className="text-2xl md:text-3xl font-cursive text-gray-800 italic mb-4">Elie & Maya</p>
 
           {/* Reply Deadline */}
-          <p className="text-sm text-[#7a4c4c] mb-2">Please reply before 1 August, 2025</p>
+          <p className="text-sm  mb-2">Please reply before 1 August, 2025</p>
 
           {/* Number of Persons */}
           <p className="text-sm text-gray-700 mb-4">
