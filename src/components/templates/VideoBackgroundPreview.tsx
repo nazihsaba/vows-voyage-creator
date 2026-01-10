@@ -158,7 +158,7 @@ export const VideoBackgroundPreview = () => {
           <div className="max-w-5xl w-full">
             <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
-              <p className="text-template-body opacity-90">Join us in celebrating this special day</p>
+              <p className="text-template-subtitle mb-6 opacity-90">Join us in celebrating this special day</p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
