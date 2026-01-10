@@ -40,19 +40,16 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
     <section className="py-16 px-4 animate-fade-in">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
-          <Gift className="w-12 h-12 text-gray-700 mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-gray-800 mb-4">Wedding Gift</h2>
-          <p className="text-lg text-gray-600">For those who desire a wedding list is available</p>
+          <Gift className="w-12 h-12 text-white mx-auto mb-4" />
+          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-4">Wedding Gift</h2>
+          <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2">
           {giftCards.map((card) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (
-              <Card
-                key={card.id}
-                className="shadow-soft bg-gray-50 border border-gray-200"
-              >
+              <Card key={card.id} className="shadow-soft bg-gray-50 border border-gray-200">
                 <CardContent className="p-6">
                   <div className="flex items-center gap-4">
                     {/* LEFT — Image */}
