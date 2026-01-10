@@ -308,6 +308,37 @@ export const EnvelopeTemplatePreview = ({
             {/* Divider */}
             <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
 
+            {/* ===== GALLERY SECTION ===== */}
+            <section className="mb-16">
+              <h2 className="text-3xl md:text-4xl font-cursive text-center text-gray-800 mb-8">
+                Our Moments
+              </h2>
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                {[
+                  "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
+                  "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop"
+                ].map((src, index) => (
+                  <div
+                    key={index}
+                    className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200"
+                  >
+                    <img
+                      src={src}
+                      alt={`Wedding moment ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            </section>
+
+            {/* Divider */}
+            <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+
             {/* ===== GIFTS SECTION ===== */}
             <section className="mb-16 text-center">
               <h2 className="text-3xl md:text-4xl font-cursive text-gray-800 mb-6">
