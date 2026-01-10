@@ -44,7 +44,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Together with their families */}
           <div className="mb-6">
-            <p className="text-xl md:text-2xl text-gray-800 font-serif">Together with their families</p>
+            <p className="text-xl md:text-2xl text-gray-800 font-mono">Together with their families</p>
           </div>
 
           {/* Parents Names */}
