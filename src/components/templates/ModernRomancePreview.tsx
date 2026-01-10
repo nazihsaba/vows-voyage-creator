@@ -73,7 +73,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-2xl md:text-3xl font-serif mb-8 text-[#3e2723]">Counting Down To Our Special Day</h2>
+      <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
           { value: timeRemaining.days, label: "Days" },
