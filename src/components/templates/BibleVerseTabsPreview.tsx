@@ -51,7 +51,7 @@ export const BibleVerseTabsPreview = () => {
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mb-6">
             {/* Groom's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a] italic font-[Roboto]">Mr. Pierre & Mrs. Nayla</p>
+              <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Pierre & Mrs. Nayla</p>
               <p className="text-2xl md:text-3xl font-cursive text-gray-800">Nawfal</p>
             </div>
 
@@ -59,7 +59,7 @@ export const BibleVerseTabsPreview = () => {
 
             {/* Bride's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a] italic font-[Roboto]">Mr. Michel & Mrs. Layla</p>
+              <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Michel & Mrs. Layla</p>
               <p className="text-2xl md:text-3xl font-cursive text-gray-800">Assaker</p>
             </div>
           </div>
@@ -78,7 +78,7 @@ export const BibleVerseTabsPreview = () => {
 
           {/* Wedding Date */}
           <div>
-            <p className="text-lg md:text-xl text-[#c4a35a]">Saturday, August 16th, 2025</p>
+            <p className="text-lg md:text-xl text-[#c4a35a] font-[Roboto]">Saturday, August 16th, 2025</p>
           </div>
         </section>
 
@@ -165,7 +165,7 @@ export const BibleVerseTabsPreview = () => {
           </p>
 
           {/* Registry Info */}
-          <p className="text-base md:text-lg text-gray-800 italic max-w-sm mx-auto mb-6">
+          <p className="text-base md:text-lg text-gray-800 font-[Roboto] max-w-sm mx-auto mb-6">
             For those who wish, a wedding registry is available:
           </p>
 
