@@ -26,7 +26,7 @@ export const BibleVerseTabsPreview = () => {
   ];
 
   return (
-    <div className="relative w-full min-h-screen bg-white overflow-y-auto">
+    <div className="relative w-full min-h-screen bg-white overflow-y-auto font-serif text-[#3e2723]">
       {/* Watercolor Header Effect */}
       <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none z-10" />
 
@@ -36,49 +36,49 @@ export const BibleVerseTabsPreview = () => {
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
           <div className="mb-8 animate-fade-in">
-            <p className="text-lg md:text-xl  font-[Roboto] max-w-md mx-auto">
+            <p className="text-template-body max-w-md mx-auto">
               "Two are better than one. For if they fall, one will lift up the other."
             </p>
-            <p className="text-sm text-gray-600 mt-2 font-[Roboto]">- Ecclesiastes 4:9-12</p>
+            <p className="text-template-small mt-2">- Ecclesiastes 4:9-12</p>
           </div>
 
           {/* Together with their families */}
           <div className="mb-6">
-            <p className="text-xl md:text-2xl  font-[Roboto]">Together with their families</p>
+            <p className="text-template-body">Together with their families</p>
           </div>
 
           {/* Parents Names */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mb-6">
             {/* Groom's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Pierre & Mrs. Nayla</p>
-              <p className="text-2xl md:text-3xl font-cursive ">Nawfal</p>
+              <p className="text-template-small text-primary">Mr. Pierre & Mrs. Nayla</p>
+              <p className="text-template-subtitle">Nawfal</p>
             </div>
 
-            <span className="text-2xl text-gray-400 font-[Roboto]">&</span>
+            <span className="text-2xl text-gray-400">&</span>
 
             {/* Bride's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a]  font-[Roboto]">Mr. Michel & Mrs. Layla</p>
-              <p className="text-2xl md:text-3xl font-cursive ">Assaker</p>
+              <p className="text-template-small text-primary">Mr. Michel & Mrs. Layla</p>
+              <p className="text-template-subtitle">Assaker</p>
             </div>
           </div>
 
           {/* Invitation Text */}
           <div className="mb-6">
-            <p className="text-lg md:text-xl whitespace-pre-line font-[Roboto]">
+            <p className="text-template-body whitespace-pre-line">
               joyfully invite you to the wedding of their{"\n"}beloved son and daughter
             </p>
           </div>
 
           {/* Couple Names */}
           <div className="mb-6">
-            <h1 className="text-4xl md:text-6xl font-cursive ">Stephan & Chadia</h1>
+            <h1 className="text-template-title">Stephan & Chadia</h1>
           </div>
 
           {/* Wedding Date */}
           <div>
-            <p className="text-lg md:text-xl text-[#c4a35a] font-[Roboto]">Saturday, August 16th, 2025</p>
+            <p className="text-template-body text-primary">Saturday, August 16th, 2025</p>
           </div>
         </section>
 
@@ -89,8 +89,8 @@ export const BibleVerseTabsPreview = () => {
         <section className="mb-16">
           {/* Date Header */}
           <div className="flex items-center justify-center gap-4 mb-12">
-            <Calendar className="w-7 h-7 text-gray-600" />
-            <h2 className="text-3xl md:text-4xl font-cursive  italic">16 August</h2>
+            <Calendar className="w-7 h-7 text-primary" />
+            <h2 className="text-template-subtitle">16 August</h2>
           </div>
 
           {/* Vertical Timeline */}
@@ -104,20 +104,20 @@ export const BibleVerseTabsPreview = () => {
                 <div key={event.id} className="relative flex items-start">
                   {/* Left Side - Event Name & Time */}
                   <div className="flex-1 text-right pr-8">
-                    <h3 className="text-base font-medium ">{event.title}</h3>
-                    <p className="text-sm font-semibold">{event.time}</p>
+                    <h3 className="text-template-body font-medium">{event.title}</h3>
+                    <p className="text-template-body font-semibold">{event.time}</p>
                   </div>
 
                   {/* Center Dot */}
-                  <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-gray-800 rounded-full z-10" />
+                  <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
 
                   {/* Right Side - Icon, Location & Link */}
                   <div className="flex-1 pl-8">
-                    <event.icon className="w-6 h-6 mb-1" />
-                    <p className="text-sm text-gray-600 leading-snug">{event.location}</p>
+                    <event.icon className="w-6 h-6 mb-1 text-primary" />
+                    <p className="text-template-small text-gray-600 leading-snug">{event.location}</p>
                     <a
                       href="#"
-                      className="inline-flex items-center gap-1 text-sm  underline mt-1 hover:text-gray-600 transition-colors"
+                      className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
                     >
                       <MapPin className="w-4 h-4" />
                       Location
@@ -134,7 +134,7 @@ export const BibleVerseTabsPreview = () => {
 
         {/* ===== GALLERY SECTION ===== */}
         <section className="mb-16">
-          <h2 className="text-3xl md:text-4xl font-cursive text-center  mb-8">Our Moments</h2>
+          <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
               "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
@@ -144,7 +144,7 @@ export const BibleVerseTabsPreview = () => {
               "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
               "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
             ].map((src, index) => (
-              <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-md bg-gray-200">
+              <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-soft bg-gray-200">
                 <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover" />
               </div>
             ))}
