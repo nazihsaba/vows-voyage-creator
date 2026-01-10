@@ -40,7 +40,7 @@ const WeddingForm = () => {
     venue_location_link: "",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
-    { card_name: "", card_number: "" }
+    { card_name: "", card_number: "" },
   ]);
   const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
@@ -64,17 +64,17 @@ const WeddingForm = () => {
     audio_start_time: 0,
     audio_end_time: 0,
   });
-  
+
   const template = formData.template_type;
-  const isVideoTemplate = template === 'template6' || template === 'video-cinematic';
-  const shouldShowGalleryUpload = 
-    template === 'template2' || 
-    template === 'classic-gallery' ||
-    template === 'template4' ||
-    template === 'elegant-fullscreen' ||
-    template === 'template5' ||
-    template === 'modern-wedding' ||
-    template === 'classic-romance';
+  const isVideoTemplate = template === "template6" || template === "video-cinematic";
+  const shouldShowGalleryUpload =
+    template === "template2" ||
+    template === "classic-gallery" ||
+    template === "template4" ||
+    template === "elegant-fullscreen" ||
+    template === "template5" ||
+    template === "modern-wedding" ||
+    template === "classic-romance";
 
   useEffect(() => {
     if (id) {
@@ -84,11 +84,7 @@ const WeddingForm = () => {
 
   const fetchWedding = async () => {
     try {
-      const { data, error } = await supabase
-        .from("weddings")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
       setFormData(data);
@@ -114,20 +110,17 @@ const WeddingForm = () => {
         .select("*")
         .eq("wedding_id", id)
         .order("image_order");
-      
+
       if (galleryData) {
         setExistingGalleryImages(galleryData);
       }
 
       // Fetch locations
-      const { data: locationsData } = await supabase
-        .from("wedding_locations")
-        .select("*")
-        .eq("wedding_id", id);
+      const { data: locationsData } = await supabase.from("wedding_locations").select("*").eq("wedding_id", id);
 
       if (locationsData) {
-        const ceremony = locationsData.find(l => l.type === 'ceremony');
-        const venue = locationsData.find(l => l.type === 'venue');
+        const ceremony = locationsData.find((l) => l.type === "ceremony");
+        const venue = locationsData.find((l) => l.type === "venue");
         setLocations({
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
@@ -200,7 +193,7 @@ const WeddingForm = () => {
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
-    
+
     if (totalImages > 6) {
       toast({
         title: "Maximum 6 images allowed",
@@ -211,7 +204,7 @@ const WeddingForm = () => {
     }
 
     // Immediately update files state to avoid duplication
-    setGalleryFiles(prev => [...prev, ...files]);
+    setGalleryFiles((prev) => [...prev, ...files]);
 
     // Use Promise.all to handle all FileReaders properly
     Promise.all(
@@ -223,13 +216,13 @@ const WeddingForm = () => {
           };
           reader.readAsDataURL(file);
         });
-      })
+      }),
     ).then((newPreviews) => {
-      setGalleryPreviews(prev => [...prev, ...newPreviews]);
+      setGalleryPreviews((prev) => [...prev, ...newPreviews]);
     });
-    
+
     // Reset the input value to allow re-uploading the same file
-    e.target.value = '';
+    e.target.value = "";
   };
 
   const removeGalleryImage = (index: number) => {
@@ -243,10 +236,7 @@ const WeddingForm = () => {
 
   const removeExistingGalleryImage = async (imageId: string) => {
     try {
-      const { error } = await supabase
-        .from("gallery_images")
-        .delete()
-        .eq("id", imageId);
+      const { error } = await supabase.from("gallery_images").delete().eq("id", imageId);
 
       if (error) throw error;
 
@@ -262,19 +252,17 @@ const WeddingForm = () => {
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
-    const fileExt = file.name.split('.').pop();
-    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ''}`;
+    const fileExt = file.name.split(".").pop();
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ""}`;
     const fileName = `${userId}/${uniqueId}.${fileExt}`;
-    
-    const { error: uploadError, data } = await supabase.storage
-      .from('wedding-images')
-      .upload(fileName, file);
+
+    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, file);
 
     if (uploadError) throw uploadError;
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('wedding-images')
-      .getPublicUrl(fileName);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("wedding-images").getPublicUrl(fileName);
 
     return publicUrl;
   };
@@ -289,7 +277,9 @@ const WeddingForm = () => {
     setUploading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       let imageUrl = formData.main_picture_url;
@@ -309,7 +299,7 @@ const WeddingForm = () => {
       // Upload new audio if selected, or clear if removed
       if (audioFile) {
         // Convert Blob to File with a proper name
-        const audioFileWithName = new File([audioFile], 'audio.wav', { type: 'audio/wav' });
+        const audioFileWithName = new File([audioFile], "audio.wav", { type: "audio/wav" });
         audioUrl = await uploadImage(audioFileWithName, user.id);
       } else if (!formData.audio_url) {
         // Audio was removed, clear it
@@ -323,14 +313,14 @@ const WeddingForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
+          .update({
+            ...formData,
+            slug,
+            main_picture_url: imageUrl,
             video_url: videoUrl,
             audio_url: audioUrl,
-            audio_start_time: audioUrl ? (audioTrimSettings?.startTime || 0) : null,
-            audio_end_time: audioUrl ? (audioTrimSettings?.endTime || 0) : null,
+            audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
+            audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
           })
           .eq("id", id);
 
@@ -338,26 +328,28 @@ const WeddingForm = () => {
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
-            video_url: videoUrl,
-            audio_url: audioUrl,
-            audio_start_time: audioTrimSettings?.startTime || 0,
-            audio_end_time: audioTrimSettings?.endTime || 0,
-            user_id: user.id 
-          }])
+          .insert([
+            {
+              ...formData,
+              slug,
+              main_picture_url: imageUrl,
+              video_url: videoUrl,
+              audio_url: audioUrl,
+              audio_start_time: audioTrimSettings?.startTime || 0,
+              audio_end_time: audioTrimSettings?.endTime || 0,
+              user_id: user.id,
+            },
+          ])
           .select()
           .single();
 
         if (error) throw error;
         weddingId = data.id;
         setCreatedWeddingId(data.id);
-        setFormData({ 
-          ...formData, 
-          slug: data.slug, 
-          main_picture_url: imageUrl, 
+        setFormData({
+          ...formData,
+          slug: data.slug,
+          main_picture_url: imageUrl,
           video_url: videoUrl,
           audio_url: audioUrl,
           audio_start_time: audioTrimSettings?.startTime || 0,
@@ -366,7 +358,15 @@ const WeddingForm = () => {
       }
 
       // Upload gallery images if template supports gallery
-      const galleryTemplates = ["template2", "template4", "classic-gallery", "elegant-fullscreen", "template5", "modern-wedding", "classic-romance"];
+      const galleryTemplates = [
+        "template2",
+        "template4",
+        "classic-gallery",
+        "elegant-fullscreen",
+        "template5",
+        "modern-wedding",
+        "classic-romance",
+      ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
         const { data: maxOrderData } = await supabase
@@ -376,12 +376,10 @@ const WeddingForm = () => {
           .order("image_order", { ascending: false })
           .limit(1)
           .maybeSingle();
-        
+
         const startingOrder = (maxOrderData?.image_order || 0) + 1;
 
-        const galleryUrls = await Promise.all(
-          galleryFiles.map((file, index) => uploadImage(file, user.id, index))
-        );
+        const galleryUrls = await Promise.all(galleryFiles.map((file, index) => uploadImage(file, user.id, index)));
 
         const galleryInserts = galleryUrls.map((url, index) => ({
           wedding_id: weddingId,
@@ -389,9 +387,7 @@ const WeddingForm = () => {
           image_order: startingOrder + index,
         }));
 
-        const { error: galleryError } = await supabase
-          .from("gallery_images")
-          .insert(galleryInserts);
+        const { error: galleryError } = await supabase.from("gallery_images").insert(galleryInserts);
 
         if (galleryError) throw galleryError;
       }
@@ -406,7 +402,7 @@ const WeddingForm = () => {
       if (locations.ceremony_location || locations.ceremony_time || locations.ceremony_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'ceremony',
+          type: "ceremony",
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
@@ -415,7 +411,7 @@ const WeddingForm = () => {
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'venue',
+          type: "venue",
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
@@ -423,9 +419,7 @@ const WeddingForm = () => {
       }
 
       if (locationInserts.length > 0) {
-        const { error: locError } = await supabase
-          .from("wedding_locations")
-          .insert(locationInserts);
+        const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
         if (locError) throw locError;
       }
 
@@ -435,23 +429,23 @@ const WeddingForm = () => {
         await supabase.from("gift_cards").delete().eq("wedding_id", weddingId);
       }
 
-      const validCards = giftCards.filter(card => card.card_name && card.card_number);
+      const validCards = giftCards.filter((card) => card.card_name && card.card_number);
       if (validCards.length > 0) {
         // Upload card icons if any
         const cardInserts = await Promise.all(
           validCards.map(async (card, index) => {
             let logoUrl = card.logo_url;
-            
+
             // Find original index in giftCards array
-            const originalIndex = giftCards.findIndex(c => 
-              c.card_name === card.card_name && c.card_number === card.card_number
+            const originalIndex = giftCards.findIndex(
+              (c) => c.card_name === card.card_name && c.card_number === card.card_number,
             );
-            
+
             // Upload new icon if file exists
             if (cardIconFiles[originalIndex]) {
               logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
             }
-            
+
             return {
               wedding_id: weddingId,
               card_name: card.card_name,
@@ -459,17 +453,15 @@ const WeddingForm = () => {
               logo_url: logoUrl,
               card_order: index + 1,
             };
-          })
+          }),
         );
 
-        const { error: cardError } = await supabase
-          .from("gift_cards")
-          .insert(cardInserts);
+        const { error: cardError } = await supabase.from("gift_cards").insert(cardInserts);
         if (cardError) throw cardError;
       }
 
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
-      
+
       // Clear gallery files after successful save
       setGalleryFiles([]);
       setGalleryPreviews([]);
@@ -488,20 +480,14 @@ const WeddingForm = () => {
   return (
     <div className="min-h-screen bg-gradient-soft py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/dashboard")}
-          className="mb-4"
-        >
+        <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
         </Button>
 
         <Card className="shadow-elegant">
           <CardHeader>
-            <CardTitle className="text-3xl font-serif">
-              {id ? "Edit Wedding" : "Create Wedding Invitation"}
-            </CardTitle>
+            <CardTitle className="text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -581,7 +567,7 @@ const WeddingForm = () => {
                 />
               </div>
 
-              <div className="space-y-2">
+              {/* <div className="space-y-2">
                 <Label htmlFor="custom_primary_color">Primary Color (Gold Tone)</Label>
                 <div className="flex gap-2">
                   <Input
@@ -602,7 +588,7 @@ const WeddingForm = () => {
                 <p className="text-xs text-muted-foreground">
                   This color will be used for accents and decorative elements throughout the invitation
                 </p>
-              </div>
+              </div> */}
 
               {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
               {isVideoTemplate ? (
@@ -611,11 +597,7 @@ const WeddingForm = () => {
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <video 
-                          src={videoPreview} 
-                          className="w-full h-full object-cover"
-                          controls
-                        />
+                        <video src={videoPreview} className="w-full h-full object-cover" controls />
                         <Button
                           type="button"
                           variant="destructive"
@@ -651,11 +633,7 @@ const WeddingForm = () => {
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img 
-                          src={imagePreview} 
-                          alt="Wedding preview" 
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={imagePreview} alt="Wedding preview" className="w-full h-full object-cover" />
                         <Button
                           type="button"
                           variant="destructive"
@@ -707,7 +685,7 @@ const WeddingForm = () => {
               {/* Location Fields */}
               <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-semibold">Event Locations</h3>
-                
+
                 {/* Ceremony Section */}
                 <Card className="border">
                   <CardHeader>
@@ -840,16 +818,16 @@ const WeddingForm = () => {
                         <div className="space-y-2">
                           <Label>Card Icon</Label>
                           <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
-                            <img 
-                              src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
-                              alt={card.card_name} 
+                            <img
+                              src={card.card_name === "OMT" ? omtLogo : whishLogo}
+                              alt={card.card_name}
                               className="max-h-full max-w-full object-contain rounded-[6px]"
                             />
                           </div>
                         </div>
                       )}
                     </div>
-                    
+
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
@@ -881,17 +859,16 @@ const WeddingForm = () => {
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                   </p>
-                  
+
                   {/* Existing Gallery Images */}
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {existingGalleryImages.map((image) => (
-                        <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={image.image_url} 
-                            alt="Gallery" 
-                            className="w-full h-full object-cover"
-                          />
+                        <div
+                          key={image.id}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img src={image.image_url} alt="Gallery" className="w-full h-full object-cover" />
                           <Button
                             type="button"
                             variant="destructive"
@@ -910,12 +887,11 @@ const WeddingForm = () => {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {galleryPreviews.map((preview, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={preview} 
-                            alt={`Gallery ${index + 1}`} 
-                            className="w-full h-full object-cover"
-                          />
+                        <div
+                          key={index}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img src={preview} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
                           <Button
                             type="button"
                             variant="destructive"
@@ -931,7 +907,7 @@ const WeddingForm = () => {
                   )}
 
                   {/* Upload Button */}
-                  {(existingGalleryImages.length + galleryFiles.length) < 6 && (
+                  {existingGalleryImages.length + galleryFiles.length < 6 && (
                     <>
                       <label
                         htmlFor="gallery_images"
@@ -989,7 +965,7 @@ const WeddingForm = () => {
                         videoPreview,
                         galleryPreviews,
                       };
-                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                      sessionStorage.setItem("weddingPreviewData", JSON.stringify(previewData));
                       setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
                     }
                     setPreviewModalOpen(true);
@@ -1015,13 +991,16 @@ const WeddingForm = () => {
                             .from("weddings")
                             .update({ status: newStatus })
                             .eq("id", weddingId);
-                          
+
                           if (error) throw error;
-                          
+
                           setFormData({ ...formData, status: newStatus });
-                          toast({ 
+                          toast({
                             title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
-                            description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
+                            description:
+                              newStatus === "published"
+                                ? "Your invitation is now live"
+                                : "Your invitation is now in draft mode",
                           });
                         } catch (error: any) {
                           toast({
@@ -1050,11 +1029,7 @@ const WeddingForm = () => {
             <DialogTitle>Preview Invitation</DialogTitle>
           </DialogHeader>
           <div className="flex-1 w-full overflow-hidden px-6 pb-6">
-            <iframe
-              src={previewUrl}
-              className="w-full h-full border-0 rounded-lg"
-              title="Wedding Invitation Preview"
-            />
+            <iframe src={previewUrl} className="w-full h-full border-0 rounded-lg" title="Wedding Invitation Preview" />
           </div>
         </DialogContent>
       </Dialog>
