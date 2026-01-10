@@ -227,9 +227,6 @@ export const EnvelopeTemplatePreview = ({
                   })}
                 </p>
               </div>
-
-              {/* Corner Decorations */}
-              <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
             </section>
 
             {/* Divider */}
