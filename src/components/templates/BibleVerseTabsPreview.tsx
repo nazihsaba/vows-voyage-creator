@@ -1,8 +1,4 @@
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
-import galleryWedding3 from "@/assets/gallery-wedding-3.jpg";
-import galleryWedding4 from "@/assets/gallery-wedding-4.jpg";
-import galleryWedding5 from "@/assets/gallery-wedding-5.jpg";
-import galleryWedding6 from "@/assets/gallery-wedding-6.jpg";
 
 export const BibleVerseTabsPreview = () => {
   const timelineEvents = [
@@ -143,10 +139,10 @@ export const BibleVerseTabsPreview = () => {
             {[
               "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
               "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&h=400&fit=crop",
-              galleryWedding3,
-              galleryWedding4,
-              galleryWedding5,
-              galleryWedding6,
+              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
+              "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
+              "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
+              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
             ].map((src, index) => (
               <div key={index} className="aspect-square overflow-hidden rounded-lg shadow-soft bg-gray-200">
                 <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover" />
