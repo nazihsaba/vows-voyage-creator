@@ -1,55 +1,7 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-
-// Static Countdown Timer Component
-const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
-
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeRemaining({ days, hours, minutes, seconds });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <div className="text-center">
-      <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4 md:gap-8">
-        {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
-        ].map((item) => (
-          <div key={item.label} className="text-center">
-            <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 interface EnvelopeTemplatePreviewProps {
   groomName?: string;
@@ -266,7 +218,7 @@ export const EnvelopeTemplatePreview = ({
 
               {/* Wedding Date */}
               <div>
-                <p className="text-template-body text-primary">
+                <p className="text-template-body text-primary font-semibold">
                   {new Date(weddingDate).toLocaleDateString("en-US", {
                     weekday: "long",
                     month: "long",
@@ -275,14 +227,9 @@ export const EnvelopeTemplatePreview = ({
                   })}
                 </p>
               </div>
-            </section>
 
-            {/* Divider */}
-            <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
-
-            {/* ===== COUNTDOWN SECTION ===== */}
-            <section className="py-16 px-4 bg-white">
-              <StaticCountdownTimer targetDate={new Date(weddingDate)} />
+              {/* Corner Decorations */}
+              <div className="absolute bottom-0 right-0 w-24 h-24 border-r-2 border-b-2 border-gray-300 rounded-br-lg" />
             </section>
 
             {/* Divider */}
