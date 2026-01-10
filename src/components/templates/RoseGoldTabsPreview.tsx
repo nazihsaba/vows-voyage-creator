@@ -328,7 +328,7 @@ export const RoseGoldTabsPreview = ({
         return (
           <div className="space-y-8 text-white animate-fade-in">
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 space-y-8">
-              <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration-</h2>
 
               <p className="text-center text-white/90">
                 Please let us know if you can join us on our special day. Your presence would mean the world to us.
