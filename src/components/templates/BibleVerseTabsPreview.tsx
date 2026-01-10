@@ -36,37 +36,37 @@ export const BibleVerseTabsPreview = () => {
         <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
           {/* Bible Verse Quote */}
           <div className="mb-8 animate-fade-in">
-            <p className="text-lg md:text-xl italic text-[#7a4c4c] font-serif max-w-md mx-auto">
+            <p className="text-lg md:text-xl text-[#7a4c4c] font-[Roboto] max-w-md mx-auto">
               "Two are better than one. For if they fall, one will lift up the other."
             </p>
-            <p className="text-sm text-gray-600 mt-2">- Ecclesiastes 4:9-12</p>
+            <p className="text-sm text-gray-600 mt-2 font-[Roboto]">- Ecclesiastes 4:9-12</p>
           </div>
 
           {/* Together with their families */}
           <div className="mb-6">
-            <p className="text-xl md:text-2xl text-gray-800 font-mono">Together with their families</p>
+            <p className="text-xl md:text-2xl text-gray-800 font-[Roboto]">Together with their families</p>
           </div>
 
           {/* Parents Names */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mb-6">
             {/* Groom's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a] italic">Mr. Pierre & Mrs. Nayla</p>
+              <p className="text-sm md:text-base text-[#c4a35a] italic font-[Roboto]">Mr. Pierre & Mrs. Nayla</p>
               <p className="text-2xl md:text-3xl font-cursive text-gray-800">Nawfal</p>
             </div>
 
-            <span className="text-2xl text-gray-400">&</span>
+            <span className="text-2xl text-gray-400 font-[Roboto]">&</span>
 
             {/* Bride's Parents */}
             <div className="text-center">
-              <p className="text-sm md:text-base text-[#c4a35a] italic">Mr. Michel & Mrs. Layla</p>
+              <p className="text-sm md:text-base text-[#c4a35a] italic font-[Roboto]">Mr. Michel & Mrs. Layla</p>
               <p className="text-2xl md:text-3xl font-cursive text-gray-800">Assaker</p>
             </div>
           </div>
 
           {/* Invitation Text */}
           <div className="mb-6">
-            <p className="text-base md:text-lg text-gray-700 whitespace-pre-line">
+            <p className="text-base md:text-lg text-gray-700 whitespace-pre-line font-[Roboto]">
               joyfully invite you to the wedding of their{"\n"}beloved son and daughter
             </p>
           </div>
