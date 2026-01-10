@@ -178,8 +178,33 @@ const Dashboard = () => {
               {weddingTemplates.map((template) => (
                 <Card key={template.id} className="shadow-soft hover:shadow-elegant transition-all flex flex-col">
                   <CardHeader className="p-4 sm:p-6 flex-grow">
-                    <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
-                      <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
+                    <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4 relative group cursor-pointer">
+                      {/* Envelope flap overlay */}
+                      <div className="absolute inset-0 z-10 transition-all duration-500 ease-out origin-top group-hover:opacity-0 group-hover:-translate-y-full">
+                        <div 
+                          className="absolute inset-0"
+                          style={{
+                            background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
+                            clipPath: "polygon(0 0, 100% 0, 50% 60%)",
+                          }}
+                        />
+                        <div 
+                          className="absolute inset-0"
+                          style={{
+                            background: "linear-gradient(180deg, #f0e6d8 0%, #e5d9c8 50%, #d8cbb8 100%)",
+                            clipPath: "polygon(0 40%, 50% 100%, 100% 40%, 100% 100%, 0 100%)",
+                          }}
+                        />
+                        {/* Wax seal */}
+                        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center shadow-lg z-20"
+                          style={{
+                            background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
+                          }}
+                        >
+                          <Heart className="w-5 h-5 text-[#8a7a6a]" />
+                        </div>
+                      </div>
+                      <img src={template.image} alt={template.name} className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
                     </div>
                     <CardTitle className="text-lg sm:text-xl font-serif">{template.name}</CardTitle>
                     <CardDescription className="text-sm sm:text-base">{template.description}</CardDescription>
