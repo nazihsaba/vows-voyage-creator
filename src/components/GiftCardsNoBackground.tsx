@@ -41,7 +41,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-12">
           <Gift className="w-12 h-12 text-white mx-auto mb-4" />
-          <h2 className="text-3xl md:text-4xl font-serif font-semibold text-white mb-4">Wedding Gift</h2>
+          <h2 className="text-template-subtitle mb-6 text-white">Wedding Gift</h2>
           <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
