@@ -14,17 +14,20 @@ export const EnvelopeTemplatePreview = ({
   brideName = "Jessica",
   weddingDate = "2025-06-15",
 }: EnvelopeTemplatePreviewProps) => {
-  const [envelopeState, setEnvelopeState] = useState<"closed" | "opening" | "fading" | "open">("closed");
+  const [envelopeState, setEnvelopeState] = useState<"closed" | "flap-opening" | "card-rising" | "fading" | "open">("closed");
 
   const handleEnvelopeClick = () => {
     if (envelopeState === "closed") {
-      setEnvelopeState("opening");
+      setEnvelopeState("flap-opening");
+      setTimeout(() => {
+        setEnvelopeState("card-rising");
+      }, 800);
       setTimeout(() => {
         setEnvelopeState("fading");
-      }, 1000);
+      }, 2200);
       setTimeout(() => {
         setEnvelopeState("open");
-      }, 2000);
+      }, 3000);
     }
   };
 
@@ -32,7 +35,8 @@ export const EnvelopeTemplatePreview = ({
   const groomInitial = groomName?.charAt(0)?.toUpperCase() || "M";
   const brideInitial = brideName?.charAt(0)?.toUpperCase() || "J";
 
-  const isOpening = envelopeState === "opening" || envelopeState === "fading";
+  const isFlapOpening = envelopeState === "flap-opening" || envelopeState === "card-rising" || envelopeState === "fading";
+  const isCardRising = envelopeState === "card-rising" || envelopeState === "fading";
   const isFading = envelopeState === "fading";
 
   const weddingDateObj = new Date(weddingDate);
@@ -125,12 +129,13 @@ export const EnvelopeTemplatePreview = ({
 
   const renderEnvelopeScreen = () => (
     <div
-      className={`fixed inset-0 z-50 flex items-center justify-center cursor-pointer`}
+      className="fixed inset-0 z-50 flex items-center justify-center cursor-pointer"
       onClick={handleEnvelopeClick}
       style={{
         background: "linear-gradient(145deg, #f5f0e6 0%, #e8dfd0 50%, #ddd4c5 100%)",
         opacity: isFading ? 0 : 1,
-        transition: "opacity 0.6s ease-out",
+        transition: "opacity 0.8s ease-out",
+        perspective: "1500px",
       }}
     >
       {/* Paper texture overlay */}
@@ -141,52 +146,123 @@ export const EnvelopeTemplatePreview = ({
         }}
       />
 
-      {/* Closed Envelope - Full Screen */}
-      <div className="relative w-full h-full">
-        {/* Envelope body */}
+      {/* Envelope Container - Centered */}
+      <div 
+        className="relative w-[90vw] max-w-md h-[70vh] max-h-[500px]"
+        style={{ 
+          transformStyle: "preserve-3d",
+          perspective: "1500px",
+        }}
+      >
+        {/* Envelope Back */}
         <div
-          className="absolute inset-0 rounded-md"
+          className="absolute inset-0 rounded-lg"
           style={{
-            background: "linear-gradient(180deg, #f0e6d8 0%, #e5d9c8 50%, #d8cbb8 100%)",
-            boxShadow: "0 10px 40px rgba(0,0,0,0.15), inset 0 1px 0 rgba(255,255,255,0.3)",
+            background: "linear-gradient(180deg, #e5d9c8 0%, #d8cbb8 100%)",
+            boxShadow: "0 20px 60px rgba(0,0,0,0.2)",
           }}
         />
 
-        {/* Envelope flap (opens slightly) */}
+        {/* Invitation Card (slides up) */}
         <div
-          className="absolute top-0 left-0 right-0 h-[55%]"
+          className="absolute left-4 right-4 bottom-4 rounded-lg flex flex-col items-center justify-center p-8"
           style={{
-            background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
-            clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-            boxShadow: isOpening ? "0 8px 20px rgba(0,0,0,0.12)" : "0 4px 12px rgba(0,0,0,0.08)",
-            transformOrigin: "top center",
-            transform: isOpening ? "rotateX(-45deg)" : "rotateX(0deg)",
-            transition: "transform 1s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease",
-            zIndex: 10,
+            height: "calc(100% - 32px)",
+            background: "linear-gradient(180deg, #ffffff 0%, #faf8f5 100%)",
+            boxShadow: isCardRising 
+              ? "0 -10px 40px rgba(0,0,0,0.15)" 
+              : "0 2px 8px rgba(0,0,0,0.05)",
+            transform: isCardRising 
+              ? "translateY(-120%)" 
+              : "translateY(0)",
+            transition: "transform 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.5s ease",
+            zIndex: 5,
+          }}
+        >
+          {/* Card Content Preview */}
+          <div className="text-center space-y-4 opacity-80">
+            <p className="text-sm text-gray-500 uppercase tracking-[0.3em]">You're Invited</p>
+            <h2 
+              className="text-3xl md:text-4xl"
+              style={{ fontFamily: "'Playfair Display', serif", color: "#3e2723" }}
+            >
+              {groomName} & {brideName}
+            </h2>
+            <div className="w-16 h-0.5 bg-primary/40 mx-auto" />
+            <p className="text-gray-600">{dateFormatted}</p>
+          </div>
+        </div>
+
+        {/* Envelope Front Pocket */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-[60%] rounded-b-lg"
+          style={{
+            background: "linear-gradient(180deg, #f0e6d8 0%, #e5d9c8 100%)",
+            zIndex: 15,
+            boxShadow: "0 -2px 10px rgba(0,0,0,0.05)",
           }}
         />
 
-        {/* Wax Seal - Centered */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" style={{ zIndex: 20 }}>
+        {/* Envelope Flap (opens with 3D rotation) */}
+        <div
+          className="absolute top-0 left-0 right-0 h-[50%] origin-top"
+          style={{
+            transformStyle: "preserve-3d",
+            transform: isFlapOpening 
+              ? "rotateX(-180deg)" 
+              : "rotateX(0deg)",
+            transition: "transform 0.8s cubic-bezier(0.4, 0, 0.2, 1)",
+            zIndex: isFlapOpening ? 1 : 20,
+          }}
+        >
+          {/* Flap Front */}
           <div
-            className="w-40 h-40 rounded-full flex items-center justify-center shadow-xl"
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(180deg, #ebe1d3 0%, #e0d4c2 100%)",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+              backfaceVisibility: "hidden",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.1)",
+            }}
+          />
+          {/* Flap Back (revealed when opened) */}
+          <div
+            className="absolute inset-0"
+            style={{
+              background: "linear-gradient(180deg, #d8cbb8 0%, #cfc2b0 100%)",
+              clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+              backfaceVisibility: "hidden",
+              transform: "rotateX(180deg)",
+            }}
+          />
+        </div>
+
+        {/* Wax Seal - on top of flap */}
+        <div 
+          className="absolute top-[35%] left-1/2 -translate-x-1/2 -translate-y-1/2"
+          style={{ 
+            zIndex: 25,
+            opacity: isFlapOpening ? 0 : 1,
+            transform: `translate(-50%, -50%) ${isFlapOpening ? 'scale(0.8)' : 'scale(1)'}`,
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+          }}
+        >
+          <div
+            className="w-24 h-24 md:w-32 md:h-32 rounded-full flex items-center justify-center"
             style={{
               background: "radial-gradient(circle at 35% 35%, #e8dfd0 0%, #d8cfc0 30%, #c8bfb0 70%, #b8afa0 100%)",
-              boxShadow:
-                "0 4px 20px rgba(0,0,0,0.2), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.25), inset 0 -2px 8px rgba(0,0,0,0.1), inset 0 2px 4px rgba(255,255,255,0.3)",
             }}
           >
             <div
-              className="rounded-full flex items-center justify-center"
+              className="w-16 h-16 md:w-24 md:h-24 rounded-full flex items-center justify-center"
               style={{
-                width: "128px",
-                height: "128px",
                 background: "radial-gradient(circle at 40% 40%, #e0d7c8 0%, #d0c7b8 50%, #c5bca8 100%)",
                 boxShadow: "inset 0 1px 3px rgba(0,0,0,0.1)",
               }}
             >
               <span
-                className="text-3xl tracking-wide"
+                className="text-xl md:text-2xl tracking-wide"
                 style={{
                   fontFamily: "'Dancing Script', cursive",
                   color: "#8a7a6a",
@@ -198,11 +274,20 @@ export const EnvelopeTemplatePreview = ({
             </div>
           </div>
         </div>
+      </div>
 
-        {/* Tap to open hint */}
-        <div className="absolute bottom-16 left-0 right-0 text-center" style={{ zIndex: 12 }}>
-          <p className="text-sm text-[#8a7a6a] animate-pulse">Tap to open</p>
-        </div>
+      {/* Tap to open hint */}
+      <div className="absolute bottom-12 left-0 right-0 text-center" style={{ zIndex: 30 }}>
+        <p 
+          className="text-sm text-[#8a7a6a]"
+          style={{
+            opacity: isFlapOpening ? 0 : 1,
+            transition: "opacity 0.3s ease",
+            animation: "pulse 2s infinite",
+          }}
+        >
+          Tap to open
+        </p>
       </div>
     </div>
   );
