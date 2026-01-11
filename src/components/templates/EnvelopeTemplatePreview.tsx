@@ -293,7 +293,7 @@ export const EnvelopeTemplatePreview = ({
   );
 
   return (
-    <div className="relative w-full min-h-screen bg-white font-serif text-[#3e2723]">
+    <div className="relative w-full min-h-screen font-serif text-[#3e2723]" style={{ background: envelopeState !== "open" ? "linear-gradient(145deg, #f5f0e6 0%, #e8dfd0 50%, #ddd4c5 100%)" : "#ffffff" }}>
       {/* Envelope Screen - Show if not fully open */}
       {envelopeState !== "open" && renderEnvelopeScreen()}
 
