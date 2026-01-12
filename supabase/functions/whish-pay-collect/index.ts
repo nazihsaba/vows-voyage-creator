@@ -101,8 +101,11 @@ serve(async (req: Request) => {
     // Whish API base URL (sandbox for testing, use api.whish.money for production)
     const whishApiBase = 'https://api.sandbox.whish.money/itel-service/api';
 
-    // Call Whish Collect API for CREDIT CARD payments (POST /payment/collect)
-    const collectResponse = await fetch(`${whishApiBase}/payment/collect`, {
+    // Supabase functions URL for server-to-server callbacks
+    const callbackBaseUrl = supabaseUrl.replace('.supabase.co', '.supabase.co/functions/v1');
+
+    // Call Whish Pay API for Whish Balance payments (POST /payment/whish)
+    const collectResponse = await fetch(`${whishApiBase}/payment/whish`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,8 +119,8 @@ serve(async (req: Request) => {
         currency: currency,
         invoice: invoice || `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}`,
         externalId: externalId,
-        successCallbackUrl: `${baseUrl}/api/whish-callback?status=success&weddingId=${weddingId}`,
-        failureCallbackUrl: `${baseUrl}/api/whish-callback?status=failed&weddingId=${weddingId}`,
+        successCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=success&weddingId=${weddingId}`,
+        failureCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=failed&weddingId=${weddingId}`,
         successRedirectUrl: `${baseUrl}/dashboard/my-events?payment=success&weddingId=${weddingId}`,
         failureRedirectUrl: `${baseUrl}/dashboard/my-events?payment=failed&weddingId=${weddingId}`,
       }),

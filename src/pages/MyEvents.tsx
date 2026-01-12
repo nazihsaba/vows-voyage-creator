@@ -3,7 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye, Loader2, CreditCard } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Eye, Loader2, CreditCard, Shield, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -76,6 +76,7 @@ const MyEvents = () => {
   const [publishingWeddingId, setPublishingWeddingId] = useState<string | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
+  const [paymentError, setPaymentError] = useState<string | null>(null);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -177,6 +178,7 @@ const MyEvents = () => {
 
     setProcessingPayment(true);
     setPaymentUrl(null);
+    setPaymentError(null);
     
     try {
       const { data: { session } } = await supabase.auth.getSession();
@@ -191,7 +193,7 @@ const MyEvents = () => {
           weddingId: publishingWeddingId,
           amount: PUBLISH_FEE_USD,
           currency: 'USD',
-          invoice: `Event publishing fee for ${wedding?.bride_name} & ${wedding?.groom_name}`,
+          invoice: `Event publishing: ${wedding?.bride_name} & ${wedding?.groom_name}`,
         },
       });
 
@@ -202,21 +204,14 @@ const MyEvents = () => {
       const { collectUrl } = response.data;
       
       if (collectUrl) {
-        // Store the payment URL to show in dialog
-        setPaymentUrl(collectUrl);
+        // Redirect user to the Whish payment page
+        window.location.href = collectUrl;
       } else {
         throw new Error('No payment URL received');
       }
     } catch (error) {
       console.error("Error initiating payment:", error);
-      toast({
-        title: "Payment Error",
-        description: error instanceof Error ? error.message : "Failed to initiate payment. Please try again.",
-        variant: "destructive",
-      });
-      setPaymentDialogOpen(false);
-      setPublishingWeddingId(null);
-    } finally {
+      setPaymentError(error instanceof Error ? error.message : "We couldn't start the payment. Please try again.");
       setProcessingPayment(false);
     }
   };
@@ -225,6 +220,11 @@ const MyEvents = () => {
     setPaymentDialogOpen(false);
     setPublishingWeddingId(null);
     setPaymentUrl(null);
+    setPaymentError(null);
+  };
+
+  const getPublishingWedding = () => {
+    return weddings.find(w => w.id === publishingWeddingId);
   };
 
   return (
@@ -464,100 +464,96 @@ const MyEvents = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-primary" />
-              {paymentUrl ? "Complete Your Payment" : "Publish Your Event"}
+              Pay to Publish Event
             </DialogTitle>
             <DialogDescription className="pt-2">
-              {paymentUrl 
-                ? "Click the button below to open the secure payment page and complete your payment with credit card."
-                : <>To publish your event and make it accessible to guests, a one-time fee of <span className="font-semibold text-foreground">${PUBLISH_FEE_USD} USD</span> is required.</>
-              }
+              Complete payment to make your event accessible to guests.
             </DialogDescription>
           </DialogHeader>
-          
-          {!paymentUrl ? (
-            <>
-              <div className="bg-muted/50 rounded-lg p-4 space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Publishing fee</span>
-                  <span className="font-medium">${PUBLISH_FEE_USD}.00</span>
-                </div>
-                <div className="flex justify-between text-sm border-t pt-2">
-                  <span className="font-medium">Total</span>
-                  <span className="font-bold text-primary">${PUBLISH_FEE_USD}.00 USD</span>
-                </div>
+
+          {/* Error State */}
+          {paymentError && (
+            <div className="bg-destructive/10 border border-destructive/30 rounded-lg p-4 flex items-start gap-3">
+              <AlertCircle className="w-5 h-5 text-destructive flex-shrink-0 mt-0.5" />
+              <div>
+                <p className="text-sm font-medium text-destructive">Payment Error</p>
+                <p className="text-xs text-destructive/80 mt-1">{paymentError}</p>
               </div>
-
-              <p className="text-xs text-muted-foreground">
-                Secure payment powered by Whish Pay. You will be redirected to complete the payment.
-              </p>
-
-              <DialogFooter className="flex-col sm:flex-row gap-2">
-                <Button
-                  variant="outline"
-                  onClick={handleClosePaymentDialog}
-                  disabled={processingPayment}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  onClick={handlePaymentProceed}
-                  disabled={processingPayment}
-                  className="gap-2"
-                >
-                  {processingPayment ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Generating Payment Link...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="w-4 h-4" />
-                      Pay ${PUBLISH_FEE_USD} & Publish
-                    </>
-                  )}
-                </Button>
-              </DialogFooter>
-            </>
-          ) : (
-            <>
-              <div className="bg-green-50 border border-green-200 rounded-lg p-4 space-y-3">
-                <p className="text-sm text-green-800 font-medium">
-                  ✓ Payment link generated successfully!
-                </p>
-                <p className="text-xs text-green-700">
-                  Amount: <span className="font-bold">${PUBLISH_FEE_USD}.00 USD</span>
-                </p>
-              </div>
-
-              <div className="space-y-3">
-                <a
-                  href={paymentUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block"
-                >
-                  <Button className="w-full gap-2" size="lg">
-                    <ExternalLink className="w-4 h-4" />
-                    Open Payment Page
-                  </Button>
-                </a>
-                
-                <p className="text-xs text-muted-foreground text-center">
-                  Opens in a new tab. After payment, return here and refresh to see your published event.
-                </p>
-              </div>
-
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={handleClosePaymentDialog}
-                  className="w-full"
-                >
-                  Close
-                </Button>
-              </DialogFooter>
-            </>
+            </div>
           )}
+          
+          {/* Order Summary */}
+          <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+            <div className="text-sm font-medium text-foreground">Order Summary</div>
+            
+            <div className="space-y-2 text-sm">
+              <div className="flex justify-between">
+                <span className="text-muted-foreground">Item</span>
+                <span>Event Publishing</span>
+              </div>
+              
+              {getPublishingWedding() && (
+                <div className="flex justify-between">
+                  <span className="text-muted-foreground">Event</span>
+                  <span className="font-medium text-right max-w-[180px] truncate">
+                    {getPublishingWedding()?.bride_name} & {getPublishingWedding()?.groom_name}
+                  </span>
+                </div>
+              )}
+              
+              <div className="flex justify-between border-t pt-2 mt-2">
+                <span className="font-semibold">Total Amount</span>
+                <span className="font-bold text-primary text-lg">${PUBLISH_FEE_USD}.00 USD</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Payment Method */}
+          <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                <CreditCard className="w-4 h-4 text-primary" />
+              </div>
+              <div>
+                <p className="text-sm font-medium">Whish Pay</p>
+                <p className="text-xs text-muted-foreground">Pay with your Whish balance</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Security Note */}
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <Shield className="w-4 h-4" />
+            <span>You'll be redirected to Whish to complete the payment securely.</span>
+          </div>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={handleClosePaymentDialog}
+              disabled={processingPayment}
+              className="sm:flex-1"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePaymentProceed}
+              disabled={processingPayment}
+              className="gap-2 sm:flex-1"
+            >
+              {processingPayment ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Creating payment...
+                </>
+              ) : (
+                <>
+                  Continue to Whish
+                  <ExternalLink className="w-4 h-4" />
+                </>
+              )}
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>
