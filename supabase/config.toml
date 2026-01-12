@@ -11,3 +11,9 @@ verify_jwt = false
 
 [functions.create-invitees]
 verify_jwt = false
+
+[functions.whish-pay-collect]
+verify_jwt = false
+
+[functions.whish-payment-callback]
+verify_jwt = false
