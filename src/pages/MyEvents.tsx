@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye } from "lucide-react";
+import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Download, Eye, Loader2, CreditCard } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -16,6 +16,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 interface Wedding {
   id: string;
@@ -27,7 +35,11 @@ interface Wedding {
   template_type: string;
   created_at: string;
   main_picture_url?: string;
+  payment_status?: string;
+  payment_external_id?: string;
 }
+
+const PUBLISH_FEE_USD = 5; // Fee for publishing an event
 
 const getEventType = (templateType: string): string => {
   if (templateType?.includes("bachelor")) return "Bachelor Party";
@@ -52,6 +64,7 @@ const groupEventsByType = (events: Wedding[]) => {
 
 const MyEvents = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { toast } = useToast();
   const [weddings, setWeddings] = useState<Wedding[]>([]);
   const [loading, setLoading] = useState(true);
@@ -59,10 +72,38 @@ const MyEvents = () => {
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [selectedWeddingId, setSelectedWeddingId] = useState<string | null>(null);
   const [selectedWeddingSlug, setSelectedWeddingSlug] = useState<string | null>(null);
+  const [paymentDialogOpen, setPaymentDialogOpen] = useState(false);
+  const [publishingWeddingId, setPublishingWeddingId] = useState<string | null>(null);
+  const [processingPayment, setProcessingPayment] = useState(false);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
   }, []);
+
+  // Handle payment callback from URL params
+  useEffect(() => {
+    const paymentStatus = searchParams.get('payment');
+    const weddingId = searchParams.get('weddingId');
+    
+    if (paymentStatus && weddingId) {
+      if (paymentStatus === 'success') {
+        toast({
+          title: "Payment Successful!",
+          description: "Your event has been published and is now live.",
+        });
+        // Refresh weddings to show updated status
+        fetchWeddings();
+      } else if (paymentStatus === 'failed') {
+        toast({
+          title: "Payment Failed",
+          description: "Your payment could not be processed. Please try again.",
+          variant: "destructive",
+        });
+      }
+      // Clear URL params
+      navigate('/dashboard/my-events', { replace: true });
+    }
+  }, [searchParams]);
 
   const checkUserAndFetchWeddings = async () => {
     const {
@@ -125,26 +166,56 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
-  const handlePublish = async (id: string) => {
+  const handlePublishClick = (id: string) => {
+    setPublishingWeddingId(id);
+    setPaymentDialogOpen(true);
+  };
+
+  const handlePaymentProceed = async () => {
+    if (!publishingWeddingId) return;
+
+    setProcessingPayment(true);
+    
     try {
-      const { error } = await supabase.from("weddings").update({ status: "published" }).eq("id", id);
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        throw new Error("Not authenticated");
+      }
 
-      if (error) throw error;
-
-      toast({
-        title: "Success",
-        description: "Event published successfully! You can now generate invitation links.",
+      const wedding = weddings.find(w => w.id === publishingWeddingId);
+      
+      const response = await supabase.functions.invoke('whish-pay-collect', {
+        body: {
+          weddingId: publishingWeddingId,
+          amount: PUBLISH_FEE_USD,
+          currency: 'USD',
+          invoice: `Event publishing fee for ${wedding?.bride_name} & ${wedding?.groom_name}`,
+        },
       });
 
-      // Update local state
-      setWeddings(weddings.map((w) => (w.id === id ? { ...w, status: "published" } : w)));
+      if (response.error) {
+        throw new Error(response.error.message || 'Failed to create payment link');
+      }
+
+      const { collectUrl } = response.data;
+      
+      if (collectUrl) {
+        // Redirect to Whish Pay payment page
+        window.location.href = collectUrl;
+      } else {
+        throw new Error('No payment URL received');
+      }
     } catch (error) {
-      console.error("Error publishing wedding:", error);
+      console.error("Error initiating payment:", error);
       toast({
-        title: "Error",
-        description: "Failed to publish event",
+        title: "Payment Error",
+        description: error instanceof Error ? error.message : "Failed to initiate payment. Please try again.",
         variant: "destructive",
       });
+    } finally {
+      setProcessingPayment(false);
+      setPaymentDialogOpen(false);
+      setPublishingWeddingId(null);
     }
   };
 
@@ -236,8 +307,9 @@ const MyEvents = () => {
                               )}
 
                               {wedding.status === "draft" && (
-                                <Button className="w-full" onClick={() => handlePublish(wedding.id)}>
-                                  Publish Event
+                                <Button className="w-full" onClick={() => handlePublishClick(wedding.id)}>
+                                  <CreditCard className="w-4 h-4 mr-2" />
+                                  Publish Event (${PUBLISH_FEE_USD})
                                 </Button>
                               )}
 
@@ -372,6 +444,71 @@ const MyEvents = () => {
           }}
         />
       )}
+
+      {/* Payment Confirmation Dialog */}
+      <Dialog open={paymentDialogOpen} onOpenChange={(open) => {
+        if (!processingPayment) {
+          setPaymentDialogOpen(open);
+          if (!open) setPublishingWeddingId(null);
+        }
+      }}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <CreditCard className="w-5 h-5 text-primary" />
+              Publish Your Event
+            </DialogTitle>
+            <DialogDescription className="pt-2">
+              To publish your event and make it accessible to guests, a one-time fee of <span className="font-semibold text-foreground">${PUBLISH_FEE_USD} USD</span> is required.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="bg-muted/50 rounded-lg p-4 space-y-2">
+            <div className="flex justify-between text-sm">
+              <span className="text-muted-foreground">Publishing fee</span>
+              <span className="font-medium">${PUBLISH_FEE_USD}.00</span>
+            </div>
+            <div className="flex justify-between text-sm border-t pt-2">
+              <span className="font-medium">Total</span>
+              <span className="font-bold text-primary">${PUBLISH_FEE_USD}.00 USD</span>
+            </div>
+          </div>
+
+          <p className="text-xs text-muted-foreground">
+            Secure payment powered by Whish Pay. You will be redirected to complete the payment.
+          </p>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setPaymentDialogOpen(false);
+                setPublishingWeddingId(null);
+              }}
+              disabled={processingPayment}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handlePaymentProceed}
+              disabled={processingPayment}
+              className="gap-2"
+            >
+              {processingPayment ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  Processing...
+                </>
+              ) : (
+                <>
+                  <CreditCard className="w-4 h-4" />
+                  Pay ${PUBLISH_FEE_USD} & Publish
+                </>
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

@@ -278,6 +278,8 @@ export type Database = {
           main_description: string | null
           main_picture_url: string | null
           middle_text: string | null
+          payment_external_id: string | null
+          payment_status: string | null
           recipient_name: string | null
           rsvp_deadline: string | null
           slug: string
@@ -314,6 +316,8 @@ export type Database = {
           main_description?: string | null
           main_picture_url?: string | null
           middle_text?: string | null
+          payment_external_id?: string | null
+          payment_status?: string | null
           recipient_name?: string | null
           rsvp_deadline?: string | null
           slug: string
@@ -350,6 +354,8 @@ export type Database = {
           main_description?: string | null
           main_picture_url?: string | null
           middle_text?: string | null
+          payment_external_id?: string | null
+          payment_status?: string | null
           recipient_name?: string | null
           rsvp_deadline?: string | null
           slug?: string
