@@ -200,8 +200,12 @@ const MyEvents = () => {
       const { collectUrl } = response.data;
       
       if (collectUrl) {
-        // Redirect to Whish Pay payment page
-        window.location.href = collectUrl;
+        // Open Whish Pay payment page in a new tab (required because it can't run in iframe)
+        window.open(collectUrl, '_blank');
+        toast({
+          title: "Payment Page Opened",
+          description: "Complete the payment in the new tab. Use phone 96170902894 and OTP 111111 for testing.",
+        });
       } else {
         throw new Error('No payment URL received');
       }
