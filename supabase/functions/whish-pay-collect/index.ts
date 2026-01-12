@@ -102,6 +102,7 @@ serve(async (req: Request) => {
     const baseUrl = `https://${websiteUrl}`;
 
     // Whish API base URL (sandbox for testing, use api.whish.money for production)
+    // const whishApiBase = "https://api.whish.money/itel-service/api";
     const whishApiBase = "https://api.whish.money/itel-service/api";
 
     // Supabase functions URL for server-to-server callbacks
