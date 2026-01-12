@@ -204,8 +204,9 @@ const MyEvents = () => {
       const { collectUrl } = response.data;
       
       if (collectUrl) {
-        // Redirect user to the Whish payment page
-        window.location.href = collectUrl;
+        // Store URL and show in dialog - user will click to open
+        setPaymentUrl(collectUrl);
+        setProcessingPayment(false);
       } else {
         throw new Error('No payment URL received');
       }
@@ -464,10 +465,13 @@ const MyEvents = () => {
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
               <CreditCard className="w-5 h-5 text-primary" />
-              Pay to Publish Event
+              {paymentUrl ? "Complete Your Payment" : "Pay to Publish Event"}
             </DialogTitle>
             <DialogDescription className="pt-2">
-              Complete payment to make your event accessible to guests.
+              {paymentUrl 
+                ? "Click the button below to open Whish and complete your payment."
+                : "Complete payment to make your event accessible to guests."
+              }
             </DialogDescription>
           </DialogHeader>
 
@@ -481,79 +485,122 @@ const MyEvents = () => {
               </div>
             </div>
           )}
-          
-          {/* Order Summary */}
-          <div className="bg-muted/50 rounded-lg p-4 space-y-3">
-            <div className="text-sm font-medium text-foreground">Order Summary</div>
-            
-            <div className="space-y-2 text-sm">
-              <div className="flex justify-between">
-                <span className="text-muted-foreground">Item</span>
-                <span>Event Publishing</span>
-              </div>
-              
-              {getPublishingWedding() && (
-                <div className="flex justify-between">
-                  <span className="text-muted-foreground">Event</span>
-                  <span className="font-medium text-right max-w-[180px] truncate">
-                    {getPublishingWedding()?.bride_name} & {getPublishingWedding()?.groom_name}
-                  </span>
+
+          {!paymentUrl ? (
+            <>
+              {/* Order Summary */}
+              <div className="bg-muted/50 rounded-lg p-4 space-y-3">
+                <div className="text-sm font-medium text-foreground">Order Summary</div>
+                
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-muted-foreground">Item</span>
+                    <span>Event Publishing</span>
+                  </div>
+                  
+                  {getPublishingWedding() && (
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Event</span>
+                      <span className="font-medium text-right max-w-[180px] truncate">
+                        {getPublishingWedding()?.bride_name} & {getPublishingWedding()?.groom_name}
+                      </span>
+                    </div>
+                  )}
+                  
+                  <div className="flex justify-between border-t pt-2 mt-2">
+                    <span className="font-semibold">Total Amount</span>
+                    <span className="font-bold text-primary text-lg">${PUBLISH_FEE_USD}.00 USD</span>
+                  </div>
                 </div>
-              )}
-              
-              <div className="flex justify-between border-t pt-2 mt-2">
-                <span className="font-semibold">Total Amount</span>
-                <span className="font-bold text-primary text-lg">${PUBLISH_FEE_USD}.00 USD</span>
               </div>
-            </div>
-          </div>
 
-          {/* Payment Method */}
-          <div className="bg-muted/30 rounded-lg p-4 space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
-                <CreditCard className="w-4 h-4 text-primary" />
+              {/* Payment Method */}
+              <div className="bg-muted/30 rounded-lg p-4 space-y-2">
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 bg-primary/10 rounded-full flex items-center justify-center">
+                    <CreditCard className="w-4 h-4 text-primary" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Whish Pay</p>
+                    <p className="text-xs text-muted-foreground">Pay with your Whish balance</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-sm font-medium">Whish Pay</p>
-                <p className="text-xs text-muted-foreground">Pay with your Whish balance</p>
+
+              {/* Security Note */}
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Shield className="w-4 h-4" />
+                <span>You'll be redirected to Whish to complete the payment securely.</span>
               </div>
-            </div>
-          </div>
 
-          {/* Security Note */}
-          <div className="flex items-center gap-2 text-xs text-muted-foreground">
-            <Shield className="w-4 h-4" />
-            <span>You'll be redirected to Whish to complete the payment securely.</span>
-          </div>
+              <DialogFooter className="flex-col sm:flex-row gap-2">
+                <Button
+                  variant="outline"
+                  onClick={handleClosePaymentDialog}
+                  disabled={processingPayment}
+                  className="sm:flex-1"
+                >
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handlePaymentProceed}
+                  disabled={processingPayment}
+                  className="gap-2 sm:flex-1"
+                >
+                  {processingPayment ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                      Creating payment...
+                    </>
+                  ) : (
+                    <>
+                      Continue to Whish
+                      <ExternalLink className="w-4 h-4" />
+                    </>
+                  )}
+                </Button>
+              </DialogFooter>
+            </>
+          ) : (
+            <>
+              {/* Payment Ready */}
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-green-800">
+                  <Shield className="w-5 h-5" />
+                  <span className="font-medium">Payment link ready!</span>
+                </div>
+                <p className="text-xs text-green-700 mt-2">
+                  Amount: <span className="font-bold">${PUBLISH_FEE_USD}.00 USD</span>
+                </p>
+              </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button
-              variant="outline"
-              onClick={handleClosePaymentDialog}
-              disabled={processingPayment}
-              className="sm:flex-1"
-            >
-              Cancel
-            </Button>
-            <Button
-              onClick={handlePaymentProceed}
-              disabled={processingPayment}
-              className="gap-2 sm:flex-1"
-            >
-              {processingPayment ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Creating payment...
-                </>
-              ) : (
-                <>
-                  Continue to Whish
+              <a
+                href={paymentUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block"
+              >
+                <Button className="w-full gap-2" size="lg">
                   <ExternalLink className="w-4 h-4" />
-                </>
-              )}
-            </Button>
-          </DialogFooter>
+                  Open Whish Payment Page
+                </Button>
+              </a>
+
+              <p className="text-xs text-muted-foreground text-center">
+                Opens in a new tab. After payment, return here and your event will be published automatically.
+              </p>
+
+              <DialogFooter>
+                <Button
+                  variant="outline"
+                  onClick={handleClosePaymentDialog}
+                  className="w-full"
+                >
+                  Close
+                </Button>
+              </DialogFooter>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </div>
