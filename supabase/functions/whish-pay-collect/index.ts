@@ -101,8 +101,8 @@ serve(async (req: Request) => {
     // Whish API base URL (sandbox for testing, use api.whish.money for production)
     const whishApiBase = 'https://api.sandbox.whish.money/itel-service/api';
 
-    // Call Whish Payment API (POST /payment/whish)
-    const collectResponse = await fetch(`${whishApiBase}/payment/whish`, {
+    // Call Whish Collect API for CREDIT CARD payments (POST /payment/collect)
+    const collectResponse = await fetch(`${whishApiBase}/payment/collect`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -112,7 +112,7 @@ serve(async (req: Request) => {
         'User-Agent': 'Whish/1.0 (https://aureainvites.com; support@aureainvites.com)',
       },
       body: JSON.stringify({
-        amount: amount.toString(),
+        amount: amount,
         currency: currency,
         invoice: invoice || `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}`,
         externalId: externalId,
@@ -125,7 +125,7 @@ serve(async (req: Request) => {
 
     const whishResult: WhishCollectResponse = await collectResponse.json();
 
-    console.log('Whish Payment API response:', JSON.stringify(whishResult));
+    console.log('Whish Collect API response:', JSON.stringify(whishResult));
 
     if (!whishResult.status || !whishResult.data?.collectUrl) {
       return new Response(
