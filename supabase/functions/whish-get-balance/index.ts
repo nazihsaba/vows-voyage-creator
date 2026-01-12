@@ -14,6 +14,7 @@ interface WhishBalanceResponse {
   data: {
     balance?: number;
     currency?: string;
+    balances?: Array<{ currency: string; balance: number }>;
   };
 }
 
@@ -59,8 +60,8 @@ serve(async (req: Request) => {
     // Whish API base URL (sandbox for testing, use api.whish.money for production)
     const whishApiBase = 'https://api.sandbox.whish.money/itel-service/api';
 
-    // Call Whish Balance API (GET /balance)
-    const balanceResponse = await fetch(`${whishApiBase}/balance`, {
+    // Call Whish Account Info API (GET /account/info) - this endpoint returns balance info
+    const balanceResponse = await fetch(`${whishApiBase}/account/info`, {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
@@ -71,25 +72,79 @@ serve(async (req: Request) => {
       },
     });
 
-    const whishResult: WhishBalanceResponse = await balanceResponse.json();
+    // First get response as text to check what we're receiving
+    const responseText = await balanceResponse.text();
+    console.log('Whish API raw response:', responseText);
 
-    console.log('Whish Balance API response:', JSON.stringify(whishResult));
+    // Check if response is HTML (error page)
+    if (responseText.startsWith('<!') || responseText.startsWith('<html')) {
+      console.error('Whish API returned HTML instead of JSON');
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: 'Balance API not available',
+          balance: null,
+          currency: 'USD'
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Parse as JSON
+    let whishResult: WhishBalanceResponse;
+    try {
+      whishResult = JSON.parse(responseText);
+    } catch {
+      console.error('Failed to parse Whish response as JSON');
+      return new Response(
+        JSON.stringify({ 
+          success: false,
+          error: 'Invalid response from payment provider',
+          balance: null,
+          currency: 'USD'
+        }),
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    console.log('Whish Balance API parsed response:', JSON.stringify(whishResult));
 
     if (!whishResult.status) {
       return new Response(
         JSON.stringify({ 
-          error: 'Failed to fetch balance',
-          details: whishResult.dialog?.message || whishResult.code || 'Unknown error'
+          success: false,
+          error: whishResult.dialog?.message || whishResult.code || 'Failed to fetch balance',
+          balance: null,
+          currency: 'USD'
         }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Handle different response structures
+    let balance = 0;
+    let currency = 'USD';
+    
+    if (whishResult.data?.balance !== undefined) {
+      balance = whishResult.data.balance;
+      currency = whishResult.data.currency || 'USD';
+    } else if (whishResult.data?.balances && Array.isArray(whishResult.data.balances)) {
+      // Find USD balance first, or use the first available
+      const usdBalance = whishResult.data.balances.find(b => b.currency === 'USD');
+      if (usdBalance) {
+        balance = usdBalance.balance;
+        currency = 'USD';
+      } else if (whishResult.data.balances.length > 0) {
+        balance = whishResult.data.balances[0].balance;
+        currency = whishResult.data.balances[0].currency;
+      }
     }
 
     return new Response(
       JSON.stringify({ 
         success: true,
-        balance: whishResult.data?.balance || 0,
-        currency: whishResult.data?.currency || 'USD'
+        balance: balance,
+        currency: currency
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -98,8 +153,13 @@ serve(async (req: Request) => {
     console.error('Error in whish-get-balance:', error);
     const errorMessage = error instanceof Error ? error.message : 'Internal server error';
     return new Response(
-      JSON.stringify({ error: errorMessage }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      JSON.stringify({ 
+        success: false,
+        error: errorMessage,
+        balance: null,
+        currency: 'USD'
+      }),
+      { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 });

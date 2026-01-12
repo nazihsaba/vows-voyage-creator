@@ -20,6 +20,7 @@ const Settings = () => {
   const [whishBalance, setWhishBalance] = useState<number | null>(null);
   const [whishCurrency, setWhishCurrency] = useState<string>("USD");
   const [loadingBalance, setLoadingBalance] = useState(false);
+  const [balanceError, setBalanceError] = useState<string | null>(null);
 
   useEffect(() => {
     checkUser();
@@ -38,6 +39,7 @@ const Settings = () => {
 
   const fetchWhishBalance = async () => {
     setLoadingBalance(true);
+    setBalanceError(null);
     try {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
@@ -50,15 +52,20 @@ const Settings = () => {
 
       if (response.error) {
         console.error('Error fetching balance:', response.error);
+        setBalanceError('Failed to connect to payment service');
         return;
       }
 
       if (response.data?.success) {
         setWhishBalance(response.data.balance);
         setWhishCurrency(response.data.currency || 'USD');
+        setBalanceError(null);
+      } else if (response.data?.error) {
+        setBalanceError(response.data.error);
       }
     } catch (error) {
       console.error('Error fetching Whish balance:', error);
+      setBalanceError('Failed to fetch balance');
     } finally {
       setLoadingBalance(false);
     }
@@ -179,12 +186,16 @@ const Settings = () => {
               <div>
                 {loadingBalance ? (
                   <p className="text-muted-foreground">Loading balance...</p>
+                ) : balanceError ? (
+                  <div>
+                    <p className="text-muted-foreground text-sm">{balanceError}</p>
+                  </div>
                 ) : whishBalance !== null ? (
                   <p className="text-3xl font-bold text-primary">
                     {whishCurrency === 'USD' ? '$' : ''}{whishBalance.toLocaleString()} {whishCurrency}
                   </p>
                 ) : (
-                  <p className="text-muted-foreground">Unable to fetch balance</p>
+                  <p className="text-muted-foreground">Click refresh to load balance</p>
                 )}
               </div>
               <Button
