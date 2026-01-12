@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowLeft, User, Mail, Lock, LogOut } from "lucide-react";
+import { ArrowLeft, User, Mail, Lock, LogOut, Wallet, RefreshCw } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 const Settings = () => {
@@ -17,6 +17,9 @@ const Settings = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [whishBalance, setWhishBalance] = useState<number | null>(null);
+  const [whishCurrency, setWhishCurrency] = useState<string>("USD");
+  const [loadingBalance, setLoadingBalance] = useState(false);
 
   useEffect(() => {
     checkUser();
@@ -30,6 +33,35 @@ const Settings = () => {
     }
     setUser({ email: session.user.email || "", id: session.user.id });
     setLoading(false);
+    fetchWhishBalance();
+  };
+
+  const fetchWhishBalance = async () => {
+    setLoadingBalance(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+
+      const response = await supabase.functions.invoke('whish-get-balance', {
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+        },
+      });
+
+      if (response.error) {
+        console.error('Error fetching balance:', response.error);
+        return;
+      }
+
+      if (response.data?.success) {
+        setWhishBalance(response.data.balance);
+        setWhishCurrency(response.data.currency || 'USD');
+      }
+    } catch (error) {
+      console.error('Error fetching Whish balance:', error);
+    } finally {
+      setLoadingBalance(false);
+    }
   };
 
   const handlePasswordChange = async () => {
@@ -129,6 +161,41 @@ const Settings = () => {
               <p className="text-xs text-muted-foreground">
                 Contact support to change your email address
               </p>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Whish Pay Balance */}
+        <Card className="shadow-soft">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <Wallet className="w-5 h-5" />
+              Whish Pay Balance
+            </CardTitle>
+            <CardDescription>Your current Whish Pay account balance</CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="flex items-center justify-between">
+              <div>
+                {loadingBalance ? (
+                  <p className="text-muted-foreground">Loading balance...</p>
+                ) : whishBalance !== null ? (
+                  <p className="text-3xl font-bold text-primary">
+                    {whishCurrency === 'USD' ? '$' : ''}{whishBalance.toLocaleString()} {whishCurrency}
+                  </p>
+                ) : (
+                  <p className="text-muted-foreground">Unable to fetch balance</p>
+                )}
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={fetchWhishBalance}
+                disabled={loadingBalance}
+              >
+                <RefreshCw className={`w-4 h-4 mr-2 ${loadingBalance ? 'animate-spin' : ''}`} />
+                Refresh
+              </Button>
             </div>
           </CardContent>
         </Card>
