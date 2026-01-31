@@ -132,21 +132,33 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <header className="bg-white shadow-soft sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2 sm:gap-3">
-              <Calendar className="w-6 h-6 sm:w-8 sm:h-8 text-primary" />
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-serif font-bold text-primary text-center sm:text-left">
-                Choose Your Template
-              </h1>
+            <div className="flex items-center gap-3">
+              <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
+                  Choose Your Template
+                </h1>
+                <p className="text-xs text-muted-foreground hidden sm:block">Create beautiful invitations</p>
+              </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-              <Button onClick={() => navigate("/dashboard/my-events")} className="flex-1 sm:flex-none">
+              <Button 
+                onClick={() => navigate("/dashboard/my-events")} 
+                className="flex-1 sm:flex-none rounded-full px-5 shadow-sm hover:shadow-md transition-all"
+              >
                 My Events
               </Button>
-              <Button variant="outline" onClick={handleLogout} className="flex-1 sm:flex-none">
+              <Button 
+                variant="outline" 
+                onClick={handleLogout} 
+                className="flex-1 sm:flex-none rounded-full border-border/60 hover:bg-muted/50"
+              >
                 <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
                 <span className="sm:hidden">Exit</span>
@@ -156,7 +168,7 @@ const Dashboard = () => {
                 size="icon"
                 onClick={() => navigate("/dashboard/settings")}
                 title="Settings"
-                className="rounded-full"
+                className="rounded-full hover:bg-muted/50"
               >
                 <UserCog className="w-5 h-5" />
               </Button>
@@ -165,24 +177,29 @@ const Dashboard = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-        <div className="space-y-8 sm:space-y-12">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="space-y-10 sm:space-y-16">
           {/* Weddings Section */}
           <div>
-            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <Heart className="w-6 h-6 sm:w-8 sm:h-8 text-rose-500" />
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Weddings</h2>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-rose-100 to-rose-50 shadow-sm">
+                <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-rose-500" />
+              </div>
+              <div>
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Weddings</h2>
+                <p className="text-xs text-muted-foreground">Elegant templates for your special day</p>
+              </div>
             </div>
 
-            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {weddingTemplates.map((template) => (
-                <Card key={template.id} className="shadow-soft hover:shadow-elegant transition-all flex flex-col">
-                  <CardHeader className="p-4 sm:p-6 flex-grow">
-                    <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4 relative">
+                <Card key={template.id} className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden">
+                  <CardHeader className="p-0 flex-grow">
+                    <div className="aspect-video overflow-hidden relative">
                       {template.id === "envelope-invitation" ? (
-                        <div className="w-full h-full relative group cursor-pointer" style={{ perspective: '1000px' }}>
+                        <div className="w-full h-full relative group/envelope cursor-pointer" style={{ perspective: '1000px' }}>
                           {/* Card/Letter that slides up */}
-                          <div className="absolute inset-x-2 top-4 bottom-2 z-10 transition-all duration-700 ease-out group-hover:-translate-y-8 group-hover:scale-[0.85]">
+                          <div className="absolute inset-x-2 top-4 bottom-2 z-10 transition-all duration-700 ease-out group-hover/envelope:-translate-y-8 group-hover/envelope:scale-[0.85]">
                             <div className="w-full h-full rounded-sm bg-white shadow-xl overflow-hidden border border-primary/20">
                               <img 
                                 src={template.image} 
@@ -193,7 +210,7 @@ const Dashboard = () => {
                           </div>
                           
                           {/* Envelope back */}
-                          <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/20 to-primary/40 rounded-lg shadow-inner" />
+                          <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/20 to-primary/40 shadow-inner" />
                           
                           {/* Envelope side flaps (left & right) */}
                           <div className="absolute left-0 top-0 w-1/4 h-full bg-gradient-to-r from-primary/30 to-transparent z-20 opacity-60" />
@@ -201,12 +218,12 @@ const Dashboard = () => {
                           
                           {/* Envelope top flap with 3D rotation */}
                           <div 
-                            className="absolute top-0 left-0 w-full h-[55%] origin-top z-30 transition-transform duration-700 ease-out group-hover:[transform:rotateX(-180deg)]"
+                            className="absolute top-0 left-0 w-full h-[55%] origin-top z-30 transition-transform duration-700 ease-out group-hover/envelope:[transform:rotateX(-180deg)]"
                             style={{ transformStyle: 'preserve-3d' }}
                           >
                             {/* Front of flap (visible initially) */}
                             <div 
-                              className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-primary/20 rounded-t-lg"
+                              className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-primary/20"
                               style={{ backfaceVisibility: 'hidden' }}
                             >
                               {/* Triangular fold pattern */}
@@ -223,7 +240,7 @@ const Dashboard = () => {
                             </div>
                             {/* Back of flap (visible when opened) */}
                             <div 
-                              className="absolute inset-0 bg-gradient-to-t from-primary/40 to-primary/20 rounded-t-lg"
+                              className="absolute inset-0 bg-gradient-to-t from-primary/40 to-primary/20"
                               style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
                             />
                           </div>
@@ -232,30 +249,42 @@ const Dashboard = () => {
                           <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-t from-primary/50 to-transparent z-20" />
                         </div>
                       ) : (
-                        <img src={template.image} alt={template.name} className="w-full h-full object-cover" />
+                        <img 
+                          src={template.image} 
+                          alt={template.name} 
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                        />
+                      )}
+                      {/* Overlay gradient on hover */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    </div>
+                    <div className="p-5">
+                      <CardTitle className="text-lg font-serif mb-1.5">{template.name}</CardTitle>
+                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">{template.description}</CardDescription>
+
+                      {template.features && (
+                        <div className="mt-4 flex flex-wrap gap-1.5">
+                          {template.features.map((feature, idx) => {
+                            const FeatureIcon = feature.icon;
+                            return (
+                              <Badge 
+                                key={idx} 
+                                variant="secondary" 
+                                className="text-[10px] flex items-center gap-1 py-0.5 px-2 bg-muted/60 hover:bg-muted transition-colors"
+                              >
+                                <FeatureIcon className="w-2.5 h-2.5" />
+                                {feature.text}
+                              </Badge>
+                            );
+                          })}
+                        </div>
                       )}
                     </div>
-                    <CardTitle className="text-lg sm:text-xl font-serif">{template.name}</CardTitle>
-                    <CardDescription className="text-sm sm:text-base">{template.description}</CardDescription>
-
-                    {template.features && (
-                      <div className="mt-3 sm:mt-4 flex flex-wrap gap-2">
-                        {template.features.map((feature, idx) => {
-                          const FeatureIcon = feature.icon;
-                          return (
-                            <Badge key={idx} variant="secondary" className="text-xs flex items-center gap-1 py-1">
-                              <FeatureIcon className="w-3 h-3" />
-                              {feature.text}
-                            </Badge>
-                          );
-                        })}
-                      </div>
-                    )}
                   </CardHeader>
-                  <CardContent className="p-4 sm:p-6 pt-0 mt-auto space-y-2">
+                  <CardContent className="px-5 pb-5 pt-0 mt-auto space-y-2.5">
                     <Button
                       variant="outline"
-                      className="w-full text-sm sm:text-base"
+                      className="w-full text-sm rounded-full border-border/60 hover:bg-muted/50 hover:border-primary/30 transition-all"
                       onClick={(e) => {
                         e.stopPropagation();
                         setShowPreview(template.id);
@@ -265,7 +294,7 @@ const Dashboard = () => {
                       Preview
                     </Button>
                     <Button
-                      className="w-full text-sm sm:text-base"
+                      className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
                         if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
                           navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
@@ -284,26 +313,35 @@ const Dashboard = () => {
 
           {/* Bachelor Section - Coming Soon */}
           <div>
-            <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
-              <GlassWater className="w-6 h-6 sm:w-8 sm:h-8 text-indigo-500" />
-              <h2 className="text-2xl sm:text-3xl font-serif font-bold text-foreground">Bachelor</h2>
-              <Badge variant="secondary" className="ml-2">
-                Coming Soon
-              </Badge>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 shadow-sm">
+                <GlassWater className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" />
+              </div>
+              <div className="flex items-center gap-3">
+                <div>
+                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Bachelor</h2>
+                  <p className="text-xs text-muted-foreground">Party invitations</p>
+                </div>
+                <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-700 border-0">
+                  Coming Soon
+                </Badge>
+              </div>
             </div>
 
-            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              <Card className="shadow-soft opacity-50 flex flex-col">
-                <CardHeader className="p-4 sm:p-6 flex-grow">
-                  <div className="aspect-video rounded-lg overflow-hidden mb-3 sm:mb-4">
-                    <div className="w-full h-full bg-gradient-to-br from-indigo-500/20 to-indigo-500/5 flex items-center justify-center">
-                      <GlassWater className="w-12 h-12 sm:w-16 sm:h-16 text-indigo-500 opacity-50" />
+            <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              <Card className="border-0 bg-white/50 backdrop-blur-sm shadow-md opacity-60 flex flex-col rounded-2xl overflow-hidden">
+                <CardHeader className="p-0 flex-grow">
+                  <div className="aspect-video overflow-hidden">
+                    <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center">
+                      <GlassWater className="w-12 h-12 sm:w-14 sm:h-14 text-indigo-400" />
                     </div>
                   </div>
-                  <CardTitle className="text-lg sm:text-xl font-serif">Bachelor Template</CardTitle>
-                  <CardDescription className="text-sm sm:text-base">
-                    Celebrate your bachelor party in style
-                  </CardDescription>
+                  <div className="p-5">
+                    <CardTitle className="text-lg font-serif mb-1.5">Bachelor Template</CardTitle>
+                    <CardDescription className="text-sm leading-relaxed">
+                      Celebrate your bachelor party in style
+                    </CardDescription>
+                  </div>
                 </CardHeader>
               </Card>
             </div>

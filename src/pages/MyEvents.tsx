@@ -229,66 +229,90 @@ const MyEvents = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <header className="bg-white shadow-soft">
-        <div className="max-w-7xl mx-auto px-4 py-6 flex items-center justify-between">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Calendar className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">My Events</h1>
+            <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+              <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+            </div>
+            <div>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">My Events</h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">Manage your invitations</p>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/dashboard")}>Create Event</Button>
-            <Button variant="outline" onClick={() => navigate("/dashboard")}>
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back
+          <div className="flex items-center gap-2 sm:gap-3">
+            <Button 
+              onClick={() => navigate("/dashboard")} 
+              className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
+            >
+              Create Event
+            </Button>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate("/dashboard")}
+              className="rounded-full border-border/60 hover:bg-muted/50"
+            >
+              <ArrowLeft className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Back</span>
             </Button>
           </div>
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 py-8 sm:py-12">
         {loading ? (
-          <div className="text-center py-12">
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
+              <Loader2 className="w-6 h-6 text-primary animate-spin" />
+            </div>
             <p className="text-muted-foreground">Loading your events...</p>
           </div>
         ) : weddings.length === 0 ? (
-          <div className="text-center py-12">
-            <Calendar className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-            <h2 className="text-2xl font-serif font-bold mb-2">No Events Yet</h2>
-            <p className="text-muted-foreground mb-6">Create your first event invitation to get started</p>
-            <Button onClick={() => navigate("/dashboard/select-event-type")}>Create Event</Button>
+          <div className="text-center py-16">
+            <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 mb-5">
+              <Calendar className="w-8 h-8 text-primary" />
+            </div>
+            <h2 className="text-xl sm:text-2xl font-serif font-bold mb-2">No Events Yet</h2>
+            <p className="text-muted-foreground mb-6 text-sm">Create your first event invitation to get started</p>
+            <Button onClick={() => navigate("/dashboard/select-event-type")} className="rounded-full px-6 shadow-sm">
+              Create Event
+            </Button>
           </div>
         ) : (
-          <div className="space-y-12">
+          <div className="space-y-10 sm:space-y-14">
             {Object.entries(groupEventsByType(weddings)).map(
               ([eventType, events]) =>
                 events.length > 0 && (
                   <section key={eventType}>
-                    <div className="mb-6">
-                      <h2 className="text-2xl font-serif font-bold text-foreground">{eventType}s</h2>
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {events.filter((e) => e.status === "published").length} published,{" "}
-                        {events.filter((e) => e.status === "draft").length} draft
-                      </p>
+                    <div className="mb-6 sm:mb-8 flex items-center justify-between">
+                      <div>
+                        <h2 className="text-lg sm:text-xl font-serif font-bold text-foreground">{eventType}s</h2>
+                        <div className="flex items-center gap-3 mt-1">
+                          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                            {events.filter((e) => e.status === "published").length} published
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                            {events.filter((e) => e.status === "draft").length} draft
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    <div className="grid gap-5 sm:gap-6 md:grid-cols-2 lg:grid-cols-3">
                       {events.map((wedding) => (
                         <Card
                           key={wedding.id}
-                          className="shadow-soft hover:shadow-elegant transition-all relative rounded-[20px]"
+                          className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden"
                         >
-                          <CardHeader>
-                            <div className="flex items-start justify-between">
-                              <div className="flex-1">
-                                <div className="mb-1">
-                                  {/* <span className="text-xs font-semibold text-primary uppercase tracking-wide">
-                                    {getEventType(wedding.template_type)}
-                                  </span> */}
-                                </div>
-                                <CardTitle className="text-xl font-serif">
+                          <CardHeader className="p-5 pb-4">
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex-1 min-w-0">
+                                <CardTitle className="text-lg font-serif truncate">
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
-                                <CardDescription>
+                                <CardDescription className="mt-1 text-sm">
                                   {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
@@ -297,7 +321,11 @@ const MyEvents = () => {
                                 </CardDescription>
                               </div>
                               <span
-                                className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-full ${wedding.status === "published" ? "bg-green-100 text-green-800" : "bg-amber-100 text-amber-800"}`}
+                                className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
+                                  wedding.status === "published" 
+                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200" 
+                                    : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                                }`}
                               >
                                 <span
                                   className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
@@ -306,17 +334,20 @@ const MyEvents = () => {
                               </span>
                             </div>
                           </CardHeader>
-                          <CardContent>
-                            <div className="space-y-4">
+                          <CardContent className="px-5 pb-5 pt-0">
+                            <div className="space-y-3">
                               {wedding.status === "draft" && (
-                                <div className="bg-amber-50 border border-amber-200 rounded-md p-3 text-sm text-amber-800">
-                                  <p className="font-medium">Not published yet</p>
-                                  <p className="text-xs mt-1">Edit and publish to generate invitation links</p>
+                                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-sm text-amber-800">
+                                  <p className="font-medium text-xs">Not published yet</p>
+                                  <p className="text-[11px] mt-0.5 text-amber-600">Edit and publish to generate invitation links</p>
                                 </div>
                               )}
 
                               {wedding.status === "draft" && (
-                                <Button className="w-full" onClick={() => handlePublishClick(wedding.id)}>
+                                <Button 
+                                  className="w-full rounded-full shadow-sm hover:shadow-md transition-all" 
+                                  onClick={() => handlePublishClick(wedding.id)}
+                                >
                                   <CreditCard className="w-4 h-4 mr-2" />
                                   Publish Event (${PUBLISH_FEE_USD})
                                 </Button>
@@ -325,10 +356,10 @@ const MyEvents = () => {
                               {wedding.status === "published" && (
                                 <>
                                   {!wedding.template_type?.includes("bachelor") ? (
-                                    <>
+                                    <div className="space-y-2">
                                       <Button
                                         variant="outline"
-                                        className="w-full flex items-center justify-between rounded-full"
+                                        className="w-full flex items-center justify-between rounded-full border-border/60 hover:bg-muted/50 hover:border-primary/30 transition-all text-sm"
                                         onClick={() => {
                                           setSelectedWeddingId(wedding.id);
                                           setSelectedWeddingSlug(wedding.slug);
@@ -341,31 +372,31 @@ const MyEvents = () => {
 
                                       <Button
                                         variant="outline"
-                                        className="w-full flex items-center justify-between rounded-full"
+                                        className="w-full flex items-center justify-between rounded-full border-border/60 hover:bg-muted/50 hover:border-primary/30 transition-all text-sm"
                                         onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                                       >
                                         <span>Manage invitation Links</span>
                                         <List className="w-4 h-4" />
                                       </Button>
-                                    </>
+                                    </div>
                                   ) : wedding.main_picture_url ? (
-                                    <div className="relative rounded-lg overflow-hidden border border-border">
+                                    <div className="relative rounded-xl overflow-hidden border border-border/50 shadow-sm">
                                       <img
                                         src={wedding.main_picture_url}
                                         alt="Bachelor party card"
-                                        className="w-full h-48 object-cover"
+                                        className="w-full h-44 object-cover"
                                       />
                                     </div>
                                   ) : null}
                                 </>
                               )}
 
-                              <div className="mt-2 flex items-center justify-end gap-1.5 border-t border-dashed border-border/60 pt-3">
-                                <div className="inline-flex items-center gap-1 rounded-full bg-muted/70 px-2 py-1">
+                              <div className="flex items-center justify-end gap-1 border-t border-border/40 pt-3 mt-3">
+                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/50 p-1">
                                   <Button
                                     variant="ghost"
                                     size="icon"
-                                    className="h-8 w-8 rounded-full"
+                                    className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                     onClick={() => {
                                       let editPath = `/dashboard/edit/${wedding.id}`;
 
@@ -381,18 +412,18 @@ const MyEvents = () => {
                                     }}
                                     title="Edit"
                                   >
-                                    <Edit className="h-4 w-4" />
+                                    <Edit className="h-3.5 w-3.5" />
                                   </Button>
 
                                   {wedding.status === "published" && (
                                     <Button
                                       variant="ghost"
                                       size="icon"
-                                      className="h-8 w-8 rounded-full"
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
                                       title="View Invitation"
                                     >
-                                      <Eye className="h-4 w-4" />
+                                      <Eye className="h-3.5 w-3.5" />
                                     </Button>
                                   )}
 
@@ -401,9 +432,9 @@ const MyEvents = () => {
                                     size="icon"
                                     onClick={() => setDeleteId(wedding.id)}
                                     title="Delete"
-                                    className="h-8 w-8 rounded-full text-destructive hover:text-destructive"
+                                    className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
                                   >
-                                    <Trash2 className="h-4 w-4" />
+                                    <Trash2 className="h-3.5 w-3.5" />
                                   </Button>
                                 </div>
                               </div>
