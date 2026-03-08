@@ -55,11 +55,11 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6">Create Beautiful Event Invitations</h1>
-          <p className="text-xl md:text-2xl mb-8 font-light">
-            Weddings, Birthdays, Parties & More - Share your special moments with stunning digital invitations
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-4">Create Beautiful Event Invitations</h1>
+          <p className="text-lg md:text-xl mb-8 font-light max-w-2xl mx-auto opacity-90">
+            Design elegant digital invitations for weddings, birthdays, and special celebrations — in minutes.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
@@ -67,7 +67,18 @@ const Index = () => {
             >
               Create Event
             </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => navigate("/demo")}
+              className="text-lg px-8 py-6 border-white/70 text-white hover:bg-white/20 hover:text-white"
+            >
+              View Demo
+            </Button>
           </div>
+          <p className="text-sm md:text-base font-light tracking-wide opacity-75">
+            No coding needed &nbsp;•&nbsp; Mobile-friendly &nbsp;•&nbsp; Share your invitation instantly
+          </p>
         </div>
       </section>
 
