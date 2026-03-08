@@ -56,7 +56,10 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-4">Create Beautiful Event Invitations</h1>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">Create Beautiful Event Invitations</h1>
+          <p className="text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
+            Elegant digital invitations for unforgettable moments.
+          </p>
           <p className="text-lg md:text-xl mb-8 font-light max-w-2xl mx-auto opacity-90">
             Design elegant digital invitations for weddings, birthdays, and special celebrations — in minutes.
           </p>
