@@ -18,7 +18,7 @@ import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import ModernRomancePreview from "./components/templates/ModernRomancePreview";
+import VeritePreview from "./components/templates/VeritePreview";
 
 const queryClient = new QueryClient();
 
