@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Image, Gift, Link as LinkIcon } from "lucide-react";
+import { Calendar, Image, Gift, Link as LinkIcon, Menu, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
@@ -12,6 +12,14 @@ import eventCelebration from "@/assets/event-celebration.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Features", href: "#features" },
+    { label: "Templates", href: "#templates" },
+    { label: "How It Works", href: "#how-it-works" },
+    { label: "Pricing", href: "#pricing" },
+  ];
 
   const heroImages = [
     { src: eventWedding, alt: "Wedding celebration" },
@@ -35,10 +43,48 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <img src={aureaLogo} alt="Auréa" className="h-14" />
           </div>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+
           <div className="flex items-center gap-3">
             <Button onClick={() => navigate("/auth")}>Sign In</Button>
+            {/* Mobile hamburger */}
+            <button
+              className="md:hidden p-2 text-muted-foreground hover:text-primary transition-colors"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile dropdown */}
+        {mobileMenuOpen && (
+          <nav className="md:hidden border-t border-border/50 bg-white/95 backdrop-blur-sm px-4 py-3 flex flex-col gap-3">
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+                className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-1"
+              >
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        )}
       </header>
 
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
