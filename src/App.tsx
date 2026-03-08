@@ -8,17 +8,20 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
-import WeddingForm from "./pages/WeddingForm";
-import BachelorForm from "./pages/BachelorForm";
-import ChristmasForm from "./pages/ChristmasForm";
-import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
+import WeddingForm from "./pages/forms/WeddingForm";
+import BachelorForm from "./pages/forms/BachelorForm";
+import ChristmasForm from "./pages/forms/ChristmasForm";
+import AuraForm from "./pages/forms/AuraForm";
+import VeriteForm from "./pages/forms/VeriteForm";
+import EclatForm from "./pages/forms/EclatForm";
+import GraceForm from "./pages/forms/GraceForm";
 import WeddingInvite from "./pages/WeddingInvite";
 
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import VeritePreview from "./components/templates/VeritePreview";
+import VeritePreview from "./components/templates/previews/VeritePreview";
 
 const queryClient = new QueryClient();
 

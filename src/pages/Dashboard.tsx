@@ -27,12 +27,12 @@ import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
-import { VeritePreview } from "@/components/templates/VeritePreview";
-import { GracePreview } from "@/components/templates/GracePreview";
-import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
-import { EclatPreview } from "@/components/templates/EclatPreview";
-import { AuraPreview } from "@/components/templates/AuraPreview";
-import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
+import { VeritePreview } from "@/components/templates/previews/VeritePreview";
+import { GracePreview } from "@/components/templates/previews/GracePreview";
+import { RoseGoldTabsPreview } from "@/components/templates/previews/RoseGoldTabsPreview";
+import { EclatPreview } from "@/components/templates/previews/EclatPreview";
+import { AuraPreview } from "@/components/templates/previews/AuraPreview";
+import { EnvelopeTemplatePreview } from "@/components/templates/previews/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();

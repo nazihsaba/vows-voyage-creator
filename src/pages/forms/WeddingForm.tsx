@@ -14,7 +14,11 @@ import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 
-const WeddingForm = () => {
+interface WeddingFormProps {
+  defaultTemplate?: string;
+}
+
+const WeddingForm = ({ defaultTemplate }: WeddingFormProps = {}) => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
