@@ -191,9 +191,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'ClassicRomanceTemplate') {
+  if (template.component === 'EclatTemplate') {
     return (
-      <ClassicRomanceTemplate
+      <EclatTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
