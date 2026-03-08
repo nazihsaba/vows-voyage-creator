@@ -122,8 +122,11 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
             Ready to Create Your Invitation?
           </h2>
-          <p className="text-xl text-muted-foreground mb-8">
-            Choose from weddings, birthdays, parties and more - start creating today
+          <p className="text-xl text-muted-foreground mb-4">
+            Choose from weddings, birthdays, parties and more — start creating today.
+          </p>
+          <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-8">
+            Create, customize, and share in minutes.
           </p>
           <div className="flex justify-center">
             <Button

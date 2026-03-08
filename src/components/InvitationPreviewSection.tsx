@@ -49,6 +49,9 @@ const InvitationPreviewSection = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5">
             See Your Wedding Invitation Come to Life
           </h2>
+          <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-4">
+            Designed for modern celebrations.
+          </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
             Create and share stunning digital wedding invitations that capture the elegance of your special day — beautifully designed and ready in minutes.
           </p>
