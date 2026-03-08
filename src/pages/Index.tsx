@@ -11,7 +11,7 @@ import eventCelebration from "@/assets/event-celebration.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  
+
   const heroImages = [
     { src: eventWedding, alt: "Wedding celebration" },
     { src: eventBirthday, alt: "Birthday party" },
@@ -32,12 +32,10 @@ const Index = () => {
       <header className="bg-white/80 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={aureaLogo} alt="Auréa" className="h-10" />
+            <img src={aureaLogo} alt="Auréa" className="h-12" />
           </div>
           <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/auth")}>
-              Sign In
-            </Button>
+            <Button onClick={() => navigate("/auth")}>Sign In</Button>
           </div>
         </div>
       </header>
@@ -57,9 +55,7 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6">
-            Create Beautiful Event Invitations
-          </h1>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-6">Create Beautiful Event Invitations</h1>
           <p className="text-xl md:text-2xl mb-8 font-light">
             Weddings, Birthdays, Parties & More - Share your special moments with stunning digital invitations
           </p>
