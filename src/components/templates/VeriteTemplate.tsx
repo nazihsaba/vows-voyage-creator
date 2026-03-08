@@ -6,7 +6,7 @@ import { EditableField } from "@/components/EditableField";
 import { Calendar, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-interface ModernTemplateProps {
+interface VeriteTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -18,7 +18,7 @@ interface ModernTemplateProps {
   getFieldStyle: (fieldId: string) => any;
 }
 
-export const ModernTemplate = ({
+export const VeriteTemplate = ({
   wedding,
   locations,
   gallery,
@@ -28,7 +28,7 @@ export const ModernTemplate = ({
   onFieldUpdate,
   getFieldValue,
   getFieldStyle,
-}: ModernTemplateProps) => {
+}: VeriteTemplateProps) => {
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 

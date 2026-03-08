@@ -4,7 +4,7 @@ import { GiftCards } from "@/components/GiftCards";
 import { Button } from "@/components/ui/button";
 import { Clock, MapPin } from "lucide-react";
 
-export const VideoBackgroundPreview = () => {
+export const GracePreview = () => {
   const [scrollProgress, setScrollProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);

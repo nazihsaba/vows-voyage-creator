@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-interface ClassicRomanceTemplateProps {
+interface EclatTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -28,7 +28,7 @@ interface ClassicRomanceTemplateProps {
   submittingRsvp?: boolean;
 }
 
-export const ClassicRomanceTemplate = ({
+export const EclatTemplate = ({
   wedding,
   locations,
   gallery,
@@ -45,7 +45,7 @@ export const ClassicRomanceTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: ClassicRomanceTemplateProps) => {
+}: EclatTemplateProps) => {
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -538,4 +538,4 @@ export const ClassicRomanceTemplate = ({
   );
 };
 
-export default ClassicRomanceTemplate;
+export default EclatTemplate;

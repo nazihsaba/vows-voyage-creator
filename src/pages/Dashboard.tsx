@@ -27,11 +27,11 @@ import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
-import { ModernRomancePreview } from "@/components/templates/ModernRomancePreview";
-import { VideoBackgroundPreview } from "@/components/templates/VideoBackgroundPreview";
+import { VeritePreview } from "@/components/templates/VeritePreview";
+import { GracePreview } from "@/components/templates/GracePreview";
 import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
-import { ClassicRomancePreview } from "@/components/templates/ClassicRomancePreview";
-import { BibleVerseTabsPreview } from "@/components/templates/BibleVerseTabsPreview";
+import { EclatPreview } from "@/components/templates/EclatPreview";
+import { AuraPreview } from "@/components/templates/AuraPreview";
 import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
@@ -347,11 +347,11 @@ const Dashboard = () => {
             </Button>
           </DialogHeader>
           <div className="w-full h-full overflow-y-auto">
-            {showPreview === "template2" && <ModernRomancePreview />}
-            {showPreview === "template6" && <VideoBackgroundPreview />}
+            {showPreview === "template2" && <VeritePreview />}
+            {showPreview === "template6" && <GracePreview />}
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
-            {showPreview === "classic-romance" && <ClassicRomancePreview />}
-            {showPreview === "bible-verse-tabs" && <BibleVerseTabsPreview />}
+            {showPreview === "classic-romance" && <EclatPreview />}
+            {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "envelope-invitation" && <EnvelopeTemplatePreview />}
           </div>
         </DialogContent>

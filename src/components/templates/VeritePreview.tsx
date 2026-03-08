@@ -91,7 +91,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   );
 };
 
-export const ModernRomancePreview = () => {
+export const VeritePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
@@ -300,4 +300,4 @@ export const ModernRomancePreview = () => {
   );
 };
 
-export default ModernRomancePreview;
+export default VeritePreview;

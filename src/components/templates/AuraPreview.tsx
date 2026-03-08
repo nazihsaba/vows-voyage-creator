@@ -51,7 +51,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
 const weddingDate = new Date("2025-08-16");
 
-export const BibleVerseTabsPreview = () => {
+export const AuraPreview = () => {
   const timelineEvents = [
     {
       id: "ceremony",
