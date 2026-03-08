@@ -276,8 +276,14 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
-                        if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
-                          navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
+                        if (template.id === "bible-verse-tabs") {
+                          navigate(`/dashboard/aura-form?template=${template.id}`);
+                        } else if (template.id === "template2") {
+                          navigate(`/dashboard/verite-form`);
+                        } else if (template.id === "classic-romance") {
+                          navigate(`/dashboard/eclat-form`);
+                        } else if (template.id === "template6") {
+                          navigate(`/dashboard/grace-form`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                         }
