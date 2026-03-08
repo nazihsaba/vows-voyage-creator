@@ -6,13 +6,13 @@ import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
 import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
 import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
-import { ModernTemplate } from './ModernTemplate';
-import { VideoBackgroundTemplate } from './VideoBackgroundTemplate';
+import { VeriteTemplate } from './VeriteTemplate';
+import { GraceTemplate } from './GraceTemplate';
 import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
 import { ChristmasTemplate } from './ChristmasTemplate';
 import { ElegantTabsTemplate } from './ElegantTabsTemplate';
-import { ClassicRomanceTemplate } from './ClassicRomanceTemplate';
-import { BibleVerseTabsTemplate } from './BibleVerseTabsTemplate';
+import { EclatTemplate } from './EclatTemplate';
+import { AuraTemplate } from './AuraTemplate';
 import { EnvelopeTemplate } from './EnvelopeTemplate';
 import { ReactNode } from 'react';
 
