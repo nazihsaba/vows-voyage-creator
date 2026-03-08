@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Image, Gift, Link as LinkIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
+import InvitationPreviewSection from "@/components/InvitationPreviewSection";
 import { useState, useEffect } from "react";
 import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
@@ -80,6 +81,8 @@ const Index = () => {
           </p>
         </div>
       </section>
+
+      <InvitationPreviewSection />
 
       <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
