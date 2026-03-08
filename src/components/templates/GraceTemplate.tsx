@@ -9,7 +9,7 @@ import { Clock, MapPin } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-interface VideoBackgroundTemplateProps {
+interface GraceTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -28,7 +28,7 @@ interface VideoBackgroundTemplateProps {
   submittingRsvp?: boolean;
 }
 
-export const VideoBackgroundTemplate = ({
+export const GraceTemplate = ({
   wedding,
   locations,
   gallery,
