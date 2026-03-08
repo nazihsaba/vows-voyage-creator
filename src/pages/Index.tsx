@@ -12,6 +12,14 @@ import eventCelebration from "@/assets/event-celebration.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const navLinks = [
+    { label: "Features", href: "#features" },
+    { label: "Templates", href: "#templates" },
+    { label: "How It Works", href: "#how-it-works" },
+    { label: "Pricing", href: "#pricing" },
+  ];
 
   const heroImages = [
     { src: eventWedding, alt: "Wedding celebration" },
