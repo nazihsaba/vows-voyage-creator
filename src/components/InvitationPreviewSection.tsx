@@ -54,54 +54,31 @@ const InvitationPreviewSection = () => {
           </p>
         </div>
 
-        {/* Preview Cards — featured + 3 supporting */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-14">
-          {/* Featured card - Aura */}
-          <div className="lg:col-span-7 group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 aspect-[4/3] lg:aspect-auto lg:min-h-[480px]">
-            <img
-              src={previewCards[0].image}
-              alt={previewCards[0].label}
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-            <div className="absolute top-4 left-4">
-              <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
-                {previewCards[0].label}
-              </span>
-            </div>
-            <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white">
-              <p className="text-sm font-light tracking-widest uppercase mb-1 opacity-80">
-                {previewCards[0].tagline}
-              </p>
-            </div>
-          </div>
-
-          {/* Three supporting cards stacked */}
-          <div className="lg:col-span-5 flex flex-col gap-6">
-            {previewCards.slice(1).map((card) => (
-              <div
-                key={card.label}
-                className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 flex-1 min-h-[140px]"
-              >
-                <img
-                  src={card.image}
-                  alt={card.label}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-                <div className="absolute top-3 left-3">
-                  <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
-                    {card.label}
-                  </span>
-                </div>
-                <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                  <p className="text-xs font-light tracking-widest uppercase opacity-80">
-                    {card.tagline}
-                  </p>
-                </div>
+        {/* Preview Cards — equal grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
+          {previewCards.map((card) => (
+            <div
+              key={card.label}
+              className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 aspect-[3/4]"
+            >
+              <img
+                src={card.image}
+                alt={card.label}
+                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+              <div className="absolute top-3 left-3">
+                <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+                  {card.label}
+                </span>
               </div>
-            ))}
-          </div>
+              <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                <p className="text-xs font-light tracking-widest uppercase opacity-80">
+                  {card.tagline}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* CTAs */}
