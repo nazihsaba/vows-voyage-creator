@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { PartyPopper, Calendar, Image, Gift, Link as LinkIcon } from "lucide-react";
+import { Calendar, Image, Gift, Link as LinkIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import eventWedding from "@/assets/event-wedding.jpg";
