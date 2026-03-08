@@ -1,33 +1,34 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
-import templateModernRomance from "@/assets/template-modern-romance-new.jpg";
-import templateRoseGold from "@/assets/template-rose-gold-elegant.jpg";
-import templateClassic from "@/assets/template-wedding-classic.jpg";
+import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
+import veriteTemplate from "@/assets/template-verite.jpg";
+import classicRomance from "@/assets/template-wedding-classic.jpg";
+import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 
 const previewCards = [
   {
-    image: templateModernRomance,
-    label: "Modern",
-    couple: "Sophie & Alexandre",
-    date: "June 21, 2025",
-    tagline: "Together forever starts here",
+    image: bibleVerseTabs,
+    label: "Aura",
+    tagline: "Bible verse & botanical elegance",
     featured: true,
   },
   {
-    image: templateRoseGold,
-    label: "Floral",
-    couple: "Léa & Marc",
-    date: "September 14, 2025",
-    tagline: "Two hearts, one love",
+    image: veriteTemplate,
+    label: "Vérité",
+    tagline: "Contemporary gallery showcase",
     featured: false,
   },
   {
-    image: templateClassic,
-    label: "Classic",
-    couple: "Emma & Nicolas",
-    date: "December 6, 2025",
-    tagline: "A timeless celebration",
+    image: classicRomance,
+    label: "Éclat",
+    tagline: "Elegant scrollable design",
+    featured: false,
+  },
+  {
+    image: cinematicVideo,
+    label: "Grâce",
+    tagline: "Immersive video background",
     featured: false,
   },
 ];
@@ -53,13 +54,13 @@ const InvitationPreviewSection = () => {
           </p>
         </div>
 
-        {/* Preview Cards — featured + 2 supporting */}
+        {/* Preview Cards — featured + 3 supporting */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-14">
-          {/* Featured card */}
+          {/* Featured card - Aura */}
           <div className="lg:col-span-7 group relative rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow duration-500 aspect-[4/3] lg:aspect-auto lg:min-h-[480px]">
             <img
               src={previewCards[0].image}
-              alt={previewCards[0].couple}
+              alt={previewCards[0].label}
               className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
@@ -72,23 +73,19 @@ const InvitationPreviewSection = () => {
               <p className="text-sm font-light tracking-widest uppercase mb-1 opacity-80">
                 {previewCards[0].tagline}
               </p>
-              <h3 className="text-2xl md:text-3xl font-serif font-bold mb-1">
-                {previewCards[0].couple}
-              </h3>
-              <p className="text-sm font-light opacity-80">{previewCards[0].date}</p>
             </div>
           </div>
 
-          {/* Two supporting cards stacked */}
+          {/* Three supporting cards stacked */}
           <div className="lg:col-span-5 flex flex-col gap-6">
             {previewCards.slice(1).map((card) => (
               <div
-                key={card.couple}
-                className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 flex-1 min-h-[220px]"
+                key={card.label}
+                className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 flex-1 min-h-[140px]"
               >
                 <img
                   src={card.image}
-                  alt={card.couple}
+                  alt={card.label}
                   className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
@@ -98,11 +95,9 @@ const InvitationPreviewSection = () => {
                   </span>
                 </div>
                 <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                  <p className="text-xs font-light tracking-widest uppercase mb-1 opacity-80">
+                  <p className="text-xs font-light tracking-widest uppercase opacity-80">
                     {card.tagline}
                   </p>
-                  <h3 className="text-xl font-serif font-bold mb-0.5">{card.couple}</h3>
-                  <p className="text-xs font-light opacity-80">{card.date}</p>
                 </div>
               </div>
             ))}
