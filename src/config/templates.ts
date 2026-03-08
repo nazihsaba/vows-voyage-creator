@@ -369,7 +369,7 @@ export const templates: Template[] = [
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
-    component: 'ModernTemplate',
+    component: 'VeriteTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },
