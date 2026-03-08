@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-interface BibleVerseTabsTemplateProps {
+interface AuraTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -27,7 +27,7 @@ interface BibleVerseTabsTemplateProps {
   submittingRsvp?: boolean;
 }
 
-export const BibleVerseTabsTemplate = ({
+export const AuraTemplate = ({
   wedding,
   locations,
   gallery,
