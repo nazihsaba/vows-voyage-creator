@@ -404,8 +404,8 @@ const MyEvents = () => {
                                         editPath = `/dashboard/edit-bachelor/${wedding.id}`;
                                       } else if (wedding.template_type?.includes("christmas")) {
                                         editPath = `/dashboard/edit-christmas/${wedding.id}`;
-                                      } else if (wedding.template_type === "rose-gold-tabs") {
-                                        editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
+                                      } else if (wedding.template_type === "rose-gold-tabs" || wedding.template_type === "bible-verse-tabs") {
+                                        editPath = `/dashboard/edit-aura/${wedding.id}`;
                                       }
 
                                       navigate(editPath);

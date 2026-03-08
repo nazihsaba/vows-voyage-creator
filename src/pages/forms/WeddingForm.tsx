@@ -14,7 +14,11 @@ import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 
-const RoseGoldTabsForm = () => {
+interface WeddingFormProps {
+  defaultTemplate?: string;
+}
+
+const WeddingForm = ({ defaultTemplate }: WeddingFormProps = {}) => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
@@ -28,10 +32,6 @@ const RoseGoldTabsForm = () => {
   const [imagePreview, setImagePreview] = useState<string>("");
   const [videoFile, setVideoFile] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
-  const [audioFile, setAudioFile] = useState<File | null>(null);
-  const [audioUrl, setAudioUrl] = useState<string>("");
-  const [audioStartTime, setAudioStartTime] = useState<number>(0);
-  const [audioEndTime, setAudioEndTime] = useState<number>(0);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
@@ -44,13 +44,12 @@ const RoseGoldTabsForm = () => {
     venue_location_link: "",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
-    { card_name: "", card_number: "" }
+    { card_name: "", card_number: "" },
   ]);
   const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
-  
-  const templateType = searchParams.get("template") || "rose-gold-tabs";
-  const isBibleVerseTabs = templateType === "bible-verse-tabs";
+  const [audioFile, setAudioFile] = useState<Blob | null>(null);
+  const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -63,9 +62,23 @@ const RoseGoldTabsForm = () => {
     status: "draft",
     main_picture_url: "",
     video_url: "",
-    template_type: searchParams.get("template") || "rose-gold-tabs",
-    custom_primary_color: "#fb7185",
+    template_type: defaultTemplate || searchParams.get("template") || "template1",
+    custom_primary_color: "#E2C497",
+    audio_url: "",
+    audio_start_time: 0,
+    audio_end_time: 0,
   });
+
+  const template = formData.template_type;
+  const isVideoTemplate = template === "template6" || template === "video-cinematic";
+  const shouldShowGalleryUpload =
+    template === "template2" ||
+    template === "classic-gallery" ||
+    template === "template4" ||
+    template === "elegant-fullscreen" ||
+    template === "template5" ||
+    template === "modern-wedding" ||
+    template === "classic-romance";
 
   useEffect(() => {
     if (id) {
@@ -75,11 +88,7 @@ const RoseGoldTabsForm = () => {
 
   const fetchWedding = async () => {
     try {
-      const { data, error } = await supabase
-        .from("weddings")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
       setFormData(data);
@@ -90,20 +99,32 @@ const RoseGoldTabsForm = () => {
         setVideoPreview(data.video_url);
       }
       if (data.audio_url) {
-        setAudioUrl(data.audio_url);
-        setAudioStartTime(data.audio_start_time || 0);
-        setAudioEndTime(data.audio_end_time || 0);
+        // Audio is already uploaded, just show it in the preview
+      }
+      if (data.audio_start_time !== undefined) {
+        setAudioTrimSettings({
+          startTime: data.audio_start_time,
+          endTime: data.audio_end_time,
+        });
       }
 
-      const { data: locationsData } = await supabase
-        .from("wedding_locations")
+      // Fetch existing gallery images
+      const { data: galleryData } = await supabase
+        .from("gallery_images")
         .select("*")
-        .eq("wedding_id", id);
+        .eq("wedding_id", id)
+        .order("image_order");
+
+      if (galleryData) {
+        setExistingGalleryImages(galleryData);
+      }
+
+      // Fetch locations
+      const { data: locationsData } = await supabase.from("wedding_locations").select("*").eq("wedding_id", id);
 
       if (locationsData) {
-        const ceremony = locationsData.find((loc) => loc.type === "ceremony");
-        const venue = locationsData.find((loc) => loc.type === "venue");
-        
+        const ceremony = locationsData.find((l) => l.type === "ceremony");
+        const venue = locationsData.find((l) => l.type === "venue");
         setLocations({
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
@@ -114,38 +135,27 @@ const RoseGoldTabsForm = () => {
         });
       }
 
-      // Fetch existing gallery images
-      const { data: galleryData } = await supabase
-        .from("gallery_images")
-        .select("*")
-        .eq("wedding_id", id)
-        .order("image_order");
-      
-      if (galleryData) {
-        setExistingGalleryImages(galleryData);
-      }
-
-      const { data: giftCardsData } = await supabase
+      // Fetch gift cards
+      const { data: cardsData } = await supabase
         .from("gift_cards")
         .select("*")
         .eq("wedding_id", id)
         .order("card_order");
 
-      if (giftCardsData && giftCardsData.length > 0) {
-        setGiftCards(giftCardsData.map(card => ({
-          card_name: card.card_name,
-          card_number: card.card_number,
-          logo_url: card.logo_url,
-        })));
+      if (cardsData && cardsData.length > 0) {
+        setGiftCards(cardsData);
+        // Set existing logos as previews
+        const previews: Record<number, string> = {};
+        cardsData.forEach((card, index) => {
+          if (card.logo_url) {
+            previews[index] = card.logo_url;
+          }
+        });
+        setCardIconPreviews(previews);
       }
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error fetching wedding:", error);
-      toast({ title: "Error", description: "Failed to load wedding", variant: "destructive" });
     }
-  };
-
-  const generateSlug = (groomName: string, brideName: string) => {
-    return `${groomName}-${brideName}`.toLowerCase().replace(/\s+/g, "-");
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -187,39 +197,50 @@ const RoseGoldTabsForm = () => {
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
-    
+
     if (totalImages > 6) {
       toast({
-        title: "Maximum 6 images",
-        description: `You can only upload ${6 - existingGalleryImages.length - galleryFiles.length} more image(s)`,
+        title: "Maximum 6 images allowed",
+        description: "Please select fewer images for the gallery.",
         variant: "destructive",
       });
       return;
     }
 
-    setGalleryFiles([...galleryFiles, ...files]);
-    
-    // Create previews
-    files.forEach((file) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setGalleryPreviews((prev) => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
+    // Immediately update files state to avoid duplication
+    setGalleryFiles((prev) => [...prev, ...files]);
+
+    // Use Promise.all to handle all FileReaders properly
+    Promise.all(
+      files.map((file) => {
+        return new Promise<string>((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result as string);
+          };
+          reader.readAsDataURL(file);
+        });
+      }),
+    ).then((newPreviews) => {
+      setGalleryPreviews((prev) => [...prev, ...newPreviews]);
     });
+
+    // Reset the input value to allow re-uploading the same file
+    e.target.value = "";
   };
 
-  const removeGalleryFile = (index: number) => {
-    setGalleryFiles(galleryFiles.filter((_, i) => i !== index));
-    setGalleryPreviews(galleryPreviews.filter((_, i) => i !== index));
+  const removeGalleryImage = (index: number) => {
+    const newFiles = [...galleryFiles];
+    const newPreviews = [...galleryPreviews];
+    newFiles.splice(index, 1);
+    newPreviews.splice(index, 1);
+    setGalleryFiles(newFiles);
+    setGalleryPreviews(newPreviews);
   };
 
   const removeExistingGalleryImage = async (imageId: string) => {
     try {
-      const { error } = await supabase
-        .from("gallery_images")
-        .delete()
-        .eq("id", imageId);
+      const { error } = await supabase.from("gallery_images").delete().eq("id", imageId);
 
       if (error) throw error;
 
@@ -227,7 +248,7 @@ const RoseGoldTabsForm = () => {
       toast({ title: "Image removed successfully" });
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Error removing image",
         description: error.message,
         variant: "destructive",
       });
@@ -235,21 +256,23 @@ const RoseGoldTabsForm = () => {
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
-    const fileExt = file.name.split('.').pop();
-    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ''}`;
+    const fileExt = file.name.split(".").pop();
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ""}`;
     const fileName = `${userId}/${uniqueId}.${fileExt}`;
-    
-    const { error: uploadError, data } = await supabase.storage
-      .from('wedding-images')
-      .upload(fileName, file);
+
+    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, file);
 
     if (uploadError) throw uploadError;
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('wedding-images')
-      .getPublicUrl(fileName);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("wedding-images").getPublicUrl(fileName);
 
     return publicUrl;
+  };
+
+  const generateSlug = (groomName: string, brideName: string) => {
+    return `${groomName}-${brideName}`.toLowerCase().replace(/\s+/g, "-");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -258,12 +281,14 @@ const RoseGoldTabsForm = () => {
     setUploading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
-      let uploadedAudioUrl = audioUrl;
+      let audioUrl = formData.audio_url;
 
       // Upload new image if selected
       if (imageFile) {
@@ -277,10 +302,12 @@ const RoseGoldTabsForm = () => {
 
       // Upload new audio if selected, or clear if removed
       if (audioFile) {
-        uploadedAudioUrl = await uploadImage(audioFile, user.id);
-      } else if (!audioUrl) {
+        // Convert Blob to File with a proper name
+        const audioFileWithName = new File([audioFile], "audio.wav", { type: "audio/wav" });
+        audioUrl = await uploadImage(audioFileWithName, user.id);
+      } else if (!formData.audio_url) {
         // Audio was removed, clear it
-        uploadedAudioUrl = null;
+        audioUrl = null;
       }
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
@@ -290,14 +317,14 @@ const RoseGoldTabsForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
+          .update({
+            ...formData,
+            slug,
+            main_picture_url: imageUrl,
             video_url: videoUrl,
-            audio_url: uploadedAudioUrl,
-            audio_start_time: uploadedAudioUrl ? audioStartTime : null,
-            audio_end_time: uploadedAudioUrl ? audioEndTime : null
+            audio_url: audioUrl,
+            audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
+            audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
           })
           .eq("id", id);
 
@@ -305,23 +332,68 @@ const RoseGoldTabsForm = () => {
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
-            video_url: videoUrl,
-            audio_url: uploadedAudioUrl,
-            audio_start_time: audioStartTime,
-            audio_end_time: audioEndTime,
-            user_id: user.id 
-          }])
+          .insert([
+            {
+              ...formData,
+              slug,
+              main_picture_url: imageUrl,
+              video_url: videoUrl,
+              audio_url: audioUrl,
+              audio_start_time: audioTrimSettings?.startTime || 0,
+              audio_end_time: audioTrimSettings?.endTime || 0,
+              user_id: user.id,
+            },
+          ])
           .select()
           .single();
 
         if (error) throw error;
         weddingId = data.id;
         setCreatedWeddingId(data.id);
-        setFormData({ ...formData, slug: data.slug, main_picture_url: imageUrl, video_url: videoUrl });
+        setFormData({
+          ...formData,
+          slug: data.slug,
+          main_picture_url: imageUrl,
+          video_url: videoUrl,
+          audio_url: audioUrl,
+          audio_start_time: audioTrimSettings?.startTime || 0,
+          audio_end_time: audioTrimSettings?.endTime || 0,
+        });
+      }
+
+      // Upload gallery images if template supports gallery
+      const galleryTemplates = [
+        "template2",
+        "template4",
+        "classic-gallery",
+        "elegant-fullscreen",
+        "template5",
+        "modern-wedding",
+        "classic-romance",
+      ];
+      if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
+        // Get the highest image_order to append new images
+        const { data: maxOrderData } = await supabase
+          .from("gallery_images")
+          .select("image_order")
+          .eq("wedding_id", weddingId)
+          .order("image_order", { ascending: false })
+          .limit(1)
+          .maybeSingle();
+
+        const startingOrder = (maxOrderData?.image_order || 0) + 1;
+
+        const galleryUrls = await Promise.all(galleryFiles.map((file, index) => uploadImage(file, user.id, index)));
+
+        const galleryInserts = galleryUrls.map((url, index) => ({
+          wedding_id: weddingId,
+          image_url: url,
+          image_order: startingOrder + index,
+        }));
+
+        const { error: galleryError } = await supabase.from("gallery_images").insert(galleryInserts);
+
+        if (galleryError) throw galleryError;
       }
 
       // Save locations
@@ -334,7 +406,7 @@ const RoseGoldTabsForm = () => {
       if (locations.ceremony_location || locations.ceremony_time || locations.ceremony_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'ceremony',
+          type: "ceremony",
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
@@ -343,7 +415,7 @@ const RoseGoldTabsForm = () => {
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'venue',
+          type: "venue",
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
@@ -351,9 +423,7 @@ const RoseGoldTabsForm = () => {
       }
 
       if (locationInserts.length > 0) {
-        const { error: locError } = await supabase
-          .from("wedding_locations")
-          .insert(locationInserts);
+        const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
         if (locError) throw locError;
       }
 
@@ -363,23 +433,23 @@ const RoseGoldTabsForm = () => {
         await supabase.from("gift_cards").delete().eq("wedding_id", weddingId);
       }
 
-      const validCards = giftCards.filter(card => card.card_name && card.card_number);
+      const validCards = giftCards.filter((card) => card.card_name && card.card_number);
       if (validCards.length > 0) {
         // Upload card icons if any
         const cardInserts = await Promise.all(
           validCards.map(async (card, index) => {
             let logoUrl = card.logo_url;
-            
+
             // Find original index in giftCards array
-            const originalIndex = giftCards.findIndex(c => 
-              c.card_name === card.card_name && c.card_number === card.card_number
+            const originalIndex = giftCards.findIndex(
+              (c) => c.card_name === card.card_name && c.card_number === card.card_number,
             );
-            
+
             // Upload new icon if file exists
             if (cardIconFiles[originalIndex]) {
               logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
             }
-            
+
             return {
               wedding_id: weddingId,
               card_name: card.card_name,
@@ -387,43 +457,18 @@ const RoseGoldTabsForm = () => {
               logo_url: logoUrl,
               card_order: index + 1,
             };
-          })
+          }),
         );
 
-        const { error: cardError } = await supabase
-          .from("gift_cards")
-          .insert(cardInserts);
+        const { error: cardError } = await supabase.from("gift_cards").insert(cardInserts);
         if (cardError) throw cardError;
       }
 
-      // Upload gallery images for bible-verse-tabs template
-      if (isBibleVerseTabs && galleryFiles.length > 0) {
-        // Get the highest image_order to append new images
-        const { data: maxOrderData } = await supabase
-          .from("gallery_images")
-          .select("image_order")
-          .eq("wedding_id", weddingId)
-          .order("image_order", { ascending: false })
-          .limit(1);
-
-        const startOrder = (maxOrderData?.[0]?.image_order || 0) + 1;
-
-        const galleryInserts = await Promise.all(
-          galleryFiles.map(async (file, index) => ({
-            wedding_id: weddingId,
-            image_url: await uploadImage(file, user.id, index),
-            image_order: startOrder + index,
-          }))
-        );
-
-        const { error: galleryError } = await supabase
-          .from("gallery_images")
-          .insert(galleryInserts);
-
-        if (galleryError) throw galleryError;
-      }
-
       toast({ title: id ? "Wedding updated successfully!" : "Wedding created successfully!" });
+
+      // Clear gallery files after successful save
+      setGalleryFiles([]);
+      setGalleryPreviews([]);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -439,20 +484,14 @@ const RoseGoldTabsForm = () => {
   return (
     <div className="min-h-screen bg-gradient-soft py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/dashboard")}
-          className="mb-4"
-        >
+        <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Dashboard
         </Button>
 
         <Card className="shadow-elegant">
           <CardHeader>
-            <CardTitle className="text-3xl font-serif">
-              {id ? "Edit Wedding" : "Create Wedding Invitation"}
-            </CardTitle>
+            <CardTitle className="text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -532,22 +571,37 @@ const RoseGoldTabsForm = () => {
                 />
               </div>
 
+              {/* <div className="space-y-2">
+                <Label htmlFor="custom_primary_color">Primary Color (Gold Tone)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    id="custom_primary_color"
+                    type="color"
+                    value={formData.custom_primary_color}
+                    onChange={(e) => setFormData({ ...formData, custom_primary_color: e.target.value })}
+                    className="w-20 h-10 p-1 cursor-pointer"
+                  />
+                  <Input
+                    type="text"
+                    value={formData.custom_primary_color}
+                    onChange={(e) => setFormData({ ...formData, custom_primary_color: e.target.value })}
+                    placeholder="#E2C497"
+                    className="flex-1"
+                  />
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  This color will be used for accents and decorative elements throughout the invitation
+                </p>
+              </div> */}
 
-              {/* Background Photo or Video - only for rose-gold-tabs */}
-              {!isBibleVerseTabs && (
+              {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
+              {isVideoTemplate ? (
                 <div className="space-y-2">
-                  <Label htmlFor="main_picture">Background Photo or Video</Label>
-                  <p className="text-sm text-muted-foreground">
-                    Upload a photo or video to display as the fullscreen background
-                  </p>
+                  <Label htmlFor="wedding_video">Upload Video</Label>
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <video 
-                          src={videoPreview} 
-                          className="w-full h-full object-cover"
-                          controls
-                        />
+                        <video src={videoPreview} className="w-full h-full object-cover" controls />
                         <Button
                           type="button"
                           variant="destructive"
@@ -558,13 +612,32 @@ const RoseGoldTabsForm = () => {
                           <X className="w-4 h-4" />
                         </Button>
                       </div>
-                    ) : imagePreview ? (
+                    ) : (
+                      <label
+                        htmlFor="wedding_video"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload video</span>
+                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
+                      </label>
+                    )}
+                    <Input
+                      id="wedding_video"
+                      type="file"
+                      accept="video/*"
+                      onChange={handleVideoChange}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  <Label htmlFor="main_picture">Main Wedding Photo</Label>
+                  <div className="flex flex-col gap-4">
+                    {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img 
-                          src={imagePreview} 
-                          alt="Wedding preview" 
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={imagePreview} alt="Wedding preview" className="w-full h-full object-cover" />
                         <Button
                           type="button"
                           variant="destructive"
@@ -576,33 +649,15 @@ const RoseGoldTabsForm = () => {
                         </Button>
                       </div>
                     ) : (
-                      <>
-                        <label
-                          htmlFor="main_video"
-                          className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                        >
-                          <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">Click to upload video (recommended)</span>
-                          <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
-                        </label>
-                        <div className="text-center text-sm text-muted-foreground">or</div>
-                        <label
-                          htmlFor="main_picture"
-                          className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                        >
-                          <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                          <span className="text-sm text-muted-foreground">Click to upload image</span>
-                          <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
-                        </label>
-                      </>
+                      <label
+                        htmlFor="main_picture"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload image</span>
+                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                      </label>
                     )}
-                    <Input
-                      id="main_video"
-                      type="file"
-                      accept="video/*"
-                      onChange={handleVideoChange}
-                      className="hidden"
-                    />
                     <Input
                       id="main_picture"
                       type="file"
@@ -614,119 +669,27 @@ const RoseGoldTabsForm = () => {
                 </div>
               )}
 
-              {/* Gallery Images Section - for bible-verse-tabs */}
-              {isBibleVerseTabs && (
-                <div className="space-y-2">
-                  <Label>Gallery Images (up to 6)</Label>
-                  <p className="text-sm text-muted-foreground mb-2">
-                    Upload images to showcase in your wedding gallery
-                  </p>
-                  
-                  {/* Existing Gallery Images */}
-                  {existingGalleryImages.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {existingGalleryImages.map((image) => (
-                        <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={image.image_url} 
-                            alt={image.alt_text || "Gallery image"} 
-                            className="w-full h-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeExistingGalleryImage(image.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* New Gallery Images */}
-                  {galleryPreviews.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {galleryPreviews.map((preview, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={preview} 
-                            alt={`New gallery image ${index + 1}`} 
-                            className="w-full h-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeGalleryFile(index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Upload Button */}
-                  {(existingGalleryImages.length + galleryFiles.length) < 6 && (
-                    <>
-                      <label
-                        htmlFor="gallery_images"
-                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
-                      >
-                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Click to upload images</span>
-                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB each</span>
-                      </label>
-                      <Input
-                        id="gallery_images"
-                        type="file"
-                        accept="image/*"
-                        multiple
-                        onChange={handleGalleryChange}
-                        className="hidden"
-                      />
-                    </>
-                  )}
-                </div>
-              )}
-
-              {/* Audio Background Section */}
-              <div className="space-y-2 border-t pt-6">
-                <Label>Background Music</Label>
-                <p className="text-sm text-muted-foreground">
-                  Upload an audio file and trim it to play in the background
-                </p>
-                <AudioTrimField
-                  key={`audio-${id}-${audioUrl}`}
-                  onAudioTrimmed={(blob, startTime, endTime) => {
-                    // Convert Blob to File
-                    const file = new File([blob], "audio.wav", { type: "audio/wav" });
-                    const url = URL.createObjectURL(blob);
-                    setAudioFile(file);
-                    setAudioUrl(url);
-                    setAudioStartTime(startTime);
-                    setAudioEndTime(endTime);
-                  }}
-                  onAudioRemoved={() => {
-                    setAudioFile(null);
-                    setAudioUrl("");
-                    setAudioStartTime(0);
-                    setAudioEndTime(0);
-                  }}
-                  initialAudioUrl={audioUrl}
-                  initialStartTime={audioStartTime}
-                  initialEndTime={audioEndTime}
-                />
-              </div>
+              {/* Audio Trim Field */}
+              <AudioTrimField
+                key={`audio-${id}-${formData.audio_url}`}
+                onAudioTrimmed={(blob, startTime, endTime) => {
+                  setAudioFile(blob);
+                  setAudioTrimSettings({ startTime, endTime });
+                }}
+                onAudioRemoved={() => {
+                  setAudioFile(null);
+                  setAudioTrimSettings(null);
+                  setFormData({ ...formData, audio_url: "" });
+                }}
+                initialAudioUrl={formData.audio_url}
+                initialStartTime={formData.audio_start_time}
+                initialEndTime={formData.audio_end_time}
+              />
 
               {/* Location Fields */}
               <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-semibold">Event Locations</h3>
-                
+
                 {/* Ceremony Section */}
                 <Card className="border">
                   <CardHeader>
@@ -859,16 +822,16 @@ const RoseGoldTabsForm = () => {
                         <div className="space-y-2">
                           <Label>Card Icon</Label>
                           <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
-                            <img 
-                              src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
-                              alt={card.card_name} 
+                            <img
+                              src={card.card_name === "OMT" ? omtLogo : whishLogo}
+                              alt={card.card_name}
                               className="max-h-full max-w-full object-contain rounded-[6px]"
                             />
                           </div>
                         </div>
                       )}
                     </div>
-                    
+
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
@@ -892,6 +855,86 @@ const RoseGoldTabsForm = () => {
                   </div>
                 ))}
               </div>
+
+              {/* Gallery Images Section - for templates with gallery support */}
+              {shouldShowGalleryUpload && (
+                <div className="space-y-2">
+                  <Label>Gallery Images (up to 6)</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Upload images to showcase in your wedding gallery
+                  </p>
+
+                  {/* Existing Gallery Images */}
+                  {existingGalleryImages.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {existingGalleryImages.map((image) => (
+                        <div
+                          key={image.id}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img src={image.image_url} alt="Gallery" className="w-full h-full object-cover" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeExistingGalleryImage(image.id)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* New Gallery Images */}
+                  {galleryPreviews.length > 0 && (
+                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                      {galleryPreviews.map((preview, index) => (
+                        <div
+                          key={index}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img src={preview} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={() => removeGalleryImage(index)}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Upload Button */}
+                  {existingGalleryImages.length + galleryFiles.length < 6 && (
+                    <>
+                      <label
+                        htmlFor="gallery_images"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload gallery images</span>
+                        <span className="text-xs text-muted-foreground mt-1">
+                          {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                        </span>
+                      </label>
+                      <Input
+                        id="gallery_images"
+                        type="file"
+                        accept="image/*"
+                        multiple
+                        onChange={handleGalleryChange}
+                        className="hidden"
+                      />
+                    </>
+                  )}
+                </div>
+              )}
 
               <div className="space-y-2">
                 <Label htmlFor="slug">Custom URL Slug</Label>
@@ -923,8 +966,10 @@ const RoseGoldTabsForm = () => {
                         locations,
                         giftCards,
                         imagePreview,
+                        videoPreview,
+                        galleryPreviews,
                       };
-                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                      sessionStorage.setItem("weddingPreviewData", JSON.stringify(previewData));
                       setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
                     }
                     setPreviewModalOpen(true);
@@ -950,13 +995,16 @@ const RoseGoldTabsForm = () => {
                             .from("weddings")
                             .update({ status: newStatus })
                             .eq("id", weddingId);
-                          
+
                           if (error) throw error;
-                          
+
                           setFormData({ ...formData, status: newStatus });
-                          toast({ 
+                          toast({
                             title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
-                            description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
+                            description:
+                              newStatus === "published"
+                                ? "Your invitation is now live"
+                                : "Your invitation is now in draft mode",
                           });
                         } catch (error: any) {
                           toast({
@@ -985,11 +1033,7 @@ const RoseGoldTabsForm = () => {
             <DialogTitle>Preview Invitation</DialogTitle>
           </DialogHeader>
           <div className="flex-1 w-full overflow-hidden px-6 pb-6">
-            <iframe
-              src={previewUrl}
-              className="w-full h-full border-0 rounded-lg"
-              title="Wedding Invitation Preview"
-            />
+            <iframe src={previewUrl} className="w-full h-full border-0 rounded-lg" title="Wedding Invitation Preview" />
           </div>
         </DialogContent>
       </Dialog>
@@ -997,4 +1041,4 @@ const RoseGoldTabsForm = () => {
   );
 };
 
-export default RoseGoldTabsForm;
+export default WeddingForm;

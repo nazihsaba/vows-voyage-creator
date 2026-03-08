@@ -8,17 +8,20 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
-import WeddingForm from "./pages/WeddingForm";
-import BachelorForm from "./pages/BachelorForm";
-import ChristmasForm from "./pages/ChristmasForm";
-import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
+import WeddingForm from "./pages/forms/WeddingForm";
+import BachelorForm from "./pages/forms/BachelorForm";
+import ChristmasForm from "./pages/forms/ChristmasForm";
+import AuraForm from "./pages/forms/AuraForm";
+import VeriteForm from "./pages/forms/VeriteForm";
+import EclatForm from "./pages/forms/EclatForm";
+import GraceForm from "./pages/forms/GraceForm";
 import WeddingInvite from "./pages/WeddingInvite";
 
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
-import VeritePreview from "./components/templates/VeritePreview";
+import VeritePreview from "./components/templates/previews/VeritePreview";
 
 const queryClient = new QueryClient();
 
@@ -39,13 +42,16 @@ const App = () => (
           <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
+          <Route path="/dashboard/verite-form" element={<VeriteForm />} />
+          <Route path="/dashboard/eclat-form" element={<EclatForm />} />
+          <Route path="/dashboard/grace-form" element={<GraceForm />} />
           <Route path="/dashboard/bachelor-form" element={<BachelorForm />} />
           <Route path="/dashboard/christmas-form" element={<ChristmasForm />} />
-          <Route path="/dashboard/rose-gold-tabs-form" element={<RoseGoldTabsForm />} />
+          <Route path="/dashboard/aura-form" element={<AuraForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/dashboard/edit-bachelor/:id" element={<BachelorForm />} />
           <Route path="/dashboard/edit-christmas/:id" element={<ChristmasForm />} />
-          <Route path="/dashboard/edit-rose-gold-tabs/:id" element={<RoseGoldTabsForm />} />
+          <Route path="/dashboard/edit-aura/:id" element={<AuraForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
