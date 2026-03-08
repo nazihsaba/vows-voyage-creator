@@ -95,18 +95,8 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
-    {
-      id: "rose-gold-tabs",
-      name: "Lumière",
-      description: "Fullscreen video background with elegant page transitions",
-      image: lumiereTemplate,
-      features: [
-        { icon: Video, text: "Video Background" },
-        { icon: Sparkles, text: "Page Transitions" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
+    // Lumière template hidden
+
     {
       id: "template6",
       name: "Grâce",
