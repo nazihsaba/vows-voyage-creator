@@ -91,7 +91,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   );
 };
 
-export const ClassicRomancePreview = () => {
+export const EclatPreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
