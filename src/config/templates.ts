@@ -576,7 +576,7 @@ export const templates: Template[] = [
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
-    component: 'BibleVerseTabsTemplate',
+    component: 'AuraTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'countdown', enabled: true, order: 2, customizable: true },
