@@ -44,7 +44,7 @@ export const AuraTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: BibleVerseTabsTemplateProps) => {
+}: AuraTemplateProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");

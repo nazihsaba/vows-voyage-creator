@@ -28,7 +28,7 @@ export const VeriteTemplate = ({
   onFieldUpdate,
   getFieldValue,
   getFieldStyle,
-}: ModernTemplateProps) => {
+}: VeriteTemplateProps) => {
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 

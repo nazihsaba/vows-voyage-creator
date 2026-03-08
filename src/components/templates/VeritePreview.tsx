@@ -300,4 +300,4 @@ export const VeritePreview = () => {
   );
 };
 
-export default ModernRomancePreview;
+export default VeritePreview;

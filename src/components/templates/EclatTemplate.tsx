@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
-interface ClassicRomanceTemplateProps {
+interface EclatTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -28,7 +28,7 @@ interface ClassicRomanceTemplateProps {
   submittingRsvp?: boolean;
 }
 
-export const ClassicRomanceTemplate = ({
+export const EclatTemplate = ({
   wedding,
   locations,
   gallery,
