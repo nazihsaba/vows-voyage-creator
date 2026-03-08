@@ -405,7 +405,7 @@ export const templates: Template[] = [
     thumbnail: '/placeholder.svg',
     isPremium: true,
     isPopular: false,
-    component: 'VideoBackgroundTemplate',
+    component: 'GraceTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },
