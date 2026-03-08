@@ -14,7 +14,7 @@ import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 
-const RoseGoldTabsForm = () => {
+const AuraForm = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
