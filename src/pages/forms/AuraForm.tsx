@@ -997,4 +997,4 @@ const AuraForm = () => {
   );
 };
 
-export default RoseGoldTabsForm;
+export default AuraForm;
