@@ -63,15 +63,14 @@ const Index = () => {
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
-              className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
+              className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               Create Event
             </Button>
             <Button
               size="lg"
-              variant="outline"
               onClick={() => navigate("/demo")}
-              className="text-lg px-8 py-6 border-white/70 text-white hover:bg-white/20 hover:text-white"
+              className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               View Demo
             </Button>
