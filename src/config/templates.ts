@@ -540,7 +540,7 @@ export const templates: Template[] = [
     thumbnail: '/placeholder.svg',
     isPremium: false,
     isPopular: true,
-    component: 'ClassicRomanceTemplate',
+    component: 'EclatTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },
