@@ -62,7 +62,7 @@ const WeddingForm = ({ defaultTemplate }: WeddingFormProps = {}) => {
     status: "draft",
     main_picture_url: "",
     video_url: "",
-    template_type: searchParams.get("template") || "template1",
+    template_type: defaultTemplate || searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
     audio_start_time: 0,
