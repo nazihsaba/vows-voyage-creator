@@ -69,18 +69,8 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
-    {
-      id: "envelope-invitation",
-      name: "Épure",
-      description: "Elegant envelope opening animation with wax seal and tab navigation",
-      image: ivoireTemplate,
-      features: [
-        { icon: Sparkles, text: "Envelope Animation" },
-        { icon: Heart, text: "Wax Seal" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
+    // Épure template hidden
+
     {
       id: "template2",
       name: "Vérité",
