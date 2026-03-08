@@ -32,8 +32,7 @@ const Index = () => {
       <header className="bg-white/80 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <PartyPopper className="w-8 h-8 text-primary" />
-            <span className="text-2xl font-serif font-bold text-primary">Auréa</span>
+            <img src={aureaLogo} alt="Auréa" className="h-10" />
           </div>
           <div className="flex items-center gap-3">
             <Button onClick={() => navigate("/auth")}>
