@@ -214,9 +214,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'BibleVerseTabsTemplate') {
+  if (template.component === 'AuraTemplate') {
     return (
-      <BibleVerseTabsTemplate
+      <AuraTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

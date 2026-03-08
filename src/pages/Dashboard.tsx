@@ -347,11 +347,11 @@ const Dashboard = () => {
             </Button>
           </DialogHeader>
           <div className="w-full h-full overflow-y-auto">
-            {showPreview === "template2" && <ModernRomancePreview />}
-            {showPreview === "template6" && <VideoBackgroundPreview />}
+            {showPreview === "template2" && <VeritePreview />}
+            {showPreview === "template6" && <GracePreview />}
             {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
-            {showPreview === "classic-romance" && <ClassicRomancePreview />}
-            {showPreview === "bible-verse-tabs" && <BibleVerseTabsPreview />}
+            {showPreview === "classic-romance" && <EclatPreview />}
+            {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "envelope-invitation" && <EnvelopeTemplatePreview />}
           </div>
         </DialogContent>

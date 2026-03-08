@@ -538,4 +538,4 @@ export const EclatTemplate = ({
   );
 };
 
-export default ClassicRomanceTemplate;
+export default EclatTemplate;
