@@ -98,9 +98,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'ModernTemplate') {
+  if (template.component === 'VeriteTemplate') {
     return (
-      <ModernTemplate
+      <VeriteTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
