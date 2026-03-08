@@ -114,9 +114,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'VideoBackgroundTemplate') {
+  if (template.component === 'GraceTemplate') {
     return (
-      <VideoBackgroundTemplate
+      <GraceTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
