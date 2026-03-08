@@ -45,7 +45,7 @@ export const EclatTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: ClassicRomanceTemplateProps) => {
+}: EclatTemplateProps) => {
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");

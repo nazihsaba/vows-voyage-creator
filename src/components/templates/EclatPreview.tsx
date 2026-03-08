@@ -359,4 +359,4 @@ export const EclatPreview = () => {
   );
 };
 
-export default ClassicRomancePreview;
+export default EclatPreview;
