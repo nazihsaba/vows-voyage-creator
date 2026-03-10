@@ -129,15 +129,13 @@ export const AuraPreview = () => {
             {/* Wedding Date */}
             <div className="space-y-3">
               <div className="w-16 h-px bg-primary/30 mx-auto" />
-              <p className="text-template-body font-semibold tracking-wide text-primary">
-                Saturday, August 16th, 2025
-              </p>
+              <p className="text-template-body font-semibold tracking-wide text-primary">Saturday, August 16th, 2025</p>
             </div>
           </div>
         </section>
 
         {/* Divider */}
-        <div className="w-24 h-px bg-primary/20 mx-auto" />
+        {/* <div className="w-24 h-px bg-primary/20 mx-auto" /> */}
 
         {/* ===== COUNTDOWN SECTION ===== */}
         <section className="py-16 px-4 bg-white">
@@ -145,7 +143,7 @@ export const AuraPreview = () => {
         </section>
 
         {/* Divider */}
-        <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+        {/* <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" /> */}
 
         {/* ===== TIMELINE SECTION ===== */}
         <section className="mb-16">
