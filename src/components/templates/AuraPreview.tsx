@@ -88,23 +88,21 @@ export const AuraPreview = () => {
           <div className="absolute top-0 right-0 w-72 h-72 bg-[#d4e5f7]/20 rounded-full blur-3xl pointer-events-none" />
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f5ebe0]/30 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10">
-            <AnimatedSection delay={0} animation="fade-in">
-              <div className="space-y-3">
-                <div className="w-12 h-px bg-primary/40 mx-auto" />
-                <p className="text-template-body italic max-w-sm mx-auto leading-relaxed opacity-80">
-                  "Two are better than one. For if they fall, one will lift up the other."
-                </p>
-                <p className="text-template-small mt-1">— Ecclesiastes 4:9-12</p>
-                <div className="w-12 h-px bg-primary/40 mx-auto" />
-              </div>
-            </AnimatedSection>
+          <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10 animate-fade-in-sequence">
+            <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
+              <div className="w-12 h-px bg-primary/40 mx-auto" />
+              <p className="text-template-body italic max-w-sm mx-auto leading-relaxed opacity-80">
+                "Two are better than one. For if they fall, one will lift up the other."
+              </p>
+              <p className="text-template-small mt-1">— Ecclesiastes 4:9-12</p>
+              <div className="w-12 h-px bg-primary/40 mx-auto" />
+            </div>
 
-            <AnimatedSection delay={200} animation="fade-up">
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
               <p className="text-template-small tracking-[0.3em]">Together with their families</p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection delay={400} animation="fade-up">
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
                   <p className="text-sm text-primary font-medium tracking-wide">Mr. Pierre & Mrs. Nayla</p>
@@ -116,26 +114,26 @@ export const AuraPreview = () => {
                   <p className="text-template-subtitle">Assaker</p>
                 </div>
               </div>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection delay={600} animation="fade-in">
+            <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <p className="text-template-body opacity-70 whitespace-pre-line leading-relaxed">
                 joyfully invite you to the wedding of their{"\n"}beloved son and daughter
               </p>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection delay={800} animation="scale-in">
+            <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
                 <h1 className="text-template-title text-primary">Stephan & Chadia</h1>
               </div>
-            </AnimatedSection>
+            </div>
 
-            <AnimatedSection delay={1000} animation="fade-up">
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
                 <p className="text-template-body font-semibold tracking-wide text-primary">Saturday, August 16th, 2025</p>
               </div>
-            </AnimatedSection>
+            </div>
           </div>
         </section>
 
