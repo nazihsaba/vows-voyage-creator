@@ -77,64 +77,67 @@ export const AuraPreview = () => {
   ];
 
   return (
-    <div className="relative w-full min-h-screen bg-white overflow-y-auto font-serif text-[#3e2723]">
-      {/* Watercolor Header Effect */}
-      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#d4e5f7]/60 via-[#e8f0f7]/30 to-transparent pointer-events-none z-10" />
-
+    <div className="relative w-full min-h-screen bg-[#faf8f5] overflow-y-auto font-serif text-[#3e2723]">
       {/* Scrollable Content */}
-      <div className="px-6 py-12">
+      <div>
         {/* ===== INTRO SECTION ===== */}
-        <section className="min-h-[80vh] flex flex-col items-center justify-center text-center mb-16">
-          {/* Bible Verse Quote */}
-          <div className="mb-8 animate-fade-in">
-            <p className="text-template-body max-w-md mx-auto">
-              "Two are better than one. For if they fall, one will lift up the other."
-            </p>
-            <p className="text-template-small mt-2">- Ecclesiastes 4:9-12</p>
-          </div>
+        <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
+          {/* Soft watercolor background layers */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#d4e5f7]/40 via-[#f5ebe0]/30 to-[#faf8f5] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-72 h-72 bg-[#d4e5f7]/20 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f5ebe0]/30 rounded-full blur-3xl pointer-events-none" />
 
-          {/* Together with their families */}
-          <div className="mb-6">
-            <p className="text-template-body">Together with their families</p>
-          </div>
-
-          {/* Parents Names */}
-          <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12 mb-6">
-            {/* Groom's Parents */}
-            <div className="text-center">
-              <p className="text-primary font-semibold">Mr. Pierre & Mrs. Nayla</p>
-              <p className="text-template-subtitle">Nawfal</p>
+          <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10">
+            {/* Bible Verse Quote */}
+            <div className="space-y-3 animate-fade-in">
+              <div className="w-12 h-px bg-primary/40 mx-auto" />
+              <p className="text-template-body italic max-w-sm mx-auto leading-relaxed opacity-80">
+                "Two are better than one. For if they fall, one will lift up the other."
+              </p>
+              <p className="text-template-small mt-1">— Ecclesiastes 4:9-12</p>
+              <div className="w-12 h-px bg-primary/40 mx-auto" />
             </div>
 
-            <span className="text-2xl text-gray-400">&</span>
+            {/* Together with their families */}
+            <p className="text-template-small tracking-[0.3em]">Together with their families</p>
 
-            {/* Bride's Parents */}
-            <div className="text-center">
-              <p className="text-primary font-semibold">Mr. Michel & Mrs. Layla</p>
-              <p className="text-template-subtitle">Assaker</p>
+            {/* Parents Names */}
+            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
+              <div className="text-center space-y-1">
+                <p className="text-sm text-primary font-medium tracking-wide">Mr. Pierre & Mrs. Nayla</p>
+                <p className="text-template-subtitle">Nawfal</p>
+              </div>
+
+              <span className="text-3xl font-light text-primary/50">&</span>
+
+              <div className="text-center space-y-1">
+                <p className="text-sm text-primary font-medium tracking-wide">Mr. Michel & Mrs. Layla</p>
+                <p className="text-template-subtitle">Assaker</p>
+              </div>
             </div>
-          </div>
 
-          {/* Invitation Text */}
-          <div className="mb-6">
-            <p className="text-template-body whitespace-pre-line">
+            {/* Invitation Text */}
+            <p className="text-template-body opacity-70 whitespace-pre-line leading-relaxed">
               joyfully invite you to the wedding of their{"\n"}beloved son and daughter
             </p>
-          </div>
 
-          {/* Couple Names */}
-          <div className="mb-6">
-            <h1 className="text-template-title">Stephan & Chadia</h1>
-          </div>
+            {/* Couple Names */}
+            <div className="py-4">
+              <h1 className="text-template-title text-primary">Stephan & Chadia</h1>
+            </div>
 
-          {/* Wedding Date */}
-          <div>
-            <p className="text-template-body text-primary font-semibold">Saturday, August 16th, 2025</p>
+            {/* Wedding Date */}
+            <div className="space-y-3">
+              <div className="w-16 h-px bg-primary/30 mx-auto" />
+              <p className="text-template-body font-semibold tracking-wide text-primary">
+                Saturday, August 16th, 2025
+              </p>
+            </div>
           </div>
         </section>
 
         {/* Divider */}
-        <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+        <div className="w-24 h-px bg-primary/20 mx-auto" />
 
         {/* ===== COUNTDOWN SECTION ===== */}
         <section className="py-16 px-4 bg-white">
