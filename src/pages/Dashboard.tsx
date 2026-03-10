@@ -27,12 +27,12 @@ import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
-import { VeritePreview } from "@/components/templates/previews/VeritePreview";
-import { GracePreview } from "@/components/templates/previews/GracePreview";
-import { RoseGoldTabsPreview } from "@/components/templates/previews/RoseGoldTabsPreview";
-import { EclatPreview } from "@/components/templates/previews/EclatPreview";
-import { AuraPreview } from "@/components/templates/previews/AuraPreview";
-import { EnvelopeTemplatePreview } from "@/components/templates/previews/EnvelopeTemplatePreview";
+import { VeritePreview } from "@/components/templates/VeritePreview";
+import { GracePreview } from "@/components/templates/GracePreview";
+import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
+import { EclatPreview } from "@/components/templates/EclatPreview";
+import { AuraPreview } from "@/components/templates/AuraPreview";
+import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -276,14 +276,8 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
-                        if (template.id === "bible-verse-tabs") {
-                          navigate(`/dashboard/aura-form?template=${template.id}`);
-                        } else if (template.id === "template2") {
-                          navigate(`/dashboard/verite-form`);
-                        } else if (template.id === "classic-romance") {
-                          navigate(`/dashboard/eclat-form`);
-                        } else if (template.id === "template6") {
-                          navigate(`/dashboard/grace-form`);
+                        if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
+                          navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                         }

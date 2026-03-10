@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { templateConfig, getTemplatesByCategory, getPopularTemplates } from "@/config/templates";
-import { TemplatePreviewLive } from "@/components/templates/previews/TemplatePreviewLive";
+import { TemplatePreviewLive } from "@/components/templates/TemplatePreviewLive";
 import { TemplateCategory } from "@/types/templates";
 import { Heart } from "lucide-react";
 
