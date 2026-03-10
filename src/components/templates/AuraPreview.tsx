@@ -40,10 +40,10 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
           { value: timeRemaining.minutes, label: "Minutes" },
           { value: timeRemaining.seconds, label: "Seconds" },
         ].map((item, index) => (
-          <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
+          <AnimatedSection key={item.label} delay={index * 100} animation="fade-in">
             <div className="text-center">
               <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-              <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
+              <div className="text-sm md:text-base text-muted-foreground mt-2">{item.label}</div>
             </div>
           </AnimatedSection>
         ))}
@@ -80,15 +80,15 @@ export const AuraPreview = () => {
   ];
 
   return (
-    <div className="relative w-full min-h-screen bg-[#faf8f5] overflow-y-auto font-serif text-[#3e2723]">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
       <div>
         {/* ===== INTRO SECTION ===== */}
         <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#d4e5f7]/40 via-[#f5ebe0]/30 to-[#faf8f5] pointer-events-none" />
-          <div className="absolute top-0 right-0 w-72 h-72 bg-[#d4e5f7]/20 rounded-full blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-[#f5ebe0]/30 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-b from-secondary/20 via-muted/30 to-background pointer-events-none" />
+          <div className="absolute top-0 right-0 w-72 h-72 bg-secondary/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-0 w-96 h-96 bg-muted/20 rounded-full blur-3xl pointer-events-none" />
 
-          <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10 animate-fade-in-sequence">
+          <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10">
             <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
               <div className="w-12 h-px bg-primary/40 mx-auto" />
               <p className="text-template-body italic max-w-sm mx-auto leading-relaxed opacity-80">
@@ -140,17 +140,15 @@ export const AuraPreview = () => {
         <div className="w-24 h-px mx-auto" />
 
         {/* ===== COUNTDOWN SECTION ===== */}
-        <AnimatedSection animation="fade-up">
-          <section className="py-16 px-4 bg-white">
-            <StaticCountdownTimer targetDate={weddingDate} />
-          </section>
-        </AnimatedSection>
+        <section className="py-16 px-4 bg-card">
+          <StaticCountdownTimer targetDate={weddingDate} />
+        </section>
 
         <div className="w-24 mx-auto mb-16" />
 
         {/* ===== TIMELINE SECTION ===== */}
         <section className="mb-16">
-          <AnimatedSection animation="fade-up">
+          <AnimatedSection animation="fade-in">
             <div className="flex items-center justify-center gap-4 mb-12">
               <Calendar className="w-7 h-7 text-primary" />
               <h2 className="text-template-subtitle">16 August</h2>
@@ -158,11 +156,11 @@ export const AuraPreview = () => {
           </AnimatedSection>
 
           <div className="relative max-w-lg mx-auto">
-            <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-gray-300 -translate-x-1/2" />
+            <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2" />
 
             <div className="space-y-12">
               {timelineEvents.map((event, index) => (
-                <AnimatedSection key={event.id} delay={index * 200} animation={index % 2 === 0 ? "slide-left" : "slide-right"}>
+                <AnimatedSection key={event.id} delay={index * 150} animation="fade-in">
                   <div className="relative flex items-start">
                     <div className="flex-1 text-right pr-8">
                       <h3 className="text-template-body font-medium">{event.title}</h3>
@@ -171,7 +169,7 @@ export const AuraPreview = () => {
                     <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
                     <div className="flex-1 pl-8">
                       <event.icon className="w-6 h-6 mb-1 text-primary" />
-                      <p className="text-template-small text-gray-600 leading-snug">{event.location}</p>
+                      <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                       <a
                         href="#"
                         className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
@@ -187,11 +185,11 @@ export const AuraPreview = () => {
           </div>
         </section>
 
-        <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+        <div className="w-24 h-0.5 bg-border mx-auto mb-16" />
 
         {/* ===== GALLERY SECTION ===== */}
         <section className="mb-16">
-          <AnimatedSection animation="fade-up">
+          <AnimatedSection animation="fade-in">
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
@@ -203,8 +201,8 @@ export const AuraPreview = () => {
               "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
               "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
             ].map((src, index) => (
-              <AnimatedSection key={index} delay={index * 100} animation="scale-in">
-                <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-gray-200">
+              <AnimatedSection key={index} delay={index * 80} animation="scale-in">
+                <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
                   <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
                 </div>
               </AnimatedSection>
@@ -213,47 +211,47 @@ export const AuraPreview = () => {
         </section>
 
         {/* ===== GIFTS SECTION ===== */}
-        <AnimatedSection animation="fade-up">
-          <section className="py-16 px-4 bg-white">
-            <div className="max-w-4xl mx-auto">
+        <section className="py-16 px-4 bg-card">
+          <div className="max-w-4xl mx-auto">
+            <AnimatedSection animation="fade-in">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">
+              <p className="text-center text-template-body mb-8 text-muted-foreground">
                 For those who desire a wedding list is available
               </p>
-              <div className="grid gap-4 md:grid-cols-2">
-                {[
-                  { id: "1", card_name: "OMT", card_number: "123456789" },
-                  { id: "2", card_name: "Whish", card_number: "123456789" },
-                ].map((card, index) => (
-                  <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
-                    <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
-                      <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                      <p className="text-gray-600 mt-2">{card.card_number}</p>
-                    </div>
-                  </AnimatedSection>
-                ))}
-              </div>
+            </AnimatedSection>
+            <div className="grid gap-4 md:grid-cols-2">
+              {[
+                { id: "1", card_name: "OMT", card_number: "123456789" },
+                { id: "2", card_name: "Whish", card_number: "123456789" },
+              ].map((card, index) => (
+                <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
+                  <div className="bg-background p-6 rounded-lg text-center">
+                    <p className="font-semibold text-lg text-foreground">{card.card_name}</p>
+                    <p className="text-muted-foreground mt-2">{card.card_number}</p>
+                  </div>
+                </AnimatedSection>
+              ))}
             </div>
-          </section>
-        </AnimatedSection>
+          </div>
+        </section>
 
         {/* ===== RSVP SECTION ===== */}
-        <AnimatedSection animation="fade-up">
-          <section className="py-16 px-4 bg-white">
-            <div className="max-w-3xl mx-auto space-y-8">
+        <section className="py-16 px-4 bg-card">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <AnimatedSection animation="fade-in">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
-              <p className="text-template-body text-center text-gray-600">
+              <p className="text-template-body text-center text-muted-foreground">
                 Please let us know if you can join us on our special day. Your presence would mean the world to us.
               </p>
-              <div className="pt-8 border-t border-gray-300">
-                <p className="text-template-small text-center mb-2 text-gray-600">
-                  Kindly confirm your attendance before this date:
-                </p>
-                <p className="text-template-heading text-primary text-center">August 1, 2025</p>
-              </div>
+            </AnimatedSection>
+            <div className="pt-8 border-t border-border">
+              <p className="text-template-small text-center mb-2 text-muted-foreground">
+                Kindly confirm your attendance before this date:
+              </p>
+              <p className="text-template-heading text-primary text-center">August 1, 2025</p>
             </div>
-          </section>
-        </AnimatedSection>
+          </div>
+        </section>
       </div>
     </div>
   );
