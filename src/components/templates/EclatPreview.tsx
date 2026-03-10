@@ -108,7 +108,7 @@ export const EclatPreview = () => {
   };
 
   return (
-    <div className="w-full bg-white text-[#3e2723] font-serif">
+    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
@@ -233,7 +233,7 @@ export const EclatPreview = () => {
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <AnimatedSection delay={0} animation="slide-left">
+              <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
                     <Church className="w-8 h-8 text-primary" />
@@ -257,7 +257,7 @@ export const EclatPreview = () => {
               </AnimatedSection>
             )}
             {venue && (
-              <AnimatedSection delay={200} animation="slide-right">
+              <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
                     <PartyPopper className="w-8 h-8 text-primary" />
