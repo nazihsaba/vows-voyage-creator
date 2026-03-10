@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import weddingHero from "@/assets/wedding-hero.jpg";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 // Static demo data
 const staticWedding = {
@@ -58,11 +59,12 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
       const diff = targetDate.getTime() - now.getTime();
 
       if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeRemaining({ days, hours, minutes, seconds });
+        setTimeRemaining({
+          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
+          hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
+          seconds: Math.floor((diff % (1000 * 60)) / 1000),
+        });
       }
     };
 
@@ -80,11 +82,13 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
           { value: timeRemaining.hours, label: "Hours" },
           { value: timeRemaining.minutes, label: "Minutes" },
           { value: timeRemaining.seconds, label: "Seconds" },
-        ].map((item) => (
-          <div key={item.label} className="text-center">
-            <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-            <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
-          </div>
+        ].map((item, index) => (
+          <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
+            <div className="text-center">
+              <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
+              <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
+            </div>
+          </AnimatedSection>
         ))}
       </div>
     </div>
@@ -105,7 +109,7 @@ export const EclatPreview = () => {
 
   return (
     <div className="w-full bg-white text-[#3e2723] font-serif">
-      {/* Hero Section - Fullscreen */}
+      {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
         style={{
@@ -116,7 +120,7 @@ export const EclatPreview = () => {
       >
         <div className="absolute inset-0 bg-black/30" />
 
-        <div className="relative z-10 space-y-6 px-4 max-w-2xl">
+        <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
           <p className="text-template-small">The Wedding Of</p>
 
           <div className="space-y-2">
@@ -151,210 +155,236 @@ export const EclatPreview = () => {
 
       {/* Family Names Section */}
       <section id="family-section-classic" className="py-16 px-4 text-center bg-white">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="space-y-4">
-            <h2 className="text-template-subtitle">{staticWedding.groom_family}</h2>
-            <p className="text-2xl">&</p>
-            <h2 className="text-template-subtitle">{staticWedding.bride_family}</h2>
-          </div>
+        <AnimatedSection animation="fade-up">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <div className="space-y-4">
+              <h2 className="text-template-subtitle">{staticWedding.groom_family}</h2>
+              <p className="text-2xl">&</p>
+              <h2 className="text-template-subtitle">{staticWedding.bride_family}</h2>
+            </div>
 
-          <p className="text-template-body">
-            Request the honor of your presence at the wedding of their Son and Daughter
-          </p>
-        </div>
+            <p className="text-template-body">
+              Request the honor of your presence at the wedding of their Son and Daughter
+            </p>
+          </div>
+        </AnimatedSection>
       </section>
 
       {/* Gallery Image 1 - Full Width */}
-      <section className="relative w-full">
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
+      <AnimatedSection animation="fade-in">
+        <section className="relative w-full">
+          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
 
-        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={staticGallery[0].image_url} alt="Gallery 1" className="w-full h-full object-cover" />
-        </div>
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={staticGallery[0].image_url} alt="Gallery 1" className="w-full h-full object-cover" />
+          </div>
 
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
-      </section>
+          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* Countdown Section */}
-      <section className="py-16 px-4 bg-white">
-        <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
-      </section>
+      <AnimatedSection animation="fade-up">
+        <section className="py-16 px-4 bg-white">
+          <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
+        </section>
+      </AnimatedSection>
 
       {/* Gallery Image 2 - Full Width */}
-      <section className="relative w-full">
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
+      <AnimatedSection animation="fade-in">
+        <section className="relative w-full">
+          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
 
-        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={staticGallery[1].image_url} alt="Gallery 2" className="w-full h-full object-cover" />
-        </div>
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={staticGallery[1].image_url} alt="Gallery 2" className="w-full h-full object-cover" />
+          </div>
 
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
-      </section>
+          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* Wedding Events Section */}
       <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div>
-            <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
-            <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
-              {"With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"}
-            </p>
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div>
+              <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
+              <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
+                {"With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"}
+              </p>
+            </div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                <div className="flex items-center justify-center w-full">
-                  <Church className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+              <AnimatedSection delay={0} animation="slide-left">
+                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
+                  <div className="flex items-center justify-center w-full">
+                    <Church className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
 
-                <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
-                <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">Event Location</p>
-                  <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
+                  <div className="space-y-2">
+                    <p className="text-template-small text-gray-600">Event Location</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                  </div>
+                  <a
+                    href={ceremony.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
-                <a
-                  href={ceremony.location_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
-                >
-                  View on Map
-                </a>
-              </div>
+              </AnimatedSection>
             )}
             {venue && (
-              <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                <div className="flex items-center justify-center w-full">
-                  <PartyPopper className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
+              <AnimatedSection delay={200} animation="slide-right">
+                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
+                  <div className="flex items-center justify-center w-full">
+                    <PartyPopper className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
 
-                <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
-                <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">Event Location</p>
-                  <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
+                  <div className="space-y-2">
+                    <p className="text-template-small text-gray-600">Event Location</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+                  </div>
+                  <a
+                    href={venue.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
-                <a
-                  href={venue.location_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
-                >
-                  View on Map
-                </a>
-              </div>
+              </AnimatedSection>
             )}
           </div>
         </div>
       </section>
 
       {/* Gallery Image 3 - Full Width */}
-      <section className="relative w-full">
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
+      <AnimatedSection animation="fade-in">
+        <section className="relative w-full">
+          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
 
-        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={staticGallery[2].image_url} alt="Gallery 3" className="w-full h-full object-cover" />
-        </div>
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={staticGallery[2].image_url} alt="Gallery 3" className="w-full h-full object-cover" />
+          </div>
 
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
-      </section>
+          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* Gift Cards Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-4xl mx-auto">
-          <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-          <p className="text-center text-template-body mb-8 text-gray-600">
-            For those who desire a wedding list is available
-          </p>
-          <div className="grid gap-4 md:grid-cols-2">
-            {staticGiftCards.map((card) => (
-              <div key={card.id} className="bg-[#faf8f5] p-6 rounded-lg text-center">
-                <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                <p className="text-gray-600 mt-2">{card.card_number}</p>
-              </div>
-            ))}
+      <AnimatedSection animation="fade-up">
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
+            <div className="grid gap-4 md:grid-cols-2">
+              {staticGiftCards.map((card, index) => (
+                <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
+                  <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
+                    <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+                    <p className="text-gray-600 mt-2">{card.card_number}</p>
+                  </div>
+                </AnimatedSection>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </AnimatedSection>
 
       {/* Gallery Image 4 - Full Width */}
-      <section className="relative w-full">
-        <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
+      <AnimatedSection animation="fade-in">
+        <section className="relative w-full">
+          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
 
-        <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={staticGallery[3].image_url} alt="Gallery 4" className="w-full h-full object-cover" />
-        </div>
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={staticGallery[3].image_url} alt="Gallery 4" className="w-full h-full object-cover" />
+          </div>
 
-        <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
-          <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
-            <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-          </svg>
-        </div>
-      </section>
+          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+        </section>
+      </AnimatedSection>
 
       {/* RSVP Section */}
-      <section className="py-16 px-4 bg-white">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
+      <AnimatedSection animation="fade-up">
+        <section className="py-16 px-4 bg-white">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
 
-          <p className="text-template-body text-center text-gray-600">
-            Please let us know if you can join us on our special day. Your presence would mean the world to us.
-          </p>
+            <p className="text-template-body text-center text-gray-600">
+              Please let us know if you can join us on our special day. Your presence would mean the world to us.
+            </p>
 
-          <div className="pt-8 border-t border-gray-300">
-            <p className="text-template-small text-center mb-2 text-gray-600">
-              Kindly confirm your attendance before this date:
-            </p>
-            <p className="text-template-heading text-primary text-center">
-              {staticWedding.rsvp_deadline.toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </p>
+            <div className="pt-8 border-t border-gray-300">
+              <p className="text-template-small text-center mb-2 text-gray-600">
+                Kindly confirm your attendance before this date:
+              </p>
+              <p className="text-template-heading text-primary text-center">
+                {staticWedding.rsvp_deadline.toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                })}
+              </p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      </AnimatedSection>
 
       {/* Closing Message */}
-      <section className="py-16 px-4 bg-[#faf8f5] text-center">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <p className="text-template-body">
-            We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and
-            make wonderful memories with us.
-          </p>
-        </div>
-      </section>
+      <AnimatedSection animation="fade-in">
+        <section className="py-16 px-4 bg-[#faf8f5] text-center">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <p className="text-template-body">
+              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and
+              make wonderful memories with us.
+            </p>
+          </div>
+        </section>
+      </AnimatedSection>
     </div>
   );
 };
