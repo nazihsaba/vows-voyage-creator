@@ -163,7 +163,7 @@ export const VeritePreview = () => {
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <AnimatedSection delay={0} animation="slide-left">
+              <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
