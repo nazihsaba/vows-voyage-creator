@@ -212,7 +212,7 @@ export const AuraPreview = () => {
         </section>
 
         {/* Divider */}
-        <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" />
+        {/* <div className="w-24 h-0.5 bg-gray-300 mx-auto mb-16" /> */}
 
         {/* ===== GIFTS SECTION ===== */}
         <section className="py-16 px-4 bg-white">
