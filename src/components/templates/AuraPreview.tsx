@@ -135,7 +135,7 @@ export const AuraPreview = () => {
         </section>
 
         {/* Divider */}
-        <div className="w-24 h-px bg-primary/20 mx-auto" />
+        <div className="w-24 h-px mx-auto" />
 
         {/* ===== COUNTDOWN SECTION ===== */}
         <section className="py-16 px-4 bg-white">
