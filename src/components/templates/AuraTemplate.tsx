@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef } from "react";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -6,8 +6,7 @@ import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -50,10 +49,6 @@ export const AuraTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  useEffect(() => {
-    AOS.init({ duration: 800, once: true, easing: "ease-out" });
-  }, []);
-
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
     if (audio && wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
@@ -64,7 +59,6 @@ export const AuraTemplate = ({
   const weddingDate = new Date(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString("en-US", { day: "numeric", month: "long" });
 
-  // Build timeline events from locations
   const timelineEvents = [
     ...(ceremony
       ? [{
@@ -102,7 +96,6 @@ export const AuraTemplate = ({
 
   return (
     <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
-      {/* Hidden audio element */}
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
@@ -115,8 +108,7 @@ export const AuraTemplate = ({
           <div className="absolute bottom-0 left-0 w-96 h-96 bg-muted/20 rounded-full blur-3xl pointer-events-none" />
 
           <div className="relative z-10 px-6 py-16 max-w-xl mx-auto space-y-10">
-            {/* Bible Verse */}
-            <div className="space-y-3" data-aos="fade-down">
+            <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
               <div className="w-12 h-px bg-primary/40 mx-auto" />
               <EditableField
                 fieldId="bible-verse"
@@ -139,8 +131,7 @@ export const AuraTemplate = ({
               <div className="w-12 h-px bg-primary/40 mx-auto" />
             </div>
 
-            {/* Together with their families */}
-            <div data-aos="fade-up" data-aos-delay="100">
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
               <EditableField
                 fieldId="together-text"
                 text={getFieldValue("together-text", "Together with their families")}
@@ -152,53 +143,53 @@ export const AuraTemplate = ({
               />
             </div>
 
-            {/* Parents Names */}
-            <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14" data-aos="fade-up" data-aos-delay="200">
-              <div className="text-center space-y-1">
-                <EditableField
-                  fieldId="groom-parents"
-                  text={getFieldValue("groom-parents", `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`)}
-                  style={getFieldStyle("groom-parents")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="p"
-                  className="text-sm text-primary font-medium tracking-wide"
-                />
-                <EditableField
-                  fieldId="groom-family-name"
-                  text={getFieldValue("groom-family-name", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family")}
-                  style={getFieldStyle("groom-family-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="p"
-                  className="text-template-subtitle"
-                />
-              </div>
-              <span className="text-3xl font-light text-primary/50">&</span>
-              <div className="text-center space-y-1">
-                <EditableField
-                  fieldId="bride-parents"
-                  text={getFieldValue("bride-parents", `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`)}
-                  style={getFieldStyle("bride-parents")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="p"
-                  className="text-sm text-primary font-medium tracking-wide"
-                />
-                <EditableField
-                  fieldId="bride-family-name"
-                  text={getFieldValue("bride-family-name", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family")}
-                  style={getFieldStyle("bride-family-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="p"
-                  className="text-template-subtitle"
-                />
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
+                <div className="text-center space-y-1">
+                  <EditableField
+                    fieldId="groom-parents"
+                    text={getFieldValue("groom-parents", `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`)}
+                    style={getFieldStyle("groom-parents")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-sm text-primary font-medium tracking-wide"
+                  />
+                  <EditableField
+                    fieldId="groom-family-name"
+                    text={getFieldValue("groom-family-name", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family")}
+                    style={getFieldStyle("groom-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-template-subtitle"
+                  />
+                </div>
+                <span className="text-3xl font-light text-primary/50">&</span>
+                <div className="text-center space-y-1">
+                  <EditableField
+                    fieldId="bride-parents"
+                    text={getFieldValue("bride-parents", `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`)}
+                    style={getFieldStyle("bride-parents")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-sm text-primary font-medium tracking-wide"
+                  />
+                  <EditableField
+                    fieldId="bride-family-name"
+                    text={getFieldValue("bride-family-name", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family")}
+                    style={getFieldStyle("bride-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-template-subtitle"
+                  />
+                </div>
               </div>
             </div>
 
-            {/* Invitation Text */}
-            <div data-aos="fade-up" data-aos-delay="300">
+            <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <EditableField
                 fieldId="invitation-line"
                 text={getFieldValue("invitation-line", "joyfully invite you to the wedding of their\nbeloved son and daughter")}
@@ -211,31 +202,33 @@ export const AuraTemplate = ({
               />
             </div>
 
-            {/* Couple Names */}
-            <div className="py-4" data-aos="zoom-in" data-aos-delay="400">
-              <EditableField
-                fieldId="couple-names"
-                text={getFieldValue("couple-names", `${wedding.groom_name} & ${wedding.bride_name}`)}
-                style={getFieldStyle("couple-names")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h1"
-                className="text-template-title text-primary"
-              />
+            <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
+              <div className="py-4">
+                <EditableField
+                  fieldId="couple-names"
+                  text={getFieldValue("couple-names", `${wedding.groom_name} & ${wedding.bride_name}`)}
+                  style={getFieldStyle("couple-names")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h1"
+                  className="text-template-title text-primary"
+                />
+              </div>
             </div>
 
-            {/* Wedding Date */}
-            <div className="space-y-3" data-aos="fade-up" data-aos-delay="500">
-              <div className="w-16 h-px bg-primary/30 mx-auto" />
-              <EditableField
-                fieldId="wedding-date-formatted"
-                text={getFieldValue("wedding-date-formatted", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }))}
-                style={getFieldStyle("wedding-date-formatted")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-body font-semibold tracking-wide text-primary"
-              />
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
+              <div className="space-y-3">
+                <div className="w-16 h-px bg-primary/30 mx-auto" />
+                <EditableField
+                  fieldId="wedding-date-formatted"
+                  text={getFieldValue("wedding-date-formatted", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }))}
+                  style={getFieldStyle("wedding-date-formatted")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="p"
+                  className="text-template-body font-semibold tracking-wide text-primary"
+                />
+              </div>
             </div>
           </div>
         </section>
@@ -252,56 +245,63 @@ export const AuraTemplate = ({
         {/* ===== TIMELINE SECTION ===== */}
         {timelineEvents.length > 0 && (
           <section className="mb-16">
-            <div className="flex items-center justify-center gap-4 mb-12" data-aos="fade-down">
-              <Calendar className="w-7 h-7 text-primary" />
-              <h2 className="text-template-subtitle">{dateFormatted}</h2>
-            </div>
+            <AnimatedSection animation="fade-in">
+              <div className="flex items-center justify-center gap-4 mb-12">
+                <Calendar className="w-7 h-7 text-primary" />
+                <h2 className="text-template-subtitle">{dateFormatted}</h2>
+              </div>
+            </AnimatedSection>
 
             <div className="relative max-w-lg mx-auto">
               <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-border -translate-x-1/2" />
 
               <div className="space-y-12">
                 {timelineEvents.map((event, index) => (
-                  <div key={event.id} className="relative flex items-start" data-aos="fade-up" data-aos-delay={index * 150}>
-                    <div className="flex-1 text-right pr-8">
-                      <h3 className="text-template-body font-medium">{event.title}</h3>
-                      <p className="text-template-body font-semibold">{event.time}</p>
+                  <AnimatedSection key={event.id} delay={index * 150} animation="fade-in">
+                    <div className="relative flex items-start">
+                      <div className="flex-1 text-right pr-8">
+                        <h3 className="text-template-body font-medium">{event.title}</h3>
+                        <p className="text-template-body font-semibold">{event.time}</p>
+                      </div>
+                      <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
+                      <div className="flex-1 pl-8">
+                        <event.icon className="w-6 h-6 mb-1 text-primary" />
+                        <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
+                        {event.link && (
+                          <a
+                            href={event.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
+                          >
+                            <MapPin className="w-4 h-4" />
+                            Location
+                          </a>
+                        )}
+                      </div>
                     </div>
-                    <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
-                    <div className="flex-1 pl-8">
-                      <event.icon className="w-6 h-6 mb-1 text-primary" />
-                      <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
-                      {event.link && (
-                        <a
-                          href={event.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
-                        >
-                          <MapPin className="w-4 h-4" />
-                          Location
-                        </a>
-                      )}
-                    </div>
-                  </div>
+                  </AnimatedSection>
                 ))}
               </div>
             </div>
           </section>
         )}
 
-        {/* Divider */}
         {gallery && gallery.length > 0 && <div className="w-24 h-0.5 bg-border mx-auto mb-16" />}
 
         {/* ===== GALLERY SECTION ===== */}
         {gallery && gallery.length > 0 && (
-          <section className="mb-16" data-aos="fade-up">
-            <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
+          <section className="mb-16">
+            <AnimatedSection animation="fade-in">
+              <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
+            </AnimatedSection>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               {gallery.map((image: any, index: number) => (
-                <div key={image.id || index} className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
-                  <img src={image.image_url} alt={image.alt_text || `Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
-                </div>
+                <AnimatedSection key={image.id || index} delay={index * 80} animation="scale-in">
+                  <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
+                    <img src={image.image_url} alt={image.alt_text || `Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+                  </div>
+                </AnimatedSection>
               ))}
             </div>
           </section>
@@ -309,12 +309,14 @@ export const AuraTemplate = ({
 
         {/* ===== GIFTS SECTION ===== */}
         {hasGiftCards && (
-          <section className="py-16 px-4 bg-card" data-aos="fade-up">
+          <section className="py-16 px-4 bg-card">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-              <p className="text-center text-template-body mb-8 text-muted-foreground">
-                For those who desire a wedding list is available
-              </p>
+              <AnimatedSection animation="fade-in">
+                <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+                <p className="text-center text-template-body mb-8 text-muted-foreground">
+                  For those who desire a wedding list is available
+                </p>
+              </AnimatedSection>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
@@ -322,27 +324,29 @@ export const AuraTemplate = ({
 
         {/* ===== RSVP SECTION ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <section className="py-16 px-4 bg-card" data-aos="fade-up">
+          <section className="py-16 px-4 bg-card">
             <div className="max-w-3xl mx-auto space-y-8">
-              <EditableField
-                fieldId="rsvp-title"
-                text={getFieldValue("rsvp-title", "Join Our Celebration")}
-                style={getFieldStyle("rsvp-title")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h2"
-                className="text-template-subtitle text-center mb-12 text-primary"
-              />
-              <EditableField
-                fieldId="rsvp-message"
-                text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
-                style={getFieldStyle("rsvp-message")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-template-body text-center text-muted-foreground"
-              />
+              <AnimatedSection animation="fade-in">
+                <EditableField
+                  fieldId="rsvp-title"
+                  text={getFieldValue("rsvp-title", "Join Our Celebration")}
+                  style={getFieldStyle("rsvp-title")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-subtitle text-center mb-12 text-primary"
+                />
+                <EditableField
+                  fieldId="rsvp-message"
+                  text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+                  style={getFieldStyle("rsvp-message")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  multiline={true}
+                  tag="p"
+                  className="text-template-body text-center text-muted-foreground"
+                />
+              </AnimatedSection>
 
               {invitees.length > 0 && (
                 <div className="space-y-4">

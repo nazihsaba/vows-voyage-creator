@@ -6,8 +6,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import AOS from "aos";
-import "aos/dist/aos.css";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface VeriteTemplateProps {
   wedding: any;
@@ -70,7 +69,6 @@ export const VeriteTemplate = ({
   };
 
   useEffect(() => {
-    AOS.init({ duration: 1000, once: true, easing: "ease-out" });
     return () => {
       if (audioRef.current) audioRef.current.pause();
     };
@@ -95,7 +93,6 @@ export const VeriteTemplate = ({
 
   return (
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden">
-      {/* Hidden audio element */}
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
@@ -115,44 +112,15 @@ export const VeriteTemplate = ({
       >
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-          <EditableField
-            fieldId="hero-subtitle"
-            text={getFieldValue("hero-subtitle", "The Wedding Of")}
-            style={getFieldStyle("hero-subtitle")}
-            onUpdate={onFieldUpdate}
-            isPreview={isPreview}
-            tag="p"
-            className="text-template-small"
-          />
+          <EditableField fieldId="hero-subtitle" text={getFieldValue("hero-subtitle", "The Wedding Of")} style={getFieldStyle("hero-subtitle")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="p" className="text-template-small" />
           <div className="space-y-2">
-            <EditableField
-              fieldId="groom-name"
-              text={getFieldValue("groom-name", wedding.groom_name)}
-              style={getFieldStyle("groom-name")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h1"
-              className="text-template-title"
-            />
+            <EditableField fieldId="groom-name" text={getFieldValue("groom-name", wedding.groom_name)} style={getFieldStyle("groom-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
             <p className="text-4xl md:text-5xl">&</p>
-            <EditableField
-              fieldId="bride-name"
-              text={getFieldValue("bride-name", wedding.bride_name)}
-              style={getFieldStyle("bride-name")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h1"
-              className="text-template-title"
-            />
+            <EditableField fieldId="bride-name" text={getFieldValue("bride-name", wedding.bride_name)} style={getFieldStyle("bride-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
           </div>
           <EditableField
             fieldId="wedding-date-display"
-            text={getFieldValue(
-              "wedding-date-display",
-              new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-                weekday: "long", year: "numeric", month: "long", day: "numeric",
-              }),
-            )}
+            text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }))}
             style={getFieldStyle("wedding-date-display")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -160,12 +128,7 @@ export const VeriteTemplate = ({
             className="text-template-body tracking-wide"
           />
           {!hasStarted && (
-            <Button
-              onClick={handleStart}
-              className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
-            >
-              Tap To Start
-            </Button>
+            <Button onClick={handleStart} className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm">Tap To Start</Button>
           )}
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -174,51 +137,39 @@ export const VeriteTemplate = ({
       </section>
 
       {/* Family Names */}
-      <section id="family-section" className="py-16 px-4 text-center bg-white" data-aos="fade-up">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <div className="space-y-4">
+      <section id="family-section" className="py-16 px-4 text-center bg-white">
+        <AnimatedSection animation="fade-up">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <div className="space-y-4">
+              <EditableField fieldId="groom-family" text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")} style={getFieldStyle("groom-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+              <p className="text-2xl">&</p>
+              <EditableField fieldId="bride-family" text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")} style={getFieldStyle("bride-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+            </div>
             <EditableField
-              fieldId="groom-family"
-              text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")}
-              style={getFieldStyle("groom-family")}
+              fieldId="invitation-text"
+              text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding of their Son and Daughter")}
+              style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
-              tag="h2"
-              className="text-template-subtitle"
-            />
-            <p className="text-2xl">&</p>
-            <EditableField
-              fieldId="bride-family"
-              text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")}
-              style={getFieldStyle("bride-family")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h2"
-              className="text-template-subtitle"
+              multiline={true}
+              tag="p"
+              className="text-template-body"
             />
           </div>
-          <EditableField
-            fieldId="invitation-text"
-            text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding of their Son and Daughter")}
-            style={getFieldStyle("invitation-text")}
-            onUpdate={onFieldUpdate}
-            isPreview={isPreview}
-            multiline={true}
-            tag="p"
-            className="text-template-body"
-          />
-        </div>
+        </AnimatedSection>
       </section>
 
       {/* Gallery Grid */}
       {gallery.length > 0 && (
-        <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up">
+        <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-6xl mx-auto">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {gallery.slice(0, 8).map((image: any, index: number) => (
-                <div key={image.id || index} className="aspect-square overflow-hidden rounded-lg shadow-lg">
-                  <img src={image.image_url} alt={image.alt_text || `Gallery ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
-                </div>
+                <AnimatedSection key={image.id || index} delay={index * 100} animation="scale-in">
+                  <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
+                    <img src={image.image_url} alt={image.alt_text || `Gallery ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+                  </div>
+                </AnimatedSection>
               ))}
             </div>
           </div>
@@ -226,55 +177,63 @@ export const VeriteTemplate = ({
       )}
 
       {/* Countdown */}
-      <section className="py-16 px-4 bg-white" data-aos="fade-up">
-        <CountdownTimer targetDate={wedding.wedding_date} />
-      </section>
+      <AnimatedSection animation="fade-up">
+        <section className="py-16 px-4 bg-white">
+          <CountdownTimer targetDate={wedding.wedding_date} />
+        </section>
+      </AnimatedSection>
 
       {/* Wedding Events */}
-      <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up">
+      <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-4xl mx-auto text-center space-y-12">
-          <div>
-            <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
-            <EditableField
-              fieldId="events-subtitle"
-              text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
-              style={getFieldStyle("events-subtitle")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              multiline={true}
-              tag="p"
-              className="text-template-body max-w-2xl mx-auto whitespace-pre-line"
-            />
-          </div>
+          <AnimatedSection animation="fade-up">
+            <div>
+              <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
+              <EditableField
+                fieldId="events-subtitle"
+                text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
+                style={getFieldStyle("events-subtitle")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                multiline={true}
+                tag="p"
+                className="text-template-body max-w-2xl mx-auto whitespace-pre-line"
+              />
+            </div>
+          </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="100">
-                <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
-                <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
-                <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">Event Location</p>
-                  <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+              <AnimatedSection delay={0} animation="fade-in">
+                <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+                  <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                  <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
+                  <div className="space-y-2">
+                    <p className="text-template-small text-gray-600">Event Location</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                  </div>
+                  {ceremony.location_link && (
+                    <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  )}
                 </div>
-                {ceremony.location_link && (
-                  <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
-                )}
-              </div>
+              </AnimatedSection>
             )}
             {venue && (
-              <div className="bg-white p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="200">
-                <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
-                <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
-                <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
-                <div className="space-y-2">
-                  <p className="text-template-small text-gray-600">Event Location</p>
-                  <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+              <AnimatedSection delay={200} animation="fade-in">
+                <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
+                  <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
+                  <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
+                  <div className="space-y-2">
+                    <p className="text-template-small text-gray-600">Event Location</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+                  </div>
+                  {venue.location_link && (
+                    <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  )}
                 </div>
-                {venue.location_link && (
-                  <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
-                )}
-              </div>
+              </AnimatedSection>
             )}
           </div>
         </div>
@@ -282,121 +241,115 @@ export const VeriteTemplate = ({
 
       {/* Gallery Image - Full Width with Wave SVGs */}
       {gallery.length > 0 && (
-        <section className="relative w-full" data-aos="fade-up">
-          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
-            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
-              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-            </svg>
-          </div>
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={gallery[0].image_url} alt="Wedding moment" className="w-full h-full object-cover" />
-          </div>
-          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
-            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
-              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
-            </svg>
-          </div>
-        </section>
+        <AnimatedSection animation="fade-in">
+          <section className="relative w-full">
+            <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+              <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
+                <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+              </svg>
+            </div>
+            <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+              <img src={gallery[0].image_url} alt="Wedding moment" className="w-full h-full object-cover" />
+            </div>
+            <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+              <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
+                <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+              </svg>
+            </div>
+          </section>
+        </AnimatedSection>
       )}
 
       {/* Gift Cards */}
       {giftCards.length > 0 && (
-        <section className="py-16 px-4 bg-white" data-aos="fade-up">
-          <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
-            <GiftCards giftCards={giftCards} isOwner={isOwner} />
-          </div>
-        </section>
+        <AnimatedSection animation="fade-up">
+          <section className="py-16 px-4 bg-white">
+            <div className="max-w-4xl mx-auto">
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+              <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+              <GiftCards giftCards={giftCards} isOwner={isOwner} />
+            </div>
+          </section>
+        </AnimatedSection>
       )}
 
       {/* RSVP Section */}
       {(wedding.rsvp_deadline || invitees.length > 0) && (
-        <section className="py-16 px-4 bg-white" data-aos="fade-up">
+        <AnimatedSection animation="fade-up">
+          <section className="py-16 px-4 bg-white">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <EditableField fieldId="rsvp-title" text={getFieldValue("rsvp-title", "Join Our Celebration")} style={getFieldStyle("rsvp-title")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle text-center mb-12 text-primary" />
+              <EditableField
+                fieldId="rsvp-message"
+                text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+                style={getFieldStyle("rsvp-message")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                multiline={true}
+                tag="p"
+                className="text-template-body text-center text-gray-600"
+              />
+
+              {invitees.length > 0 && (
+                <div className="space-y-6 pt-6 border-t border-gray-300">
+                  <div className="space-y-4">
+                    {invitees.map((invitee: any) => (
+                      <div key={invitee.id} className="flex items-center justify-between py-4 px-6 bg-[#faf8f5] rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors">
+                        <span className="text-xl font-serif text-primary">{invitee.name}</span>
+                        <div className="flex items-center gap-3">
+                          <Checkbox id={`rsvp-${invitee.id}`} checked={rsvpResponses[invitee.id] === true} onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)} disabled={isRsvpDeadlinePassed} className="h-5 w-5" />
+                          <Label htmlFor={`rsvp-${invitee.id}`} className={`text-base cursor-pointer font-medium ${isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"}`}>
+                            {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                          </Label>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="pt-6 border-t border-gray-300 space-y-4">
+                    <p className="text-lg font-semibold text-center text-[#3e2723]">Number of Guests: {numberOfPersons || invitees.length}</p>
+                    {isRsvpDeadlinePassed ? (
+                      <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
+                    ) : (
+                      <Button onClick={handleRsvpSubmit} disabled={submittingRsvp} className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90" size="lg">
+                        {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                      </Button>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {wedding.rsvp_deadline && (
+                <div className="pt-8 border-t border-gray-300">
+                  <p className="text-template-small text-center mb-2 text-gray-600">
+                    {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                  </p>
+                  <p className="text-template-heading text-primary text-center">
+                    {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                  </p>
+                </div>
+              )}
+            </div>
+          </section>
+        </AnimatedSection>
+      )}
+
+      {/* Closing Message */}
+      <AnimatedSection animation="fade-in">
+        <section className="py-16 px-4 bg-[#faf8f5] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <EditableField
-              fieldId="rsvp-title"
-              text={getFieldValue("rsvp-title", "Join Our Celebration")}
-              style={getFieldStyle("rsvp-title")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h2"
-              className="text-template-subtitle text-center mb-12 text-primary"
-            />
-            <EditableField
-              fieldId="rsvp-message"
-              text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
-              style={getFieldStyle("rsvp-message")}
+              fieldId="closing-message"
+              text={getFieldValue("closing-message", "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.")}
+              style={getFieldStyle("closing-message")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-template-body text-center text-gray-600"
+              className="text-template-body"
             />
-
-            {invitees.length > 0 && (
-              <div className="space-y-6 pt-6 border-t border-gray-300">
-                <div className="space-y-4">
-                  {invitees.map((invitee: any) => (
-                    <div key={invitee.id} className="flex items-center justify-between py-4 px-6 bg-[#faf8f5] rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors">
-                      <span className="text-xl font-serif text-primary">{invitee.name}</span>
-                      <div className="flex items-center gap-3">
-                        <Checkbox
-                          id={`rsvp-${invitee.id}`}
-                          checked={rsvpResponses[invitee.id] === true}
-                          onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
-                          disabled={isRsvpDeadlinePassed}
-                          className="h-5 w-5"
-                        />
-                        <Label htmlFor={`rsvp-${invitee.id}`} className={`text-base cursor-pointer font-medium ${isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"}`}>
-                          {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
-                        </Label>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-                <div className="pt-6 border-t border-gray-300 space-y-4">
-                  <p className="text-lg font-semibold text-center text-[#3e2723]">Number of Guests: {numberOfPersons || invitees.length}</p>
-                  {isRsvpDeadlinePassed ? (
-                    <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
-                  ) : (
-                    <Button onClick={handleRsvpSubmit} disabled={submittingRsvp} className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90" size="lg">
-                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
-                    </Button>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {wedding.rsvp_deadline && (
-              <div className="pt-8 border-t border-gray-300">
-                <p className="text-template-small text-center mb-2 text-gray-600">
-                  {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
-                </p>
-                <p className="text-template-heading text-primary text-center">
-                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-                </p>
-              </div>
-            )}
           </div>
         </section>
-      )}
-
-      {/* Closing Message */}
-      <section className="py-16 px-4 bg-[#faf8f5] text-center" data-aos="fade-up">
-        <div className="max-w-3xl mx-auto space-y-8">
-          <EditableField
-            fieldId="closing-message"
-            text={getFieldValue("closing-message", "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.")}
-            style={getFieldStyle("closing-message")}
-            onUpdate={onFieldUpdate}
-            isPreview={isPreview}
-            multiline={true}
-            tag="p"
-            className="text-template-body"
-          />
-        </div>
-      </section>
+      </AnimatedSection>
     </div>
   );
 };
