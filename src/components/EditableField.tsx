@@ -73,9 +73,9 @@ export const EditableField = ({
 
   const Tag = tag as any;
 
-  const appliedStyle = {
-    fontFamily: style.fontFamily,
-    color: style.color,
+  const appliedStyle: React.CSSProperties = {
+    ...(style.fontFamily ? { fontFamily: style.fontFamily } : {}),
+    ...(style.color ? { color: style.color } : {}),
   };
 
   if (!isPreview) {
