@@ -383,7 +383,7 @@ export type Database = {
         }
         Insert: {
           card_name?: string | null
-          card_number?: never
+          card_number?: string | null
           card_order?: number | null
           created_at?: string | null
           id?: string | null
@@ -392,7 +392,7 @@ export type Database = {
         }
         Update: {
           card_name?: string | null
-          card_number?: never
+          card_number?: string | null
           card_order?: number | null
           created_at?: string | null
           id?: string | null
