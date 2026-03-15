@@ -94,7 +94,7 @@ const WeddingTemplates = () => {
               className="shadow-soft hover:shadow-elegant transition-all cursor-pointer hover:scale-[1.02] flex flex-col"
               onClick={() => {
                 if (template.id === 'rose-gold-tabs') {
-                  navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
+                  navigate(`/dashboard/aura-form?template=${template.id}`);
                 } else {
                   navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                 }
