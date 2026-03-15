@@ -161,7 +161,7 @@ export const GraceTemplate = ({
         </video>
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
-          <CountdownTimer targetDate={wedding.wedding_date} />
+          <CountdownTimer targetDate={wedding.wedding_date} variant="dark" />
         </div>
       </section>
 
