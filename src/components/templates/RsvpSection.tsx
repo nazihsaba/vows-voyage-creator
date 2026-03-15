@@ -5,11 +5,7 @@ import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface RsvpSectionProps {
-  /** If true, renders static preview text (no EditableField, no invitees) */
-  isStatic?: boolean;
-  /** Static deadline date for preview mode */
   staticDeadline?: Date;
-  // Template (live) props
   wedding?: any;
   isPreview?: boolean;
   onFieldUpdate?: (fieldId: string, text: string, style: any) => void;
@@ -22,14 +18,11 @@ interface RsvpSectionProps {
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
   submittingRsvp?: boolean;
-  /** Background class for the section */
   bgClassName?: string;
-  /** Background class for invitee cards */
   cardBgClassName?: string;
 }
 
 export const RsvpSection = ({
-  isStatic = false,
   staticDeadline,
   wedding,
   isPreview = false,
@@ -46,44 +39,33 @@ export const RsvpSection = ({
   bgClassName = "bg-white",
   cardBgClassName = "bg-[#faf8f5]",
 }: RsvpSectionProps) => {
-  const rsvpDeadline = isStatic ? staticDeadline : wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) : null;
+  const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) : null);
 
   return (
     <AnimatedSection animation="fade-up">
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-3xl mx-auto space-y-8">
-          {isStatic ? (
-            <>
-              <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
-              <p className="text-template-body text-center text-gray-600">
-                Please let us know if you can join us on our special day. Your presence would mean the world to us.
-              </p>
-            </>
-          ) : (
-            <>
-              <EditableField
-                fieldId="rsvp-title"
-                text={getFieldValue("rsvp-title", "Join Our Celebration")}
-                style={getFieldStyle("rsvp-title")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h2"
-                className="text-template-subtitle text-center mb-12 text-primary"
-              />
-              <EditableField
-                fieldId="rsvp-message"
-                text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
-                style={getFieldStyle("rsvp-message")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-template-body text-center text-gray-600"
-              />
-            </>
-          )}
+          <EditableField
+            fieldId="rsvp-title"
+            text={getFieldValue("rsvp-title", "Join Our Celebration")}
+            style={getFieldStyle("rsvp-title")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="h2"
+            className="text-template-subtitle text-center mb-12 text-primary"
+          />
+          <EditableField
+            fieldId="rsvp-message"
+            text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+            style={getFieldStyle("rsvp-message")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            multiline={true}
+            tag="p"
+            className="text-template-body text-center text-gray-600"
+          />
 
-          {!isStatic && invitees.length > 0 && (
+          {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="space-y-4">
                 {invitees.map((invitee: any) => (
@@ -133,7 +115,7 @@ export const RsvpSection = ({
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">
               <p className="text-template-small text-center mb-2 text-gray-600">
-                {!isStatic && invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
               </p>
               <p className="text-template-heading text-primary text-center">
                 {rsvpDeadline.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
