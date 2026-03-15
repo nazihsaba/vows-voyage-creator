@@ -40,7 +40,6 @@ export const RsvpSection = ({
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <CalendarHeart className="w-12 h-12 text-primary mx-auto mb-4" />
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
             <p className="text-center text-template-body mb-8 text-muted-foreground">
               Please let us know if you can join us on our special day. Your presence would mean the world to us.
