@@ -225,12 +225,12 @@ export const AuraTemplate = ({
               <div className="py-4">
                 <EditableField
                   fieldId="couple-names"
-                  text={getFieldValue("couple-names", `${wedding.groom_name} & ${wedding.bride_name}`)}
-                  style={getFieldStyle("couple-names")}
+                  text={getFieldValue("bride-parents", `${wedding.groom_name} & ${wedding.bride_name}`)}
+                  style={getFieldStyle("bride-parents")}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="h1"
-                  className="text-template-subtitle text-primary"
+                  className="text-template-title text-primary"
                 />
               </div>
             </div>
