@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
@@ -236,22 +237,7 @@ export const AuraPreview = () => {
         </section>
 
         {/* ===== RSVP SECTION ===== */}
-        <section className="py-16 px-4 bg-card">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <AnimatedSection animation="fade-in">
-              <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
-              <p className="text-template-body text-center text-muted-foreground">
-                Please let us know if you can join us on our special day. Your presence would mean the world to us.
-              </p>
-            </AnimatedSection>
-            <div className="pt-8 border-t border-border">
-              <p className="text-template-small text-center mb-2 text-muted-foreground">
-                Kindly confirm your attendance before this date:
-              </p>
-              <p className="text-template-heading text-primary text-center">August 1, 2025</p>
-            </div>
-          </div>
-        </section>
+        <RsvpSection isStatic staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import weddingHero from "@/assets/wedding-hero.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 const staticWedding = {
   groom_name: "Chris",
@@ -236,20 +237,7 @@ export const VeritePreview = () => {
       </AnimatedSection>
 
       {/* RSVP */}
-      <AnimatedSection animation="fade-up">
-        <section className="py-16 px-4 bg-white">
-          <div className="max-w-3xl mx-auto space-y-8">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
-            <p className="text-template-body text-center text-gray-600">Please let us know if you can join us on our special day. Your presence would mean the world to us.</p>
-            <div className="pt-8 border-t border-gray-300">
-              <p className="text-template-small text-center mb-2 text-gray-600">Kindly confirm your attendance before this date:</p>
-              <p className="text-template-heading text-primary text-center">
-                {staticWedding.rsvp_deadline.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-              </p>
-            </div>
-          </div>
-        </section>
-      </AnimatedSection>
+      <RsvpSection isStatic staticDeadline={staticWedding.rsvp_deadline} />
 
       {/* Closing */}
       <AnimatedSection animation="fade-in">
