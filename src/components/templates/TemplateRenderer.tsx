@@ -231,29 +231,6 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'EnvelopeTemplate') {
-    return (
-      <EnvelopeTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
   // Sort sections by order
   const sortedSections = [...template.sections].sort((a, b) => a.order - b.order);
   
