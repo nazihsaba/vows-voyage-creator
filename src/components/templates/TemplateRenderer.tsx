@@ -4,16 +4,10 @@ import { WeddingGallery } from '@/components/WeddingGallery';
 import { EventLocation } from '@/components/EventLocation';
 import { GiftCards } from '@/components/GiftCards';
 import { EditableField } from '@/components/EditableField';
-import { AnthonyOdileTemplate } from './AnthonyOdileTemplate';
-import { AnthonyOdileCarouselTemplate } from './AnthonyOdileCarouselTemplate';
 import { VeriteTemplate } from './VeriteTemplate';
 import { GraceTemplate } from './GraceTemplate';
-import { BachelorLeafyTemplate } from './BachelorLeafyTemplate';
-import { ChristmasTemplate } from './ChristmasTemplate';
-import { ElegantTabsTemplate } from './ElegantTabsTemplate';
 import { EclatTemplate } from './EclatTemplate';
 import { AuraTemplate } from './AuraTemplate';
-import { EnvelopeTemplate } from './EnvelopeTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -58,46 +52,6 @@ export const TemplateRenderer = ({
   submittingRsvp = false,
 }: TemplateRendererProps) => {
   // Use custom template component if specified
-  if (template.component === 'AnthonyOdileTemplate') {
-    return (
-      <AnthonyOdileTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'AnthonyOdileCarouselTemplate') {
-    return (
-      <AnthonyOdileCarouselTemplate
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
   if (template.component === 'VeriteTemplate') {
     return (
       <VeriteTemplate
@@ -117,60 +71,6 @@ export const TemplateRenderer = ({
   if (template.component === 'GraceTemplate') {
     return (
       <GraceTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'BachelorLeafyTemplate') {
-    return (
-      <BachelorLeafyTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'ChristmasTemplate') {
-    return (
-      <ChristmasTemplate
-        wedding={wedding}
-        locations={locations}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'ElegantTabsTemplate') {
-    return (
-      <ElegantTabsTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
@@ -217,29 +117,6 @@ export const TemplateRenderer = ({
   if (template.component === 'AuraTemplate') {
     return (
       <AuraTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'EnvelopeTemplate') {
-    return (
-      <EnvelopeTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

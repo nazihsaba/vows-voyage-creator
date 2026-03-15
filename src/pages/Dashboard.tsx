@@ -29,10 +29,8 @@ import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
-import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
-import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -176,65 +174,11 @@ const Dashboard = () => {
                 <Card key={template.id} className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden">
                   <CardHeader className="p-0 flex-grow">
                     <div className="aspect-video overflow-hidden relative">
-                      {template.id === "envelope-invitation" ? (
-                        <div className="w-full h-full relative group/envelope cursor-pointer" style={{ perspective: '1000px' }}>
-                          {/* Card/Letter that slides up */}
-                          <div className="absolute inset-x-2 top-4 bottom-2 z-10 transition-all duration-700 ease-out group-hover/envelope:-translate-y-8 group-hover/envelope:scale-[0.85]">
-                            <div className="w-full h-full rounded-sm bg-white shadow-xl overflow-hidden border border-primary/20">
-                              <img 
-                                src={template.image} 
-                                alt={template.name} 
-                                className="w-full h-full object-cover" 
-                              />
-                            </div>
-                          </div>
-                          
-                          {/* Envelope back */}
-                          <div className="absolute inset-0 bg-gradient-to-b from-background via-primary/20 to-primary/40 shadow-inner" />
-                          
-                          {/* Envelope side flaps (left & right) */}
-                          <div className="absolute left-0 top-0 w-1/4 h-full bg-gradient-to-r from-primary/30 to-transparent z-20 opacity-60" />
-                          <div className="absolute right-0 top-0 w-1/4 h-full bg-gradient-to-l from-primary/30 to-transparent z-20 opacity-60" />
-                          
-                          {/* Envelope top flap with 3D rotation */}
-                          <div 
-                            className="absolute top-0 left-0 w-full h-[55%] origin-top z-30 transition-transform duration-700 ease-out group-hover/envelope:[transform:rotateX(-180deg)]"
-                            style={{ transformStyle: 'preserve-3d' }}
-                          >
-                            {/* Front of flap (visible initially) */}
-                            <div 
-                              className="absolute inset-0 bg-gradient-to-b from-background via-primary/10 to-primary/20"
-                              style={{ backfaceVisibility: 'hidden' }}
-                            >
-                              {/* Triangular fold pattern */}
-                              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 55" preserveAspectRatio="none">
-                                <polygon 
-                                  points="0,0 100,0 50,55" 
-                                  className="fill-primary/30"
-                                />
-                              </svg>
-                              {/* Wax seal */}
-                              <div className="absolute bottom-2 left-1/2 -translate-x-1/2 w-10 h-10 rounded-full bg-gradient-to-br from-secondary to-secondary/80 shadow-lg flex items-center justify-center border-2 border-secondary/60">
-                                <Heart className="w-5 h-5 text-white fill-white drop-shadow" />
-                              </div>
-                            </div>
-                            {/* Back of flap (visible when opened) */}
-                            <div 
-                              className="absolute inset-0 bg-gradient-to-t from-primary/40 to-primary/20"
-                              style={{ backfaceVisibility: 'hidden', transform: 'rotateX(180deg)' }}
-                            />
-                          </div>
-                          
-                          {/* Bottom fold shadow line */}
-                          <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-t from-primary/50 to-transparent z-20" />
-                        </div>
-                      ) : (
-                        <img 
-                          src={template.image} 
-                          alt={template.name} 
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-                        />
-                      )}
+                      <img 
+                        src={template.image} 
+                        alt={template.name} 
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                      />
                       {/* Overlay gradient on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
@@ -276,7 +220,7 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
-                        if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
+                        if (template.id === "bible-verse-tabs") {
                           navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
@@ -349,10 +293,8 @@ const Dashboard = () => {
           <div className="w-full h-full overflow-y-auto">
             {showPreview === "template2" && <VeritePreview />}
             {showPreview === "template6" && <GracePreview />}
-            {showPreview === "rose-gold-tabs" && <RoseGoldTabsPreview />}
             {showPreview === "classic-romance" && <EclatPreview />}
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
-            {showPreview === "envelope-invitation" && <EnvelopeTemplatePreview />}
           </div>
         </DialogContent>
       </Dialog>
