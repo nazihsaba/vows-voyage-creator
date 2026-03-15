@@ -55,11 +55,14 @@ export const RsvpSection = ({
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
               tag="h2"
-              className="text-template-subtitle mb-6 text-primary"
+              className="text-template-subtitle text-center mb-12 text-primary"
             />
             <EditableField
               fieldId="rsvp-message"
-              text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+              text={getFieldValue(
+                "rsvp-message",
+                "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+              )}
               style={getFieldStyle("rsvp-message")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
