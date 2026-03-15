@@ -323,82 +323,23 @@ export const AuraTemplate = ({
 
         {/* ===== RSVP SECTION ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <section className="py-16 px-4 bg-card">
-            <div className="max-w-3xl mx-auto space-y-8">
-              <AnimatedSection animation="fade-in">
-                <EditableField
-                  fieldId="rsvp-title"
-                  text={getFieldValue("rsvp-title", "Join Our Celebration")}
-                  style={getFieldStyle("rsvp-title")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h2"
-                  className="text-template-subtitle text-center mb-12 text-primary"
-                />
-                <EditableField
-                  fieldId="rsvp-message"
-                  text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
-                  style={getFieldStyle("rsvp-message")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  multiline={true}
-                  tag="p"
-                  className="text-template-body text-center text-muted-foreground"
-                />
-              </AnimatedSection>
-
-              {invitees.length > 0 && (
-                <div className="space-y-4">
-                  {invitees.map((invitee: any) => (
-                    <div key={invitee.id} className="flex items-center justify-between py-3 px-4 bg-background rounded-lg border border-border">
-                      <span className="text-foreground font-medium">{invitee.name}</span>
-                      <div className="flex items-center gap-6">
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`attending-${invitee.id}`}
-                            checked={rsvpResponses[invitee.id] === true}
-                            onCheckedChange={() => handleRsvpToggle(invitee.id, true)}
-                            disabled={isRsvpDeadlinePassed}
-                          />
-                          <Label htmlFor={`attending-${invitee.id}`} className="text-sm text-muted-foreground">Yes</Label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Checkbox
-                            id={`not-attending-${invitee.id}`}
-                            checked={rsvpResponses[invitee.id] === false}
-                            onCheckedChange={() => handleRsvpToggle(invitee.id, false)}
-                            disabled={isRsvpDeadlinePassed}
-                          />
-                          <Label htmlFor={`not-attending-${invitee.id}`} className="text-sm text-muted-foreground">No</Label>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {invitees.length > 0 && !isRsvpDeadlinePassed && (
-                <Button onClick={handleRsvpSubmit} disabled={submittingRsvp} className="w-full mt-6">
-                  {submittingRsvp ? "Submitting..." : "Submit RSVP"}
-                </Button>
-              )}
-
-              {isRsvpDeadlinePassed && (
-                <p className="mt-4 text-sm text-red-600 text-center">The RSVP deadline has passed.</p>
-              )}
-
-              {wedding.rsvp_deadline && (
-                <div className="pt-8 border-t border-border">
-                  <p className="text-template-small text-center mb-2 text-muted-foreground">
-                    Kindly confirm your attendance before this date:
-                  </p>
-                  <p className="text-template-heading text-primary text-center">
-                    {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
+          <RsvpSection
+            wedding={wedding}
+            isPreview={isPreview}
+            onFieldUpdate={onFieldUpdate}
+            getFieldValue={getFieldValue}
+            getFieldStyle={getFieldStyle}
+            invitees={invitees}
+            rsvpResponses={rsvpResponses}
+            handleRsvpToggle={handleRsvpToggle}
+            handleRsvpSubmit={handleRsvpSubmit}
+            numberOfPersons={numberOfPersons}
+            isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+            submittingRsvp={submittingRsvp}
+            bgClassName="bg-card"
+            cardBgClassName="bg-background"
+          />
+        )}
         )}
       </div>
     </div>
