@@ -52,46 +52,6 @@ export const TemplateRenderer = ({
   submittingRsvp = false,
 }: TemplateRendererProps) => {
   // Use custom template component if specified
-  if (template.component === 'AnthonyOdileTemplate') {
-    return (
-      <AnthonyOdileTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'AnthonyOdileCarouselTemplate') {
-    return (
-      <AnthonyOdileCarouselTemplate
-        template={template}
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
   if (template.component === 'VeriteTemplate') {
     return (
       <VeriteTemplate
@@ -111,60 +71,6 @@ export const TemplateRenderer = ({
   if (template.component === 'GraceTemplate') {
     return (
       <GraceTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'BachelorLeafyTemplate') {
-    return (
-      <BachelorLeafyTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'ChristmasTemplate') {
-    return (
-      <ChristmasTemplate
-        wedding={wedding}
-        locations={locations}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-      />
-    );
-  }
-
-  if (template.component === 'ElegantTabsTemplate') {
-    return (
-      <ElegantTabsTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
