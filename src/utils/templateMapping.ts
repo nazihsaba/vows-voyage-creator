@@ -1,6 +1,6 @@
 // Maps old template IDs to new template IDs for backward compatibility
 export const templateMapping: Record<string, string> = {
-  'template2': 'classic-gallery',
+  'template2': 'modern-wedding',
   'template3': 'romantic-fullscreen',
   'template4': 'elegant-fullscreen',
   'template5': 'modern-wedding',
