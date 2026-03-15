@@ -73,10 +73,14 @@ export const EditableField = ({
 
   const Tag = tag as any;
 
+  // Only apply inline styles when they are explicitly set and non-empty
   const appliedStyle: React.CSSProperties = {
-    ...(style.fontFamily ? { fontFamily: style.fontFamily } : {}),
-    ...(style.color ? { color: style.color } : {}),
+    ...(style.fontFamily && style.fontFamily.trim() ? { fontFamily: style.fontFamily } : {}),
+    ...(style.color && style.color.trim() ? { color: style.color } : {}),
   };
+
+  // Only add fontSize className when it's explicitly set
+  const fontSizeClass = style.fontSize && style.fontSize.trim() ? style.fontSize : undefined;
 
   if (!isPreview) {
     return (
