@@ -66,6 +66,7 @@ const WeddingForm = () => {
   });
 
   const template = formData.template_type;
+  const isAuraTemplate = template === "bible-verse-tabs";
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
   const shouldShowGalleryUpload =
     template === "template2" ||
