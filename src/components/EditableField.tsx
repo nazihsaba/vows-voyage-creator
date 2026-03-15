@@ -73,14 +73,18 @@ export const EditableField = ({
 
   const Tag = tag as any;
 
+  // Only apply inline styles when they are explicitly set and non-empty
   const appliedStyle: React.CSSProperties = {
-    ...(style.fontFamily ? { fontFamily: style.fontFamily } : {}),
-    ...(style.color ? { color: style.color } : {}),
+    ...(style.fontFamily && style.fontFamily.trim() ? { fontFamily: style.fontFamily } : {}),
+    ...(style.color && style.color.trim() ? { color: style.color } : {}),
   };
+
+  // Only add fontSize className when it's explicitly set
+  const fontSizeClass = style.fontSize && style.fontSize.trim() ? style.fontSize : undefined;
 
   if (!isPreview) {
     return (
-      <Tag className={cn(className, style.fontSize)} style={appliedStyle}>
+      <Tag className={cn(className, fontSizeClass)} style={appliedStyle}>
         {children || text}
       </Tag>
     );
@@ -92,7 +96,7 @@ export const EditableField = ({
         onClick={handleClick}
         className={cn(
           className,
-          style.fontSize,
+          fontSizeClass,
           "cursor-pointer hover:outline hover:outline-2 hover:outline-primary/50 hover:bg-primary/5 rounded transition-all relative group"
         )}
         style={appliedStyle}
