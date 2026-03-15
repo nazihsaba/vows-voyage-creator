@@ -84,7 +84,7 @@ export const EditableField = ({
 
   if (!isPreview) {
     return (
-      <Tag className={cn(className, style.fontSize)} style={appliedStyle}>
+      <Tag className={cn(className, fontSizeClass)} style={appliedStyle}>
         {children || text}
       </Tag>
     );
