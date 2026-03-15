@@ -60,14 +60,16 @@ export const AuraTemplate = ({
 
   const timelineEvents = [
     ...(ceremony
-      ? [{
-          id: "ceremony",
-          title: "Ceremony",
-          time: ceremony.time || "7:00 PM",
-          location: ceremony.location_name,
-          link: ceremony.location_link,
-          icon: Church,
-        }]
+      ? [
+          {
+            id: "ceremony",
+            title: "Ceremony",
+            time: ceremony.time || "7:00 PM",
+            location: ceremony.location_name,
+            link: ceremony.location_link,
+            icon: Church,
+          },
+        ]
       : []),
     ...(venue
       ? [
@@ -111,7 +113,10 @@ export const AuraTemplate = ({
               <div className="w-12 h-px bg-primary/40 mx-auto" />
               <EditableField
                 fieldId="bible-verse"
-                text={getFieldValue("bible-verse", '"Two are better than one. For if they fall, one will lift up the other."')}
+                text={getFieldValue(
+                  "bible-verse",
+                  '"Two are better than one. For if they fall, one will lift up the other."',
+                )}
                 style={getFieldStyle("bible-verse")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -147,16 +152,22 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="groom-parents"
-                    text={getFieldValue("groom-parents", `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`)}
+                    text={getFieldValue(
+                      "groom-parents",
+                      `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`,
+                    )}
                     style={getFieldStyle("groom-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm text-primary font-medium tracking-wide"
+                    className="text-template-title text-primary"
                   />
                   <EditableField
                     fieldId="groom-family-name"
-                    text={getFieldValue("groom-family-name", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family")}
+                    text={getFieldValue(
+                      "groom-family-name",
+                      wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
+                    )}
                     style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -168,7 +179,10 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-parents"
-                    text={getFieldValue("bride-parents", `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`)}
+                    text={getFieldValue(
+                      "bride-parents",
+                      `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`,
+                    )}
                     style={getFieldStyle("bride-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -177,7 +191,10 @@ export const AuraTemplate = ({
                   />
                   <EditableField
                     fieldId="bride-family-name"
-                    text={getFieldValue("bride-family-name", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family")}
+                    text={getFieldValue(
+                      "bride-family-name",
+                      wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
+                    )}
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -191,7 +208,10 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <EditableField
                 fieldId="invitation-line"
-                text={getFieldValue("invitation-line", "joyfully invite you to the wedding of their\nbeloved son and daughter")}
+                text={getFieldValue(
+                  "invitation-line",
+                  "joyfully invite you to the wedding of their\nbeloved son and daughter",
+                )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -220,7 +240,15 @@ export const AuraTemplate = ({
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
                 <EditableField
                   fieldId="wedding-date-formatted"
-                  text={getFieldValue("wedding-date-formatted", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" }))}
+                  text={getFieldValue(
+                    "wedding-date-formatted",
+                    new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                      weekday: "long",
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    }),
+                  )}
                   style={getFieldStyle("wedding-date-formatted")}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
@@ -286,7 +314,6 @@ export const AuraTemplate = ({
           </section>
         )}
 
-
         {/* ===== GALLERY SECTION ===== */}
         {gallery && gallery.length > 0 && (
           <section className="mb-16">
@@ -297,7 +324,12 @@ export const AuraTemplate = ({
               {gallery.map((image: any, index: number) => (
                 <AnimatedSection key={image.id || index} delay={index * 80} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
-                    <img src={image.image_url} alt={image.alt_text || `Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+                    <img
+                      src={image.image_url}
+                      alt={image.alt_text || `Wedding moment ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                    />
                   </div>
                 </AnimatedSection>
               ))}
@@ -330,7 +362,11 @@ export const AuraTemplate = ({
             </div>
             <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
               <img
-                src={gallery && gallery.length > 0 ? gallery[0].image_url : "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop"}
+                src={
+                  gallery && gallery.length > 0
+                    ? gallery[0].image_url
+                    : "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop"
+                }
                 alt="Wedding moment"
                 className="w-full h-full object-cover"
                 loading="lazy"
