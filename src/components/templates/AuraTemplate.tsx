@@ -340,7 +340,6 @@ export const AuraTemplate = ({
             cardBgClassName="bg-background"
           />
         )}
-        )}
       </div>
     </div>
   );
