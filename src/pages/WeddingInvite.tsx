@@ -336,18 +336,6 @@ const WeddingInvite = () => {
 
   const content = (
     <>
-      {isOwner && (
-        <div className="fixed top-4 left-4 z-50">
-          <Button
-            onClick={() => navigate("/dashboard/my-events")}
-            variant="outline"
-            className="bg-white/90 hover:bg-white shadow-lg"
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            My Events
-          </Button>
-        </div>
-      )}
       {wedding?.template_type?.includes("bachelor") && (
         <div className="fixed top-4 right-4 z-50">
           <Button
