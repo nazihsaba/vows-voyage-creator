@@ -10,7 +10,6 @@ import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
-import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
 
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
