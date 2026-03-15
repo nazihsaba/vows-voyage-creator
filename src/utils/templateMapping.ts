@@ -10,10 +10,9 @@ export const templateMapping: Record<string, string> = {
 // Reverse mapping for saving to database
 export const reverseTemplateMapping: Record<string, string> = {
   'classic-cover': 'template1',
-  'classic-gallery': 'template2',
+  'modern-wedding': 'template2',
   'romantic-fullscreen': 'template3',
   'elegant-fullscreen': 'template4',
-  'modern-wedding': 'template5',
   'video-cinematic': 'template6',
 };
 
