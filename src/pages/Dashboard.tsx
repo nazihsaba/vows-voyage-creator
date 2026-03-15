@@ -29,10 +29,8 @@ import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import ivoireTemplate from "@/assets/template-ivoire.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
-import { RoseGoldTabsPreview } from "@/components/templates/RoseGoldTabsPreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
-import { EnvelopeTemplatePreview } from "@/components/templates/EnvelopeTemplatePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
