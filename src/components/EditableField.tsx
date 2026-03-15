@@ -96,7 +96,7 @@ export const EditableField = ({
         onClick={handleClick}
         className={cn(
           className,
-          style.fontSize,
+          fontSizeClass,
           "cursor-pointer hover:outline hover:outline-2 hover:outline-primary/50 hover:bg-primary/5 rounded transition-all relative group"
         )}
         style={appliedStyle}
