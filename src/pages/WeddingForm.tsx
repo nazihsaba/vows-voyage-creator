@@ -978,48 +978,6 @@ const WeddingForm = () => {
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
                 </Button>
-                {(id || createdWeddingId) && (
-                  <>
-                    <Button
-                      type="button"
-                      variant={formData.status === "published" ? "outline" : "default"}
-                      disabled={loading}
-                      onClick={async () => {
-                        const weddingId = id || createdWeddingId;
-                        if (!weddingId) return;
-                        setLoading(true);
-                        try {
-                          const newStatus = formData.status === "published" ? "draft" : "published";
-                          const { error } = await supabase
-                            .from("weddings")
-                            .update({ status: newStatus })
-                            .eq("id", weddingId);
-
-                          if (error) throw error;
-
-                          setFormData({ ...formData, status: newStatus });
-                          toast({
-                            title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
-                            description:
-                              newStatus === "published"
-                                ? "Your invitation is now live"
-                                : "Your invitation is now in draft mode",
-                          });
-                        } catch (error: any) {
-                          toast({
-                            title: "Error",
-                            description: error.message,
-                            variant: "destructive",
-                          });
-                        } finally {
-                          setLoading(false);
-                        }
-                      }}
-                    >
-                      {formData.status === "published" ? "Unpublish" : "Publish"}
-                    </Button>
-                  </>
-                )}
               </div>
             </form>
           </CardContent>
