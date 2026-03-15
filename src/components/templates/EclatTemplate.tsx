@@ -6,7 +6,6 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface EclatTemplateProps {
   wedding: any;
