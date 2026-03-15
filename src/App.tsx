@@ -9,9 +9,6 @@ import Dashboard from "./pages/Dashboard";
 import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
-import BachelorForm from "./pages/BachelorForm";
-import ChristmasForm from "./pages/ChristmasForm";
-import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
 import WeddingInvite from "./pages/WeddingInvite";
 
 import TemplateSelection from "./pages/TemplateSelection";
