@@ -44,7 +44,7 @@ export const RsvpSection = ({
   return (
     <AnimatedSection animation="fade-up">
       <section className={`py-16 px-4 ${bgClassName}`}>
-        <div className="max-w-3xl mx-auto space-y-8">
+        <div className="max-w-4xl mx-auto">
           <EditableField
             fieldId="rsvp-title"
             text={getFieldValue("rsvp-title", "Join Our Celebration")}
@@ -62,7 +62,7 @@ export const RsvpSection = ({
             isPreview={isPreview}
             multiline={true}
             tag="p"
-            className="text-template-body text-center text-gray-600"
+            className="text-center text-template-body mb-8 text-gray-600"
           />
 
           {invitees.length > 0 && (
