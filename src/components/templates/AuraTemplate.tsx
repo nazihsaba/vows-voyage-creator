@@ -228,7 +228,7 @@ export const AuraTemplate = ({
                   text={getFieldValue("couple-names", `${wedding.groom_name} & ${wedding.bride_name}`)}
                   style={getFieldStyle("couple-names")}
                   onUpdate={onFieldUpdate}
-                  isPreview={!isPreview}
+                  isPreview={isPreview}
                   tag="h1"
                   className="text-template-title text-primary"
                 />
