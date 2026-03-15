@@ -1,4 +1,3 @@
-import { EditableField } from "@/components/EditableField";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
@@ -9,9 +8,6 @@ interface RsvpSectionProps {
   staticDeadline?: Date;
   wedding?: any;
   isPreview?: boolean;
-  onFieldUpdate?: (fieldId: string, text: string, style: any) => void;
-  getFieldValue?: (fieldId: string, defaultValue: string) => string;
-  getFieldStyle?: (fieldId: string) => any;
   invitees?: any[];
   rsvpResponses?: Record<string, boolean>;
   handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
@@ -27,9 +23,6 @@ export const RsvpSection = ({
   staticDeadline,
   wedding,
   isPreview = false,
-  onFieldUpdate = () => {},
-  getFieldValue = (_id: string, def: string) => def,
-  getFieldStyle = () => ({}),
   invitees = [],
   rsvpResponses = {},
   handleRsvpToggle = () => {},
@@ -47,28 +40,11 @@ export const RsvpSection = ({
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <EditableField
-              fieldId="rsvp-title"
-              text={getFieldValue("rsvp-title", "Join Our Celebration")}
-              style={getFieldStyle("rsvp-title")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="h2"
-              className="text-template-subtitle text-center mb-12 text-primary"
-            />
-            <EditableField
-              fieldId="rsvp-message"
-              text={getFieldValue(
-                "rsvp-message",
-                "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-              )}
-              style={getFieldStyle("rsvp-message")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              multiline={true}
-              tag="p"
-              className="text-center text-template-body mb-8 text-gray-600"
-            />
+            <CalendarHeart className="w-12 h-12 text-primary mx-auto mb-4" />
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
+            <p className="text-center text-template-body mb-8 text-muted-foreground">
+              Please let us know if you can join us on our special day. Your presence would mean the world to us.
+            </p>
           </div>
 
           {invitees.length > 0 && (
