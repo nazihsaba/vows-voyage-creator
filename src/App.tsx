@@ -10,6 +10,7 @@ import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
+import RoseGoldTabsForm from "./pages/RoseGoldTabsForm";
 
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
@@ -36,6 +37,7 @@ const App = () => (
           <Route path="/dashboard/wedding-templates" element={<WeddingTemplates />} />
           <Route path="/dashboard/select-template/:eventType" element={<TemplateSelection />} />
           <Route path="/dashboard/create" element={<WeddingForm />} />
+          <Route path="/dashboard/rose-gold-tabs-form" element={<RoseGoldTabsForm />} />
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
