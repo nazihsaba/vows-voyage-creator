@@ -220,11 +220,14 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
-                        if (template.id === "bible-verse-tabs") {
-                          navigate(`/dashboard/aura-form?template=${template.id}`);
-                        } else {
-                          navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
-                        }
+                        const routeMap: Record<string, string> = {
+                          "bible-verse-tabs": "/dashboard/aura-form",
+                          "template2": "/dashboard/verite-form",
+                          "classic-romance": "/dashboard/eclat-form",
+                          "template6": "/dashboard/grace-form",
+                        };
+                        const route = routeMap[template.id] || "/dashboard/create";
+                        navigate(`${route}?eventType=weddings&template=${template.id}`);
                       }}
                     >
                       Use This Template
