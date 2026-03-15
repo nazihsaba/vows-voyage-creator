@@ -4,9 +4,8 @@ import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 interface AuraTemplateProps {
   wedding: any;
