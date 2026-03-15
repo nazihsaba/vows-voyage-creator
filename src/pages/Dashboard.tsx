@@ -220,7 +220,7 @@ const Dashboard = () => {
                     <Button
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
-                        if (template.id === "rose-gold-tabs" || template.id === "bible-verse-tabs") {
+                        if (template.id === "bible-verse-tabs") {
                           navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
