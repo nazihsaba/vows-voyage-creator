@@ -75,7 +75,8 @@ const WeddingForm = () => {
     template === "elegant-fullscreen" ||
     template === "template5" ||
     template === "modern-wedding" ||
-    template === "classic-romance";
+    template === "classic-romance" ||
+    template === "bible-verse-tabs";
 
   useEffect(() => {
     if (id) {
@@ -367,6 +368,7 @@ const WeddingForm = () => {
         "template5",
         "modern-wedding",
         "classic-romance",
+        "bible-verse-tabs",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
