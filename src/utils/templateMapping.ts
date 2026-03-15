@@ -43,6 +43,6 @@ export const isLegacyTemplateId = (id: string): boolean => {
  * Normalizes template ID to new format for use in components
  */
 export const normalizeTemplateId = (id: string | null | undefined): string => {
-  if (!id) return 'classic-cover';
+  if (!id) return 'modern-wedding';
   return getNewTemplateId(id);
 };
