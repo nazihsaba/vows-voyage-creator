@@ -277,9 +277,6 @@ export const VeriteTemplate = ({
         <RsvpSection
           wedding={wedding}
           isPreview={isPreview}
-          onFieldUpdate={onFieldUpdate}
-          getFieldValue={getFieldValue}
-          getFieldStyle={getFieldStyle}
           invitees={invitees}
           rsvpResponses={rsvpResponses}
           handleRsvpToggle={handleRsvpToggle}
