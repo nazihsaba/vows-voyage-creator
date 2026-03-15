@@ -350,7 +350,7 @@ export const EclatPreview = () => {
       </AnimatedSection>
 
       {/* RSVP Section */}
-      <RsvpSection isStatic staticDeadline={staticWedding.rsvp_deadline} />
+      <RsvpSection staticDeadline={staticWedding.rsvp_deadline} />
 
       {/* Closing Message */}
       <AnimatedSection animation="fade-in">
