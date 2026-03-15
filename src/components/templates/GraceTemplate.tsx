@@ -2,10 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
+import { Church, PartyPopper, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Clock, MapPin } from "lucide-react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 
@@ -46,7 +46,6 @@ export const GraceTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: GraceTemplateProps) => {
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [hasStarted, setHasStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
@@ -54,48 +53,24 @@ export const GraceTemplate = ({
   const venue = locations.find((loc) => loc.type === "venue");
 
   useEffect(() => {
-    const handleScroll = () => {
-      const windowHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-      const scrollTop = window.scrollY;
-      const progress = (scrollTop / (documentHeight - windowHeight)) * 100;
-      setScrollProgress(progress);
-    };
-
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    AOS.init({ duration: 1000, once: true, easing: "ease-out" });
   }, []);
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.play().catch((error) => {
-        console.log("Video autoplay prevented:", error);
-      });
+      videoRef.current.play().catch(() => {});
     }
   }, []);
 
-  useEffect(() => {
-    AOS.init({
-      duration: 1000,
-      once: true,
-      easing: "ease-out",
-    });
-  }, []);
-
-  // Lock/unlock scroll based on hasStarted
   useEffect(() => {
     if (!hasStarted) {
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "auto";
     }
-
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    return () => { document.body.style.overflow = "auto"; };
   }, [hasStarted]);
 
-  // Handle audio time updates to loop within trimmed range
   const handleTimeUpdate = () => {
     if (audioRef.current && wedding.audio_end_time) {
       if (audioRef.current.currentTime >= wedding.audio_end_time) {
@@ -104,393 +79,255 @@ export const GraceTemplate = ({
     }
   };
 
-  // Handle start button click
   const handleStartClick = async () => {
     setHasStarted(true);
-
-    // Play audio if available
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
       const startTime = wedding.audio_start_time || 0;
-
-      // If we need to seek, wait for the seek to complete before playing
       if (startTime > 0) {
         audio.currentTime = startTime;
         await new Promise<void>((resolve) => {
           audio.addEventListener("seeked", () => resolve(), { once: true });
         });
       }
-
-      try {
-        await audio.play();
-      } catch (err) {
-        console.log("Audio playback failed:", err);
-      }
+      try { await audio.play(); } catch (err) { console.log("Audio playback failed:", err); }
     }
-
-    // Smooth scroll to next section
     setTimeout(() => {
-      document.getElementById("family-section")?.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }, 300);
+      document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
   };
 
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="w-full text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hidden audio element */}
       {wedding.audio_url && (
         <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
-          Your browser does not support the audio element.
         </audio>
       )}
 
-      {/* Fixed Video Background */}
-      <div className="fixed inset-0 w-full h-full overflow-hidden">
+      {/* Hero */}
+      <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
         <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source
-            src={
-              wedding.video_url ||
-              "https://assets.mixkit.co/videos/preview/mixkit-wedding-couple-walking-through-garden-4437-large.mp4"
-            }
-            type="video/mp4"
-          />
+          <source src={wedding.video_url || "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4"} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
-      </div>
+        <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
+          <EditableField
+            fieldId="hero-subtitle"
+            text={getFieldValue("hero-subtitle", "The Wedding Of")}
+            style={getFieldStyle("hero-subtitle")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-template-small"
+          />
+          <div className="space-y-2">
+            <EditableField fieldId="groom-name" text={getFieldValue("groom-name", wedding.groom_name)} style={getFieldStyle("groom-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
+            <p className="text-4xl md:text-5xl">&</p>
+            <EditableField fieldId="bride-name" text={getFieldValue("bride-name", wedding.bride_name)} style={getFieldStyle("bride-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
+          </div>
+          <EditableField
+            fieldId="wedding-date-display"
+            text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }))}
+            style={getFieldStyle("wedding-date-display")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-template-body tracking-wide"
+          />
+          {!hasStarted && (
+            <Button onClick={handleStartClick} className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm">Tap To Start</Button>
+          )}
+        </div>
+        <div className="absolute bottom-8 animate-bounce">
+          <ChevronDown className="w-8 h-8 text-white" />
+        </div>
+      </section>
 
-      {/* Scroll Progress Bar */}
-      <div className="fixed top-0 left-0 w-full h-1 bg-white/20 z-50">
-        <div className="h-full bg-white transition-all duration-300" style={{ width: `${scrollProgress}%` }} />
-      </div>
+      {/* Family Names */}
+      <section id="family-section" className="py-16 px-4 text-center bg-white" data-aos="fade-up">
+        <div className="max-w-3xl mx-auto space-y-8">
+          <div className="space-y-4">
+            <EditableField fieldId="groom-family" text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")} style={getFieldStyle("groom-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+            <p className="text-2xl">&</p>
+            <EditableField fieldId="bride-family" text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")} style={getFieldStyle("bride-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+          </div>
+          <EditableField
+            fieldId="invitation-text"
+            text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding celebration")}
+            style={getFieldStyle("invitation-text")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            multiline={true}
+            tag="p"
+            className="text-template-body"
+          />
+        </div>
+      </section>
 
-      {/* Scrollable Content */}
-      <div className="relative z-10">
-        {/* Hero Section */}
-        <section className="min-h-screen flex flex-col items-center justify-center px-4 text-center text-white">
-          <div className="space-y-8 animate-fade-in" data-aos="fade-up">
+      {/* Countdown with Video Background */}
+      <section className="relative py-16 px-4 overflow-hidden">
+        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
+          <source src={wedding.video_url || "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4"} type="video/mp4" />
+        </video>
+        <div className="absolute inset-0 bg-black/50" />
+        <div className="relative z-10">
+          <CountdownTimer targetDate={wedding.wedding_date} />
+        </div>
+      </section>
+
+      {/* Wedding Events */}
+      <section className="py-16 px-4 bg-white" data-aos="fade-up">
+        <div className="max-w-4xl mx-auto text-center space-y-12">
+          <div>
+            <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
             <EditableField
-              fieldId="hero-subtitle"
-              text={getFieldValue("hero-subtitle", "The Wedding Of")}
-              style={getFieldStyle("hero-subtitle")}
+              fieldId="events-subtitle"
+              text={getFieldValue("events-subtitle", "Join us in celebrating this special day")}
+              style={getFieldStyle("events-subtitle")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
+              multiline={true}
               tag="p"
-              className="text-template-small"
+              className="text-template-body max-w-2xl mx-auto"
             />
+          </div>
 
-            <div className="space-y-4">
-              <EditableField
-                fieldId="groom-name"
-                text={getFieldValue("groom-name", wedding.groom_name)}
-                style={getFieldStyle("groom-name")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h1"
-                className="text-template-title"
-              />
-              <p className="text-4xl md:text-5xl">&</p>
-              <EditableField
-                fieldId="bride-name"
-                text={getFieldValue("bride-name", wedding.bride_name)}
-                style={getFieldStyle("bride-name")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h1"
-                className="text-template-title"
-              />
-            </div>
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
+            {ceremony && (
+              <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="100">
+                <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
+                <div className="space-y-2">
+                  <p className="text-template-small text-gray-600">Event Location</p>
+                  <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                </div>
+                {ceremony.location_link && (
+                  <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                )}
+              </div>
+            )}
+            {venue && (
+              <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6" data-aos="fade-up" data-aos-delay="200">
+                <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
+                <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
+                <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
+                <div className="space-y-2">
+                  <p className="text-template-small text-gray-600">Event Location</p>
+                  <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+                </div>
+                {venue.location_link && (
+                  <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
 
+      {/* Gallery Image - Full Width with Wave SVGs */}
+      {gallery.length > 0 && (
+        <section className="relative w-full" data-aos="fade-up">
+          <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <img src={gallery[0].image_url} alt="Wedding moment" className="w-full h-full object-cover" />
+          </div>
+          <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
+            <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-[#faf8f5]">
+              <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
+            </svg>
+          </div>
+        </section>
+      )}
+
+      {/* Gift Cards */}
+      {giftCards.length > 0 && (
+        <section className="py-16 px-4 bg-[#faf8f5]" data-aos="fade-up">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+            <GiftCards giftCards={giftCards} isOwner={isOwner} />
+          </div>
+        </section>
+      )}
+
+      {/* RSVP */}
+      {(wedding.rsvp_deadline || invitees.length > 0) && (
+        <section className="py-16 px-4 bg-white" data-aos="fade-up">
+          <div className="max-w-3xl mx-auto space-y-8">
+            <EditableField fieldId="rsvp-title" text={getFieldValue("rsvp-title", "Join Our Celebration")} style={getFieldStyle("rsvp-title")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle text-center mb-12 text-primary" />
             <EditableField
-              fieldId="wedding-date-display"
-              text={getFieldValue(
-                "wedding-date-display",
-                new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }),
-              )}
-              style={getFieldStyle("wedding-date-display")}
+              fieldId="rsvp-message"
+              text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+              style={getFieldStyle("rsvp-message")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
+              multiline={true}
               tag="p"
-              className="text-template-body tracking-widest"
+              className="text-template-body text-center text-gray-600"
             />
 
-            {!hasStarted && (
-              <Button
-                onClick={handleStartClick}
-                className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm animate-fade-in"
-              >
-                Tap To Start
-              </Button>
+            {invitees.length > 0 && (
+              <div className="space-y-6 pt-6 border-t border-gray-300">
+                <div className="space-y-4">
+                  {invitees.map((invitee: any) => (
+                    <div key={invitee.id} className="flex items-center justify-between py-4 px-6 bg-[#faf8f5] rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors">
+                      <span className="text-xl font-serif text-primary">{invitee.name}</span>
+                      <div className="flex items-center gap-3">
+                        <Checkbox id={`rsvp-${invitee.id}`} checked={rsvpResponses[invitee.id] === true} onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)} disabled={isRsvpDeadlinePassed} className="h-5 w-5" />
+                        <Label htmlFor={`rsvp-${invitee.id}`} className={`text-base cursor-pointer font-medium ${isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"}`}>
+                          {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                        </Label>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+                <div className="pt-6 border-t border-gray-300 space-y-4">
+                  <p className="text-lg font-semibold text-center text-[#3e2723]">Number of Guests: {numberOfPersons || invitees.length}</p>
+                  {isRsvpDeadlinePassed ? (
+                    <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
+                  ) : (
+                    <Button onClick={handleRsvpSubmit} disabled={submittingRsvp} className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90" size="lg">
+                      {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    </Button>
+                  )}
+                </div>
+              </div>
+            )}
+
+            {wedding.rsvp_deadline && (
+              <div className="pt-8 border-t border-gray-300">
+                <p className="text-template-small text-center mb-2 text-gray-600">{invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}</p>
+                <p className="text-template-heading text-primary text-center">
+                  {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                </p>
+              </div>
             )}
           </div>
         </section>
+      )}
 
-        {/* Family Names Section */}
-        <section id="family-section" className="flex items-center justify-center px-4 py-8">
-          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl op" data-aos="zoom-in">
-            <div className="space-y-12">
-              <div className="grid md:grid-cols-2 gap-8 text-center">
-                <div className="space-y-4">
-                  <p className="text-template-small">Groom's Family</p>
-                  <EditableField
-                    fieldId="groom-family"
-                    text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")}
-                    style={getFieldStyle("groom-family")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="h2"
-                    className="text-template-subtitle"
-                  />
-                </div>
-
-                <div className="space-y-4">
-                  <p className="text-template-small">Bride's Family</p>
-                  <EditableField
-                    fieldId="bride-family"
-                    text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")}
-                    style={getFieldStyle("bride-family")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="h2"
-                    className="text-template-subtitle"
-                  />
-                </div>
-              </div>
-
-              <div className="pt-8 border-t border-border">
-                <EditableField
-                  fieldId="invitation-text"
-                  text={getFieldValue(
-                    "invitation-text",
-                    "Request the honor of your presence at the wedding celebration",
-                  )}
-                  style={getFieldStyle("invitation-text")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  multiline={true}
-                  tag="p"
-                  className="text-template-body text-center"
-                />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* Countdown Section */}
-        <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
-          <div className="max-w-4xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl" data-aos="zoom-in">
-            <CountdownTimer targetDate={wedding.wedding_date} />
-          </div>
-        </section>
-
-        {/* Wedding Events Section */}
-        {(ceremony || venue) && (
-          <section className="flex items-center justify-center px-4 py-8">
-            <div className="max-w-5xl w-full">
-              <div className="text-center mb-12 bg-white rounded-2xl p-8 shadow-2xl">
-                <h2 className="text-template-subtitle mb-6">Wedding Events</h2>
-                <EditableField
-                  fieldId="events-subtitle"
-                  text={getFieldValue("events-subtitle", "Join us in celebrating this special day")}
-                  style={getFieldStyle("events-subtitle")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  multiline={true}
-                  tag="p"
-                  className="text-template-body opacity-90"
-                />
-              </div>
-
-              <div className="grid md:grid-cols-2 gap-6">
-                {ceremony && (
-                  <div
-                    className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
-                    data-aos="fade-left"
-                    data-aos-delay="100"
-                  >
-                    <div className="w-24 bg-primary/90 flex items-center justify-center">
-                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">
-                        Ceremony
-                      </p>
-                    </div>
-                    <div className="flex-1 p-6 space-y-6">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5" />
-                        <p className="text-template-body font-bold text-base">{ceremony.time}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-base font-bold">Event Location</p>
-                        <p className="text-template-body text-base">{ceremony.location_name}</p>
-                      </div>
-                      {ceremony.location_link && (
-                        <a
-                          href={ceremony.location_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 border-2 border-primary text-foreground px-6 py-3 rounded-full transition-colors"
-                        >
-                          <MapPin className="w-5 h-5" />
-                          <span>Google Maps</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-                {venue && (
-                  <div
-                    className="bg-white rounded-xl shadow-2xl overflow-hidden flex"
-                    data-aos="fade-left"
-                    data-aos-delay="200"
-                  >
-                    <div className="w-24 bg-primary/90 flex items-center justify-center">
-                      <p className="text-white text-4xl font-cursive transform -rotate-90 whitespace-nowrap">Venue</p>
-                    </div>
-                    <div className="flex-1 p-6 space-y-6">
-                      <div className="flex items-center gap-3">
-                        <Clock className="w-5 h-5" />
-                        <p className="text-template-body font-bold text-base">{venue.time}</p>
-                      </div>
-                      <div className="space-y-2">
-                        <p className="text-base font-bold">Event Location</p>
-                        <p className="text-template-body text-base">{venue.location_name}</p>
-                      </div>
-                      {venue.location_link && (
-                        <a
-                          href={venue.location_link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 border-2 border-primary text-foreground px-6 py-3 rounded-full transition-colors"
-                        >
-                          <MapPin className="w-5 h-5" />
-                          <span>Google Maps</span>
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </section>
-        )}
-
-        {/* Gift Cards Section */}
-        {giftCards.length > 0 && (
-          <section className="min-h-[75vh] flex items-center justify-center px-4 py-8">
-            <div className="max-w-4xl w-full bg-white rounded-2xl px-2 py-8 md:p-8 shadow-2xl" data-aos="zoom-in">
-              <h2 className="text-template-subtitle text-center mb-12">Wedding Gift</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">
-                For those who desire a wedding list is available
-              </p>
-              <GiftCards giftCards={giftCards} isOwner={isOwner} />
-            </div>
-          </section>
-        )}
-
-        {/* RSVP Section */}
-        {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <section className="flex items-center justify-center px-4 py-8">
-            <div className="max-w-3xl w-full bg-white rounded-2xl p-8 md:p-16 shadow-2xl space-y-8" data-aos="zoom-in">
-              <EditableField
-                fieldId="rsvp-title"
-                text={getFieldValue("rsvp-title", "Join Our Celebration")}
-                style={getFieldStyle("rsvp-title")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h2"
-                className="text-template-subtitle text-center mb-12 text-primary"
-              />
-
-              <EditableField
-                fieldId="rsvp-message"
-                text={getFieldValue(
-                  "rsvp-message",
-                  "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-                )}
-                style={getFieldStyle("rsvp-message")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-template-body text-center"
-              />
-
-              {/* Invitees List with Checkboxes */}
-              {invitees.length > 0 && (
-                <div className="space-y-6 pt-6 border-t border-border">
-                  <div className="space-y-4">
-                    {invitees.map((invitee: any) => (
-                      <div
-                        key={invitee.id}
-                        className="flex items-center justify-between py-4 px-6 bg-accent/5 rounded-lg border border-border hover:bg-accent/10 transition-colors"
-                      >
-                        <span className="text-xl font-serif text-primary">{invitee.name}</span>
-                        <div className="flex items-center gap-3">
-                          <Checkbox
-                            id={`rsvp-${invitee.id}`}
-                            checked={rsvpResponses[invitee.id] === true}
-                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
-                            disabled={isRsvpDeadlinePassed}
-                            className="h-5 w-5"
-                          />
-                          <Label
-                            htmlFor={`rsvp-${invitee.id}`}
-                            className={`text-base cursor-pointer font-medium ${
-                              isRsvpDeadlinePassed ? "text-muted-foreground" : "text-foreground"
-                            }`}
-                          >
-                            {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
-                          </Label>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="pt-6 border-t border-border space-y-4">
-                    <p className="text-lg font-semibold text-center">
-                      Number of Guests: {numberOfPersons || invitees.length}
-                    </p>
-
-                    {isRsvpDeadlinePassed ? (
-                      <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
-                    ) : (
-                      <Button
-                        onClick={handleRsvpSubmit}
-                        disabled={submittingRsvp}
-                        className="w-full text-lg py-6 text-white"
-                        size="lg"
-                      >
-                        {submittingRsvp ? "Submitting..." : "Submit RSVP"}
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {wedding.rsvp_deadline && (
-                <div className="pt-8 border-t border-border">
-                  <p className="text-template-small text-center mb-2">
-                    {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
-                  </p>
-                  <p className="text-template-heading text-primary text-center">
-                    {new Date(wedding.rsvp_deadline).toLocaleDateString("en-US", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </p>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
-      </div>
+      {/* Closing */}
+      <section className="py-16 px-4 bg-[#faf8f5] text-center" data-aos="fade-up">
+        <div className="max-w-3xl mx-auto space-y-8">
+          <EditableField
+            fieldId="closing-message"
+            text={getFieldValue("closing-message", "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.")}
+            style={getFieldStyle("closing-message")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            multiline={true}
+            tag="p"
+            className="text-template-body"
+          />
+        </div>
+      </section>
     </div>
   );
 };
