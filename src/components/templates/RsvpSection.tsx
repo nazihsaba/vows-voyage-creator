@@ -47,7 +47,6 @@ export const RsvpSection = ({
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <CalendarHeart className="w-12 h-12 text-primary mx-auto mb-4" />
             <EditableField
               fieldId="rsvp-title"
               text={getFieldValue("rsvp-title", "Join Our Celebration")}
