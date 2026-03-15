@@ -237,7 +237,7 @@ export const VeritePreview = () => {
       </AnimatedSection>
 
       {/* RSVP */}
-      <RsvpSection isStatic staticDeadline={staticWedding.rsvp_deadline} />
+      <RsvpSection staticDeadline={staticWedding.rsvp_deadline} />
 
       {/* Closing */}
       <AnimatedSection animation="fade-in">

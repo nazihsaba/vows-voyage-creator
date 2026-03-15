@@ -237,7 +237,7 @@ export const AuraPreview = () => {
         </section>
 
         {/* ===== RSVP SECTION ===== */}
-        <RsvpSection isStatic staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
+        <RsvpSection staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
       </div>
     </div>
   );
