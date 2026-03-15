@@ -1,5 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
-import { Gift, Copy } from "lucide-react";
+import { Copy } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import { useToast } from "@/hooks/use-toast";
@@ -37,47 +36,31 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
   };
 
   return (
-    <section className="py-4 px-2 bg-wedding-blush/20">
-      <div className="max-w-4xl mx-auto">
-        <div className="grid gap-6 md:grid-cols-2">
-          {giftCards.map((card) => {
-            const logoSrc = card.logo_url || getCardLogo(card.card_name);
-            return (
-              <Card key={card.id} className="shadow-soft">
-                <CardContent className="p-3">
-                  <div className="flex items-center gap-4">
-                    {/* LEFT – Logo */}
-                    {logoSrc && (
-                      <div className="h-8 w-8 flex items-center justify-center">
-                        <img
-                          src={logoSrc}
-                          alt={card.card_name}
-                          className="max-h-full max-w-full object-contain rounded-[6px]"
-                        />
-                      </div>
-                    )}
-
-                    {/* RIGHT – Name + Number */}
-                    <div className="flex-1 flex flex-col justify-center">
-                      <div className="text-md font-semibold mb-1 text-foreground">{card.card_name}</div>
-
-                      <div className="flex items-center gap-2 justify-between">
-                        <p className="text-sm md:text-sm font-mono bg-wedding-ivory rounded-lg inline-flex items-center">
-                          {card.card_number}
-                        </p>
-                        <Copy
-                          className="h-4 w-4 cursor-pointer text-muted-foreground hover:text-foreground transition-colors"
-                          onClick={() => copyToClipboard(card.card_number, card.card_name)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
-      </div>
-    </section>
+    <div className="grid gap-4 md:grid-cols-2">
+      {giftCards.map((card) => {
+        const logoSrc = card.logo_url || getCardLogo(card.card_name);
+        return (
+          <div key={card.id} className="bg-[#faf8f5] p-6 rounded-lg text-center space-y-2">
+            {logoSrc && (
+              <div className="flex justify-center mb-2">
+                <img
+                  src={logoSrc}
+                  alt={card.card_name}
+                  className="h-8 w-8 object-contain rounded-[6px]"
+                />
+              </div>
+            )}
+            <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+            <div className="flex items-center justify-center gap-2">
+              <p className="text-gray-600">{card.card_number}</p>
+              <Copy
+                className="h-4 w-4 cursor-pointer text-gray-400 hover:text-gray-700 transition-colors"
+                onClick={() => copyToClipboard(card.card_number, card.card_name)}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 };
