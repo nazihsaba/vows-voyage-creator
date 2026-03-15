@@ -3,6 +3,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import weddingHero from "@/assets/wedding-hero.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 // Static demo data
 const staticWedding = {

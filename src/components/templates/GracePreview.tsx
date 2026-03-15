@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { ChevronDown, Church, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 const staticWedding = {
   groom_name: "Anthony",

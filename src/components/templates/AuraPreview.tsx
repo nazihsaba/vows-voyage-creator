@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { RsvpSection } from "@/components/templates/RsvpSection";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
