@@ -67,7 +67,7 @@ export const RsvpSection = ({
               isPreview={isPreview}
               multiline={true}
               tag="p"
-              className="text-lg text-gray-600"
+              className="text-center text-template-body mb-8 text-gray-600"
             />
           </div>
 
