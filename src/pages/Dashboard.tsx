@@ -221,7 +221,7 @@ const Dashboard = () => {
                       className="w-full text-sm rounded-full shadow-sm hover:shadow-md transition-all"
                       onClick={() => {
                         if (template.id === "bible-verse-tabs") {
-                          navigate(`/dashboard/rose-gold-tabs-form?template=${template.id}`);
+                          navigate(`/dashboard/aura-form?template=${template.id}`);
                         } else {
                           navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                         }
