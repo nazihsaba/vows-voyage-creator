@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { CalendarHeart } from "lucide-react";
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
@@ -45,25 +46,28 @@ export const RsvpSection = ({
     <AnimatedSection animation="fade-up">
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
-          <EditableField
-            fieldId="rsvp-title"
-            text={getFieldValue("rsvp-title", "Join Our Celebration")}
-            style={getFieldStyle("rsvp-title")}
-            onUpdate={onFieldUpdate}
-            isPreview={isPreview}
-            tag="h2"
-            className="text-template-subtitle text-center mb-12 text-primary"
-          />
-          <EditableField
-            fieldId="rsvp-message"
-            text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
-            style={getFieldStyle("rsvp-message")}
-            onUpdate={onFieldUpdate}
-            isPreview={isPreview}
-            multiline={true}
-            tag="p"
-            className="text-center text-template-body mb-8 text-gray-600"
-          />
+          <div className="text-center mb-12">
+            <CalendarHeart className="w-12 h-12 text-primary mx-auto mb-4" />
+            <EditableField
+              fieldId="rsvp-title"
+              text={getFieldValue("rsvp-title", "Join Our Celebration")}
+              style={getFieldStyle("rsvp-title")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="h2"
+              className="text-template-subtitle mb-6 text-primary"
+            />
+            <EditableField
+              fieldId="rsvp-message"
+              text={getFieldValue("rsvp-message", "Please let us know if you can join us on our special day. Your presence would mean the world to us.")}
+              style={getFieldStyle("rsvp-message")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              multiline={true}
+              tag="p"
+              className="text-lg text-gray-600"
+            />
+          </div>
 
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
