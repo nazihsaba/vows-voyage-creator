@@ -87,33 +87,32 @@ const Index = () => {
 
       <InvitationPreviewSection />
 
-      <section className="py-24 px-4 bg-gradient-to-b from-background to-card">
+      <section className="py-20 px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.3em] text-primary/70 mb-3 font-sans">Features</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-              Everything You Need
-            </h2>
-            <div className="w-16 h-0.5 bg-primary/40 mx-auto" />
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {[
-              { icon: Calendar, title: "Countdown Timer", desc: "Real-time countdown to your special day" },
-              { icon: Image, title: "Photo Gallery", desc: "Showcase your memorable moments" },
-              { icon: Gift, title: "Gift Registry", desc: "Share gift card and registry information" },
-              { icon: LinkIcon, title: "Custom Links", desc: "Auto-generated unique invitation URLs" },
-            ].map((item) => (
-              <div
-                key={item.title}
-                className="group text-center p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 shadow-soft hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
-              >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/20 transition-colors duration-500">
-                  <item.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-lg font-semibold mb-2 text-foreground">{item.title}</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{item.desc}</p>
-              </div>
-            ))}
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-center text-primary mb-16">
+            Everything You Need
+          </h2>
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="text-center">
+              <Calendar className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Countdown Timer</h3>
+              <p className="text-muted-foreground">Real-time countdown to your special day</p>
+            </div>
+            <div className="text-center">
+              <Image className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Photo Gallery</h3>
+              <p className="text-muted-foreground">Showcase your memorable moments</p>
+            </div>
+            <div className="text-center">
+              <Gift className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Gift Registry</h3>
+              <p className="text-muted-foreground">Share gift card and registry information</p>
+            </div>
+            <div className="text-center">
+              <LinkIcon className="w-12 h-12 text-primary mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Custom Links</h3>
+              <p className="text-muted-foreground">Auto-generated unique invitation URLs</p>
+            </div>
           </div>
         </div>
       </section>

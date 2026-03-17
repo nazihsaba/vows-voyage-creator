@@ -630,7 +630,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : !shouldShowGalleryUpload ? (
+              ) : (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">Main Wedding Photo</Label>
                   <div className="flex flex-col gap-4">
@@ -666,7 +666,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : null}
+              )}
 
               {/* Audio Trim Field */}
               <AudioTrimField
