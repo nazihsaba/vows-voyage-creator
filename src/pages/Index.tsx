@@ -8,7 +8,7 @@ import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
-import previewWedding7 from "@/assets/preview-wedding-7.jpg";
+import previewWedding7 from "@/assets/preview-wedding-5.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
