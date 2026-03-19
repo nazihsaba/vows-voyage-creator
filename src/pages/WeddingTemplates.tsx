@@ -3,9 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles } from "lucide-react";
-import modernRomance from "@/assets/template-modern-romance.jpg";
+import modernRomance from "@/assets/eclat-wedding-1.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import roseGoldTabs from "@/assets/template-rose-gold-tabs.jpg";
+import roseGoldTabs from "@/assets/eclat-wedding-2.jpg";
 
 const WeddingTemplates = () => {
   const navigate = useNavigate();
