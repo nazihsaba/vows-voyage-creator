@@ -9,6 +9,7 @@ import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-5.jpg";
+import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -17,8 +18,8 @@ const Index = () => {
   const heroImages = [
     { src: eventWedding, alt: "Wedding celebration" },
     { src: eventBirthday, alt: "Birthday party" },
-    { src: previewWedding5, alt: "Party celebration" },
-    { src: eventCelebration, alt: "Special celebration" },
+    { src: eclatWedding4, alt: "Party celebration" },
+    { src: previewWedding5, alt: "Special celebration" },
   ];
 
   useEffect(() => {
