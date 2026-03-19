@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
+import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
+import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
+import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
+import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
+import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
+import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
@@ -193,14 +200,7 @@ export const AuraPreview = () => {
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {[
-              "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
-            ].map((src, index) => (
+            {[eclatWedding1, eclatWedding2, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6].map((src, index) => (
               <AnimatedSection key={index} delay={index * 80} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
                   <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
@@ -244,7 +244,7 @@ export const AuraPreview = () => {
               </svg>
             </div>
             <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop" alt="Wedding moment" className="w-full h-full object-cover" />
+              <img src={eclatWedding7} alt="Wedding moment" className="w-full h-full object-cover" />
             </div>
             <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
               <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-background">
