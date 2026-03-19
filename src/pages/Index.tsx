@@ -17,7 +17,7 @@ const Index = () => {
   const heroImages = [
     { src: eventWedding, alt: "Wedding celebration" },
     { src: eventBirthday, alt: "Birthday party" },
-    { src: eventWedding, alt: "Party celebration" },
+    { src: previewWedding5, alt: "Party celebration" },
     { src: eventCelebration, alt: "Special celebration" },
   ];
 
