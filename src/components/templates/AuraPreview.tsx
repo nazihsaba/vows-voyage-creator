@@ -139,7 +139,9 @@ export const AuraPreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
-                <p className="text-template-body font-semibold tracking-wide text-primary">Saturday, August 16th, 2025</p>
+                <p className="text-template-body font-semibold tracking-wide text-primary">
+                  Saturday, August 16th, 2025
+                </p>
               </div>
             </div>
           </div>
@@ -193,20 +195,25 @@ export const AuraPreview = () => {
           </div>
         </section>
 
-
         {/* ===== GALLERY SECTION ===== */}
         <section className="mb-16">
           <AnimatedSection animation="fade-in">
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {[eclatWedding1, eclatWedding2, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6].map((src, index) => (
-              <AnimatedSection key={index} delay={index * 80} animation="scale-in">
-                <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
-                  <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
-                </div>
-              </AnimatedSection>
-            ))}
+            {[eclatWedding1, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7].map(
+              (src, index) => (
+                <AnimatedSection key={index} delay={index * 80} animation="scale-in">
+                  <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
+                    <img
+                      src={src}
+                      alt={`Wedding moment ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                    />
+                  </div>
+                </AnimatedSection>
+              ),
+            )}
           </div>
         </section>
 
@@ -244,7 +251,7 @@ export const AuraPreview = () => {
               </svg>
             </div>
             <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-              <img src={eclatWedding7} alt="Wedding moment" className="w-full h-full object-cover" />
+              <img src={eclatWedding2} alt="Wedding moment" className="w-full h-full object-cover" />
             </div>
             <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
               <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-background">
