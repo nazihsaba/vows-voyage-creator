@@ -40,10 +40,12 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop" },
-  { id: "2", image_url: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop" },
-  { id: "3", image_url: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop" },
-  { id: "4", image_url: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&h=400&fit=crop" },
+  { id: "1", image_url: eclatWedding1 },
+  { id: "2", image_url: eclatWedding2 },
+  { id: "3", image_url: eclatWedding3 },
+  { id: "4", image_url: eclatWedding5 },
+  { id: "5", image_url: eclatWedding6 },
+  { id: "6", image_url: eclatWedding7 },
 ];
 
 const staticGiftCards = [
