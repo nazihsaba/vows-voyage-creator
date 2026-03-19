@@ -8,16 +8,16 @@ import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
-import previewWedding7 from "@/assets/preview-wedding-5.jpg";
+import previewWedding5 from "@/assets/preview-wedding-5.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const heroImages = [
-    { src: previewWedding7, alt: "Wedding celebration" },
+    { src: eventWedding, alt: "Wedding celebration" },
     { src: eventBirthday, alt: "Birthday party" },
-    { src: eventParty, alt: "Party celebration" },
+    { src: eventWedding, alt: "Party celebration" },
     { src: eventCelebration, alt: "Special celebration" },
   ];
 
