@@ -9,7 +9,7 @@ import leclercWedding6 from "@/assets/leclerc-wedding-6.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 
-// Static demo data
+// Static demo data - using Leclerc wedding images
 const staticWedding = {
   groom_name: "Chris",
   bride_name: "Adele",
