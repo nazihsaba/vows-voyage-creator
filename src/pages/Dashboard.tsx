@@ -23,10 +23,10 @@ import {
 } from "lucide-react";
 import veriteTemplate from "@/assets/template-verite.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import lumiereTemplate from "@/assets/eclat-wedding-3.jpg";
+import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
-import ivoireTemplate from "@/assets/eclat-wedding-4.jpg";
+import ivoireTemplate from "@/assets/template-ivoire.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
@@ -126,15 +126,15 @@ const Dashboard = () => {
               </div>
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
-              <Button 
-                onClick={() => navigate("/dashboard/my-events")} 
+              <Button
+                onClick={() => navigate("/dashboard/my-events")}
                 className="flex-1 sm:flex-none rounded-full px-5 shadow-sm hover:shadow-md transition-all"
               >
                 My Events
               </Button>
-              <Button 
-                variant="outline" 
-                onClick={handleLogout} 
+              <Button
+                variant="outline"
+                onClick={handleLogout}
                 className="flex-1 sm:flex-none rounded-full border-border/60 hover:bg-muted/50"
               >
                 <LogOut className="w-4 h-4 sm:mr-2" />
@@ -171,29 +171,34 @@ const Dashboard = () => {
 
             <div className="grid gap-5 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               {weddingTemplates.map((template) => (
-                <Card key={template.id} className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden">
+                <Card
+                  key={template.id}
+                  className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden"
+                >
                   <CardHeader className="p-0 flex-grow">
                     <div className="aspect-video overflow-hidden relative">
-                      <img 
-                        src={template.image} 
-                        alt={template.name} 
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+                      <img
+                        src={template.image}
+                        alt={template.name}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* Overlay gradient on hover */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <div className="p-5">
                       <CardTitle className="text-lg font-serif mb-1.5">{template.name}</CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">{template.description}</CardDescription>
+                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">
+                        {template.description}
+                      </CardDescription>
 
                       {template.features && (
                         <div className="mt-4 flex flex-wrap gap-1.5">
                           {template.features.map((feature, idx) => {
                             const FeatureIcon = feature.icon;
                             return (
-                              <Badge 
-                                key={idx} 
-                                variant="secondary" 
+                              <Badge
+                                key={idx}
+                                variant="secondary"
                                 className="text-[10px] flex items-center gap-1 py-0.5 px-2 bg-muted/60 hover:bg-muted transition-colors"
                               >
                                 <FeatureIcon className="w-2.5 h-2.5" />
@@ -222,9 +227,9 @@ const Dashboard = () => {
                       onClick={() => {
                         const routeMap: Record<string, string> = {
                           "bible-verse-tabs": "/dashboard/aura-form",
-                          "template2": "/dashboard/verite-form",
+                          template2: "/dashboard/verite-form",
                           "classic-romance": "/dashboard/eclat-form",
-                          "template6": "/dashboard/grace-form",
+                          template6: "/dashboard/grace-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
