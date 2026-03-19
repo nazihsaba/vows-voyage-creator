@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import leclercWedding2 from "@/assets/leclerc-wedding-2.jpg";
+import leclercWedding3 from "@/assets/leclerc-wedding-3.jpg";
+import leclercWedding4 from "@/assets/leclerc-wedding-4.jpg";
+import leclercWedding5 from "@/assets/leclerc-wedding-5.jpg";
+import leclercWedding6 from "@/assets/leclerc-wedding-6.jpg";
+import leclercWedding7 from "@/assets/leclerc-wedding-7.jpg";
+import leclercWeddingHero from "@/assets/leclerc-wedding-hero.jpg";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
@@ -194,12 +201,12 @@ export const AuraPreview = () => {
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
             {[
-              "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
+              leclercWedding2,
+              leclercWedding3,
+              leclercWedding4,
+              leclercWedding5,
+              leclercWedding6,
+              leclercWedding7,
             ].map((src, index) => (
               <AnimatedSection key={index} delay={index * 80} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
@@ -244,7 +251,7 @@ export const AuraPreview = () => {
               </svg>
             </div>
             <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-              <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop" alt="Wedding moment" className="w-full h-full object-cover" />
+              <img src={leclercWeddingHero} alt="Wedding moment" className="w-full h-full object-cover" />
             </div>
             <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
               <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-background">

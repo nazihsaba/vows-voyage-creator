@@ -1,7 +1,12 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import weddingHero from "@/assets/wedding-hero.jpg";
+import leclercWeddingHero from "@/assets/leclerc-wedding-hero.jpg";
+import leclercWedding2 from "@/assets/leclerc-wedding-2.jpg";
+import leclercWedding4 from "@/assets/leclerc-wedding-4.jpg";
+import leclercWedding7 from "@/assets/leclerc-wedding-7.jpg";
+import leclercWedding8 from "@/assets/leclerc-wedding-8.jpg";
+import leclercWedding1 from "@/assets/leclerc-wedding-1.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 
@@ -12,7 +17,7 @@ const staticWedding = {
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-  main_picture_url: weddingHero,
+  main_picture_url: leclercWeddingHero,
 };
 
 const staticLocations = [
@@ -21,10 +26,10 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop" },
-  { id: "2", image_url: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop" },
-  { id: "3", image_url: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop" },
-  { id: "4", image_url: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&h=400&fit=crop" },
+  { id: "1", image_url: leclercWedding2 },
+  { id: "2", image_url: leclercWedding4 },
+  { id: "3", image_url: leclercWedding7 },
+  { id: "4", image_url: leclercWedding8 },
 ];
 
 const staticGiftCards = [
@@ -205,7 +210,7 @@ export const VeritePreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop" alt="Wedding moment" className="w-full h-full object-cover" />
+            <img src={leclercWedding1} alt="Wedding moment" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
