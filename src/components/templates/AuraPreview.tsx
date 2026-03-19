@@ -2,6 +2,13 @@ import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import leclercWedding2 from "@/assets/leclerc-wedding-2.jpg";
+import leclercWedding3 from "@/assets/leclerc-wedding-3.jpg";
+import leclercWedding4 from "@/assets/leclerc-wedding-4.jpg";
+import leclercWedding5 from "@/assets/leclerc-wedding-5.jpg";
+import leclercWedding6 from "@/assets/leclerc-wedding-6.jpg";
+import leclercWedding7 from "@/assets/leclerc-wedding-7.jpg";
+import leclercWeddingHero from "@/assets/leclerc-wedding-hero.jpg";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
