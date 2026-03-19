@@ -12,7 +12,7 @@ const staticWedding = {
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-  video_url: "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4",
+  video_url: graceVideo,
 };
 
 const staticLocations = [
