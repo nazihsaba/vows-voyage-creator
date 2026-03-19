@@ -1,9 +1,16 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import weddingHero from "@/assets/wedding-hero.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import previewWedding1 from "@/assets/preview-wedding-1.jpg";
+import previewWedding2 from "@/assets/preview-wedding-2.jpg";
+import previewWedding3 from "@/assets/preview-wedding-3.jpg";
+import previewWedding4 from "@/assets/preview-wedding-4.jpg";
+import previewWedding5 from "@/assets/preview-wedding-5.jpg";
+import previewWedding6 from "@/assets/preview-wedding-6.jpg";
+import previewWedding7 from "@/assets/preview-wedding-7.jpg";
+import previewWedding8 from "@/assets/preview-wedding-8.jpg";
 
 const staticWedding = {
   groom_name: "Chris",
