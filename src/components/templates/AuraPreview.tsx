@@ -200,14 +200,7 @@ export const AuraPreview = () => {
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {[
-              "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1606216794074-735e91aa2c92?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1591604466107-ec97de577aff?w=400&h=400&fit=crop",
-              "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=400&h=400&fit=crop",
-            ].map((src, index) => (
+            {[eclatWedding1, eclatWedding2, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6].map((src, index) => (
               <AnimatedSection key={index} delay={index * 80} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
                   <img src={src} alt={`Wedding moment ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
