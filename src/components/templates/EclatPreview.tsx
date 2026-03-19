@@ -1,15 +1,11 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import leclercWeddingHero from "@/assets/leclerc-wedding-hero.jpg";
-import leclercWedding2 from "@/assets/leclerc-wedding-2.jpg";
-import leclercWedding3 from "@/assets/leclerc-wedding-3.jpg";
-import leclercWedding5 from "@/assets/leclerc-wedding-5.jpg";
-import leclercWedding6 from "@/assets/leclerc-wedding-6.jpg";
+import weddingHero from "@/assets/wedding-hero.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 
-// Static demo data - using Leclerc wedding images
+// Static demo data
 const staticWedding = {
   groom_name: "Chris",
   bride_name: "Adele",
@@ -17,7 +13,7 @@ const staticWedding = {
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
-  main_picture_url: leclercWeddingHero,
+  main_picture_url: weddingHero,
 };
 
 const staticLocations = [
@@ -38,10 +34,10 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: leclercWedding2 },
-  { id: "2", image_url: leclercWedding3 },
-  { id: "3", image_url: leclercWedding5 },
-  { id: "4", image_url: leclercWedding6 },
+  { id: "1", image_url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop" },
+  { id: "2", image_url: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop" },
+  { id: "3", image_url: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop" },
+  { id: "4", image_url: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&h=400&fit=crop" },
 ];
 
 const staticGiftCards = [

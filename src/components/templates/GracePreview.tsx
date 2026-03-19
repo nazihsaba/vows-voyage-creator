@@ -3,7 +3,6 @@ import { ChevronDown, Church, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import leclercWedding1 from "@/assets/leclerc-wedding-1.jpg";
 
 const staticWedding = {
   groom_name: "Anthony",
@@ -185,7 +184,7 @@ export const GracePreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={leclercWedding1} alt="Wedding moment" className="w-full h-full object-cover" />
+            <img src="https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop" alt="Wedding moment" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
