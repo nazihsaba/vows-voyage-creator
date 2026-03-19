@@ -140,7 +140,7 @@ export const VeritePreview = () => {
       {/* Gallery */}
       <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {staticGallery.map((image, index) => (
               <AnimatedSection key={image.id} delay={index * 100} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
