@@ -17,7 +17,7 @@ const staticWedding = {
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
-  main_picture_url: weddingHero,
+  main_picture_url: leclercWeddingHero,
 };
 
 const staticLocations = [
