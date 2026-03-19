@@ -8,13 +8,14 @@ import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
+import previewWedding7 from "@/assets/preview-wedding-7.jpg";
 
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const heroImages = [
-    { src: eventWedding, alt: "Wedding celebration" },
+    { src: previewWedding7, alt: "Wedding celebration" },
     { src: eventBirthday, alt: "Birthday party" },
     { src: eventParty, alt: "Party celebration" },
     { src: eventCelebration, alt: "Special celebration" },
@@ -91,9 +92,7 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">Features</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-              Everything You Need
-            </h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Everything You Need</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               Powerful tools to make your invitation truly unforgettable.
             </p>
