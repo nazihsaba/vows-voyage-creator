@@ -23,10 +23,8 @@ import {
 } from "lucide-react";
 import veriteTemplate from "@/assets/template-verite.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
-import lumiereTemplate from "@/assets/template-lumiere.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
-import ivoireTemplate from "@/assets/template-ivoire.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
