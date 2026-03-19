@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import graceVideo from "@/assets/grace-preview-video.mp4";
+import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
 const staticWedding = {
   groom_name: "Anthony",
