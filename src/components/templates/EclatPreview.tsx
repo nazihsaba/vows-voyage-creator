@@ -1,9 +1,15 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import weddingHero from "@/assets/wedding-hero.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
+import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
+import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
+import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
+import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
+import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
+import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
 // Static demo data
 const staticWedding = {
@@ -13,7 +19,7 @@ const staticWedding = {
   bride_family: "The Williams Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
-  main_picture_url: weddingHero,
+  main_picture_url: eclatWedding4,
 };
 
 const staticLocations = [
@@ -34,10 +40,12 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: "https://images.unsplash.com/photo-1519741497674-611481863552?w=400&h=400&fit=crop" },
-  { id: "2", image_url: "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?w=400&h=400&fit=crop" },
-  { id: "3", image_url: "https://images.unsplash.com/photo-1465495976277-4387d4b0b4c6?w=400&h=400&fit=crop" },
-  { id: "4", image_url: "https://images.unsplash.com/photo-1529634806980-85c3dd6d34ac?w=400&h=400&fit=crop" },
+  { id: "1", image_url: eclatWedding1 },
+  { id: "2", image_url: eclatWedding2 },
+  { id: "3", image_url: eclatWedding3 },
+  { id: "4", image_url: eclatWedding5 },
+  { id: "5", image_url: eclatWedding6 },
+  { id: "6", image_url: eclatWedding7 },
 ];
 
 const staticGiftCards = [
