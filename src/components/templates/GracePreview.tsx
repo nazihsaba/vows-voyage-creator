@@ -3,6 +3,7 @@ import { ChevronDown, Church, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import leclercWedding1 from "@/assets/leclerc-wedding-1.jpg";
 
 const staticWedding = {
   groom_name: "Anthony",
