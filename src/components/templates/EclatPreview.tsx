@@ -1,7 +1,11 @@
 import { useState, useEffect } from "react";
 import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import weddingHero from "@/assets/wedding-hero.jpg";
+import leclercWeddingHero from "@/assets/leclerc-wedding-hero.jpg";
+import leclercWedding2 from "@/assets/leclerc-wedding-2.jpg";
+import leclercWedding3 from "@/assets/leclerc-wedding-3.jpg";
+import leclercWedding5 from "@/assets/leclerc-wedding-5.jpg";
+import leclercWedding6 from "@/assets/leclerc-wedding-6.jpg";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 
