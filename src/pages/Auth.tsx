@@ -379,6 +379,22 @@ const Auth = () => {
                         />
                       </div>
                     </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signup-confirm-password">Confirm Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signup-confirm-password"
+                          type="password"
+                          placeholder="Confirm your password"
+                          value={confirmPassword}
+                          onChange={(e) => setConfirmPassword(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
                     <Button type="submit" className="w-full" disabled={loading}>
                       {loading ? (
                         <>
