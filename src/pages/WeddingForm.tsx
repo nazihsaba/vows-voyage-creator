@@ -94,6 +94,12 @@ const WeddingForm = () => {
 
       if (error) throw error;
       setFormData(data);
+      // Load Aura quote/reference from field_customizations
+      if (data.field_customizations) {
+        const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
+        if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
+        if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
+      }
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
