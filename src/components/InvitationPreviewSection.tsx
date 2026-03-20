@@ -85,16 +85,13 @@ const InvitationPreviewSection = () => {
         </div>
 
         {/* CTAs */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <div className="flex justify-center items-center">
           <Button
             size="lg"
             onClick={() => navigate("/dashboard")}
             className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
           >
             Browse Wedding Templates
-          </Button>
-          <Button size="lg" variant="outline" onClick={() => navigate("/demo")} className="text-lg px-8 py-6">
-            See How It Looks
           </Button>
         </div>
       </div>
