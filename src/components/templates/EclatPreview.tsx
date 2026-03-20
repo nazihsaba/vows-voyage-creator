@@ -234,7 +234,9 @@ export const EclatPreview = () => {
             <div>
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
               <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
-                {"With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"}
+                {
+                  "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"
+                }
               </p>
             </div>
           </AnimatedSection>
@@ -319,7 +321,7 @@ export const EclatPreview = () => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
             <p className="text-center text-template-body mb-8 text-gray-600">
-              For those who desire a wedding list is available
+              Your presence is our greatest gift — a registry is available if you wish
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               {staticGiftCards.map((card, index) => (
@@ -364,8 +366,8 @@ export const EclatPreview = () => {
         <section className="py-16 px-4 bg-[#faf8f5] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
             <p className="text-template-body">
-              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and
-              make wonderful memories with us.
+              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures,
+              and make wonderful memories with us.
             </p>
           </div>
         </section>
