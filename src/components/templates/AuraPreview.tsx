@@ -126,7 +126,7 @@ export const AuraPreview = () => {
 
             <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <p className="text-template-body opacity-70 whitespace-pre-line leading-relaxed">
-                joyfully invite you to the wedding of their{"\n"}beloved son and daughter
+                Request the honor of your presence at the wedding of their Son and Daughter
               </p>
             </div>
 
