@@ -202,7 +202,7 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {!emailSent && !resetEmailSent ? (
+          {!resetEmailSent ? (
             showForgotPassword ? (
               <form onSubmit={handleResetPassword} className="space-y-4">
                 <div className="space-y-2">
