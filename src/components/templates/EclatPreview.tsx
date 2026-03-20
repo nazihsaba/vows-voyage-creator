@@ -3,13 +3,12 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
-import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
-import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
-import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
-import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
-import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
+import auraPreview1 from "@/assets/aura-preview-1.jpg";
+import auraPreview2 from "@/assets/aura-preview-2.jpg";
+import auraPreview3 from "@/assets/aura-preview-3.jpg";
+import auraPreview4 from "@/assets/aura-preview-4.jpg";
+import auraPreview5 from "@/assets/aura-preview-5.jpg";
+import auraPreview6 from "@/assets/aura-preview-6.jpg";
 
 // Static demo data
 const staticWedding = {
@@ -19,7 +18,7 @@ const staticWedding = {
   bride_family: "The Vienne Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
-  main_picture_url: eclatWedding1,
+  main_picture_url: auraPreview3,
 };
 
 const staticLocations = [
@@ -40,11 +39,11 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: eclatWedding2 },
-  { id: "2", image_url: eclatWedding3 },
-  { id: "3", image_url: eclatWedding4 },
-  { id: "4", image_url: eclatWedding5 },
-  { id: "5", image_url: eclatWedding2 },
+  { id: "1", image_url: auraPreview4 },
+  { id: "2", image_url: auraPreview1 },
+  { id: "3", image_url: auraPreview5 },
+  { id: "4", image_url: auraPreview6 },
+  { id: "5", image_url: auraPreview2 },
 ];
 
 const staticGiftCards = [
