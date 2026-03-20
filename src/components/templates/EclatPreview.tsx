@@ -3,7 +3,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import auraPreview1 from "@/assets/aura-preview-1.jpg";
+import auraPreview7 from "@/assets/aura-preview-7.jpg";
 import auraPreview2 from "@/assets/aura-preview-2.jpg";
 import auraPreview3 from "@/assets/aura-preview-3.jpg";
 import auraPreview4 from "@/assets/aura-preview-4.jpg";
@@ -40,7 +40,7 @@ const staticLocations = [
 
 const staticGallery = [
   { id: "1", image_url: auraPreview3 },
-  { id: "2", image_url: auraPreview1 },
+  { id: "2", image_url: auraPreview7 },
   { id: "3", image_url: auraPreview5 },
   { id: "4", image_url: auraPreview6 },
   { id: "5", image_url: auraPreview2 },
