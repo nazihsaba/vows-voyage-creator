@@ -595,6 +595,32 @@ const WeddingForm = () => {
                 />
               </div>
 
+              {/* Aura Template: Quote & Reference */}
+              {isAuraTemplate && (
+                <div className="space-y-4 border-t pt-6">
+                  <h3 className="text-lg font-semibold">Quote & Reference</h3>
+                  <div className="space-y-2">
+                    <Label htmlFor="aura_quote">Quote</Label>
+                    <Textarea
+                      id="aura_quote"
+                      value={auraQuote}
+                      onChange={(e) => setAuraQuote(e.target.value)}
+                      rows={3}
+                      placeholder="Two are better than one..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="aura_reference">Reference</Label>
+                    <Input
+                      id="aura_reference"
+                      value={auraReference}
+                      onChange={(e) => setAuraReference(e.target.value)}
+                      placeholder="— Ecclesiastes 4:9-12"
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* <div className="space-y-2">
                 <Label htmlFor="custom_primary_color">Primary Color (Gold Tone)</Label>
                 <div className="flex gap-2">
