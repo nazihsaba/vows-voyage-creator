@@ -114,25 +114,25 @@ export const AuraPreview = () => {
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
                   <p className="text-sm text-primary font-medium tracking-wide">Mr. Pierre & Mrs. Nayla</p>
-                  <p className="text-template-subtitle">Nawfal</p>
+                  <p className="text-template-subtitle">Vale</p>
                 </div>
                 <span className="text-3xl font-light text-primary/50">&</span>
                 <div className="text-center space-y-1">
                   <p className="text-sm text-primary font-medium tracking-wide">Mr. Michel & Mrs. Layla</p>
-                  <p className="text-template-subtitle">Assaker</p>
+                  <p className="text-template-subtitle">Maris</p>
                 </div>
               </div>
             </div>
 
             <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <p className="text-template-body opacity-70 whitespace-pre-line leading-relaxed">
-                Request the honor of your presence at the wedding of their Son and Daughter
+                joyfully invite you to the wedding of their{"\n"}beloved son and daughter
               </p>
             </div>
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
-                <h1 className="text-template-title text-primary">Stephan & Chadia</h1>
+                <h1 className="text-template-title text-primary">Adrian & Elena</h1>
               </div>
             </div>
 
