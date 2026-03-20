@@ -163,7 +163,7 @@ const Index = () => {
           <p className="text-sm text-muted-foreground font-medium tracking-wide">Follow us</p>
           <div className="flex items-center gap-6">
             <a
-              href="https://instagram.com"
+              href="https://www.instagram.com/aureainvites?igsh=MXJjYmJrejF3ejI3eQ=="
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
