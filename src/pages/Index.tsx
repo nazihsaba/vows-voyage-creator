@@ -22,7 +22,7 @@ const Index = () => {
     { src: tableDecor, alt: "Wedding celebration" },
     { src: sparklers, alt: "Birthday party" },
     { src: flowerVase, alt: "Party celebration" },
-    { src: previewWedding5, alt: "Special celebration" },
+    { src: eclatWedding4, alt: "Special celebration" },
   ];
 
   useEffect(() => {
