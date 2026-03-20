@@ -162,7 +162,7 @@ export const EclatTemplate = ({
             </div>
             <EditableField
               fieldId="invitation-text"
-              text={getFieldValue("invitation-text", "Request the honor of your presence at the wedding of their Son and Daughter")}
+              text={getFieldValue("invitation-text", wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter")}
               style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
