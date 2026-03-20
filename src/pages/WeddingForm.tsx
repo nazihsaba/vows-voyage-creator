@@ -321,9 +321,10 @@ const WeddingForm = () => {
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       // Build field_customizations with Aura quote/reference if applicable
-      const existingCustomizations = typeof formData.field_customizations === 'string'
-        ? JSON.parse(formData.field_customizations || '{}')
-        : (formData.field_customizations || {});
+      const rawFc = (formData as any).field_customizations;
+      const existingCustomizations = typeof rawFc === 'string'
+        ? JSON.parse(rawFc || '{}')
+        : (rawFc || {});
       const fieldCustomizations = isAuraTemplate
         ? {
             ...existingCustomizations,
