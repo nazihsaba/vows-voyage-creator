@@ -21,6 +21,7 @@ import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
