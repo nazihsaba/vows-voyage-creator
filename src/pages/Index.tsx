@@ -4,10 +4,7 @@ import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
 import { useState, useEffect } from "react";
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
@@ -27,7 +24,6 @@ const Index = () => {
     { src: tableDecor, alt: "Wedding celebration" },
     { src: eclatWedding2, alt: "Birthday party" },
     { src: flowerVase, alt: "Party celebration" },
-    { src: sparklers, alt: "Special celebration" },
   ];
 
   useEffect(() => {
@@ -90,11 +86,10 @@ const Index = () => {
               <DialogContent className="sm:max-w-md text-center p-8">
                 <div className="flex flex-col items-center gap-4">
                   <span className="text-5xl">💍✨</span>
-                  <h3 className="text-2xl font-serif font-bold text-primary">
-                    Coming Soon!
-                  </h3>
+                  <h3 className="text-2xl font-serif font-bold text-primary">Coming Soon!</h3>
                   <p className="text-muted-foreground leading-relaxed">
-                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on its way!
+                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on
+                    its way!
                   </p>
                   <Button
                     onClick={() => setShowComingSoon(false)}
@@ -150,9 +145,7 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
             Ready to Create Your Invitation?
           </h2>
-          <p className="text-xl text-muted-foreground mb-4">
-            Create your wedding invitation with timeless elegance
-          </p>
+          <p className="text-xl text-muted-foreground mb-4">Create your wedding invitation with timeless elegance</p>
           <div className="flex justify-center">
             <Button
               size="lg"
@@ -185,7 +178,16 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="TikTok"
             >
-              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
               </svg>
             </a>
@@ -199,7 +201,9 @@ const Index = () => {
               <MessageCircle size={22} />
             </a>
           </div>
-          <p className="text-xs text-muted-foreground/60 mt-2">© {new Date().getFullYear()} Vows Voyage. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground/60 mt-2">
+            © {new Date().getFullYear()} Vows Voyage. All rights reserved.
+          </p>
         </div>
       </footer>
     </div>
