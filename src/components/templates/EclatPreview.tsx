@@ -39,8 +39,8 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: auraPreview3 },
-  { id: "2", image_url: auraPreview7 },
+  { id: "1", image_url: auraPreview7 },
+  { id: "2", image_url: auraPreview3 },
   { id: "3", image_url: auraPreview5 },
   { id: "4", image_url: auraPreview6 },
   { id: "5", image_url: auraPreview2 },
