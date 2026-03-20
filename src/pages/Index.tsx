@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
 import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
@@ -17,6 +21,7 @@ import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [showComingSoon, setShowComingSoon] = useState(false);
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
@@ -78,11 +83,31 @@ const Index = () => {
             </Button>
             <Button
               size="lg"
-              onClick={() => navigate("/demo")}
+              onClick={() => setShowComingSoon(true)}
               className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               View Demo
             </Button>
+
+            <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+              <DialogContent className="sm:max-w-md text-center p-8">
+                <div className="flex flex-col items-center gap-4">
+                  <span className="text-5xl">💍✨</span>
+                  <h3 className="text-2xl font-serif font-bold text-primary">
+                    Coming Soon!
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on its way!
+                  </p>
+                  <Button
+                    onClick={() => setShowComingSoon(false)}
+                    className="mt-2 bg-primary text-primary-foreground hover:bg-primary-hover"
+                  >
+                    Can't Wait! 💕
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
           <p className="text-sm md:text-base font-light tracking-wide opacity-75">
             No coding needed &nbsp;•&nbsp; Mobile-friendly &nbsp;•&nbsp; Share your invitation instantly
