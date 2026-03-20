@@ -10,7 +10,7 @@ import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 const previewCards = [
   {
     image: auraTemplate,
-    label: "Aura",
+    label: "Dorée",
     tagline: "Bible verse & botanical elegance",
     featured: true,
   },
