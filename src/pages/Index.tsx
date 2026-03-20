@@ -151,7 +151,7 @@ const Index = () => {
             Ready to Create Your Invitation?
           </h2>
           <p className="text-xl text-muted-foreground mb-4">
-            Choose from weddings, birthdays, parties and more — start creating today.
+            Create your wedding invitation with timeless elegance
           </p>
           <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-8">
             Create, customize, and share in minutes.
