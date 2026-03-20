@@ -39,11 +39,11 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: eclatWedding2 },
-  { id: "2", image_url: eclatWedding3 },
-  { id: "3", image_url: eclatWedding4 },
-  { id: "4", image_url: eclatWedding5 },
-  { id: "5", image_url: eclatWedding2 },
+  { id: "1", image_url: auraPreview4 },
+  { id: "2", image_url: auraPreview1 },
+  { id: "3", image_url: auraPreview5 },
+  { id: "4", image_url: auraPreview6 },
+  { id: "5", image_url: auraPreview2 },
 ];
 
 const staticGiftCards = [
