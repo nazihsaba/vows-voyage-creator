@@ -21,7 +21,7 @@ import {
   Eye,
   X,
 } from "lucide-react";
-import veriteTemplate from "@/assets/template-verite.jpg";
+import veriteTemplate from "@/assets/verite-preview-3.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
