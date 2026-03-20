@@ -16,7 +16,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Plus, X, Upload, Download, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import * as XLSX from 'xlsx';
+import * as XLSX from "xlsx";
 
 interface GenerateLinkDialogProps {
   open: boolean;
@@ -47,7 +47,10 @@ export const GenerateLinkDialog = ({
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
     if (!slugManuallyEdited) {
-      const autoSlug = value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+      const autoSlug = value
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
       setUniqueSlug(autoSlug);
     }
   };
@@ -76,7 +79,7 @@ export const GenerateLinkDialog = ({
       return;
     }
 
-    const validInvitees = invitees.filter(name => name.trim());
+    const validInvitees = invitees.filter((name) => name.trim());
     if (validInvitees.length === 0) {
       toast({
         title: "Error",
@@ -102,14 +105,12 @@ export const GenerateLinkDialog = ({
 
       if (linkError) throw linkError;
 
-      const inviteeRecords = validInvitees.map(name => ({
+      const inviteeRecords = validInvitees.map((name) => ({
         invitation_link_id: linkData.id,
         name: name.trim(),
       }));
 
-      const { error: inviteeError } = await (supabase as any)
-        .from("invitees")
-        .insert(inviteeRecords);
+      const { error: inviteeError } = await (supabase as any).from("invitees").insert(inviteeRecords);
 
       if (inviteeError) throw inviteeError;
 
@@ -140,7 +141,7 @@ export const GenerateLinkDialog = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.name.endsWith('.xlsx') || file.name.endsWith('.xls')) {
+      if (file.name.endsWith(".xlsx") || file.name.endsWith(".xls")) {
         setSelectedFile(file);
       } else {
         toast({
@@ -159,79 +160,79 @@ export const GenerateLinkDialog = ({
         DisplayName: "Smith Family",
         nbOfPersons: 3,
         invitees: "John Smith",
-        side: "GROOM"
+        side: "GROOM",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Sarah Smith",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Emily Smith",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "Johnson Couple",
         nbOfPersons: 2,
         invitees: "Michael Johnson",
-        side: "BRIDE"
+        side: "BRIDE",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Lisa Johnson",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "Williams Family",
         nbOfPersons: 4,
         invitees: "David Williams",
-        side: "GROOM"
+        side: "GROOM",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Emma Williams",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Oliver Williams",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "",
         nbOfPersons: "",
         invitees: "Sophia Williams",
-        side: ""
+        side: "",
       },
       {
         DisplayName: "Robert Brown",
         nbOfPersons: 1,
         invitees: "Robert Brown",
-        side: "BRIDE"
+        side: "BRIDE",
       },
       {
         DisplayName: "Jennifer Davis",
         nbOfPersons: 1,
         invitees: "Jennifer Davis",
-        side: "GROOM"
-      }
+        side: "GROOM",
+      },
     ];
 
     // Create worksheet
     const worksheet = XLSX.utils.json_to_sheet(templateData);
-    
+
     // Set column widths
-    worksheet['!cols'] = [
+    worksheet["!cols"] = [
       { wch: 25 }, // DisplayName
       { wch: 15 }, // nbOfPersons
       { wch: 20 }, // invitees
-      { wch: 10 }  // side
+      { wch: 10 }, // side
     ];
 
     // Create workbook
@@ -260,15 +261,15 @@ export const GenerateLinkDialog = ({
     setLoading(true);
     try {
       const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('weddingSlug', weddingSlug);
-      formData.append('weddingId', weddingId);
+      formData.append("file", selectedFile);
+      formData.append("weddingSlug", weddingSlug);
+      formData.append("weddingId", weddingId);
 
-      const webhookUrl = 'https://aurea-invites.app.n8n.cloud/webhook-test/read-invitees-csv';
+      const webhookUrl = "https://aurea-invites.app.n8n.cloud/webhook/read-invitees-csv";
       console.log("Sending file to n8n workflow:", webhookUrl);
 
       const response = await fetch(webhookUrl, {
-        method: 'POST',
+        method: "POST",
         body: formData,
       });
 
@@ -321,21 +322,20 @@ export const GenerateLinkDialog = ({
 
   const sanitizedLinkName = linkName
     .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '');
-  
-  const previewUrl = uniqueSlug && linkName
-    ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter(n => n.trim()).length}`
-    : "";
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+  const previewUrl =
+    uniqueSlug && linkName
+      ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
+      : "";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Generate Invitation Link</DialogTitle>
-          <DialogDescription>
-            Create invitation links manually or automatically from a file
-          </DialogDescription>
+          <DialogDescription>Create invitation links manually or automatically from a file</DialogDescription>
         </DialogHeader>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
@@ -345,92 +345,90 @@ export const GenerateLinkDialog = ({
           </TabsList>
 
           <TabsContent value="manual" className="space-y-4 py-4">
-          <div className="space-y-2">
-            <Label htmlFor="linkName">Link Name *</Label>
-            <p className="text-sm text-muted-foreground">A friendly name to identify this invitation group (e.g., "Family Smith", "Work Colleagues")</p>
-            <Input
-              id="linkName"
-              placeholder="e.g., Family Smith"
-              value={linkName}
-              onChange={(e) => handleLinkNameChange(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="uniqueSlug">Link Unique Identifier *</Label>
-            <p className="text-sm text-muted-foreground">A unique URL-friendly identifier that will be part of the invitation link</p>
-            <Input
-              id="uniqueSlug"
-              placeholder="e.g., family-smith"
-              value={uniqueSlug}
-              onChange={(e) => {
-                setSlugManuallyEdited(true);
-                setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, '-'));
-              }}
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="side">Side</Label>
-            <p className="text-sm text-muted-foreground">Which side of the wedding party does this group belong to?</p>
-            <select
-              id="side"
-              value={side}
-              onChange={(e) => setSide(e.target.value)}
-              className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              <option value="">Select side (optional)</option>
-              <option value="GROOM">Groom</option>
-              <option value="BRIDE">Bride</option>
-            </select>
-          </div>
-
-          {previewUrl && (
-            <Card className="p-3 bg-muted">
-              <Label className="text-xs text-muted-foreground">Preview URL:</Label>
-              <p className="text-sm font-mono break-all">{previewUrl}</p>
-            </Card>
-          )}
-
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <div>
-                <Label>Invitees ({invitees.filter(n => n.trim()).length})</Label>
-                <p className="text-sm text-muted-foreground mt-1">Add the names of people who will receive this invitation link</p>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                onClick={handleAddInvitee}
-              >
-                <Plus className="w-4 h-4 mr-1" />
-                Add Invitee
-              </Button>
+            <div className="space-y-2">
+              <Label htmlFor="linkName">Link Name *</Label>
+              <p className="text-sm text-muted-foreground">
+                A friendly name to identify this invitation group (e.g., "Family Smith", "Work Colleagues")
+              </p>
+              <Input
+                id="linkName"
+                placeholder="e.g., Family Smith"
+                value={linkName}
+                onChange={(e) => handleLinkNameChange(e.target.value)}
+              />
             </div>
 
             <div className="space-y-2">
-              {invitees.map((invitee, index) => (
-                <div key={index} className="flex gap-2">
-                  <Input
-                    placeholder={`Invitee ${index + 1} name`}
-                    value={invitee}
-                    onChange={(e) => handleInviteeChange(index, e.target.value)}
-                  />
-                  {invitees.length > 1 && (
-                    <Button
-                      type="button"
-                      variant="outline"
-                      size="icon"
-                      onClick={() => handleRemoveInvitee(index)}
-                    >
-                      <X className="w-4 h-4" />
-                    </Button>
-                  )}
-                </div>
-              ))}
+              <Label htmlFor="uniqueSlug">Link Unique Identifier *</Label>
+              <p className="text-sm text-muted-foreground">
+                A unique URL-friendly identifier that will be part of the invitation link
+              </p>
+              <Input
+                id="uniqueSlug"
+                placeholder="e.g., family-smith"
+                value={uniqueSlug}
+                onChange={(e) => {
+                  setSlugManuallyEdited(true);
+                  setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
+                }}
+              />
             </div>
-          </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="side">Side</Label>
+              <p className="text-sm text-muted-foreground">
+                Which side of the wedding party does this group belong to?
+              </p>
+              <select
+                id="side"
+                value={side}
+                onChange={(e) => setSide(e.target.value)}
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                <option value="">Select side (optional)</option>
+                <option value="GROOM">Groom</option>
+                <option value="BRIDE">Bride</option>
+              </select>
+            </div>
+
+            {previewUrl && (
+              <Card className="p-3 bg-muted">
+                <Label className="text-xs text-muted-foreground">Preview URL:</Label>
+                <p className="text-sm font-mono break-all">{previewUrl}</p>
+              </Card>
+            )}
+
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <div>
+                  <Label>Invitees ({invitees.filter((n) => n.trim()).length})</Label>
+                  <p className="text-sm text-muted-foreground mt-1">
+                    Add the names of people who will receive this invitation link
+                  </p>
+                </div>
+                <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee}>
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add Invitee
+                </Button>
+              </div>
+
+              <div className="space-y-2">
+                {invitees.map((invitee, index) => (
+                  <div key={index} className="flex gap-2">
+                    <Input
+                      placeholder={`Invitee ${index + 1} name`}
+                      value={invitee}
+                      onChange={(e) => handleInviteeChange(index, e.target.value)}
+                    />
+                    {invitees.length > 1 && (
+                      <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)}>
+                        <X className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
           </TabsContent>
 
           <TabsContent value="automatic" className="space-y-6 py-4">
@@ -449,12 +447,7 @@ export const GenerateLinkDialog = ({
                       </p>
                     </div>
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleDownloadTemplate}
-                  >
+                  <Button type="button" variant="outline" size="sm" onClick={handleDownloadTemplate}>
                     <Download className="w-4 h-4 mr-2" />
                     Download
                   </Button>
@@ -472,7 +465,7 @@ export const GenerateLinkDialog = ({
                     </p>
                   </div>
                 </div>
-                
+
                 {!selectedFile ? (
                   <label htmlFor="file-upload" className="block">
                     <Card className="p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50">
@@ -528,7 +521,8 @@ export const GenerateLinkDialog = ({
                       <span className="text-xs font-bold text-primary">✓</span>
                     </div>
                     <p className="text-sm text-foreground">
-                      Your Excel file will be automatically processed to generate personalized invitation links for all invitees
+                      Your Excel file will be automatically processed to generate personalized invitation links for all
+                      invitees
                     </p>
                   </div>
                   <div className="flex items-start gap-2">
