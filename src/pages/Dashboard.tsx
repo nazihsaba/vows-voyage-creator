@@ -22,7 +22,7 @@ import {
   X,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
-import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import cinematicVideo from "@/assets/preview-wedding-5.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
