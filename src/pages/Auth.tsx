@@ -193,9 +193,7 @@ const Auth = () => {
             {resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
           </CardTitle>
           <CardDescription className="text-center">
-            {emailSent 
-              ? `We sent a verification link to ${email}`
-              : resetEmailSent
+            {resetEmailSent
               ? `We sent a password reset link to ${email}`
               : showForgotPassword
               ? "Enter your email to receive a password reset link"
