@@ -19,9 +19,9 @@ const Index = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   const heroImages = [
-    { src: flowerVase, alt: "Wedding celebration" },
+    { src: tableDecor, alt: "Wedding celebration" },
     { src: sparklers, alt: "Birthday party" },
-    { src: tableDecor, alt: "Party celebration" },
+    { src: flowerVase, alt: "Party celebration" },
     { src: previewWedding5, alt: "Special celebration" },
   ];
 
