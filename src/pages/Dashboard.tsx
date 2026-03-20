@@ -83,7 +83,7 @@ const Dashboard = () => {
       id: "classic-romance",
       name: "Éclat",
       description: "Elegant scrollable design with photo gallery and RSVP",
-      image: classicRomance,
+      image: eclatTemplate,
       features: [
         { icon: Images, text: "Photo Gallery" },
         { icon: MapPin, text: "Event Locations" },
