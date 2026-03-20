@@ -320,6 +320,18 @@ const WeddingForm = () => {
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
+      // Build field_customizations with Aura quote/reference if applicable
+      const existingCustomizations = typeof formData.field_customizations === 'string'
+        ? JSON.parse(formData.field_customizations || '{}')
+        : (formData.field_customizations || {});
+      const fieldCustomizations = isAuraTemplate
+        ? {
+            ...existingCustomizations,
+            "bible-verse": { text: auraQuote },
+            "bible-verse-reference": { text: auraReference },
+          }
+        : existingCustomizations;
+
       let weddingId = id;
 
       if (id) {
