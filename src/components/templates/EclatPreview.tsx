@@ -9,7 +9,6 @@ import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
 import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
 import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
 import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
 // Static demo data
 const staticWedding = {
