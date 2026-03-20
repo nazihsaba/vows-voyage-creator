@@ -15,7 +15,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<"password" | "magic">("password");
+  const [loginMethod] = useState<"password">("password");
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [isProcessingCallback, setIsProcessingCallback] = useState(true);
