@@ -50,8 +50,8 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email.trim() || !password.trim()) {
-      toast.error("Please enter both email and password");
+    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
+      toast.error("Please fill in all fields");
       return;
     }
 
@@ -66,21 +66,23 @@ const Auth = () => {
       return;
     }
 
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match");
+      return;
+    }
+
     setLoading(true);
 
     try {
       const { error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password: password,
-        options: {
-          emailRedirectTo: `${window.location.origin}/auth`,
-        },
       });
 
       if (error) throw error;
 
-      setEmailSent(true);
-      toast.success("Check your email to verify your account!");
+      toast.success("Account created successfully!");
+      navigate("/dashboard");
     } catch (error: any) {
       console.error("Sign up error:", error);
       toast.error(error.message || "Failed to create account");
