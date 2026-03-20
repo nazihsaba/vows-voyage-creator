@@ -493,6 +493,9 @@ const WeddingForm = () => {
       // Clear gallery files after successful save
       setGalleryFiles([]);
       setGalleryPreviews([]);
+
+      // Navigate to My Events page
+      navigate("/dashboard/my-events");
     } catch (error: any) {
       toast({
         title: "Error",
