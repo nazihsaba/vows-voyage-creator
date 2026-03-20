@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
 import { useState, useEffect } from "react";
+import {
+  Dialog,
+  DialogContent,
+} from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
