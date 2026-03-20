@@ -13,10 +13,10 @@ import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
 // Static demo data
 const staticWedding = {
-  groom_name: "Chris",
-  bride_name: "Adele",
-  groom_family: "The Johnson Family",
-  bride_family: "The Williams Family",
+  groom_name: "Julien",
+  bride_name: "Clara",
+  groom_family: "The Aris Family",
+  bride_family: "The Vienne Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
   main_picture_url: eclatWedding1,

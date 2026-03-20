@@ -7,18 +7,30 @@ import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
 const staticWedding = {
-  groom_name: "Anthony",
-  bride_name: "Odile",
-  groom_family: "The Johnson Family",
-  bride_family: "The Williams Family",
+  groom_name: "Noah",
+  bride_name: "Mia",
+  groom_family: "The Elin Family",
+  bride_family: "The Soren Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   video_url: graceVideo,
 };
 
 const staticLocations = [
-  { id: "1", type: "ceremony", time: "2:00 PM", location_name: "St. Mary's Cathedral", location_link: "https://maps.google.com" },
-  { id: "2", type: "venue", time: "5:00 PM", location_name: "Grand Ballroom Hotel", location_link: "https://maps.google.com" },
+  {
+    id: "1",
+    type: "ceremony",
+    time: "2:00 PM",
+    location_name: "St. Mary's Cathedral",
+    location_link: "https://maps.google.com",
+  },
+  {
+    id: "2",
+    type: "venue",
+    time: "5:00 PM",
+    location_name: "Grand Ballroom Hotel",
+    location_link: "https://maps.google.com",
+  },
 ];
 
 const staticGiftCards = [
@@ -97,10 +109,20 @@ export const GracePreview = () => {
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
-            {staticWedding.wedding_date.toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            {staticWedding.wedding_date.toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
           {!hasStarted && (
-            <Button onClick={handleStart} className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm">Tap To Start</Button>
+            <Button
+              onClick={handleStart}
+              className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+            >
+              Tap To Start
+            </Button>
           )}
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -147,28 +169,46 @@ export const GracePreview = () => {
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <Church className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                   </div>
-                  <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  <a
+                    href={ceremony.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
               </AnimatedSection>
             )}
             {venue && (
               <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <PartyPopper className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                   </div>
-                  <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  <a
+                    href={venue.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
               </AnimatedSection>
             )}
@@ -202,7 +242,9 @@ export const GracePreview = () => {
         <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
             <div className="grid gap-4 md:grid-cols-2">
               {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
@@ -224,7 +266,10 @@ export const GracePreview = () => {
       <AnimatedSection animation="fade-in">
         <section className="py-16 px-4 bg-[#faf8f5] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
-            <p className="text-template-body">We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.</p>
+            <p className="text-template-body">
+              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures,
+              and make wonderful memories with us.
+            </p>
           </div>
         </section>
       </AnimatedSection>

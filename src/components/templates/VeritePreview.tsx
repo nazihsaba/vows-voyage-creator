@@ -3,28 +3,40 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import previewWedding1 from "@/assets/verite-preview-1.jpg";
-import previewWedding2 from "@/assets/verite-preview-2.jpg";
-import previewWedding3 from "@/assets/verite-preview-3.jpg";
-import previewWedding4 from "@/assets/verite-preview-4.jpg";
-import previewWedding5 from "@/assets/verite-preview-5.jpg";
-import previewWedding6 from "@/assets/verite-preview-6.jpg";
-import previewWedding7 from "@/assets/verite-preview-7.jpg";
-import previewWedding8 from "@/assets/verite-preview-8.jpg";
+import previewWedding1 from "@/assets/preview-wedding-1.jpg";
+import previewWedding2 from "@/assets/preview-wedding-2.jpg";
+import previewWedding3 from "@/assets/preview-wedding-3.jpg";
+import previewWedding4 from "@/assets/preview-wedding-4.jpg";
+import previewWedding5 from "@/assets/preview-wedding-5.jpg";
+import previewWedding6 from "@/assets/preview-wedding-6.jpg";
+import previewWedding7 from "@/assets/preview-wedding-7.jpg";
+import previewWedding8 from "@/assets/preview-wedding-8.jpg";
 
 const staticWedding = {
-  groom_name: "Chris",
-  bride_name: "Adele",
+  groom_name: "Ryan",
+  bride_name: "Ava",
   groom_family: "The Johnson Family",
-  bride_family: "The Williams Family",
+  bride_family: "The Neril Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   main_picture_url: previewWedding1,
 };
 
 const staticLocations = [
-  { id: "1", type: "ceremony", location_name: "St.Michel Church", time: "6:00 PM", location_link: "https://maps.app.goo.gl/m9pqWpFKT1yVdkVVA" },
-  { id: "2", type: "venue", location_name: "Le Petit Paradis", time: "8:00 PM", location_link: "https://maps.app.goo.gl/FTzJ5FYp5tHdJGyA8" },
+  {
+    id: "1",
+    type: "ceremony",
+    location_name: "St.Michel Church",
+    time: "6:00 PM",
+    location_link: "https://maps.app.goo.gl/m9pqWpFKT1yVdkVVA",
+  },
+  {
+    id: "2",
+    type: "venue",
+    location_name: "Le Petit Paradis",
+    time: "8:00 PM",
+    location_link: "https://maps.app.goo.gl/FTzJ5FYp5tHdJGyA8",
+  },
 ];
 
 const staticGallery = [
@@ -101,7 +113,11 @@ export const VeritePreview = () => {
       {/* Hero */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
-        style={{ backgroundImage: `url(${staticWedding.main_picture_url})`, backgroundSize: "cover", backgroundPosition: "center" }}
+        style={{
+          backgroundImage: `url(${staticWedding.main_picture_url})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
       >
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
@@ -112,10 +128,20 @@ export const VeritePreview = () => {
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
-            {new Date(staticWedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+            {new Date(staticWedding.wedding_date).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
           </p>
           {!hasStarted && (
-            <Button onClick={handleStart} className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm">Tap To Start</Button>
+            <Button
+              onClick={handleStart}
+              className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+            >
+              Tap To Start
+            </Button>
           )}
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -132,7 +158,9 @@ export const VeritePreview = () => {
               <p className="text-2xl">&</p>
               <h2 className="text-template-subtitle">{staticWedding.bride_family}</h2>
             </div>
-            <p className="text-template-body">Request the honor of your presence at the wedding of their Son and Daughter</p>
+            <p className="text-template-body">
+              Request the honor of your presence at the wedding of their Son and Daughter
+            </p>
           </div>
         </AnimatedSection>
       </section>
@@ -144,7 +172,11 @@ export const VeritePreview = () => {
             {staticGallery.map((image, index) => (
               <AnimatedSection key={image.id} delay={index * 100} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
-                  <img src={image.image_url} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" />
+                  <img
+                    src={image.image_url}
+                    alt={`Gallery ${index + 1}`}
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  />
                 </div>
               </AnimatedSection>
             ))}
@@ -166,7 +198,9 @@ export const VeritePreview = () => {
             <div>
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
               <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
-                {"With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"}
+                {
+                  "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"
+                }
               </p>
             </div>
           </AnimatedSection>
@@ -175,28 +209,46 @@ export const VeritePreview = () => {
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <Church className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                   </div>
-                  <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  <a
+                    href={ceremony.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
               </AnimatedSection>
             )}
             {venue && (
               <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <PartyPopper className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                   </div>
-                  <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                  <a
+                    href={venue.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                  >
+                    View on Map
+                  </a>
                 </div>
               </AnimatedSection>
             )}
@@ -230,7 +282,9 @@ export const VeritePreview = () => {
         <section className="py-16 px-4 bg-white">
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
             <div className="grid gap-4 md:grid-cols-2">
               {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
@@ -252,7 +306,10 @@ export const VeritePreview = () => {
       <AnimatedSection animation="fade-in">
         <section className="py-16 px-4 bg-[#faf8f5] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
-            <p className="text-template-body">We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.</p>
+            <p className="text-template-body">
+              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures,
+              and make wonderful memories with us.
+            </p>
           </div>
         </section>
       </AnimatedSection>
