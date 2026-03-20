@@ -2,13 +2,14 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
-import veriteTemplate from "@/assets/template-verite.jpg";
+import veriteTemplate from "@/assets/verite-preview-3.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
-import cinematicVideo from "@/assets/template-cinematic-video.jpg";
+import graceTemplate from "@/assets/preview-wedding-5.jpg";
+import auraTemplate from "@/assets/eclat-wedding-4.jpg";
 
 const previewCards = [
   {
-    image: bibleVerseTabs,
+    image: auraTemplate,
     label: "Aura",
     tagline: "Bible verse & botanical elegance",
     featured: true,
@@ -26,7 +27,7 @@ const previewCards = [
     featured: false,
   },
   {
-    image: cinematicVideo,
+    image: graceTemplate,
     label: "Grâce",
     tagline: "Immersive video background",
     featured: false,
@@ -53,7 +54,8 @@ const InvitationPreviewSection = () => {
             Designed for modern celebrations.
           </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Create and share stunning digital wedding invitations that capture the elegance of your special day — beautifully designed and ready in minutes.
+            Create and share stunning digital wedding invitations that capture the elegance of your special day —
+            beautifully designed and ready in minutes.
           </p>
         </div>
 
@@ -76,9 +78,7 @@ const InvitationPreviewSection = () => {
                 </span>
               </div>
               <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                <p className="text-xs font-light tracking-widest uppercase opacity-80">
-                  {card.tagline}
-                </p>
+                <p className="text-xs font-light tracking-widest uppercase opacity-80">{card.tagline}</p>
               </div>
             </div>
           ))}
@@ -93,12 +93,7 @@ const InvitationPreviewSection = () => {
           >
             Browse Wedding Templates
           </Button>
-          <Button
-            size="lg"
-            variant="outline"
-            onClick={() => navigate("/demo")}
-            className="text-lg px-8 py-6"
-          >
+          <Button size="lg" variant="outline" onClick={() => navigate("/demo")} className="text-lg px-8 py-6">
             See How It Looks
           </Button>
         </div>
