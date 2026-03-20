@@ -22,9 +22,9 @@ import {
   X,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
-import cinematicVideo from "@/assets/preview-wedding-5.jpg";
+import graceTemplate from "@/assets/preview-wedding-5.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
-import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
+import auraTemplate from "@/assets/eclat-wedding-4.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
@@ -57,7 +57,7 @@ const Dashboard = () => {
       id: "bible-verse-tabs",
       name: "Aura",
       description: "Elegant tab design with Bible verse, family names & botanical decor",
-      image: bibleVerseTabs,
+      image: auraTemplate,
       features: [
         { icon: Sparkles, text: "Bible Verse" },
         { icon: Heart, text: "Family Names" },
@@ -97,7 +97,7 @@ const Dashboard = () => {
       id: "template6",
       name: "Grâce",
       description: "Immersive full-screen video background experience",
-      image: cinematicVideo,
+      image: graceTemplate,
       features: [
         { icon: Video, text: "Video Background" },
         { icon: MapPin, text: "Event Locations" },
