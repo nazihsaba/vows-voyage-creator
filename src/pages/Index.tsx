@@ -20,9 +20,9 @@ const Index = () => {
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
-    { src: sparklers, alt: "Birthday party" },
+    { src: eclatWedding4, alt: "Birthday party" },
     { src: flowerVase, alt: "Party celebration" },
-    { src: eclatWedding4, alt: "Special celebration" },
+    { src: sparklers, alt: "Special celebration" },
   ];
 
   useEffect(() => {
