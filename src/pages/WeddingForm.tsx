@@ -346,6 +346,7 @@ const WeddingForm = () => {
             audio_url: audioUrl,
             audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
             audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
+            field_customizations: fieldCustomizations,
           })
           .eq("id", id);
 
