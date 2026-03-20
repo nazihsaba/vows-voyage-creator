@@ -22,7 +22,7 @@ import {
   X,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-1.jpg";
-import graceTemplate from "@/assets/preview-wedding-5.jpg";
+import graceTemplate from "@/assets/preview-wedding-1.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-4.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
