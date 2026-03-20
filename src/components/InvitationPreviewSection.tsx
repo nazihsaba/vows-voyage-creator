@@ -5,7 +5,7 @@ import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
 import classicRomance from "@/assets/template-wedding-classic.jpg";
 import graceTemplate from "@/assets/preview-wedding-5.jpg";
-import auraTemplate from "@/assets/eclat-wedding-4.jpg";
+import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 
 const previewCards = [
   {
