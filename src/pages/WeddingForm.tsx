@@ -46,6 +46,10 @@ const WeddingForm = () => {
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
+  const [auraQuote, setAuraQuote] = useState(
+    "Two are better than one. For if they fall, one will lift up the other."
+  );
+  const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -90,6 +94,12 @@ const WeddingForm = () => {
 
       if (error) throw error;
       setFormData(data);
+      // Load Aura quote/reference from field_customizations
+      if (data.field_customizations) {
+        const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
+        if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
+        if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
+      }
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
@@ -310,6 +320,19 @@ const WeddingForm = () => {
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
+      // Build field_customizations with Aura quote/reference if applicable
+      const rawFc = (formData as any).field_customizations;
+      const existingCustomizations = typeof rawFc === 'string'
+        ? JSON.parse(rawFc || '{}')
+        : (rawFc || {});
+      const fieldCustomizations = isAuraTemplate
+        ? {
+            ...existingCustomizations,
+            "bible-verse": { text: auraQuote },
+            "bible-verse-reference": { text: auraReference },
+          }
+        : existingCustomizations;
+
       let weddingId = id;
 
       if (id) {
@@ -323,6 +346,7 @@ const WeddingForm = () => {
             audio_url: audioUrl,
             audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
             audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
+            field_customizations: fieldCustomizations,
           })
           .eq("id", id);
 
@@ -339,6 +363,7 @@ const WeddingForm = () => {
               audio_url: audioUrl,
               audio_start_time: audioTrimSettings?.startTime || 0,
               audio_end_time: audioTrimSettings?.endTime || 0,
+              field_customizations: fieldCustomizations,
               user_id: user.id,
             },
           ])
@@ -569,6 +594,32 @@ const WeddingForm = () => {
                   rows={4}
                 />
               </div>
+
+              {/* Aura Template: Quote & Reference */}
+              {isAuraTemplate && (
+                <div className="space-y-4 border-t pt-6">
+                  <h3 className="text-lg font-semibold">Quote & Reference</h3>
+                  <div className="space-y-2">
+                    <Label htmlFor="aura_quote">Quote</Label>
+                    <Textarea
+                      id="aura_quote"
+                      value={auraQuote}
+                      onChange={(e) => setAuraQuote(e.target.value)}
+                      rows={3}
+                      placeholder="Two are better than one..."
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="aura_reference">Reference</Label>
+                    <Input
+                      id="aura_reference"
+                      value={auraReference}
+                      onChange={(e) => setAuraReference(e.target.value)}
+                      placeholder="— Ecclesiastes 4:9-12"
+                    />
+                  </div>
+                </div>
+              )}
 
               {/* <div className="space-y-2">
                 <Label htmlFor="custom_primary_color">Primary Color (Gold Tone)</Label>
