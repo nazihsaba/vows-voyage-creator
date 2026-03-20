@@ -18,7 +18,7 @@ const staticWedding = {
   bride_family: "The Vienne Family",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
-  main_picture_url: auraPreview3,
+  main_picture_url: auraPreview4,
 };
 
 const staticLocations = [
@@ -39,7 +39,7 @@ const staticLocations = [
 ];
 
 const staticGallery = [
-  { id: "1", image_url: auraPreview4 },
+  { id: "1", image_url: auraPreview3 },
   { id: "2", image_url: auraPreview1 },
   { id: "3", image_url: auraPreview5 },
   { id: "4", image_url: auraPreview6 },
