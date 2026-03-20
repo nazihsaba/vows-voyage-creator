@@ -9,6 +9,7 @@ import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
 import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
 import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
 import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
+import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
 // Static demo data
 const staticWedding = {
@@ -43,7 +44,7 @@ const staticGallery = [
   { id: "2", image_url: eclatWedding3 },
   { id: "3", image_url: eclatWedding4 },
   { id: "4", image_url: eclatWedding5 },
-  { id: "5", image_url: eclatWedding6 },
+  { id: "5", image_url: eclatWedding2 },
 ];
 
 const staticGiftCards = [
