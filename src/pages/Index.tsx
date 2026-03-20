@@ -70,9 +70,6 @@ const Index = () => {
           <p className="text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
             Elegant digital invitations for unforgettable moments.
           </p>
-          <p className="text-lg md:text-xl mb-8 font-light max-w-2xl mx-auto opacity-90">
-            Elegant invitations, thoughtfully designed for your special day
-          </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <Button
               size="lg"
