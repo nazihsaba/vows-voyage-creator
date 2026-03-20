@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Heart } from "lucide-react";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
-import classicRomance from "@/assets/template-wedding-classic.jpg";
+import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-5.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 
@@ -21,7 +21,7 @@ const previewCards = [
     featured: false,
   },
   {
-    image: classicRomance,
+    image: eclatTemplate,
     label: "Éclat",
     tagline: "Elegant scrollable design",
     featured: false,
