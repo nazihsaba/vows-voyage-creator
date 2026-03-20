@@ -190,7 +190,7 @@ const Auth = () => {
             </div>
           </div>
           <CardTitle className="text-2xl text-center font-serif">
-            {emailSent || resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
+            {resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
           </CardTitle>
           <CardDescription className="text-center">
             {emailSent 
