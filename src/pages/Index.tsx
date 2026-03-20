@@ -71,7 +71,7 @@ const Index = () => {
             Elegant digital invitations for unforgettable moments.
           </p>
           <p className="text-lg md:text-xl mb-8 font-light max-w-2xl mx-auto opacity-90">
-            Design elegant digital invitations for weddings, birthdays, and special celebrations — in minutes.
+            Create stunning wedding invitations your guests will love — personalized, digital, and ready to share in minutes.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <Button
