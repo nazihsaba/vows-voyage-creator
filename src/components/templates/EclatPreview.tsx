@@ -43,7 +43,7 @@ const staticGallery = [
   { id: "2", image_url: eclatWedding3 },
   { id: "3", image_url: eclatWedding4 },
   { id: "4", image_url: eclatWedding5 },
-  { id: "5", image_url: eclatWedding2 },
+  { id: "5", image_url: eclatWedding6 },
 ];
 
 const staticGiftCards = [
