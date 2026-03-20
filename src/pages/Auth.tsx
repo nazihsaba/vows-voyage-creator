@@ -15,7 +15,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  const [loginMethod, setLoginMethod] = useState<"password" | "magic">("password");
+  
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [isProcessingCallback, setIsProcessingCallback] = useState(true);
@@ -286,116 +286,61 @@ const Auth = () => {
                 </TabsList>
                 
                 <TabsContent value="signin" className="space-y-4 mt-4">
-                  <div className="flex gap-2 mb-4">
-                    <Button
-                      type="button"
-                      variant={loginMethod === "password" ? "default" : "outline"}
-                      onClick={() => setLoginMethod("password")}
-                      className="flex-1"
-                      size="sm"
-                    >
-                      Password
+                  <form onSubmit={handleSignInWithPassword} className="space-y-4">
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-email">Email</Label>
+                      <div className="relative">
+                        <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signin-email"
+                          type="email"
+                          placeholder="Enter your email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <Label htmlFor="signin-password">Password</Label>
+                      <div className="relative">
+                        <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
+                        <Input
+                          id="signin-password"
+                          type="password"
+                          placeholder="Enter your password"
+                          value={password}
+                          onChange={(e) => setPassword(e.target.value)}
+                          className="pl-10"
+                          disabled={loading}
+                          required
+                        />
+                      </div>
+                    </div>
+                    <Button type="submit" className="w-full" disabled={loading}>
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Signing In...
+                        </>
+                      ) : (
+                        <>
+                          Sign In
+                          <ArrowRight className="ml-2 h-4 w-4" />
+                        </>
+                      )}
                     </Button>
                     <Button
                       type="button"
-                      variant={loginMethod === "magic" ? "default" : "outline"}
-                      onClick={() => setLoginMethod("magic")}
-                      className="flex-1"
-                      size="sm"
+                      variant="link"
+                      onClick={() => setShowForgotPassword(true)}
+                      className="w-full text-sm"
                     >
-                      Magic Link
+                      Forgot your password?
                     </Button>
-                  </div>
-
-                  {loginMethod === "password" ? (
-                    <form onSubmit={handleSignInWithPassword} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="signin-email">Email</Label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                          <Input
-                            id="signin-email"
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="pl-10"
-                            disabled={loading}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="signin-password">Password</Label>
-                        <div className="relative">
-                          <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                          <Input
-                            id="signin-password"
-                            type="password"
-                            placeholder="Enter your password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="pl-10"
-                            disabled={loading}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Signing In...
-                          </>
-                        ) : (
-                          <>
-                            Sign In
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="link"
-                        onClick={() => setShowForgotPassword(true)}
-                        className="w-full text-sm"
-                      >
-                        Forgot your password?
-                      </Button>
-                    </form>
-                  ) : (
-                    <form onSubmit={handleSignInWithMagicLink} className="space-y-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="magic-email">Email</Label>
-                        <div className="relative">
-                          <Mail className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                          <Input
-                            id="magic-email"
-                            type="email"
-                            placeholder="Enter your email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
-                            className="pl-10"
-                            disabled={loading}
-                            required
-                          />
-                        </div>
-                      </div>
-                      <Button type="submit" className="w-full" disabled={loading}>
-                        {loading ? (
-                          <>
-                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            Sending Link...
-                          </>
-                        ) : (
-                          <>
-                            Send Sign-In Link
-                            <ArrowRight className="ml-2 h-4 w-4" />
-                          </>
-                        )}
-                      </Button>
-                    </form>
-                  )}
+                  </form>
                 </TabsContent>
 
                 <TabsContent value="signup" className="space-y-4 mt-4">
