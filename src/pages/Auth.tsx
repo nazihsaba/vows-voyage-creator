@@ -182,7 +182,7 @@ const Auth = () => {
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              {emailSent || resetEmailSent ? (
+              {resetEmailSent ? (
                 <CheckCircle2 className="w-6 h-6 text-primary" />
               ) : (
                 <Lock className="w-6 h-6 text-primary" />
