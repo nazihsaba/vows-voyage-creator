@@ -4,7 +4,7 @@ import { Heart } from "lucide-react";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
-import graceTemplate from "@/assets/preview-wedding-5.jpg";
+import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 
 const previewCards = [
