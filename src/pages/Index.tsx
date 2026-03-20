@@ -83,11 +83,31 @@ const Index = () => {
             </Button>
             <Button
               size="lg"
-              onClick={() => navigate("/demo")}
+              onClick={() => setShowComingSoon(true)}
               className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               View Demo
             </Button>
+
+            <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
+              <DialogContent className="sm:max-w-md text-center p-8">
+                <div className="flex flex-col items-center gap-4">
+                  <span className="text-5xl">💍✨</span>
+                  <h3 className="text-2xl font-serif font-bold text-primary">
+                    Coming Soon!
+                  </h3>
+                  <p className="text-muted-foreground leading-relaxed">
+                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on its way!
+                  </p>
+                  <Button
+                    onClick={() => setShowComingSoon(false)}
+                    className="mt-2 bg-primary text-primary-foreground hover:bg-primary-hover"
+                  >
+                    Can't Wait! 💕
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
           <p className="text-sm md:text-base font-light tracking-wide opacity-75">
             No coding needed &nbsp;•&nbsp; Mobile-friendly &nbsp;•&nbsp; Share your invitation instantly
