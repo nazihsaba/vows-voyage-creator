@@ -210,7 +210,7 @@ export const AuraTemplate = ({
                 fieldId="invitation-line"
                 text={getFieldValue(
                   "invitation-line",
-                  "joyfully invite you to the wedding of their\nbeloved son and daughter",
+                  wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter",
                 )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
