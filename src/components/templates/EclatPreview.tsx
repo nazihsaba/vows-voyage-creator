@@ -3,13 +3,12 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
-import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
-import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
-import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
-import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
-import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
+import auraPreview1 from "@/assets/aura-preview-1.jpg";
+import auraPreview2 from "@/assets/aura-preview-2.jpg";
+import auraPreview3 from "@/assets/aura-preview-3.jpg";
+import auraPreview4 from "@/assets/aura-preview-4.jpg";
+import auraPreview5 from "@/assets/aura-preview-5.jpg";
+import auraPreview6 from "@/assets/aura-preview-6.jpg";
 
 // Static demo data
 const staticWedding = {
