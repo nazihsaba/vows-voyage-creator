@@ -153,9 +153,6 @@ const Index = () => {
           <p className="text-xl text-muted-foreground mb-4">
             Create your wedding invitation with timeless elegance
           </p>
-          <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-8">
-            Create, customize, and share in minutes.
-          </p>
           <div className="flex justify-center">
             <Button
               size="lg"
