@@ -157,11 +157,11 @@ const Auth = () => {
   };
 
   const handleTryAgain = () => {
-    setEmailSent(false);
     setResetEmailSent(false);
     setShowForgotPassword(false);
     setEmail("");
     setPassword("");
+    setConfirmPassword("");
   };
 
   // Show loading screen while processing auth callback
