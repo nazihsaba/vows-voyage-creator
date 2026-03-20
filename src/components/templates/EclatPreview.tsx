@@ -8,7 +8,7 @@ import auraPreview2 from "@/assets/aura-preview-11.jpg";
 import auraPreview3 from "@/assets/aura-preview-3.jpg";
 import auraPreview4 from "@/assets/aura-preview-4.jpg";
 import auraPreview5 from "@/assets/aura-preview-5.jpg";
-import auraPreview6 from "@/assets/aura-preview-6.jpg";
+import auraPreview6 from "@/assets/aura-preview-11.jpg";
 
 // Static demo data
 const staticWedding = {
