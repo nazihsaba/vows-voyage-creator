@@ -363,6 +363,7 @@ const WeddingForm = () => {
               audio_url: audioUrl,
               audio_start_time: audioTrimSettings?.startTime || 0,
               audio_end_time: audioTrimSettings?.endTime || 0,
+              field_customizations: fieldCustomizations,
               user_id: user.id,
             },
           ])
