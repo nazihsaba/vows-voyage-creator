@@ -46,6 +46,10 @@ const WeddingForm = () => {
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
+  const [auraQuote, setAuraQuote] = useState(
+    "Two are better than one. For if they fall, one will lift up the other."
+  );
+  const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
