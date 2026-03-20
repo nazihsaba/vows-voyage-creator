@@ -24,7 +24,7 @@ import {
 import veriteTemplate from "@/assets/verite-preview-3.jpg";
 import graceTemplate from "@/assets/preview-wedding-5.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
-import auraTemplate from "@/assets/eclat-wedding-4.jpg";
+import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
