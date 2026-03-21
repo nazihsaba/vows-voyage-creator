@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
-import { ChevronDown, PartyPopper, Church } from "lucide-react";
+import { ChevronDown, PartyPopper, Gem } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
@@ -274,7 +274,7 @@ export const VeriteTemplate = ({
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
-                    <Church className="w-8 h-8 text-primary" />
+                    <Gem className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
