@@ -115,7 +115,7 @@ export const AuraPreview = () => {
                 <div className="text-center space-y-1">
                   <p className="text-template-subtitle">The Vale Family</p>
                 </div>
-                <span className="text-3xl font-light text-primary/50">&</span>
+                <span className="text-3xl">&</span>
                 <div className="text-center space-y-1">
                   <p className="text-template-subtitle">The Maris Family</p>
                 </div>
