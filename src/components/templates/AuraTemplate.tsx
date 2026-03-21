@@ -153,15 +153,12 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="groom-parents"
-                    text={getFieldValue(
-                      "groom-parents",
-                      `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`,
-                    )}
+                    text={getFieldValue("groom-parents", `Mr. & Mrs.`)}
                     style={getFieldStyle("groom-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-title text-primary"
+                    className="text-template-title"
                   />
                   <EditableField
                     fieldId="groom-family-name"
@@ -180,15 +177,12 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-parents"
-                    text={getFieldValue(
-                      "bride-parents",
-                      `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`,
-                    )}
+                    text={getFieldValue("bride-parents", `Mr. & Mrs.`)}
                     style={getFieldStyle("bride-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm text-primary font-medium tracking-wide"
+                    className="text-sm font-medium tracking-wide"
                   />
                   <EditableField
                     fieldId="bride-family-name"
@@ -211,7 +205,8 @@ export const AuraTemplate = ({
                 fieldId="invitation-line"
                 text={getFieldValue(
                   "invitation-line",
-                  wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter",
+                  wedding.main_description ||
+                    "Request the honor of your presence at the wedding of their Son and Daughter",
                 )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
@@ -224,9 +219,9 @@ export const AuraTemplate = ({
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
-              <h1 className="text-template-title text-primary">
-                {wedding.groom_name} & {wedding.bride_name}
-              </h1>
+                <h1 className="text-template-title text-primary">
+                  {wedding.groom_name} & {wedding.bride_name}
+                </h1>
               </div>
             </div>
 
