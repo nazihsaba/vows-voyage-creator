@@ -274,7 +274,7 @@ export const EclatPreview = () => {
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
 
-                  <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
