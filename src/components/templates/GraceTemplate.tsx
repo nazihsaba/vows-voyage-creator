@@ -6,6 +6,7 @@ import { Church, PartyPopper, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface GraceTemplateProps {
   wedding: any;
