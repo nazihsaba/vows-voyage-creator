@@ -6,6 +6,7 @@ import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -64,7 +65,7 @@ export const AuraTemplate = ({
           {
             id: "ceremony",
             title: "Ceremony",
-            time: ceremony.time || "7:00 PM",
+            time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
             location: ceremony.location_name,
             link: ceremony.location_link,
             icon: Church,

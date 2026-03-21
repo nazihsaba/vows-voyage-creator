@@ -3,6 +3,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import { formatTimeTo12Hour } from "@/lib/formatTime";
 import previewWedding1 from "@/assets/verite-preview-1.jpg";
 import previewWedding2 from "@/assets/verite-preview-2.jpg";
 import previewWedding3 from "@/assets/verite-preview-3.jpg";
@@ -213,7 +214,7 @@ export const VeritePreview = () => {
                     <Church className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
@@ -236,7 +237,7 @@ export const VeritePreview = () => {
                     <PartyPopper className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>

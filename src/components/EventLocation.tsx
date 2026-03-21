@@ -1,4 +1,5 @@
 import { MapPin, Clock } from "lucide-react";
+import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -24,7 +25,7 @@ export const EventLocation = ({ type, locationName, locationLink, time }: EventL
         {time && (
           <div className="flex items-center justify-center gap-2 mb-4">
             <Clock className="w-5 h-5 text-primary" />
-            <span className="text-lg">{time}</span>
+            <span className="text-lg">{formatTimeTo12Hour(time)}</span>
           </div>
         )}
 
