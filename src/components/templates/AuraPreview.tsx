@@ -116,7 +116,7 @@ export const AuraPreview = () => {
                   <p className="text-sm font-medium tracking-wide">Mr. Pierre & Mrs. Nayla</p>
                   <p className="text-template-subtitle">Vale</p>
                 </div>
-                <span className="text-3xl font-light text-primary/50 font-['script']">&</span>
+                <span className="text-3xl font-light text-primary/50">&</span>
                 <div className="text-center space-y-1">
                   <p className="text-sm font-medium tracking-wide">Mr. Michel & Mrs. Layla</p>
                   <p className="text-template-subtitle">Maris</p>
