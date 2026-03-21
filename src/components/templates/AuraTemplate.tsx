@@ -158,7 +158,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-title"
+                    className="text-sm font-medium tracking-wide"
                   />
                   <EditableField
                     fieldId="groom-family-name"
