@@ -53,6 +53,18 @@ const Dashboard = () => {
   };
 
   const weddingTemplates = [
+    {
+      id: "bible-verse-tabs",
+      name: "Dorée",
+      description: "Elegant tab design with Bible verse, family names & botanical decor",
+      image: auraTemplate,
+      features: [
+        { icon: Sparkles, text: "Bible Verse" },
+        { icon: Heart, text: "Family Names" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
     // Épure template hidden
 
     {
@@ -90,18 +102,6 @@ const Dashboard = () => {
         { icon: Video, text: "Video Background" },
         { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
-        { icon: Clock, text: "Countdown Timer" },
-      ],
-    },
-    {
-      id: "bible-verse-tabs",
-      name: "Dorée",
-      description: "Elegant tab design with Bible verse, family names & botanical decor",
-      image: auraTemplate,
-      features: [
-        { icon: Sparkles, text: "Bible Verse" },
-        { icon: Heart, text: "Family Names" },
-        { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
