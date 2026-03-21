@@ -6,7 +6,6 @@ import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -65,7 +64,7 @@ export const AuraTemplate = ({
           {
             id: "ceremony",
             title: "Ceremony",
-            time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
+            time: ceremony.time || "7:00 PM",
             location: ceremony.location_name,
             link: ceremony.location_link,
             icon: Church,
@@ -161,7 +160,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-title"
+                    className="text-template-title text-primary"
                   />
                   <EditableField
                     fieldId="groom-family-name"
@@ -176,7 +175,7 @@ export const AuraTemplate = ({
                     className="text-template-subtitle"
                   />
                 </div>
-                <span className="text-3xl">&</span>
+                <span className="text-3xl font-light text-primary/50">&</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-parents"
@@ -188,7 +187,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm font-medium tracking-wide"
+                    className="text-sm text-primary font-medium tracking-wide"
                   />
                   <EditableField
                     fieldId="bride-family-name"
@@ -211,8 +210,7 @@ export const AuraTemplate = ({
                 fieldId="invitation-line"
                 text={getFieldValue(
                   "invitation-line",
-                  wedding.main_description ||
-                    "Request the honor of your presence at the wedding of their Son and Daughter",
+                  wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter",
                 )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
@@ -225,9 +223,9 @@ export const AuraTemplate = ({
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
-                <h1 className="text-template-title text-primary">
-                  {wedding.groom_name} & {wedding.bride_name}
-                </h1>
+              <h1 className="text-template-title text-primary">
+                {wedding.groom_name} & {wedding.bride_name}
+              </h1>
               </div>
             </div>
 

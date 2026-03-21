@@ -13,8 +13,8 @@ const Auth = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
   
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
@@ -50,8 +50,8 @@ const Auth = () => {
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!email.trim() || !password.trim() || !confirmPassword.trim()) {
-      toast.error("Please fill in all fields");
+    if (!email.trim() || !password.trim()) {
+      toast.error("Please enter both email and password");
       return;
     }
 
@@ -66,23 +66,21 @@ const Auth = () => {
       return;
     }
 
-    if (password !== confirmPassword) {
-      toast.error("Passwords do not match");
-      return;
-    }
-
     setLoading(true);
 
     try {
       const { error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password: password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth`,
+        },
       });
 
       if (error) throw error;
 
-      toast.success("Account created successfully!");
-      navigate("/dashboard");
+      setEmailSent(true);
+      toast.success("Check your email to verify your account!");
     } catch (error: any) {
       console.error("Sign up error:", error);
       toast.error(error.message || "Failed to create account");
@@ -119,6 +117,41 @@ const Auth = () => {
     }
   };
 
+  const handleSignInWithMagicLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!email.trim()) {
+      toast.error("Please enter your email address");
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address");
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth`,
+        },
+      });
+
+      if (error) throw error;
+
+      setEmailSent(true);
+      toast.success("Check your email for the login link!");
+    } catch (error: any) {
+      console.error("Sign in error:", error);
+      toast.error(error.message || "Failed to send verification email");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -157,11 +190,11 @@ const Auth = () => {
   };
 
   const handleTryAgain = () => {
+    setEmailSent(false);
     setResetEmailSent(false);
     setShowForgotPassword(false);
     setEmail("");
     setPassword("");
-    setConfirmPassword("");
   };
 
   // Show loading screen while processing auth callback
@@ -182,7 +215,7 @@ const Auth = () => {
         <CardHeader className="space-y-1">
           <div className="flex items-center justify-center mb-4">
             <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-              {resetEmailSent ? (
+              {emailSent || resetEmailSent ? (
                 <CheckCircle2 className="w-6 h-6 text-primary" />
               ) : (
                 <Lock className="w-6 h-6 text-primary" />
@@ -190,10 +223,12 @@ const Auth = () => {
             </div>
           </div>
           <CardTitle className="text-2xl text-center font-serif">
-            {resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
+            {emailSent || resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
           </CardTitle>
           <CardDescription className="text-center">
-            {resetEmailSent
+            {emailSent 
+              ? `We sent a verification link to ${email}`
+              : resetEmailSent
               ? `We sent a password reset link to ${email}`
               : showForgotPassword
               ? "Enter your email to receive a password reset link"
@@ -202,7 +237,7 @@ const Auth = () => {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          {!resetEmailSent ? (
+          {!emailSent && !resetEmailSent ? (
             showForgotPassword ? (
               <form onSubmit={handleResetPassword} className="space-y-4">
                 <div className="space-y-2">
@@ -336,22 +371,6 @@ const Auth = () => {
                           placeholder="Create a password (min. 6 characters)"
                           value={password}
                           onChange={(e) => setPassword(e.target.value)}
-                          className="pl-10"
-                          disabled={loading}
-                          required
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="signup-confirm-password">Confirm Password</Label>
-                      <div className="relative">
-                        <Lock className="absolute left-3 top-3 h-5 w-5 text-muted-foreground" />
-                        <Input
-                          id="signup-confirm-password"
-                          type="password"
-                          placeholder="Confirm your password"
-                          value={confirmPassword}
-                          onChange={(e) => setConfirmPassword(e.target.value)}
                           className="pl-10"
                           disabled={loading}
                           required

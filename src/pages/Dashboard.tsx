@@ -55,7 +55,7 @@ const Dashboard = () => {
   const weddingTemplates = [
     {
       id: "bible-verse-tabs",
-      name: "Dorée",
+      name: "Aura",
       description: "Elegant tab design with Bible verse, family names & botanical decor",
       image: auraTemplate,
       features: [

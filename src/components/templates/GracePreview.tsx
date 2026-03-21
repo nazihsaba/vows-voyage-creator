@@ -1,9 +1,8 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, Gem, PartyPopper } from "lucide-react";
+import { ChevronDown, Church, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import { formatTimeTo12Hour } from "@/lib/formatTime";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
@@ -171,10 +170,10 @@ export const GracePreview = () => {
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
-                    <Gem className="w-8 h-8 text-primary" />
+                    <Church className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
@@ -197,7 +196,7 @@ export const GracePreview = () => {
                     <PartyPopper className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
+                  <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
