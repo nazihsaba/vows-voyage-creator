@@ -22,7 +22,7 @@ All colors MUST be HSL.
     --primary: 36 57% 74%;
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 68%;
-    
+
     /* Muted Blush - romance */
     --secondary: 358 44% 80%;
     --secondary-foreground: 0 0% 17%;
@@ -129,7 +129,7 @@ All colors MUST be HSL.
   }
 }
 
-@import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap");
 
 @layer base {
   * {
@@ -138,10 +138,17 @@ All colors MUST be HSL.
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "liga" 1, "calt" 1;
+    font-feature-settings:
+      "liga" 1,
+      "calt" 1;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     @apply font-serif;
   }
 
@@ -149,21 +156,21 @@ All colors MUST be HSL.
   .text-template-title {
     @apply text-5xl md:text-7xl font-script;
   }
-  
+
   .text-template-subtitle {
     @apply text-3xl md:text-4xl font-script;
   }
-  
+
   .text-template-heading {
     @apply text-2xl md:text-3xl font-script;
   }
-  
+
   .text-template-body {
-    @apply text-base md:text-lg leading-relaxed;
+    @apply text-xl leading-relaxed;
   }
-  
+
   .text-template-small {
-    @apply text-sm uppercase tracking-widest opacity-70;
+    @apply text-lg uppercase tracking-widest opacity-70;
   }
 
   /* Smooth scrolling */
@@ -190,16 +197,32 @@ All colors MUST be HSL.
 }
 
 @keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(1.5rem); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
