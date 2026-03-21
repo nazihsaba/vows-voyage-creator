@@ -166,11 +166,11 @@ All colors MUST be HSL.
   }
 
   .text-template-body {
-    @apply text-xl leading-relaxed;
+    @apply text-base md:text-lg leading-relaxed;
   }
 
   .text-template-small {
-    @apply text-lg uppercase tracking-widest opacity-70;
+    @apply text-sm uppercase tracking-widest opacity-70;
   }
 
   /* Smooth scrolling */
