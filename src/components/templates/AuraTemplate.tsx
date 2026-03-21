@@ -152,22 +152,10 @@ export const AuraTemplate = ({
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
                   <EditableField
-                    fieldId="groom-parents"
-                    text={getFieldValue(
-                      "groom-parents",
-                      `Mr. & Mrs. ${wedding.groom_family || wedding.groom_name.split(" ").pop()}`,
-                    )}
-                    style={getFieldStyle("groom-parents")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-template-title"
-                  />
-                  <EditableField
                     fieldId="groom-family-name"
                     text={getFieldValue(
                       "groom-family-name",
-                      wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
+                      `The ${wedding.groom_family || wedding.groom_name.split(" ").pop()} Family`,
                     )}
                     style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
@@ -179,22 +167,10 @@ export const AuraTemplate = ({
                 <span className="text-3xl font-light text-primary/50">&</span>
                 <div className="text-center space-y-1">
                   <EditableField
-                    fieldId="bride-parents"
-                    text={getFieldValue(
-                      "bride-parents",
-                      `Mr. & Mrs. ${wedding.bride_family || wedding.bride_name.split(" ").pop()}`,
-                    )}
-                    style={getFieldStyle("bride-parents")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-sm font-medium tracking-wide"
-                  />
-                  <EditableField
                     fieldId="bride-family-name"
                     text={getFieldValue(
                       "bride-family-name",
-                      wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
+                      `The ${wedding.bride_family || wedding.bride_name.split(" ").pop()} Family`,
                     )}
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
