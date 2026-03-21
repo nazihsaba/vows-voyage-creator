@@ -166,7 +166,7 @@ All colors MUST be HSL.
   }
 
   .text-template-body {
-    @apply text-base md:text-lg leading-relaxed;
+    @apply text-lg md:text-lg leading-relaxed;
   }
 
   .text-template-small {
