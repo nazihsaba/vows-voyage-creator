@@ -161,7 +161,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-title text-primary"
+                    className="text-template-title"
                   />
                   <EditableField
                     fieldId="groom-family-name"
@@ -188,7 +188,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm text-primary font-medium tracking-wide"
+                    className="text-sm font-medium tracking-wide"
                   />
                   <EditableField
                     fieldId="bride-family-name"
@@ -211,7 +211,8 @@ export const AuraTemplate = ({
                 fieldId="invitation-line"
                 text={getFieldValue(
                   "invitation-line",
-                  wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter",
+                  wedding.main_description ||
+                    "Request the honor of your presence at the wedding of their Son and Daughter",
                 )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
@@ -224,9 +225,9 @@ export const AuraTemplate = ({
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
-              <h1 className="text-template-title text-primary">
-                {wedding.groom_name} & {wedding.bride_name}
-              </h1>
+                <h1 className="text-template-title text-primary">
+                  {wedding.groom_name} & {wedding.bride_name}
+                </h1>
               </div>
             </div>
 
