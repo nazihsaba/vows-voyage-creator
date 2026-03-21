@@ -65,7 +65,7 @@ export const AuraTemplate = ({
           {
             id: "ceremony",
             title: "Ceremony",
-            time: ceremony.time || "7:00 PM",
+            time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
             location: ceremony.location_name,
             link: ceremony.location_link,
             icon: Church,
