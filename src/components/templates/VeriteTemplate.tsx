@@ -80,7 +80,9 @@ export const VeriteTemplate = ({
     } else {
       document.body.style.overflow = "auto";
     }
-    return () => { document.body.style.overflow = "auto"; };
+    return () => {
+      document.body.style.overflow = "auto";
+    };
   }, [hasStarted]);
 
   const handleTimeUpdate = () => {
@@ -112,15 +114,47 @@ export const VeriteTemplate = ({
       >
         <div className="absolute inset-0 bg-black/30" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-          <EditableField fieldId="hero-subtitle" text={getFieldValue("hero-subtitle", "The Wedding Of")} style={getFieldStyle("hero-subtitle")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="p" className="text-template-small" />
+          <EditableField
+            fieldId="hero-subtitle"
+            text={getFieldValue("hero-subtitle", "The Wedding Of")}
+            style={getFieldStyle("hero-subtitle")}
+            onUpdate={onFieldUpdate}
+            isPreview={isPreview}
+            tag="p"
+            className="text-template-small"
+          />
           <div className="space-y-2">
-            <EditableField fieldId="groom-name" text={getFieldValue("groom-name", wedding.groom_name)} style={getFieldStyle("groom-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
+            <EditableField
+              fieldId="groom-name"
+              text={getFieldValue("groom-name", wedding.groom_name)}
+              style={getFieldStyle("groom-name")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="h1"
+              className="text-template-title"
+            />
             <p className="text-4xl md:text-5xl">&</p>
-            <EditableField fieldId="bride-name" text={getFieldValue("bride-name", wedding.bride_name)} style={getFieldStyle("bride-name")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h1" className="text-template-title" />
+            <EditableField
+              fieldId="bride-name"
+              text={getFieldValue("bride-name", wedding.bride_name)}
+              style={getFieldStyle("bride-name")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="h1"
+              className="text-template-title"
+            />
           </div>
           <EditableField
             fieldId="wedding-date-display"
-            text={getFieldValue("wedding-date-display", new Date(wedding.wedding_date).toLocaleDateString("en-US", { weekday: "long", year: "numeric", month: "long", day: "numeric" }))}
+            text={getFieldValue(
+              "wedding-date-display",
+              new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              }),
+            )}
             style={getFieldStyle("wedding-date-display")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -128,7 +162,12 @@ export const VeriteTemplate = ({
             className="text-template-body tracking-wide"
           />
           {!hasStarted && (
-            <Button onClick={handleStart} className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm">Tap To Start</Button>
+            <Button
+              onClick={handleStart}
+              className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+            >
+              Tap To Start
+            </Button>
           )}
         </div>
         <div className="absolute bottom-8 animate-bounce">
@@ -141,13 +180,33 @@ export const VeriteTemplate = ({
         <AnimatedSection animation="fade-up">
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="space-y-4">
-              <EditableField fieldId="groom-family" text={getFieldValue("groom-family", wedding.groom_family || "Groom's Family")} style={getFieldStyle("groom-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+              <EditableField
+                fieldId="groom-family"
+                text={`The ${getFieldValue("groom-family", wedding.groom_family || "Groom")} Family`}
+                style={getFieldStyle("groom-family")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h2"
+                className="text-template-subtitle"
+              />
               <p className="text-2xl">&</p>
-              <EditableField fieldId="bride-family" text={getFieldValue("bride-family", wedding.bride_family || "Bride's Family")} style={getFieldStyle("bride-family")} onUpdate={onFieldUpdate} isPreview={isPreview} tag="h2" className="text-template-subtitle" />
+              <EditableField
+                fieldId="bride-family"
+                text={`The ${getFieldValue("bride-family", wedding.bride_family || "Bride's Family")} Family`}
+                style={getFieldStyle("bride-family")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h2"
+                className="text-template-subtitle"
+              />
             </div>
             <EditableField
               fieldId="invitation-text"
-              text={getFieldValue("invitation-text", wedding.main_description || "Request the honor of your presence at the wedding of their Son and Daughter")}
+              text={getFieldValue(
+                "invitation-text",
+                wedding.main_description ||
+                  "Request the honor of your presence at the wedding of their Son and Daughter",
+              )}
               style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -167,7 +226,12 @@ export const VeriteTemplate = ({
               {gallery.slice(0, 8).map((image: any, index: number) => (
                 <AnimatedSection key={image.id || index} delay={index * 100} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
-                    <img src={image.image_url} alt={image.alt_text || `Gallery ${index + 1}`} className="w-full h-full object-cover hover:scale-110 transition-transform duration-500" loading="lazy" />
+                    <img
+                      src={image.image_url}
+                      alt={image.alt_text || `Gallery ${index + 1}`}
+                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      loading="lazy"
+                    />
                   </div>
                 </AnimatedSection>
               ))}
@@ -191,7 +255,10 @@ export const VeriteTemplate = ({
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
               <EditableField
                 fieldId="events-subtitle"
-                text={getFieldValue("events-subtitle", "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:")}
+                text={getFieldValue(
+                  "events-subtitle",
+                  "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:",
+                )}
                 style={getFieldStyle("events-subtitle")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -206,7 +273,9 @@ export const VeriteTemplate = ({
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><Church className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <Church className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
                   <div className="space-y-2">
@@ -214,7 +283,14 @@ export const VeriteTemplate = ({
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                   </div>
                   {ceremony.location_link && (
-                    <a href={ceremony.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                    <a
+                      href={ceremony.location_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                    >
+                      View on Map
+                    </a>
                   )}
                 </div>
               </AnimatedSection>
@@ -222,7 +298,9 @@ export const VeriteTemplate = ({
             {venue && (
               <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full"><PartyPopper className="w-8 h-8 text-primary" /></div>
+                  <div className="flex items-center justify-center w-full">
+                    <PartyPopper className="w-8 h-8 text-primary" />
+                  </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
@@ -230,7 +308,14 @@ export const VeriteTemplate = ({
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                   </div>
                   {venue.location_link && (
-                    <a href={venue.location_link} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors">View on Map</a>
+                    <a
+                      href={venue.location_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                    >
+                      View on Map
+                    </a>
                   )}
                 </div>
               </AnimatedSection>
@@ -266,7 +351,9 @@ export const VeriteTemplate = ({
           <section className="py-16 px-4 bg-white">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">For those who desire a wedding list is available</p>
+              <p className="text-center text-template-body mb-8 text-gray-600">
+                For those who desire a wedding list is available
+              </p>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
@@ -294,7 +381,10 @@ export const VeriteTemplate = ({
           <div className="max-w-3xl mx-auto space-y-8">
             <EditableField
               fieldId="closing-message"
-              text={getFieldValue("closing-message", "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.")}
+              text={getFieldValue(
+                "closing-message",
+                "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
+              )}
               style={getFieldStyle("closing-message")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
