@@ -130,10 +130,7 @@ export const AuraPreview = () => {
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
-                <h1 className="text-template-title">Adrian</h1>
-                <p className="text-4xl md:text-5xl">&</p>
-                <h1 className="text-template-title">Elena</h1>
-                {/* <h1 className="text-template-title text-primary">Adrian & Elena</h1> */}
+                <h1 className="text-template-title text-primary">Adrian & Elena</h1>
               </div>
             </div>
 
