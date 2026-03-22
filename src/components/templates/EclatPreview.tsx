@@ -3,6 +3,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import auraPreview7 from "@/assets/aura-preview-10.jpg";
 import auraPreview2 from "@/assets/aura-preview-11.jpg";
 import auraPreview3 from "@/assets/aura-preview-3.jpg";
