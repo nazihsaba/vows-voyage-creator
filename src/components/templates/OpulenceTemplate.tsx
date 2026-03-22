@@ -55,9 +55,9 @@ const ConfettiCanvas = () => {
     const H = canvas.offsetHeight;
 
     const colors = [
-      "hsla(0, 55%, 30%, 0.85)",   // burgundy
+      "hsla(36, 55%, 40%, 0.85)",   // burgundy
       "hsla(36, 57%, 74%, 0.9)",   // champagne
-      "hsla(0, 55%, 40%, 0.7)",    // lighter burgundy
+      "hsla(36, 55%, 50%, 0.7)",    // lighter burgundy
       "hsla(36, 57%, 84%, 0.8)",   // light gold
       "hsla(45, 29%, 96%, 0.9)",   // ivory
     ];
@@ -143,15 +143,15 @@ const CurtainDrapes = () => (
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="curtainGradL" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(0, 55%, 22%)" />
-            <stop offset="40%" stopColor="hsl(0, 50%, 30%)" />
-            <stop offset="70%" stopColor="hsl(0, 45%, 35%)" />
-            <stop offset="100%" stopColor="hsl(0, 50%, 28%)" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="hsl(36, 50%, 32%)" />
+            <stop offset="40%" stopColor="hsl(36, 50%, 40%)" />
+            <stop offset="70%" stopColor="hsl(36, 45%, 48%)" />
+            <stop offset="100%" stopColor="hsl(36, 50%, 38%)" stopOpacity="0.3" />
           </linearGradient>
         </defs>
         <path d="M0,0 L200,0 C180,60 160,100 140,180 C120,260 110,340 100,420 C90,500 60,560 30,600 L0,600 Z" fill="url(#curtainGradL)" />
-        <path d="M0,0 L120,0 C100,80 80,160 70,260 C60,360 40,460 20,600 L0,600 Z" fill="hsl(0, 55%, 25%)" opacity="0.4" />
-        <path d="M0,0 L60,0 C50,100 40,200 30,320 C20,440 10,540 0,600 Z" fill="hsl(0, 60%, 20%)" opacity="0.3" />
+        <path d="M0,0 L120,0 C100,80 80,160 70,260 C60,360 40,460 20,600 L0,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
+        <path d="M0,0 L60,0 C50,100 40,200 30,320 C20,440 10,540 0,600 Z" fill="hsl(36, 60%, 28%)" opacity="0.3" />
       </svg>
     </div>
     {/* Right curtain */}
@@ -159,22 +159,22 @@ const CurtainDrapes = () => (
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="curtainGradR" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="hsl(0, 55%, 22%)" />
-            <stop offset="40%" stopColor="hsl(0, 50%, 30%)" />
-            <stop offset="70%" stopColor="hsl(0, 45%, 35%)" />
-            <stop offset="100%" stopColor="hsl(0, 50%, 28%)" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="hsl(36, 50%, 32%)" />
+            <stop offset="40%" stopColor="hsl(36, 50%, 40%)" />
+            <stop offset="70%" stopColor="hsl(36, 45%, 48%)" />
+            <stop offset="100%" stopColor="hsl(36, 50%, 38%)" stopOpacity="0.3" />
           </linearGradient>
         </defs>
         <path d="M200,0 L0,0 C20,60 40,100 60,180 C80,260 90,340 100,420 C110,500 140,560 170,600 L200,600 Z" fill="url(#curtainGradR)" />
-        <path d="M200,0 L80,0 C100,80 120,160 130,260 C140,360 160,460 180,600 L200,600 Z" fill="hsl(0, 55%, 25%)" opacity="0.4" />
-        <path d="M200,0 L140,0 C150,100 160,200 170,320 C180,440 190,540 200,600 Z" fill="hsl(0, 60%, 20%)" opacity="0.3" />
+        <path d="M200,0 L80,0 C100,80 120,160 130,260 C140,360 160,460 180,600 L200,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
+        <path d="M200,0 L140,0 C150,100 160,200 170,320 C180,440 190,540 200,600 Z" fill="hsl(36, 60%, 28%)" opacity="0.3" />
       </svg>
     </div>
     {/* Top valance */}
     <div className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[2]">
       <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
-        <rect width="400" height="12" fill="hsl(0, 55%, 25%)" />
-        <path d="M0,12 Q50,28 100,12 Q150,28 200,12 Q250,28 300,12 Q350,28 400,12 L400,30 L0,30 Z" fill="hsl(0, 50%, 30%)" opacity="0.6" />
+        <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
+        <path d="M0,12 Q50,28 100,12 Q150,28 200,12 Q250,28 300,12 Q350,28 400,12 L400,30 L0,30 Z" fill="hsl(36, 50%, 40%)" opacity="0.6" />
       </svg>
     </div>
   </>
