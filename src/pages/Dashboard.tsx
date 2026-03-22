@@ -29,6 +29,7 @@ import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
+import OpulencePreview from "@/components/templates/OpulencePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -104,6 +105,18 @@ const Dashboard = () => {
       image: graceTemplate,
       features: [
         { icon: Video, text: "Video Background" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
+    {
+      id: "opulence-curtain",
+      name: "Opulence",
+      description: "Luxury curtain-draped invitation with editorial serif styling & confetti reveal",
+      image: eclatTemplate,
+      features: [
+        { icon: Sparkles, text: "Curtain Reveal" },
         { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
@@ -232,6 +245,7 @@ const Dashboard = () => {
                           template2: "/dashboard/verite-form",
                           "classic-romance": "/dashboard/eclat-form",
                           template6: "/dashboard/grace-form",
+                          "opulence-curtain": "/dashboard/opulence-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -305,6 +319,7 @@ const Dashboard = () => {
             {showPreview === "template6" && <GracePreview />}
             {showPreview === "classic-romance" && <EclatPreview />}
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
+            {showPreview === "opulence-curtain" && <OpulencePreview />}
           </div>
         </DialogContent>
       </Dialog>

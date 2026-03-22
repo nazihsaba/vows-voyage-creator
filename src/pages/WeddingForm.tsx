@@ -72,6 +72,7 @@ const WeddingForm = () => {
   const template = formData.template_type;
   const isAuraTemplate = template === "bible-verse-tabs";
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
+  const isOpulenceTemplate = template === "opulence-curtain";
   const shouldShowGalleryUpload =
     template === "template2" ||
     template === "classic-gallery" ||
@@ -80,7 +81,8 @@ const WeddingForm = () => {
     template === "template5" ||
     template === "modern-wedding" ||
     template === "classic-romance" ||
-    template === "bible-verse-tabs";
+    template === "bible-verse-tabs" ||
+    template === "opulence-curtain";
 
   useEffect(() => {
     if (id) {
