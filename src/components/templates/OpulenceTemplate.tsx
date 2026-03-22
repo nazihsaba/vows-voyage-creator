@@ -280,10 +280,10 @@ export const OpulenceTemplate = ({
 
         {/* Tap to Start overlay — shown before curtains open */}
         {!started && (
-          <div className="absolute inset-0 z-[5] flex items-center justify-center">
+          <div className="absolute inset-0 z-[20] flex items-center justify-center">
             <button
               onClick={handleStart}
-              className="relative z-10 px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+              className="relative px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
               style={{
                 background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 68%))",
                 color: "hsl(0, 0%, 17%)",
