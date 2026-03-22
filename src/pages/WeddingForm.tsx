@@ -206,12 +206,13 @@ const WeddingForm = () => {
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const maxImages = isAuraTemplate ? 1 : 6;
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
 
-    if (totalImages > 6) {
+    if (totalImages > maxImages) {
       toast({
-        title: "Maximum 6 images allowed",
-        description: "Please select fewer images for the gallery.",
+        title: `Maximum ${maxImages} image${maxImages > 1 ? 's' : ''} allowed`,
+        description: isAuraTemplate ? "Only 1 featured image is allowed." : "Please select fewer images for the gallery.",
         variant: "destructive",
       });
       return;
