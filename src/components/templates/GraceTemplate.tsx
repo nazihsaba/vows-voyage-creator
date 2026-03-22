@@ -8,6 +8,7 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
+import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 
 interface GraceTemplateProps {
   wedding: any;
