@@ -49,9 +49,12 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 };
 
 /* ── Curtain Drapes ── */
-const CurtainDrapes = () => (
+const CurtainDrapes = ({ opened }: { opened: boolean }) => (
   <>
-    <div className="absolute top-0 left-0 w-[35%] h-full pointer-events-none z-[1] overflow-hidden opacity-0 animate-[curtainLeft_1.2s_ease-out_0.3s_forwards]">
+    <div
+      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      style={{ transform: opened ? "translateX(-100%)" : "translateX(0)" }}
+    >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="pCurtainGradL" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -65,7 +68,10 @@ const CurtainDrapes = () => (
         <path d="M0,0 L120,0 C100,80 80,160 70,260 C60,360 40,460 20,600 L0,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
       </svg>
     </div>
-    <div className="absolute top-0 right-0 w-[35%] h-full pointer-events-none z-[1] overflow-hidden opacity-0 animate-[curtainRight_1.2s_ease-out_0.3s_forwards]">
+    <div
+      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      style={{ transform: opened ? "translateX(100%)" : "translateX(0)" }}
+    >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="pCurtainGradR" x1="100%" y1="0%" x2="0%" y2="0%">
@@ -79,7 +85,10 @@ const CurtainDrapes = () => (
         <path d="M200,0 L80,0 C100,80 120,160 130,260 C140,360 160,460 180,600 L200,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
       </svg>
     </div>
-    <div className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[2]">
+    <div
+      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4] transition-opacity duration-700"
+      style={{ opacity: opened ? 0 : 1 }}
+    >
       <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
         <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
         <path d="M0,12 Q50,28 100,12 Q150,28 200,12 Q250,28 300,12 Q350,28 400,12 L400,30 L0,30 Z" fill="hsl(36, 50%, 40%)" opacity="0.6" />
@@ -105,24 +114,53 @@ const NavCircle = ({ label }: { label: string }) => (
 const OpulencePreview = () => {
   const staticWeddingDate = new Date("2025-09-15");
   const staticRsvpDeadline = new Date("2025-08-15");
+  const [started, setStarted] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)] overflow-x-hidden" style={{ fontFamily: "'Cormorant Garamond', 'Times New Roman', serif" }}>
+    <div
+      className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)]"
+      style={{
+        fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+        overflowX: "hidden",
+        overflowY: started ? "auto" : "hidden",
+        maxHeight: started ? "none" : "100vh",
+      }}
+    >
 
       {/* ═══ OPENING SCREEN ═══ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-        <CurtainDrapes />
+        <CurtainDrapes opened={started} />
 
-        <div className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8">
-          <div className="opacity-0 animate-[fadeIn_0.8s_ease-out_0.8s_forwards]">
+        {/* Tap to Start */}
+        {!started && (
+          <div className="absolute inset-0 z-[5] flex items-center justify-center">
+            <button
+              onClick={() => setStarted(true)}
+              className="relative z-10 px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{
+                background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 68%))",
+                color: "hsl(0, 0%, 17%)",
+                boxShadow: "0 6px 24px hsl(36 57% 74% / 0.4)",
+              }}
+            >
+              Tap to Start
+            </button>
+          </div>
+        )}
+
+        <div
+          className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-700"
+          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "0.8s" : "0s" }}
+        >
+          <div>
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
           </div>
 
-          <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_1s_forwards]">
+          <div>
             <p className="text-sm uppercase tracking-[0.35em] opacity-60">Together with their families</p>
           </div>
 
-          <div className="opacity-0 animate-[scaleIn_0.8s_ease-out_1.2s_forwards]">
+          <div>
             <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontWeight: 300 }}>
               Alexander
               <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
@@ -130,17 +168,17 @@ const OpulencePreview = () => {
             </h1>
           </div>
 
-          <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_1.5s_forwards]">
+          <div>
             <p className="text-base md:text-lg leading-relaxed opacity-70 italic whitespace-pre-line">
               {"Request the honour of your presence\nat the celebration of their marriage"}
             </p>
           </div>
 
-          <div className="opacity-0 animate-[fadeIn_0.8s_ease-out_1.7s_forwards]">
+          <div>
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
           </div>
 
-          <div className="opacity-0 animate-[fadeIn_1s_ease-out_2s_forwards] pt-4">
+          <div className="pt-4">
             <ChevronDown className="w-5 h-5 mx-auto animate-bounce opacity-40" />
           </div>
         </div>
