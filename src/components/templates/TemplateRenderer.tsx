@@ -8,6 +8,7 @@ import { VeriteTemplate } from './VeriteTemplate';
 import { GraceTemplate } from './GraceTemplate';
 import { EclatTemplate } from './EclatTemplate';
 import { AuraTemplate } from './AuraTemplate';
+import { OpulenceTemplate } from './OpulenceTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
