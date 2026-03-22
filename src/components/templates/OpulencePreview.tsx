@@ -133,10 +133,10 @@ const OpulencePreview = () => {
 
         {/* Tap to Start */}
         {!started && (
-          <div className="absolute inset-0 z-[5] flex items-center justify-center">
+          <div className="absolute inset-0 z-[20] flex items-center justify-center">
             <button
               onClick={() => setStarted(true)}
-              className="relative z-10 px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+              className="relative px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
               style={{
                 background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 68%))",
                 color: "hsl(0, 0%, 17%)",
@@ -149,8 +149,8 @@ const OpulencePreview = () => {
         )}
 
         <div
-          className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-700"
-          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "0.8s" : "0s" }}
+          className={`relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-1000 ${!started ? 'pointer-events-none' : ''}`}
+          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "1s" : "0s" }}
         >
           <div>
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
