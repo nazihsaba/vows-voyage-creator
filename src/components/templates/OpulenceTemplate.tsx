@@ -140,8 +140,11 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
   <>
     {/* Left curtain */}
     <div
-      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
-      style={{ transform: opened ? "translateX(-100%)" : "translateX(0)" }}
+      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      style={{
+        transform: opened ? "translateX(-110%)" : "translateX(0)",
+        transition: "transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
     >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
@@ -159,8 +162,11 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
     </div>
     {/* Right curtain */}
     <div
-      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
-      style={{ transform: opened ? "translateX(100%)" : "translateX(0)" }}
+      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      style={{
+        transform: opened ? "translateX(110%)" : "translateX(0)",
+        transition: "transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
     >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
@@ -178,8 +184,8 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
     </div>
     {/* Top valance */}
     <div
-      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4] transition-opacity duration-700"
-      style={{ opacity: opened ? 0 : 1 }}
+      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4]"
+      style={{ opacity: opened ? 0 : 1, transition: "opacity 0.8s ease-out 0.5s" }}
     >
       <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
         <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
@@ -280,10 +286,10 @@ export const OpulenceTemplate = ({
 
         {/* Tap to Start overlay — shown before curtains open */}
         {!started && (
-          <div className="absolute inset-0 z-[5] flex items-center justify-center">
+          <div className="absolute inset-0 z-[20] flex items-center justify-center">
             <button
               onClick={handleStart}
-              className="relative z-10 px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+              className="relative px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95 animate-pulse"
               style={{
                 background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 68%))",
                 color: "hsl(0, 0%, 17%)",
@@ -297,8 +303,8 @@ export const OpulenceTemplate = ({
 
         {/* Content revealed after start */}
         <div
-          className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-700"
-          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "0.8s" : "0s" }}
+          className={`relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-1000 ${!started ? 'pointer-events-none' : ''}`}
+          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "1s" : "0s" }}
         >
           {/* Decorative top line */}
           <div>
