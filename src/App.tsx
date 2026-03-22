@@ -16,7 +16,7 @@ import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import VeritePreview from "./components/templates/VeritePreview";
-import OpulencePreview from "./components/templates/OpulencePreview";
+
 
 const queryClient = new QueryClient();
 
@@ -41,13 +41,13 @@ const App = () => (
           <Route path="/dashboard/verite-form" element={<WeddingForm />} />
           <Route path="/dashboard/eclat-form" element={<WeddingForm />} />
           <Route path="/dashboard/grace-form" element={<WeddingForm />} />
-          <Route path="/dashboard/opulence-form" element={<WeddingForm />} />
+          
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
           <Route path="/preview/modern-romance" element={<VeritePreview />} />
-          <Route path="/preview/opulence" element={<OpulencePreview />} />
+          
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
