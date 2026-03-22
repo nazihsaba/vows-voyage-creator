@@ -131,7 +131,7 @@ const WeddingForm = () => {
       if (galleryData) {
         setExistingGalleryImages(galleryData);
         // Load Grace featured image preview if applicable
-        if (data.template_type === "video-cinematic" && galleryData.length > 0) {
+        if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
           setGraceFeaturedPreview(galleryData[0].image_url);
         }
       }
