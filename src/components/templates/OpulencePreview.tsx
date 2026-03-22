@@ -84,7 +84,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
         <path d="M0,0 L70,0 C60,80 48,180 38,300 C28,420 15,530 0,600 Z" fill="hsl(36, 55%, 22%)" opacity="0.35" />
         <path d="M90,0 C85,100 82,200 80,300 C78,400 70,500 55,600 L75,600 C80,500 85,400 88,300 C91,200 95,100 100,0 Z" fill="url(#pCurtainHighlightL)" />
         <path d="M155,0 C148,80 142,170 138,270 C134,370 125,480 110,600 L125,600 C132,480 138,370 142,270 C146,170 152,80 160,0 Z" fill="hsl(36, 57%, 74%)" opacity="0.12" />
-        <rect x="195" y="0" width="25" height="600" fill="url(#pCurtainEdgeL)" />
+        
       </svg>
     </div>
 
@@ -121,7 +121,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
         <path d="M220,0 L150,0 C160,80 172,180 182,300 C192,420 205,530 220,600 Z" fill="hsl(36, 55%, 22%)" opacity="0.35" />
         <path d="M130,0 C135,100 138,200 140,300 C142,400 150,500 165,600 L145,600 C140,500 135,400 132,300 C129,200 125,100 120,0 Z" fill="url(#pCurtainHighlightR)" />
         <path d="M65,0 C72,80 78,170 82,270 C86,370 95,480 110,600 L95,600 C88,480 82,370 78,270 C74,170 68,80 60,0 Z" fill="hsl(36, 57%, 74%)" opacity="0.12" />
-        <rect x="0" y="0" width="25" height="600" fill="url(#pCurtainEdgeR)" />
+        
       </svg>
     </div>
 
