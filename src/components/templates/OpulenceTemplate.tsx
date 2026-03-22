@@ -184,8 +184,8 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
     </div>
     {/* Top valance */}
     <div
-      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4] transition-opacity duration-700"
-      style={{ opacity: opened ? 0 : 1 }}
+      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4]"
+      style={{ opacity: opened ? 0 : 1, transition: "opacity 0.8s ease-out 0.5s" }}
     >
       <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
         <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
