@@ -40,12 +40,53 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
     setAudioUrl(url);
   };
 
-  const handleLoadedMetadata = () => {
+  const handleLoadedMetadata = async () => {
     if (audioRef.current) {
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Number.isFinite(d) ? Math.min(60, d) : 60);
+      setEndTime(Math.min(60, d));
+      // Auto-trim on load
+      if (file) {
+        await autoTrim(file, 0, Math.min(60, d));
+      }
+    }
+  };
+
+  const autoTrim = async (audioFile: File, start: number, end: number) => {
+    setIsTrimming(true);
+    try {
+      const arrayBuffer = await audioFile.arrayBuffer();
+      const audioContext = new (window.AudioContext ||
+        // @ts-ignore
+        window.webkitAudioContext)();
+      const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
+      const sampleRate = audioBuffer.sampleRate;
+      const startSample = Math.floor(Math.max(0, start) * sampleRate);
+      const endSample = Math.floor(Math.min(end, audioBuffer.duration) * sampleRate);
+      const trimmedLength = endSample - startSample;
+
+      const trimmedBuffer = audioContext.createBuffer(
+        audioBuffer.numberOfChannels,
+        trimmedLength,
+        sampleRate
+      );
+
+      for (let channel = 0; channel < audioBuffer.numberOfChannels; channel++) {
+        const channelData = audioBuffer.getChannelData(channel);
+        const trimmedData = trimmedBuffer.getChannelData(channel);
+        trimmedData.set(channelData.subarray(startSample, endSample));
+      }
+
+      const trimmedBlob = await audioBufferToWavBlob(trimmedBuffer);
+      const trimmedObjectUrl = URL.createObjectURL(trimmedBlob);
+      setTrimmedUrl(trimmedObjectUrl);
+      onAudioTrimmed(trimmedBlob, start, end);
+    } catch (err) {
+      console.error(err);
+      alert("Error while trimming audio");
+    } finally {
+      setIsTrimming(false);
     }
   };
 
