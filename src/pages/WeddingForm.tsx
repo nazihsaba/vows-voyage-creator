@@ -31,6 +31,8 @@ const WeddingForm = () => {
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
+  const [graceFeaturedFile, setGraceFeaturedFile] = useState<File | null>(null);
+  const [graceFeaturedPreview, setGraceFeaturedPreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
