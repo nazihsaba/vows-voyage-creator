@@ -763,6 +763,61 @@ const WeddingForm = () => {
                 initialEndTime={formData.audio_end_time}
               />
 
+              {/* Grace Featured Image */}
+              {isGraceTemplate && (
+                <div className="space-y-2">
+                  <Label htmlFor="grace_featured">Featured Image</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    This image will be displayed as a full-width photo in your invitation
+                  </p>
+                  {graceFeaturedPreview ? (
+                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                      <img src={graceFeaturedPreview} alt="Featured" className="w-full h-full object-cover" />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          setGraceFeaturedFile(null);
+                          setGraceFeaturedPreview("");
+                          // Also remove existing gallery image if editing
+                          if (id && existingGalleryImages.length > 0) {
+                            removeExistingGalleryImage(existingGalleryImages[0].id);
+                          }
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="grace_featured"
+                      className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                    >
+                      <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Click to upload featured image</span>
+                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                    </label>
+                  )}
+                  <Input
+                    id="grace_featured"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setGraceFeaturedFile(file);
+                        const reader = new FileReader();
+                        reader.onloadend = () => setGraceFeaturedPreview(reader.result as string);
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+              )}
+
               {/* Location Fields */}
               <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-semibold">Event Locations</h3>
