@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -49,6 +49,28 @@ export const AuraTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+
+  useEffect(() => {
+    if (wedding.audio_url && audioRef.current) {
+      const audio = audioRef.current;
+      audio.currentTime = wedding.audio_start_time || 0;
+      audio.loop = true;
+      audio.volume = 0.5;
+      const playPromise = audio.play();
+      if (playPromise) {
+        playPromise.catch(() => {
+          // Autoplay blocked by browser; play on first user interaction
+          const playOnInteraction = () => {
+            audio.play().catch(() => {});
+            document.removeEventListener("click", playOnInteraction);
+            document.removeEventListener("touchstart", playOnInteraction);
+          };
+          document.addEventListener("click", playOnInteraction);
+          document.addEventListener("touchstart", playOnInteraction);
+        });
+      }
+    }
+  }, [wedding.audio_url, wedding.audio_start_time]);
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
