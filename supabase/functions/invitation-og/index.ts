@@ -53,7 +53,7 @@ Deno.serve(async (req) => {
     const ogImage = wedding.main_picture_url || `${supabaseUrl}/storage/v1/object/public/wedding-images/default-og.jpg`;
 
     // Build the redirect URL to the actual invitation page
-    const appUrl = Deno.env.get("APP_URL") || "https://vows-voyage-creator.lovable.app";
+    const appUrl = Deno.env.get("APP_URL") || "https://aureainvites.com";
     let redirectPath = `/invite/${slug}`;
     if (linkSlug) redirectPath += `/${linkSlug}`;
     if (persons) redirectPath += `/${persons}`;
