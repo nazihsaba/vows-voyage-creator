@@ -327,7 +327,7 @@ export const GenerateLinkDialog = ({
 
   const previewUrl =
     uniqueSlug && linkName
-      ? `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/invitation-og?slug=${encodeURIComponent(weddingSlug)}&link=${encodeURIComponent(sanitizedLinkName)}&persons=${invitees.filter((n) => n.trim()).length}`
+      ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
       : "";
 
   return (
