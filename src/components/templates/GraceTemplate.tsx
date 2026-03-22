@@ -8,6 +8,7 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
+import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 
 interface GraceTemplateProps {
   wedding: any;
@@ -111,7 +112,7 @@ export const GraceTemplate = ({
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
         <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
           <source
-            src={wedding.video_url || "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4"}
+            src={wedding.video_url || gracePreviewVideo}
             type="video/mp4"
           />
         </video>
@@ -225,7 +226,7 @@ export const GraceTemplate = ({
       <section className="relative py-16 px-4 overflow-hidden">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
           <source
-            src={wedding.video_url || "https://videos.pexels.com/video-files/3015510/3015510-hd_1920_1080_24fps.mp4"}
+            src={wedding.video_url || gracePreviewVideo}
             type="video/mp4"
           />
         </video>
