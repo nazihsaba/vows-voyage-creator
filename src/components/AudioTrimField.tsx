@@ -17,7 +17,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
   onAudioRemoved,
   initialAudioUrl,
   initialStartTime = 0,
-  initialEndTime = 0,
+  initialEndTime = 60,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(initialAudioUrl || null);
@@ -45,7 +45,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Number.isFinite(d) ? Math.max(0, d - 1) : 0);
+      setEndTime(Number.isFinite(d) ? Math.min(60, d) : 60);
     }
   };
 
@@ -233,10 +233,10 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
                   id="end-time"
                   type="number"
                   min={0}
-                  max={duration}
+                  max={60}
                   step={0.1}
                   value={endTime}
-                  onChange={(e) => setEndTime(Number(e.target.value))}
+                  onChange={(e) => setEndTime(Math.min(60, Number(e.target.value)))}
                 />
               </div>
             </div>
