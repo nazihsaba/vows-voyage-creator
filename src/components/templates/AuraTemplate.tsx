@@ -304,28 +304,7 @@ export const AuraTemplate = ({
           </section>
         )}
 
-        {/* ===== GALLERY SECTION ===== */}
-        {gallery && gallery.length > 0 && (
-          <section className="mb-16">
-            <AnimatedSection animation="fade-in">
-              <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
-            </AnimatedSection>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-              {gallery.map((image: any, index: number) => (
-                <AnimatedSection key={image.id || index} delay={index * 80} animation="scale-in">
-                  <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
-                    <img
-                      src={image.image_url}
-                      alt={image.alt_text || `Wedding moment ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                      loading="lazy"
-                    />
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </section>
-        )}
+        {/* ===== GALLERY SECTION (removed grid, single image shown in full-width section below) ===== */}
 
         {/* ===== GIFTS SECTION ===== */}
         {hasGiftCards && (
