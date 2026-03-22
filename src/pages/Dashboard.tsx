@@ -121,7 +121,7 @@ const Dashboard = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-4">
               <img
-                src={aureaLogo}
+                src={aureaIcon}
                 alt="Auréa Invites"
                 className="h-8 sm:h-10 object-contain cursor-pointer"
                 onClick={() => navigate("/")}
