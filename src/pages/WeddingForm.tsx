@@ -430,7 +430,7 @@ const WeddingForm = () => {
       }
 
       // Upload Grace featured image (single image for gallery section)
-      if (formData.template_type === "video-cinematic" && graceFeaturedFile) {
+      if ((formData.template_type === "video-cinematic" || formData.template_type === "template6") && graceFeaturedFile) {
         // Remove existing gallery images for Grace (only 1 allowed)
         if (id) {
           await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
