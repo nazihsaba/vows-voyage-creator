@@ -125,30 +125,6 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
       </svg>
     </div>
 
-    {/* Luxurious top valance */}
-    <div
-      className="absolute top-0 left-0 right-0 h-12 pointer-events-none z-[4]"
-      style={{ opacity: opened ? 0 : 1, transition: "opacity 1s ease-out 0.8s" }}
-    >
-      <svg viewBox="0 0 400 40" className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="pValanceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="hsl(36, 50%, 30%)" />
-            <stop offset="60%" stopColor="hsl(36, 55%, 38%)" />
-            <stop offset="100%" stopColor="hsl(36, 50%, 42%)" />
-          </linearGradient>
-          <linearGradient id="pValanceHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
-            <stop offset="0%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-        <rect width="400" height="14" fill="url(#pValanceGrad)" />
-        <rect width="400" height="3" fill="url(#pValanceHighlight)" />
-        <path d="M0,14 Q25,32 50,14 Q75,32 100,14 Q125,32 150,14 Q175,32 200,14 Q225,32 250,14 Q275,32 300,14 Q325,32 350,14 Q375,32 400,14 L400,40 L0,40 Z" fill="hsl(36, 50%, 36%)" opacity="0.7" />
-        <path d="M0,16 Q25,30 50,16 Q75,30 100,16 Q125,30 150,16 Q175,30 200,16 Q225,30 250,16 Q275,30 300,16 Q325,30 350,16 Q375,30 400,16 L400,40 L0,40 Z" fill="hsl(36, 45%, 25%)" opacity="0.25" />
-        <line x1="0" y1="13" x2="400" y2="13" stroke="hsl(36, 57%, 68%)" strokeWidth="0.8" opacity="0.5" />
-      </svg>
-    </div>
 
     {/* Ambient glow */}
     <div
