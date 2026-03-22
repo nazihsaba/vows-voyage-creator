@@ -181,7 +181,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 
     {/* Right curtain */}
     <div
-      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      className="fixed top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
       style={{
         transform: opened ? "translateX(110%)" : "translateX(0)",
         transition: "transform 2s cubic-bezier(0.22, 1, 0.36, 1)",
