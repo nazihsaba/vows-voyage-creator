@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -38,16 +38,20 @@ const Dashboard = () => {
     checkUser();
   }, []);
 
+  const loggingOut = useRef(false);
+
   const checkUser = async () => {
+    if (loggingOut.current) return;
     const {
       data: { session },
     } = await supabase.auth.getSession();
-    if (!session) {
+    if (!session && !loggingOut.current) {
       navigate("/auth");
     }
   };
 
   const handleLogout = async () => {
+    loggingOut.current = true;
     await supabase.auth.signOut();
     navigate("/");
   };
