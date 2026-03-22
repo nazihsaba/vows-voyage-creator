@@ -263,6 +263,25 @@ const ManageLinks = () => {
                   <p className="text-sm text-muted-foreground mt-1">
                     {filteredLinks.length} {filteredLinks.length === 1 ? 'link' : 'links'} • {Object.values(invitees).flat().length} total guests
                   </p>
+                  {(() => {
+                    const allInvitees = Object.values(invitees).flat();
+                    const attending = allInvitees.filter(i => i.is_attending === true).length;
+                    const notAttending = allInvitees.filter(i => i.is_attending === false).length;
+                    const pending = allInvitees.filter(i => i.is_attending === null).length;
+                    return (
+                      <div className="flex flex-wrap gap-3 mt-2">
+                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium">
+                          <Check className="w-3 h-3 mr-1" /> {attending} attending
+                        </Badge>
+                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
+                          <Loader2 className="w-3 h-3 mr-1" /> {pending} pending
+                        </Badge>
+                        <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
+                          <X className="w-3 h-3 mr-1" /> {notAttending} not attending
+                        </Badge>
+                      </div>
+                    );
+                  })()}
                 </div>
                 <div className="relative w-full md:w-64">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
