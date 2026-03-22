@@ -429,6 +429,21 @@ const WeddingForm = () => {
         if (galleryError) throw galleryError;
       }
 
+      // Upload Grace featured image (single image for gallery section)
+      if (formData.template_type === "video-cinematic" && graceFeaturedFile) {
+        // Remove existing gallery images for Grace (only 1 allowed)
+        if (id) {
+          await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
+        }
+        const featuredUrl = await uploadImage(graceFeaturedFile, user.id);
+        const { error: featuredError } = await supabase.from("gallery_images").insert({
+          wedding_id: weddingId,
+          image_url: featuredUrl,
+          image_order: 1,
+        });
+        if (featuredError) throw featuredError;
+      }
+
       // Save locations
       if (id) {
         // Delete existing locations
