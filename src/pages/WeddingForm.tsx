@@ -872,12 +872,13 @@ const WeddingForm = () => {
                   <CardContent className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="venue_location">Location Name</Label>
+                        <Label htmlFor="venue_location">Location Name *</Label>
                         <Input
                           id="venue_location"
                           value={locations.venue_location}
                           onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
                           placeholder="Reception venue name"
+                          required
                         />
                       </div>
                       <div className="space-y-2">
