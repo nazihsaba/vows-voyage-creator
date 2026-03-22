@@ -38,7 +38,7 @@ const Dashboard = () => {
     checkUser();
   }, []);
 
-  const loggingOut = React.useRef(false);
+  const loggingOut = useRef(false);
 
   const checkUser = async () => {
     if (loggingOut.current) return;
