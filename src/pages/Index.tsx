@@ -38,11 +38,6 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const heroImages = [
-    { src: tableDecor, alt: "Wedding celebration" },
-    { src: eclatWedding2, alt: "Birthday party" },
-    { src: flowerVase, alt: "Party celebration" },
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
