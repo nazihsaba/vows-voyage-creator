@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import aureaLogo from "@/assets/aureaLogoFullColored.png";
+import aureaIcon from "@/assets/aureaLogoIcon.png";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
