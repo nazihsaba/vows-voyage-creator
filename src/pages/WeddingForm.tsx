@@ -537,7 +537,7 @@ const WeddingForm = () => {
       <div className="max-w-2xl mx-auto">
         <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          To My Events
+          My Events
         </Button>
 
         <Card className="shadow-elegant">
