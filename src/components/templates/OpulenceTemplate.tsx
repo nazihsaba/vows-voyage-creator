@@ -297,8 +297,8 @@ export const OpulenceTemplate = ({
 
         {/* Content revealed after start */}
         <div
-          className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-700"
-          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "0.8s" : "0s" }}
+          className={`relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-1000 ${!started ? 'pointer-events-none' : ''}`}
+          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "1s" : "0s" }}
         >
           {/* Decorative top line */}
           <div>
