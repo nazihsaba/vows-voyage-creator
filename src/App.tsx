@@ -16,6 +16,7 @@ import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import VeritePreview from "./components/templates/VeritePreview";
+import OpulencePreview from "./components/templates/OpulencePreview";
 
 const queryClient = new QueryClient();
 
