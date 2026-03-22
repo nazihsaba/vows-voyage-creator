@@ -217,8 +217,6 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
         <path d="M130,0 C135,100 138,200 140,300 C142,400 150,500 165,600 L145,600 C140,500 135,400 132,300 C129,200 125,100 120,0 Z" fill="url(#curtainHighlightR)" />
         {/* Subtle second highlight */}
         <path d="M65,0 C72,80 78,170 82,270 C86,370 95,480 110,600 L95,600 C88,480 82,370 78,270 C74,170 68,80 60,0 Z" fill="hsl(36, 57%, 74%)" opacity="0.12" />
-        {/* Left edge shadow for depth */}
-        <rect x="0" y="0" width="25" height="600" fill="url(#curtainEdgeR)" />
       </svg>
     </div>
 
