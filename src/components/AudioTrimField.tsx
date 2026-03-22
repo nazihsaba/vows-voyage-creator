@@ -233,10 +233,10 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
                   id="end-time"
                   type="number"
                   min={0}
-                  max={duration}
+                  max={60}
                   step={0.1}
                   value={endTime}
-                  onChange={(e) => setEndTime(Number(e.target.value))}
+                  onChange={(e) => setEndTime(Math.min(60, Number(e.target.value)))}
                 />
               </div>
             </div>
