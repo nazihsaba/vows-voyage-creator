@@ -31,7 +31,6 @@ import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
 
-
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState<string | null>(null);
@@ -60,19 +59,17 @@ const Dashboard = () => {
 
   const weddingTemplates = [
     {
-      id: "bible-verse-tabs",
-      name: "Dorée",
-      description: "Elegant tab design with Bible verse, family names & botanical decor",
-      image: auraTemplate,
+      id: "template6",
+      name: "Grâce",
+      description: "Immersive full-screen video background experience",
+      image: graceTemplate,
       features: [
-        { icon: Sparkles, text: "Bible Verse" },
-        { icon: Heart, text: "Family Names" },
+        { icon: Video, text: "Video Background" },
         { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
-    // Épure template hidden
-
     {
       id: "template2",
       name: "Vérité",
@@ -97,17 +94,15 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
-    // Lumière template hidden
-
     {
-      id: "template6",
-      name: "Grâce",
-      description: "Immersive full-screen video background experience",
-      image: graceTemplate,
+      id: "bible-verse-tabs",
+      name: "Dorée",
+      description: "Elegant tab design with Bible verse, family names & botanical decor",
+      image: auraTemplate,
       features: [
-        { icon: Video, text: "Video Background" },
+        { icon: Sparkles, text: "Bible Verse" },
+        { icon: Heart, text: "Family Names" },
         { icon: MapPin, text: "Event Locations" },
-        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
@@ -238,7 +233,6 @@ const Dashboard = () => {
                           template2: "/dashboard/verite-form",
                           "classic-romance": "/dashboard/eclat-form",
                           template6: "/dashboard/grace-form",
-                          
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -312,7 +306,6 @@ const Dashboard = () => {
             {showPreview === "template6" && <GracePreview />}
             {showPreview === "classic-romance" && <EclatPreview />}
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
-            
           </div>
         </DialogContent>
       </Dialog>
