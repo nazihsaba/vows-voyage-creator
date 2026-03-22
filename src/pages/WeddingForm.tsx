@@ -602,12 +602,13 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="rsvp_deadline">Confirmation Deadline</Label>
+                  <Label htmlFor="rsvp_deadline">Confirmation Deadline *</Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
                     value={formData.rsvp_deadline}
                     onChange={(e) => setFormData({ ...formData, rsvp_deadline: e.target.value })}
+                    required
                   />
                 </div>
               </div>
