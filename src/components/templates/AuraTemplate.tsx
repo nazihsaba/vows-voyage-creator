@@ -387,6 +387,9 @@ export const AuraTemplate = ({
             cardBgClassName="bg-background"
           />
         )}
+
+        {/* ===== BRANDED FOOTER ===== */}
+        <TemplatePreviewFooter />
       </div>
     </div>
   );
