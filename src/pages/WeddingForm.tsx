@@ -206,12 +206,13 @@ const WeddingForm = () => {
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    const maxImages = isAuraTemplate ? 1 : 6;
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
 
-    if (totalImages > 6) {
+    if (totalImages > maxImages) {
       toast({
-        title: "Maximum 6 images allowed",
-        description: "Please select fewer images for the gallery.",
+        title: `Maximum ${maxImages} image${maxImages > 1 ? 's' : ''} allowed`,
+        description: isAuraTemplate ? "Only 1 featured image is allowed." : "Please select fewer images for the gallery.",
         variant: "destructive",
       });
       return;
@@ -914,15 +915,17 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
-                  <Label>Gallery Images (up to 6)</Label>
+                  <Label>{isAuraTemplate ? "Gallery Image" : "Gallery Images (up to 6)"}</Label>
                   <p className="text-sm text-muted-foreground mb-2">
-                    Upload images to showcase in your wedding gallery
+                    {isAuraTemplate
+                      ? "Upload a featured image for your invitation"
+                      : "Upload images to showcase in your wedding gallery"}
                   </p>
 
                   {/* Existing Gallery Images */}
                   {existingGalleryImages.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {existingGalleryImages.map((image) => (
+                    <div className={isAuraTemplate ? "mb-4" : "grid grid-cols-2 md:grid-cols-3 gap-4 mb-4"}>
+                      {existingGalleryImages.slice(0, isAuraTemplate ? 1 : undefined).map((image) => (
                         <div
                           key={image.id}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
@@ -944,8 +947,8 @@ const WeddingForm = () => {
 
                   {/* New Gallery Images */}
                   {galleryPreviews.length > 0 && (
-                    <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {galleryPreviews.map((preview, index) => (
+                    <div className={isAuraTemplate ? "mb-4" : "grid grid-cols-2 md:grid-cols-3 gap-4 mb-4"}>
+                      {galleryPreviews.slice(0, isAuraTemplate ? 1 : undefined).map((preview, index) => (
                         <div
                           key={index}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
@@ -966,23 +969,27 @@ const WeddingForm = () => {
                   )}
 
                   {/* Upload Button */}
-                  {existingGalleryImages.length + galleryFiles.length < 6 && (
+                  {existingGalleryImages.length + galleryFiles.length < (isAuraTemplate ? 1 : 6) && (
                     <>
                       <label
                         htmlFor="gallery_images"
                         className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
                       >
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
-                        <span className="text-sm text-muted-foreground">Click to upload gallery images</span>
-                        <span className="text-xs text-muted-foreground mt-1">
-                          {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                        <span className="text-sm text-muted-foreground">
+                          {isAuraTemplate ? "Click to upload featured image" : "Click to upload gallery images"}
                         </span>
+                        {!isAuraTemplate && (
+                          <span className="text-xs text-muted-foreground mt-1">
+                            {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                          </span>
+                        )}
                       </label>
                       <Input
                         id="gallery_images"
                         type="file"
                         accept="image/*"
-                        multiple
+                        multiple={!isAuraTemplate}
                         onChange={handleGalleryChange}
                         className="hidden"
                       />
