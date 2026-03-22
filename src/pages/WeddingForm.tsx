@@ -573,17 +573,19 @@ const WeddingForm = () => {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="groom_family">Groom's Family</Label>
+                  <Label htmlFor="groom_family">Groom's Family *</Label>
                   <Input
                     id="groom_family"
+                    required
                     value={formData.groom_family}
                     onChange={(e) => setFormData({ ...formData, groom_family: e.target.value })}
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="bride_family">Bride's Family</Label>
+                  <Label htmlFor="bride_family">Bride's Family *</Label>
                   <Input
                     id="bride_family"
+                    required
                     value={formData.bride_family}
                     onChange={(e) => setFormData({ ...formData, bride_family: e.target.value })}
                   />
