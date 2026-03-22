@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -118,10 +119,13 @@ const Dashboard = () => {
       <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-5">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
-                <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
-              </div>
+            <div className="flex items-center gap-4">
+              <img
+                src={aureaLogo}
+                alt="Auréa Invites"
+                className="h-8 sm:h-10 object-contain cursor-pointer"
+                onClick={() => navigate("/")}
+              />
               <div>
                 <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
                   Choose Your Template
