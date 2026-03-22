@@ -265,7 +265,7 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="grid gap-5 sm:gap-6 grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               <Card className="border-0 bg-white/50 backdrop-blur-sm shadow-md opacity-60 flex flex-col rounded-2xl overflow-hidden">
                 <CardHeader className="p-0 flex-grow">
                   <div className="aspect-video overflow-hidden">
