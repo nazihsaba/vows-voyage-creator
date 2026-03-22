@@ -26,7 +26,6 @@ const previewCards = [
     tagline: "Elegant scrollable design",
     featured: false,
   },
-
   {
     image: auraTemplate,
     label: "Dorée",
