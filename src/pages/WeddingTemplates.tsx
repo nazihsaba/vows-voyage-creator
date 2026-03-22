@@ -59,6 +59,18 @@ const WeddingTemplates = () => {
         { icon: Clock, text: "Countdown Timer" }
       ]
     },
+    { 
+      id: "opulence-curtain", 
+      name: "Opulence", 
+      description: "Luxury curtain-draped invitation with editorial serif styling", 
+      image: modernRomance,
+      features: [
+        { icon: Theater, text: "Curtain Reveal" },
+        { icon: Sparkles, text: "Confetti Animation" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Gift, text: "Gift Registry" }
+      ]
+    },
   ];
 
   return (
