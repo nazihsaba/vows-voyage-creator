@@ -6,6 +6,7 @@ import { ChevronDown, PartyPopper, Church } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface EclatTemplateProps {
@@ -382,6 +383,9 @@ export const EclatTemplate = ({
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };

@@ -6,6 +6,7 @@ import { Church, PartyPopper, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface GraceTemplateProps {
@@ -375,6 +376,9 @@ export const GraceTemplate = ({
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };

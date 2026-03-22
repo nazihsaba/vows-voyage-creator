@@ -6,6 +6,7 @@ import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface AuraTemplateProps {
@@ -386,6 +387,9 @@ export const AuraTemplate = ({
             cardBgClassName="bg-background"
           />
         )}
+
+        {/* ===== BRANDED FOOTER ===== */}
+        <TemplatePreviewFooter />
       </div>
     </div>
   );
