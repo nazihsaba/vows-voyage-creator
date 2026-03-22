@@ -313,6 +313,9 @@ export const VeritePreview = () => {
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };

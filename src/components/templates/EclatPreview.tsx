@@ -371,6 +371,9 @@ export const EclatPreview = () => {
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };

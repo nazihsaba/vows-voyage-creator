@@ -263,6 +263,9 @@ export const AuraPreview = () => {
 
         {/* ===== RSVP SECTION ===== */}
         <RsvpSection staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
+
+        {/* ===== BRANDED FOOTER ===== */}
+        <TemplatePreviewFooter />
       </div>
     </div>
   );

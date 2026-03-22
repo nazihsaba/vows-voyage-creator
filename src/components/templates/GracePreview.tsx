@@ -273,6 +273,9 @@ export const GracePreview = () => {
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };
