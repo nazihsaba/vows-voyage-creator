@@ -245,6 +245,7 @@ const Dashboard = () => {
                           template2: "/dashboard/verite-form",
                           "classic-romance": "/dashboard/eclat-form",
                           template6: "/dashboard/grace-form",
+                          "opulence-curtain": "/dashboard/opulence-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
