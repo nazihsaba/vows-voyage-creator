@@ -8,6 +8,7 @@ import { VeriteTemplate } from './VeriteTemplate';
 import { GraceTemplate } from './GraceTemplate';
 import { EclatTemplate } from './EclatTemplate';
 import { AuraTemplate } from './AuraTemplate';
+import { OpulenceTemplate } from './OpulenceTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -124,6 +125,29 @@ export const TemplateRenderer = ({
   if (template.component === 'AuraTemplate') {
     return (
       <AuraTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'OpulenceTemplate') {
+    return (
+      <OpulenceTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

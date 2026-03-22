@@ -432,6 +432,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'opulence-curtain',
+    name: 'Opulence',
+    category: 'elegant',
+    description: 'Luxury curtain-draped invitation with editorial serif typography and confetti reveal',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'OpulenceTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'details', enabled: true, order: 2, customizable: true },
+      { id: 'countdown', enabled: true, order: 3, customizable: true },
+      { id: 'location', enabled: true, order: 4, customizable: true },
+      { id: 'gallery', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Cormorant Garamond',
+      fontSecondary: 'Inter',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#6B2020',
+        secondary: '#D4AF37',
+        accent: '#FAF8F5',
+        background: '#FFFFFF',
+        text: '#2C2C2C',
+      },
+      borderRadius: 'none',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
