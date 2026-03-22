@@ -224,6 +224,7 @@ export const OpulenceTemplate = ({
   submittingRsvp = false,
 }: OpulenceTemplateProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [started, setStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
@@ -231,6 +232,14 @@ export const OpulenceTemplate = ({
     const audio = audioRef.current;
     if (audio && wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
       audio.currentTime = wedding.audio_start_time || 0;
+    }
+  };
+
+  const handleStart = () => {
+    setStarted(true);
+    if (audioRef.current) {
+      audioRef.current.currentTime = wedding.audio_start_time || 0;
+      audioRef.current.play().catch(() => {});
     }
   };
 
@@ -242,23 +251,52 @@ export const OpulenceTemplate = ({
   };
 
   return (
-    <div className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)] overflow-x-hidden" style={{ fontFamily: "'Cormorant Garamond', 'Times New Roman', serif" }}>
+    <div
+      className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)]"
+      style={{
+        fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+        overflowX: "hidden",
+        overflowY: started ? "auto" : "hidden",
+        maxHeight: started ? "none" : "100vh",
+      }}
+    >
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
 
       {/* ═══ OPENING SCREEN ═══ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-        <CurtainDrapes />
+        <CurtainDrapes opened={started} />
 
-        <div className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8">
+        {/* Tap to Start overlay — shown before curtains open */}
+        {!started && (
+          <div className="absolute inset-0 z-[5] flex items-center justify-center">
+            <button
+              onClick={handleStart}
+              className="relative z-10 px-8 py-3 rounded-full text-sm uppercase tracking-[0.3em] font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+              style={{
+                background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 68%))",
+                color: "hsl(0, 0%, 17%)",
+                boxShadow: "0 6px 24px hsl(36 57% 74% / 0.4)",
+              }}
+            >
+              Tap to Start
+            </button>
+          </div>
+        )}
+
+        {/* Content revealed after start */}
+        <div
+          className="relative z-10 px-6 py-16 max-w-lg mx-auto space-y-8 transition-opacity duration-700"
+          style={{ opacity: started ? 1 : 0, transitionDelay: started ? "0.8s" : "0s" }}
+        >
           {/* Decorative top line */}
-          <div className="opacity-0 animate-[fadeIn_0.8s_ease-out_0.8s_forwards]">
+          <div>
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
           </div>
 
           {/* Invitation text */}
-          <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_1s_forwards]">
+          <div>
             <EditableField
               fieldId="opulence-invitation-text"
               text={getFieldValue("opulence-invitation-text", "Together with their families")}
@@ -271,7 +309,7 @@ export const OpulenceTemplate = ({
           </div>
 
           {/* Couple names */}
-          <div className="opacity-0 animate-[scaleIn_0.8s_ease-out_1.2s_forwards]">
+          <div>
             <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>
               {wedding.groom_name}
               <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
@@ -280,7 +318,7 @@ export const OpulenceTemplate = ({
           </div>
 
           {/* Formal message */}
-          <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_1.5s_forwards]">
+          <div>
             <EditableField
               fieldId="opulence-formal-message"
               text={getFieldValue(
@@ -297,12 +335,12 @@ export const OpulenceTemplate = ({
           </div>
 
           {/* Decorative bottom line */}
-          <div className="opacity-0 animate-[fadeIn_0.8s_ease-out_1.7s_forwards]">
+          <div>
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
           </div>
 
           {/* Scroll hint */}
-          <div className="opacity-0 animate-[fadeIn_1s_ease-out_2s_forwards] pt-4">
+          <div className="pt-4">
             <ChevronDown className="w-5 h-5 mx-auto animate-bounce opacity-40" />
           </div>
         </div>
