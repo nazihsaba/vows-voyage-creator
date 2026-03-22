@@ -107,6 +107,8 @@ const WeddingTemplates = () => {
               onClick={() => {
                 if (template.id === 'rose-gold-tabs') {
                   navigate(`/dashboard/aura-form?template=${template.id}`);
+                } else if (template.id === 'opulence-curtain') {
+                  navigate(`/dashboard/opulence-form?template=${template.id}`);
                 } else {
                   navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                 }
