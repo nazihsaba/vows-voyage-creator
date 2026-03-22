@@ -192,59 +192,20 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
           <audio
             ref={audioRef}
             src={audioUrl}
-            controls
             onLoadedMetadata={handleLoadedMetadata}
-            className="w-full"
+            className="hidden"
           />
 
-          <div className="space-y-4">
+          {isTrimming ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Auto-trimming to 60 seconds...
+            </div>
+          ) : (
             <div className="text-sm text-muted-foreground">
-              Duration: {duration.toFixed(2)} seconds
+              Original duration: {duration.toFixed(0)}s — trimmed to {Math.min(60, duration).toFixed(0)}s
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="start-time">Start (seconds)</Label>
-                <Input
-                  id="start-time"
-                  type="number"
-                  min={0}
-                  max={duration}
-                  step={0.1}
-                  value={startTime}
-                  onChange={(e) => setStartTime(Number(e.target.value))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="end-time">End (seconds)</Label>
-                <Input
-                  id="end-time"
-                  type="number"
-                  min={0}
-                  max={60}
-                  step={0.1}
-                  value={endTime}
-                  onChange={(e) => setEndTime(Math.min(60, Number(e.target.value)))}
-                />
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              onClick={handleTrim}
-              disabled={isTrimming}
-              className="w-full"
-            >
-              {isTrimming ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Trimming...
-                </>
-              ) : (
-                "Trim Audio"
-              )}
-            </Button>
-          </div>
+          )}
         </>
       )}
 
