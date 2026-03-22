@@ -223,7 +223,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 
     {/* Ambient glow behind curtains */}
     <div
-      className="absolute inset-0 pointer-events-none z-[2]"
+      className="fixed inset-0 pointer-events-none z-[2]"
       style={{
         background: opened
           ? "transparent"
