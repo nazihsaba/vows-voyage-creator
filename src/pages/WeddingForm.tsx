@@ -75,7 +75,7 @@ const WeddingForm = () => {
   const isAuraTemplate = template === "bible-verse-tabs";
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
   const isOpulenceTemplate = template === "opulence-curtain";
-  const isGraceTemplate = template === "video-cinematic";
+  const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const shouldShowGalleryUpload =
     template === "template2" ||
     template === "classic-gallery" ||
