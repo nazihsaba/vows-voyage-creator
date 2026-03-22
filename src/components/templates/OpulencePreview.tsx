@@ -49,9 +49,12 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 };
 
 /* ── Curtain Drapes ── */
-const CurtainDrapes = () => (
+const CurtainDrapes = ({ opened }: { opened: boolean }) => (
   <>
-    <div className="absolute top-0 left-0 w-[35%] h-full pointer-events-none z-[1] overflow-hidden opacity-0 animate-[curtainLeft_1.2s_ease-out_0.3s_forwards]">
+    <div
+      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      style={{ transform: opened ? "translateX(-100%)" : "translateX(0)" }}
+    >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="pCurtainGradL" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -65,7 +68,10 @@ const CurtainDrapes = () => (
         <path d="M0,0 L120,0 C100,80 80,160 70,260 C60,360 40,460 20,600 L0,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
       </svg>
     </div>
-    <div className="absolute top-0 right-0 w-[35%] h-full pointer-events-none z-[1] overflow-hidden opacity-0 animate-[curtainRight_1.2s_ease-out_0.3s_forwards]">
+    <div
+      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
+      style={{ transform: opened ? "translateX(100%)" : "translateX(0)" }}
+    >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="pCurtainGradR" x1="100%" y1="0%" x2="0%" y2="0%">
@@ -79,7 +85,10 @@ const CurtainDrapes = () => (
         <path d="M200,0 L80,0 C100,80 120,160 130,260 C140,360 160,460 180,600 L200,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
       </svg>
     </div>
-    <div className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[2]">
+    <div
+      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4] transition-opacity duration-700"
+      style={{ opacity: opened ? 0 : 1 }}
+    >
       <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
         <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
         <path d="M0,12 Q50,28 100,12 Q150,28 200,12 Q250,28 300,12 Q350,28 400,12 L400,30 L0,30 Z" fill="hsl(36, 50%, 40%)" opacity="0.6" />
