@@ -97,17 +97,37 @@ const Index = () => {
             </Button>
 
             <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
-              <DialogContent className="sm:max-w-md text-center p-8">
-                <div className="flex flex-col items-center gap-4">
-                  <span className="text-5xl">💍✨</span>
-                  <h3 className="text-2xl font-serif font-bold text-primary">Coming Soon!</h3>
-                  <p className="text-muted-foreground leading-relaxed">
-                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on
-                    its way!
+              <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none rounded-3xl shadow-2xl">
+                {/* Decorative top gradient bar */}
+                <div className="h-2 bg-gradient-to-r from-primary/60 via-primary to-primary/60" />
+
+                <div className="flex flex-col items-center gap-5 px-8 pt-8 pb-10 text-center">
+                  {/* Animated ring icon */}
+                  <div className="relative">
+                    <div className="w-20 h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                      <span className="text-4xl animate-pulse">💍</span>
+                    </div>
+                    <span className="absolute -top-1 -right-1 text-lg animate-bounce">✨</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <h3 className="text-2xl font-serif font-bold text-primary tracking-tight">
+                      Coming Soon!
+                    </h3>
+                    <p className="text-xs uppercase tracking-[0.25em] text-primary/50 font-medium">
+                      Something special is brewing
+                    </p>
+                  </div>
+
+                  <div className="w-12 h-px bg-primary/20" />
+
+                  <p className="text-muted-foreground leading-relaxed text-[15px] max-w-xs">
+                    We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on its way!
                   </p>
+
                   <Button
                     onClick={() => setShowComingSoon(false)}
-                    className="mt-2 bg-primary text-primary-foreground hover:bg-primary-hover"
+                    className="mt-1 px-8 py-5 rounded-full bg-primary text-primary-foreground hover:bg-primary-hover text-base font-medium shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Can't Wait! 💕
                   </Button>
