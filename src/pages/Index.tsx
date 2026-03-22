@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
 import { useState, useEffect } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
 import eventBirthday from "@/assets/event-birthday.jpg";
@@ -19,6 +20,17 @@ const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showComingSoon, setShowComingSoon] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
@@ -41,9 +53,11 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <img src={aureaLogo} alt="Auréa" className="h-14" />
           </div>
-          <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/auth")}>Sign In</Button>
-          </div>
+          {!isAuthenticated && (
+            <div className="flex items-center gap-3">
+              <Button onClick={() => navigate("/auth")}>Sign In</Button>
+            </div>
+          )}
         </div>
       </header>
 
