@@ -131,7 +131,7 @@ const WeddingForm = () => {
       if (galleryData) {
         setExistingGalleryImages(galleryData);
         // Load Grace featured image preview if applicable
-        if (data.template_type === "video-cinematic" && galleryData.length > 0) {
+        if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
           setGraceFeaturedPreview(galleryData[0].image_url);
         }
       }
@@ -430,7 +430,7 @@ const WeddingForm = () => {
       }
 
       // Upload Grace featured image (single image for gallery section)
-      if (formData.template_type === "video-cinematic" && graceFeaturedFile) {
+      if ((formData.template_type === "video-cinematic" || formData.template_type === "template6") && graceFeaturedFile) {
         // Remove existing gallery images for Grace (only 1 allowed)
         if (id) {
           await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
