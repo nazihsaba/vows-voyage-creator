@@ -53,9 +53,11 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <img src={aureaLogo} alt="Auréa" className="h-14" />
           </div>
-          <div className="flex items-center gap-3">
-            <Button onClick={() => navigate("/auth")}>Sign In</Button>
-          </div>
+          {!isAuthenticated && (
+            <div className="flex items-center gap-3">
+              <Button onClick={() => navigate("/auth")}>Sign In</Button>
+            </div>
+          )}
         </div>
       </header>
 
