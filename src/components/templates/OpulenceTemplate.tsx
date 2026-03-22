@@ -225,6 +225,16 @@ export const OpulenceTemplate = ({
 }: OpulenceTemplateProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [started, setStarted] = useState(false);
+
+  // Lock body scroll until started
+  useEffect(() => {
+    if (!started) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [started]);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
