@@ -140,8 +140,11 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
   <>
     {/* Left curtain */}
     <div
-      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden transition-transform duration-[1.4s] ease-[cubic-bezier(0.4,0,0.2,1)]"
-      style={{ transform: opened ? "translateX(-100%)" : "translateX(0)" }}
+      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      style={{
+        transform: opened ? "translateX(-110%)" : "translateX(0)",
+        transition: "transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
     >
       <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
