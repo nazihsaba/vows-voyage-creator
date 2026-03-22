@@ -110,6 +110,18 @@ const Dashboard = () => {
         { icon: Clock, text: "Countdown Timer" },
       ],
     },
+    {
+      id: "opulence-curtain",
+      name: "Opulence",
+      description: "Luxury curtain-draped invitation with editorial serif styling & confetti reveal",
+      image: eclatTemplate,
+      features: [
+        { icon: Sparkles, text: "Curtain Reveal" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+      ],
+    },
   ];
 
   return (
