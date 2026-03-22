@@ -38,16 +38,20 @@ const Dashboard = () => {
     checkUser();
   }, []);
 
+  const loggingOut = React.useRef(false);
+
   const checkUser = async () => {
+    if (loggingOut.current) return;
     const {
       data: { session },
     } = await supabase.auth.getSession();
-    if (!session) {
+    if (!session && !loggingOut.current) {
       navigate("/auth");
     }
   };
 
   const handleLogout = async () => {
+    loggingOut.current = true;
     await supabase.auth.signOut();
     navigate("/");
   };
