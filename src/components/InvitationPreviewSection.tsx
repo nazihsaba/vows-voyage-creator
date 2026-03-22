@@ -9,10 +9,10 @@ import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 
 const previewCards = [
   {
-    image: auraTemplate,
-    label: "Dorée",
-    tagline: "Bible verse & botanical elegance",
-    featured: true,
+    image: graceTemplate,
+    label: "Grâce",
+    tagline: "Immersive video background",
+    featured: false,
   },
   {
     image: veriteTemplate,
@@ -26,11 +26,12 @@ const previewCards = [
     tagline: "Elegant scrollable design",
     featured: false,
   },
+
   {
-    image: graceTemplate,
-    label: "Grâce",
-    tagline: "Immersive video background",
-    featured: false,
+    image: auraTemplate,
+    label: "Dorée",
+    tagline: "Bible verse & botanical elegance",
+    featured: true,
   },
 ];
 
