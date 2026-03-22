@@ -3,6 +3,7 @@ import { ChevronDown, Church, PartyPopper } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
@@ -273,6 +274,9 @@ export const GracePreview = () => {
           </div>
         </section>
       </AnimatedSection>
+
+      {/* ===== BRANDED FOOTER ===== */}
+      <TemplatePreviewFooter />
     </div>
   );
 };

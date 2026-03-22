@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
+import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
 import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
@@ -263,6 +264,9 @@ export const AuraPreview = () => {
 
         {/* ===== RSVP SECTION ===== */}
         <RsvpSection staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
+
+        {/* ===== BRANDED FOOTER ===== */}
+        <TemplatePreviewFooter />
       </div>
     </div>
   );
