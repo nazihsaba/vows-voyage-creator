@@ -202,7 +202,7 @@ const Index = () => {
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
-            © {new Date().getFullYear()} Vows Voyage. All rights reserved.
+            © {new Date().getFullYear()} Aurea Invites. All rights reserved.
           </p>
         </div>
       </footer>
