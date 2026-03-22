@@ -29,6 +29,7 @@ import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
+import OpulencePreview from "@/components/templates/OpulencePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
