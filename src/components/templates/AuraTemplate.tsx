@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
