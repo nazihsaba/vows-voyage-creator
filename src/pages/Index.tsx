@@ -16,6 +16,12 @@ import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 
+const heroImages = [
+  { src: tableDecor, alt: "Wedding celebration" },
+  { src: eclatWedding2, alt: "Birthday party" },
+  { src: flowerVase, alt: "Party celebration" },
+];
+
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -32,11 +38,6 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const heroImages = [
-    { src: tableDecor, alt: "Wedding celebration" },
-    { src: eclatWedding2, alt: "Birthday party" },
-    { src: flowerVase, alt: "Party celebration" },
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -70,7 +71,7 @@ const Index = () => {
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
             >
-              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
+              <img src={image.src} alt={image.alt} loading="eager" decoding="async" className="w-full h-full object-cover" />
             </div>
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
