@@ -110,9 +110,9 @@ export const LinkManagementTable = ({
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/^-+|-+$/g, '');
-    // Use weddingSlug (the wedding's slug) as the first parameter, not the link's unique_slug
-    const url = `${window.location.origin}/invite/${weddingSlug}/${sanitizedLinkName}/${link.number_of_persons}`;
-    navigator.clipboard.writeText(url);
+    // Use the OG edge function URL for WhatsApp-friendly link previews
+    const ogUrl = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/invitation-og?slug=${encodeURIComponent(weddingSlug)}&link=${encodeURIComponent(sanitizedLinkName)}&persons=${link.number_of_persons}`;
+    navigator.clipboard.writeText(ogUrl);
     toast({
       title: "Success",
       description: "Link copied to clipboard",
