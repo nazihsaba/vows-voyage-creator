@@ -140,7 +140,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
   <>
     {/* Left curtain */}
     <div
-      className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      className="fixed top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
       style={{
         transform: opened ? "translateX(-110%)" : "translateX(0)",
         transition: "transform 2s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -181,7 +181,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 
     {/* Right curtain */}
     <div
-      className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
+      className="fixed top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
       style={{
         transform: opened ? "translateX(110%)" : "translateX(0)",
         transition: "transform 2s cubic-bezier(0.22, 1, 0.36, 1)",
@@ -223,7 +223,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 
     {/* Ambient glow behind curtains */}
     <div
-      className="absolute inset-0 pointer-events-none z-[2]"
+      className="fixed inset-0 pointer-events-none z-[2]"
       style={{
         background: opened
           ? "transparent"
@@ -319,9 +319,11 @@ export const OpulenceTemplate = ({
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
 
+      {/* Curtains persist across entire template */}
+      <CurtainDrapes opened={started} />
+
       {/* ═══ OPENING SCREEN ═══ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-        <CurtainDrapes opened={started} />
 
         {/* Tap to Start overlay — shown before curtains open */}
         {!started && (
