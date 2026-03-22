@@ -831,21 +831,23 @@ const WeddingForm = () => {
                   <CardContent className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="ceremony_location">Location Name</Label>
+                        <Label htmlFor="ceremony_location">Location Name *</Label>
                         <Input
                           id="ceremony_location"
                           value={locations.ceremony_location}
                           onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
                           placeholder="Church or venue name"
+                          required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="ceremony_time">Time</Label>
+                        <Label htmlFor="ceremony_time">Time *</Label>
                         <Input
                           id="ceremony_time"
                           type="time"
                           value={locations.ceremony_time}
                           onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                          required
                         />
                       </div>
                     </div>
@@ -870,21 +872,23 @@ const WeddingForm = () => {
                   <CardContent className="space-y-4">
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="venue_location">Location Name</Label>
+                        <Label htmlFor="venue_location">Location Name *</Label>
                         <Input
                           id="venue_location"
                           value={locations.venue_location}
                           onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
                           placeholder="Reception venue name"
+                          required
                         />
                       </div>
                       <div className="space-y-2">
-                        <Label htmlFor="venue_time">Time</Label>
+                        <Label htmlFor="venue_time">Time *</Label>
                         <Input
                           id="venue_time"
                           type="time"
                           value={locations.venue_time}
                           onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
+                          required
                         />
                       </div>
                     </div>
