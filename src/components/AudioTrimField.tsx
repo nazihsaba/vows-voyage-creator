@@ -2,7 +2,7 @@ import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, X } from "lucide-react";
 
 interface AudioTrimFieldProps {
   onAudioTrimmed: (blob: Blob, startTime: number, endTime: number) => void;
@@ -40,42 +40,30 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
     setAudioUrl(url);
   };
 
-  const handleLoadedMetadata = () => {
+  const handleLoadedMetadata = async () => {
     if (audioRef.current) {
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Number.isFinite(d) ? Math.min(60, d) : 60);
+      setEndTime(Math.min(60, d));
+      // Auto-trim on load
+      if (file) {
+        await autoTrim(file, 0, Math.min(60, d));
+      }
     }
   };
 
-  const handleTrim = async () => {
-    if (!file) return;
-    if (startTime < 0 || endTime <= startTime) {
-      alert("Invalid trim range");
-      return;
-    }
-
+  const autoTrim = async (audioFile: File, start: number, end: number) => {
     setIsTrimming(true);
     try {
-      const arrayBuffer = await file.arrayBuffer();
-
+      const arrayBuffer = await audioFile.arrayBuffer();
       const audioContext = new (window.AudioContext ||
         // @ts-ignore
         window.webkitAudioContext)();
-
       const audioBuffer = await audioContext.decodeAudioData(arrayBuffer);
-
       const sampleRate = audioBuffer.sampleRate;
-      const startOffset = Math.max(0, Math.min(startTime, audioBuffer.duration));
-      const endOffset = Math.max(
-        startOffset,
-        Math.min(endTime, audioBuffer.duration)
-      );
-
-      const startSample = Math.floor(startOffset * sampleRate);
-      const endSample = Math.floor(endOffset * sampleRate);
-
+      const startSample = Math.floor(Math.max(0, start) * sampleRate);
+      const endSample = Math.floor(Math.min(end, audioBuffer.duration) * sampleRate);
       const trimmedLength = endSample - startSample;
 
       const trimmedBuffer = audioContext.createBuffer(
@@ -93,8 +81,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       const trimmedBlob = await audioBufferToWavBlob(trimmedBuffer);
       const trimmedObjectUrl = URL.createObjectURL(trimmedBlob);
       setTrimmedUrl(trimmedObjectUrl);
-      
-      onAudioTrimmed(trimmedBlob, startTime, endTime);
+      onAudioTrimmed(trimmedBlob, start, end);
     } catch (err) {
       console.error(err);
       alert("Error while trimming audio");
@@ -102,6 +89,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       setIsTrimming(false);
     }
   };
+
 
   const audioBufferToWavBlob = (audioBuffer: AudioBuffer): Promise<Blob> => {
     return new Promise((resolve) => {
@@ -204,59 +192,20 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
           <audio
             ref={audioRef}
             src={audioUrl}
-            controls
             onLoadedMetadata={handleLoadedMetadata}
-            className="w-full"
+            className="hidden"
           />
 
-          <div className="space-y-4">
+          {isTrimming ? (
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <Loader2 className="w-4 h-4 animate-spin" />
+              Auto-trimming to 60 seconds...
+            </div>
+          ) : (
             <div className="text-sm text-muted-foreground">
-              Duration: {duration.toFixed(2)} seconds
+              Original duration: {duration.toFixed(0)}s — trimmed to {Math.min(60, duration).toFixed(0)}s
             </div>
-            
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="start-time">Start (seconds)</Label>
-                <Input
-                  id="start-time"
-                  type="number"
-                  min={0}
-                  max={duration}
-                  step={0.1}
-                  value={startTime}
-                  onChange={(e) => setStartTime(Number(e.target.value))}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="end-time">End (seconds)</Label>
-                <Input
-                  id="end-time"
-                  type="number"
-                  min={0}
-                  max={60}
-                  step={0.1}
-                  value={endTime}
-                  onChange={(e) => setEndTime(Math.min(60, Number(e.target.value)))}
-                />
-              </div>
-            </div>
-
-            <Button
-              type="button"
-              onClick={handleTrim}
-              disabled={isTrimming}
-              className="w-full"
-            >
-              {isTrimming ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Trimming...
-                </>
-              ) : (
-                "Trim Audio"
-              )}
-            </Button>
-          </div>
+          )}
         </>
       )}
 
