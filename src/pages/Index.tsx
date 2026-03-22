@@ -16,6 +16,12 @@ import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 
+const heroImages = [
+  { src: tableDecor, alt: "Wedding celebration" },
+  { src: eclatWedding2, alt: "Birthday party" },
+  { src: flowerVase, alt: "Party celebration" },
+];
+
 const Index = () => {
   const navigate = useNavigate();
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
