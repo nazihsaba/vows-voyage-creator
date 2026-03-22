@@ -143,55 +143,127 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
       className="absolute top-0 left-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
       style={{
         transform: opened ? "translateX(-110%)" : "translateX(0)",
-        transition: "transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: "transform 2s cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     >
-      <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
+      <svg viewBox="0 0 220 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="curtainGradL" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="hsl(36, 50%, 32%)" />
-            <stop offset="40%" stopColor="hsl(36, 50%, 40%)" />
-            <stop offset="70%" stopColor="hsl(36, 45%, 48%)" />
-            <stop offset="100%" stopColor="hsl(36, 50%, 38%)" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="hsl(36, 45%, 25%)" />
+            <stop offset="20%" stopColor="hsl(36, 50%, 35%)" />
+            <stop offset="50%" stopColor="hsl(36, 55%, 45%)" />
+            <stop offset="75%" stopColor="hsl(36, 50%, 38%)" />
+            <stop offset="100%" stopColor="hsl(36, 45%, 30%)" stopOpacity="0.6" />
+          </linearGradient>
+          <linearGradient id="curtainHighlightL" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
+            <stop offset="30%" stopColor="hsl(36, 57%, 78%)" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="hsl(36, 57%, 82%)" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="curtainEdgeL" x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="hsl(36, 40%, 20%)" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="hsl(36, 40%, 20%)" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d="M0,0 L200,0 C180,60 160,100 140,180 C120,260 110,340 100,420 C90,500 60,560 30,600 L0,600 Z" fill="url(#curtainGradL)" />
-        <path d="M0,0 L120,0 C100,80 80,160 70,260 C60,360 40,460 20,600 L0,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
-        <path d="M0,0 L60,0 C50,100 40,200 30,320 C20,440 10,540 0,600 Z" fill="hsl(36, 60%, 28%)" opacity="0.3" />
+        {/* Main fabric body */}
+        <path d="M0,0 L220,0 C200,40 185,90 170,150 C150,230 135,320 120,410 C105,490 70,555 30,600 L0,600 Z" fill="url(#curtainGradL)" />
+        {/* Deep fold shadow */}
+        <path d="M0,0 L130,0 C115,60 95,140 80,240 C65,340 45,450 20,600 L0,600 Z" fill="hsl(36, 50%, 28%)" opacity="0.45" />
+        {/* Inner fold */}
+        <path d="M0,0 L70,0 C60,80 48,180 38,300 C28,420 15,530 0,600 Z" fill="hsl(36, 55%, 22%)" opacity="0.35" />
+        {/* Silk highlight streak */}
+        <path d="M90,0 C85,100 82,200 80,300 C78,400 70,500 55,600 L75,600 C80,500 85,400 88,300 C91,200 95,100 100,0 Z" fill="url(#curtainHighlightL)" />
+        {/* Subtle second highlight */}
+        <path d="M155,0 C148,80 142,170 138,270 C134,370 125,480 110,600 L125,600 C132,480 138,370 142,270 C146,170 152,80 160,0 Z" fill="hsl(36, 57%, 74%)" opacity="0.12" />
+        {/* Right edge shadow for depth */}
+        <rect x="195" y="0" width="25" height="600" fill="url(#curtainEdgeL)" />
       </svg>
     </div>
+
     {/* Right curtain */}
     <div
       className="absolute top-0 right-0 w-[55%] h-full pointer-events-none z-[3] overflow-hidden"
       style={{
         transform: opened ? "translateX(110%)" : "translateX(0)",
-        transition: "transform 1.8s cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: "transform 2s cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     >
-      <svg viewBox="0 0 200 600" className="w-full h-full" preserveAspectRatio="none">
+      <svg viewBox="0 0 220 600" className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="curtainGradR" x1="100%" y1="0%" x2="0%" y2="0%">
-            <stop offset="0%" stopColor="hsl(36, 50%, 32%)" />
-            <stop offset="40%" stopColor="hsl(36, 50%, 40%)" />
-            <stop offset="70%" stopColor="hsl(36, 45%, 48%)" />
-            <stop offset="100%" stopColor="hsl(36, 50%, 38%)" stopOpacity="0.3" />
+            <stop offset="0%" stopColor="hsl(36, 45%, 25%)" />
+            <stop offset="20%" stopColor="hsl(36, 50%, 35%)" />
+            <stop offset="50%" stopColor="hsl(36, 55%, 45%)" />
+            <stop offset="75%" stopColor="hsl(36, 50%, 38%)" />
+            <stop offset="100%" stopColor="hsl(36, 45%, 30%)" stopOpacity="0.6" />
+          </linearGradient>
+          <linearGradient id="curtainHighlightR" x1="100%" y1="0%" x2="0%" y2="0%">
+            <stop offset="0%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
+            <stop offset="30%" stopColor="hsl(36, 57%, 78%)" stopOpacity="0.3" />
+            <stop offset="50%" stopColor="hsl(36, 57%, 82%)" stopOpacity="0.15" />
+            <stop offset="100%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
+          </linearGradient>
+          <linearGradient id="curtainEdgeR" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="hsl(36, 40%, 20%)" stopOpacity="0.8" />
+            <stop offset="100%" stopColor="hsl(36, 40%, 20%)" stopOpacity="0" />
           </linearGradient>
         </defs>
-        <path d="M200,0 L0,0 C20,60 40,100 60,180 C80,260 90,340 100,420 C110,500 140,560 170,600 L200,600 Z" fill="url(#curtainGradR)" />
-        <path d="M200,0 L80,0 C100,80 120,160 130,260 C140,360 160,460 180,600 L200,600 Z" fill="hsl(36, 55%, 35%)" opacity="0.4" />
-        <path d="M200,0 L140,0 C150,100 160,200 170,320 C180,440 190,540 200,600 Z" fill="hsl(36, 60%, 28%)" opacity="0.3" />
+        {/* Main fabric body */}
+        <path d="M220,0 L0,0 C20,40 35,90 50,150 C70,230 85,320 100,410 C115,490 150,555 190,600 L220,600 Z" fill="url(#curtainGradR)" />
+        {/* Deep fold shadow */}
+        <path d="M220,0 L90,0 C105,60 125,140 140,240 C155,340 175,450 200,600 L220,600 Z" fill="hsl(36, 50%, 28%)" opacity="0.45" />
+        {/* Inner fold */}
+        <path d="M220,0 L150,0 C160,80 172,180 182,300 C192,420 205,530 220,600 Z" fill="hsl(36, 55%, 22%)" opacity="0.35" />
+        {/* Silk highlight streak */}
+        <path d="M130,0 C135,100 138,200 140,300 C142,400 150,500 165,600 L145,600 C140,500 135,400 132,300 C129,200 125,100 120,0 Z" fill="url(#curtainHighlightR)" />
+        {/* Subtle second highlight */}
+        <path d="M65,0 C72,80 78,170 82,270 C86,370 95,480 110,600 L95,600 C88,480 82,370 78,270 C74,170 68,80 60,0 Z" fill="hsl(36, 57%, 74%)" opacity="0.12" />
+        {/* Left edge shadow for depth */}
+        <rect x="0" y="0" width="25" height="600" fill="url(#curtainEdgeR)" />
       </svg>
     </div>
-    {/* Top valance */}
+
+    {/* Luxurious top valance with scallops */}
     <div
-      className="absolute top-0 left-0 right-0 h-8 pointer-events-none z-[4]"
-      style={{ opacity: opened ? 0 : 1, transition: "opacity 0.8s ease-out 0.5s" }}
+      className="absolute top-0 left-0 right-0 h-12 pointer-events-none z-[4]"
+      style={{ opacity: opened ? 0 : 1, transition: "opacity 1s ease-out 0.8s" }}
     >
-      <svg viewBox="0 0 400 30" className="w-full h-full" preserveAspectRatio="none">
-        <rect width="400" height="12" fill="hsl(36, 55%, 35%)" />
-        <path d="M0,12 Q50,28 100,12 Q150,28 200,12 Q250,28 300,12 Q350,28 400,12 L400,30 L0,30 Z" fill="hsl(36, 50%, 40%)" opacity="0.6" />
+      <svg viewBox="0 0 400 40" className="w-full h-full" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="valanceGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="hsl(36, 50%, 30%)" />
+            <stop offset="60%" stopColor="hsl(36, 55%, 38%)" />
+            <stop offset="100%" stopColor="hsl(36, 50%, 42%)" />
+          </linearGradient>
+          <linearGradient id="valanceHighlight" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0.3" />
+            <stop offset="100%" stopColor="hsl(36, 57%, 74%)" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {/* Main bar */}
+        <rect width="400" height="14" fill="url(#valanceGrad)" />
+        {/* Highlight strip */}
+        <rect width="400" height="3" fill="url(#valanceHighlight)" />
+        {/* Scalloped draping */}
+        <path d="M0,14 Q25,32 50,14 Q75,32 100,14 Q125,32 150,14 Q175,32 200,14 Q225,32 250,14 Q275,32 300,14 Q325,32 350,14 Q375,32 400,14 L400,40 L0,40 Z" fill="hsl(36, 50%, 36%)" opacity="0.7" />
+        {/* Scallop shadow */}
+        <path d="M0,16 Q25,30 50,16 Q75,30 100,16 Q125,30 150,16 Q175,30 200,16 Q225,30 250,16 Q275,30 300,16 Q325,30 350,16 Q375,30 400,16 L400,40 L0,40 Z" fill="hsl(36, 45%, 25%)" opacity="0.25" />
+        {/* Gold trim line */}
+        <line x1="0" y1="13" x2="400" y2="13" stroke="hsl(36, 57%, 68%)" strokeWidth="0.8" opacity="0.5" />
       </svg>
     </div>
+
+    {/* Ambient glow behind curtains */}
+    <div
+      className="absolute inset-0 pointer-events-none z-[2]"
+      style={{
+        background: opened
+          ? "transparent"
+          : "radial-gradient(ellipse at center, hsl(36, 57%, 74%, 0.08) 0%, transparent 70%)",
+        transition: "background 1.5s ease-out",
+      }}
+    />
   </>
 );
 
