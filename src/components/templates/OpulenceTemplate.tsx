@@ -319,9 +319,11 @@ export const OpulenceTemplate = ({
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
 
+      {/* Curtains persist across entire template */}
+      <CurtainDrapes opened={started} />
+
       {/* ═══ OPENING SCREEN ═══ */}
       <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
-        <CurtainDrapes opened={started} />
 
         {/* Tap to Start overlay — shown before curtains open */}
         {!started && (
