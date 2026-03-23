@@ -117,6 +117,7 @@ export const EclatPreview = () => {
   };
 
   return (
+    <TemplateShell>
     <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero Section */}
       <section
