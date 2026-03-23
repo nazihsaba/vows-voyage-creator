@@ -90,6 +90,7 @@ export const AuraPreview = () => {
   ];
 
   return (
+    <TemplateShell>
     <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
       <div>
         {/* ===== INTRO SECTION ===== */}
