@@ -300,18 +300,18 @@ const ManageLinks = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg overflow-hidden bg-white shadow-inner">
+              <div className="rounded-xl overflow-hidden border border-border/30">
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-accent/30">
+                      <TableRow className="bg-muted/30 border-b border-border/40">
                         <TableHead className="w-12"></TableHead>
-                        <TableHead className="font-semibold">Invitation Link</TableHead>
-                        <TableHead className="font-semibold">Side</TableHead>
-                        <TableHead className="font-semibold">Created</TableHead>
-                        <TableHead className="font-semibold">Guests</TableHead>
-                        <TableHead className="font-semibold">RSVP Summary</TableHead>
-                        <TableHead className="font-semibold text-right">Actions</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">RSVP</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
