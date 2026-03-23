@@ -45,7 +45,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
           <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
-        <div className="grid gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           {giftCards.map((card) => {
             const logoSrc = card.logo_url || getCardLogo(card.card_name);
             return (

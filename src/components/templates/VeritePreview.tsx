@@ -78,7 +78,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   return (
     <div className="text-center">
       <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4">
+      <div className="flex justify-center gap-4 md:gap-8">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -87,8 +87,8 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary">{item.value}</div>
-              <div className="text-sm text-gray-600 mt-2">{item.label}</div>
+              <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
+              <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
             </div>
           </AnimatedSection>
         ))}
@@ -125,7 +125,7 @@ export const VeritePreview = () => {
           <p className="text-template-small">The Wedding Of</p>
           <div className="space-y-2">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
-            <p className="text-4xl">&</p>
+            <p className="text-4xl md:text-5xl">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
@@ -169,7 +169,7 @@ export const VeritePreview = () => {
       {/* Gallery */}
       <section className="py-16 px-4 bg-[#faf8f5]">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {staticGallery.map((image, index) => (
               <AnimatedSection key={image.id} delay={index * 100} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
@@ -206,7 +206,7 @@ export const VeritePreview = () => {
             </div>
           </AnimatedSection>
 
-          <div className="grid gap-8 mt-12">
+          <div className="grid md:grid-cols-2 gap-8 mt-12">
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-white p-8 rounded-lg shadow-soft space-y-6">
@@ -266,7 +266,7 @@ export const VeritePreview = () => {
             </svg>
           </div>
 
-          <div className="w-full h-[50vh] overflow-hidden">
+          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
             <img src={previewWedding4} alt="Wedding moment" className="w-full h-full object-cover" />
           </div>
 
@@ -286,7 +286,7 @@ export const VeritePreview = () => {
             <p className="text-center text-template-body mb-8 text-gray-600">
               For those who desire a wedding list is available
             </p>
-            <div className="grid gap-4">
+            <div className="grid gap-4 md:grid-cols-2">
               {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-[#faf8f5] p-6 rounded-lg text-center">

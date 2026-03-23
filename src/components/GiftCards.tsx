@@ -36,7 +36,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
   };
 
   return (
-    <div className="grid gap-4">
+    <div className="grid gap-4 md:grid-cols-2">
       {giftCards.map((card) => {
         const logoSrc = card.logo_url || getCardLogo(card.card_name);
         return (

@@ -238,7 +238,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 const NavCircle = ({ label, onClick }: { label: string; onClick: () => void }) => (
   <button
     onClick={onClick}
-    className="w-16 h-16 rounded-full flex items-center justify-center text-[10px] uppercase tracking-wider font-medium transition-all duration-300 hover:scale-105"
+    className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-[10px] md:text-xs uppercase tracking-wider font-medium transition-all duration-300 hover:scale-105"
     style={{
       background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 72%))",
       color: "hsl(0, 0%, 17%)",
@@ -367,9 +367,9 @@ export const OpulenceTemplate = ({
 
           {/* Couple names */}
           <div>
-            <h1 className="text-5xl leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>
+            <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>
               {wedding.groom_name}
-              <span className="block text-3xl my-2 italic opacity-50">&</span>
+              <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
               {wedding.bride_name}
             </h1>
           </div>
@@ -387,7 +387,7 @@ export const OpulenceTemplate = ({
               isPreview={isPreview}
               multiline
               tag="p"
-              className="text-base leading-relaxed opacity-70 whitespace-pre-line italic"
+              className="text-base md:text-lg leading-relaxed opacity-70 whitespace-pre-line italic"
             />
           </div>
 
@@ -406,7 +406,7 @@ export const OpulenceTemplate = ({
       {/* ═══ QUICK NAVIGATION CIRCLES ═══ */}
       <section className="py-12 px-4">
         <AnimatedSection animation="fade-in">
-          <div className="flex justify-center gap-4 flex-wrap max-w-md mx-auto">
+          <div className="flex justify-center gap-4 md:gap-6 flex-wrap max-w-md mx-auto">
             <NavCircle label="Date" onClick={() => scrollTo("opulence-details")} />
             <NavCircle label="Venue" onClick={() => scrollTo("opulence-venue")} />
             {hasGiftCards && <NavCircle label="Gifts" onClick={() => scrollTo("opulence-gifts")} />}
@@ -425,10 +425,10 @@ export const OpulenceTemplate = ({
         <AnimatedSection animation="fade-in">
           <div className="max-w-sm mx-auto text-center space-y-8">
             <div className="space-y-2">
-              <p className="text-6xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-6xl md:text-8xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 {weddingDate.getDate()}
               </p>
-              <p className="text-xl uppercase tracking-[0.3em] font-light">
+              <p className="text-xl md:text-2xl uppercase tracking-[0.3em] font-light">
                 {weddingDate.toLocaleDateString("en-US", { month: "long" })}
               </p>
               <p className="text-lg tracking-[0.2em] opacity-60">
@@ -465,7 +465,7 @@ export const OpulenceTemplate = ({
         <ConfettiCanvas />
         <AnimatedSection animation="fade-in">
           <div className="relative z-20 max-w-md mx-auto text-center space-y-10">
-            <h2 className="text-3xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-4xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               The Venue
             </h2>
 
@@ -539,11 +539,11 @@ export const OpulenceTemplate = ({
       {gallery && gallery.length > 0 && (
         <section className="py-16 px-4" style={{ background: "hsl(45, 29%, 96%)" }}>
           <AnimatedSection animation="fade-in">
-            <h2 className="text-3xl font-light text-center mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-4xl font-light text-center mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               Our Moments
             </h2>
           </AnimatedSection>
-          <div className="grid grid-cols-2 gap-3 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
             {gallery.map((image: any, index: number) => (
               <AnimatedSection key={image.id || index} delay={index * 80} animation="scale-in">
                 <div className="aspect-square overflow-hidden rounded-sm">
@@ -565,7 +565,7 @@ export const OpulenceTemplate = ({
         <section id="opulence-gifts" className="py-16 px-4">
           <div className="max-w-4xl mx-auto">
             <AnimatedSection animation="fade-in">
-              <h2 className="text-3xl font-light text-center mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-3xl md:text-4xl font-light text-center mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Wedding Gift
               </h2>
               <p className="text-center text-sm opacity-60 mb-10 tracking-wide">
