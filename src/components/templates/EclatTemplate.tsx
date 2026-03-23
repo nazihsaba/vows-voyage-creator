@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateShell from "@/components/templates/TemplateShell";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface EclatTemplateProps {
