@@ -391,11 +391,8 @@ const MyEvents = () => {
                                 </>
                               )}
 
-                              <div className="flex items-center justify-between border-t border-border/30 pt-3 mt-3">
-                                <span className="text-[10px] text-muted-foreground/60 font-medium uppercase tracking-wider">
-                                  {wedding.template_type?.replace(/-/g, ' ') || 'Classic'}
-                                </span>
-                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
+                              <div className="flex items-center justify-end gap-1 border-t border-border/40 pt-3 mt-3">
+                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/50 p-1">
                                   <Button
                                     variant="ghost"
                                     size="icon"
