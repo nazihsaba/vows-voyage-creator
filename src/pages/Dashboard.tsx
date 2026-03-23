@@ -175,48 +175,73 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="grid gap-6 sm:gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
               {weddingTemplates.map((template) => (
-                <Card
-                  key={template.id}
-                  className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden"
-                >
-                  <CardHeader className="p-0 flex-grow">
-                    <div className="aspect-video overflow-hidden relative">
-                      <img
-                        src={template.image}
-                        alt={template.name}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      />
-                      {/* Overlay gradient on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    </div>
-                    <div className="p-5">
-                      <CardTitle className="text-lg font-serif mb-1.5">{template.name}</CardTitle>
-                      <CardDescription className="text-sm text-muted-foreground leading-relaxed">
-                        {template.description}
-                      </CardDescription>
-
-                      {template.features && (
-                        <div className="mt-4 flex flex-wrap gap-1.5">
-                          {template.features.map((feature, idx) => {
-                            const FeatureIcon = feature.icon;
-                            return (
-                              <Badge
-                                key={idx}
-                                variant="secondary"
-                                className="text-[10px] flex items-center gap-1 py-0.5 px-2 bg-muted/60 hover:bg-muted transition-colors"
-                              >
-                                <FeatureIcon className="w-2.5 h-2.5" />
-                                {feature.text}
-                              </Badge>
-                            );
-                          })}
+                <div key={template.id} className="flex flex-col items-center">
+                  {/* Phone frame wrapper — desktop only */}
+                  {!isMobile ? (
+                    <PhoneFrame className="w-full max-w-[260px]">
+                      <div className="aspect-[9/16] overflow-hidden relative">
+                        <img
+                          src={template.image}
+                          alt={template.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                        <div className="absolute bottom-4 left-0 right-0 text-center text-white px-3">
+                          <p className="text-lg font-serif font-semibold">{template.name}</p>
+                          <p className="text-[11px] opacity-80 mt-0.5">{template.description}</p>
                         </div>
-                      )}
-                    </div>
-                  </CardHeader>
-                  <CardContent className="px-5 pb-5 pt-0 mt-auto space-y-2.5">
+                      </div>
+                    </PhoneFrame>
+                  ) : (
+                    <Card className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 flex flex-col rounded-2xl overflow-hidden w-full">
+                      <CardHeader className="p-0 flex-grow">
+                        <div className="aspect-video overflow-hidden relative">
+                          <img
+                            src={template.image}
+                            alt={template.name}
+                            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        </div>
+                        <div className="p-5">
+                          <CardTitle className="text-lg font-serif mb-1.5">{template.name}</CardTitle>
+                          <CardDescription className="text-sm text-muted-foreground leading-relaxed">
+                            {template.description}
+                          </CardDescription>
+                          {template.features && (
+                            <div className="mt-4 flex flex-wrap gap-1.5">
+                              {template.features.map((feature, idx) => {
+                                const FeatureIcon = feature.icon;
+                                return (
+                                  <Badge key={idx} variant="secondary" className="text-[10px] flex items-center gap-1 py-0.5 px-2 bg-muted/60 hover:bg-muted transition-colors">
+                                    <FeatureIcon className="w-2.5 h-2.5" />
+                                    {feature.text}
+                                  </Badge>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      </CardHeader>
+                    </Card>
+                  )}
+
+                  {/* Buttons below the phone / card */}
+                  <div className="mt-4 w-full max-w-[260px] space-y-2">
+                    {template.features && !isMobile && (
+                      <div className="flex flex-wrap justify-center gap-1.5 mb-3">
+                        {template.features.map((feature, idx) => {
+                          const FeatureIcon = feature.icon;
+                          return (
+                            <Badge key={idx} variant="secondary" className="text-[10px] flex items-center gap-1 py-0.5 px-2 bg-muted/60 hover:bg-muted transition-colors">
+                              <FeatureIcon className="w-2.5 h-2.5" />
+                              {feature.text}
+                            </Badge>
+                          );
+                        })}
+                      </div>
+                    )}
                     <Button
                       variant="outline"
                       className="w-full text-sm rounded-full border-border/60 hover:bg-muted/50 hover:border-primary/30 transition-all"
@@ -243,8 +268,8 @@ const Dashboard = () => {
                     >
                       Use This Template
                     </Button>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
