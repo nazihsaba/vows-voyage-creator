@@ -89,7 +89,7 @@ export const AuraPreview = () => {
   ];
 
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]">
       <div>
         {/* ===== INTRO SECTION ===== */}
         <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">

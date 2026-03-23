@@ -110,7 +110,7 @@ export const VeritePreview = () => {
   };
 
   return (
-    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden">
+    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
       {/* Hero */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"

@@ -95,7 +95,7 @@ export const VeriteTemplate = ({
   };
 
   return (
-    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden">
+    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
