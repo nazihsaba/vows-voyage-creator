@@ -96,6 +96,7 @@ export const GracePreview = () => {
   };
 
   return (
+    <TemplateShell>
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
