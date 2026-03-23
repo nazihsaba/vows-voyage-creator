@@ -275,7 +275,7 @@ export const TemplateRenderer = ({
               >
                 Location & Time
               </h2>
-              <div className="grid md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-2 gap-3">
                 {ceremony && (
                   <EventLocation
                     type="ceremony"
