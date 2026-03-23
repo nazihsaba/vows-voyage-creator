@@ -336,7 +336,7 @@ const WeddingInvite = () => {
 
   const content = (
     <div className="w-full min-h-screen bg-muted/30 flex justify-center">
-      <div className="w-full max-w-[430px] shadow-elegant relative">
+      <div className="w-full max-w-[480px] shadow-elegant relative">
         {wedding?.template_type?.includes("bachelor") && (
           <div className="fixed top-4 right-4 z-50">
             <Button
