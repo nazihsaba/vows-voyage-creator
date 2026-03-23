@@ -111,6 +111,7 @@ export const VeritePreview = () => {
   };
 
   return (
+    <TemplateShell>
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero */}
       <section
