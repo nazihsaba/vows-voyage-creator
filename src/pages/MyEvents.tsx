@@ -304,15 +304,23 @@ const MyEvents = () => {
                       {events.map((wedding) => (
                         <Card
                           key={wedding.id}
-                          className="group border-0 bg-white/80 backdrop-blur-sm shadow-md hover:shadow-xl transition-all duration-300 rounded-2xl overflow-hidden"
+                          className="group relative border-0 bg-white/90 backdrop-blur-sm shadow-md hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 rounded-2xl overflow-hidden"
                         >
-                          <CardHeader className="p-5 pb-4">
+                          {/* Top gradient accent */}
+                          <div className={`h-1.5 w-full ${
+                            wedding.status === "published" 
+                              ? "bg-gradient-to-r from-emerald-400 via-primary to-emerald-400" 
+                              : "bg-gradient-to-r from-amber-300 via-orange-400 to-amber-300"
+                          }`} />
+                          
+                          <CardHeader className="p-5 pb-3">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <CardTitle className="text-lg font-serif truncate">
+                                <CardTitle className="text-lg font-serif truncate leading-tight">
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
-                                <CardDescription className="mt-1 text-sm">
+                                <CardDescription className="mt-1.5 text-sm flex items-center gap-1.5">
+                                  <Calendar className="w-3.5 h-3.5 text-primary/60" />
                                   {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
@@ -321,14 +329,14 @@ const MyEvents = () => {
                                 </CardDescription>
                               </div>
                               <span
-                                className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
+                                className={`shrink-0 inline-flex items-center gap-1.5 px-3 py-1.5 text-[11px] font-semibold rounded-full tracking-wide uppercase transition-colors ${
                                   wedding.status === "published" 
-                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200" 
-                                    : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                                    ? "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200/80" 
+                                    : "bg-amber-50 text-amber-700 ring-1 ring-amber-200/80"
                                 }`}
                               >
                                 <span
-                                  className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
+                                  className={`w-2 h-2 rounded-full animate-pulse ${wedding.status === "published" ? "bg-emerald-500" : "bg-amber-500"}`}
                                 ></span>
                                 {wedding.status === "published" ? "Live" : "Draft"}
                               </span>
@@ -337,9 +345,9 @@ const MyEvents = () => {
                           <CardContent className="px-5 pb-5 pt-0">
                             <div className="space-y-3">
                               {wedding.status === "draft" && (
-                                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-sm text-amber-800">
-                                  <p className="font-medium text-xs">Not published yet</p>
-                                  <p className="text-[11px] mt-0.5 text-amber-600">Edit and publish to generate invitation links</p>
+                                <div className="bg-gradient-to-r from-amber-50/80 to-orange-50/80 border border-amber-200/50 rounded-xl p-3.5">
+                                  <p className="font-semibold text-xs text-amber-800">⏳ Not published yet</p>
+                                  <p className="text-[11px] mt-1 text-amber-600/90">Edit and publish to generate invitation links</p>
                                 </div>
                               )}
 
@@ -391,8 +399,11 @@ const MyEvents = () => {
                                 </>
                               )}
 
-                              <div className="flex items-center justify-end gap-1 border-t border-border/40 pt-3 mt-3">
-                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/50 p-1">
+                              <div className="flex items-center justify-between border-t border-border/30 pt-3 mt-3">
+                                <span className="text-[10px] text-muted-foreground/60 font-medium uppercase tracking-wider">
+                                  {wedding.template_type?.replace(/-/g, ' ') || 'Classic'}
+                                </span>
+                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
                                   <Button
                                     variant="ghost"
                                     size="icon"

@@ -218,25 +218,30 @@ const ManageLinks = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-soft">
-      <header className="bg-white shadow-soft">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+    <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
           <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">
-                Manage Invitation Links
-              </h1>
-              <p className="text-muted-foreground mt-1">
-                {wedding.bride_name} & {wedding.groom_name}
-              </p>
-            </div>
             <div className="flex items-center gap-3">
-              <Button onClick={() => setGenerateLinkOpen(true)}>
-                Generate New Link
+              <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+                <Users className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
+                  Manage Links
+                </h1>
+                <p className="text-xs text-muted-foreground hidden sm:block">
+                  {wedding.bride_name} & {wedding.groom_name}
+                </p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-3">
+              <Button onClick={() => setGenerateLinkOpen(true)} className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm">
+                Generate Link
               </Button>
-              <Button variant="outline" onClick={() => navigate("/dashboard/my-events")}>
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back
+              <Button variant="outline" onClick={() => navigate("/dashboard/my-events")} className="rounded-full border-border/60 hover:bg-muted/50">
+                <ArrowLeft className="w-4 h-4 sm:mr-2" />
+                <span className="hidden sm:inline">Back</span>
               </Button>
             </div>
           </div>
@@ -245,21 +250,24 @@ const ManageLinks = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {links.length === 0 ? (
-          <Card className="shadow-elegant">
-            <CardContent className="py-12 text-center">
-              <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-4">No invitation links created yet</p>
-              <Button onClick={() => setGenerateLinkOpen(true)}>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl">
+            <CardContent className="py-16 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 mb-5">
+                <Users className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-serif font-semibold mb-2">No Links Yet</h3>
+              <p className="text-muted-foreground text-sm mb-6">Generate your first invitation link to get started</p>
+              <Button onClick={() => setGenerateLinkOpen(true)} className="rounded-full px-6 shadow-sm">
                 Generate Your First Link
               </Button>
             </CardContent>
           </Card>
         ) : (
-          <Card className="shadow-elegant">
-            <CardHeader>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl overflow-hidden">
+            <CardHeader className="pb-4">
               <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                  <h2 className="text-xl font-serif font-semibold">All Invitation Links & Guests</h2>
+                  <h2 className="text-xl font-serif font-semibold text-foreground">Invitation Links & Guests</h2>
                   <p className="text-sm text-muted-foreground mt-1">
                     {filteredLinks.length} {filteredLinks.length === 1 ? 'link' : 'links'} • {Object.values(invitees).flat().length} total guests
                   </p>
@@ -295,18 +303,18 @@ const ManageLinks = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="border rounded-lg overflow-hidden bg-white shadow-inner">
+              <div className="rounded-xl overflow-hidden border border-border/30">
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-accent/30">
+                      <TableRow className="bg-muted/30 border-b border-border/40">
                         <TableHead className="w-12"></TableHead>
-                        <TableHead className="font-semibold">Invitation Link</TableHead>
-                        <TableHead className="font-semibold">Side</TableHead>
-                        <TableHead className="font-semibold">Created</TableHead>
-                        <TableHead className="font-semibold">Guests</TableHead>
-                        <TableHead className="font-semibold">RSVP Summary</TableHead>
-                        <TableHead className="font-semibold text-right">Actions</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">RSVP</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -326,7 +334,7 @@ const ManageLinks = () => {
                             <React.Fragment key={link.id}>
                               {/* Main Link Row */}
                               <TableRow 
-                                className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} hover:bg-accent/10 transition-colors cursor-pointer`}
+                                className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/20`}
                                 onClick={() => toggleLink(link.id)}
                               >
                                 <TableCell>
@@ -391,39 +399,41 @@ const ManageLinks = () => {
                                     className="flex gap-1 justify-end"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                      title="Copy Link"
-                                      className="h-8 w-8"
-                                    >
-                                      <Copy className="w-4 h-4" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => {
-                                        const sanitizedLinkName = link.link_name
-                                          .toLowerCase()
-                                          .replace(/[^a-z0-9]+/g, '-')
-                                          .replace(/^-+|-+$/g, '');
-                                        window.open(`/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`, '_blank');
-                                      }}
-                                      title="Open Link"
-                                      className="h-8 w-8"
-                                    >
-                                      <ExternalLink className="w-4 h-4" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => setDeleteId(link.id)}
-                                      title="Delete Link"
-                                      className="text-destructive hover:text-destructive h-8 w-8"
-                                    >
-                                      <Trash2 className="w-4 h-4" />
-                                    </Button>
+                                    <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        title="Copy Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <Copy className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => {
+                                          const sanitizedLinkName = link.link_name
+                                            .toLowerCase()
+                                            .replace(/[^a-z0-9]+/g, '-')
+                                            .replace(/^-+|-+$/g, '');
+                                          window.open(`/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`, '_blank');
+                                        }}
+                                        title="Open Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => setDeleteId(link.id)}
+                                        title="Delete Link"
+                                        className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </Button>
+                                    </div>
                                   </div>
                                 </TableCell>
                               </TableRow>
@@ -432,7 +442,7 @@ const ManageLinks = () => {
                               {isExpanded && linkInvitees.length > 0 && linkInvitees.map((invitee, inviteeIndex) => (
                                 <TableRow 
                                   key={invitee.id}
-                                  className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} border-l-4 border-l-primary/20`}
+                                  className="bg-primary/[0.02] border-l-4 border-l-primary/20 hover:bg-primary/5 transition-colors"
                                 >
                                   <TableCell></TableCell>
                                   <TableCell colSpan={3} className="pl-8 font-medium">
