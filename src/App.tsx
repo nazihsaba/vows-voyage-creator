@@ -46,7 +46,7 @@ const App = () => (
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
-          <Route path="/preview/modern-romance" element={<VeritePreview />} />
+          <Route path="/preview/modern-romance" element={<div className="min-h-screen bg-muted/30 flex justify-center"><div className="w-full max-w-[480px] shadow-elegant"><VeritePreview /></div></div>} />
           
           <Route path="*" element={<NotFound />} />
         </Routes>
