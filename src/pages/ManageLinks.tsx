@@ -250,11 +250,14 @@ const ManageLinks = () => {
 
       <main className="max-w-7xl mx-auto px-4 py-8">
         {links.length === 0 ? (
-          <Card className="shadow-elegant">
-            <CardContent className="py-12 text-center">
-              <Users className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground mb-4">No invitation links created yet</p>
-              <Button onClick={() => setGenerateLinkOpen(true)}>
+          <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl">
+            <CardContent className="py-16 text-center">
+              <div className="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-gradient-to-br from-primary/10 to-secondary/10 mb-5">
+                <Users className="w-8 h-8 text-primary" />
+              </div>
+              <h3 className="text-lg font-serif font-semibold mb-2">No Links Yet</h3>
+              <p className="text-muted-foreground text-sm mb-6">Generate your first invitation link to get started</p>
+              <Button onClick={() => setGenerateLinkOpen(true)} className="rounded-full px-6 shadow-sm">
                 Generate Your First Link
               </Button>
             </CardContent>
