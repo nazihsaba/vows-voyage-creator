@@ -36,6 +36,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState<string | null>(null);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     checkUser();
