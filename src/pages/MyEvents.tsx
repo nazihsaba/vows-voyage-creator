@@ -325,7 +325,7 @@ const MyEvents = () => {
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
                                 <CardTitle className="text-lg font-serif truncate">
-                                  {wedding.bride_name} && {wedding.groom_name}
+                                  {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm">
                                   {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
