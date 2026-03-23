@@ -114,6 +114,7 @@ export const EclatTemplate = ({
   );
 
   return (
+    <TemplateShell>
     <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden">
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
