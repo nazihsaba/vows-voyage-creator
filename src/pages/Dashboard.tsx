@@ -301,13 +301,11 @@ const Dashboard = () => {
               <X className="w-5 h-5" />
             </Button>
           </DialogHeader>
-          <div className="w-full h-full overflow-y-auto bg-muted/30 flex justify-center">
-            <div className="w-full max-w-[480px] shadow-elegant">
-              {showPreview === "template2" && <VeritePreview />}
-              {showPreview === "template6" && <GracePreview />}
-              {showPreview === "classic-romance" && <EclatPreview />}
-              {showPreview === "bible-verse-tabs" && <AuraPreview />}
-            </div>
+          <div className="w-full h-full overflow-y-auto">
+            {showPreview === "template2" && <VeritePreview />}
+            {showPreview === "template6" && <GracePreview />}
+            {showPreview === "classic-romance" && <EclatPreview />}
+            {showPreview === "bible-verse-tabs" && <AuraPreview />}
           </div>
         </DialogContent>
       </Dialog>
