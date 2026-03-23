@@ -102,6 +102,7 @@ export const GraceTemplate = ({
   };
 
   return (
+    <TemplateShell>
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden">
       {wedding.audio_url && (
         <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
