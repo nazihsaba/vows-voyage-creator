@@ -302,7 +302,7 @@ const Dashboard = () => {
             </Button>
           </DialogHeader>
           <div className="w-full h-full overflow-y-auto bg-muted/30 flex justify-center">
-            <div className="w-full max-w-[480px] shadow-elegant">
+            <div className="w-full max-w-[430px] shadow-elegant">
               {showPreview === "template2" && <VeritePreview />}
               {showPreview === "template6" && <GracePreview />}
               {showPreview === "classic-romance" && <EclatPreview />}
