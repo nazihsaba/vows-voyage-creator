@@ -172,7 +172,7 @@ export const AuraTemplate = ({
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
+              <div className="flex flex-col items-center justify-center gap-6">
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="groom-parents"
@@ -333,7 +333,7 @@ export const AuraTemplate = ({
             <AnimatedSection animation="fade-in">
               <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
             </AnimatedSection>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+            <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
               {gallery.map((image: any, index: number) => (
                 <AnimatedSection key={image.id || index} delay={index * 80} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
@@ -373,7 +373,7 @@ export const AuraTemplate = ({
                 <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
               </svg>
             </div>
-            <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <div className="w-full h-[50vh] overflow-hidden">
               <img
                 src={
                   gallery && gallery.length > 0

@@ -42,7 +42,7 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
       <h2 className={`text-template-subtitle mb-6 ${isDark ? "text-white" : ""}`}>
         Counting Down To Our Special Day
       </h2>
-      <div className="flex justify-center gap-4 md:gap-8">
+      <div className="flex justify-center gap-4">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -51,10 +51,10 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
-              <div className={`text-3xl md:text-5xl font-bold ${isDark ? "text-white" : "text-primary"}`}>
+              <div className={`text-3xl font-bold ${isDark ? "text-white" : "text-primary"}`}>
                 {item.value}
               </div>
-              <div className={`text-sm md:text-base mt-2 ${isDark ? "text-white/70" : "text-muted-foreground"}`}>
+              <div className={`text-sm mt-2 ${isDark ? "text-white/70" : "text-muted-foreground"}`}>
                 {item.label}
               </div>
             </div>
