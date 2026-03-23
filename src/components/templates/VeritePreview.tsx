@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import TemplateShell from "@/components/templates/TemplateShell";
 import previewWedding1 from "@/assets/verite-preview-1.jpg";
 import previewWedding2 from "@/assets/verite-preview-2.jpg";
 import previewWedding3 from "@/assets/verite-preview-3.jpg";
@@ -111,7 +110,6 @@ export const VeritePreview = () => {
   };
 
   return (
-    <TemplateShell>
     <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero */}
       <section
@@ -320,7 +318,6 @@ export const VeritePreview = () => {
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
-    </TemplateShell>
   );
 };
 

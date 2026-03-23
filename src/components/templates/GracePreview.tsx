@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import TemplateShell from "@/components/templates/TemplateShell";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
@@ -96,7 +95,6 @@ export const GracePreview = () => {
   };
 
   return (
-    <TemplateShell>
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden">
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
@@ -268,7 +266,6 @@ export const GracePreview = () => {
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
-    </TemplateShell>
   );
 };
 
