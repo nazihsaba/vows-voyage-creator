@@ -23,6 +23,7 @@ export default {
         'cormorant': ['Cormorant Garamond', 'serif'],
         'great-vibes': ['Great Vibes', 'cursive'],
         'cinzel': ['Cinzel', 'serif'],
+        'montserrat': ['Montserrat', 'sans-serif'],
       },
       colors: {
         border: "hsl(var(--border))",
