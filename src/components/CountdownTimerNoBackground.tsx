@@ -40,16 +40,16 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
   }, [targetDate]);
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
-    <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[100px] px-2">
-      <span className="text-2xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-1 md:mb-2">{value}</span>
-      <span className="text-[9px] md:text-sm uppercase tracking-widest text-white drop-shadow-md">{label}</span>
+    <div className="flex flex-col items-center justify-center min-w-[60px] px-2">
+      <span className="text-2xl font-serif font-bold text-white drop-shadow-lg mb-1">{value}</span>
+      <span className="text-[9px] uppercase tracking-widest text-white drop-shadow-md">{label}</span>
     </div>
   );
 
   return (
-    <div className="flex flex-col items-center justify-center py-8 md:py-12">
+    <div className="flex flex-col items-center justify-center py-8">
       <h3 className="text-template-subtitle mb-6 text-white">Counting down to our big day</h3>
-      <div className="flex flex-row items-center justify-center gap-4 md:gap-8">
+      <div className="flex flex-row items-center justify-center gap-4">
         <TimeUnit value={timeRemaining.days} label="Days" />
         <TimeUnit value={timeRemaining.hours} label="Hours" />
         <TimeUnit value={timeRemaining.minutes} label="Minutes" />
