@@ -63,7 +63,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   return (
     <div className="text-center">
       <h2 className="text-template-subtitle mb-6 text-white">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4 md:gap-8">
+      <div className="flex justify-center gap-4">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -72,8 +72,8 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
-              <div className="text-3xl md:text-5xl font-bold text-white">{item.value}</div>
-              <div className="text-sm md:text-base text-white/70 mt-2">{item.label}</div>
+              <div className="text-3xl font-bold text-white">{item.value}</div>
+              <div className="text-sm text-white/70 mt-2">{item.label}</div>
             </div>
           </AnimatedSection>
         ))}
@@ -106,7 +106,7 @@ export const GracePreview = () => {
           <p className="text-template-small">The Wedding Of</p>
           <div className="space-y-2">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
-            <p className="text-4xl md:text-5xl">&</p>
+            <p className="text-4xl">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
@@ -166,7 +166,7 @@ export const GracePreview = () => {
             </div>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
+          <div className="grid gap-8 mt-12">
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
@@ -220,7 +220,7 @@ export const GracePreview = () => {
       {/* Gallery Image - Full Width */}
       <AnimatedSection animation="fade-in">
         <section className="relative w-full">
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img src={previewWedding4} alt="Wedding moment" className="w-full h-full object-cover" />
           </div>
         </section>
@@ -234,7 +234,7 @@ export const GracePreview = () => {
             <p className="text-center text-template-body mb-8 text-gray-600">
               For those who desire a wedding list is available
             </p>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-white p-6 rounded-lg text-center">

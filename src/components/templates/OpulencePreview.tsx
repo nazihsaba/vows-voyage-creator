@@ -26,10 +26,10 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-3xl md:text-4xl font-light mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+      <h2 className="text-3xl font-light mb-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
         Counting Down
       </h2>
-      <div className="flex justify-center gap-6 md:gap-10">
+      <div className="flex justify-center gap-6">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -37,7 +37,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
           { value: timeRemaining.seconds, label: "Sec" },
         ].map((item) => (
           <div key={item.label} className="text-center">
-            <p className="text-3xl md:text-4xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-3xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
               {String(item.value).padStart(2, "0")}
             </p>
             <p className="text-[10px] uppercase tracking-[0.2em] opacity-50 mt-1">{item.label}</p>
@@ -142,7 +142,7 @@ const CurtainDrapes = ({ opened }: { opened: boolean }) => (
 /* ── Nav Circle ── */
 const NavCircle = ({ label }: { label: string }) => (
   <div
-    className="w-16 h-16 md:w-20 md:h-20 rounded-full flex items-center justify-center text-[10px] md:text-xs uppercase tracking-wider font-medium"
+    className="w-16 h-16 rounded-full flex items-center justify-center text-[10px] uppercase tracking-wider font-medium"
     style={{
       background: "linear-gradient(135deg, hsl(36, 57%, 82%), hsl(36, 57%, 72%))",
       color: "hsl(0, 0%, 17%)",
@@ -203,15 +203,15 @@ const OpulencePreview = () => {
           </div>
 
           <div>
-            <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontWeight: 300 }}>
+            <h1 className="text-5xl leading-tight" style={{ fontWeight: 300 }}>
               Alexander
-              <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
+              <span className="block text-3xl my-2 italic opacity-50">&</span>
               Victoria
             </h1>
           </div>
 
           <div>
-            <p className="text-base md:text-lg leading-relaxed opacity-70 italic whitespace-pre-line">
+            <p className="text-base leading-relaxed opacity-70 italic whitespace-pre-line">
               {"Request the honour of your presence\nat the celebration of their marriage"}
             </p>
           </div>
@@ -229,7 +229,7 @@ const OpulencePreview = () => {
       {/* ═══ NAV CIRCLES ═══ */}
       <section className="py-12 px-4">
         <AnimatedSection animation="fade-in">
-          <div className="flex justify-center gap-4 md:gap-6 flex-wrap max-w-md mx-auto">
+          <div className="flex justify-center gap-4 flex-wrap max-w-md mx-auto">
             <NavCircle label="Date" />
             <NavCircle label="Venue" />
             <NavCircle label="Gifts" />
@@ -245,8 +245,8 @@ const OpulencePreview = () => {
         <AnimatedSection animation="fade-in">
           <div className="max-w-sm mx-auto text-center space-y-8">
             <div className="space-y-2">
-              <p className="text-6xl md:text-8xl font-light">15</p>
-              <p className="text-xl md:text-2xl uppercase tracking-[0.3em] font-light">September</p>
+              <p className="text-6xl font-light">15</p>
+              <p className="text-xl uppercase tracking-[0.3em] font-light">September</p>
               <p className="text-lg tracking-[0.2em] opacity-60">2025</p>
             </div>
             <div className="w-12 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
@@ -271,7 +271,7 @@ const OpulencePreview = () => {
       <section className="relative py-20 px-6">
         <AnimatedSection animation="fade-in">
           <div className="max-w-md mx-auto text-center space-y-10">
-            <h2 className="text-3xl md:text-4xl font-light">The Venue</h2>
+            <h2 className="text-3xl font-light">The Venue</h2>
 
             <div className="mx-auto w-32 h-32 opacity-30">
               <svg viewBox="0 0 120 100" fill="none" stroke="currentColor" strokeWidth="0.8">

@@ -42,7 +42,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   return (
     <div className="text-center">
       <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4 md:gap-8">
+      <div className="flex justify-center gap-4">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -51,8 +51,8 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="fade-in">
             <div className="text-center">
-              <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-              <div className="text-sm md:text-base text-muted-foreground mt-2">{item.label}</div>
+              <div className="text-3xl font-bold text-primary">{item.value}</div>
+              <div className="text-sm text-muted-foreground mt-2">{item.label}</div>
             </div>
           </AnimatedSection>
         ))}
@@ -112,7 +112,7 @@ export const AuraPreview = () => {
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
+              <div className="flex flex-col items-center justify-center gap-6">
                 <div className="text-center space-y-1">
                   <p className="text-sm font-medium tracking-wide">Mr. & Mrs.</p>
                   <p className="text-template-subtitle">Vale</p>
@@ -201,7 +201,7 @@ export const AuraPreview = () => {
           <AnimatedSection animation="fade-in">
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
+          <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
             {[eclatWedding1, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7].map(
               (src, index) => (
                 <AnimatedSection key={index} delay={index * 80} animation="scale-in">
@@ -227,7 +227,7 @@ export const AuraPreview = () => {
                 For those who desire a wedding list is available
               </p>
             </AnimatedSection>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               {[
                 { id: "1", card_name: "OMT", card_number: "123456789" },
                 { id: "2", card_name: "Whish", card_number: "123456789" },
@@ -251,7 +251,7 @@ export const AuraPreview = () => {
                 <path d="M0,0V46.29c47.79,22,103.59,29,158,17.39C230.41,50,284,8,339.09,0c54.37-8,104.26,21.7,158.17,36.4C620,62,680,42,740,29c60-13,120-8,180,3,60,11,120,25,180,20V0Z" />
               </svg>
             </div>
-            <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+            <div className="w-full h-[50vh] overflow-hidden">
               <img src={eclatWedding2} alt="Wedding moment" className="w-full h-full object-cover" />
             </div>
             <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">

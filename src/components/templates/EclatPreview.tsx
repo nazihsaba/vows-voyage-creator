@@ -84,7 +84,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   return (
     <div className="text-center">
       <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4 md:gap-8">
+      <div className="flex justify-center gap-4">
         {[
           { value: timeRemaining.days, label: "Days" },
           { value: timeRemaining.hours, label: "Hours" },
@@ -93,8 +93,8 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
-              <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-              <div className="text-sm md:text-base text-gray-600 mt-2">{item.label}</div>
+              <div className="text-3xl font-bold text-primary">{item.value}</div>
+              <div className="text-sm text-gray-600 mt-2">{item.label}</div>
             </div>
           </AnimatedSection>
         ))}
@@ -133,7 +133,7 @@ export const EclatPreview = () => {
 
           <div className="space-y-2">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
-            <p className="text-4xl md:text-5xl">&</p>
+            <p className="text-4xl">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
 
@@ -187,7 +187,7 @@ export const EclatPreview = () => {
             </svg>
           </div>
 
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img src={staticGallery[0].image_url} alt="Gallery 1" className="w-full h-full object-cover" />
           </div>
 
@@ -215,7 +215,7 @@ export const EclatPreview = () => {
             </svg>
           </div>
 
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img src={staticGallery[1].image_url} alt="Gallery 2" className="w-full h-full object-cover" />
           </div>
 
@@ -241,7 +241,7 @@ export const EclatPreview = () => {
             </div>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
+          <div className="grid gap-8 mt-12">
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
@@ -303,7 +303,7 @@ export const EclatPreview = () => {
             </svg>
           </div>
 
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img src={staticGallery[2].image_url} alt="Gallery 3" className="w-full h-full object-cover" />
           </div>
 
@@ -323,7 +323,7 @@ export const EclatPreview = () => {
             <p className="text-center text-template-body mb-8 text-gray-600">
               Your presence is our greatest gift — a registry is available if you wish
             </p>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid gap-4">
               {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
@@ -346,7 +346,7 @@ export const EclatPreview = () => {
             </svg>
           </div>
 
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img src={staticGallery[3].image_url} alt="Gallery 4" className="w-full h-full object-cover" />
           </div>
 

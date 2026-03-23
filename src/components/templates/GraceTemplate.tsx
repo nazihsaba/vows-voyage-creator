@@ -137,7 +137,7 @@ export const GraceTemplate = ({
               tag="h1"
               className="text-template-title"
             />
-            <p className="text-4xl md:text-5xl">&</p>
+            <p className="text-4xl">&</p>
             <EditableField
               fieldId="bride-name"
               text={getFieldValue("bride-name", wedding.bride_name)}
@@ -255,7 +255,7 @@ export const GraceTemplate = ({
             </div>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-2 gap-8 mt-12">
+          <div className="grid gap-8 mt-12">
             {ceremony && (
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
@@ -313,7 +313,7 @@ export const GraceTemplate = ({
       {/* Gallery Image - Full Width with Wave SVGs */}
       <AnimatedSection animation="fade-in">
         <section className="relative w-full">
-          <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
+          <div className="w-full h-[50vh] overflow-hidden">
             <img
               src={
                 gallery.length > 0
