@@ -223,7 +223,7 @@ export const VeriteTemplate = ({
       {gallery.length > 0 && (
         <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {gallery.slice(0, 8).map((image: any, index: number) => (
                 <AnimatedSection key={image.id || index} delay={index * 100} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
