@@ -550,7 +550,7 @@ const MyEvents = () => {
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Event</span>
                       <span className="font-medium text-right max-w-[180px] truncate">
-                        {getPublishingWedding()?.bride_name} & {getPublishingWedding()?.groom_name}
+                        {getPublishingWedding()?.bride_name} && {getPublishingWedding()?.groom_name}
                       </span>
                     </div>
                   )}
