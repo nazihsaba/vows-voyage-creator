@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateShell from "@/components/templates/TemplateShell";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 
@@ -101,6 +102,7 @@ export const GraceTemplate = ({
   };
 
   return (
+    <TemplateShell>
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden">
       {wedding.audio_url && (
         <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
@@ -381,5 +383,6 @@ export const GraceTemplate = ({
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };

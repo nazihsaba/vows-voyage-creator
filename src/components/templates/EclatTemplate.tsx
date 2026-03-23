@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateShell from "@/components/templates/TemplateShell";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface EclatTemplateProps {
@@ -113,6 +114,7 @@ export const EclatTemplate = ({
   );
 
   return (
+    <TemplateShell>
     <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden">
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
@@ -387,6 +389,7 @@ export const EclatTemplate = ({
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };
 

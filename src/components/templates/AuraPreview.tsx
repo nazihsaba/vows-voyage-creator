@@ -3,6 +3,7 @@ import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react"
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateShell from "@/components/templates/TemplateShell";
 import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
 import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
@@ -89,6 +90,7 @@ export const AuraPreview = () => {
   ];
 
   return (
+    <TemplateShell>
     <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
       <div>
         {/* ===== INTRO SECTION ===== */}
@@ -269,5 +271,6 @@ export const AuraPreview = () => {
         <TemplatePreviewFooter />
       </div>
     </div>
+    </TemplateShell>
   );
 };

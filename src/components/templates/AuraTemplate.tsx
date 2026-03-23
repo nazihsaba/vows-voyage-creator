@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateShell from "@/components/templates/TemplateShell";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface AuraTemplateProps {
@@ -120,6 +121,7 @@ export const AuraTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
+    <TemplateShell>
     <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
@@ -414,5 +416,6 @@ export const AuraTemplate = ({
         <TemplatePreviewFooter />
       </div>
     </div>
+    </TemplateShell>
   );
 };
