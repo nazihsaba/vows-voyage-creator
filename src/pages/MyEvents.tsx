@@ -3,7 +3,20 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Calendar, ArrowLeft, Edit, Trash2, ExternalLink, Link2, List, Eye, Loader2, CreditCard, Shield, AlertCircle } from "lucide-react";
+import {
+  Calendar,
+  ArrowLeft,
+  Edit,
+  Trash2,
+  ExternalLink,
+  Link2,
+  List,
+  Eye,
+  Loader2,
+  CreditCard,
+  Shield,
+  AlertCircle,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -84,18 +97,18 @@ const MyEvents = () => {
 
   // Handle payment callback from URL params
   useEffect(() => {
-    const paymentStatus = searchParams.get('payment');
-    const weddingId = searchParams.get('weddingId');
-    
+    const paymentStatus = searchParams.get("payment");
+    const weddingId = searchParams.get("weddingId");
+
     if (paymentStatus && weddingId) {
-      if (paymentStatus === 'success') {
+      if (paymentStatus === "success") {
         toast({
           title: "Payment Successful!",
           description: "Your event has been published and is now live.",
         });
         // Refresh weddings to show updated status
         fetchWeddings();
-      } else if (paymentStatus === 'failed') {
+      } else if (paymentStatus === "failed") {
         toast({
           title: "Payment Failed",
           description: "Your payment could not be processed. Please try again.",
@@ -103,7 +116,7 @@ const MyEvents = () => {
         });
       }
       // Clear URL params
-      navigate('/dashboard/my-events', { replace: true });
+      navigate("/dashboard/my-events", { replace: true });
     }
   }, [searchParams]);
 
@@ -179,36 +192,38 @@ const MyEvents = () => {
     setProcessingPayment(true);
     setPaymentUrl(null);
     setPaymentError(null);
-    
+
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) {
         throw new Error("Not authenticated");
       }
 
-      const wedding = weddings.find(w => w.id === publishingWeddingId);
-      
-      const response = await supabase.functions.invoke('whish-pay-collect', {
+      const wedding = weddings.find((w) => w.id === publishingWeddingId);
+
+      const response = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId: publishingWeddingId,
           amount: PUBLISH_FEE_USD,
-          currency: 'USD',
+          currency: "USD",
           invoice: `Event publishing: ${wedding?.bride_name} & ${wedding?.groom_name}`,
         },
       });
 
       if (response.error) {
-        throw new Error(response.error.message || 'Failed to create payment link');
+        throw new Error(response.error.message || "Failed to create payment link");
       }
 
       const { collectUrl } = response.data;
-      
+
       if (collectUrl) {
         // Store URL and show in dialog - user will click to open
         setPaymentUrl(collectUrl);
         setProcessingPayment(false);
       } else {
-        throw new Error('No payment URL received');
+        throw new Error("No payment URL received");
       }
     } catch (error) {
       console.error("Error initiating payment:", error);
@@ -225,7 +240,7 @@ const MyEvents = () => {
   };
 
   const getPublishingWedding = () => {
-    return weddings.find(w => w.id === publishingWeddingId);
+    return weddings.find((w) => w.id === publishingWeddingId);
   };
 
   return (
@@ -242,14 +257,14 @@ const MyEvents = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            <Button 
-              onClick={() => navigate("/dashboard")} 
+            <Button
+              onClick={() => navigate("/dashboard")}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
             >
               Create Event
             </Button>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => navigate("/dashboard")}
               className="rounded-full border-border/60 hover:bg-muted/50"
             >
@@ -309,7 +324,7 @@ const MyEvents = () => {
                           <CardHeader className="p-5 pb-4">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <CardTitle className="text-lg font-serif truncate">
+                                <CardTitle className="text-lg truncate">
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm">
@@ -322,8 +337,8 @@ const MyEvents = () => {
                               </div>
                               <span
                                 className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
-                                  wedding.status === "published" 
-                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200" 
+                                  wedding.status === "published"
+                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200"
                                     : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
                                 }`}
                               >
@@ -339,13 +354,15 @@ const MyEvents = () => {
                               {wedding.status === "draft" && (
                                 <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-sm text-amber-800">
                                   <p className="font-medium text-xs">Not published yet</p>
-                                  <p className="text-[11px] mt-0.5 text-amber-600">Edit and publish to generate invitation links</p>
+                                  <p className="text-[11px] mt-0.5 text-amber-600">
+                                    Edit and publish to generate invitation links
+                                  </p>
                                 </div>
                               )}
 
                               {wedding.status === "draft" && (
-                                <Button 
-                                  className="w-full rounded-full shadow-sm hover:shadow-md transition-all" 
+                                <Button
+                                  className="w-full rounded-full shadow-sm hover:shadow-md transition-all"
                                   onClick={() => handlePublishClick(wedding.id)}
                                 >
                                   <CreditCard className="w-4 h-4 mr-2" />
@@ -484,12 +501,15 @@ const MyEvents = () => {
       )}
 
       {/* Payment Confirmation Dialog */}
-      <Dialog open={paymentDialogOpen} onOpenChange={(open) => {
-        if (!processingPayment) {
-          if (!open) handleClosePaymentDialog();
-          else setPaymentDialogOpen(open);
-        }
-      }}>
+      <Dialog
+        open={paymentDialogOpen}
+        onOpenChange={(open) => {
+          if (!processingPayment) {
+            if (!open) handleClosePaymentDialog();
+            else setPaymentDialogOpen(open);
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
@@ -497,10 +517,9 @@ const MyEvents = () => {
               {paymentUrl ? "Complete Your Payment" : "Pay to Publish Event"}
             </DialogTitle>
             <DialogDescription className="pt-2">
-              {paymentUrl 
+              {paymentUrl
                 ? "Click the button below to open Whish and complete your payment."
-                : "Complete payment to make your event accessible to guests."
-              }
+                : "Complete payment to make your event accessible to guests."}
             </DialogDescription>
           </DialogHeader>
 
@@ -520,13 +539,13 @@ const MyEvents = () => {
               {/* Order Summary */}
               <div className="bg-muted/50 rounded-lg p-4 space-y-3">
                 <div className="text-sm font-medium text-foreground">Order Summary</div>
-                
+
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Item</span>
                     <span>Event Publishing</span>
                   </div>
-                  
+
                   {getPublishingWedding() && (
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Event</span>
@@ -535,7 +554,7 @@ const MyEvents = () => {
                       </span>
                     </div>
                   )}
-                  
+
                   <div className="flex justify-between border-t pt-2 mt-2">
                     <span className="font-semibold">Total Amount</span>
                     <span className="font-bold text-primary text-lg">${PUBLISH_FEE_USD}.00 USD</span>
@@ -571,11 +590,7 @@ const MyEvents = () => {
                 >
                   Cancel
                 </Button>
-                <Button
-                  onClick={handlePaymentProceed}
-                  disabled={processingPayment}
-                  className="gap-2 sm:flex-1"
-                >
+                <Button onClick={handlePaymentProceed} disabled={processingPayment} className="gap-2 sm:flex-1">
                   {processingPayment ? (
                     <>
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -603,12 +618,7 @@ const MyEvents = () => {
                 </p>
               </div>
 
-              <a
-                href={paymentUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="block"
-              >
+              <a href={paymentUrl} target="_blank" rel="noopener noreferrer" className="block">
                 <Button className="w-full gap-2" size="lg">
                   <ExternalLink className="w-4 h-4" />
                   Open Whish Payment Page
@@ -620,11 +630,7 @@ const MyEvents = () => {
               </p>
 
               <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={handleClosePaymentDialog}
-                  className="w-full"
-                >
+                <Button variant="outline" onClick={handleClosePaymentDialog} className="w-full">
                   Close
                 </Button>
               </DialogFooter>
