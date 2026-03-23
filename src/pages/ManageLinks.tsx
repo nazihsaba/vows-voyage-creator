@@ -439,7 +439,7 @@ const ManageLinks = () => {
                               {isExpanded && linkInvitees.length > 0 && linkInvitees.map((invitee, inviteeIndex) => (
                                 <TableRow 
                                   key={invitee.id}
-                                  className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'} border-l-4 border-l-primary/20`}
+                                  className="bg-primary/[0.02] border-l-4 border-l-primary/20 hover:bg-primary/5 transition-colors"
                                 >
                                   <TableCell></TableCell>
                                   <TableCell colSpan={3} className="pl-8 font-medium">
