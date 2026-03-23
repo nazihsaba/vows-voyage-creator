@@ -120,7 +120,7 @@ export const AuraTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]">
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
