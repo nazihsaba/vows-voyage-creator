@@ -314,7 +314,12 @@ const Dashboard = () => {
 
       {/* Preview Modal */}
       <Dialog open={showPreview !== null} onOpenChange={(open) => !open && setShowPreview(null)}>
-        <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 overflow-hidden">
+        <DialogContent className={cn(
+          "p-0 overflow-hidden",
+          isMobile
+            ? "max-w-[95vw] w-full max-h-[95vh] h-full"
+            : "max-w-[440px] w-full max-h-[90vh] bg-transparent border-0 shadow-none"
+        )}>
           <VisuallyHidden>
             <DialogTitle>Template Preview</DialogTitle>
             <DialogDescription>Preview of the selected wedding template</DialogDescription>
@@ -329,12 +334,23 @@ const Dashboard = () => {
               <X className="w-5 h-5" />
             </Button>
           </DialogHeader>
-          <div className="w-full h-full overflow-y-auto">
-            {showPreview === "template2" && <VeritePreview />}
-            {showPreview === "template6" && <GracePreview />}
-            {showPreview === "classic-romance" && <EclatPreview />}
-            {showPreview === "bible-verse-tabs" && <AuraPreview />}
-          </div>
+          {!isMobile ? (
+            <PhoneFrame className="w-full max-w-[390px] mx-auto">
+              <div className="h-[75vh] overflow-y-auto">
+                {showPreview === "template2" && <VeritePreview />}
+                {showPreview === "template6" && <GracePreview />}
+                {showPreview === "classic-romance" && <EclatPreview />}
+                {showPreview === "bible-verse-tabs" && <AuraPreview />}
+              </div>
+            </PhoneFrame>
+          ) : (
+            <div className="w-full h-full overflow-y-auto">
+              {showPreview === "template2" && <VeritePreview />}
+              {showPreview === "template6" && <GracePreview />}
+              {showPreview === "classic-romance" && <EclatPreview />}
+              {showPreview === "bible-verse-tabs" && <AuraPreview />}
+            </div>
+          )}
         </DialogContent>
       </Dialog>
     </div>
