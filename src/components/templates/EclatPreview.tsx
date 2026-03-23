@@ -378,6 +378,7 @@ export const EclatPreview = () => {
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };
 

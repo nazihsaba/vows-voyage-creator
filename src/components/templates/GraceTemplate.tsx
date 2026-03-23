@@ -382,5 +382,6 @@ export const GraceTemplate = ({
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };

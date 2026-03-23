@@ -271,5 +271,6 @@ export const AuraPreview = () => {
         <TemplatePreviewFooter />
       </div>
     </div>
+    </TemplateShell>
   );
 };

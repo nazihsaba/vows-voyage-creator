@@ -268,6 +268,7 @@ export const GracePreview = () => {
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };
 

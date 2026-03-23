@@ -402,5 +402,6 @@ export const VeriteTemplate = ({
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };

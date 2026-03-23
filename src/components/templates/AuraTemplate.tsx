@@ -416,5 +416,6 @@ export const AuraTemplate = ({
         <TemplatePreviewFooter />
       </div>
     </div>
+    </TemplateShell>
   );
 };

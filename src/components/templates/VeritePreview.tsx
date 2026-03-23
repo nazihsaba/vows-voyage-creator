@@ -320,6 +320,7 @@ export const VeritePreview = () => {
       {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
+    </TemplateShell>
   );
 };
 
