@@ -121,6 +121,7 @@ export const AuraTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
+    <TemplateShell>
     <div className="relative w-full min-h-screen bg-background font-serif text-foreground">
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
