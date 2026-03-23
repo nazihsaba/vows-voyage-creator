@@ -335,59 +335,61 @@ const WeddingInvite = () => {
   };
 
   const content = (
-    <>
-      {wedding?.template_type?.includes("bachelor") && (
-        <div className="fixed top-4 right-4 z-50">
-          <Button
-            onClick={handleDownloadCard}
-            disabled={downloadingCard}
-            className="bg-primary/90 hover:bg-primary shadow-lg"
-          >
-            {downloadingCard ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Downloading...
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4 mr-2" />
-                Download Card
-              </>
-            )}
-          </Button>
-        </div>
-      )}
-      <div id="bachelor-card-preview">
-        <TemplateRenderer
-          template={template}
-          wedding={wedding}
-          locations={locations}
-          gallery={gallery}
-          giftCards={giftCards}
-          isOwner={isOwner}
-          isPreview={canEdit}
-          onFieldUpdate={updateFieldCustomization}
-          getFieldValue={getFieldValue}
-          getFieldStyle={getFieldStyle}
-          invitees={invitees}
-          rsvpResponses={rsvpResponses}
-          handleRsvpToggle={handleRsvpToggle}
-          handleRsvpSubmit={handleRsvpSubmit}
-          numberOfPersons={numberOfPersons ? parseInt(numberOfPersons) : 0}
-          isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-          submittingRsvp={submittingRsvp}
-        >
-          <div className="text-center text-white space-y-6">
-            <h1 className="text-5xl md:text-7xl font-script">
-              {wedding.groom_name} & {wedding.bride_name}
-            </h1>
-            <p className="text-xl md:text-2xl tracking-wide">
-              {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
-            </p>
+    <div className="w-full min-h-screen bg-muted/30 flex justify-center">
+      <div className="w-full max-w-[480px] shadow-elegant relative">
+        {wedding?.template_type?.includes("bachelor") && (
+          <div className="fixed top-4 right-4 z-50">
+            <Button
+              onClick={handleDownloadCard}
+              disabled={downloadingCard}
+              className="bg-primary/90 hover:bg-primary shadow-lg"
+            >
+              {downloadingCard ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Downloading...
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Card
+                </>
+              )}
+            </Button>
           </div>
-        </TemplateRenderer>
+        )}
+        <div id="bachelor-card-preview">
+          <TemplateRenderer
+            template={template}
+            wedding={wedding}
+            locations={locations}
+            gallery={gallery}
+            giftCards={giftCards}
+            isOwner={isOwner}
+            isPreview={canEdit}
+            onFieldUpdate={updateFieldCustomization}
+            getFieldValue={getFieldValue}
+            getFieldStyle={getFieldStyle}
+            invitees={invitees}
+            rsvpResponses={rsvpResponses}
+            handleRsvpToggle={handleRsvpToggle}
+            handleRsvpSubmit={handleRsvpSubmit}
+            numberOfPersons={numberOfPersons ? parseInt(numberOfPersons) : 0}
+            isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+            submittingRsvp={submittingRsvp}
+          >
+            <div className="text-center text-white space-y-6">
+              <h1 className="text-5xl md:text-7xl font-script">
+                {wedding.groom_name} & {wedding.bride_name}
+              </h1>
+              <p className="text-xl md:text-2xl tracking-wide">
+                {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+              </p>
+            </div>
+          </TemplateRenderer>
+        </div>
       </div>
-    </>
+    </div>
   );
 
   if (canEdit) {
