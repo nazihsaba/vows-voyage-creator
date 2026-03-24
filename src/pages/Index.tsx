@@ -234,7 +234,7 @@ const Index = () => {
         </div>
       </section>
 
-      <section className="py-20 px-4 bg-white">
+      {/* <section className="py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
             Ready to Create Your Invitation?
@@ -250,7 +250,7 @@ const Index = () => {
             </Button>
           </div>
         </div>
-      </section>
+      </section> */}
 
       <footer className="py-10 px-4 border-t border-border/40 bg-muted/30">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
