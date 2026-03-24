@@ -68,7 +68,7 @@ const Dashboard = () => {
         { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
-        { icon: CalendarHeart, text: "RSVP" },
+        { icon: Calendar, text: "RSVP" },
       ],
     },
     {
