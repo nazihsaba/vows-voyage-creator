@@ -151,6 +151,7 @@ const Index = () => {
               { icon: Image, title: "Photo Gallery", desc: "Showcase your memorable moments" },
               { icon: Gift, title: "Gift Registry", desc: "Share gift card and registry information" },
               { icon: LinkIcon, title: "Custom Links", desc: "Auto-generated unique invitation URLs" },
+              { icon: Calendar, title: "RSVP", desc: "Manage guest attendance and responses" },
             ].map((feature) => (
               <div
                 key={feature.title}
