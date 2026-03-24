@@ -107,6 +107,7 @@ const Dashboard = () => {
         { icon: Heart, text: "Family Names" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
       ],
     },
     // Opulence template hidden
