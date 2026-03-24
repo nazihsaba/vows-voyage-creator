@@ -167,6 +167,70 @@ const Index = () => {
         </div>
       </section>
 
+      <section className="py-24 px-4 bg-white">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">How It Works</p>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Two Ways to Get Started</h2>
+            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+              Whether you prefer a hands-on approach or a fully managed experience, we've got you covered.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Option 1: DIY */}
+            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Do It Yourself</h3>
+              <div className="space-y-5">
+                {[
+                  { step: "1", text: "Visit aureainvites.com" },
+                  { step: "2", text: "Create your personal account" },
+                  { step: "3", text: "Choose your template" },
+                  { step: "4", text: "Customize your invitation details" },
+                  { step: "5", text: "Pay once, share unlimited links" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-semibold text-primary">{item.step}</span>
+                    </div>
+                    <p className="text-foreground">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 text-center">
+                <Button onClick={() => navigate("/dashboard")} className="bg-primary text-primary-foreground hover:bg-primary-hover px-8">
+                  Get Started
+                </Button>
+              </div>
+            </div>
+
+            {/* Option 2: Managed */}
+            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Let Us Handle It</h3>
+              <div className="space-y-5">
+                {[
+                  { step: "1", text: "Contact us" },
+                  { step: "2", text: "Share your event details" },
+                  { step: "3", text: "We take care of everything" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-semibold text-primary">{item.step}</span>
+                    </div>
+                    <p className="text-foreground">{item.text}</p>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-8 text-center">
+                <Button onClick={() => window.open("https://wa.me/", "_blank")} variant="outline" className="border-primary text-primary hover:bg-primary/5 px-8">
+                  Contact Us
+                </Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
