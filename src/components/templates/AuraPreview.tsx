@@ -263,7 +263,17 @@ export const AuraPreview = () => {
         </AnimatedSection>
 
         {/* ===== RSVP SECTION ===== */}
-        <RsvpSection staticDeadline={new Date("2025-08-01")} bgClassName="bg-card" />
+        <RsvpSection
+          staticDeadline={new Date("2025-08-01")}
+          bgClassName="bg-card"
+          invitees={[
+            { id: "1", name: "Daniel Farah" },
+            { id: "2", name: "Sara Mansour" },
+          ]}
+          rsvpResponses={{ "1": true, "2": false }}
+          numberOfPersons={2}
+          isPreview
+        />
 
         {/* ===== BRANDED FOOTER ===== */}
         <TemplatePreviewFooter />

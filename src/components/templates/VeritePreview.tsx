@@ -301,7 +301,16 @@ export const VeritePreview = () => {
       </AnimatedSection>
 
       {/* RSVP */}
-      <RsvpSection staticDeadline={staticWedding.rsvp_deadline} />
+      <RsvpSection
+        staticDeadline={staticWedding.rsvp_deadline}
+        invitees={[
+          { id: "1", name: "James Bennett" },
+          { id: "2", name: "Olivia Carter" },
+        ]}
+        rsvpResponses={{ "1": true, "2": false }}
+        numberOfPersons={2}
+        isPreview
+      />
 
       {/* Closing */}
       <AnimatedSection animation="fade-in">
