@@ -42,11 +42,11 @@ const InvitationPreviewSection = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-2 mb-4">
+          {/* <div className="flex items-center justify-center gap-2 mb-4">
             <div className="h-px w-10 bg-primary/40" />
             <Heart className="w-4 h-4 text-primary" />
             <div className="h-px w-10 bg-primary/40" />
-          </div>
+          </div> */}
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5">
             See Your Wedding Invitation Come to Life
           </h2>
