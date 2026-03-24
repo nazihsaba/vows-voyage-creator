@@ -286,7 +286,7 @@ const Dashboard = () => {
 
       {/* Preview Modal */}
       <Dialog open={showPreview !== null} onOpenChange={(open) => !open && setShowPreview(null)}>
-        <DialogContent className="max-w-[95vw] w-full max-h-[95vh] h-full p-0 overflow-hidden">
+        <DialogContent className="max-w-[100vw] w-full max-h-[100vh] h-[100dvh] p-0 overflow-hidden rounded-none sm:rounded-lg sm:max-w-[95vw] sm:max-h-[95vh] sm:h-[95vh]">
           <VisuallyHidden>
             <DialogTitle>Template Preview</DialogTitle>
             <DialogDescription>Preview of the selected wedding template</DialogDescription>
