@@ -359,7 +359,16 @@ export const EclatPreview = () => {
       </AnimatedSection>
 
       {/* RSVP Section */}
-      <RsvpSection staticDeadline={staticWedding.rsvp_deadline} />
+      <RsvpSection
+        staticDeadline={staticWedding.rsvp_deadline}
+        invitees={[
+          { id: "1", name: "Elias Haddad" },
+          { id: "2", name: "Layla Khoury" },
+        ]}
+        rsvpResponses={{ "1": true, "2": false }}
+        numberOfPersons={2}
+        isPreview
+      />
 
       {/* Closing Message */}
       <AnimatedSection animation="fade-in">

@@ -249,7 +249,16 @@ export const GracePreview = () => {
       </AnimatedSection>
 
       {/* RSVP */}
-      <RsvpSection staticDeadline={staticWedding.rsvp_deadline} />
+      <RsvpSection
+        staticDeadline={staticWedding.rsvp_deadline}
+        invitees={[
+          { id: "1", name: "Noah Elin" },
+          { id: "2", name: "Mia Soren" },
+        ]}
+        rsvpResponses={{ "1": true, "2": false }}
+        numberOfPersons={2}
+        isPreview
+      />
 
       {/* Closing */}
       <AnimatedSection animation="fade-in">
