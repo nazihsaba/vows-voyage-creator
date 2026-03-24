@@ -197,14 +197,14 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-8 text-center">
+              {/* <div className="mt-8 text-center">
                 <Button
                   onClick={() => navigate("/dashboard")}
                   className="bg-primary text-primary-foreground hover:bg-primary-hover px-8"
                 >
                   Get Started
                 </Button>
-              </div>
+              </div> */}
             </div>
 
             {/* Option 2: Managed */}
