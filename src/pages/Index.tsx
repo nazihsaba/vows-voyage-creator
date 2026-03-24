@@ -198,7 +198,10 @@ const Index = () => {
                 ))}
               </div>
               <div className="mt-8 text-center">
-                <Button onClick={() => navigate("/dashboard")} className="bg-primary text-primary-foreground hover:bg-primary-hover px-8">
+                <Button
+                  onClick={() => navigate("/dashboard")}
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8"
+                >
                   Get Started
                 </Button>
               </div>
@@ -221,11 +224,11 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-8 text-center">
+              {/* <div className="mt-8 text-center">
                 <Button onClick={() => window.open("https://wa.me/", "_blank")} variant="outline" className="border-primary text-primary hover:bg-primary/5 px-8">
                   Contact Us
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
