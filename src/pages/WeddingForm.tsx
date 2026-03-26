@@ -41,8 +41,6 @@ const WeddingForm = () => {
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
-  const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
-  const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [auraQuote, setAuraQuote] = useState(
