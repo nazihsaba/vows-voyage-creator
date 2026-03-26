@@ -1092,31 +1092,28 @@ const WeddingForm = () => {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="slug">Custom URL Slug</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="slug" className="text-sm font-medium">Custom URL Slug</Label>
                 <Input
                   id="slug"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="e.g., john-jane-2024"
                   disabled={!!id}
+                  className="h-11 sm:h-10"
                 />
                 {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
               </div>
 
-              <div className="flex gap-4">
-                <Button type="submit" disabled={loading || uploading} className="flex-1">
-                  {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
-                </Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-2">
                 <Button
                   type="button"
                   variant="outline"
+                  className="h-11 sm:h-10 sm:w-auto"
                   onClick={() => {
-                    // For existing weddings with slug, open preview
                     if (id && formData.slug) {
                       setPreviewUrl(`/invite/${formData.slug}?preview=true&readOnly=true`);
                     } else {
-                      // For new/unsaved weddings, store preview data
                       const previewData = {
                         ...formData,
                         locations,
@@ -1134,6 +1131,9 @@ const WeddingForm = () => {
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
+                </Button>
+                <Button type="submit" disabled={loading || uploading} className="h-11 sm:h-10 flex-1">
+                  {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
               </div>
             </form>
