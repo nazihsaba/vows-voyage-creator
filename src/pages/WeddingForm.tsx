@@ -943,22 +943,17 @@ const WeddingForm = () => {
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
-                        <Select
+                        <Input
+                          id={`card_name_${index}`}
                           value={card.card_name}
-                          onValueChange={(value) => {
+                          onChange={(e) => {
                             const newCards = [...giftCards];
-                            newCards[index].card_name = value;
+                            newCards[index].card_name = e.target.value;
                             setGiftCards(newCards);
                           }}
-                        >
-                          <SelectTrigger id={`card_name_${index}`} className="h-11 sm:h-10">
-                            <SelectValue placeholder="Select card" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="OMT">OMT</SelectItem>
-                            <SelectItem value="Whish">Whish</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          placeholder="e.g., OMT, Whish, Bank..."
+                          className="h-11 sm:h-10"
+                        />
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
@@ -975,18 +970,6 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-                    {card.card_name && (
-                      <div className="flex items-center gap-2">
-                        <Label className="text-xs text-muted-foreground">Icon:</Label>
-                        <div className="h-9 w-20 rounded-md overflow-hidden border flex items-center justify-center bg-muted/20 p-1.5">
-                          <img
-                            src={card.card_name === "OMT" ? omtLogo : whishLogo}
-                            alt={card.card_name}
-                            className="max-h-full max-w-full object-contain rounded-[4px]"
-                          />
-                        </div>
-                      </div>
-                    )}
 
                     {giftCards.length > 1 && (
                       <Button
@@ -997,12 +980,6 @@ const WeddingForm = () => {
                         onClick={() => {
                           const newCards = giftCards.filter((_, i) => i !== index);
                           setGiftCards(newCards);
-                          const newFiles = { ...cardIconFiles };
-                          delete newFiles[index];
-                          setCardIconFiles(newFiles);
-                          const newPreviews = { ...cardIconPreviews };
-                          delete newPreviews[index];
-                          setCardIconPreviews(newPreviews);
                         }}
                       >
                         <X className="w-3.5 h-3.5" />
