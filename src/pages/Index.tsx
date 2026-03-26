@@ -145,7 +145,7 @@ const Index = () => {
               Powerful tools to make your invitation truly unforgettable.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-6 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
               { icon: Calendar, title: "Countdown Timer", desc: "Real-time countdown to your special day" },
               { icon: Image, title: "Photo Gallery", desc: "Showcase your memorable moments" },
