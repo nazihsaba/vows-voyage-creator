@@ -533,95 +533,105 @@ const WeddingForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft py-8 px-4">
+    <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-4">
+        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
           My Events
         </Button>
 
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
+        <Card className="shadow-elegant overflow-hidden">
+          <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
+            <CardTitle className="text-2xl sm:text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groom_name">Groom Name *</Label>
+          <CardContent className="px-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+              {/* Couple Names */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="groom_name" className="text-sm font-medium">Groom Name *</Label>
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
                     onChange={(e) => setFormData({ ...formData, groom_name: e.target.value })}
                     required
                     disabled={!!id}
+                    className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bride_name">Bride Name *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
                     onChange={(e) => setFormData({ ...formData, bride_name: e.target.value })}
                     required
                     disabled={!!id}
+                    className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groom_family">Groom's Family *</Label>
+              {/* Family Names */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="groom_family" className="text-sm font-medium">Groom's Family *</Label>
                   <Input
                     id="groom_family"
                     required
                     value={formData.groom_family}
                     onChange={(e) => setFormData({ ...formData, groom_family: e.target.value })}
+                    className="h-11 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bride_family">Bride's Family *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
                   <Input
                     id="bride_family"
                     required
                     value={formData.bride_family}
                     onChange={(e) => setFormData({ ...formData, bride_family: e.target.value })}
+                    className="h-11 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="wedding_date">Wedding Date *</Label>
+              {/* Dates */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="wedding_date" className="text-sm font-medium">Wedding Date *</Label>
                   <Input
                     id="wedding_date"
                     type="date"
                     value={formData.wedding_date}
                     onChange={(e) => setFormData({ ...formData, wedding_date: e.target.value })}
                     required
+                    className="h-11 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rsvp_deadline">Confirmation Deadline *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">Confirmation Deadline *</Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
                     value={formData.rsvp_deadline}
                     onChange={(e) => setFormData({ ...formData, rsvp_deadline: e.target.value })}
                     required
+                    className="h-11 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="main_description">Description</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="main_description" className="text-sm font-medium">Description</Label>
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
                   onChange={(e) => setFormData({ ...formData, main_description: e.target.value })}
-                  rows={4}
+                  rows={3}
+                  className="min-h-[80px] text-base sm:text-sm"
                 />
               </div>
 
@@ -822,17 +832,17 @@ const WeddingForm = () => {
               )}
 
               {/* Location Fields */}
-              <div className="space-y-6 border-t pt-6">
-                <h3 className="text-lg font-semibold">Event Locations</h3>
+              <div className="space-y-4 sm:space-y-6 border-t pt-5 sm:pt-6">
+                <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
 
                 {/* Ceremony Section */}
-                <Card className="border">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Ceremony Details</CardTitle>
+                <Card className="border shadow-sm">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                    <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor="ceremony_location">Location Name *</Label>
                         <Input
                           id="ceremony_location"
@@ -840,9 +850,10 @@ const WeddingForm = () => {
                           onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
                           placeholder="Church or venue name"
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor="ceremony_time">Time *</Label>
                         <Input
                           id="ceremony_time"
@@ -850,10 +861,11 @@ const WeddingForm = () => {
                           value={locations.ceremony_time}
                           onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
                       <Input
                         id="ceremony_location_link"
@@ -861,19 +873,20 @@ const WeddingForm = () => {
                         onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
                         placeholder="https://maps.google.com/..."
                         type="url"
+                        className="h-11 sm:h-10 text-sm"
                       />
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Venue Section */}
-                <Card className="border">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Venue Details</CardTitle>
+                <Card className="border shadow-sm">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                    <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor="venue_location">Location Name *</Label>
                         <Input
                           id="venue_location"
@@ -881,9 +894,10 @@ const WeddingForm = () => {
                           onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
                           placeholder="Reception venue name"
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor="venue_time">Time *</Label>
                         <Input
                           id="venue_time"
@@ -891,10 +905,11 @@ const WeddingForm = () => {
                           value={locations.venue_time}
                           onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       <Label htmlFor="venue_location_link">Venue map link</Label>
                       <Input
                         id="venue_location_link"
@@ -902,6 +917,7 @@ const WeddingForm = () => {
                         onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
                         placeholder="https://maps.google.com/..."
                         type="url"
+                        className="h-11 sm:h-10 text-sm"
                       />
                     </div>
                   </CardContent>
@@ -909,9 +925,9 @@ const WeddingForm = () => {
               </div>
 
               {/* Card List Section */}
-              <div className="space-y-4 border-t pt-6">
+              <div className="space-y-3 sm:space-y-4 border-t pt-5 sm:pt-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Gift Cards</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">Gift Cards</h3>
                   <Button
                     type="button"
                     variant="outline"
@@ -923,9 +939,9 @@ const WeddingForm = () => {
                 </div>
 
                 {giftCards.map((card, index) => (
-                  <div key={index} className="grid gap-4 p-4 border rounded-lg relative">
-                    <div className="grid md:grid-cols-3 gap-4 items-end">
-                      <div className="space-y-2">
+                  <div key={index} className="space-y-3 p-3 sm:p-4 border rounded-lg relative">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
                         <Select
                           value={card.card_name}
@@ -935,7 +951,7 @@ const WeddingForm = () => {
                             setGiftCards(newCards);
                           }}
                         >
-                          <SelectTrigger id={`card_name_${index}`}>
+                          <SelectTrigger id={`card_name_${index}`} className="h-11 sm:h-10">
                             <SelectValue placeholder="Select card" />
                           </SelectTrigger>
                           <SelectContent>
@@ -944,7 +960,7 @@ const WeddingForm = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
                         <Input
                           id={`card_number_${index}`}
@@ -955,28 +971,29 @@ const WeddingForm = () => {
                             setGiftCards(newCards);
                           }}
                           placeholder="XXXX-XXXX-XXXX-XXXX"
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      {card.card_name && (
-                        <div className="space-y-2">
-                          <Label>Card Icon</Label>
-                          <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
-                            <img
-                              src={card.card_name === "OMT" ? omtLogo : whishLogo}
-                              alt={card.card_name}
-                              className="max-h-full max-w-full object-contain rounded-[6px]"
-                            />
-                          </div>
-                        </div>
-                      )}
                     </div>
+                    {card.card_name && (
+                      <div className="flex items-center gap-2">
+                        <Label className="text-xs text-muted-foreground">Icon:</Label>
+                        <div className="h-9 w-20 rounded-md overflow-hidden border flex items-center justify-center bg-muted/20 p-1.5">
+                          <img
+                            src={card.card_name === "OMT" ? omtLogo : whishLogo}
+                            alt={card.card_name}
+                            className="max-h-full max-w-full object-contain rounded-[4px]"
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
                         variant="destructive"
                         size="icon"
-                        className="absolute top-2 right-2"
+                        className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8"
                         onClick={() => {
                           const newCards = giftCards.filter((_, i) => i !== index);
                           setGiftCards(newCards);
@@ -988,7 +1005,7 @@ const WeddingForm = () => {
                           setCardIconPreviews(newPreviews);
                         }}
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3.5 h-3.5" />
                       </Button>
                     )}
                   </div>
@@ -1075,31 +1092,28 @@ const WeddingForm = () => {
                 </div>
               )}
 
-              <div className="space-y-2">
-                <Label htmlFor="slug">Custom URL Slug</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="slug" className="text-sm font-medium">Custom URL Slug</Label>
                 <Input
                   id="slug"
                   value={formData.slug}
                   onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
                   placeholder="e.g., john-jane-2024"
                   disabled={!!id}
+                  className="h-11 sm:h-10"
                 />
                 {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
               </div>
 
-              <div className="flex gap-4">
-                <Button type="submit" disabled={loading || uploading} className="flex-1">
-                  {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
-                </Button>
+              <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-2">
                 <Button
                   type="button"
                   variant="outline"
+                  className="h-11 sm:h-10 sm:w-auto"
                   onClick={() => {
-                    // For existing weddings with slug, open preview
                     if (id && formData.slug) {
                       setPreviewUrl(`/invite/${formData.slug}?preview=true&readOnly=true`);
                     } else {
-                      // For new/unsaved weddings, store preview data
                       const previewData = {
                         ...formData,
                         locations,
@@ -1117,6 +1131,9 @@ const WeddingForm = () => {
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
+                </Button>
+                <Button type="submit" disabled={loading || uploading} className="h-11 sm:h-10 flex-1">
+                  {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
               </div>
             </form>
