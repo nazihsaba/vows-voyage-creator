@@ -533,84 +533,93 @@ const WeddingForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-soft py-8 px-4">
+    <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-4">
+        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
           My Events
         </Button>
 
-        <Card className="shadow-elegant">
-          <CardHeader>
-            <CardTitle className="text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
+        <Card className="shadow-elegant overflow-hidden">
+          <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
+            <CardTitle className="text-2xl sm:text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
           </CardHeader>
-          <CardContent>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groom_name">Groom Name *</Label>
+          <CardContent className="px-4 sm:px-6">
+            <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+              {/* Couple Names */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="groom_name" className="text-sm font-medium">Groom Name *</Label>
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
                     onChange={(e) => setFormData({ ...formData, groom_name: e.target.value })}
                     required
                     disabled={!!id}
+                    className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bride_name">Bride Name *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
                     onChange={(e) => setFormData({ ...formData, bride_name: e.target.value })}
                     required
                     disabled={!!id}
+                    className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="groom_family">Groom's Family *</Label>
+              {/* Family Names */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="groom_family" className="text-sm font-medium">Groom's Family *</Label>
                   <Input
                     id="groom_family"
                     required
                     value={formData.groom_family}
                     onChange={(e) => setFormData({ ...formData, groom_family: e.target.value })}
+                    className="h-11 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="bride_family">Bride's Family *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
                   <Input
                     id="bride_family"
                     required
                     value={formData.bride_family}
                     onChange={(e) => setFormData({ ...formData, bride_family: e.target.value })}
+                    className="h-11 sm:h-10"
                   />
                 </div>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="wedding_date">Wedding Date *</Label>
+              {/* Dates */}
+              <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                <div className="space-y-1.5">
+                  <Label htmlFor="wedding_date" className="text-sm font-medium">Wedding Date *</Label>
                   <Input
                     id="wedding_date"
                     type="date"
                     value={formData.wedding_date}
                     onChange={(e) => setFormData({ ...formData, wedding_date: e.target.value })}
                     required
+                    className="h-11 sm:h-10"
                   />
                 </div>
-                <div className="space-y-2">
-                  <Label htmlFor="rsvp_deadline">Confirmation Deadline *</Label>
+                <div className="space-y-1.5">
+                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">Confirmation Deadline *</Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
                     value={formData.rsvp_deadline}
                     onChange={(e) => setFormData({ ...formData, rsvp_deadline: e.target.value })}
                     required
+                    className="h-11 sm:h-10"
                   />
                 </div>
               </div>
