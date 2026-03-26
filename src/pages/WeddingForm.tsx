@@ -155,15 +155,6 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData);
-        // Set existing logos as previews
-        const previews: Record<number, string> = {};
-        cardsData.forEach((card, index) => {
-          if (card.logo_url) {
-            previews[index] = card.logo_url;
-          }
-        });
-        setCardIconPreviews(previews);
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
