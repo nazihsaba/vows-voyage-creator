@@ -472,23 +472,11 @@ const WeddingForm = () => {
         // Upload card icons if any
         const cardInserts = await Promise.all(
           validCards.map(async (card, index) => {
-            let logoUrl = card.logo_url;
-
-            // Find original index in giftCards array
-            const originalIndex = giftCards.findIndex(
-              (c) => c.card_name === card.card_name && c.card_number === card.card_number,
-            );
-
-            // Upload new icon if file exists
-            if (cardIconFiles[originalIndex]) {
-              logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
-            }
-
             return {
               wedding_id: weddingId,
               card_name: card.card_name,
               card_number: card.card_number,
-              logo_url: logoUrl,
+              logo_url: card.logo_url || null,
               card_order: index + 1,
             };
           }),
