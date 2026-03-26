@@ -832,17 +832,17 @@ const WeddingForm = () => {
               )}
 
               {/* Location Fields */}
-              <div className="space-y-6 border-t pt-6">
-                <h3 className="text-lg font-semibold">Event Locations</h3>
+              <div className="space-y-4 sm:space-y-6 border-t pt-5 sm:pt-6">
+                <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
 
                 {/* Ceremony Section */}
-                <Card className="border">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Ceremony Details</CardTitle>
+                <Card className="border shadow-sm">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                    <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor="ceremony_location">Location Name *</Label>
                         <Input
                           id="ceremony_location"
@@ -850,9 +850,10 @@ const WeddingForm = () => {
                           onChange={(e) => setLocations({ ...locations, ceremony_location: e.target.value })}
                           placeholder="Church or venue name"
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor="ceremony_time">Time *</Label>
                         <Input
                           id="ceremony_time"
@@ -860,10 +861,11 @@ const WeddingForm = () => {
                           value={locations.ceremony_time}
                           onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
                       <Input
                         id="ceremony_location_link"
@@ -871,19 +873,20 @@ const WeddingForm = () => {
                         onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
                         placeholder="https://maps.google.com/..."
                         type="url"
+                        className="h-11 sm:h-10 text-sm"
                       />
                     </div>
                   </CardContent>
                 </Card>
 
                 {/* Venue Section */}
-                <Card className="border">
-                  <CardHeader>
-                    <CardTitle className="text-xl">Venue Details</CardTitle>
+                <Card className="border shadow-sm">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                    <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
                   </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
+                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor="venue_location">Location Name *</Label>
                         <Input
                           id="venue_location"
@@ -891,9 +894,10 @@ const WeddingForm = () => {
                           onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
                           placeholder="Reception venue name"
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor="venue_time">Time *</Label>
                         <Input
                           id="venue_time"
@@ -901,10 +905,11 @@ const WeddingForm = () => {
                           value={locations.venue_time}
                           onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
                           required
+                          className="h-11 sm:h-10"
                         />
                       </div>
                     </div>
-                    <div className="space-y-2">
+                    <div className="space-y-1.5">
                       <Label htmlFor="venue_location_link">Venue map link</Label>
                       <Input
                         id="venue_location_link"
@@ -912,6 +917,7 @@ const WeddingForm = () => {
                         onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
                         placeholder="https://maps.google.com/..."
                         type="url"
+                        className="h-11 sm:h-10 text-sm"
                       />
                     </div>
                   </CardContent>
