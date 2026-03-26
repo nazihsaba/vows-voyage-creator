@@ -7,11 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
-import omtLogo from "@/assets/omt-logo.jpg";
-import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 
 const WeddingForm = () => {
@@ -44,8 +41,6 @@ const WeddingForm = () => {
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
-  const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
-  const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [auraQuote, setAuraQuote] = useState(
@@ -160,15 +155,6 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData);
-        // Set existing logos as previews
-        const previews: Record<number, string> = {};
-        cardsData.forEach((card, index) => {
-          if (card.logo_url) {
-            previews[index] = card.logo_url;
-          }
-        });
-        setCardIconPreviews(previews);
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -486,23 +472,11 @@ const WeddingForm = () => {
         // Upload card icons if any
         const cardInserts = await Promise.all(
           validCards.map(async (card, index) => {
-            let logoUrl = card.logo_url;
-
-            // Find original index in giftCards array
-            const originalIndex = giftCards.findIndex(
-              (c) => c.card_name === card.card_name && c.card_number === card.card_number,
-            );
-
-            // Upload new icon if file exists
-            if (cardIconFiles[originalIndex]) {
-              logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
-            }
-
             return {
               wedding_id: weddingId,
               card_name: card.card_name,
               card_number: card.card_number,
-              logo_url: logoUrl,
+              logo_url: card.logo_url || null,
               card_order: index + 1,
             };
           }),
@@ -943,22 +917,17 @@ const WeddingForm = () => {
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
-                        <Select
+                        <Input
+                          id={`card_name_${index}`}
                           value={card.card_name}
-                          onValueChange={(value) => {
+                          onChange={(e) => {
                             const newCards = [...giftCards];
-                            newCards[index].card_name = value;
+                            newCards[index].card_name = e.target.value;
                             setGiftCards(newCards);
                           }}
-                        >
-                          <SelectTrigger id={`card_name_${index}`} className="h-11 sm:h-10">
-                            <SelectValue placeholder="Select card" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="OMT">OMT</SelectItem>
-                            <SelectItem value="Whish">Whish</SelectItem>
-                          </SelectContent>
-                        </Select>
+                          placeholder="e.g., OMT, Whish, Bank..."
+                          className="h-11 sm:h-10"
+                        />
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
@@ -975,18 +944,6 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-                    {card.card_name && (
-                      <div className="flex items-center gap-2">
-                        <Label className="text-xs text-muted-foreground">Icon:</Label>
-                        <div className="h-9 w-20 rounded-md overflow-hidden border flex items-center justify-center bg-muted/20 p-1.5">
-                          <img
-                            src={card.card_name === "OMT" ? omtLogo : whishLogo}
-                            alt={card.card_name}
-                            className="max-h-full max-w-full object-contain rounded-[4px]"
-                          />
-                        </div>
-                      </div>
-                    )}
 
                     {giftCards.length > 1 && (
                       <Button
@@ -997,12 +954,6 @@ const WeddingForm = () => {
                         onClick={() => {
                           const newCards = giftCards.filter((_, i) => i !== index);
                           setGiftCards(newCards);
-                          const newFiles = { ...cardIconFiles };
-                          delete newFiles[index];
-                          setCardIconFiles(newFiles);
-                          const newPreviews = { ...cardIconPreviews };
-                          delete newPreviews[index];
-                          setCardIconPreviews(newPreviews);
                         }}
                       >
                         <X className="w-3.5 h-3.5" />
