@@ -324,7 +324,7 @@ const MyEvents = () => {
                           <CardHeader className="p-5 pb-4">
                             <div className="flex items-start justify-between gap-3">
                               <div className="flex-1 min-w-0">
-                                <CardTitle className="text-lg font-script truncate">
+                                <CardTitle className="text-lg font-dancing truncate">
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm">
