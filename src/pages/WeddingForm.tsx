@@ -925,9 +925,9 @@ const WeddingForm = () => {
               </div>
 
               {/* Card List Section */}
-              <div className="space-y-4 border-t pt-6">
+              <div className="space-y-3 sm:space-y-4 border-t pt-5 sm:pt-6">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-lg font-semibold">Gift Cards</h3>
+                  <h3 className="text-base sm:text-lg font-semibold">Gift Cards</h3>
                   <Button
                     type="button"
                     variant="outline"
@@ -939,9 +939,9 @@ const WeddingForm = () => {
                 </div>
 
                 {giftCards.map((card, index) => (
-                  <div key={index} className="grid gap-4 p-4 border rounded-lg relative">
-                    <div className="grid md:grid-cols-3 gap-4 items-end">
-                      <div className="space-y-2">
+                  <div key={index} className="space-y-3 p-3 sm:p-4 border rounded-lg relative">
+                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                      <div className="space-y-1.5">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
                         <Select
                           value={card.card_name}
@@ -951,7 +951,7 @@ const WeddingForm = () => {
                             setGiftCards(newCards);
                           }}
                         >
-                          <SelectTrigger id={`card_name_${index}`}>
+                          <SelectTrigger id={`card_name_${index}`} className="h-11 sm:h-10">
                             <SelectValue placeholder="Select card" />
                           </SelectTrigger>
                           <SelectContent>
@@ -960,7 +960,7 @@ const WeddingForm = () => {
                           </SelectContent>
                         </Select>
                       </div>
-                      <div className="space-y-2">
+                      <div className="space-y-1.5">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
                         <Input
                           id={`card_number_${index}`}
@@ -971,28 +971,29 @@ const WeddingForm = () => {
                             setGiftCards(newCards);
                           }}
                           placeholder="XXXX-XXXX-XXXX-XXXX"
+                          className="h-11 sm:h-10"
                         />
                       </div>
-                      {card.card_name && (
-                        <div className="space-y-2">
-                          <Label>Card Icon</Label>
-                          <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
-                            <img
-                              src={card.card_name === "OMT" ? omtLogo : whishLogo}
-                              alt={card.card_name}
-                              className="max-h-full max-w-full object-contain rounded-[6px]"
-                            />
-                          </div>
-                        </div>
-                      )}
                     </div>
+                    {card.card_name && (
+                      <div className="flex items-center gap-2">
+                        <Label className="text-xs text-muted-foreground">Icon:</Label>
+                        <div className="h-9 w-20 rounded-md overflow-hidden border flex items-center justify-center bg-muted/20 p-1.5">
+                          <img
+                            src={card.card_name === "OMT" ? omtLogo : whishLogo}
+                            alt={card.card_name}
+                            className="max-h-full max-w-full object-contain rounded-[4px]"
+                          />
+                        </div>
+                      </div>
+                    )}
 
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
                         variant="destructive"
                         size="icon"
-                        className="absolute top-2 right-2"
+                        className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8"
                         onClick={() => {
                           const newCards = giftCards.filter((_, i) => i !== index);
                           setGiftCards(newCards);
@@ -1004,7 +1005,7 @@ const WeddingForm = () => {
                           setCardIconPreviews(newPreviews);
                         }}
                       >
-                        <X className="w-4 h-4" />
+                        <X className="w-3.5 h-3.5" />
                       </Button>
                     )}
                   </div>
