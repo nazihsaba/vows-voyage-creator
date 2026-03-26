@@ -624,13 +624,14 @@ const WeddingForm = () => {
                 </div>
               </div>
 
-              <div className="space-y-2">
-                <Label htmlFor="main_description">Description</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="main_description" className="text-sm font-medium">Description</Label>
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
                   onChange={(e) => setFormData({ ...formData, main_description: e.target.value })}
-                  rows={4}
+                  rows={3}
+                  className="min-h-[80px] text-base sm:text-sm"
                 />
               </div>
 
