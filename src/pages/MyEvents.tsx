@@ -411,49 +411,59 @@ const MyEvents = () => {
                               )}
 
                               <div className="flex items-center justify-end gap-1 border-t border-border/40 pt-3 mt-3">
-                                <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/50 p-1">
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    onClick={() => {
-                                      let editPath = `/dashboard/edit/${wedding.id}`;
-
-                                      if (wedding.template_type?.includes("bachelor")) {
-                                        editPath = `/dashboard/edit-bachelor/${wedding.id}`;
-                                      } else if (wedding.template_type?.includes("christmas")) {
-                                        editPath = `/dashboard/edit-christmas/${wedding.id}`;
-                                      } else if (wedding.template_type === "rose-gold-tabs") {
-                                        editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
-                                      }
-
-                                      navigate(editPath, { state: { from: "my-events" } });
-                                    }}
-                                    title="Edit"
-                                  >
-                                    <Edit className="h-3.5 w-3.5" />
-                                  </Button>
-
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    onClick={() => setPreviewSlug(wedding.slug)}
-                                    title="Preview"
-                                  >
-                                    <Eye className="h-3.5 w-3.5" />
-                                  </Button>
-
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    onClick={() => setDeleteId(wedding.id)}
-                                    title="Delete"
-                                    className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                                  >
-                                    <Trash2 className="h-3.5 w-3.5" />
-                                  </Button>
-                                </div>
+                                <TooltipProvider>
+                                  <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/50 p-1">
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                          onClick={() => {
+                                            let editPath = `/dashboard/edit/${wedding.id}`;
+                                            if (wedding.template_type?.includes("bachelor")) {
+                                              editPath = `/dashboard/edit-bachelor/${wedding.id}`;
+                                            } else if (wedding.template_type?.includes("christmas")) {
+                                              editPath = `/dashboard/edit-christmas/${wedding.id}`;
+                                            } else if (wedding.template_type === "rose-gold-tabs") {
+                                              editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
+                                            }
+                                            navigate(editPath, { state: { from: "my-events" } });
+                                          }}
+                                        >
+                                          <Edit className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>Edit</TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                          onClick={() => setPreviewSlug(wedding.slug)}
+                                        >
+                                          <Eye className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>Preview</TooltipContent>
+                                    </Tooltip>
+                                    <Tooltip>
+                                      <TooltipTrigger asChild>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          onClick={() => setDeleteId(wedding.id)}
+                                          className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                        >
+                                          <Trash2 className="h-3.5 w-3.5" />
+                                        </Button>
+                                      </TooltipTrigger>
+                                      <TooltipContent>Delete</TooltipContent>
+                                    </Tooltip>
+                                  </div>
+                                </TooltipProvider>
                               </div>
                             </div>
                           </CardContent>
