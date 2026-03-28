@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,18 +13,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, X, Upload, Download, Loader2, Eye } from "lucide-react";
+import { Plus, X, Upload, Download, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as XLSX from "xlsx";
-import { generateInvitationPreview } from "@/utils/invitationPreview";
 
 interface GenerateLinkDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   weddingId: string;
   weddingSlug: string;
-  mainImageUrl?: string | null;
   onSuccess: () => void;
 }
 
@@ -33,7 +31,6 @@ export const GenerateLinkDialog = ({
   onOpenChange,
   weddingId,
   weddingSlug,
-  mainImageUrl,
   onSuccess,
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
@@ -420,45 +417,6 @@ export const GenerateLinkDialog = ({
                   <p className="text-[11px] sm:text-sm font-mono break-all mt-0.5">{previewUrl}</p>
                 </Card>
               )}
-
-              {linkName.trim() && (() => {
-                const preview = generateInvitationPreview({
-                  guestName: linkName,
-                  weddingSlug,
-                  mainImageUrl,
-                });
-                return (
-                  <Card className="overflow-hidden rounded-xl border-border/50 bg-muted/30">
-                    <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1.5">
-                      <Eye className="w-3 h-3 text-muted-foreground" />
-                      <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
-                        Link Preview
-                      </span>
-                    </div>
-                    {preview.imageUrl && (
-                      <div className="mx-3 rounded-lg overflow-hidden aspect-[1.91/1] bg-muted">
-                        <img
-                          src={preview.imageUrl}
-                          alt="Preview"
-                          className="w-full h-full object-cover"
-                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-                        />
-                      </div>
-                    )}
-                    <div className="px-3 py-2.5 space-y-0.5">
-                      <p className="text-xs sm:text-sm font-serif font-semibold text-foreground leading-snug line-clamp-2">
-                        {preview.title}
-                      </p>
-                      <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
-                        {preview.description}
-                      </p>
-                      <p className="text-[10px] text-muted-foreground/70 truncate">
-                        aureainvites.com
-                      </p>
-                    </div>
-                  </Card>
-                );
-              })()}
 
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">

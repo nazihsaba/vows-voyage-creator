@@ -57,7 +57,6 @@ interface Wedding {
   groom_name: string;
   slug: string;
   status: string;
-  main_picture_url?: string | null;
 }
 
 const ManageLinks = () => {
@@ -728,7 +727,6 @@ const ManageLinks = () => {
           onOpenChange={setGenerateLinkOpen}
           weddingId={wedding.id}
           weddingSlug={wedding.slug}
-          mainImageUrl={wedding.main_picture_url}
           onSuccess={() => setRefresh((prev) => prev + 1)}
         />
       )}
