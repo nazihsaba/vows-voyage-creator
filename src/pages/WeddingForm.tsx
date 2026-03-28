@@ -224,9 +224,9 @@ const WeddingForm = () => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
 
-    if (totalImages > 6) {
+    if (totalImages > maxGalleryImages) {
       toast({
-        title: "Maximum 6 images allowed",
+        title: `Maximum ${maxGalleryImages} images allowed`,
         description: "Please select fewer images for the gallery.",
         variant: "destructive",
       });
