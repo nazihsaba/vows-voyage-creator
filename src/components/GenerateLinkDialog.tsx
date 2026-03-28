@@ -45,6 +45,7 @@ export const GenerateLinkDialog = ({
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
