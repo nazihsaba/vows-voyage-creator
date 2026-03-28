@@ -222,6 +222,7 @@ const Index = () => {
                   { step: "2", text: "Choose your template" },
                   { step: "3", text: "Share your event details" },
                   { step: "4", text: "We take care of everything" },
+                  { step: "5", text: "Pay once, share unlimited links" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-center gap-4">
                     <div className="w-9 h-9 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
