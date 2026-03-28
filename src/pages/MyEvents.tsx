@@ -425,7 +425,7 @@ const MyEvents = () => {
                                         editPath = `/dashboard/edit-rose-gold-tabs/${wedding.id}`;
                                       }
 
-                                      navigate(editPath);
+                                      navigate(editPath, { state: { from: "my-events" } });
                                     }}
                                     title="Edit"
                                   >
