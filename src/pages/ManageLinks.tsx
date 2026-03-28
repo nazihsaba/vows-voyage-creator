@@ -322,7 +322,7 @@ const ManageLinks = () => {
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-white border-b border-border/40">
+                      <TableRow className="bg-primary/10 border-b border-primary/20">
                         <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Link Name
