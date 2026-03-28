@@ -615,7 +615,7 @@ const ManageLinks = () => {
                             <div className="flex items-center gap-1.5">
                               <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                 <Users className="w-3 h-3" />
-                                <span className="text-sm">
+                                <span className="text-xs">
                                   {stats.total} {stats.total === 1 ? "guest" : "guests"}
                                 </span>
                               </span>
