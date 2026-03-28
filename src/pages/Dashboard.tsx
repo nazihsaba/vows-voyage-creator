@@ -132,7 +132,7 @@ const Dashboard = () => {
                 onClick={() => navigate("/")}
               />
               <div>
-                <h1 className="text-xl sm:text-xl md:text-2xl font-serif font-bold text-foreground">
+                <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
                   Choose Your Template
                 </h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">Create beautiful invitations</p>
