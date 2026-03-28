@@ -630,7 +630,8 @@ const ManageLinks = () => {
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
                               </span>
                             )}
-                            <span className="text-[11px] text-muted-foreground">
+                            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                              <Users className="w-3 h-3" />
                               {stats.total} {stats.total === 1 ? "guest" : "guests"}
                             </span>
                             <span className="text-[11px] text-muted-foreground">
