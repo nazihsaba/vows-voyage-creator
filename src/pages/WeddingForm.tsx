@@ -370,6 +370,16 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate video is required for video templates
+    if (isVideoTemplate && !videoFile && !formData.video_url) {
+      toast({
+        title: "Video required",
+        description: "Please upload a video for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
@@ -760,7 +770,7 @@ const WeddingForm = () => {
               {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
-                  <Label htmlFor="wedding_video">Upload Video</Label>
+                  <Label htmlFor="wedding_video">Upload Video <span className="text-destructive">*</span></Label>
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
