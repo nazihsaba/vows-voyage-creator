@@ -1,6 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { Heart } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselPrevious,
+  CarouselNext,
+} from "@/components/ui/carousel";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
