@@ -155,6 +155,7 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
+        setGiftCards(cardsData.map(c => ({ card_name: c.card_name, card_number: c.card_number })));
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
