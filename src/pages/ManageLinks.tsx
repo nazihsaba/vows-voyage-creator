@@ -274,7 +274,9 @@ const ManageLinks = () => {
             <CardHeader className="pb-4">
               <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                  <h2 className="text-xl font-serif font-semibold text-foreground">Invitation Links & Guests</h2>
+                  <h2 className="text-xl font-['great-vibes'] font-semibold text-foreground">
+                    Invitation Links & Guests
+                  </h2>
                   <p className="text-sm text-muted-foreground mt-1">
                     {filteredLinks.length} {filteredLinks.length === 1 ? "link" : "links"} •{" "}
                     {Object.values(invitees).flat().length} total guests
