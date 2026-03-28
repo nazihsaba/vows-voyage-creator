@@ -421,6 +421,46 @@ export const GenerateLinkDialog = ({
                 </Card>
               )}
 
+              {/* WhatsApp / Social Preview Card */}
+              {linkName.trim() && (() => {
+                const preview = generateInvitationPreview({
+                  guestName: linkName,
+                  weddingSlug,
+                  mainImageUrl,
+                });
+                return (
+                  <Card className="overflow-hidden rounded-xl border-border/50 bg-muted/30">
+                    <div className="flex items-center gap-1.5 px-3 pt-2.5 pb-1.5">
+                      <Eye className="w-3 h-3 text-muted-foreground" />
+                      <span className="text-[10px] sm:text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                        Link Preview
+                      </span>
+                    </div>
+                    {preview.imageUrl && (
+                      <div className="mx-3 rounded-lg overflow-hidden aspect-[1.91/1] bg-muted">
+                        <img
+                          src={preview.imageUrl}
+                          alt="Preview"
+                          className="w-full h-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
+                      </div>
+                    )}
+                    <div className="px-3 py-2.5 space-y-0.5">
+                      <p className="text-xs sm:text-sm font-serif font-semibold text-foreground leading-snug line-clamp-2">
+                        {preview.title}
+                      </p>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                        {preview.description}
+                      </p>
+                      <p className="text-[10px] text-muted-foreground/70 truncate">
+                        aureainvites.com
+                      </p>
+                    </div>
+                  </Card>
+                );
+              })()}
+
               <div className="space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div className="min-w-0">
