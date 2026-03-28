@@ -526,7 +526,7 @@ const ManageLinks = () => {
                     const isExpanded = expandedLinks[link.id] || false;
 
                     return (
-                      <div key={link.id} className="rounded-xl border border-border/30 bg-white overflow-hidden shadow-sm">
+                      <div key={link.id} className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm">
                         {/* Card Header */}
                         <div
                           className="p-4 cursor-pointer active:bg-muted/30 transition-colors"
