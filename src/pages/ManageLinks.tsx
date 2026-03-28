@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
+  Link2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
@@ -224,33 +225,33 @@ const ManageLinks = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-14 sm:h-16">
-            <div className="flex items-center gap-3 min-w-0">
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate("/dashboard/my-events")}
-                className="h-8 w-8 rounded-full flex-shrink-0"
-              >
-                <ArrowLeft className="w-4 h-4" />
-              </Button>
-              <div className="min-w-0">
-                <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate leading-tight font-['great-vibes']">
-                  Manage Links
-                </h1>
-                <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
-                  {wedding.bride_name} & {wedding.groom_name}
-                </p>
-              </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+              <Link2 className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
             </div>
+            <div>
+              <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">Manage Links</h1>
+              <p className="text-xs text-muted-foreground hidden sm:block">
+                {wedding.bride_name} & {wedding.groom_name}
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               onClick={() => setGenerateLinkOpen(true)}
-              size="sm"
-              className="rounded-full text-xs sm:text-sm h-8 px-3 sm:px-4"
+              className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
             >
-              <Plus className="w-3.5 h-3.5 mr-1" />
-              <span className="hidden xs:inline">Generate</span> Link
+              <Plus className="w-4 h-4 sm:mr-1" />
+              <span className="hidden sm:inline">Generate Link</span>
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/dashboard/my-events")}
+              className="rounded-full border-border/60 hover:bg-muted/50"
+            >
+              <ArrowLeft className="w-4 h-4 sm:mr-2" />
+              <span className="hidden sm:inline">Back</span>
             </Button>
           </div>
         </div>
