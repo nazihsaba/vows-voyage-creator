@@ -154,9 +154,11 @@ const WeddingForm = () => {
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
           ceremony_location_link: ceremony?.location_link || "",
+          ceremony_icon: ceremony?.icon || "material-symbols:church-rounded",
           venue_location: venue?.location_name || "",
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
+          venue_icon: venue?.icon || "solar:confetti-bold",
         });
       }
 
