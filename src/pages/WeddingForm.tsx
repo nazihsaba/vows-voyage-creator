@@ -45,9 +45,11 @@ const WeddingForm = () => {
     ceremony_location: "",
     ceremony_time: "",
     ceremony_location_link: "",
+    ceremony_icon: "material-symbols:church-rounded",
     venue_location: "",
     venue_time: "",
     venue_location_link: "",
+    venue_icon: "solar:confetti-bold",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
