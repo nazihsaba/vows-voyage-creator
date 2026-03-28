@@ -31,7 +31,7 @@ Deno.serve(async (req) => {
 
     const { data: wedding, error } = await supabase
       .from("weddings")
-      .select("groom_name, bride_name, wedding_date, main_picture_url, event_title, template_type")
+      .select("id, groom_name, bride_name, wedding_date, main_picture_url, event_title, template_type")
       .eq("slug", slug)
       .maybeSingle();
 
@@ -48,15 +48,21 @@ Deno.serve(async (req) => {
     const redirectUrl = `${siteOrigin}${redirectPath}`;
 
     const title = `Wedding of ${wedding.groom_name} & ${wedding.bride_name}`;
-    const description = "Wedding invitation";
-    const imageUrl = wedding.main_picture_url || "";
-    const weddingDate = wedding.wedding_date
-      ? new Date(wedding.wedding_date).toLocaleDateString("en-US", {
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        })
-      : "";
+    const description = `You are invited to the wedding of ${wedding.groom_name} and ${wedding.bride_name}`;
+
+    let imageUrl = wedding.main_picture_url || "";
+
+    if (!imageUrl) {
+      const { data: coverImage } = await supabase
+        .from("gallery_images")
+        .select("image_url")
+        .eq("wedding_id", wedding.id)
+        .order("image_order", { ascending: true })
+        .limit(1)
+        .maybeSingle();
+
+      imageUrl = coverImage?.image_url || "";
+    }
 
     const html = `<!DOCTYPE html>
 <html lang="en">
@@ -64,17 +70,20 @@ Deno.serve(async (req) => {
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${title}</title>
-  <meta name="description" content="${description}${weddingDate ? ` on ${weddingDate}` : ""}" />
+  <meta name="description" content="${description}" />
   
   <meta property="og:type" content="website" />
   <meta property="og:title" content="${title}" />
-  <meta property="og:description" content="${description}${weddingDate ? ` on ${weddingDate}` : ""}" />
-  <meta property="og:image" content="${imageUrl}" />
+  <meta property="og:description" content="${description}" />
   <meta property="og:url" content="${redirectUrl}" />
+  <meta property="og:site_name" content="Aurea Invites" />
+  <meta property="og:image" content="${imageUrl}" />
+  <meta property="og:image:secure_url" content="${imageUrl}" />
+  <meta property="og:image:alt" content="Wedding invitation cover for ${wedding.groom_name} and ${wedding.bride_name}" />
   
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" content="${title}" />
-  <meta name="twitter:description" content="${description}${weddingDate ? ` on ${weddingDate}` : ""}" />
+  <meta name="twitter:description" content="${description}" />
   <meta name="twitter:image" content="${imageUrl}" />
   
   <meta http-equiv="refresh" content="0;url=${redirectUrl}" />
