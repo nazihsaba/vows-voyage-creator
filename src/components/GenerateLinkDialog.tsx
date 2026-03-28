@@ -573,10 +573,17 @@ export const GenerateLinkDialog = ({
               {loading ? "Creating..." : "Create Link"}
             </Button>
           ) : (
-            <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile} className="rounded-lg h-9 sm:h-10 text-sm">
-              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {loading ? "Processing..." : "Generate Automatically"}
-            </Button>
+            <div className="flex items-center gap-3">
+              {loading && (
+                <p className="text-xs text-muted-foreground animate-pulse">
+                  Hang tight — generating your links, this may take a few moments…
+                </p>
+              )}
+              <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile} className="rounded-lg h-9 sm:h-10 text-sm shrink-0">
+                {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {loading ? "Processing..." : "Generate Automatically"}
+              </Button>
+            </div>
           )}
         </div>
       </DialogContent>
