@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
+import { Calendar, MapPin, Copy } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
