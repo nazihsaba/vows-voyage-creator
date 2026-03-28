@@ -727,6 +727,7 @@ const ManageLinks = () => {
           onOpenChange={setGenerateLinkOpen}
           weddingId={wedding.id}
           weddingSlug={wedding.slug}
+          mainImageUrl={wedding.main_picture_url}
           onSuccess={() => setRefresh((prev) => prev + 1)}
         />
       )}
