@@ -6,6 +6,7 @@ import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useTemplate } from "@/hooks/useTemplate";
 import { format } from "date-fns";
 import { Loader2, Download, ArrowLeft } from "lucide-react";
+import aureaLogoIcon from "@/assets/aureaLogoIcon.png";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
