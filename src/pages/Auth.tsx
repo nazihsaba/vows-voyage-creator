@@ -182,16 +182,13 @@ const Auth = () => {
     setLoading(true);
 
     try {
-      // Check if email exists in the profiles table
-      const { data: profile, error: profileError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("email", email.trim().toLowerCase())
-        .maybeSingle();
+      // Check if email exists in the database
+      const { data: emailExists, error: checkError } = await supabase
+        .rpc("check_email_exists", { check_email: email.trim().toLowerCase() });
 
-      if (profileError) throw profileError;
+      if (checkError) throw checkError;
 
-      if (!profile) {
+      if (!emailExists) {
         toast.error("No account found with this email address");
         setLoading(false);
         return;
