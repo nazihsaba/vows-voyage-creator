@@ -64,7 +64,7 @@ const Index = () => {
       <header className="bg-white/80 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={aureaLogo} alt="Auréa" className="h-14" />
+            <img src={aureaLogo} alt="Auréa" loading="lazy" className="h-14" />
           </div>
           {!isAuthenticated && (
             <div className="flex items-center gap-3">
