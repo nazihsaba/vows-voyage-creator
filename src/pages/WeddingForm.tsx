@@ -84,6 +84,13 @@ const WeddingForm = () => {
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
+
+  const getMaxGalleryImages = () => {
+    if (template === "classic-romance") return 4;
+    return 7; // Vérité and Aura templates
+  };
+  const maxGalleryImages = getMaxGalleryImages();
+
   const shouldShowGalleryUpload =
     template === "template2" ||
     template === "classic-gallery" ||
@@ -217,9 +224,9 @@ const WeddingForm = () => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
 
-    if (totalImages > 6) {
+    if (totalImages > maxGalleryImages) {
       toast({
-        title: "Maximum 6 images allowed",
+        title: `Maximum ${maxGalleryImages} images allowed`,
         description: "Please select fewer images for the gallery.",
         variant: "destructive",
       });
@@ -332,6 +339,17 @@ const WeddingForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate gallery images are required for templates that show gallery
+    if (shouldShowGalleryUpload && existingGalleryImages.length + galleryFiles.length === 0) {
+      toast({
+        title: "Gallery images required",
+        description: "Please upload at least one gallery image.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
@@ -1079,7 +1097,7 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
-                  <Label>Gallery Images (up to 6)</Label>
+                  <Label>Gallery Images (up to {maxGalleryImages}) <span className="text-destructive">*</span></Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                   </p>
@@ -1131,7 +1149,7 @@ const WeddingForm = () => {
                   )}
 
                   {/* Upload Button */}
-                  {existingGalleryImages.length + galleryFiles.length < 6 && (
+                  {existingGalleryImages.length + galleryFiles.length < maxGalleryImages && (
                     <>
                       <label
                         htmlFor="gallery_images"
@@ -1140,7 +1158,7 @@ const WeddingForm = () => {
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground">Click to upload gallery images</span>
                         <span className="text-xs text-muted-foreground mt-1">
-                          {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                          {maxGalleryImages - existingGalleryImages.length - galleryFiles.length} slots remaining
                         </span>
                       </label>
                       <Input
