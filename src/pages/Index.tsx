@@ -272,15 +272,15 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="space-y-3 mb-8">
-                {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
-                  <div key={perk} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-primary" />
-                    <span className="text-sm text-muted-foreground">{perk}</span>
-                  </div>
-                ))}
-              </div>
-              <div className="mt-auto text-center">
+              <div className="flex items-end justify-between mb-8 mt-auto">
+                <div className="space-y-3">
+                  {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
+                    <div key={perk} className="flex items-center gap-2">
+                      <Check className="w-4 h-4 text-primary" />
+                      <span className="text-sm text-muted-foreground">{perk}</span>
+                    </div>
+                  ))}
+                </div>
                 <Button
                   onClick={() => window.open("https://wa.me/", "_blank")}
                   className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
