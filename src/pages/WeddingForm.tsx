@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,8 @@ const WeddingForm = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const cameFromMyEvents = (location.state as any)?.from === "my-events";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -512,7 +514,7 @@ const WeddingForm = () => {
       <div className="max-w-2xl mx-auto">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          My Events
+          {cameFromMyEvents ? "My Events" : "Back to Dashboard"}
         </Button>
 
         <Card className="shadow-elegant overflow-hidden">
