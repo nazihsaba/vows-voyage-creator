@@ -381,9 +381,10 @@ const ManageLinks = () => {
                                   })}
                                 </TableCell>
                                 <TableCell>
-                                  <span className="text-sm font-medium">
-                                    {stats.total} {stats.total === 1 ? "guest" : "guests"}
-                                  </span>
+                                  <div className="flex items-center gap-1.5">
+                                    <Users className="w-4 h-4 text-muted-foreground" />
+                                    <span className="text-sm font-medium">{stats.total}</span>
+                                  </div>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex gap-1.5">
