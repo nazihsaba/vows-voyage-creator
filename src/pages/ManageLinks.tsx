@@ -140,10 +140,10 @@ const ManageLinks = () => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    // Use the OG edge function URL so shared links show rich previews (image, title, description)
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const ogUrl = `${supabaseUrl}/functions/v1/og-invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}?origin=${encodeURIComponent(window.location.origin)}`;
-    await navigator.clipboard.writeText(ogUrl);
+    // Share the clean app URL for the invitation
+    const siteOrigin = window.location.origin;
+    const inviteUrl = `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    await navigator.clipboard.writeText(inviteUrl);
     toast({
       title: "Copied!",
       description: "Invitation link copied to clipboard",
