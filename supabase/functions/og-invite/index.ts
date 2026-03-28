@@ -47,8 +47,8 @@ Deno.serve(async (req) => {
     }
     const redirectUrl = `${siteOrigin}${redirectPath}`;
 
-    const title = wedding.event_title || `${wedding.groom_name} & ${wedding.bride_name}`;
-    const description = `You're invited to celebrate with ${wedding.groom_name} & ${wedding.bride_name}`;
+    const title = `Wedding of ${wedding.groom_name} & ${wedding.bride_name}`;
+    const description = "Wedding invitation";
     const imageUrl = wedding.main_picture_url || "";
     const weddingDate = wedding.wedding_date
       ? new Date(wedding.wedding_date).toLocaleDateString("en-US", {
