@@ -219,8 +219,9 @@ const Index = () => {
               <div className="space-y-5">
                 {[
                   { step: "1", text: "Contact us" },
-                  { step: "2", text: "Share your event details" },
-                  { step: "3", text: "We take care of everything" },
+                  { step: "2", text: "Choose your template" },
+                  { step: "3", text: "Share your event details" },
+                  { step: "4", text: "We take care of everything" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-center gap-4">
                     <div className="w-9 h-9 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
