@@ -192,6 +192,9 @@ const Dashboard = () => {
                       <img
                         src={template.image}
                         alt={template.name}
+                        loading="eager"
+                        fetchPriority="high"
+                        decoding="sync"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* Overlay gradient on hover */}
