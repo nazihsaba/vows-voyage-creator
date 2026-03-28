@@ -549,38 +549,39 @@ const ManageLinks = () => {
                             </div>
 
                             {/* Action buttons - icon only on mobile, with text on larger screens */}
-                            <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                            <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5" onClick={(e) => e.stopPropagation()}>
                               <Button
-                                size="sm"
-                                variant="outline"
+                                size="icon"
+                                variant="ghost"
                                 onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3"
+                                title="Copy Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                               >
-                                <Copy className="w-3 h-3 sm:mr-1" />
-                                <span className="hidden sm:inline text-xs">Copy</span>
+                                <Copy className="w-3.5 h-3.5" />
                               </Button>
                               <Button
-                                size="sm"
-                                variant="outline"
+                                size="icon"
+                                variant="ghost"
                                 onClick={() => {
-                                  const s = link.link_name
+                                  const sanitizedLinkName = link.link_name
                                     .toLowerCase()
-                                    .replace(/[^a-z0-9]+/g, "-")
-                                    .replace(/^-+|-+$/g, "");
-                                  window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, "_blank");
+                                    .replace(/[^a-z0-9]+/g, '-')
+                                    .replace(/^-+|-+$/g, '');
+                                  window.open(`/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`, '_blank');
                                 }}
-                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3"
+                                title="Open Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                               >
-                                <ExternalLink className="w-3 h-3 sm:mr-1" />
-                                <span className="hidden sm:inline text-xs">Open</span>
+                                <ExternalLink className="w-3.5 h-3.5" />
                               </Button>
                               <Button
-                                size="sm"
-                                variant="outline"
+                                size="icon"
+                                variant="ghost"
                                 onClick={() => setDeleteId(link.id)}
-                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                                title="Delete Link"
+                                className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
                               >
-                                <Trash2 className="w-3 h-3" />
+                                <Trash2 className="w-3.5 h-3.5" />
                               </Button>
                             </div>
                           </div>
