@@ -358,7 +358,7 @@ const ManageLinks = () => {
                           return (
                             <React.Fragment key={link.id}>
                               <TableRow
-                                className={`${linkIndex % 2 === 0 ? "bg-white" : "bg-muted/20"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/20`}
+                                className={`${linkIndex % 2 === 0 ? "bg-background" : "bg-muted/40"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/30`}
                                 onClick={() => toggleLink(link.id)}
                               >
                                 <TableCell>
@@ -454,7 +454,7 @@ const ManageLinks = () => {
                                 linkInvitees.map((invitee) => (
                                   <TableRow
                                     key={invitee.id}
-                                    className="bg-primary/[0.02] border-l-4 border-l-primary/20 hover:bg-primary/5 transition-colors"
+                                    className="bg-muted/30 border-l-4 border-l-primary/30 hover:bg-primary/5 transition-colors"
                                   >
                                     <TableCell></TableCell>
                                     <TableCell colSpan={3} className="pl-8 font-medium">
@@ -492,7 +492,7 @@ const ManageLinks = () => {
                                 ))}
 
                               {isExpanded && linkInvitees.length === 0 && (
-                                <TableRow className={linkIndex % 2 === 0 ? "bg-white" : "bg-accent/5"}>
+                                <TableRow className="bg-muted/20">
                                   <TableCell></TableCell>
                                   <TableCell
                                     colSpan={5}
@@ -645,7 +645,7 @@ const ManageLinks = () => {
 
                         {/* Expanded Guests */}
                         {isExpanded && (
-                          <div className="border-t border-border/20 bg-muted/10">
+                          <div className="border-t border-border/20 bg-muted/30">
                             {linkInvitees.length === 0 ? (
                               <p className="text-center py-4 text-sm text-muted-foreground italic">
                                 No guests added yet
@@ -654,7 +654,7 @@ const ManageLinks = () => {
                               linkInvitees.map((invitee) => (
                                 <div
                                   key={invitee.id}
-                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
+                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-background"
                                 >
                                   <span className="text-sm font-medium text-foreground truncate mr-2">
                                     {invitee.name}
