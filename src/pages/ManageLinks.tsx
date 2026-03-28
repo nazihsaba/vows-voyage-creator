@@ -387,24 +387,18 @@ const ManageLinks = () => {
                                   </div>
                                 </TableCell>
                                 <TableCell>
-                                  <div className="flex gap-1.5">
+                                  <div className="flex flex-wrap gap-1.5">
                                     <Badge
-                                      variant="outline"
-                                      className="bg-green-50 border-green-200 text-green-700 text-xs"
+                                      variant="secondary"
+                                      className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
                                     >
-                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
-                                      {stats.attending}
+                                      <Check className="w-3 h-3 mr-1" /> {stats.attending}
                                     </Badge>
-                                    <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-xs">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>
-                                      {stats.notAttending}
+                                    <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
+                                      <Loader2 className="w-3 h-3 mr-1" /> {stats.pending}
                                     </Badge>
-                                    <Badge
-                                      variant="outline"
-                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs"
-                                    >
-                                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1"></span>
-                                      {stats.pending}
+                                    <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
+                                      <X className="w-3 h-3 mr-1" /> {stats.notAttending}
                                     </Badge>
                                   </div>
                                 </TableCell>
