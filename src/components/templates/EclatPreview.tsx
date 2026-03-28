@@ -271,7 +271,7 @@ export const EclatPreview = () => {
               <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
-                    <PartyPopper className="w-8 h-8 text-primary" />
+                    <Icon icon="solar:confetti-bold" className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
 
