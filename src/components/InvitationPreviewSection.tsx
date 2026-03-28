@@ -1,10 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
-import veriteTemplate from "@/assets/verite-preview-9.jpg";
-import eclatTemplate from "@/assets/aura-preview-11.jpg";
-import graceTemplate from "@/assets/preview-wedding-9.jpg";
-import auraTemplate from "@/assets/eclat-wedding-4.jpg";
+import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
+import veriteTemplate from "@/assets/verite-preview-10.jpg";
+import eclatTemplate from "@/assets/aura-preview-10.jpg";
+import graceTemplate from "@/assets/preview-wedding-10.jpg";
+import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 
 const previewCards = [
   {
