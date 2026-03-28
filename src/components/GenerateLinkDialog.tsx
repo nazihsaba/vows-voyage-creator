@@ -24,6 +24,7 @@ interface GenerateLinkDialogProps {
   onOpenChange: (open: boolean) => void;
   weddingId: string;
   weddingSlug: string;
+  mainImageUrl?: string | null;
   onSuccess: () => void;
 }
 
