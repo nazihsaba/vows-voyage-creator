@@ -140,10 +140,9 @@ const ManageLinks = () => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    // Use OG edge function URL so shared links show rich previews (image, title)
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-    const ogPath = `${supabaseUrl}/functions/v1/og-invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}?origin=${encodeURIComponent(window.location.origin)}`;
-    await navigator.clipboard.writeText(ogPath);
+    // Use wedding.slug as the first parameter, not the link's unique_slug
+    const fullUrl = `${window.location.origin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    await navigator.clipboard.writeText(fullUrl);
     toast({
       title: "Copied!",
       description: "Invitation link copied to clipboard",
@@ -322,7 +321,7 @@ const ManageLinks = () => {
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-muted/30 border-b border-border/40">
+                      <TableRow className="bg-white border-b border-border/40">
                         <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Link Name
@@ -455,7 +454,7 @@ const ManageLinks = () => {
                                 linkInvitees.map((invitee) => (
                                   <TableRow
                                     key={invitee.id}
-                                    className="bg-muted/30 border-l-4 border-l-primary/30 hover:bg-primary/5 transition-colors"
+                                    className="bg-white border-l-4 border-l-primary/30 hover:bg-primary/5 transition-colors"
                                   >
                                     <TableCell></TableCell>
                                     <TableCell colSpan={3} className="pl-8 font-medium">
@@ -646,7 +645,7 @@ const ManageLinks = () => {
 
                         {/* Expanded Guests */}
                         {isExpanded && (
-                          <div className="border-t border-border/20 bg-white">
+                          <div className="border-t border-border/20 bg-muted/30">
                             {linkInvitees.length === 0 ? (
                               <p className="text-center py-4 text-sm text-muted-foreground italic">
                                 No guests added yet
