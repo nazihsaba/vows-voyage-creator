@@ -760,7 +760,7 @@ const WeddingForm = () => {
               {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
-                  <Label htmlFor="wedding_video">Upload Video</Label>
+                  <Label htmlFor="wedding_video">Upload Video <span className="text-destructive">*</span></Label>
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
