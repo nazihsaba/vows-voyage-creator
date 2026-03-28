@@ -1138,7 +1138,7 @@ const WeddingForm = () => {
                   )}
 
                   {/* Upload Button */}
-                  {existingGalleryImages.length + galleryFiles.length < 6 && (
+                  {existingGalleryImages.length + galleryFiles.length < maxGalleryImages && (
                     <>
                       <label
                         htmlFor="gallery_images"
@@ -1147,7 +1147,8 @@ const WeddingForm = () => {
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground">Click to upload gallery images</span>
                         <span className="text-xs text-muted-foreground mt-1">
-                          {6 - existingGalleryImages.length - galleryFiles.length} slots remaining
+                          {maxGalleryImages - existingGalleryImages.length - galleryFiles.length} slots remaining
+                        </span>
                         </span>
                       </label>
                       <Input
