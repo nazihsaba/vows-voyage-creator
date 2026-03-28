@@ -421,7 +421,6 @@ export const GenerateLinkDialog = ({
                 </Card>
               )}
 
-              {/* WhatsApp / Social Preview Card */}
               {linkName.trim() && (() => {
                 const preview = generateInvitationPreview({
                   guestName: linkName,
