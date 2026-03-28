@@ -235,7 +235,7 @@ const ManageLinks = () => {
                 <ArrowLeft className="w-4 h-4" />
               </Button>
               <div className="min-w-0">
-                <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate leading-tight">
+                <h1 className="text-sm sm:text-lg font-semibold text-foreground truncate leading-tight font-['great-vibes']">
                   Manage Links
                 </h1>
                 <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
@@ -608,9 +608,7 @@ const ManageLinks = () => {
                             {link.side && (
                               <span
                                 className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                  link.side === "GROOM"
-                                    ? "bg-blue-100 text-blue-800"
-                                    : "bg-pink-100 text-pink-800"
+                                  link.side === "GROOM" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"
                                 }`}
                               >
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
