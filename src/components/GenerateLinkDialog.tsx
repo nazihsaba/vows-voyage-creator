@@ -265,7 +265,7 @@ export const GenerateLinkDialog = ({
       formData.append("weddingSlug", weddingSlug);
       formData.append("weddingId", weddingId);
 
-      const webhookUrl = "https://aurea-invites.app.n8n.cloud/webhook-test/read-invitees-csv";
+      const webhookUrl = "https://aurea-invites.app.n8n.cloud/webhook/read-invitees-csv";
       console.log("Sending file to n8n workflow:", webhookUrl);
 
       const response = await fetch(webhookUrl, {
