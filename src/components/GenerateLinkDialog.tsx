@@ -287,9 +287,15 @@ export const GenerateLinkDialog = ({
       }
       console.log("n8n workflow response:", result);
 
+      // Extract message from the webhook response
+      const responseMessage =
+        typeof result === "string"
+          ? result
+          : result?.message || result?.description || "Your invitation links have been generated successfully.";
+
       toast({
         title: "Success!",
-        description: "Your invitation links have been generated successfully.",
+        description: responseMessage,
         action: (
           <Button
             variant="outline"
