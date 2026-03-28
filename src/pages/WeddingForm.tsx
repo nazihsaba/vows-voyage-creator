@@ -15,6 +15,8 @@ const WeddingForm = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  const cameFromMyEvents = (location.state as any)?.from === "my-events";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
