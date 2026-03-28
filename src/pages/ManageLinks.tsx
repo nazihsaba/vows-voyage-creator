@@ -322,7 +322,7 @@ const ManageLinks = () => {
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
-                      <TableRow className="bg-white border-b border-border/40">
+                      <TableRow className="bg-primary/10 border-b border-primary/20">
                         <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Link Name
@@ -359,7 +359,7 @@ const ManageLinks = () => {
                           return (
                             <React.Fragment key={link.id}>
                               <TableRow
-                                className={`${linkIndex % 2 === 0 ? "bg-background" : "bg-muted/40"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/30`}
+                                className={`${linkIndex % 2 === 0 ? "bg-background" : "bg-muted/40"} transition-all duration-200 cursor-pointer border-b border-border/30`}
                                 onClick={() => toggleLink(link.id)}
                               >
                                 <TableCell>
@@ -455,7 +455,7 @@ const ManageLinks = () => {
                                 linkInvitees.map((invitee) => (
                                   <TableRow
                                     key={invitee.id}
-                                    className="bg-white border-l-4 border-l-primary/30 hover:bg-primary/5 transition-colors"
+                                    className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                   >
                                     <TableCell></TableCell>
                                     <TableCell colSpan={3} className="pl-8 font-medium">
