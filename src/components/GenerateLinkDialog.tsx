@@ -332,7 +332,7 @@ export const GenerateLinkDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0 rounded-2xl sm:rounded-2xl">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden p-0 gap-0 rounded-2xl sm:rounded-2xl border-border/60 shadow-xl flex flex-col">
         {/* Header */}
         <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-border/50 bg-gradient-to-br from-primary/5 to-secondary/5">
           <DialogHeader className="space-y-1">
@@ -351,7 +351,7 @@ export const GenerateLinkDialog = ({
         </div>
 
         {/* Body */}
-        <div className="px-4 sm:px-6 py-4 sm:py-5">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto flex-1 min-h-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
               <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
@@ -563,7 +563,7 @@ export const GenerateLinkDialog = ({
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-border/50 bg-muted/30 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-border/50 bg-muted/30 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2 shrink-0 rounded-b-2xl">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading} className="rounded-lg h-9 sm:h-10 text-sm">
             Cancel
           </Button>
