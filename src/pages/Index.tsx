@@ -185,9 +185,9 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-8">
             {/* Option 1: DIY */}
-            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
-              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Do It Yourself</h3>
-              <div className="space-y-5">
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-8 text-center">Do It Yourself</h3>
+              <div className="space-y-6">
                 {[
                   { step: "1", text: "Visit aureainvites.com" },
                   { step: "2", text: "Create your personal account" },
@@ -195,28 +195,20 @@ const Index = () => {
                   { step: "4", text: "Customize your invitation details" },
                   { step: "5", text: "Pay once, share unlimited links" },
                 ].map((item) => (
-                  <div key={item.step} className="flex items-center gap-4">
-                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                  <div key={item.step} className="flex items-center gap-5">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <span className="text-sm font-semibold text-primary">{item.step}</span>
                     </div>
-                    <p className="text-foreground">{item.text}</p>
+                    <p className="text-foreground text-base">{item.text}</p>
                   </div>
                 ))}
               </div>
-              {/* <div className="mt-8 text-center">
-                <Button
-                  onClick={() => navigate("/dashboard")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8"
-                >
-                  Get Started
-                </Button>
-              </div> */}
             </div>
 
             {/* Option 2: Managed */}
-            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
-              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Let Us Handle It</h3>
-              <div className="space-y-5">
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-8 text-center">Let Us Handle It</h3>
+              <div className="space-y-6">
                 {[
                   { step: "1", text: "Contact us" },
                   { step: "2", text: "Choose your template" },
@@ -224,19 +216,14 @@ const Index = () => {
                   { step: "4", text: "We take care of everything" },
                   { step: "5", text: "Pay once, share unlimited links" },
                 ].map((item) => (
-                  <div key={item.step} className="flex items-center gap-4">
-                    <div className="w-9 h-9 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
+                  <div key={item.step} className="flex items-center gap-5">
+                    <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
                       <span className="text-sm font-semibold text-primary">{item.step}</span>
                     </div>
-                    <p className="text-foreground">{item.text}</p>
+                    <p className="text-foreground text-base">{item.text}</p>
                   </div>
                 ))}
               </div>
-              {/* <div className="mt-8 text-center">
-                <Button onClick={() => window.open("https://wa.me/", "_blank")} variant="outline" className="border-primary text-primary hover:bg-primary/5 px-8">
-                  Contact Us
-                </Button>
-              </div> */}
             </div>
           </div>
         </div>
