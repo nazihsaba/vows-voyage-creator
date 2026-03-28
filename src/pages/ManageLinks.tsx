@@ -358,7 +358,7 @@ const ManageLinks = () => {
                           return (
                             <React.Fragment key={link.id}>
                               <TableRow
-                                className={`${linkIndex % 2 === 0 ? "bg-white" : "bg-muted/20"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/20`}
+                                className={`${linkIndex % 2 === 0 ? "bg-background" : "bg-muted/40"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/30`}
                                 onClick={() => toggleLink(link.id)}
                               >
                                 <TableCell>
