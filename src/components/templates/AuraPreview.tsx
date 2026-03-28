@@ -71,21 +71,21 @@ export const AuraPreview = () => {
       title: "Ceremony",
       time: "7:00 PM",
       location: "Couvent Saint Sauveur - Sarba",
-      icon: <Icon icon="mdi-light:home" />,
+      icon: <Icon icon="mdi-light:home" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "welcome",
       title: "Welcome Drink",
       time: "8:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: Wine,
+      icon: <Wine className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "dinner",
       title: "Dinner & Party",
       time: "9:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: PartyPopper,
+      icon: <PartyPopper className="w-6 h-6 mb-1 text-primary" />,
     },
   ];
 
