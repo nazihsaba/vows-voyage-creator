@@ -66,28 +66,33 @@ const InvitationPreviewSection = () => {
         </div>
 
         {/* Preview Cards — equal grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-14">
-          {previewCards.map((card) => (
-            <div
-              key={card.label}
-              className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 aspect-[3/4]"
-            >
-              <img
-                src={card.image}
-                alt={card.label}
-                className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
-              <div className="absolute top-3 left-3">
-                <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
-                  {card.label}
-                </span>
-              </div>
-              <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-                <p className="text-xs font-light tracking-widest uppercase opacity-80">{card.tagline}</p>
-              </div>
-            </div>
-          ))}
+        <div className="mb-14">
+          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <CarouselContent className="-ml-4">
+              {previewCards.map((card) => (
+                <CarouselItem key={card.label} className="pl-4 basis-full sm:basis-1/2 lg:basis-1/4">
+                  <div className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-500 aspect-[3/4]">
+                    <img
+                      src={card.image}
+                      alt={card.label}
+                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
+                    <div className="absolute top-3 left-3">
+                      <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+                        {card.label}
+                      </span>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
+                      <p className="text-xs font-light tracking-widest uppercase opacity-80">{card.tagline}</p>
+                    </div>
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-4 sm:-left-5" />
+            <CarouselNext className="-right-4 sm:-right-5" />
+          </Carousel>
         </div>
 
         {/* CTAs */}
