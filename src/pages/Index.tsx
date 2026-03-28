@@ -255,7 +255,6 @@ const Index = () => {
               <div className="space-y-0 mb-8">
                 {[
                   { step: "1", text: "Contact us" },
-                  { step: "2", text: "Choose your template" },
                   { step: "3", text: "Share your event details" },
                   { step: "4", text: "We prepare everything for you" },
                   { step: "5", text: "Pay and share with your guests" },
