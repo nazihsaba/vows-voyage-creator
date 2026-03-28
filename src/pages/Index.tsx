@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Image, Gift, Link as LinkIcon, Instagram, MessageCircle, Users } from "lucide-react";
+import { Calendar, Image, Gift, Link as LinkIcon, Instagram, MessageCircle, Users, Wand2, Mail, Check } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
