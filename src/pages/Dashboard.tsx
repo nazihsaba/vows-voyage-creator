@@ -128,11 +128,11 @@ const Dashboard = () => {
                 src={aureaIcon}
                 alt="Auréa Invites"
                 loading="lazy"
-                className="h-10 sm:h-12 object-contain cursor-pointer"
+                className="h-12 sm:h-12 object-contain cursor-pointer"
                 onClick={() => navigate("/")}
               />
               <div>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
+                <h1 className="text-xl sm:text-xl md:text-2xl font-serif font-bold text-foreground">
                   Choose Your Template
                 </h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">Create beautiful invitations</p>
