@@ -44,11 +44,11 @@ const RoseGoldTabsForm = () => {
     venue_location_link: "",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
-    { card_name: "", card_number: "" }
+    { card_name: "", card_number: "" },
   ]);
   const [cardIconFiles, setCardIconFiles] = useState<Record<number, File | null>>({});
   const [cardIconPreviews, setCardIconPreviews] = useState<Record<number, string>>({});
-  
+
   const templateType = searchParams.get("template") || "rose-gold-tabs";
   const isBibleVerseTabs = templateType === "bible-verse-tabs";
   const [formData, setFormData] = useState({
@@ -75,11 +75,7 @@ const RoseGoldTabsForm = () => {
 
   const fetchWedding = async () => {
     try {
-      const { data, error } = await supabase
-        .from("weddings")
-        .select("*")
-        .eq("id", id)
-        .single();
+      const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
       setFormData(data);
@@ -95,15 +91,12 @@ const RoseGoldTabsForm = () => {
         setAudioEndTime(data.audio_end_time || 0);
       }
 
-      const { data: locationsData } = await supabase
-        .from("wedding_locations")
-        .select("*")
-        .eq("wedding_id", id);
+      const { data: locationsData } = await supabase.from("wedding_locations").select("*").eq("wedding_id", id);
 
       if (locationsData) {
         const ceremony = locationsData.find((loc) => loc.type === "ceremony");
         const venue = locationsData.find((loc) => loc.type === "venue");
-        
+
         setLocations({
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
@@ -120,7 +113,7 @@ const RoseGoldTabsForm = () => {
         .select("*")
         .eq("wedding_id", id)
         .order("image_order");
-      
+
       if (galleryData) {
         setExistingGalleryImages(galleryData);
       }
@@ -132,11 +125,13 @@ const RoseGoldTabsForm = () => {
         .order("card_order");
 
       if (giftCardsData && giftCardsData.length > 0) {
-        setGiftCards(giftCardsData.map(card => ({
-          card_name: card.card_name,
-          card_number: card.card_number,
-          logo_url: card.logo_url,
-        })));
+        setGiftCards(
+          giftCardsData.map((card) => ({
+            card_name: card.card_name,
+            card_number: card.card_number,
+            logo_url: card.logo_url,
+          })),
+        );
       }
     } catch (error: any) {
       console.error("Error fetching wedding:", error);
@@ -187,7 +182,7 @@ const RoseGoldTabsForm = () => {
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
-    
+
     if (totalImages > 6) {
       toast({
         title: "Maximum 6 images",
@@ -198,7 +193,7 @@ const RoseGoldTabsForm = () => {
     }
 
     setGalleryFiles([...galleryFiles, ...files]);
-    
+
     // Create previews
     files.forEach((file) => {
       const reader = new FileReader();
@@ -216,10 +211,7 @@ const RoseGoldTabsForm = () => {
 
   const removeExistingGalleryImage = async (imageId: string) => {
     try {
-      const { error } = await supabase
-        .from("gallery_images")
-        .delete()
-        .eq("id", imageId);
+      const { error } = await supabase.from("gallery_images").delete().eq("id", imageId);
 
       if (error) throw error;
 
@@ -235,19 +227,17 @@ const RoseGoldTabsForm = () => {
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
-    const fileExt = file.name.split('.').pop();
-    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ''}`;
+    const fileExt = file.name.split(".").pop();
+    const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ""}`;
     const fileName = `${userId}/${uniqueId}.${fileExt}`;
-    
-    const { error: uploadError, data } = await supabase.storage
-      .from('wedding-images')
-      .upload(fileName, file);
+
+    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, file);
 
     if (uploadError) throw uploadError;
 
-    const { data: { publicUrl } } = supabase.storage
-      .from('wedding-images')
-      .getPublicUrl(fileName);
+    const {
+      data: { publicUrl },
+    } = supabase.storage.from("wedding-images").getPublicUrl(fileName);
 
     return publicUrl;
   };
@@ -258,7 +248,9 @@ const RoseGoldTabsForm = () => {
     setUploading(true);
 
     try {
-      const { data: { user } } = await supabase.auth.getUser();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
       let imageUrl = formData.main_picture_url;
@@ -290,14 +282,14 @@ const RoseGoldTabsForm = () => {
       if (id) {
         const { error } = await supabase
           .from("weddings")
-          .update({ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
+          .update({
+            ...formData,
+            slug,
+            main_picture_url: imageUrl,
             video_url: videoUrl,
             audio_url: uploadedAudioUrl,
             audio_start_time: uploadedAudioUrl ? audioStartTime : null,
-            audio_end_time: uploadedAudioUrl ? audioEndTime : null
+            audio_end_time: uploadedAudioUrl ? audioEndTime : null,
           })
           .eq("id", id);
 
@@ -305,16 +297,18 @@ const RoseGoldTabsForm = () => {
       } else {
         const { data, error } = await supabase
           .from("weddings")
-          .insert([{ 
-            ...formData, 
-            slug, 
-            main_picture_url: imageUrl, 
-            video_url: videoUrl,
-            audio_url: uploadedAudioUrl,
-            audio_start_time: audioStartTime,
-            audio_end_time: audioEndTime,
-            user_id: user.id 
-          }])
+          .insert([
+            {
+              ...formData,
+              slug,
+              main_picture_url: imageUrl,
+              video_url: videoUrl,
+              audio_url: uploadedAudioUrl,
+              audio_start_time: audioStartTime,
+              audio_end_time: audioEndTime,
+              user_id: user.id,
+            },
+          ])
           .select()
           .single();
 
@@ -334,7 +328,7 @@ const RoseGoldTabsForm = () => {
       if (locations.ceremony_location || locations.ceremony_time || locations.ceremony_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'ceremony',
+          type: "ceremony",
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
@@ -343,7 +337,7 @@ const RoseGoldTabsForm = () => {
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
-          type: 'venue',
+          type: "venue",
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
@@ -351,9 +345,7 @@ const RoseGoldTabsForm = () => {
       }
 
       if (locationInserts.length > 0) {
-        const { error: locError } = await supabase
-          .from("wedding_locations")
-          .insert(locationInserts);
+        const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
         if (locError) throw locError;
       }
 
@@ -363,23 +355,23 @@ const RoseGoldTabsForm = () => {
         await supabase.from("gift_cards").delete().eq("wedding_id", weddingId);
       }
 
-      const validCards = giftCards.filter(card => card.card_name && card.card_number);
+      const validCards = giftCards.filter((card) => card.card_name && card.card_number);
       if (validCards.length > 0) {
         // Upload card icons if any
         const cardInserts = await Promise.all(
           validCards.map(async (card, index) => {
             let logoUrl = card.logo_url;
-            
+
             // Find original index in giftCards array
-            const originalIndex = giftCards.findIndex(c => 
-              c.card_name === card.card_name && c.card_number === card.card_number
+            const originalIndex = giftCards.findIndex(
+              (c) => c.card_name === card.card_name && c.card_number === card.card_number,
             );
-            
+
             // Upload new icon if file exists
             if (cardIconFiles[originalIndex]) {
               logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
             }
-            
+
             return {
               wedding_id: weddingId,
               card_name: card.card_name,
@@ -387,12 +379,10 @@ const RoseGoldTabsForm = () => {
               logo_url: logoUrl,
               card_order: index + 1,
             };
-          })
+          }),
         );
 
-        const { error: cardError } = await supabase
-          .from("gift_cards")
-          .insert(cardInserts);
+        const { error: cardError } = await supabase.from("gift_cards").insert(cardInserts);
         if (cardError) throw cardError;
       }
 
@@ -413,12 +403,10 @@ const RoseGoldTabsForm = () => {
             wedding_id: weddingId,
             image_url: await uploadImage(file, user.id, index),
             image_order: startOrder + index,
-          }))
+          })),
         );
 
-        const { error: galleryError } = await supabase
-          .from("gallery_images")
-          .insert(galleryInserts);
+        const { error: galleryError } = await supabase.from("gallery_images").insert(galleryInserts);
 
         if (galleryError) throw galleryError;
       }
@@ -439,20 +427,14 @@ const RoseGoldTabsForm = () => {
   return (
     <div className="min-h-screen bg-gradient-soft py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <Button
-          variant="ghost"
-          onClick={() => navigate("/dashboard")}
-          className="mb-4"
-        >
+        <Button variant="ghost" onClick={() => navigate("/dashboard")} className="mb-4">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          Back to Dashboard
+          Dashboard
         </Button>
 
         <Card className="shadow-elegant">
           <CardHeader>
-            <CardTitle className="text-3xl font-serif">
-              {id ? "Edit Wedding" : "Create Wedding Invitation"}
-            </CardTitle>
+            <CardTitle className="text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -532,7 +514,6 @@ const RoseGoldTabsForm = () => {
                 />
               </div>
 
-
               {/* Background Photo or Video - only for rose-gold-tabs */}
               {!isBibleVerseTabs && (
                 <div className="space-y-2">
@@ -543,11 +524,7 @@ const RoseGoldTabsForm = () => {
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <video 
-                          src={videoPreview} 
-                          className="w-full h-full object-cover"
-                          controls
-                        />
+                        <video src={videoPreview} className="w-full h-full object-cover" controls />
                         <Button
                           type="button"
                           variant="destructive"
@@ -560,11 +537,7 @@ const RoseGoldTabsForm = () => {
                       </div>
                     ) : imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img 
-                          src={imagePreview} 
-                          alt="Wedding preview" 
-                          className="w-full h-full object-cover"
-                        />
+                        <img src={imagePreview} alt="Wedding preview" className="w-full h-full object-cover" />
                         <Button
                           type="button"
                           variant="destructive"
@@ -621,15 +594,18 @@ const RoseGoldTabsForm = () => {
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                   </p>
-                  
+
                   {/* Existing Gallery Images */}
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {existingGalleryImages.map((image) => (
-                        <div key={image.id} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={image.image_url} 
-                            alt={image.alt_text || "Gallery image"} 
+                        <div
+                          key={image.id}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img
+                            src={image.image_url}
+                            alt={image.alt_text || "Gallery image"}
                             className="w-full h-full object-cover"
                           />
                           <Button
@@ -650,10 +626,13 @@ const RoseGoldTabsForm = () => {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {galleryPreviews.map((preview, index) => (
-                        <div key={index} className="relative aspect-square rounded-lg overflow-hidden border-2 border-border">
-                          <img 
-                            src={preview} 
-                            alt={`New gallery image ${index + 1}`} 
+                        <div
+                          key={index}
+                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
+                        >
+                          <img
+                            src={preview}
+                            alt={`New gallery image ${index + 1}`}
                             className="w-full h-full object-cover"
                           />
                           <Button
@@ -671,7 +650,7 @@ const RoseGoldTabsForm = () => {
                   )}
 
                   {/* Upload Button */}
-                  {(existingGalleryImages.length + galleryFiles.length) < 6 && (
+                  {existingGalleryImages.length + galleryFiles.length < 6 && (
                     <>
                       <label
                         htmlFor="gallery_images"
@@ -726,7 +705,7 @@ const RoseGoldTabsForm = () => {
               {/* Location Fields */}
               <div className="space-y-6 border-t pt-6">
                 <h3 className="text-lg font-semibold">Event Locations</h3>
-                
+
                 {/* Ceremony Section */}
                 <Card className="border">
                   <CardHeader>
@@ -859,16 +838,16 @@ const RoseGoldTabsForm = () => {
                         <div className="space-y-2">
                           <Label>Card Icon</Label>
                           <div className="h-10 w-24 rounded-lg overflow-hidden border flex items-center justify-center bg-muted/20 p-2">
-                            <img 
-                              src={card.card_name === 'OMT' ? omtLogo : whishLogo} 
-                              alt={card.card_name} 
+                            <img
+                              src={card.card_name === "OMT" ? omtLogo : whishLogo}
+                              alt={card.card_name}
                               className="max-h-full max-w-full object-contain rounded-[6px]"
                             />
                           </div>
                         </div>
                       )}
                     </div>
-                    
+
                     {giftCards.length > 1 && (
                       <Button
                         type="button"
@@ -924,7 +903,7 @@ const RoseGoldTabsForm = () => {
                         giftCards,
                         imagePreview,
                       };
-                      sessionStorage.setItem('weddingPreviewData', JSON.stringify(previewData));
+                      sessionStorage.setItem("weddingPreviewData", JSON.stringify(previewData));
                       setPreviewUrl(`/invite/preview?draft=true&readOnly=true`);
                     }
                     setPreviewModalOpen(true);
@@ -950,13 +929,16 @@ const RoseGoldTabsForm = () => {
                             .from("weddings")
                             .update({ status: newStatus })
                             .eq("id", weddingId);
-                          
+
                           if (error) throw error;
-                          
+
                           setFormData({ ...formData, status: newStatus });
-                          toast({ 
+                          toast({
                             title: newStatus === "published" ? "Wedding published!" : "Wedding unpublished",
-                            description: newStatus === "published" ? "Your invitation is now live" : "Your invitation is now in draft mode"
+                            description:
+                              newStatus === "published"
+                                ? "Your invitation is now live"
+                                : "Your invitation is now in draft mode",
                           });
                         } catch (error: any) {
                           toast({
@@ -988,11 +970,7 @@ const RoseGoldTabsForm = () => {
             </Button>
           </DialogHeader>
           <div className="flex-1 w-full overflow-hidden px-6 pb-6">
-            <iframe
-              src={previewUrl}
-              className="w-full h-full border-0 rounded-lg"
-              title="Wedding Invitation Preview"
-            />
+            <iframe src={previewUrl} className="w-full h-full border-0 rounded-lg" title="Wedding Invitation Preview" />
           </div>
         </DialogContent>
       </Dialog>
