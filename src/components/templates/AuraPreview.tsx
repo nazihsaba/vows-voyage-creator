@@ -78,14 +78,14 @@ export const AuraPreview = () => {
       title: "Welcome Drink",
       time: "8:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: Wine,
+      icon: <Wine className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "dinner",
       title: "Dinner & Party",
       time: "9:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: PartyPopper,
+      icon: <PartyPopper className="w-6 h-6 mb-1 text-primary" />,
     },
   ];
 
