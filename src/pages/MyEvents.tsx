@@ -281,7 +281,7 @@ const MyEvents = () => {
         {loading ? (
           <div className="text-center py-16">
             <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mb-4">
-              <Loader2 className="w-6 h-6 text-primary animate-spin" />
+              <img src={aureaLogoIcon} alt="Loading" className="w-8 h-8 animate-pulse" />
             </div>
             <p className="text-muted-foreground">Loading your events...</p>
           </div>
