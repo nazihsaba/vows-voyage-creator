@@ -13,7 +13,7 @@ Deno.serve(async (req) => {
   try {
     const url = new URL(req.url);
     const pathParts = url.pathname.split("/").filter(Boolean);
-    
+
     // Expected path: /og-invite/{slug} or /og-invite/{slug}/{linkSlug}/{numberOfPersons}
     // Edge function name is the first part, so we skip it
     const fnIndex = pathParts.indexOf("og-invite");
@@ -40,7 +40,7 @@ Deno.serve(async (req) => {
     }
 
     // Build the redirect URL to the actual SPA invitation page
-    const siteOrigin = url.searchParams.get("origin") || "https://vows-voyage-creator.lovable.app";
+    const siteOrigin = url.searchParams.get("origin") || "https://app.aureainvites.com";
     let redirectPath = `/invite/${slug}`;
     if (linkSlug && numberOfPersons) {
       redirectPath = `/invite/${slug}/${linkSlug}/${numberOfPersons}`;
