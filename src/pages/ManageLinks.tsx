@@ -549,7 +549,7 @@ const ManageLinks = () => {
                             </div>
 
                             {/* Action buttons - icon only on mobile, with text on larger screens */}
-                            <div className="flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                            <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
                               <Button
                                 size="sm"
                                 variant="outline"
