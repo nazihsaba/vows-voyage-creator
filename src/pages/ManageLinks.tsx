@@ -12,7 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, Users, Search, ChevronDown, ChevronRight } from "lucide-react";
+import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, Users, Search, ChevronDown, ChevronRight, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
