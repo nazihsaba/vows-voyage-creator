@@ -563,7 +563,7 @@ export const GenerateLinkDialog = ({
         </div>
 
         {/* Footer */}
-        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-border/50 bg-muted/30 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2">
+        <div className="px-4 sm:px-6 py-3 sm:py-4 border-t border-border/50 bg-muted/30 flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2 shrink-0 rounded-b-2xl">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading} className="rounded-lg h-9 sm:h-10 text-sm">
             Cancel
           </Button>
