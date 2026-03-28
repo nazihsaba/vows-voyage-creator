@@ -7,9 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
+import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
+
+const LOCATION_ICON_OPTIONS = [
+  { value: "bx:home", label: "Home" },
+  { value: "material-symbols:church-rounded", label: "Church" },
+  { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
+  { value: "solar:confetti-bold", label: "Confetti" },
+];
 
 const WeddingForm = () => {
   const { id } = useParams();
@@ -36,9 +45,11 @@ const WeddingForm = () => {
     ceremony_location: "",
     ceremony_time: "",
     ceremony_location_link: "",
+    ceremony_icon: "material-symbols:church-rounded",
     venue_location: "",
     venue_time: "",
     venue_location_link: "",
+    venue_icon: "solar:confetti-bold",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
@@ -143,9 +154,11 @@ const WeddingForm = () => {
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
           ceremony_location_link: ceremony?.location_link || "",
+          ceremony_icon: ceremony?.icon || "material-symbols:church-rounded",
           venue_location: venue?.location_name || "",
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
+          venue_icon: venue?.icon || "solar:confetti-bold",
         });
       }
 
@@ -447,6 +460,7 @@ const WeddingForm = () => {
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
+          icon: locations.ceremony_icon,
         });
       }
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
@@ -456,6 +470,7 @@ const WeddingForm = () => {
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
+          icon: locations.venue_icon,
         });
       }
 
@@ -853,6 +868,32 @@ const WeddingForm = () => {
                         className="h-11 sm:h-10 text-sm"
                       />
                     </div>
+                    <div className="space-y-1.5">
+                      <Label>Icon</Label>
+                      <Select
+                        value={locations.ceremony_icon}
+                        onValueChange={(value) => setLocations({ ...locations, ceremony_icon: value })}
+                      >
+                        <SelectTrigger className="h-11 sm:h-10">
+                          <SelectValue>
+                            <span className="flex items-center gap-2">
+                              <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
+                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.ceremony_icon)?.label}
+                            </span>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {LOCATION_ICON_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              <span className="flex items-center gap-2">
+                                <Icon icon={opt.value} className="w-5 h-5" />
+                                {opt.label}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </CardContent>
                 </Card>
 
@@ -896,6 +937,32 @@ const WeddingForm = () => {
                         type="url"
                         className="h-11 sm:h-10 text-sm"
                       />
+                    </div>
+                    <div className="space-y-1.5">
+                      <Label>Icon</Label>
+                      <Select
+                        value={locations.venue_icon}
+                        onValueChange={(value) => setLocations({ ...locations, venue_icon: value })}
+                      >
+                        <SelectTrigger className="h-11 sm:h-10">
+                          <SelectValue>
+                            <span className="flex items-center gap-2">
+                              <Icon icon={locations.venue_icon} className="w-5 h-5" />
+                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.venue_icon)?.label}
+                            </span>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {LOCATION_ICON_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              <span className="flex items-center gap-2">
+                                <Icon icon={opt.value} className="w-5 h-5" />
+                                {opt.label}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                   </CardContent>
                 </Card>

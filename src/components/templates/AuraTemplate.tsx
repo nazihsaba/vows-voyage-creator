@@ -2,7 +2,8 @@ import { useRef, useEffect } from "react";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { Calendar, Church, Wine, PartyPopper, MapPin } from "lucide-react";
+import { Calendar, MapPin } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
@@ -91,27 +92,19 @@ export const AuraTemplate = ({
             time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
             location: ceremony.location_name,
             link: ceremony.location_link,
-            icon: Church,
+            icon: ceremony.icon || "material-symbols:church-rounded",
           },
         ]
       : []),
     ...(venue
       ? [
           {
-            id: "welcome",
-            title: "Welcome Drink",
-            time: "8:00 PM",
+            id: "venue",
+            title: "Venue",
+            time: formatTimeTo12Hour(venue.time) || "8:00 PM",
             location: venue.location_name,
             link: venue.location_link,
-            icon: Wine,
-          },
-          {
-            id: "dinner",
-            title: "Dinner & Party",
-            time: "9:00 PM",
-            location: venue.location_name,
-            link: venue.location_link,
-            icon: PartyPopper,
+            icon: venue.icon || "solar:confetti-bold",
           },
         ]
       : []),
@@ -305,7 +298,7 @@ export const AuraTemplate = ({
                       </div>
                       <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
                       <div className="flex-1 pl-8">
-                        <event.icon className="w-6 h-6 mb-1 text-primary" />
+                        <Icon icon={event.icon} className="w-6 h-6 mb-1 text-primary" />
                         <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                         {event.link && (
                           <a

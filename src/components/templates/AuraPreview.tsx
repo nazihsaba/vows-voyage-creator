@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Calendar, Church, Wine, PartyPopper, MapPin, Copy } from "lucide-react";
+import { Calendar, MapPin, Copy } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -70,21 +71,21 @@ export const AuraPreview = () => {
       title: "Ceremony",
       time: "7:00 PM",
       location: "Couvent Saint Sauveur - Sarba",
-      icon: <Church className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Icon icon="material-symbols:church-rounded" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "welcome",
       title: "Welcome Drink",
       time: "8:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: <Wine className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Icon icon="streamline:champagne-party-alcohol-remix" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "dinner",
       title: "Dinner & Party",
       time: "9:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: <PartyPopper className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Icon icon="solar:confetti-bold" className="w-6 h-6 mb-1 text-primary" />,
     },
   ];
 

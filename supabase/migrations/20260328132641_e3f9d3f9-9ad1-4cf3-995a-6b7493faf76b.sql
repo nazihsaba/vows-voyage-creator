@@ -1,0 +1,1 @@
+ALTER TABLE public.wedding_locations ADD COLUMN icon text DEFAULT NULL;
