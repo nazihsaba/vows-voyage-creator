@@ -852,7 +852,7 @@ const WeddingForm = () => {
               {/* Grace Featured Image */}
               {isGraceTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="grace_featured">Featured Image</Label>
+                  <Label htmlFor="grace_featured">Featured Image <span className="text-destructive">*</span></Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     This image will be displayed as a full-width photo in your invitation
                   </p>
