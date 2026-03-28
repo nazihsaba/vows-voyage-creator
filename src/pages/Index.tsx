@@ -196,32 +196,35 @@ const Index = () => {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {/* Option 1: DIY */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
-              <div className="text-center mb-6">
-                {/* <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
-                  <Wand2 className="w-7 h-7 text-primary" />
-                </div>  */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
+                  <Wand2 className="w-8 h-8 text-primary" />
+                </div>
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
               </div>
-              <div className="space-y-5 mb-6">
+              <div className="space-y-0 mb-8">
                 {[
                   { step: "1", text: "Create your account" },
                   { step: "2", text: "Choose your template" },
                   { step: "3", text: "Customize your invitation" },
                   { step: "4", text: "Pay and share instantly" },
-                ].map((item) => (
-                  <div key={item.step} className="flex items-center gap-5">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-semibold text-primary">{item.step}</span>
+                ].map((item, i) => (
+                  <div key={item.step}>
+                    <div className="flex items-center gap-5 py-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="text-sm font-semibold text-primary">{item.step}</span>
+                      </div>
+                      <p className="text-foreground text-base">{item.text}</p>
                     </div>
-                    <p className="text-foreground text-base">{item.text}</p>
+                    {i < 3 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-2 gap-x-4 gap-y-2 mb-8">
+              <div className="grid grid-cols-2 gap-x-4 gap-y-3 mb-8">
                 {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
                   <div key={perk} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
@@ -232,7 +235,7 @@ const Index = () => {
               <div className="mt-auto text-center">
                 <Button
                   onClick={() => navigate("/dashboard")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 rounded-lg"
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
                 >
                   Start Creating
                 </Button>
@@ -241,32 +244,35 @@ const Index = () => {
 
             {/* Option 2: Managed */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
-              <div className="text-center mb-6">
-                {/* <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/20 mb-4">
-                  <Mail className="w-7 h-7 text-primary" />
-                </div> */}
+              <div className="text-center mb-8">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
+                  <Mail className="w-8 h-8 text-primary" />
+                </div>
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Let Us Handle It</h3>
                 <p className="text-muted-foreground text-sm">
                   Perfect for a more personalized, done-for-you experience
                 </p>
               </div>
-              <div className="space-y-5 mb-6">
+              <div className="space-y-0 mb-8">
                 {[
                   { step: "1", text: "Contact us" },
                   { step: "2", text: "Choose your template" },
                   { step: "3", text: "Share your event details" },
                   { step: "4", text: "We prepare everything for you" },
                   { step: "5", text: "Pay and share with your guests" },
-                ].map((item) => (
-                  <div key={item.step} className="flex items-center gap-5">
-                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <span className="text-sm font-semibold text-primary">{item.step}</span>
+                ].map((item, i) => (
+                  <div key={item.step}>
+                    <div className="flex items-center gap-5 py-4">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                        <span className="text-sm font-semibold text-primary">{item.step}</span>
+                      </div>
+                      <p className="text-foreground text-base">{item.text}</p>
                     </div>
-                    <p className="text-foreground text-base">{item.text}</p>
+                    {i < 4 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
                   </div>
                 ))}
               </div>
-              <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-8">
+              <div className="space-y-3 mb-8">
                 {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
                   <div key={perk} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
@@ -277,7 +283,7 @@ const Index = () => {
               <div className="mt-auto text-center">
                 <Button
                   onClick={() => window.open("https://wa.me/", "_blank")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 rounded-lg"
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
                 >
                   Contact Us
                 </Button>
