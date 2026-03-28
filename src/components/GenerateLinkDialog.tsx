@@ -351,7 +351,7 @@ export const GenerateLinkDialog = ({
         </div>
 
         {/* Body */}
-        <div className="px-4 sm:px-6 py-4 sm:py-5">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto flex-1 min-h-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
             <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
               <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
