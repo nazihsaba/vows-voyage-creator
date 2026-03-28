@@ -332,7 +332,7 @@ export const GenerateLinkDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto p-0 gap-0 rounded-2xl sm:rounded-2xl">
+      <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden p-0 gap-0 rounded-2xl sm:rounded-2xl border-border/60 shadow-xl flex flex-col">
         {/* Header */}
         <div className="px-4 sm:px-6 pt-5 sm:pt-6 pb-3 sm:pb-4 border-b border-border/50 bg-gradient-to-br from-primary/5 to-secondary/5">
           <DialogHeader className="space-y-1">
