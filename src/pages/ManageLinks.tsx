@@ -327,9 +327,6 @@ const ManageLinks = () => {
                           Link Name
                         </TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                          Side
-                        </TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Created
                         </TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
@@ -346,7 +343,7 @@ const ManageLinks = () => {
                     <TableBody>
                       {filteredLinks.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                             {searchQuery
                               ? "No invitation links or guests match your search"
                               : "No invitation links created yet"}
@@ -374,21 +371,6 @@ const ManageLinks = () => {
                                   </Button>
                                 </TableCell>
                                 <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
-                                <TableCell>
-                                  {link.side ? (
-                                    <span
-                                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                        link.side === "GROOM"
-                                          ? "bg-blue-100 text-blue-800"
-                                          : "bg-pink-100 text-pink-800"
-                                      }`}
-                                    >
-                                      {link.side === "GROOM" ? "Groom" : "Bride"}
-                                    </span>
-                                  ) : (
-                                    <span className="text-muted-foreground text-xs">—</span>
-                                  )}
-                                </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
                                   {new Date(link.created_at).toLocaleDateString("en-US", {
                                     month: "short",
