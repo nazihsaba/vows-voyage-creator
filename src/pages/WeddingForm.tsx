@@ -7,9 +7,18 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
+import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
+
+const LOCATION_ICON_OPTIONS = [
+  { value: "bx:home", label: "Home" },
+  { value: "material-symbols:church-rounded", label: "Church" },
+  { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
+  { value: "solar:confetti-bold", label: "Confetti" },
+];
 
 const WeddingForm = () => {
   const { id } = useParams();
