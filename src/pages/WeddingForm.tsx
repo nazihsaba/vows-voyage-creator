@@ -460,6 +460,7 @@ const WeddingForm = () => {
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
+          icon: locations.ceremony_icon,
         });
       }
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
@@ -469,6 +470,7 @@ const WeddingForm = () => {
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
+          icon: locations.venue_icon,
         });
       }
 
