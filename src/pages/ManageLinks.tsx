@@ -610,7 +610,15 @@ const ManageLinks = () => {
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
                               </span>
                             )}
-                            <span className="text-[11px] text-muted-foreground">{stats.total}</span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {stats.total} {stats.total === 1 ? "guest" : "guests"}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {new Date(link.created_at).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                              })}
+                            </span>
                           </div>
 
                           {/* RSVP Badges */}
