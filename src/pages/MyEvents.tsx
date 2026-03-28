@@ -436,7 +436,7 @@ const MyEvents = () => {
                                     variant="ghost"
                                     size="icon"
                                     className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    onClick={() => window.open(`/invite/${wedding.slug}`, "_blank")}
+                                    onClick={() => window.open(`/invite/${wedding.slug}?preview=true&readOnly=true`, "_blank")}
                                     title="Preview"
                                   >
                                     <Eye className="h-3.5 w-3.5" />
