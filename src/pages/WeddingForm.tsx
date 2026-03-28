@@ -339,6 +339,17 @@ const WeddingForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate gallery images are required for templates that show gallery
+    if (shouldShowGalleryUpload && existingGalleryImages.length + galleryFiles.length === 0) {
+      toast({
+        title: "Gallery images required",
+        description: "Please upload at least one gallery image.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
