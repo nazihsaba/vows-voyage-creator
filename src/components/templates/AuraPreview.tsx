@@ -71,21 +71,21 @@ export const AuraPreview = () => {
       title: "Ceremony",
       time: "7:00 PM",
       location: "Couvent Saint Sauveur - Sarba",
-      icon: <Icon icon="mdi:home" />,
+      icon: <Icon icon="mdi:home" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "welcome",
       title: "Welcome Drink",
       time: "8:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: Wine,
+      icon: <Wine className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "dinner",
       title: "Dinner & Party",
       time: "9:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: PartyPopper,
+      icon: <PartyPopper className="w-6 h-6 mb-1 text-primary" />,
     },
   ];
 
@@ -180,7 +180,7 @@ export const AuraPreview = () => {
                     </div>
                     <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
                     <div className="flex-1 pl-8">
-                      <event.icon className="w-6 h-6 mb-1 text-primary" />
+                      {event.icon}
                       <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                       <a
                         href="#"
