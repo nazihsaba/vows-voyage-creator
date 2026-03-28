@@ -611,13 +611,8 @@ const ManageLinks = () => {
                               </span>
                             )}
                             <span className="text-[11px] text-muted-foreground">
-                              {stats.total} {stats.total === 1 ? "guest" : "guests"}
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">
-                              {new Date(link.created_at).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                              })}
+                              <Users className="w-3 h-3" />
+                              {stats.total}
                             </span>
                           </div>
 
