@@ -294,6 +294,42 @@ const WeddingForm = () => {
     return `${groomName}-${brideName}`.toLowerCase().replace(/\s+/g, "-");
   };
 
+  /**
+   * Copy the main wedding image into the invitation-images bucket
+   * at invites/{slug}/main.{ext} for reliable OG previews.
+   */
+  const uploadOgImage = async (mainPictureUrl: string, slug: string) => {
+    try {
+      if (!mainPictureUrl) return;
+
+      // Fetch the image as a blob
+      const response = await fetch(mainPictureUrl);
+      if (!response.ok) return;
+      const blob = await response.blob();
+
+      // Determine extension from content-type
+      const contentType = response.headers.get("content-type") || "image/jpeg";
+      const extMap: Record<string, string> = {
+        "image/jpeg": "jpg",
+        "image/png": "png",
+        "image/webp": "webp",
+        "image/gif": "gif",
+      };
+      const ext = extMap[contentType] || "jpg";
+      const filePath = `invites/${slug}/main.${ext}`;
+
+      // Upload (upsert) to invitation-images bucket
+      await supabase.storage
+        .from("invitation-images")
+        .upload(filePath, blob, {
+          contentType,
+          upsert: true,
+        });
+    } catch (err) {
+      console.warn("OG image copy failed (non-blocking):", err);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -393,6 +429,13 @@ const WeddingForm = () => {
           audio_start_time: audioTrimSettings?.startTime || 0,
           audio_end_time: audioTrimSettings?.endTime || 0,
         });
+      }
+      // Copy main image to invitation-images bucket for OG previews
+      const finalSlug = slug;
+      const finalImageUrl = imageUrl;
+      if (finalImageUrl) {
+        // Fire and forget — don't block the save flow
+        uploadOgImage(finalImageUrl, finalSlug);
       }
 
       // Upload gallery images if template supports gallery
