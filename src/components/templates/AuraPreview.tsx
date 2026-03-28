@@ -10,7 +10,6 @@ import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
 import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
 import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
 import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
-import { Icon } from "@iconify/react";
 
 // Static Countdown Timer Component
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
@@ -71,7 +70,7 @@ export const AuraPreview = () => {
       title: "Ceremony",
       time: "7:00 PM",
       location: "Couvent Saint Sauveur - Sarba",
-      icon: <Icon icon="solar:confetti-bold" className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Church className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "welcome",
