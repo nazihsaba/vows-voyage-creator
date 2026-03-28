@@ -90,6 +90,7 @@ const MyEvents = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
+  const [previewSlug, setPreviewSlug] = useState<string | null>(null);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
