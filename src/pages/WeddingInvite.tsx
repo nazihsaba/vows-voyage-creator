@@ -297,7 +297,7 @@ const WeddingInvite = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-soft">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <img src={aureaLogoIcon} alt="Auréa Invites" className="w-16 h-16 animate-pulse" />
       </div>
     );
   }
