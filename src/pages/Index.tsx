@@ -220,7 +220,6 @@ const Index = () => {
                       </div>
                       <p className="text-foreground text-base">{item.text}</p>
                     </div>
-                    {i < 3 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
                   </div>
                 ))}
               </div>
@@ -268,7 +267,6 @@ const Index = () => {
                       </div>
                       <p className="text-foreground text-base">{item.text}</p>
                     </div>
-                    {i < 4 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
                   </div>
                 ))}
               </div>
