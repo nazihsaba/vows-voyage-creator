@@ -71,7 +71,7 @@ export const AuraPreview = () => {
       title: "Ceremony",
       time: "7:00 PM",
       location: "Couvent Saint Sauveur - Sarba",
-      icon: <Icon icon="bx:home" className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Icon icon="streamline-ultimate-color:party-confetti" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "welcome",
