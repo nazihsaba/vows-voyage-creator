@@ -33,7 +33,6 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface InvitationLink {
   id: string;
@@ -395,68 +394,60 @@ const ManageLinks = () => {
                                     >
                                       {stats.attending}
                                     </Badge>
-                                    <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                    >
                                       {stats.pending}
                                     </Badge>
-                                    <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                    >
                                       {stats.notAttending}
                                     </Badge>
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
-                                    <TooltipProvider>
-                                      <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Button
-                                              size="icon"
-                                              variant="ghost"
-                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                            >
-                                              <Copy className="w-3.5 h-3.5" />
-                                            </Button>
-                                          </TooltipTrigger>
-                                          <TooltipContent>Copy Link</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Button
-                                              size="icon"
-                                              variant="ghost"
-                                              onClick={() => {
-                                                const s = link.link_name
-                                                  .toLowerCase()
-                                                  .replace(/[^a-z0-9]+/g, "-")
-                                                  .replace(/^-+|-+$/g, "");
-                                                window.open(
-                                                  `/invite/${wedding?.slug}/${s}/${link.number_of_persons}`,
-                                                  "_blank",
-                                                );
-                                              }}
-                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                            >
-                                              <ExternalLink className="w-3.5 h-3.5" />
-                                            </Button>
-                                          </TooltipTrigger>
-                                          <TooltipContent>Open Link</TooltipContent>
-                                        </Tooltip>
-                                        <Tooltip>
-                                          <TooltipTrigger asChild>
-                                            <Button
-                                              size="icon"
-                                              variant="ghost"
-                                              onClick={() => setDeleteId(link.id)}
-                                              className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                                            >
-                                              <Trash2 className="w-3.5 h-3.5" />
-                                            </Button>
-                                          </TooltipTrigger>
-                                          <TooltipContent>Delete Link</TooltipContent>
-                                        </Tooltip>
-                                      </div>
-                                    </TooltipProvider>
+                                    <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        title="Copy Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <Copy className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => {
+                                          const s = link.link_name
+                                            .toLowerCase()
+                                            .replace(/[^a-z0-9]+/g, "-")
+                                            .replace(/^-+|-+$/g, "");
+                                          window.open(
+                                            `/invite/${wedding?.slug}/${s}/${link.number_of_persons}`,
+                                            "_blank",
+                                          );
+                                        }}
+                                        title="Open Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <ExternalLink className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => setDeleteId(link.id)}
+                                        title="Delete Link"
+                                        className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                      >
+                                        <Trash2 className="w-3.5 h-3.5" />
+                                      </Button>
+                                    </div>
                                   </div>
                                 </TableCell>
                               </TableRow>
@@ -488,7 +479,10 @@ const ManageLinks = () => {
                                           Attending
                                         </Badge>
                                       ) : (
-                                        <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
+                                        <Badge
+                                          variant="secondary"
+                                          className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                        >
                                           Not Attending
                                         </Badge>
                                       )}
@@ -562,61 +556,47 @@ const ManageLinks = () => {
                             </div>
 
                             {/* Action buttons - icon only on mobile, with text on larger screens */}
-                            <TooltipProvider>
-                              <div
-                                className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
-                                onClick={(e) => e.stopPropagation()}
+                            <div
+                              className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                title="Copy Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                               >
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <Copy className="w-3.5 h-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Copy Link</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => {
-                                        const sanitizedLinkName = link.link_name
-                                          .toLowerCase()
-                                          .replace(/[^a-z0-9]+/g, "-")
-                                          .replace(/^-+|-+$/g, "");
-                                        window.open(
-                                          `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
-                                          "_blank",
-                                        );
-                                      }}
-                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <ExternalLink className="w-3.5 h-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Open Link</TooltipContent>
-                                </Tooltip>
-                                <Tooltip>
-                                  <TooltipTrigger asChild>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => setDeleteId(link.id)}
-                                      className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                                    >
-                                      <Trash2 className="w-3.5 h-3.5" />
-                                    </Button>
-                                  </TooltipTrigger>
-                                  <TooltipContent>Delete Link</TooltipContent>
-                                </Tooltip>
-                              </div>
-                            </TooltipProvider>
+                                <Copy className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => {
+                                  const sanitizedLinkName = link.link_name
+                                    .toLowerCase()
+                                    .replace(/[^a-z0-9]+/g, "-")
+                                    .replace(/^-+|-+$/g, "");
+                                  window.open(
+                                    `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                    "_blank",
+                                  );
+                                }}
+                                title="Open Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                              >
+                                <ExternalLink className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
+                                onClick={() => setDeleteId(link.id)}
+                                title="Delete Link"
+                                className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </Button>
+                            </div>
                           </div>
 
                           {/* Meta info row */}
@@ -630,16 +610,7 @@ const ManageLinks = () => {
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
                               </span>
                             )}
-                            <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                              <Users className="w-3 h-3" />
-                              {stats.total} {stats.total === 1 ? "guest" : "guests"}
-                            </span>
-                            <span className="text-[11px] text-muted-foreground">
-                              {new Date(link.created_at).toLocaleDateString("en-US", {
-                                month: "short",
-                                day: "numeric",
-                              })}
-                            </span>
+                            <span className="text-[11px] text-muted-foreground">{stats.total}</span>
                           </div>
 
                           {/* RSVP Badges */}
