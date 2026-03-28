@@ -645,7 +645,7 @@ const ManageLinks = () => {
 
                         {/* Expanded Guests */}
                         {isExpanded && (
-                          <div className="border-t border-border/20 bg-muted/30">
+                          <div className="border-t border-border/20 bg-white">
                             {linkInvitees.length === 0 ? (
                               <p className="text-center py-4 text-sm text-muted-foreground italic">
                                 No guests added yet
