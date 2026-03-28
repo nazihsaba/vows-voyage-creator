@@ -77,7 +77,7 @@ export const EditableImage = ({
   };
 
   if (!isPreview) {
-    return <img src={imageUrl} alt={alt} className={className} />;
+    return <img src={imageUrl} alt={alt} loading="lazy" className={className} />;
   }
 
   return (
