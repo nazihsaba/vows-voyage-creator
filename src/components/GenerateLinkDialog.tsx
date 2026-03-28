@@ -33,6 +33,7 @@ export const GenerateLinkDialog = ({
   onOpenChange,
   weddingId,
   weddingSlug,
+  mainImageUrl,
   onSuccess,
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
