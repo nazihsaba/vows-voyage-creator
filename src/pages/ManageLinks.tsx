@@ -460,21 +460,21 @@ const ManageLinks = () => {
                                     <TableCell>
                                       {invitee.is_attending === null ? (
                                         <Badge
-                                          variant="outline"
-                                          className="bg-yellow-50 border-yellow-200 text-yellow-700"
+                                          variant="secondary"
+                                          className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
                                         >
-                                          <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>Pending
+                                          <Loader2 className="w-3 h-3 mr-1" /> Pending
                                         </Badge>
                                       ) : invitee.is_attending ? (
                                         <Badge
-                                          variant="outline"
-                                          className="bg-green-50 border-green-200 text-green-700"
+                                          variant="secondary"
+                                          className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
                                         >
                                           <Check className="w-3 h-3 mr-1" />
                                           Attending
                                         </Badge>
                                       ) : (
-                                        <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
+                                        <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
                                           <X className="w-3 h-3 mr-1" />
                                           Not Attending
                                         </Badge>
