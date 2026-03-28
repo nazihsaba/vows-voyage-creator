@@ -64,7 +64,7 @@ const Index = () => {
       <header className="bg-white/80 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={aureaLogo} alt="Auréa" className="h-14" />
+            <img src={aureaLogo} alt="Auréa" loading="lazy" className="h-14" />
           </div>
           {!isAuthenticated && (
             <div className="flex items-center gap-3">
@@ -83,7 +83,7 @@ const Index = () => {
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
             >
-              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
+              <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-full object-cover" />
             </div>
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />

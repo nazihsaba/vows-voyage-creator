@@ -102,7 +102,7 @@ export const EclatTemplate = ({
           </svg>
         </div>
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={imageUrl} alt={altText} className="w-full h-full object-cover" />
+          <img src={imageUrl} alt={altText} loading="lazy" className="w-full h-full object-cover" />
         </div>
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
           <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">

@@ -719,7 +719,7 @@ const WeddingForm = () => {
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img src={imagePreview} alt="Wedding preview" className="w-full h-full object-cover" />
+                        <img src={imagePreview} alt="Wedding preview" loading="lazy" className="w-full h-full object-cover" />
                         <Button
                           type="button"
                           variant="destructive"
@@ -777,7 +777,7 @@ const WeddingForm = () => {
                   </p>
                   {graceFeaturedPreview ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <img src={graceFeaturedPreview} alt="Featured" className="w-full h-full object-cover" />
+                      <img src={graceFeaturedPreview} alt="Featured" loading="lazy" className="w-full h-full object-cover" />
                       <Button
                         type="button"
                         variant="destructive"
@@ -1049,7 +1049,7 @@ const WeddingForm = () => {
                           key={image.id}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
                         >
-                          <img src={image.image_url} alt="Gallery" className="w-full h-full object-cover" />
+                          <img src={image.image_url} alt="Gallery" loading="lazy" className="w-full h-full object-cover" />
                           <Button
                             type="button"
                             variant="destructive"
@@ -1072,7 +1072,7 @@ const WeddingForm = () => {
                           key={index}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
                         >
-                          <img src={preview} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                          <img src={preview} alt={`Gallery ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
                           <Button
                             type="button"
                             variant="destructive"

@@ -127,6 +127,7 @@ const Dashboard = () => {
               <img
                 src={aureaIcon}
                 alt="Auréa Invites"
+                loading="lazy"
                 className="h-8 sm:h-10 object-contain cursor-pointer"
                 onClick={() => navigate("/")}
               />
@@ -192,9 +193,7 @@ const Dashboard = () => {
                       <img
                         src={template.image}
                         alt={template.name}
-                        loading="eager"
-                        fetchPriority="high"
-                        decoding="sync"
+                        loading="lazy"
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                       />
                       {/* Overlay gradient on hover */}

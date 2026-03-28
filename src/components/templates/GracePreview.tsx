@@ -222,7 +222,7 @@ export const GracePreview = () => {
       <AnimatedSection animation="fade-in">
         <section className="relative w-full">
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={previewWedding4} alt="Wedding moment" className="w-full h-full object-cover" />
+            <img src={previewWedding4} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
           </div>
         </section>
       </AnimatedSection>

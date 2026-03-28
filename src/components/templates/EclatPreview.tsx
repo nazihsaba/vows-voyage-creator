@@ -189,7 +189,7 @@ export const EclatPreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={staticGallery[0].image_url} alt="Gallery 1" className="w-full h-full object-cover" />
+            <img src={staticGallery[0].image_url} alt="Gallery 1" loading="lazy" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
@@ -217,7 +217,7 @@ export const EclatPreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={staticGallery[1].image_url} alt="Gallery 2" className="w-full h-full object-cover" />
+            <img src={staticGallery[1].image_url} alt="Gallery 2" loading="lazy" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
@@ -305,7 +305,7 @@ export const EclatPreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={staticGallery[2].image_url} alt="Gallery 3" className="w-full h-full object-cover" />
+            <img src={staticGallery[2].image_url} alt="Gallery 3" loading="lazy" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
@@ -348,7 +348,7 @@ export const EclatPreview = () => {
           </div>
 
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-            <img src={staticGallery[3].image_url} alt="Gallery 4" className="w-full h-full object-cover" />
+            <img src={staticGallery[3].image_url} alt="Gallery 4" loading="lazy" className="w-full h-full object-cover" />
           </div>
 
           <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
