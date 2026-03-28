@@ -550,47 +550,85 @@ const ManageLinks = () => {
                           className="p-4 cursor-pointer active:bg-muted/30 transition-colors"
                           onClick={() => toggleLink(link.id)}
                         >
-                          <div className="flex items-start justify-between gap-2">
-                            <div className="flex items-start gap-2 min-w-0 flex-1">
-                              <Button variant="ghost" size="icon" className="h-6 w-6 mt-0.5 flex-shrink-0">
+                          <div className="flex items-center justify-between gap-2">
+                            <div className="flex items-center gap-2 min-w-0 flex-1">
+                              <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
                                 {isExpanded ? (
                                   <ChevronDown className="w-4 h-4" />
                                 ) : (
                                   <ChevronRight className="w-4 h-4" />
                                 )}
                               </Button>
-                              <div className="min-w-0">
+                              <div className="min-w-0 flex-1">
                                 <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes']">
                                   {link.link_name}
                                 </h3>
-                                <div className="flex items-center gap-2 mt-1 flex-wrap">
-                                  {link.side && (
-                                    <span
-                                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                        link.side === "GROOM"
-                                          ? "bg-blue-100 text-blue-800"
-                                          : "bg-pink-100 text-pink-800"
-                                      }`}
-                                    >
-                                      {link.side === "GROOM" ? "Groom" : "Bride"}
-                                    </span>
-                                  )}
-                                  <span className="text-[11px] text-muted-foreground">
-                                    {stats.total} {stats.total === 1 ? "guest" : "guests"}
-                                  </span>
-                                  <span className="text-[11px] text-muted-foreground">
-                                    {new Date(link.created_at).toLocaleDateString("en-US", {
-                                      month: "short",
-                                      day: "numeric",
-                                    })}
-                                  </span>
-                                </div>
                               </div>
+                            </div>
+
+                            {/* Action buttons - icon only on mobile, with text on larger screens */}
+                            <div className="flex items-center gap-1 flex-shrink-0" onClick={(e) => e.stopPropagation()}>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3"
+                              >
+                                <Copy className="w-3 h-3 sm:mr-1" />
+                                <span className="hidden sm:inline text-xs">Copy</span>
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => {
+                                  const s = link.link_name
+                                    .toLowerCase()
+                                    .replace(/[^a-z0-9]+/g, "-")
+                                    .replace(/^-+|-+$/g, "");
+                                  window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, "_blank");
+                                }}
+                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3"
+                              >
+                                <ExternalLink className="w-3 h-3 sm:mr-1" />
+                                <span className="hidden sm:inline text-xs">Open</span>
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => setDeleteId(link.id)}
+                                className="h-7 w-7 sm:w-auto rounded-full p-0 sm:px-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                              >
+                                <Trash2 className="w-3 h-3" />
+                              </Button>
                             </div>
                           </div>
 
+                          {/* Meta info row */}
+                          <div className="flex items-center gap-2 mt-1 ml-8 flex-wrap">
+                            {link.side && (
+                              <span
+                                className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                                  link.side === "GROOM"
+                                    ? "bg-blue-100 text-blue-800"
+                                    : "bg-pink-100 text-pink-800"
+                                }`}
+                              >
+                                {link.side === "GROOM" ? "Groom" : "Bride"}
+                              </span>
+                            )}
+                            <span className="text-[11px] text-muted-foreground">
+                              {stats.total} {stats.total === 1 ? "guest" : "guests"}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {new Date(link.created_at).toLocaleDateString("en-US", {
+                                month: "short",
+                                day: "numeric",
+                              })}
+                            </span>
+                          </div>
+
                           {/* RSVP Badges */}
-                          <div className="flex gap-1.5 mt-3 ml-8">
+                          <div className="flex gap-1.5 mt-2 ml-8">
                             <Badge
                               variant="outline"
                               className="bg-green-50 border-green-200 text-green-700 text-[10px] px-1.5 py-0.5"
@@ -612,42 +650,6 @@ const ManageLinks = () => {
                               <X className="w-2.5 h-2.5 mr-0.5" />
                               {stats.notAttending}
                             </Badge>
-                          </div>
-
-                          {/* Actions Row */}
-                          <div className="flex gap-1 mt-3 ml-8" onClick={(e) => e.stopPropagation()}>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                              className="h-7 text-xs rounded-full px-3"
-                            >
-                              <Copy className="w-3 h-3 mr-1" />
-                              Copy
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                const s = link.link_name
-                                  .toLowerCase()
-                                  .replace(/[^a-z0-9]+/g, "-")
-                                  .replace(/^-+|-+$/g, "");
-                                window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, "_blank");
-                              }}
-                              className="h-7 text-xs rounded-full px-3"
-                            >
-                              <ExternalLink className="w-3 h-3 mr-1" />
-                              Open
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => setDeleteId(link.id)}
-                              className="h-7 text-xs rounded-full px-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10 border-destructive/20"
-                            >
-                              <Trash2 className="w-3 h-3" />
-                            </Button>
                           </div>
                         </div>
 
