@@ -938,6 +938,32 @@ const WeddingForm = () => {
                         className="h-11 sm:h-10 text-sm"
                       />
                     </div>
+                    <div className="space-y-1.5">
+                      <Label>Icon</Label>
+                      <Select
+                        value={locations.venue_icon}
+                        onValueChange={(value) => setLocations({ ...locations, venue_icon: value })}
+                      >
+                        <SelectTrigger className="h-11 sm:h-10">
+                          <SelectValue>
+                            <span className="flex items-center gap-2">
+                              <Icon icon={locations.venue_icon} className="w-5 h-5" />
+                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.venue_icon)?.label}
+                            </span>
+                          </SelectValue>
+                        </SelectTrigger>
+                        <SelectContent>
+                          {LOCATION_ICON_OPTIONS.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              <span className="flex items-center gap-2">
+                                <Icon icon={opt.value} className="w-5 h-5" />
+                                {opt.label}
+                              </span>
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
                   </CardContent>
                 </Card>
               </div>
