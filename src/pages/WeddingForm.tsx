@@ -350,6 +350,26 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate main wedding photo is required
+    if (!imageFile && !formData.main_picture_url) {
+      toast({
+        title: "Main photo required",
+        description: "Please upload a main wedding photo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate Grace featured image is required
+    if (isGraceTemplate && !graceFeaturedFile && !graceFeaturedPreview) {
+      toast({
+        title: "Featured image required",
+        description: "Please upload a featured image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
@@ -776,7 +796,7 @@ const WeddingForm = () => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="main_picture">Main Wedding Photo</Label>
+                  <Label htmlFor="main_picture">Main Wedding Photo <span className="text-destructive">*</span></Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
@@ -832,7 +852,7 @@ const WeddingForm = () => {
               {/* Grace Featured Image */}
               {isGraceTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="grace_featured">Featured Image</Label>
+                  <Label htmlFor="grace_featured">Featured Image <span className="text-destructive">*</span></Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     This image will be displayed as a full-width photo in your invitation
                   </p>
