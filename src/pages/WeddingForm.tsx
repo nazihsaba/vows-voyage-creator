@@ -510,7 +510,7 @@ const WeddingForm = () => {
   return (
     <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-3 sm:mb-4 -ml-1">
+        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
           My Events
         </Button>
