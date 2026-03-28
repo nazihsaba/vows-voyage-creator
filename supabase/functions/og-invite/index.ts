@@ -148,9 +148,30 @@ Deno.serve(async (req) => {
     const title = `You are invited to ${groomName} and ${brideName}'s wedding`;
     const description = `Join us in celebrating the union of ${groomName} & ${brideName}. Tap to view your invitation and RSVP.`;
 
-    // Resolve image: main_picture_url → first gallery image → default
-    let imageUrl = wedding.main_picture_url || "";
+    // Resolve image: invitation-images bucket → main_picture_url → gallery → default
+    let imageUrl = "";
 
+    // Try the dedicated OG image from invitation-images bucket first
+    const ogBasePath = `invites/${slug}/main`;
+    for (const ext of ["jpg", "png", "webp"]) {
+      const candidateUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/${ogBasePath}.${ext}`;
+      try {
+        const headResp = await fetch(candidateUrl, { method: "HEAD" });
+        if (headResp.ok) {
+          imageUrl = candidateUrl;
+          break;
+        }
+      } catch {
+        // continue trying
+      }
+    }
+
+    // Fallback to main_picture_url from the wedding record
+    if (!imageUrl) {
+      imageUrl = wedding.main_picture_url || "";
+    }
+
+    // Fallback to first gallery image
     if (!imageUrl) {
       const { data: coverImage } = await supabase
         .from("gallery_images")
