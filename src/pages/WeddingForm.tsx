@@ -370,6 +370,16 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate video is required for video templates
+    if (isVideoTemplate && !videoFile && !formData.video_url) {
+      toast({
+        title: "Video required",
+        description: "Please upload a video for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
