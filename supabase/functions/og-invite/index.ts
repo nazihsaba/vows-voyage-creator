@@ -2,8 +2,83 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  "Access-Control-Allow-Headers":
+    "authorization, x-client-info, apikey, content-type",
 };
+
+const SITE_ORIGIN = "https://app.aureainvites.com";
+const DEFAULT_TITLE = "Wedding Invitation";
+const DEFAULT_DESCRIPTION = "Tap to view your invitation";
+const DEFAULT_IMAGE =
+  "https://zpwnpxkznlgdgkticiem.supabase.co/storage/v1/object/public/wedding-images/og-default.png";
+
+/** Escape HTML special chars to prevent broken tags / XSS */
+function esc(str: string): string {
+  return str
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+}
+
+function buildOgHtml({
+  title,
+  description,
+  imageUrl,
+  imageAlt,
+  canonicalUrl,
+  redirectUrl,
+}: {
+  title: string;
+  description: string;
+  imageUrl: string;
+  imageAlt: string;
+  canonicalUrl: string;
+  redirectUrl: string;
+}): string {
+  const t = esc(title);
+  const d = esc(description);
+  const img = esc(imageUrl);
+  const alt = esc(imageAlt);
+  const url = esc(canonicalUrl);
+  const redir = esc(redirectUrl);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>${t}</title>
+  <meta name="description" content="${d}" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="${t}" />
+  <meta property="og:description" content="${d}" />
+  <meta property="og:url" content="${url}" />
+  <meta property="og:site_name" content="Aurea Invites" />
+  <meta property="og:image" content="${img}" />
+  <meta property="og:image:secure_url" content="${img}" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="${alt}" />
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="${t}" />
+  <meta name="twitter:description" content="${d}" />
+  <meta name="twitter:image" content="${img}" />
+
+  <!-- Redirect human visitors -->
+  <meta http-equiv="refresh" content="0;url=${redir}" />
+  <link rel="canonical" href="${url}" />
+</head>
+<body>
+  <p>Redirecting to <a href="${redir}">your invitation</a>&hellip;</p>
+</body>
+</html>`;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -14,8 +89,7 @@ Deno.serve(async (req) => {
     const url = new URL(req.url);
     const pathParts = url.pathname.split("/").filter(Boolean);
 
-    // Expected path: /og-invite/{slug} or /og-invite/{slug}/{linkSlug}/{numberOfPersons}
-    // Edge function name is the first part, so we skip it
+    // Path: /og-invite/{slug} or /og-invite/{slug}/{linkSlug}/{numberOfPersons}
     const fnIndex = pathParts.indexOf("og-invite");
     const slug = pathParts[fnIndex + 1];
     const linkSlug = pathParts[fnIndex + 2];
@@ -31,25 +105,50 @@ Deno.serve(async (req) => {
 
     const { data: wedding, error } = await supabase
       .from("weddings")
-      .select("id, groom_name, bride_name, wedding_date, main_picture_url, event_title, template_type")
+      .select(
+        "id, groom_name, bride_name, wedding_date, main_picture_url, event_title, template_type"
+      )
       .eq("slug", slug)
       .maybeSingle();
 
-    if (error || !wedding) {
-      return new Response("Wedding not found", { status: 404 });
-    }
-
-    // Build the redirect URL to the actual SPA invitation page
-    const siteOrigin = url.searchParams.get("origin") || "https://app.aureainvites.com";
+    // ── Build redirect path ──
+    const siteOrigin =
+      url.searchParams.get("origin") || SITE_ORIGIN;
     let redirectPath = `/invite/${slug}`;
     if (linkSlug && numberOfPersons) {
       redirectPath = `/invite/${slug}/${linkSlug}/${numberOfPersons}`;
     }
     const redirectUrl = `${siteOrigin}${redirectPath}`;
+    const canonicalUrl = `${SITE_ORIGIN}${redirectPath}`;
 
-    const title = `Wedding of ${wedding.groom_name} & ${wedding.bride_name}`;
-    const description = `You are invited to the wedding of ${wedding.groom_name} and ${wedding.bride_name}`;
+    // ── Fallback when wedding not found ──
+    if (error || !wedding) {
+      const html = buildOgHtml({
+        title: DEFAULT_TITLE,
+        description: DEFAULT_DESCRIPTION,
+        imageUrl: DEFAULT_IMAGE,
+        imageAlt: "Wedding Invitation",
+        canonicalUrl,
+        redirectUrl,
+      });
 
+      return new Response(html, {
+        headers: {
+          ...corsHeaders,
+          "Content-Type": "text/html; charset=utf-8",
+          "Cache-Control": "public, max-age=600",
+        },
+      });
+    }
+
+    // ── Dynamic values ──
+    const groomName = wedding.groom_name || "Groom";
+    const brideName = wedding.bride_name || "Bride";
+
+    const title = `You are invited to ${groomName} and ${brideName}'s wedding`;
+    const description = `Join us in celebrating the union of ${groomName} & ${brideName}. Tap to view your invitation and RSVP.`;
+
+    // Resolve image: main_picture_url → first gallery image → default
     let imageUrl = wedding.main_picture_url || "";
 
     if (!imageUrl) {
@@ -64,34 +163,20 @@ Deno.serve(async (req) => {
       imageUrl = coverImage?.image_url || "";
     }
 
-    const html = `<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${title}</title>
-  <meta name="description" content="${description}" />
-  
-  <meta property="og:type" content="website" />
-  <meta property="og:title" content="${title}" />
-  <meta property="og:description" content="${description}" />
-  <meta property="og:url" content="${redirectUrl}" />
-  <meta property="og:site_name" content="Aurea Invites" />
-  <meta property="og:image" content="${imageUrl}" />
-  <meta property="og:image:secure_url" content="${imageUrl}" />
-  <meta property="og:image:alt" content="Wedding invitation cover for ${wedding.groom_name} and ${wedding.bride_name}" />
-  
-  <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="${title}" />
-  <meta name="twitter:description" content="${description}" />
-  <meta name="twitter:image" content="${imageUrl}" />
-  
-  <meta http-equiv="refresh" content="0;url=${redirectUrl}" />
-</head>
-<body>
-  <p>Redirecting to <a href="${redirectUrl}">invitation</a>...</p>
-</body>
-</html>`;
+    if (!imageUrl) {
+      imageUrl = DEFAULT_IMAGE;
+    }
+
+    const imageAlt = `Wedding invitation for ${groomName} and ${brideName}`;
+
+    const html = buildOgHtml({
+      title,
+      description,
+      imageUrl,
+      imageAlt,
+      canonicalUrl,
+      redirectUrl,
+    });
 
     return new Response(html, {
       headers: {
@@ -102,6 +187,24 @@ Deno.serve(async (req) => {
     });
   } catch (err) {
     console.error("OG invite error:", err);
-    return new Response("Internal server error", { status: 500 });
+
+    // Even on error, return valid OG HTML so crawlers get something
+    const fallbackHtml = buildOgHtml({
+      title: DEFAULT_TITLE,
+      description: DEFAULT_DESCRIPTION,
+      imageUrl: DEFAULT_IMAGE,
+      imageAlt: "Wedding Invitation",
+      canonicalUrl: SITE_ORIGIN,
+      redirectUrl: SITE_ORIGIN,
+    });
+
+    return new Response(fallbackHtml, {
+      status: 500,
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/html; charset=utf-8",
+        "Cache-Control": "no-cache",
+      },
+    });
   }
 });
