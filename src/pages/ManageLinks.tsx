@@ -242,8 +242,8 @@ const ManageLinks = () => {
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
             >
-              <Plus className="w-4 h-4 sm:mr-1" />
-              <span className="hidden sm:inline">Generate Link</span>
+              <Plus className="w-4 h-4 mr-1" />
+              Generate Link
             </Button>
             <Button
               variant="outline"
