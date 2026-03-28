@@ -393,7 +393,7 @@ const MyEvents = () => {
                                         className="w-full flex items-center justify-between rounded-full border-border/60 hover:bg-muted/50 hover:border-primary/30 transition-all text-sm"
                                         onClick={() => navigate(`/dashboard/manage-links/${wedding.id}`)}
                                       >
-                                        <span>Manage invitation Links</span>
+                                        <span>Manage Invitation Links</span>
                                         <List className="w-4 h-4" />
                                       </Button>
                                     </div>

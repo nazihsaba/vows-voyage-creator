@@ -22,7 +22,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
     navigator.clipboard.writeText(cardNumber);
     toast({
       title: "Copied!",
-      description: `${cardName} number copied to clipboard`,
+      description: `${cardName} number copied`,
     });
   };
 

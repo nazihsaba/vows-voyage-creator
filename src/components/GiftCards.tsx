@@ -21,7 +21,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
     navigator.clipboard.writeText(cardNumber);
     toast({
       title: "Copied!",
-      description: `${cardName} number copied to clipboard`,
+      description: `${cardName} number copied`,
     });
   };
 

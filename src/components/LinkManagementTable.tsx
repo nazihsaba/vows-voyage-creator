@@ -1,13 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Copy, Trash2, Users } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
@@ -38,11 +31,7 @@ interface LinkManagementTableProps {
   refresh: number;
 }
 
-export const LinkManagementTable = ({
-  weddingId,
-  weddingSlug,
-  refresh,
-}: LinkManagementTableProps) => {
+export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkManagementTableProps) => {
   const { toast } = useToast();
   const [links, setLinks] = useState<InvitationLink[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,18 +46,18 @@ export const LinkManagementTable = ({
   // Set up real-time subscription for invitation links
   useEffect(() => {
     const channel = supabase
-      .channel('invitation-links-changes')
+      .channel("invitation-links-changes")
       .on(
-        'postgres_changes',
+        "postgres_changes",
         {
-          event: '*',
-          schema: 'public',
-          table: 'invitation_links',
-          filter: `wedding_id=eq.${weddingId}`
+          event: "*",
+          schema: "public",
+          table: "invitation_links",
+          filter: `wedding_id=eq.${weddingId}`,
         },
         () => {
           fetchLinks();
-        }
+        },
       )
       .subscribe();
 
@@ -80,7 +69,7 @@ export const LinkManagementTable = ({
   const handleOpenInvitees = (linkId: string) => {
     setSelectedLinkId(linkId);
     // Trigger a refresh when opening the dialog
-    setInviteeRefreshTrigger(prev => prev + 1);
+    setInviteeRefreshTrigger((prev) => prev + 1);
   };
 
   const fetchLinks = async () => {
@@ -108,23 +97,20 @@ export const LinkManagementTable = ({
   const handleCopyLink = (link: InvitationLink) => {
     const sanitizedLinkName = link.link_name
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
     // Use weddingSlug (the wedding's slug) as the first parameter, not the link's unique_slug
     const url = `${window.location.origin}/invite/${weddingSlug}/${sanitizedLinkName}/${link.number_of_persons}`;
     navigator.clipboard.writeText(url);
     toast({
       title: "Success",
-      description: "Link copied to clipboard",
+      description: "Link copied",
     });
   };
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await (supabase as any)
-        .from("invitation_links")
-        .delete()
-        .eq("id", id);
+      const { error } = await (supabase as any).from("invitation_links").delete().eq("id", id);
 
       if (error) throw error;
 
@@ -149,11 +135,7 @@ export const LinkManagementTable = ({
   }
 
   if (links.length === 0) {
-    return (
-      <p className="text-muted-foreground text-sm text-center py-4">
-        No invitation links created yet
-      </p>
-    );
+    return <p className="text-muted-foreground text-sm text-center py-4">No invitation links created yet</p>;
   }
 
   return (
@@ -175,12 +157,14 @@ export const LinkManagementTable = ({
                 <TableCell className="font-medium">{link.link_name}</TableCell>
                 <TableCell>
                   {link.side ? (
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                      link.side === 'GROOM' 
-                        ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' 
-                        : 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200'
-                    }`}>
-                      {link.side === 'GROOM' ? 'Groom' : 'Bride'}
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        link.side === "GROOM"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200"
+                      }`}
+                    >
+                      {link.side === "GROOM" ? "Groom" : "Bride"}
                     </span>
                   ) : (
                     <span className="text-muted-foreground text-xs">—</span>
@@ -192,9 +176,7 @@ export const LinkManagementTable = ({
                     {link.number_of_persons}
                   </div>
                 </TableCell>
-                <TableCell>
-                  {new Date(link.created_at).toLocaleDateString()}
-                </TableCell>
+                <TableCell>{new Date(link.created_at).toLocaleDateString()}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     <Button
@@ -205,12 +187,7 @@ export const LinkManagementTable = ({
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => handleCopyLink(link)}
-                      title="Copy link"
-                    >
+                    <Button variant="ghost" size="icon" onClick={() => handleCopyLink(link)} title="Copy link">
                       <Copy className="w-4 h-4" />
                     </Button>
                     <Button
