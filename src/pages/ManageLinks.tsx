@@ -658,23 +658,24 @@ const ManageLinks = () => {
                                   </span>
                                   {invitee.is_attending === null ? (
                                     <Badge
-                                      variant="outline"
-                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[10px] flex-shrink-0"
+                                      variant="secondary"
+                                      className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
+                                      <Loader2 className="w-2.5 h-2.5 mr-0.5" />
                                       Pending
                                     </Badge>
                                   ) : invitee.is_attending ? (
                                     <Badge
-                                      variant="outline"
-                                      className="bg-green-50 border-green-200 text-green-700 text-[10px] flex-shrink-0"
+                                      variant="secondary"
+                                      className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
                                       <Check className="w-2.5 h-2.5 mr-0.5" />
                                       Yes
                                     </Badge>
                                   ) : (
                                     <Badge
-                                      variant="outline"
-                                      className="bg-red-50 border-red-200 text-red-700 text-[10px] flex-shrink-0"
+                                      variant="secondary"
+                                      className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
                                       <X className="w-2.5 h-2.5 mr-0.5" />
                                       No
