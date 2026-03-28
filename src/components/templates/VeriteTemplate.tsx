@@ -332,7 +332,7 @@ export const VeriteTemplate = ({
           <section className="w-full px-4">
             <div className="max-w-6xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                <img src={gallery[0].image_url} alt="Wedding moment" className="w-full h-full object-cover" />
+                <img src={gallery[0].image_url} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>
