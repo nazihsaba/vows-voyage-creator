@@ -306,14 +306,18 @@ const MyEvents = () => {
                       <div>
                         <h2 className="text-lg sm:text-xl font-serif font-bold text-foreground">{eventType}s</h2>
                         <div className="flex items-center gap-3 mt-1">
-                          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
-                            {events.filter((e) => e.status === "published").length} published
-                          </span>
-                          <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
-                            <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                            {events.filter((e) => e.status === "draft").length} draft
-                          </span>
+                          {events.filter((e) => e.status === "published").length > 0 && (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                              <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                              {events.filter((e) => e.status === "published").length} published
+                            </span>
+                          )}
+                          {events.filter((e) => e.status === "draft").length > 0 && (
+                            <span className="inline-flex items-center gap-1.5 text-xs text-muted-foreground">
+                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                              {events.filter((e) => e.status === "draft").length} draft
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
