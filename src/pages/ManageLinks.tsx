@@ -492,7 +492,7 @@ const ManageLinks = () => {
                                 ))}
 
                               {isExpanded && linkInvitees.length === 0 && (
-                                <TableRow className={linkIndex % 2 === 0 ? "bg-white" : "bg-accent/5"}>
+                                <TableRow className="bg-muted/20">
                                   <TableCell></TableCell>
                                   <TableCell
                                     colSpan={5}
