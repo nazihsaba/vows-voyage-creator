@@ -1160,7 +1160,6 @@ const WeddingForm = () => {
                         <span className="text-xs text-muted-foreground mt-1">
                           {maxGalleryImages - existingGalleryImages.length - galleryFiles.length} slots remaining
                         </span>
-                        </span>
                       </label>
                       <Input
                         id="gallery_images"
