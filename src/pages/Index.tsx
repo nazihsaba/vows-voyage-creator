@@ -1,5 +1,16 @@
 import { Button } from "@/components/ui/button";
-import { Calendar, Image, Gift, Link as LinkIcon, Instagram, MessageCircle, Users, Wand2, Mail, Check } from "lucide-react";
+import {
+  Calendar,
+  Image,
+  Gift,
+  Link as LinkIcon,
+  Instagram,
+  MessageCircle,
+  Users,
+  Wand2,
+  Mail,
+  Check,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
@@ -177,7 +188,9 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">How It Works</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Choose the experience that fits you best</h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+              Choose the experience that fits you best
+            </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               Create your invitation yourself, or let Auréa handle everything for you.
             </p>
@@ -187,9 +200,9 @@ const Index = () => {
             {/* Option 1: DIY */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
+                {/* <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-primary/10 mb-4">
                   <Wand2 className="w-7 h-7 text-primary" />
-                </div>
+                </div>  */}
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
               </div>
@@ -229,11 +242,13 @@ const Index = () => {
             {/* Option 2: Managed */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-6">
-                <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/20 mb-4">
+                {/* <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-secondary/20 mb-4">
                   <Mail className="w-7 h-7 text-primary" />
-                </div>
+                </div> */}
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Let Us Handle It</h3>
-                <p className="text-muted-foreground text-sm">Perfect for a more personalized, done-for-you experience</p>
+                <p className="text-muted-foreground text-sm">
+                  Perfect for a more personalized, done-for-you experience
+                </p>
               </div>
               <div className="space-y-5 mb-6">
                 {[
@@ -244,7 +259,7 @@ const Index = () => {
                   { step: "5", text: "Pay and share with your guests" },
                 ].map((item) => (
                   <div key={item.step} className="flex items-center gap-5">
-                    <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                       <span className="text-sm font-semibold text-primary">{item.step}</span>
                     </div>
                     <p className="text-foreground text-base">{item.text}</p>
