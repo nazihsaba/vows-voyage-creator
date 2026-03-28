@@ -392,13 +392,13 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
                                     >
-                                      <Check className="w-3 h-3 mr-1" /> {stats.attending}
+                                      {stats.attending}
                                     </Badge>
                                     <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
-                                      <Loader2 className="w-3 h-3 mr-1" /> {stats.pending}
+                                      {stats.pending}
                                     </Badge>
                                     <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
-                                      <X className="w-3 h-3 mr-1" /> {stats.notAttending}
+                                      {stats.notAttending}
                                     </Badge>
                                   </div>
                                 </TableCell>
