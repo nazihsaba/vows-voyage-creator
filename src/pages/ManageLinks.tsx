@@ -455,7 +455,7 @@ const ManageLinks = () => {
                                 linkInvitees.map((invitee) => (
                                   <TableRow
                                     key={invitee.id}
-                                    className="bg-white border-l-4 border-l-primary/30 hover:bg-primary/5 transition-colors"
+                                    className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                   >
                                     <TableCell></TableCell>
                                     <TableCell colSpan={3} className="pl-8 font-medium">
