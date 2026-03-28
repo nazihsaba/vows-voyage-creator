@@ -1127,7 +1127,7 @@ const WeddingForm = () => {
               </div>
 
               <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-2">
-                <Button
+                {/* <Button
                   type="button"
                   variant="outline"
                   className="h-11 sm:h-10 sm:w-auto"
@@ -1152,7 +1152,7 @@ const WeddingForm = () => {
                 >
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
-                </Button>
+                </Button> */}
                 <Button type="submit" disabled={loading || uploading} className="h-11 sm:h-10 flex-1">
                   {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
