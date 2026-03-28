@@ -263,7 +263,7 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex items-end justify-between mb-8 mt-auto">
+              <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 mt-auto">
                 <div className="space-y-3">
                   {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
                     <div key={perk} className="flex items-center gap-2">
@@ -274,7 +274,7 @@ const Index = () => {
                 </div>
                 <Button
                   onClick={() => window.open("https://wa.me/", "_blank")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 sm:px-10 py-5 rounded-lg text-base w-full sm:w-auto"
                 >
                   Contact Us
                 </Button>
