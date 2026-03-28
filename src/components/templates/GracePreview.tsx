@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, Church, PartyPopper } from "lucide-react";
+import { ChevronDown } from "lucide-react";
+import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
