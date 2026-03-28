@@ -211,7 +211,7 @@ const Index = () => {
                   { step: "4", text: "Pay and share instantly" },
                 ].map((item, i) => (
                   <div key={item.step}>
-                    <div className="flex items-center gap-5 py-4">
+                    <div className="flex items-center gap-5 py-2">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                         <span className="text-sm font-semibold text-primary">{item.step}</span>
                       </div>
@@ -254,7 +254,7 @@ const Index = () => {
                   { step: "5", text: "Pay and share with your guests" },
                 ].map((item, i) => (
                   <div key={item.step}>
-                    <div className="flex items-center gap-5 py-4">
+                    <div className="flex items-center gap-5 py-2">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                         <span className="text-sm font-semibold text-primary">{item.step}</span>
                       </div>
