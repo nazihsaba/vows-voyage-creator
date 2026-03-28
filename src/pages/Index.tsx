@@ -83,7 +83,7 @@ const Index = () => {
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
             >
-              <img src={image.src} alt={image.alt} className="w-full h-full object-cover" />
+              <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-full object-cover" />
             </div>
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />

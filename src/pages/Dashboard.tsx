@@ -127,6 +127,7 @@ const Dashboard = () => {
               <img
                 src={aureaIcon}
                 alt="Auréa Invites"
+                loading="lazy"
                 className="h-8 sm:h-10 object-contain cursor-pointer"
                 onClick={() => navigate("/")}
               />

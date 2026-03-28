@@ -1072,7 +1072,7 @@ const WeddingForm = () => {
                           key={index}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
                         >
-                          <img src={preview} alt={`Gallery ${index + 1}`} className="w-full h-full object-cover" />
+                          <img src={preview} alt={`Gallery ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
                           <Button
                             type="button"
                             variant="destructive"

@@ -87,7 +87,7 @@ export const EditableImage = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <img src={imageUrl} alt={alt} className={cn(className, "transition-all")} />
+        <img src={imageUrl} alt={alt} loading="lazy" className={cn(className, "transition-all")} />
 
         {isHovered && !isUploading && (
           <div className="absolute inset-0 bg-black/50 flex items-center justify-center gap-2 transition-all z-10">

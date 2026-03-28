@@ -101,9 +101,7 @@ const InvitationPreviewSection = () => {
               <img
                 src={card.image}
                 alt={card.label}
-                loading="eager"
-                fetchPriority="high"
-                decoding="sync"
+                loading="lazy"
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
