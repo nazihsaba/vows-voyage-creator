@@ -430,6 +430,13 @@ const WeddingForm = () => {
           audio_end_time: audioTrimSettings?.endTime || 0,
         });
       }
+      // Copy main image to invitation-images bucket for OG previews
+      const finalSlug = slug;
+      const finalImageUrl = imageUrl;
+      if (finalImageUrl) {
+        // Fire and forget — don't block the save flow
+        uploadOgImage(finalImageUrl, finalSlug);
+      }
 
       // Upload gallery images if template supports gallery
       const galleryTemplates = [
