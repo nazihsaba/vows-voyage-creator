@@ -796,7 +796,7 @@ const WeddingForm = () => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="main_picture">Main Wedding Photo</Label>
+                  <Label htmlFor="main_picture">Main Wedding Photo <span className="text-destructive">*</span></Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
