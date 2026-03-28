@@ -350,6 +350,26 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate main wedding photo is required
+    if (!imageFile && !formData.main_picture_url) {
+      toast({
+        title: "Main photo required",
+        description: "Please upload a main wedding photo.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate Grace featured image is required
+    if (isGraceTemplate && !graceFeaturedFile && !graceFeaturedPreview) {
+      toast({
+        title: "Featured image required",
+        description: "Please upload a featured image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
