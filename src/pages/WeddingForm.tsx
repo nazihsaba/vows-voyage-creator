@@ -84,6 +84,13 @@ const WeddingForm = () => {
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
+
+  const getMaxGalleryImages = () => {
+    if (template === "classic-romance") return 4;
+    return 7; // Vérité and Aura templates
+  };
+  const maxGalleryImages = getMaxGalleryImages();
+
   const shouldShowGalleryUpload =
     template === "template2" ||
     template === "classic-gallery" ||
