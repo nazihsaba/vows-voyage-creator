@@ -298,7 +298,7 @@ export const AuraTemplate = ({
                       </div>
                       <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
                       <div className="flex-1 pl-8">
-                        <event.icon className="w-6 h-6 mb-1 text-primary" />
+                        <Icon icon={event.icon} className="w-6 h-6 mb-1 text-primary" />
                         <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                         {event.link && (
                           <a
