@@ -392,13 +392,13 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
                                     >
-                                      <Check className="w-3 h-3 mr-1" /> {stats.attending}
+                                      {stats.attending}
                                     </Badge>
                                     <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
-                                      <Loader2 className="w-3 h-3 mr-1" /> {stats.pending}
+                                      {stats.pending}
                                     </Badge>
                                     <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
-                                      <X className="w-3 h-3 mr-1" /> {stats.notAttending}
+                                      {stats.notAttending}
                                     </Badge>
                                   </div>
                                 </TableCell>
@@ -463,19 +463,17 @@ const ManageLinks = () => {
                                           variant="secondary"
                                           className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
                                         >
-                                          <Loader2 className="w-3 h-3 mr-1" /> Pending
+                                          Pending
                                         </Badge>
                                       ) : invitee.is_attending ? (
                                         <Badge
                                           variant="secondary"
                                           className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
                                         >
-                                          <Check className="w-3 h-3 mr-1" />
                                           Attending
                                         </Badge>
                                       ) : (
                                         <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
-                                          <X className="w-3 h-3 mr-1" />
                                           Not Attending
                                         </Badge>
                                       )}
@@ -620,21 +618,18 @@ const ManageLinks = () => {
                               variant="secondary"
                               className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <Check className="w-2.5 h-2.5 mr-0.5" />
                               {stats.attending}
                             </Badge>
                             <Badge
                               variant="secondary"
                               className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <Loader2 className="w-2.5 h-2.5 mr-0.5" />
                               {stats.pending}
                             </Badge>
                             <Badge
                               variant="secondary"
                               className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <X className="w-2.5 h-2.5 mr-0.5" />
                               {stats.notAttending}
                             </Badge>
                           </div>
@@ -661,7 +656,6 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
-                                      <Loader2 className="w-2.5 h-2.5 mr-0.5" />
                                       Pending
                                     </Badge>
                                   ) : invitee.is_attending ? (
@@ -669,7 +663,6 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
-                                      <Check className="w-2.5 h-2.5 mr-0.5" />
                                       Yes
                                     </Badge>
                                   ) : (
@@ -677,7 +670,6 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
                                     >
-                                      <X className="w-2.5 h-2.5 mr-0.5" />
                                       No
                                     </Badge>
                                   )}
