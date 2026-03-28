@@ -6,6 +6,7 @@ import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { useTemplate } from "@/hooks/useTemplate";
 import { format } from "date-fns";
 import { Loader2, Download, ArrowLeft } from "lucide-react";
+import aureaLogoIcon from "@/assets/aureaLogoIcon.png";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
@@ -296,7 +297,7 @@ const WeddingInvite = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gradient-soft">
-        <Loader2 className="w-12 h-12 animate-spin text-primary" />
+        <img src={aureaLogoIcon} alt="Auréa Invites" className="w-16 h-16 animate-pulse" />
       </div>
     );
   }
