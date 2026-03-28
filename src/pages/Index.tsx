@@ -266,7 +266,7 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="space-y-2 mb-8">
+              <div className="grid grid-cols-3 gap-x-4 gap-y-2 mb-8">
                 {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
                   <div key={perk} className="flex items-center gap-2">
                     <Check className="w-4 h-4 text-primary" />
