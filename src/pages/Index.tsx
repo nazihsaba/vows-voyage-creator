@@ -1,16 +1,5 @@
 import { Button } from "@/components/ui/button";
-import {
-  Calendar,
-  Image,
-  Gift,
-  Link as LinkIcon,
-  Instagram,
-  MessageCircle,
-  Users,
-  Wand2,
-  Mail,
-  Check,
-} from "lucide-react";
+import { Calendar, Image, Gift, Link as LinkIcon, Instagram, MessageCircle, Users } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
@@ -122,8 +111,6 @@ const Index = () => {
                     </p>
                   </div>
 
-                  <div className="w-12 h-px bg-primary/20" />
-
                   <p className="text-muted-foreground leading-relaxed text-[15px] max-w-xs">
                     We're putting the finishing touches on our demo experience. Stay tuned — something beautiful is on
                     its way!
@@ -188,106 +175,66 @@ const Index = () => {
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">How It Works</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
-              Choose the experience that fits you best
-            </h2>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Two Ways to Get Started</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
-              Create your invitation yourself, or let Auréa handle everything for you.
+              Whether you prefer a hands-on approach or a fully managed experience, we've got you covered.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 items-stretch">
+          <div className="grid md:grid-cols-2 gap-8">
             {/* Option 1: DIY */}
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-                  <Wand2 className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-2xl font-serif font-bold text-primary mb-2">Do It Yourself</h3>
-                <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
-              </div>
-              <div className="space-y-0 mb-8">
+            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Do It Yourself</h3>
+              <div className="space-y-5">
                 {[
-                  { step: "1", text: "Create your account" },
-                  { step: "2", text: "Choose your template" },
-                  { step: "3", text: "Customize your invitation" },
-                  { step: "4", text: "Pay and share instantly" },
-                ].map((item, i) => (
-                  <div key={item.step}>
-                    <div className="flex items-center gap-5 py-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-semibold text-primary">{item.step}</span>
-                      </div>
-                      <p className="text-foreground text-base">{item.text}</p>
+                  { step: "1", text: "Visit aureainvites.com" },
+                  { step: "2", text: "Create your personal account" },
+                  { step: "3", text: "Choose your template" },
+                  { step: "4", text: "Customize your invitation details" },
+                  { step: "5", text: "Pay once, share unlimited links" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-semibold text-primary">{item.step}</span>
                     </div>
-                    {i < 3 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
+                    <p className="text-foreground">{item.text}</p>
                   </div>
                 ))}
               </div>
-              <div className="flex items-end justify-between mb-8 mt-auto">
-                <div className="space-y-3">
-                  {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
-                    <div key={perk} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">{perk}</span>
-                    </div>
-                  ))}
-                </div>
+              {/* <div className="mt-8 text-center">
                 <Button
                   onClick={() => navigate("/dashboard")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
+                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8"
                 >
-                  Start Creating
+                  Get Started
                 </Button>
-              </div>
+              </div> */}
             </div>
 
             {/* Option 2: Managed */}
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
-              <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-                  <Mail className="w-8 h-8 text-primary" />
-                </div>
-                <h3 className="text-2xl font-serif font-bold text-primary mb-2">Let Us Handle It</h3>
-                <p className="text-muted-foreground text-sm">
-                  Perfect for a more personalized, done-for-you experience
-                </p>
-              </div>
-              <div className="space-y-0 mb-8">
+            <div className="rounded-2xl border border-border/50 bg-card/80 backdrop-blur-sm p-8 hover:shadow-elegant transition-all duration-500">
+              <h3 className="text-2xl font-serif font-bold text-primary mb-6 text-center">Let Us Handle It</h3>
+              <div className="space-y-5">
                 {[
                   { step: "1", text: "Contact us" },
                   { step: "2", text: "Choose your template" },
                   { step: "3", text: "Share your event details" },
-                  { step: "4", text: "We prepare everything for you" },
-                  { step: "5", text: "Pay and share with your guests" },
-                ].map((item, i) => (
-                  <div key={item.step}>
-                    <div className="flex items-center gap-5 py-4">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-semibold text-primary">{item.step}</span>
-                      </div>
-                      <p className="text-foreground text-base">{item.text}</p>
+                  { step: "4", text: "We take care of everything" },
+                  { step: "5", text: "Pay once, share unlimited links" },
+                ].map((item) => (
+                  <div key={item.step} className="flex items-center gap-4">
+                    <div className="w-9 h-9 rounded-full bg-secondary/30 flex items-center justify-center shrink-0">
+                      <span className="text-sm font-semibold text-primary">{item.step}</span>
                     </div>
-                    {i < 4 && <div className="h-px bg-border/60 ml-[3.75rem]" />}
+                    <p className="text-foreground">{item.text}</p>
                   </div>
                 ))}
               </div>
-              <div className="flex items-end justify-between mb-8 mt-auto">
-                <div className="space-y-3">
-                  {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
-                    <div key={perk} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">{perk}</span>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  onClick={() => window.open("https://wa.me/", "_blank")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-10 py-5 rounded-lg text-base"
-                >
+              {/* <div className="mt-8 text-center">
+                <Button onClick={() => window.open("https://wa.me/", "_blank")} variant="outline" className="border-primary text-primary hover:bg-primary/5 px-8">
                   Contact Us
                 </Button>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
