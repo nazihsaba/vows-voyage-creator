@@ -1086,7 +1086,7 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
-                  <Label>Gallery Images (up to 6)</Label>
+                  <Label>Gallery Images (up to {maxGalleryImages}) <span className="text-destructive">*</span></Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                   </p>
