@@ -35,7 +35,7 @@ const previewCards = [
   {
     image: auraTemplate,
     label: "Dorée",
-    tagline: "Bible verse & botanical elegance",
+    tagline: "Quote highlight & botanical elegance",
     featured: true,
   },
 ];
