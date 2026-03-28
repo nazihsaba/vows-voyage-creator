@@ -296,18 +296,6 @@ export const GenerateLinkDialog = ({
       toast({
         title: "Success!",
         description: responseMessage,
-        action: (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => {
-              navigate(`/dashboard/manage-links/${weddingId}`);
-              onOpenChange(false);
-            }}
-          >
-            View Links
-          </Button>
-        ),
       });
 
       setSelectedFile(null);
