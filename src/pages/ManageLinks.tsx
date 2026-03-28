@@ -618,21 +618,18 @@ const ManageLinks = () => {
                               variant="secondary"
                               className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <Check className="w-2.5 h-2.5 mr-0.5" />
                               {stats.attending}
                             </Badge>
                             <Badge
                               variant="secondary"
                               className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <Loader2 className="w-2.5 h-2.5 mr-0.5" />
                               {stats.pending}
                             </Badge>
                             <Badge
                               variant="secondary"
                               className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
                             >
-                              <X className="w-2.5 h-2.5 mr-0.5" />
                               {stats.notAttending}
                             </Badge>
                           </div>
