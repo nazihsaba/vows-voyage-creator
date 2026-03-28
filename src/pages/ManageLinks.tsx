@@ -654,7 +654,7 @@ const ManageLinks = () => {
                               linkInvitees.map((invitee) => (
                                 <div
                                   key={invitee.id}
-                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-background"
+                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
                                 >
                                   <span className="text-sm font-medium text-foreground truncate mr-2">
                                     {invitee.name}
