@@ -981,8 +981,11 @@ const RoseGoldTabsForm = () => {
 
       <Dialog open={previewModalOpen} onOpenChange={setPreviewModalOpen}>
         <DialogContent className="max-w-[95vw] w-full h-[95vh] p-0 flex flex-col">
-          <DialogHeader className="px-6 pt-6 pb-4 shrink-0">
+          <DialogHeader className="px-6 pt-6 pb-4 shrink-0 flex flex-row items-center justify-between">
             <DialogTitle>Preview Invitation</DialogTitle>
+            <Button variant="ghost" size="icon" onClick={() => setPreviewModalOpen(false)} className="h-8 w-8">
+              <X className="h-4 w-4" />
+            </Button>
           </DialogHeader>
           <div className="flex-1 w-full overflow-hidden px-6 pb-6">
             <iframe
