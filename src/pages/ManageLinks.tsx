@@ -526,7 +526,10 @@ const ManageLinks = () => {
                     const isExpanded = expandedLinks[link.id] || false;
 
                     return (
-                      <div key={link.id} className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm">
+                      <div
+                        key={link.id}
+                        className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm"
+                      >
                         {/* Card Header */}
                         <div
                           className="p-4 cursor-pointer bg-primary/5 active:bg-primary/10 transition-colors"
@@ -549,7 +552,10 @@ const ManageLinks = () => {
                             </div>
 
                             {/* Action buttons - icon only on mobile, with text on larger screens */}
-                            <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5" onClick={(e) => e.stopPropagation()}>
+                            <div
+                              className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
+                              onClick={(e) => e.stopPropagation()}
+                            >
                               <Button
                                 size="icon"
                                 variant="ghost"
@@ -565,9 +571,12 @@ const ManageLinks = () => {
                                 onClick={() => {
                                   const sanitizedLinkName = link.link_name
                                     .toLowerCase()
-                                    .replace(/[^a-z0-9]+/g, '-')
-                                    .replace(/^-+|-+$/g, '');
-                                  window.open(`/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`, '_blank');
+                                    .replace(/[^a-z0-9]+/g, "-")
+                                    .replace(/^-+|-+$/g, "");
+                                  window.open(
+                                    `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                    "_blank",
+                                  );
                                 }}
                                 title="Open Link"
                                 className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
@@ -645,7 +654,7 @@ const ManageLinks = () => {
                               linkInvitees.map((invitee) => (
                                 <div
                                   key={invitee.id}
-                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0"
+                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
                                 >
                                   <span className="text-sm font-medium text-foreground truncate mr-2">
                                     {invitee.name}
