@@ -232,7 +232,9 @@ const ManageLinks = () => {
             </div>
             <div>
               <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">Manage Links</h1>
-              <p className="text-xs text-muted-foreground hidden sm:block">{wedding.bride_name} & {wedding.groom_name}</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">
+                {wedding.bride_name} & {wedding.groom_name}
+              </p>
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
@@ -532,7 +534,7 @@ const ManageLinks = () => {
                       >
                         {/* Card Header */}
                         <div
-                          className="p-4 cursor-pointer bg-background active:bg-primary/10 transition-colors"
+                          className="p-2 cursor-pointer bg-background active:bg-primary/10 transition-colors"
                           onClick={() => toggleLink(link.id)}
                         >
                           <div className="flex items-center justify-between gap-2">
