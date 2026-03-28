@@ -4,15 +4,20 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { ArrowLeft, Loader2, Copy, ExternalLink, Trash2, Check, X, Users, Search, ChevronDown, ChevronRight, Plus } from "lucide-react";
+  ArrowLeft,
+  Loader2,
+  Copy,
+  ExternalLink,
+  Trash2,
+  Check,
+  X,
+  Users,
+  Search,
+  ChevronDown,
+  ChevronRight,
+} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -98,7 +103,7 @@ const ManageLinks = () => {
 
       // Fetch all invitees for these links
       if (linksData && linksData.length > 0) {
-        const linkIds = linksData.map(link => link.id);
+        const linkIds = linksData.map((link) => link.id);
         const { data: inviteesData, error: inviteesError } = await supabase
           .from("invitees")
           .select("*")
@@ -132,8 +137,8 @@ const ManageLinks = () => {
   const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
     const sanitizedLinkName = linkName
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '');
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/^-+|-+$/g, "");
     // Use wedding.slug as the first parameter, not the link's unique_slug
     const fullUrl = `${window.location.origin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
     await navigator.clipboard.writeText(fullUrl);
@@ -145,10 +150,7 @@ const ManageLinks = () => {
 
   const deleteLink = async (linkId: string) => {
     try {
-      const { error } = await supabase
-        .from("invitation_links")
-        .delete()
-        .eq("id", linkId);
+      const { error } = await supabase.from("invitation_links").delete().eq("id", linkId);
 
       if (error) throw error;
 
@@ -156,8 +158,8 @@ const ManageLinks = () => {
         title: "Success",
         description: "Link deleted successfully",
       });
-      
-      setRefresh(prev => prev + 1);
+
+      setRefresh((prev) => prev + 1);
     } catch (error) {
       console.error("Error deleting link:", error);
       toast({
@@ -171,25 +173,25 @@ const ManageLinks = () => {
 
   const getRSVPStats = (linkId: string) => {
     const linkInvitees = invitees[linkId] || [];
-    const attending = linkInvitees.filter(i => i.is_attending === true).length;
-    const notAttending = linkInvitees.filter(i => i.is_attending === false).length;
-    const pending = linkInvitees.filter(i => i.is_attending === null).length;
-    
+    const attending = linkInvitees.filter((i) => i.is_attending === true).length;
+    const notAttending = linkInvitees.filter((i) => i.is_attending === false).length;
+    const pending = linkInvitees.filter((i) => i.is_attending === null).length;
+
     return { attending, notAttending, pending, total: linkInvitees.length };
   };
 
   const toggleLink = (linkId: string) => {
-    setExpandedLinks(prev => ({
+    setExpandedLinks((prev) => ({
       ...prev,
-      [linkId]: !prev[linkId]
+      [linkId]: !prev[linkId],
     }));
   };
 
-  const filteredLinks = links.filter(link => {
+  const filteredLinks = links.filter((link) => {
     const linkInvitees = invitees[link.id] || [];
     const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesGuestName = linkInvitees.some(invitee => 
-      invitee.name.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesGuestName = linkInvitees.some((invitee) =>
+      invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
     return matchesLinkName || matchesGuestName;
   });
@@ -220,32 +222,37 @@ const ManageLinks = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
       <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 sm:py-4">
-          {/* Top row: Back button + Title */}
-          <div className="flex items-center gap-3 mb-2 sm:mb-0">
-            <Button 
-              variant="ghost" 
-              size="icon"
-              onClick={() => navigate("/dashboard/my-events")} 
-              className="h-8 w-8 rounded-full flex-shrink-0 hover:bg-muted/60"
-            >
-              <ArrowLeft className="w-4 h-4" />
-            </Button>
-            <div className="min-w-0 flex-1">
-              <h1 className="text-lg sm:text-xl font-serif font-bold text-foreground leading-tight">
-                Manage Links
-              </h1>
-              <p className="text-xs text-muted-foreground">
-                {wedding.bride_name} & {wedding.groom_name}
-              </p>
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 py-3 sm:py-5">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+              <div className="p-1.5 sm:p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20 flex-shrink-0">
+                <Users className="w-4 h-4 sm:w-6 sm:h-6 text-primary" />
+              </div>
+              <div className="min-w-0">
+                <h1 className="text-base sm:text-xl md:text-2xl font-serif font-bold text-foreground truncate">
+                  Manage Links
+                </h1>
+                <p className="text-[11px] sm:text-xs text-muted-foreground truncate">
+                  {wedding.bride_name} & {wedding.groom_name}
+                </p>
+              </div>
             </div>
-            <Button 
-              onClick={() => setGenerateLinkOpen(true)} 
-              className="rounded-full px-4 shadow-sm hover:shadow-md transition-all text-xs sm:text-sm h-8 sm:h-9 flex-shrink-0"
-            >
-              <Plus className="w-3.5 h-3.5 mr-1 sm:mr-1.5" />
-              <span className="hidden xs:inline">Generate</span> Link
-            </Button>
+            <div className="flex items-center gap-2 self-end sm:self-auto">
+              <Button
+                onClick={() => setGenerateLinkOpen(true)}
+                className="rounded-full px-3 sm:px-5 shadow-sm hover:shadow-md transition-all text-xs sm:text-sm h-8 sm:h-9"
+              >
+                Generate Link
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => navigate("/dashboard/my-events")}
+                className="rounded-full border-border/60 hover:bg-muted/50 h-8 sm:h-9 px-2.5 sm:px-4"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 sm:mr-2" />
+                <span className="hidden sm:inline text-sm">Back</span>
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -271,16 +278,20 @@ const ManageLinks = () => {
                 <div>
                   <h2 className="text-xl font-serif font-semibold text-foreground">Invitation Links & Guests</h2>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {filteredLinks.length} {filteredLinks.length === 1 ? 'link' : 'links'} • {Object.values(invitees).flat().length} total guests
+                    {filteredLinks.length} {filteredLinks.length === 1 ? "link" : "links"} •{" "}
+                    {Object.values(invitees).flat().length} total guests
                   </p>
                   {(() => {
                     const allInvitees = Object.values(invitees).flat();
-                    const attending = allInvitees.filter(i => i.is_attending === true).length;
-                    const notAttending = allInvitees.filter(i => i.is_attending === false).length;
-                    const pending = allInvitees.filter(i => i.is_attending === null).length;
+                    const attending = allInvitees.filter((i) => i.is_attending === true).length;
+                    const notAttending = allInvitees.filter((i) => i.is_attending === false).length;
+                    const pending = allInvitees.filter((i) => i.is_attending === null).length;
                     return (
                       <div className="flex flex-wrap gap-3 mt-2">
-                        <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium">
+                        <Badge
+                          variant="secondary"
+                          className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+                        >
                           <Check className="w-3 h-3 mr-1" /> {attending} attending
                         </Badge>
                         <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
@@ -312,19 +323,33 @@ const ManageLinks = () => {
                     <TableHeader>
                       <TableRow className="bg-muted/30 border-b border-border/40">
                         <TableHead className="w-12"></TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">RSVP</TableHead>
-                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Link Name
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Side
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Created
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Guests
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          RSVP
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">
+                          Actions
+                        </TableHead>
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {filteredLinks.length === 0 ? (
                         <TableRow>
                           <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                            {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
+                            {searchQuery
+                              ? "No invitation links or guests match your search"
+                              : "No invitation links created yet"}
                           </TableCell>
                         </TableRow>
                       ) : (
@@ -332,61 +357,109 @@ const ManageLinks = () => {
                           const linkInvitees = invitees[link.id] || [];
                           const stats = getRSVPStats(link.id);
                           const isExpanded = expandedLinks[link.id] || false;
-                          
+
                           return (
                             <React.Fragment key={link.id}>
-                              <TableRow 
-                                className={`${linkIndex % 2 === 0 ? 'bg-white' : 'bg-muted/20'} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/20`}
+                              <TableRow
+                                className={`${linkIndex % 2 === 0 ? "bg-white" : "bg-muted/20"} hover:bg-primary/5 transition-all duration-200 cursor-pointer border-b border-border/20`}
                                 onClick={() => toggleLink(link.id)}
                               >
                                 <TableCell>
                                   <Button variant="ghost" size="icon" className="h-6 w-6">
-                                    {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                    {isExpanded ? (
+                                      <ChevronDown className="w-4 h-4" />
+                                    ) : (
+                                      <ChevronRight className="w-4 h-4" />
+                                    )}
                                   </Button>
                                 </TableCell>
                                 <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
                                 <TableCell>
                                   {link.side ? (
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                                      link.side === 'GROOM' 
-                                        ? 'bg-blue-100 text-blue-800' 
-                                        : 'bg-pink-100 text-pink-800'
-                                    }`}>
-                                      {link.side === 'GROOM' ? 'Groom' : 'Bride'}
+                                    <span
+                                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                                        link.side === "GROOM"
+                                          ? "bg-blue-100 text-blue-800"
+                                          : "bg-pink-100 text-pink-800"
+                                      }`}
+                                    >
+                                      {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </span>
                                   ) : (
                                     <span className="text-muted-foreground text-xs">—</span>
                                   )}
                                 </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
-                                  {new Date(link.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                                  {new Date(link.created_at).toLocaleDateString("en-US", {
+                                    month: "short",
+                                    day: "numeric",
+                                    year: "numeric",
+                                  })}
                                 </TableCell>
                                 <TableCell>
-                                  <span className="text-sm font-medium">{stats.total} {stats.total === 1 ? 'guest' : 'guests'}</span>
+                                  <span className="text-sm font-medium">
+                                    {stats.total} {stats.total === 1 ? "guest" : "guests"}
+                                  </span>
                                 </TableCell>
                                 <TableCell>
                                   <div className="flex gap-1.5">
-                                    <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-xs">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>{stats.attending}
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-green-50 border-green-200 text-green-700 text-xs"
+                                    >
+                                      <span className="w-1.5 h-1.5 rounded-full bg-green-500 mr-1"></span>
+                                      {stats.attending}
                                     </Badge>
                                     <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-xs">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>{stats.notAttending}
+                                      <span className="w-1.5 h-1.5 rounded-full bg-red-500 mr-1"></span>
+                                      {stats.notAttending}
                                     </Badge>
-                                    <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs">
-                                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1"></span>{stats.pending}
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 text-xs"
+                                    >
+                                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500 mr-1"></span>
+                                      {stats.pending}
                                     </Badge>
                                   </div>
                                 </TableCell>
                                 <TableCell className="text-right">
                                   <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
                                     <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
-                                      <Button size="icon" variant="ghost" onClick={() => copyToClipboard(link.link_name, link.number_of_persons)} title="Copy Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all">
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        title="Copy Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
                                         <Copy className="w-3.5 h-3.5" />
                                       </Button>
-                                      <Button size="icon" variant="ghost" onClick={() => { const s = link.link_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, '_blank'); }} title="Open Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all">
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => {
+                                          const s = link.link_name
+                                            .toLowerCase()
+                                            .replace(/[^a-z0-9]+/g, "-")
+                                            .replace(/^-+|-+$/g, "");
+                                          window.open(
+                                            `/invite/${wedding?.slug}/${s}/${link.number_of_persons}`,
+                                            "_blank",
+                                          );
+                                        }}
+                                        title="Open Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
                                         <ExternalLink className="w-3.5 h-3.5" />
                                       </Button>
-                                      <Button size="icon" variant="ghost" onClick={() => setDeleteId(link.id)} title="Delete Link" className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all">
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => setDeleteId(link.id)}
+                                        title="Delete Link"
+                                        className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                      >
                                         <Trash2 className="w-3.5 h-3.5" />
                                       </Button>
                                     </div>
@@ -394,37 +467,55 @@ const ManageLinks = () => {
                                 </TableCell>
                               </TableRow>
 
-                              {isExpanded && linkInvitees.length > 0 && linkInvitees.map((invitee) => (
-                                <TableRow key={invitee.id} className="bg-primary/[0.02] border-l-4 border-l-primary/20 hover:bg-primary/5 transition-colors">
-                                  <TableCell></TableCell>
-                                  <TableCell colSpan={3} className="pl-8 font-medium">{invitee.name}</TableCell>
-                                  <TableCell>
-                                    {invitee.is_attending === null ? (
-                                      <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700">
-                                        <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>Pending
-                                      </Badge>
-                                    ) : invitee.is_attending ? (
-                                      <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700">
-                                        <Check className="w-3 h-3 mr-1" />Attending
-                                      </Badge>
-                                    ) : (
-                                      <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
-                                        <X className="w-3 h-3 mr-1" />Not Attending
-                                      </Badge>
-                                    )}
-                                  </TableCell>
-                                  <TableCell colSpan={3} className="text-sm text-muted-foreground">
-                                    {invitee.is_attending !== null 
-                                      ? `Responded: ${new Date(invitee.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}`
-                                      : '-'}
-                                  </TableCell>
-                                </TableRow>
-                              ))}
+                              {isExpanded &&
+                                linkInvitees.length > 0 &&
+                                linkInvitees.map((invitee) => (
+                                  <TableRow
+                                    key={invitee.id}
+                                    className="bg-primary/[0.02] border-l-4 border-l-primary/20 hover:bg-primary/5 transition-colors"
+                                  >
+                                    <TableCell></TableCell>
+                                    <TableCell colSpan={3} className="pl-8 font-medium">
+                                      {invitee.name}
+                                    </TableCell>
+                                    <TableCell>
+                                      {invitee.is_attending === null ? (
+                                        <Badge
+                                          variant="outline"
+                                          className="bg-yellow-50 border-yellow-200 text-yellow-700"
+                                        >
+                                          <span className="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span>Pending
+                                        </Badge>
+                                      ) : invitee.is_attending ? (
+                                        <Badge
+                                          variant="outline"
+                                          className="bg-green-50 border-green-200 text-green-700"
+                                        >
+                                          <Check className="w-3 h-3 mr-1" />
+                                          Attending
+                                        </Badge>
+                                      ) : (
+                                        <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700">
+                                          <X className="w-3 h-3 mr-1" />
+                                          Not Attending
+                                        </Badge>
+                                      )}
+                                    </TableCell>
+                                    <TableCell colSpan={3} className="text-sm text-muted-foreground">
+                                      {invitee.is_attending !== null
+                                        ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                        : "-"}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
 
                               {isExpanded && linkInvitees.length === 0 && (
-                                <TableRow className={linkIndex % 2 === 0 ? 'bg-white' : 'bg-accent/5'}>
+                                <TableRow className={linkIndex % 2 === 0 ? "bg-white" : "bg-accent/5"}>
                                   <TableCell></TableCell>
-                                  <TableCell colSpan={5} className="text-center py-4 text-sm text-muted-foreground italic">
+                                  <TableCell
+                                    colSpan={5}
+                                    className="text-center py-4 text-sm text-muted-foreground italic"
+                                  >
                                     No guests added to this invitation yet
                                   </TableCell>
                                 </TableRow>
@@ -442,7 +533,9 @@ const ManageLinks = () => {
               <div className="md:hidden space-y-3">
                 {filteredLinks.length === 0 ? (
                   <p className="text-center py-8 text-muted-foreground text-sm">
-                    {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
+                    {searchQuery
+                      ? "No invitation links or guests match your search"
+                      : "No invitation links created yet"}
                   </p>
                 ) : (
                   filteredLinks.map((link) => {
@@ -453,30 +546,43 @@ const ManageLinks = () => {
                     return (
                       <div key={link.id} className="rounded-xl border border-border/30 bg-white overflow-hidden">
                         {/* Card Header */}
-                        <div 
+                        <div
                           className="p-4 cursor-pointer active:bg-muted/30 transition-colors"
                           onClick={() => toggleLink(link.id)}
                         >
                           <div className="flex items-start justify-between gap-2">
                             <div className="flex items-start gap-2 min-w-0 flex-1">
                               <Button variant="ghost" size="icon" className="h-6 w-6 mt-0.5 flex-shrink-0">
-                                {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                {isExpanded ? (
+                                  <ChevronDown className="w-4 h-4" />
+                                ) : (
+                                  <ChevronRight className="w-4 h-4" />
+                                )}
                               </Button>
                               <div className="min-w-0">
-                                <h3 className="font-semibold text-foreground text-sm truncate">{link.link_name}</h3>
+                                <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes']">
+                                  {link.link_name}
+                                </h3>
                                 <div className="flex items-center gap-2 mt-1 flex-wrap">
                                   {link.side && (
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
-                                      link.side === 'GROOM' ? 'bg-blue-100 text-blue-800' : 'bg-pink-100 text-pink-800'
-                                    }`}>
-                                      {link.side === 'GROOM' ? 'Groom' : 'Bride'}
+                                    <span
+                                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${
+                                        link.side === "GROOM"
+                                          ? "bg-blue-100 text-blue-800"
+                                          : "bg-pink-100 text-pink-800"
+                                      }`}
+                                    >
+                                      {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </span>
                                   )}
                                   <span className="text-[11px] text-muted-foreground">
-                                    {stats.total} {stats.total === 1 ? 'guest' : 'guests'}
+                                    {stats.total} {stats.total === 1 ? "guest" : "guests"}
                                   </span>
                                   <span className="text-[11px] text-muted-foreground">
-                                    {new Date(link.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
+                                    {new Date(link.created_at).toLocaleDateString("en-US", {
+                                      month: "short",
+                                      day: "numeric",
+                                    })}
                                   </span>
                                 </div>
                               </div>
@@ -485,26 +591,61 @@ const ManageLinks = () => {
 
                           {/* RSVP Badges */}
                           <div className="flex gap-1.5 mt-3 ml-8">
-                            <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-[10px] px-1.5 py-0.5">
-                              <Check className="w-2.5 h-2.5 mr-0.5" />{stats.attending}
+                            <Badge
+                              variant="outline"
+                              className="bg-green-50 border-green-200 text-green-700 text-[10px] px-1.5 py-0.5"
+                            >
+                              <Check className="w-2.5 h-2.5 mr-0.5" />
+                              {stats.attending}
                             </Badge>
-                            <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[10px] px-1.5 py-0.5">
-                              <Loader2 className="w-2.5 h-2.5 mr-0.5" />{stats.pending}
+                            <Badge
+                              variant="outline"
+                              className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[10px] px-1.5 py-0.5"
+                            >
+                              <Loader2 className="w-2.5 h-2.5 mr-0.5" />
+                              {stats.pending}
                             </Badge>
-                            <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-[10px] px-1.5 py-0.5">
-                              <X className="w-2.5 h-2.5 mr-0.5" />{stats.notAttending}
+                            <Badge
+                              variant="outline"
+                              className="bg-red-50 border-red-200 text-red-700 text-[10px] px-1.5 py-0.5"
+                            >
+                              <X className="w-2.5 h-2.5 mr-0.5" />
+                              {stats.notAttending}
                             </Badge>
                           </div>
 
                           {/* Actions Row */}
                           <div className="flex gap-1 mt-3 ml-8" onClick={(e) => e.stopPropagation()}>
-                            <Button size="sm" variant="outline" onClick={() => copyToClipboard(link.link_name, link.number_of_persons)} className="h-7 text-xs rounded-full px-3">
-                              <Copy className="w-3 h-3 mr-1" />Copy
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                              className="h-7 text-xs rounded-full px-3"
+                            >
+                              <Copy className="w-3 h-3 mr-1" />
+                              Copy
                             </Button>
-                            <Button size="sm" variant="outline" onClick={() => { const s = link.link_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, '_blank'); }} className="h-7 text-xs rounded-full px-3">
-                              <ExternalLink className="w-3 h-3 mr-1" />Open
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => {
+                                const s = link.link_name
+                                  .toLowerCase()
+                                  .replace(/[^a-z0-9]+/g, "-")
+                                  .replace(/^-+|-+$/g, "");
+                                window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, "_blank");
+                              }}
+                              className="h-7 text-xs rounded-full px-3"
+                            >
+                              <ExternalLink className="w-3 h-3 mr-1" />
+                              Open
                             </Button>
-                            <Button size="sm" variant="outline" onClick={() => setDeleteId(link.id)} className="h-7 text-xs rounded-full px-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10 border-destructive/20">
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setDeleteId(link.id)}
+                              className="h-7 text-xs rounded-full px-3 text-destructive/70 hover:text-destructive hover:bg-destructive/10 border-destructive/20"
+                            >
                               <Trash2 className="w-3 h-3" />
                             </Button>
                           </div>
@@ -514,22 +655,40 @@ const ManageLinks = () => {
                         {isExpanded && (
                           <div className="border-t border-border/20 bg-muted/10">
                             {linkInvitees.length === 0 ? (
-                              <p className="text-center py-4 text-sm text-muted-foreground italic">No guests added yet</p>
+                              <p className="text-center py-4 text-sm text-muted-foreground italic">
+                                No guests added yet
+                              </p>
                             ) : (
                               linkInvitees.map((invitee) => (
-                                <div key={invitee.id} className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0">
-                                  <span className="text-sm font-medium text-foreground truncate mr-2">{invitee.name}</span>
+                                <div
+                                  key={invitee.id}
+                                  className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0"
+                                >
+                                  <span className="text-sm font-medium text-foreground truncate mr-2">
+                                    {invitee.name}
+                                  </span>
                                   {invitee.is_attending === null ? (
-                                    <Badge variant="outline" className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[10px] flex-shrink-0">
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-yellow-50 border-yellow-200 text-yellow-700 text-[10px] flex-shrink-0"
+                                    >
                                       Pending
                                     </Badge>
                                   ) : invitee.is_attending ? (
-                                    <Badge variant="outline" className="bg-green-50 border-green-200 text-green-700 text-[10px] flex-shrink-0">
-                                      <Check className="w-2.5 h-2.5 mr-0.5" />Yes
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-green-50 border-green-200 text-green-700 text-[10px] flex-shrink-0"
+                                    >
+                                      <Check className="w-2.5 h-2.5 mr-0.5" />
+                                      Yes
                                     </Badge>
                                   ) : (
-                                    <Badge variant="outline" className="bg-red-50 border-red-200 text-red-700 text-[10px] flex-shrink-0">
-                                      <X className="w-2.5 h-2.5 mr-0.5" />No
+                                    <Badge
+                                      variant="outline"
+                                      className="bg-red-50 border-red-200 text-red-700 text-[10px] flex-shrink-0"
+                                    >
+                                      <X className="w-2.5 h-2.5 mr-0.5" />
+                                      No
                                     </Badge>
                                   )}
                                 </div>
@@ -552,8 +711,8 @@ const ManageLinks = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete this link?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete the invitation link
-              and all associated invitee responses.
+              This action cannot be undone. This will permanently delete the invitation link and all associated invitee
+              responses.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -574,7 +733,7 @@ const ManageLinks = () => {
           onOpenChange={setGenerateLinkOpen}
           weddingId={wedding.id}
           weddingSlug={wedding.slug}
-          onSuccess={() => setRefresh(prev => prev + 1)}
+          onSuccess={() => setRefresh((prev) => prev + 1)}
         />
       )}
     </div>
