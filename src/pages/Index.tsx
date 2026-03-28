@@ -90,13 +90,13 @@ const Index = () => {
             >
               Create Event
             </Button>
-            <Button
+            {/* <Button
               size="lg"
               onClick={() => setShowComingSoon(true)}
               className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
               View Demo
-            </Button>
+            </Button> */}
 
             <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
               <DialogContent className="sm:max-w-md p-0 overflow-hidden border-none rounded-3xl shadow-2xl">
