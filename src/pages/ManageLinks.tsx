@@ -529,7 +529,7 @@ const ManageLinks = () => {
                       <div key={link.id} className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm">
                         {/* Card Header */}
                         <div
-                          className="p-4 cursor-pointer active:bg-muted/30 transition-colors"
+                          className="p-4 cursor-pointer bg-primary/5 active:bg-primary/10 transition-colors"
                           onClick={() => toggleLink(link.id)}
                         >
                           <div className="flex items-center justify-between gap-2">
