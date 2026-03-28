@@ -18,6 +18,7 @@ import {
   ChevronDown,
   ChevronRight,
   Plus,
+  Link2,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
