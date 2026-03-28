@@ -78,7 +78,7 @@ export const AuraPreview = () => {
       title: "Welcome Drink",
       time: "8:00 PM",
       location: "Carma - Jeita Country Club",
-      icon: <Wine className="w-6 h-6 mb-1 text-primary" />,
+      icon: <Icon icon="streamline:champagne-party-alcohol-remix" className="w-6 h-6 mb-1 text-primary" />,
     },
     {
       id: "dinner",
