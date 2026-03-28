@@ -514,7 +514,7 @@ const WeddingForm = () => {
       <div className="max-w-2xl mx-auto">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          My Events
+          {cameFromMyEvents ? "My Events" : "Back to Dashboard"}
         </Button>
 
         <Card className="shadow-elegant overflow-hidden">
