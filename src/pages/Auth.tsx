@@ -21,6 +21,16 @@ const Auth = () => {
   const [isProcessingCallback, setIsProcessingCallback] = useState(true);
 
   useEffect(() => {
+    // Replace current history entry so back button goes to landing page
+    window.history.replaceState(null, "", window.location.href);
+    window.history.pushState(null, "", window.location.href);
+
+    const handlePopState = () => {
+      navigate("/", { replace: true });
+    };
+
+    window.addEventListener("popstate", handlePopState);
+
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state change:", event, session?.user?.email);
@@ -39,12 +49,14 @@ const Auth = () => {
       if (session) {
         navigate("/dashboard");
       } else {
-        // No session and no callback being processed, show the form
         setIsProcessingCallback(false);
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      window.removeEventListener("popstate", handlePopState);
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const handleSignUp = async (e: React.FormEvent) => {
