@@ -184,11 +184,11 @@ const Auth = () => {
     try {
       // Check if email exists in the database
       const { data: emailExists, error: checkError } = await supabase
-        .rpc("check_email_exists", { check_email: email.trim().toLowerCase() });
+        .rpc("check_email_exists" as any, { check_email: email.trim().toLowerCase() });
 
       if (checkError) throw checkError;
 
-      if (!emailExists) {
+      if (emailExists !== true) {
         toast.error("No account found with this email address");
         setLoading(false);
         return;
