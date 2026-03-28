@@ -387,6 +387,7 @@ export type Database = {
       }
     }
     Functions: {
+      check_email_exists: { Args: { check_email: string }; Returns: boolean }
       get_masked_card_number: { Args: { card_number: string }; Returns: string }
     }
     Enums: {

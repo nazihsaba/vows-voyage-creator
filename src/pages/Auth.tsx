@@ -182,10 +182,22 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Check if email exists in the database
+      const { data: emailExists, error: checkError } = await supabase
+        .rpc("check_email_exists", { check_email: email.trim().toLowerCase() });
+
+      if (checkError) throw checkError;
+
+      if (!emailExists) {
+        toast.error("No account found with this email address");
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.resetPasswordForEmail(
         email.trim().toLowerCase(),
         {
-          redirectTo: `${window.location.origin}/auth`,
+          redirectTo: `${window.location.origin}/dashboard/settings`,
         }
       );
 
