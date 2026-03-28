@@ -562,47 +562,61 @@ const ManageLinks = () => {
                             </div>
 
                             {/* Action buttons - icon only on mobile, with text on larger screens */}
-                            <div
-                              className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                title="Copy Link"
-                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                            <TooltipProvider>
+                              <div
+                                className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
+                                onClick={(e) => e.stopPropagation()}
                               >
-                                <Copy className="w-3.5 h-3.5" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => {
-                                  const sanitizedLinkName = link.link_name
-                                    .toLowerCase()
-                                    .replace(/[^a-z0-9]+/g, "-")
-                                    .replace(/^-+|-+$/g, "");
-                                  window.open(
-                                    `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
-                                    "_blank",
-                                  );
-                                }}
-                                title="Open Link"
-                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                              >
-                                <ExternalLink className="w-3.5 h-3.5" />
-                              </Button>
-                              <Button
-                                size="icon"
-                                variant="ghost"
-                                onClick={() => setDeleteId(link.id)}
-                                title="Delete Link"
-                                className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                              >
-                                <Trash2 className="w-3.5 h-3.5" />
-                              </Button>
-                            </div>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <Copy className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Copy Link</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        const sanitizedLinkName = link.link_name
+                                          .toLowerCase()
+                                          .replace(/[^a-z0-9]+/g, "-")
+                                          .replace(/^-+|-+$/g, "");
+                                        window.open(
+                                          `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                          "_blank",
+                                        );
+                                      }}
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <ExternalLink className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Open Link</TooltipContent>
+                                </Tooltip>
+                                <Tooltip>
+                                  <TooltipTrigger asChild>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => setDeleteId(link.id)}
+                                      className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
+                                  </TooltipTrigger>
+                                  <TooltipContent>Delete Link</TooltipContent>
+                                </Tooltip>
+                              </div>
+                            </TooltipProvider>
                           </div>
 
                           {/* Meta info row */}
