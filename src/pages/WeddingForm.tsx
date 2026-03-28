@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,25 +7,14 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
-import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
-
-const LOCATION_ICON_OPTIONS = [
-  { value: "bx:home", label: "Home" },
-  { value: "material-symbols:church-rounded", label: "Church" },
-  { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
-  { value: "solar:confetti-bold", label: "Confetti" },
-];
 
 const WeddingForm = () => {
   const { id } = useParams();
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  const cameFromMyEvents = (location.state as any)?.from === "my-events";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -45,20 +34,16 @@ const WeddingForm = () => {
     ceremony_location: "",
     ceremony_time: "",
     ceremony_location_link: "",
-    ceremony_icon: "material-symbols:church-rounded",
     venue_location: "",
     venue_time: "",
     venue_location_link: "",
-    venue_icon: "solar:confetti-bold",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
-  const [auraQuote, setAuraQuote] = useState(
-    "Two are better than one. For if they fall, one will lift up the other."
-  );
+  const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [formData, setFormData] = useState({
     groom_name: "",
@@ -109,7 +94,10 @@ const WeddingForm = () => {
       setFormData(data);
       // Load Aura quote/reference from field_customizations
       if (data.field_customizations) {
-        const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
+        const fc =
+          typeof data.field_customizations === "string"
+            ? JSON.parse(data.field_customizations)
+            : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
       }
@@ -139,7 +127,10 @@ const WeddingForm = () => {
       if (galleryData) {
         setExistingGalleryImages(galleryData);
         // Load Grace featured image preview if applicable
-        if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
+        if (
+          (data.template_type === "video-cinematic" || data.template_type === "template6") &&
+          galleryData.length > 0
+        ) {
           setGraceFeaturedPreview(galleryData[0].image_url);
         }
       }
@@ -154,11 +145,9 @@ const WeddingForm = () => {
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
           ceremony_location_link: ceremony?.location_link || "",
-          ceremony_icon: ceremony?.icon || "material-symbols:church-rounded",
           venue_location: venue?.location_name || "",
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
-          venue_icon: venue?.icon || "solar:confetti-bold",
         });
       }
 
@@ -170,7 +159,7 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData.map(c => ({ card_name: c.card_name, card_number: c.card_number })));
+        setGiftCards(cardsData.map((c) => ({ card_name: c.card_name, card_number: c.card_number })));
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -333,9 +322,7 @@ const WeddingForm = () => {
 
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
-      const existingCustomizations = typeof rawFc === 'string'
-        ? JSON.parse(rawFc || '{}')
-        : (rawFc || {});
+      const existingCustomizations = typeof rawFc === "string" ? JSON.parse(rawFc || "{}") : rawFc || {};
       const fieldCustomizations = isAuraTemplate
         ? {
             ...existingCustomizations,
@@ -432,7 +419,10 @@ const WeddingForm = () => {
       }
 
       // Upload Grace featured image (single image for gallery section)
-      if ((formData.template_type === "video-cinematic" || formData.template_type === "template6") && graceFeaturedFile) {
+      if (
+        (formData.template_type === "video-cinematic" || formData.template_type === "template6") &&
+        graceFeaturedFile
+      ) {
         // Remove existing gallery images for Grace (only 1 allowed)
         if (id) {
           await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
@@ -460,7 +450,6 @@ const WeddingForm = () => {
           location_name: locations.ceremony_location,
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
-          icon: locations.ceremony_icon,
         });
       }
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
@@ -470,7 +459,6 @@ const WeddingForm = () => {
           location_name: locations.venue_location,
           time: locations.venue_time,
           location_link: locations.venue_location_link,
-          icon: locations.venue_icon,
         });
       }
 
@@ -527,21 +515,25 @@ const WeddingForm = () => {
   return (
     <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
-        <Button variant="ghost" onClick={() => navigate(-1)} className="mb-3 sm:mb-4 -ml-1">
+        <Button variant="ghost" onClick={() => navigate("/dashboard/my-events")} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
-          {cameFromMyEvents ? "My Events" : "Dashboard"}
+          My Events
         </Button>
 
         <Card className="shadow-elegant overflow-hidden">
           <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
-            <CardTitle className="text-2xl sm:text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl font-serif">
+              {id ? "Edit Wedding" : "Create Wedding Invitation"}
+            </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_name" className="text-sm font-medium">Groom Name *</Label>
+                  <Label htmlFor="groom_name" className="text-sm font-medium">
+                    Groom Name *
+                  </Label>
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
@@ -553,7 +545,9 @@ const WeddingForm = () => {
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
+                  <Label htmlFor="bride_name" className="text-sm font-medium">
+                    Bride Name *
+                  </Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
@@ -569,7 +563,9 @@ const WeddingForm = () => {
               {/* Family Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_family" className="text-sm font-medium">Groom's Family *</Label>
+                  <Label htmlFor="groom_family" className="text-sm font-medium">
+                    Groom's Family *
+                  </Label>
                   <Input
                     id="groom_family"
                     required
@@ -579,7 +575,9 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
+                  <Label htmlFor="bride_family" className="text-sm font-medium">
+                    Bride's Family *
+                  </Label>
                   <Input
                     id="bride_family"
                     required
@@ -593,7 +591,9 @@ const WeddingForm = () => {
               {/* Dates */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="wedding_date" className="text-sm font-medium">Wedding Date *</Label>
+                  <Label htmlFor="wedding_date" className="text-sm font-medium">
+                    Wedding Date *
+                  </Label>
                   <Input
                     id="wedding_date"
                     type="date"
@@ -604,7 +604,9 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">Confirmation Deadline *</Label>
+                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">
+                    Confirmation Deadline *
+                  </Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
@@ -617,7 +619,9 @@ const WeddingForm = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="main_description" className="text-sm font-medium">Description</Label>
+                <Label htmlFor="main_description" className="text-sm font-medium">
+                  Description
+                </Label>
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
@@ -868,32 +872,6 @@ const WeddingForm = () => {
                         className="h-11 sm:h-10 text-sm"
                       />
                     </div>
-                    <div className="space-y-1.5">
-                      <Label>Icon</Label>
-                      <Select
-                        value={locations.ceremony_icon}
-                        onValueChange={(value) => setLocations({ ...locations, ceremony_icon: value })}
-                      >
-                        <SelectTrigger className="h-11 sm:h-10">
-                          <SelectValue>
-                            <span className="flex items-center gap-2">
-                              <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.ceremony_icon)?.label}
-                            </span>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {LOCATION_ICON_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <span className="flex items-center gap-2">
-                                <Icon icon={opt.value} className="w-5 h-5" />
-                                {opt.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </CardContent>
                 </Card>
 
@@ -937,32 +915,6 @@ const WeddingForm = () => {
                         type="url"
                         className="h-11 sm:h-10 text-sm"
                       />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Icon</Label>
-                      <Select
-                        value={locations.venue_icon}
-                        onValueChange={(value) => setLocations({ ...locations, venue_icon: value })}
-                      >
-                        <SelectTrigger className="h-11 sm:h-10">
-                          <SelectValue>
-                            <span className="flex items-center gap-2">
-                              <Icon icon={locations.venue_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.venue_icon)?.label}
-                            </span>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {LOCATION_ICON_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <span className="flex items-center gap-2">
-                                <Icon icon={opt.value} className="w-5 h-5" />
-                                {opt.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
                     </div>
                   </CardContent>
                 </Card>
@@ -1114,7 +1066,9 @@ const WeddingForm = () => {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="slug" className="text-sm font-medium">Custom URL Slug</Label>
+                <Label htmlFor="slug" className="text-sm font-medium">
+                  Custom URL Slug
+                </Label>
                 <Input
                   id="slug"
                   value={formData.slug}
@@ -1161,7 +1115,7 @@ const WeddingForm = () => {
           </CardContent>
         </Card>
       </div>
-
+      {/* 
       <Dialog open={previewModalOpen} onOpenChange={setPreviewModalOpen}>
         <DialogContent className="max-w-[95vw] w-full h-[95vh] p-0 flex flex-col">
           <DialogHeader className="px-6 pt-6 pb-4 shrink-0 flex flex-row items-center justify-between">
@@ -1174,7 +1128,7 @@ const WeddingForm = () => {
             <iframe src={previewUrl} className="w-full h-full border-0 rounded-lg" title="Wedding Invitation Preview" />
           </div>
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </div>
   );
 };
