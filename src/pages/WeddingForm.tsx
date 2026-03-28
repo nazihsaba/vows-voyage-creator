@@ -777,7 +777,7 @@ const WeddingForm = () => {
                   </p>
                   {graceFeaturedPreview ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <img src={graceFeaturedPreview} alt="Featured" className="w-full h-full object-cover" />
+                      <img src={graceFeaturedPreview} alt="Featured" loading="lazy" className="w-full h-full object-cover" />
                       <Button
                         type="button"
                         variant="destructive"
