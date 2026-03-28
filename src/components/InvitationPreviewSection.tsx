@@ -1,12 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselPrevious,
-  CarouselNext,
-} from "@/components/ui/carousel";
+import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
@@ -122,7 +116,7 @@ const InvitationPreviewSection = () => {
         </div>
 
         {/* CTAs */}
-        <div className="flex justify-center">
+        {/* <div className="flex justify-center">
           <Button
             size="lg"
             onClick={() => navigate("/dashboard")}
@@ -130,7 +124,7 @@ const InvitationPreviewSection = () => {
           >
             Browse Wedding Templates
           </Button>
-        </div>
+        </div> */}
       </div>
     </section>
   );
