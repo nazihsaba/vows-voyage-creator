@@ -9,13 +9,23 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
-import { Plus, X, Upload, Download, Loader2 } from "lucide-react";
+import { Plus, X, Upload, Download, Loader2, Link2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useIsMobile } from "@/hooks/use-mobile";
 import * as XLSX from "xlsx";
 
 interface GenerateLinkDialogProps {
@@ -35,6 +45,7 @@ export const GenerateLinkDialog = ({
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
@@ -330,230 +341,271 @@ export const GenerateLinkDialog = ({
       ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
       : "";
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Generate Invitation Link</DialogTitle>
-          <DialogDescription>Create invitation links manually or automatically from a file</DialogDescription>
-        </DialogHeader>
+  const headerContent = (
+    <div className="flex items-center gap-3">
+      <div className="p-2 rounded-xl bg-gradient-to-br from-primary/20 to-secondary/20">
+        <Link2 className="w-5 h-5 text-primary" />
+      </div>
+      <div>
+        <h2 className="text-lg font-serif font-bold text-foreground">Generate Invitation Link</h2>
+        <p className="text-sm text-muted-foreground">Create links manually or from a file</p>
+      </div>
+    </div>
+  );
 
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="manual">Manual</TabsTrigger>
-            <TabsTrigger value="automatic">Automatic</TabsTrigger>
-          </TabsList>
+  const footerContent = (
+    <div className="flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2">
+      <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading} className="rounded-full">
+        Cancel
+      </Button>
+      {activeTab === "manual" ? (
+        <Button onClick={handleSubmit} disabled={loading} className="rounded-full">
+          {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {loading ? "Creating..." : "Create Link"}
+        </Button>
+      ) : (
+        <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile} className="rounded-full">
+          {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+          {loading ? "Processing..." : "Generate Automatically"}
+        </Button>
+      )}
+    </div>
+  );
 
-          <TabsContent value="manual" className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="linkName">Link Name *</Label>
-              <p className="text-sm text-muted-foreground">
-                A friendly name to identify this invitation group (e.g., "Family Smith", "Work Colleagues")
+  const formContent = (
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+      <TabsList className="grid w-full grid-cols-2 rounded-full">
+        <TabsTrigger value="manual" className="rounded-full">Manual</TabsTrigger>
+        <TabsTrigger value="automatic" className="rounded-full">Automatic</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="manual" className="space-y-4 py-4">
+        <div className="space-y-2">
+          <Label htmlFor="linkName">Link Name *</Label>
+          <p className="text-sm text-muted-foreground">
+            A friendly name to identify this invitation group (e.g., "Family Smith", "Work Colleagues")
+          </p>
+          <Input
+            id="linkName"
+            placeholder="e.g., Family Smith"
+            value={linkName}
+            onChange={(e) => handleLinkNameChange(e.target.value)}
+            className="rounded-lg"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="uniqueSlug">Link Unique Identifier *</Label>
+          <p className="text-sm text-muted-foreground">
+            A unique URL-friendly identifier that will be part of the invitation link
+          </p>
+          <Input
+            id="uniqueSlug"
+            placeholder="e.g., family-smith"
+            value={uniqueSlug}
+            onChange={(e) => {
+              setSlugManuallyEdited(true);
+              setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
+            }}
+            className="rounded-lg"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="side">Side</Label>
+          <p className="text-sm text-muted-foreground">
+            Which side of the wedding party does this group belong to?
+          </p>
+          <select
+            id="side"
+            value={side}
+            onChange={(e) => setSide(e.target.value)}
+            className="flex h-10 w-full rounded-lg border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            <option value="">Select side (optional)</option>
+            <option value="GROOM">Groom</option>
+            <option value="BRIDE">Bride</option>
+          </select>
+        </div>
+
+        {previewUrl && (
+          <Card className="p-3 bg-muted/50 border-muted rounded-xl">
+            <Label className="text-xs text-muted-foreground">Preview URL:</Label>
+            <p className="text-sm font-mono break-all mt-1">{previewUrl}</p>
+          </Card>
+        )}
+
+        <div className="space-y-2">
+          <div className="flex items-center justify-between">
+            <div>
+              <Label>Invitees ({invitees.filter((n) => n.trim()).length})</Label>
+              <p className="text-sm text-muted-foreground mt-1">
+                Add the names of people who will receive this invitation link
               </p>
-              <Input
-                id="linkName"
-                placeholder="e.g., Family Smith"
-                value={linkName}
-                onChange={(e) => handleLinkNameChange(e.target.value)}
-              />
             </div>
+            <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee} className="rounded-full">
+              <Plus className="w-4 h-4 mr-1" />
+              Add
+            </Button>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="uniqueSlug">Link Unique Identifier *</Label>
-              <p className="text-sm text-muted-foreground">
-                A unique URL-friendly identifier that will be part of the invitation link
-              </p>
-              <Input
-                id="uniqueSlug"
-                placeholder="e.g., family-smith"
-                value={uniqueSlug}
-                onChange={(e) => {
-                  setSlugManuallyEdited(true);
-                  setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
-                }}
-              />
-            </div>
+          <div className="space-y-2">
+            {invitees.map((invitee, index) => (
+              <div key={index} className="flex gap-2">
+                <Input
+                  placeholder={`Invitee ${index + 1} name`}
+                  value={invitee}
+                  onChange={(e) => handleInviteeChange(index, e.target.value)}
+                  className="rounded-lg"
+                />
+                {invitees.length > 1 && (
+                  <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)} className="rounded-lg shrink-0">
+                    <X className="w-4 h-4" />
+                  </Button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </TabsContent>
 
-            <div className="space-y-2">
-              <Label htmlFor="side">Side</Label>
-              <p className="text-sm text-muted-foreground">
-                Which side of the wedding party does this group belong to?
-              </p>
-              <select
-                id="side"
-                value={side}
-                onChange={(e) => setSide(e.target.value)}
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                <option value="">Select side (optional)</option>
-                <option value="GROOM">Groom</option>
-                <option value="BRIDE">Bride</option>
-              </select>
-            </div>
-
-            {previewUrl && (
-              <Card className="p-3 bg-muted">
-                <Label className="text-xs text-muted-foreground">Preview URL:</Label>
-                <p className="text-sm font-mono break-all">{previewUrl}</p>
-              </Card>
-            )}
-
-            <div className="space-y-2">
-              <div className="flex items-center justify-between">
+      <TabsContent value="automatic" className="space-y-6 py-4">
+        <div className="space-y-6">
+          <Card className="p-4 bg-accent/5 border-accent/20 rounded-xl">
+            <div className="flex items-center justify-between">
+              <div className="flex items-start gap-3">
+                <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
+                  <Download className="w-5 h-5 text-accent-foreground" />
+                </div>
                 <div>
-                  <Label>Invitees ({invitees.filter((n) => n.trim()).length})</Label>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    Add the names of people who will receive this invitation link
+                  <p className="font-medium text-foreground">Download Template</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Get a pre-formatted Excel file with example data
                   </p>
                 </div>
-                <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee}>
-                  <Plus className="w-4 h-4 mr-1" />
-                  Add Invitee
-                </Button>
               </div>
+              <Button type="button" variant="outline" size="sm" onClick={handleDownloadTemplate} className="rounded-full">
+                <Download className="w-4 h-4 mr-2" />
+                Download
+              </Button>
+            </div>
+          </Card>
 
-              <div className="space-y-2">
-                {invitees.map((invitee, index) => (
-                  <div key={index} className="flex gap-2">
-                    <Input
-                      placeholder={`Invitee ${index + 1} name`}
-                      value={invitee}
-                      onChange={(e) => handleInviteeChange(index, e.target.value)}
-                    />
-                    {invitees.length > 1 && (
-                      <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)}>
-                        <X className="w-4 h-4" />
-                      </Button>
-                    )}
-                  </div>
-                ))}
+          <div className="space-y-3">
+            <div className="flex items-start gap-2">
+              <Upload className="w-5 h-5 text-primary mt-0.5" />
+              <div>
+                <Label className="text-base font-semibold">Upload Your Guest List</Label>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Select an Excel file (.xlsx or .xls) with your invitee information
+                </p>
               </div>
             </div>
-          </TabsContent>
 
-          <TabsContent value="automatic" className="space-y-6 py-4">
-            <div className="space-y-6">
-              {/* Download Template Button */}
-              <Card className="p-4 bg-accent/5 border-accent/20">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-start gap-3">
-                    <div className="w-10 h-10 rounded-lg bg-accent/10 flex items-center justify-center flex-shrink-0">
-                      <Download className="w-5 h-5 text-accent-foreground" />
+            {!selectedFile ? (
+              <label htmlFor="file-upload" className="block">
+                <Card className="p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50 rounded-xl">
+                  <div className="flex flex-col items-center justify-center gap-3 text-center">
+                    <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
+                      <Upload className="w-6 h-6 text-primary" />
                     </div>
                     <div>
-                      <p className="font-medium text-foreground">Download Template</p>
-                      <p className="text-sm text-muted-foreground mt-0.5">
-                        Get a pre-formatted Excel file with example data
-                      </p>
+                      <p className="font-medium text-foreground">Click to upload</p>
+                      <p className="text-sm text-muted-foreground mt-1">Excel files only (.xlsx, .xls)</p>
                     </div>
                   </div>
-                  <Button type="button" variant="outline" size="sm" onClick={handleDownloadTemplate}>
-                    <Download className="w-4 h-4 mr-2" />
-                    Download
+                </Card>
+                <Input
+                  id="file-upload"
+                  type="file"
+                  accept=".xlsx,.xls"
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+            ) : (
+              <Card className="p-4 bg-primary/5 border-primary/20 rounded-xl">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+                      <Upload className="w-5 h-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="font-medium text-foreground">{selectedFile.name}</p>
+                      <p className="text-xs text-muted-foreground">Ready to process</p>
+                    </div>
+                  </div>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setSelectedFile(null)}
+                    className="hover:bg-destructive/10 hover:text-destructive rounded-full"
+                  >
+                    <X className="w-4 h-4" />
                   </Button>
                 </div>
               </Card>
+            )}
+          </div>
 
-              {/* Upload Area */}
-              <div className="space-y-3">
-                <div className="flex items-start gap-2">
-                  <Upload className="w-5 h-5 text-primary mt-0.5" />
-                  <div>
-                    <Label className="text-base font-semibold">Upload Your Guest List</Label>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      Select an Excel file (.xlsx or .xls) with your invitee information
-                    </p>
-                  </div>
+          <Card className="p-5 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/10 rounded-xl">
+            <div className="space-y-3">
+              <div className="flex items-start gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-xs font-bold text-primary">✓</span>
                 </div>
-
-                {!selectedFile ? (
-                  <label htmlFor="file-upload" className="block">
-                    <Card className="p-8 border-2 border-dashed border-border hover:border-primary/50 transition-colors cursor-pointer bg-muted/30 hover:bg-muted/50">
-                      <div className="flex flex-col items-center justify-center gap-3 text-center">
-                        <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                          <Upload className="w-6 h-6 text-primary" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">Click to upload</p>
-                          <p className="text-sm text-muted-foreground mt-1">Excel files only (.xlsx, .xls)</p>
-                        </div>
-                      </div>
-                    </Card>
-                    <Input
-                      id="file-upload"
-                      type="file"
-                      accept=".xlsx,.xls"
-                      onChange={handleFileChange}
-                      className="hidden"
-                    />
-                  </label>
-                ) : (
-                  <Card className="p-4 bg-primary/5 border-primary/20">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                          <Upload className="w-5 h-5 text-primary" />
-                        </div>
-                        <div>
-                          <p className="font-medium text-foreground">{selectedFile.name}</p>
-                          <p className="text-xs text-muted-foreground">Ready to process</p>
-                        </div>
-                      </div>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        onClick={() => setSelectedFile(null)}
-                        className="hover:bg-destructive/10 hover:text-destructive"
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </Card>
-                )}
+                <p className="text-sm text-foreground">
+                  Your Excel file will be automatically processed to generate personalized invitation links for all
+                  invitees
+                </p>
               </div>
-
-              {/* Information Card */}
-              <Card className="p-5 bg-gradient-to-br from-primary/5 to-accent/5 border-primary/10">
-                <div className="space-y-3">
-                  <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-primary">✓</span>
-                    </div>
-                    <p className="text-sm text-foreground">
-                      Your Excel file will be automatically processed to generate personalized invitation links for all
-                      invitees
-                    </p>
-                  </div>
-                  <div className="flex items-start gap-2">
-                    <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <span className="text-xs font-bold text-primary">✓</span>
-                    </div>
-                    <p className="text-sm text-foreground">
-                      Each invitee will receive a unique link based on the information in your file
-                    </p>
-                  </div>
+              <div className="flex items-start gap-2">
+                <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                  <span className="text-xs font-bold text-primary">✓</span>
                 </div>
-              </Card>
+                <p className="text-sm text-foreground">
+                  Each invitee will receive a unique link based on the information in your file
+                </p>
+              </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </Card>
+        </div>
+      </TabsContent>
+    </Tabs>
+  );
 
-        <DialogFooter>
-          <Button variant="outline" onClick={() => onOpenChange(false)} disabled={loading}>
-            Cancel
-          </Button>
-          {activeTab === "manual" ? (
-            <Button onClick={handleSubmit} disabled={loading}>
-              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {loading ? "Creating..." : "Create Link"}
-            </Button>
-          ) : (
-            <Button onClick={handleAutomaticGeneration} disabled={loading || !selectedFile}>
-              {loading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {loading ? "Processing..." : "Generate Automatically"}
-            </Button>
-          )}
+  if (isMobile) {
+    return (
+      <Drawer open={open} onOpenChange={onOpenChange}>
+        <DrawerContent className="max-h-[90vh]">
+          <DrawerHeader className="text-left border-b border-border pb-4">
+            {headerContent}
+          </DrawerHeader>
+          <ScrollArea className="flex-1 overflow-auto px-4 py-2" style={{ maxHeight: 'calc(90vh - 160px)' }}>
+            {formContent}
+          </ScrollArea>
+          <DrawerFooter className="border-t border-border pt-4">
+            {footerContent}
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    );
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-2xl max-h-[85vh] flex flex-col p-0 gap-0 rounded-2xl overflow-hidden">
+        <DialogHeader className="px-6 pt-6 pb-4 border-b border-border">
+          <DialogTitle className="sr-only">Generate Invitation Link</DialogTitle>
+          <DialogDescription className="sr-only">Create invitation links manually or automatically from a file</DialogDescription>
+          {headerContent}
+        </DialogHeader>
+        <ScrollArea className="flex-1 px-6 py-2" style={{ maxHeight: 'calc(85vh - 180px)' }}>
+          {formContent}
+        </ScrollArea>
+        <DialogFooter className="px-6 py-4 border-t border-border">
+          {footerContent}
         </DialogFooter>
       </DialogContent>
     </Dialog>
