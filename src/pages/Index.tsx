@@ -200,9 +200,6 @@ const Index = () => {
             {/* Option 1: DIY */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-                  <Wand2 className="w-8 h-8 text-primary" />
-                </div>
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
               </div>
@@ -244,9 +241,6 @@ const Index = () => {
             {/* Option 2: Managed */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
-                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 mb-5">
-                  <Mail className="w-8 h-8 text-primary" />
-                </div>
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">Let Us Handle It</h3>
                 <p className="text-muted-foreground text-sm">
                   Perfect for a more personalized, done-for-you experience
