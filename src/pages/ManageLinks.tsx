@@ -9,7 +9,7 @@ import {
   ArrowLeft,
   Loader2,
   Copy,
-  ExternalLink,
+  Eye,
   Trash2,
   Check,
   X,
@@ -438,7 +438,7 @@ const ManageLinks = () => {
                                         title="Open Link"
                                         className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       >
-                                        <ExternalLink className="w-3.5 h-3.5" />
+                                        <Eye className="w-3.5 h-3.5" />
                                       </Button>
                                       <Button
                                         size="icon"
@@ -587,7 +587,7 @@ const ManageLinks = () => {
                                 title="Open Link"
                                 className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                               >
-                                <ExternalLink className="w-3.5 h-3.5" />
+                                <Eye className="w-3.5 h-3.5" />
                               </Button>
                               <Button
                                 size="icon"
