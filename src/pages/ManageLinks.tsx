@@ -470,6 +470,7 @@ const ManageLinks = () => {
                             <TableRow className="bg-primary/10 border-b border-primary/20">
                               <TableHead className="w-12"></TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Table #</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
