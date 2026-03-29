@@ -35,7 +35,6 @@ const Auth = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state change:", event, session?.user?.email);
       if (event === 'SIGNED_IN' && session) {
-        toast.success("Successfully logged in!");
         navigate("/dashboard");
       }
       if (event === 'PASSWORD_RECOVERY') {
