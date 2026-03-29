@@ -87,7 +87,7 @@ const ManageLinks = () => {
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
-    number_of_persons: 1,
+    number_of_persons: 1 as number | string,
     side: "",
     table_number: "" as string,
   });
