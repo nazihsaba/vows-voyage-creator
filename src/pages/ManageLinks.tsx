@@ -636,6 +636,15 @@ const ManageLinks = () => {
                               <Button
                                 size="icon"
                                 variant="ghost"
+                                onClick={() => openEditDialog(link)}
+                                title="Edit Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 onClick={() => setDeleteId(link.id)}
                                 title="Delete Link"
                                 className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
