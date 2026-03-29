@@ -165,8 +165,8 @@ const Index = () => {
               { icon: LinkIcon, title: "Custom Links", desc: "Auto-generated unique invitation URLs" },
               {
                 icon: Users,
-                title: "Guest Tracking",
-                desc: "Track attendance status for each invited guest in real time",
+                title: "Guest Tracking & Table Management",
+                desc: "Track attendance in real time and effortlessly organize guests into tables for a seamless event experience.",
               },
             ].map((feature) => (
               <div
