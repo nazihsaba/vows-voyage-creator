@@ -778,7 +778,7 @@ const ManageLinks = () => {
                                     </Button>
                                   </div>
                                 </div>
-                                <div className="flex items-center gap-2 mt-1 ml-8 flex-wrap">
+                                <div className="flex items-center gap-3 mt-1 ml-8 flex-wrap">
                                   {link.side && (
                                     <Badge variant="secondary" className="text-xs font-medium border-0">
                                       {link.side === "GROOM" ? "Groom" : "Bride"}
