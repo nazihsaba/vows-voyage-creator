@@ -273,7 +273,7 @@ const Index = () => {
                   ))}
                 </div>
                 <Button
-                  onClick={() => window.open("https://wa.me/96171944174", "_blank")}
+                  onClick={() => window.open("https://wa.me/", "_blank")}
                   className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 sm:px-10 py-5 rounded-lg text-base w-full sm:w-auto"
                 >
                   Contact Us
@@ -315,7 +315,7 @@ const Index = () => {
             >
               <Instagram size={22} />
             </a>
-            <a
+            {/* <a
               href="https://tiktok.com"
               target="_blank"
               rel="noopener noreferrer"
@@ -334,9 +334,9 @@ const Index = () => {
               >
                 <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
               </svg>
-            </a>
+            </a> */}
             <a
-href="https://wa.me/96171944174"
+              href="https://wa.me/"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
