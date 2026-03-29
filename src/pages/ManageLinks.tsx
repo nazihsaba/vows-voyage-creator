@@ -180,6 +180,7 @@ const ManageLinks = () => {
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      table_number: link.table_number != null ? String(link.table_number) : "",
     });
     setNewInviteeName("");
     // Load invitees for this link
