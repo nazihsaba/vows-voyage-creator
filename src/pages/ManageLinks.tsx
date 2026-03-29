@@ -472,6 +472,15 @@ const ManageLinks = () => {
                                 </TableCell>
                                 <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
+                                  {link.table_number != null ? (
+                                    <Badge variant="outline" className="text-xs font-medium">
+                                      {link.table_number}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-muted-foreground/50">—</span>
+                                  )}
+                                </TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
                                   {new Date(link.created_at).toLocaleDateString("en-US", {
                                     month: "short",
                                     day: "numeric",
