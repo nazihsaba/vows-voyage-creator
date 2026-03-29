@@ -73,6 +73,8 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
+  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "" });
 
   useEffect(() => {
     if (weddingId) {
