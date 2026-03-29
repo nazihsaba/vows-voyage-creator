@@ -202,7 +202,9 @@ const Dashboard = () => {
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-1.5">
                         <CardTitle className="text-lg font-serif">{template.name}</CardTitle>
-                        <span className="flex-shrink-0 text-lg text-primary font-['great-vibes']">$100</span>
+                        <span className="flex-shrink-0 text-lg text-primary font-['great-vibes'] font-semibold">
+                          $100
+                        </span>
                       </div>
                       <CardDescription className="text-sm text-muted-foreground leading-relaxed">
                         {template.description}
