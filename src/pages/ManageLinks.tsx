@@ -180,6 +180,44 @@ const ManageLinks = () => {
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
     });
+    setNewInviteeName("");
+    // Load invitees for this link
+    const linkInvitees = invitees[link.id] || [];
+    setEditInvitees([...linkInvitees]);
+  };
+
+  const handleAddInvitee = async () => {
+    if (!editingLink || !newInviteeName.trim()) return;
+    setSavingInvitee(true);
+    try {
+      const { data, error } = await supabase
+        .from("invitees")
+        .insert({ invitation_link_id: editingLink.id, name: newInviteeName.trim() })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setEditInvitees((prev) => [...prev, data]);
+      setNewInviteeName("");
+      toast({ title: "Success", description: "Guest added" });
+    } catch (error) {
+      console.error("Error adding invitee:", error);
+      toast({ title: "Error", description: "Failed to add guest", variant: "destructive" });
+    } finally {
+      setSavingInvitee(false);
+    }
+  };
+
+  const handleDeleteInvitee = async (inviteeId: string) => {
+    try {
+      const { error } = await supabase.from("invitees").delete().eq("id", inviteeId);
+      if (error) throw error;
+      setEditInvitees((prev) => prev.filter((i) => i.id !== inviteeId));
+      toast({ title: "Success", description: "Guest removed" });
+    } catch (error) {
+      console.error("Error deleting invitee:", error);
+      toast({ title: "Error", description: "Failed to remove guest", variant: "destructive" });
+    }
   };
 
   const handleEditSave = async () => {
