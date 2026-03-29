@@ -243,7 +243,7 @@ const ManageLinks = () => {
   };
 
   const handleEditSave = async () => {
-    if (!editingLink) return;
+    if (!editingLink || !editForm.number_of_persons) return;
     try {
       const { error } = await (supabase as any)
         .from("invitation_links")
