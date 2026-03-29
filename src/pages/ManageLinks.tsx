@@ -14,13 +14,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   ArrowLeft,
   Loader2,
@@ -91,7 +85,12 @@ const ManageLinks = () => {
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
-  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "", table_number: "" as string });
+  const [editForm, setEditForm] = useState({
+    link_name: "",
+    number_of_persons: 1,
+    side: "",
+    table_number: "" as string,
+  });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
@@ -228,13 +227,13 @@ const ManageLinks = () => {
     try {
       const { error } = await supabase.from("invitees").update({ is_attending: nextStatus }).eq("id", inviteeId);
       if (error) throw error;
-      setEditInvitees((prev) => prev.map((i) => i.id === inviteeId ? { ...i, is_attending: nextStatus } : i));
+      setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)));
       // Also update the main invitees state
       const linkId = editingLink?.id;
       if (linkId) {
         setInvitees((prev) => ({
           ...prev,
-          [linkId]: (prev[linkId] || []).map((i) => i.id === inviteeId ? { ...i, is_attending: nextStatus } : i),
+          [linkId]: (prev[linkId] || []).map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)),
         }));
       }
     } catch (error) {
@@ -469,20 +468,36 @@ const ManageLinks = () => {
                           <TableHeader>
                             <TableRow className="bg-primary/10 border-b border-primary/20">
                               <TableHead className="w-12"></TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Table #</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">RSVP</TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">Actions</TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Link Name
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Side
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Table #
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Created
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Guests
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                RSVP
+                              </TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground text-right">
+                                Actions
+                              </TableHead>
                             </TableRow>
                           </TableHeader>
                           <TableBody>
                             {filteredLinks.length === 0 ? (
                               <TableRow>
                                 <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                                  {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
+                                  {searchQuery
+                                    ? "No invitation links or guests match your search"
+                                    : "No invitation links created yet"}
                                 </TableCell>
                               </TableRow>
                             ) : (
@@ -498,26 +513,38 @@ const ManageLinks = () => {
                                     >
                                       <TableCell>
                                         <Button variant="ghost" size="icon" className="h-6 w-6">
-                                          {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                          {isExpanded ? (
+                                            <ChevronDown className="w-4 h-4" />
+                                          ) : (
+                                            <ChevronRight className="w-4 h-4" />
+                                          )}
                                         </Button>
                                       </TableCell>
                                       <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.side ? (
-                                          <Badge variant="secondary" className="text-xs font-medium border-0">{link.side}</Badge>
+                                          <Badge variant="secondary" className="text-xs font-medium border-0">
+                                            {link.side}
+                                          </Badge>
                                         ) : (
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
                                       </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.table_number != null ? (
-                                          <Badge variant="secondary" className="text-xs font-medium border-0">{link.table_number}</Badge>
+                                          <Badge variant="secondary" className="text-xs font-medium border-0">
+                                            {link.table_number}
+                                          </Badge>
                                         ) : (
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
                                       </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
-                                        {new Date(link.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                                        {new Date(link.created_at).toLocaleDateString("en-US", {
+                                          month: "short",
+                                          day: "numeric",
+                                          year: "numeric",
+                                        })}
                                       </TableCell>
                                       <TableCell>
                                         <div className="flex items-center gap-1.5">
@@ -529,44 +556,129 @@ const ManageLinks = () => {
                                       </TableCell>
                                       <TableCell>
                                         <div className="flex flex-wrap gap-1.5">
-                                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium">{stats.attending}</Badge>
-                                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">{stats.pending}</Badge>
-                                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">{stats.notAttending}</Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+                                          >
+                                            {stats.attending}
+                                          </Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                          >
+                                            {stats.pending}
+                                          </Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                          >
+                                            {stats.notAttending}
+                                          </Badge>
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-right">
                                         <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
                                           <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
-                                            <Button size="icon" variant="ghost" onClick={() => copyToClipboard(link.link_name, link.number_of_persons)} title="Copy Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Copy className="w-3.5 h-3.5" /></Button>
-                                            <Button size="icon" variant="ghost" onClick={() => { const s = link.link_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); window.open(`/invite/${wedding?.slug}/${s}/${link.number_of_persons}`, "_blank"); }} title="Open Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Eye className="w-3.5 h-3.5" /></Button>
-                                            <Button size="icon" variant="ghost" onClick={() => openEditDialog(link)} title="Edit Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Pencil className="w-3.5 h-3.5" /></Button>
-                                            <Button size="icon" variant="ghost" onClick={() => setDeleteId(link.id)} title="Delete Link" className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"><Trash2 className="w-3.5 h-3.5" /></Button>
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                              title="Copy Link"
+                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                            >
+                                              <Copy className="w-3.5 h-3.5" />
+                                            </Button>
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={() => {
+                                                const s = link.link_name
+                                                  .toLowerCase()
+                                                  .replace(/[^a-z0-9]+/g, "-")
+                                                  .replace(/^-+|-+$/g, "");
+                                                window.open(
+                                                  `/invite/${wedding?.slug}/${s}/${link.number_of_persons}`,
+                                                  "_blank",
+                                                );
+                                              }}
+                                              title="Open Link"
+                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                            >
+                                              <Eye className="w-3.5 h-3.5" />
+                                            </Button>
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={() => openEditDialog(link)}
+                                              title="Edit Link"
+                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                            >
+                                              <Pencil className="w-3.5 h-3.5" />
+                                            </Button>
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={() => setDeleteId(link.id)}
+                                              title="Delete Link"
+                                              className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                            >
+                                              <Trash2 className="w-3.5 h-3.5" />
+                                            </Button>
                                           </div>
                                         </div>
                                       </TableCell>
                                     </TableRow>
-                                    {isExpanded && linkInvitees.length > 0 && linkInvitees.map((invitee) => (
-                                      <TableRow key={invitee.id} className="bg-white border-l-4 border-l-primary/30 transition-colors">
-                                        <TableCell></TableCell>
-                                        <TableCell colSpan={4} className="pl-8 font-medium">{invitee.name}</TableCell>
-                                        <TableCell>
-                                          {invitee.is_attending === null ? (
-                                            <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">Pending</Badge>
-                                          ) : invitee.is_attending ? (
-                                            <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium">Attending</Badge>
-                                          ) : (
-                                            <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">Not Attending</Badge>
-                                          )}
-                                        </TableCell>
-                                        <TableCell colSpan={3} className="text-sm text-muted-foreground">
-                                          {invitee.is_attending !== null ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}` : "-"}
-                                        </TableCell>
-                                      </TableRow>
-                                    ))}
+                                    {isExpanded &&
+                                      linkInvitees.length > 0 &&
+                                      linkInvitees.map((invitee) => (
+                                        <TableRow
+                                          key={invitee.id}
+                                          className="bg-white border-l-4 border-l-primary/30 transition-colors"
+                                        >
+                                          <TableCell></TableCell>
+                                          <TableCell colSpan={4} className="pl-8 font-medium">
+                                            {invitee.name}
+                                          </TableCell>
+                                          <TableCell>
+                                            {invitee.is_attending === null ? (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                              >
+                                                Pending
+                                              </Badge>
+                                            ) : invitee.is_attending ? (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+                                              >
+                                                Attending
+                                              </Badge>
+                                            ) : (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                              >
+                                                Not Attending
+                                              </Badge>
+                                            )}
+                                          </TableCell>
+                                          <TableCell colSpan={3} className="text-sm text-muted-foreground">
+                                            {invitee.is_attending !== null
+                                              ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                              : "-"}
+                                          </TableCell>
+                                        </TableRow>
+                                      ))}
                                     {isExpanded && linkInvitees.length === 0 && (
                                       <TableRow className="bg-muted/20">
                                         <TableCell></TableCell>
-                                        <TableCell colSpan={6} className="text-center py-4 text-sm text-muted-foreground italic">No guests added to this invitation yet</TableCell>
+                                        <TableCell
+                                          colSpan={6}
+                                          className="text-center py-4 text-sm text-muted-foreground italic"
+                                        >
+                                          No guests added to this invitation yet
+                                        </TableCell>
                                       </TableRow>
                                     )}
                                   </React.Fragment>
@@ -582,7 +694,9 @@ const ManageLinks = () => {
                     <div className="md:hidden space-y-3">
                       {filteredLinks.length === 0 ? (
                         <p className="text-center py-8 text-muted-foreground text-sm">
-                          {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
+                          {searchQuery
+                            ? "No invitation links or guests match your search"
+                            : "No invitation links created yet"}
                         </p>
                       ) : (
                         filteredLinks.map((link) => {
@@ -590,29 +704,85 @@ const ManageLinks = () => {
                           const stats = getRSVPStats(link.id);
                           const isExpanded = expandedLinks[link.id] || false;
                           return (
-                            <div key={link.id} className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm">
-                              <div className="p-2 cursor-pointer bg-background active:bg-primary/10 transition-colors" onClick={() => toggleLink(link.id)}>
+                            <div
+                              key={link.id}
+                              className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm"
+                            >
+                              <div
+                                className="p-2 cursor-pointer bg-background active:bg-primary/10 transition-colors"
+                                onClick={() => toggleLink(link.id)}
+                              >
                                 <div className="flex items-center justify-between gap-2">
                                   <div className="flex items-center gap-2 min-w-0 flex-1">
                                     <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
-                                      {isExpanded ? <ChevronDown className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
+                                      {isExpanded ? (
+                                        <ChevronDown className="w-4 h-4" />
+                                      ) : (
+                                        <ChevronRight className="w-4 h-4" />
+                                      )}
                                     </Button>
                                     <div className="min-w-0 flex-1">
-                                      <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes']">{link.link_name}</h3>
+                                      <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes']">
+                                        {link.link_name}
+                                      </h3>
                                     </div>
                                   </div>
-                                  <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5" onClick={(e) => e.stopPropagation()}>
-                                    <Button size="icon" variant="ghost" onClick={() => copyToClipboard(link.link_name, link.number_of_persons)} title="Copy Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Copy className="w-3.5 h-3.5" /></Button>
-                                    <Button size="icon" variant="ghost" onClick={() => { const sanitizedLinkName = link.link_name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, ""); window.open(`/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`, "_blank"); }} title="Open Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Eye className="w-3.5 h-3.5" /></Button>
-                                    <Button size="icon" variant="ghost" onClick={() => openEditDialog(link)} title="Edit Link" className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"><Pencil className="w-3.5 h-3.5" /></Button>
-                                    <Button size="icon" variant="ghost" onClick={() => setDeleteId(link.id)} title="Delete Link" className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"><Trash2 className="w-3.5 h-3.5" /></Button>
+                                  <div
+                                    className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
+                                    onClick={(e) => e.stopPropagation()}
+                                  >
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                      title="Copy Link"
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <Copy className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => {
+                                        const sanitizedLinkName = link.link_name
+                                          .toLowerCase()
+                                          .replace(/[^a-z0-9]+/g, "-")
+                                          .replace(/^-+|-+$/g, "");
+                                        window.open(
+                                          `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                          "_blank",
+                                        );
+                                      }}
+                                      title="Open Link"
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <Eye className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => openEditDialog(link)}
+                                      title="Edit Link"
+                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <Pencil className="w-3.5 h-3.5" />
+                                    </Button>
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => setDeleteId(link.id)}
+                                      title="Delete Link"
+                                      className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                    >
+                                      <Trash2 className="w-3.5 h-3.5" />
+                                    </Button>
                                   </div>
                                 </div>
                                 <div className="flex items-center gap-2 mt-1 ml-8 flex-wrap">
                                   {link.side && (
-                                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium ${link.side === "GROOM" ? "bg-blue-100 text-blue-800" : "bg-pink-100 text-pink-800"}`}>
+                                    <Badge variant="secondary" className="text-xs font-medium border-0">
                                       {link.side === "GROOM" ? "Groom" : "Bride"}
-                                    </span>
+                                    </Badge>
                                   )}
                                   {link.table_number != null && (
                                     <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -622,30 +792,69 @@ const ManageLinks = () => {
                                   <div className="flex items-center gap-1.5">
                                     <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                       <Users className="w-3 h-3" />
-                                      <span className="text-xs">{stats.total} {stats.total === 1 ? "guest" : "guests"}</span>
+                                      <span className="text-xs">
+                                        {stats.total} {stats.total === 1 ? "guest" : "guests"}
+                                      </span>
                                     </span>
                                   </div>
                                 </div>
                                 <div className="flex gap-1.5 mt-2 ml-8">
-                                  <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium">{stats.attending}</Badge>
-                                  <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium">{stats.pending}</Badge>
-                                  <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium">{stats.notAttending}</Badge>
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                  >
+                                    {stats.attending}
+                                  </Badge>
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                  >
+                                    {stats.pending}
+                                  </Badge>
+                                  <Badge
+                                    variant="secondary"
+                                    className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                  >
+                                    {stats.notAttending}
+                                  </Badge>
                                 </div>
                               </div>
                               {isExpanded && (
                                 <div className="border-t border-border/20 bg-muted/30">
                                   {linkInvitees.length === 0 ? (
-                                    <p className="text-center py-4 text-sm text-muted-foreground italic">No guests added yet</p>
+                                    <p className="text-center py-4 text-sm text-muted-foreground italic">
+                                      No guests added yet
+                                    </p>
                                   ) : (
                                     linkInvitees.map((invitee) => (
-                                      <div key={invitee.id} className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white">
-                                        <span className="text-sm font-medium text-foreground truncate mr-2">{invitee.name}</span>
+                                      <div
+                                        key={invitee.id}
+                                        className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
+                                      >
+                                        <span className="text-sm font-medium text-foreground truncate mr-2">
+                                          {invitee.name}
+                                        </span>
                                         {invitee.is_attending === null ? (
-                                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium">Pending</Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                          >
+                                            Pending
+                                          </Badge>
                                         ) : invitee.is_attending ? (
-                                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium">Yes</Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                          >
+                                            Yes
+                                          </Badge>
                                         ) : (
-                                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium">No</Badge>
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                          >
+                                            No
+                                          </Badge>
                                         )}
                                       </div>
                                     ))
@@ -662,7 +871,14 @@ const ManageLinks = () => {
                   {/* Tables Panel */}
                   <div className="w-full flex-shrink-0">
                     {(() => {
-                      const tableMap: Record<number, { total: number; attending: number; groups: { name: string; attending: number; total: number }[] }> = {};
+                      const tableMap: Record<
+                        number,
+                        {
+                          total: number;
+                          attending: number;
+                          groups: { name: string; attending: number; total: number }[];
+                        }
+                      > = {};
                       links.forEach((link) => {
                         if (link.table_number != null) {
                           if (!tableMap[link.table_number]) {
@@ -672,15 +888,22 @@ const ManageLinks = () => {
                           const att = linkInvitees.filter((i) => i.is_attending === true).length;
                           tableMap[link.table_number].total += linkInvitees.length;
                           tableMap[link.table_number].attending += att;
-                          tableMap[link.table_number].groups.push({ name: link.link_name, attending: att, total: linkInvitees.length });
+                          tableMap[link.table_number].groups.push({
+                            name: link.link_name,
+                            attending: att,
+                            total: linkInvitees.length,
+                          });
                         }
                       });
-                      const tableNumbers = Object.keys(tableMap).map(Number).sort((a, b) => a - b);
-                      if (tableNumbers.length === 0) return (
-                        <div className="text-center py-12 text-muted-foreground text-sm">
-                          No table numbers assigned yet. Edit a group to assign a table number.
-                        </div>
-                      );
+                      const tableNumbers = Object.keys(tableMap)
+                        .map(Number)
+                        .sort((a, b) => a - b);
+                      if (tableNumbers.length === 0)
+                        return (
+                          <div className="text-center py-12 text-muted-foreground text-sm">
+                            No table numbers assigned yet. Edit a group to assign a table number.
+                          </div>
+                        );
                       return (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {tableNumbers.map((tableNum) => {
@@ -694,17 +917,29 @@ const ManageLinks = () => {
                                 <div className="flex items-center justify-between mb-2">
                                   <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
                                   <div className="flex items-center gap-1.5">
-                                    <span className="text-xs text-muted-foreground">{attending}/{total} attending</span>
+                                    <span className="text-xs text-muted-foreground">
+                                      {attending}/{total} attending
+                                    </span>
                                     {isFull && (
-                                      <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0">Full</Badge>
+                                      <Badge
+                                        variant="secondary"
+                                        className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
+                                      >
+                                        Full
+                                      </Badge>
                                     )}
                                   </div>
                                 </div>
                                 <div className="space-y-1">
                                   {groups.map((g, i) => (
-                                    <div key={i} className="flex items-center justify-between text-xs text-muted-foreground">
+                                    <div
+                                      key={i}
+                                      className="flex items-center justify-between text-xs text-muted-foreground"
+                                    >
                                       <span className="truncate mr-2">{g.name}</span>
-                                      <span>{g.attending}/{g.total}</span>
+                                      <span>
+                                        {g.attending}/{g.total}
+                                      </span>
                                     </div>
                                   ))}
                                 </div>
@@ -762,7 +997,9 @@ const ManageLinks = () => {
           </DialogHeader>
           <div className="space-y-4 py-2 overflow-y-auto flex-1 -mx-4 px-4 sm:-mx-6 sm:px-6">
             <div className="space-y-1.5">
-              <Label htmlFor="edit-link-name" className="text-sm font-medium">Link Name</Label>
+              <Label htmlFor="edit-link-name" className="text-sm font-medium">
+                Link Name
+              </Label>
               <Input
                 id="edit-link-name"
                 value={editForm.link_name}
@@ -772,18 +1009,24 @@ const ManageLinks = () => {
             </div>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               <div className="space-y-1.5">
-                <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">Guests</Label>
+                <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">
+                  Guests
+                </Label>
                 <Input
                   id="edit-guests"
                   type="number"
                   min={1}
                   value={editForm.number_of_persons}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+                  onChange={(e) =>
+                    setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))
+                  }
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
               <div className="space-y-1.5">
-                <Label htmlFor="edit-table" className="text-xs sm:text-sm font-medium">Table #</Label>
+                <Label htmlFor="edit-table" className="text-xs sm:text-sm font-medium">
+                  Table #
+                </Label>
                 <Input
                   id="edit-table"
                   type="number"
@@ -827,11 +1070,29 @@ const ManageLinks = () => {
                       <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {invitee.is_attending === null ? (
-                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>Pending</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}
+                          >
+                            Pending
+                          </Badge>
                         ) : invitee.is_attending ? (
-                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>Yes</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}
+                          >
+                            Yes
+                          </Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>No</Badge>
+                          <Badge
+                            variant="secondary"
+                            className="bg-red-100 text-red-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                            onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}
+                          >
+                            No
+                          </Badge>
                         )}
                         <Button
                           size="icon"
@@ -857,7 +1118,9 @@ const ManageLinks = () => {
                 <Button
                   size="sm"
                   onClick={handleAddInvitee}
-                  disabled={!newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons}
+                  disabled={
+                    !newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons
+                  }
                   className="flex-shrink-0 h-11 sm:h-9 px-4"
                 >
                   <Plus className="w-4 h-4 mr-1" />
@@ -867,8 +1130,23 @@ const ManageLinks = () => {
             </div>
           </div>
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
-            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons} className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm">Save Changes</Button>
-            <Button variant="outline" onClick={() => { setEditingLink(null); setRefresh((prev) => prev + 1); }} className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm">Close</Button>
+            <Button
+              onClick={handleEditSave}
+              disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}
+              className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
+            >
+              Save Changes
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setEditingLink(null);
+                setRefresh((prev) => prev + 1);
+              }}
+              className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
+            >
+              Close
+            </Button>
             {editInvitees.length !== editForm.number_of_persons && (
               <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
