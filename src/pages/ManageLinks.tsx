@@ -407,14 +407,14 @@ const ManageLinks = () => {
                       <div className="flex flex-wrap gap-3 mt-2">
                         <Badge
                           variant="secondary"
-                          className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+className="bg-green-50 text-green-700 border-0 text-xs font-medium"
                         >
                           <Check className="w-3 h-3 mr-1" /> {attending} attending
                         </Badge>
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
+                        <Badge variant="secondary" className="bg-yellow-50 text-yellow-700 border-0 text-xs font-medium">
                           <Loader2 className="w-3 h-3 mr-1" /> {pending} pending
                         </Badge>
-                        <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
+                        <Badge variant="secondary" className="bg-red-50 text-red-700 border-0 text-xs font-medium">
                           <X className="w-3 h-3 mr-1" /> {notAttending} not attending
                         </Badge>
                       </div>
