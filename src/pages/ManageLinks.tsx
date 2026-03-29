@@ -4,7 +4,23 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   ArrowLeft,
   Loader2,
@@ -19,6 +35,7 @@ import {
   ChevronRight,
   Plus,
   Link2,
+  Pencil,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
@@ -72,6 +89,8 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
+  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "" });
 
   useEffect(() => {
     if (weddingId) {
@@ -149,6 +168,38 @@ const ManageLinks = () => {
       title: "Copied!",
       description: "Invitation link copied",
     });
+  };
+
+  const openEditDialog = (link: InvitationLink) => {
+    setEditingLink(link);
+    setEditForm({
+      link_name: link.link_name,
+      number_of_persons: link.number_of_persons,
+      side: link.side || "",
+    });
+  };
+
+  const handleEditSave = async () => {
+    if (!editingLink) return;
+    try {
+      const { error } = await supabase
+        .from("invitation_links")
+        .update({
+          link_name: editForm.link_name,
+          number_of_persons: editForm.number_of_persons,
+          side: editForm.side || null,
+        })
+        .eq("id", editingLink.id);
+
+      if (error) throw error;
+
+      toast({ title: "Success", description: "Link updated successfully" });
+      setEditingLink(null);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error updating link:", error);
+      toast({ title: "Error", description: "Failed to update link", variant: "destructive" });
+    }
   };
 
   const deleteLink = async (linkId: string) => {
@@ -443,6 +494,15 @@ const ManageLinks = () => {
                                       <Button
                                         size="icon"
                                         variant="ghost"
+                                        onClick={() => openEditDialog(link)}
+                                        title="Edit Link"
+                                        className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <Pencil className="w-3.5 h-3.5" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
                                         onClick={() => setDeleteId(link.id)}
                                         title="Delete Link"
                                         className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
@@ -592,6 +652,15 @@ const ManageLinks = () => {
                               <Button
                                 size="icon"
                                 variant="ghost"
+                                onClick={() => openEditDialog(link)}
+                                title="Edit Link"
+                                className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                              >
+                                <Pencil className="w-3.5 h-3.5" />
+                              </Button>
+                              <Button
+                                size="icon"
+                                variant="ghost"
                                 onClick={() => setDeleteId(link.id)}
                                 title="Delete Link"
                                 className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
@@ -728,6 +797,56 @@ const ManageLinks = () => {
           onSuccess={() => setRefresh((prev) => prev + 1)}
         />
       )}
+
+      {/* Edit Link Dialog */}
+      <Dialog open={!!editingLink} onOpenChange={(open) => !open && setEditingLink(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Invitation Link</DialogTitle>
+            <DialogDescription>Update the details for this invitation link.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="edit-link-name">Link Name</Label>
+              <Input
+                id="edit-link-name"
+                value={editForm.link_name}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-guests">Number of Guests</Label>
+              <Input
+                id="edit-guests"
+                type="number"
+                min={1}
+                value={editForm.number_of_persons}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Side</Label>
+              <Select
+                value={editForm.side}
+                onValueChange={(value) => setEditForm((prev) => ({ ...prev, side: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select side" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GROOM">Groom</SelectItem>
+                  <SelectItem value="BRIDE">Bride</SelectItem>
+                  <SelectItem value="">None</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingLink(null)}>Cancel</Button>
+            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim()}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
