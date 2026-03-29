@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, Eye } from "lucide-react";
+import { X } from "lucide-react";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
