@@ -643,21 +643,21 @@ className="bg-green-50 text-green-700 border-0 text-xs font-medium"
                                             {invitee.is_attending === null ? (
                                               <Badge
                                                 variant="secondary"
-                                                className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+className="bg-yellow-50 text-yellow-700 border-0 text-xs font-medium"
                                               >
                                                 Pending
                                               </Badge>
                                             ) : invitee.is_attending ? (
                                               <Badge
                                                 variant="secondary"
-                                                className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+                                                className="bg-green-50 text-green-700 border-0 text-xs font-medium"
                                               >
                                                 Attending
                                               </Badge>
                                             ) : (
                                               <Badge
                                                 variant="secondary"
-                                                className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                                className="bg-red-50 text-red-700 border-0 text-xs font-medium"
                                               >
                                                 Not Attending
                                               </Badge>
