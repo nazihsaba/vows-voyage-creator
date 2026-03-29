@@ -90,13 +90,6 @@ const TemplateCard = ({
       </span>
     </div>
 
-    {/* Preview hint — desktop hover only, non-interactive */}
-    <div className="absolute inset-0 hidden lg:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none">
-      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-6 py-3 flex items-center gap-2.5 shadow-lg">
-        <Eye className="w-4 h-4 text-white" />
-        <span className="text-white text-sm font-medium tracking-wide">Preview</span>
-      </div>
-    </div>
 
     {/* Tagline */}
     <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
