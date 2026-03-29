@@ -154,6 +154,38 @@ const ManageLinks = () => {
     });
   };
 
+  const openEditDialog = (link: InvitationLink) => {
+    setEditingLink(link);
+    setEditForm({
+      link_name: link.link_name,
+      number_of_persons: link.number_of_persons,
+      side: link.side || "",
+    });
+  };
+
+  const handleEditSave = async () => {
+    if (!editingLink) return;
+    try {
+      const { error } = await supabase
+        .from("invitation_links")
+        .update({
+          link_name: editForm.link_name,
+          number_of_persons: editForm.number_of_persons,
+          side: editForm.side || null,
+        })
+        .eq("id", editingLink.id);
+
+      if (error) throw error;
+
+      toast({ title: "Success", description: "Link updated successfully" });
+      setEditingLink(null);
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error updating link:", error);
+      toast({ title: "Error", description: "Failed to update link", variant: "destructive" });
+    }
+  };
+
   const deleteLink = async (linkId: string) => {
     try {
       const { error } = await supabase.from("invitation_links").delete().eq("id", linkId);
