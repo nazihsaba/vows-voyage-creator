@@ -942,7 +942,7 @@ const ManageLinks = () => {
             <Button onClick={handleEditSave} disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}>Save Changes</Button>
             {editInvitees.length !== editForm.number_of_persons && (
               <p className="text-xs text-destructive mt-1 w-full text-right">
-                {editInvitees.length} of {editForm.number_of_persons} guests added — must match to save
+                {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>
             )}
           </DialogFooter>
