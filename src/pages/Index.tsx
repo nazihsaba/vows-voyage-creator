@@ -161,7 +161,7 @@ const Index = () => {
               {
                 icon: Calendar,
                 title: "Countdown",
-                desc: "A live countdown to your special day, building excitement for your guests 💍✨",
+                desc: "A live countdown to your special day, building excitement for your guests",
               },
               {
                 icon: Image,
