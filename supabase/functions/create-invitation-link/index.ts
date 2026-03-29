@@ -10,6 +10,8 @@ interface CreateInvitationRequest {
   link_name: string;
   unique_slug: string;
   number_of_persons: number;
+  side?: string | null;
+  table_number?: number | string | null;
 }
 
 Deno.serve(async (req) => {
@@ -33,28 +35,55 @@ Deno.serve(async (req) => {
 
     // Parse request body
     const body: CreateInvitationRequest = await req.json();
-    const { wedding_id, link_name, unique_slug, number_of_persons } = body;
+    const {
+      wedding_id,
+      link_name,
+      unique_slug,
+      number_of_persons,
+      side = null,
+      table_number = null,
+    } = body;
 
     // Validate required fields
-    if (!wedding_id || !link_name || !unique_slug || !number_of_persons) {
+    if (!wedding_id || !link_name || !unique_slug || number_of_persons === undefined || number_of_persons === null) {
       return new Response(
-        JSON.stringify({ 
-          error: 'Validation error', 
-          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons' 
+        JSON.stringify({
+          error: 'Validation error',
+          message: 'Missing required fields: wedding_id, link_name, unique_slug, number_of_persons'
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Validate number_of_persons is a positive integer
-    if (typeof number_of_persons !== 'number' || number_of_persons < 1) {
+    if (!Number.isInteger(number_of_persons) || number_of_persons < 1) {
       return new Response(
-        JSON.stringify({ 
-          error: 'Validation error', 
-          message: 'number_of_persons must be a positive integer' 
+        JSON.stringify({
+          error: 'Validation error',
+          message: 'number_of_persons must be a positive integer'
         }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
+    }
+
+    // Validate optional side and table_number
+    const normalizedSide = typeof side === 'string' && side.trim().length > 0 ? side.trim() : null;
+
+    let normalizedTableNumber: number | null = null;
+    if (table_number !== null && table_number !== undefined && table_number !== '') {
+      const parsedTableNumber = typeof table_number === 'string' ? Number(table_number) : table_number;
+
+      if (!Number.isInteger(parsedTableNumber) || parsedTableNumber < 1) {
+        return new Response(
+          JSON.stringify({
+            error: 'Validation error',
+            message: 'table_number must be a positive integer when provided'
+          }),
+          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+
+      normalizedTableNumber = parsedTableNumber;
     }
 
     // Initialize Supabase client with service role key
@@ -74,9 +103,9 @@ Deno.serve(async (req) => {
     if (weddingError || !wedding) {
       console.error('Wedding not found:', weddingError);
       return new Response(
-        JSON.stringify({ 
-          error: 'Invalid request', 
-          message: 'The requested resource could not be found' 
+        JSON.stringify({
+          error: 'Invalid request',
+          message: 'The requested resource could not be found'
         }),
         { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
@@ -91,7 +120,9 @@ Deno.serve(async (req) => {
         wedding_id,
         link_name,
         unique_slug,
-        number_of_persons
+        number_of_persons,
+        side: normalizedSide,
+        table_number: normalizedTableNumber,
       })
       .select()
       .single();
@@ -99,8 +130,8 @@ Deno.serve(async (req) => {
     if (insertError) {
       console.error('Error inserting invitation link:', insertError);
       return new Response(
-        JSON.stringify({ 
-          error: 'Server error', 
+        JSON.stringify({
+          error: 'Server error',
           message: 'Failed to create invitation link'
         }),
         { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -119,7 +150,9 @@ Deno.serve(async (req) => {
           wedding_id: invitationLink.wedding_id,
           link_name: invitationLink.link_name,
           unique_slug: invitationLink.unique_slug,
-          number_of_persons: invitationLink.number_of_persons
+          number_of_persons: invitationLink.number_of_persons,
+          side: invitationLink.side,
+          table_number: invitationLink.table_number,
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -128,8 +161,8 @@ Deno.serve(async (req) => {
   } catch (error) {
     console.error('Unexpected error in create-invitation-link function:', error);
     return new Response(
-      JSON.stringify({ 
-        error: 'Internal server error', 
+      JSON.stringify({
+        error: 'Internal server error',
         message: 'An error occurred processing your request'
       }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
