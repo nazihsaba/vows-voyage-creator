@@ -94,6 +94,7 @@ export type Database = {
           link_name: string
           number_of_persons: number
           side: string | null
+          table_number: number | null
           unique_slug: string
           wedding_id: string
         }
@@ -103,6 +104,7 @@ export type Database = {
           link_name: string
           number_of_persons?: number
           side?: string | null
+          table_number?: number | null
           unique_slug: string
           wedding_id: string
         }
@@ -112,6 +114,7 @@ export type Database = {
           link_name?: string
           number_of_persons?: number
           side?: string | null
+          table_number?: number | null
           unique_slug?: string
           wedding_id?: string
         }

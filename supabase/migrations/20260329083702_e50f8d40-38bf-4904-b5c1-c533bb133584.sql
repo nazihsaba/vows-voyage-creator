@@ -1,0 +1,1 @@
+ALTER TABLE public.invitation_links ADD COLUMN table_number integer DEFAULT NULL;
