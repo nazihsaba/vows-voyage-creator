@@ -350,7 +350,7 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate main wedding photo is required (skip for video templates like Grace)
+    // Validate main wedding photo is required (skip for video templates which use video instead)
     if (!isVideoTemplate && !imageFile && !formData.main_picture_url) {
       toast({
         title: "Main photo required",
