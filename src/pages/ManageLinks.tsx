@@ -537,13 +537,7 @@ const ManageLinks = () => {
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
                                       </TableCell>
-                                      <TableCell className="text-sm text-muted-foreground">
-                                        {new Date(link.created_at).toLocaleDateString("en-US", {
-                                          month: "short",
-                                          day: "numeric",
-                                          year: "numeric",
-                                        })}
-                                      </TableCell>
+
                                       <TableCell>
                                         <div className="flex items-center gap-1.5">
                                           <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
