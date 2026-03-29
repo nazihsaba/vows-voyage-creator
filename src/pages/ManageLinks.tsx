@@ -717,10 +717,7 @@ const ManageLinks = () => {
                                     {link.link_name}
                                   </h3>
                                   {link.side && (
-                                    <Badge
-                                      variant="secondary"
-                                      className="text-[10px] font-medium border-0 flex-shrink-0"
-                                    >
+                                    <Badge variant="white" className="text-[10px] font-medium border-0 flex-shrink-0">
                                       {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </Badge>
                                   )}
