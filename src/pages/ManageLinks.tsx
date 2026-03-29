@@ -784,6 +784,11 @@ const ManageLinks = () => {
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
                               </span>
                             )}
+                            {link.table_number != null && (
+                              <Badge variant="outline" className="text-[10px] font-medium px-1.5 py-0">
+                                Table {link.table_number}
+                              </Badge>
+                            )}
                             <div className="flex items-center gap-1.5">
                               <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                 <Users className="w-3 h-3" />
