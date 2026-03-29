@@ -870,7 +870,7 @@ const ManageLinks = () => {
                 onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="edit-guests">Number of Guests</Label>
                 <Input
@@ -879,6 +879,17 @@ const ManageLinks = () => {
                   min={1}
                   value={editForm.number_of_persons}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-table">Table #</Label>
+                <Input
+                  id="edit-table"
+                  type="number"
+                  min={1}
+                  placeholder="—"
+                  value={editForm.table_number}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, table_number: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
