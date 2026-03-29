@@ -82,6 +82,19 @@ const Auth = () => {
     setLoading(true);
 
     try {
+      // Check if email already exists
+      const { data: emailExists, error: checkError } = await supabase.rpc("check_email_exists", {
+        check_email: email.trim().toLowerCase(),
+      });
+
+      if (checkError) throw checkError;
+
+      if (emailExists === true) {
+        toast.error("An account with this email already exists. Please sign in instead.");
+        setLoading(false);
+        return;
+      }
+
       const { error } = await supabase.auth.signUp({
         email: email.trim().toLowerCase(),
         password: password,
