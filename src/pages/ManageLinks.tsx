@@ -721,7 +721,7 @@ const ManageLinks = () => {
                                       variant="secondary"
                                       className="text-[10px] font-medium border-0 flex-shrink-0"
                                     >
-                                      {link.side === "GROOM" ? "Groom" : "Bride1"}
+                                      {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </Badge>
                                   )}
                                 </div>
