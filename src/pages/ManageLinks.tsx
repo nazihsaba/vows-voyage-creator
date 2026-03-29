@@ -175,7 +175,7 @@ const ManageLinks = () => {
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
-      side: link.side || "",
+      side: link.side || "NONE",
     });
   };
 
