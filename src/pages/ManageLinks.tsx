@@ -483,7 +483,7 @@ const ManageLinks = () => {
                                       <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.table_number != null ? (
-                                          <Badge variant="outline" className="text-xs font-medium">{link.table_number}</Badge>
+                                          <Badge variant="secondary" className="text-xs font-medium border-0">{link.table_number}</Badge>
                                         ) : (
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
