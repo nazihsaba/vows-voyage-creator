@@ -709,23 +709,62 @@ const ManageLinks = () => {
                               className="rounded-xl border border-border/30 bg-card overflow-hidden shadow-sm"
                             >
                               <div
-                                className="p-2 cursor-pointer bg-background active:bg-primary/10 transition-colors"
+                                className="p-3 cursor-pointer bg-background active:bg-primary/10 transition-colors"
                                 onClick={() => toggleLink(link.id)}
                               >
-                                <div className="flex items-center justify-between gap-2">
-                                  <div className="flex items-center gap-2 min-w-0 flex-1">
-                                    <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
-                                      {isExpanded ? (
-                                        <ChevronDown className="w-4 h-4" />
-                                      ) : (
-                                        <ChevronRight className="w-4 h-4" />
-                                      )}
-                                    </Button>
-                                    <div className="min-w-0 flex-1">
-                                      <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes']">
-                                        {link.link_name}
-                                      </h3>
-                                    </div>
+                                {/* Row 1: Chevron + Name + Side Badge */}
+                                <div className="flex items-center gap-2">
+                                  <Button variant="ghost" size="icon" className="h-6 w-6 flex-shrink-0">
+                                    {isExpanded ? (
+                                      <ChevronDown className="w-4 h-4" />
+                                    ) : (
+                                      <ChevronRight className="w-4 h-4" />
+                                    )}
+                                  </Button>
+                                  <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes'] flex-1 min-w-0">
+                                    {link.link_name}
+                                  </h3>
+                                  {link.side && (
+                                    <Badge variant="secondary" className="text-[10px] font-medium border-0 flex-shrink-0">
+                                      {link.side === "GROOM" ? "Groom" : "Bride"}
+                                    </Badge>
+                                  )}
+                                </div>
+
+                                {/* Row 2: Meta info */}
+                                <div className="flex items-center gap-3 mt-1.5 ml-8">
+                                  {link.table_number != null && (
+                                    <span className="text-[11px] text-muted-foreground">
+                                      Table {link.table_number}
+                                    </span>
+                                  )}
+                                  <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                                    <Users className="w-3 h-3" />
+                                    <span>{stats.total} {stats.total === 1 ? "guest" : "guests"}</span>
+                                  </span>
+                                </div>
+
+                                {/* Row 3: Attendance badges (left) + Action buttons (right) */}
+                                <div className="flex items-center justify-between mt-2 ml-8">
+                                  <div className="flex gap-1.5">
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                    >
+                                      {stats.attending}
+                                    </Badge>
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                    >
+                                      {stats.pending}
+                                    </Badge>
+                                    <Badge
+                                      variant="secondary"
+                                      className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                    >
+                                      {stats.notAttending}
+                                    </Badge>
                                   </div>
                                   <div
                                     className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
@@ -736,9 +775,9 @@ const ManageLinks = () => {
                                       variant="ghost"
                                       onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
                                       title="Copy Link"
-                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                     >
-                                      <Copy className="w-3.5 h-3.5" />
+                                      <Copy className="w-3 h-3" />
                                     </Button>
                                     <Button
                                       size="icon"
@@ -754,69 +793,29 @@ const ManageLinks = () => {
                                         );
                                       }}
                                       title="Open Link"
-                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                     >
-                                      <Eye className="w-3.5 h-3.5" />
+                                      <Eye className="w-3 h-3" />
                                     </Button>
                                     <Button
                                       size="icon"
                                       variant="ghost"
                                       onClick={() => openEditDialog(link)}
                                       title="Edit Link"
-                                      className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                     >
-                                      <Pencil className="w-3.5 h-3.5" />
+                                      <Pencil className="w-3 h-3" />
                                     </Button>
                                     <Button
                                       size="icon"
                                       variant="ghost"
                                       onClick={() => setDeleteId(link.id)}
                                       title="Delete Link"
-                                      className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                      className="h-7 w-7 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
                                     >
-                                      <Trash2 className="w-3.5 h-3.5" />
+                                      <Trash2 className="w-3 h-3" />
                                     </Button>
                                   </div>
-                                </div>
-                                <div className="flex items-center gap-3 mt-1 ml-8 flex-wrap">
-                                  {link.side && (
-                                    <Badge variant="secondary" className="text-xs font-medium border-0">
-                                      {link.side === "GROOM" ? "Groom" : "Bride"}
-                                    </Badge>
-                                  )}
-                                  {link.table_number != null && (
-                                    <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                                      <span className="text-xs">Table {link.table_number}</span>
-                                    </span>
-                                  )}
-                                  <div className="flex items-center gap-1.5">
-                                    <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
-                                      <Users className="w-3 h-3" />
-                                      <span className="text-xs">
-                                        {stats.total} {stats.total === 1 ? "guest" : "guests"}
-                                      </span>
-                                    </span>
-                                  </div>
-                                </div>
-                                <div className="flex gap-1.5 mt-2 ml-8">
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
-                                  >
-                                    {stats.attending}
-                                  </Badge>
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
-                                  >
-                                    {stats.pending}
-                                  </Badge>
-                                  <Badge
-                                    variant="secondary"
-                                    className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
-                                  >
-                                    {stats.notAttending}
-                                  </Badge>
                                 </div>
                               </div>
                               {isExpanded && (
