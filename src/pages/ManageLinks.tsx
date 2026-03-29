@@ -558,19 +558,19 @@ className="bg-green-50 text-green-700 border-0 text-xs font-medium"
                                         <div className="flex flex-wrap gap-1.5">
                                           <Badge
                                             variant="secondary"
-                                            className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+className="bg-green-50 text-green-700 border-0 text-xs font-medium"
                                           >
                                             {stats.attending}
                                           </Badge>
                                           <Badge
                                             variant="secondary"
-                                            className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                            className="bg-yellow-50 text-yellow-700 border-0 text-xs font-medium"
                                           >
                                             {stats.pending}
                                           </Badge>
                                           <Badge
                                             variant="secondary"
-                                            className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                            className="bg-red-50 text-red-700 border-0 text-xs font-medium"
                                           >
                                             {stats.notAttending}
                                           </Badge>
