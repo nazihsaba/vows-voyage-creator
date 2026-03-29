@@ -1134,7 +1134,7 @@ const ManageLinks = () => {
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
             <Button
               onClick={handleEditSave}
-              disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}
+              disabled={!editForm.link_name.trim() || !editForm.number_of_persons || editInvitees.length !== editForm.number_of_persons}
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
               Save Changes
