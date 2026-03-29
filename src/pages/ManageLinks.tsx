@@ -223,7 +223,26 @@ const ManageLinks = () => {
     }
   };
 
-  const handleEditSave = async () => {
+  const handleToggleInviteeStatus = async (inviteeId: string, currentStatus: boolean | null) => {
+    const nextStatus = currentStatus === null ? true : currentStatus === true ? false : null;
+    try {
+      const { error } = await supabase.from("invitees").update({ is_attending: nextStatus }).eq("id", inviteeId);
+      if (error) throw error;
+      setEditInvitees((prev) => prev.map((i) => i.id === inviteeId ? { ...i, is_attending: nextStatus } : i));
+      // Also update the main invitees state
+      const linkId = editingLink?.id;
+      if (linkId) {
+        setInvitees((prev) => ({
+          ...prev,
+          [linkId]: (prev[linkId] || []).map((i) => i.id === inviteeId ? { ...i, is_attending: nextStatus } : i),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating invitee status:", error);
+      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+    }
+  };
+
     if (!editingLink) return;
     try {
       const { error } = await (supabase as any)
