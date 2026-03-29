@@ -91,7 +91,7 @@ const ManageLinks = () => {
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
-  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "" });
+  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "", table_number: "" as string });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
