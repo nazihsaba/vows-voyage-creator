@@ -200,7 +200,10 @@ const Dashboard = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                     </div>
                     <div className="p-5">
-                      <CardTitle className="text-lg font-serif mb-1.5">{template.name}</CardTitle>
+                      <div className="flex items-start justify-between gap-2 mb-1.5">
+                        <CardTitle className="text-lg font-serif">{template.name}</CardTitle>
+                        <span className="flex-shrink-0 text-lg font-bold text-primary">$100</span>
+                      </div>
                       <CardDescription className="text-sm text-muted-foreground leading-relaxed">
                         {template.description}
                       </CardDescription>
