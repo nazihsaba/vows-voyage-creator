@@ -1121,7 +1121,7 @@ const ManageLinks = () => {
                   size="sm"
                   onClick={handleAddInvitee}
                   disabled={
-                    !newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons
+                    !newInviteeName.trim() || savingInvitee || !editForm.number_of_persons || editInvitees.length >= Number(editForm.number_of_persons)
                   }
                   className="flex-shrink-0 h-11 sm:h-9 px-4"
                 >
