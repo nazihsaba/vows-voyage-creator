@@ -424,6 +424,9 @@ const ManageLinks = () => {
                           Link Name
                         </TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Table #
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Created
                         </TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
