@@ -70,7 +70,6 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
-        { icon: Users, text: "Guest Tracking" },
       ],
     },
     {
@@ -84,7 +83,6 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
-        { icon: Users, text: "Guest Tracking" },
       ],
     },
     {
@@ -98,7 +96,6 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
-        { icon: Users, text: "Guest Tracking" },
       ],
     },
     {
@@ -112,7 +109,6 @@ const Dashboard = () => {
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
-        { icon: Users, text: "Guest Tracking" },
       ],
     },
     // Opulence template hidden
