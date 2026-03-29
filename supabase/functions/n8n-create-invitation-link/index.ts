@@ -10,6 +10,8 @@ interface InvitationLinkRequest {
   wedding_id: string;
   link_name: string;
   number_of_persons?: number;
+  side?: string | null;
+  table_number?: number | null;
 }
 
 serve(async (req) => {
