@@ -118,7 +118,6 @@ const Auth = () => {
 
       if (error) throw error;
 
-      toast.success("Successfully logged in!");
       navigate("/dashboard");
     } catch (error: any) {
       console.error("Sign in error:", error);
