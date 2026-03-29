@@ -199,7 +199,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
           {isTrimming ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Auto-trimming to 60 seconds...
+              Auto-trimming to 30 seconds...
             </div>
           ) : (
             <div className="text-sm text-muted-foreground">
