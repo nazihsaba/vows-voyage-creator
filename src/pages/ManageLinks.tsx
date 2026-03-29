@@ -1017,7 +1017,10 @@ const ManageLinks = () => {
                   min={1}
                   value={editForm.number_of_persons}
                   onChange={(e) =>
-                    setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))
+                    setEditForm((prev) => ({
+                      ...prev,
+                      number_of_persons: e.target.value === "" ? "" : (parseInt(e.target.value) || ""),
+                    }))
                   }
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
