@@ -92,31 +92,32 @@ Deno.serve(async (req) => {
 
     // Group invitees by DisplayName
     const groupedInvitees = rows.reduce((acc, row) => {
-      const displayName = row.DisplayName?.trim();
-      const inviteeName = row.invitees?.trim();
-      const nbOfPersons = row.nbOfPersons || 1;
+      const displayName = (row.DisplayName || row['Link Name'])?.trim();
+      const inviteeName = (row.invitees || row['Guest Name'])?.trim();
+      const nbOfPersons = row.nbOfPersons || row['Number Of Guests'] || 1;
+      const side = (row.side || row.Side)?.trim() || null;
+      const tableNumber = row['Table Number'] ?? row.tableNumber ?? null;
 
-      // Skip rows without DisplayName
       if (!displayName) {
         console.warn('Skipping row without DisplayName:', row);
         return acc;
       }
 
-      // Initialize the group if it doesn't exist
       if (!acc[displayName]) {
         acc[displayName] = {
           guests: [],
           totalPersons: nbOfPersons,
+          side,
+          tableNumber,
         };
       }
 
-      // Add invitee name if present
       if (inviteeName) {
         acc[displayName].guests.push(inviteeName);
       }
 
       return acc;
-    }, {} as Record<string, { guests: string[]; totalPersons: number }>);
+    }, {} as Record<string, { guests: string[]; totalPersons: number; side: string | null; tableNumber: number | null }>);
 
     console.log(`Grouped into ${Object.keys(groupedInvitees).length} invitation links`);
 
