@@ -377,7 +377,10 @@ export const GenerateLinkDialog = ({
                         <Download className="w-4 h-4 sm:w-5 sm:h-5 text-accent-foreground" />
                       </div>
                       <div>
-                        <p className="text-sm font-medium text-foreground">Download Template</p>
+                        <div className="flex items-center gap-1.5">
+                          <p className="text-sm font-medium text-foreground">Download Template</p>
+                          <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-green-700 bg-green-100 px-1.5 py-0.5 rounded-full">Recommended</span>
+                        </div>
                         <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5">
                           Pre-formatted Excel with example data
                         </p>
