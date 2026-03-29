@@ -816,11 +816,11 @@ const ManageLinks = () => {
                       <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         {invitee.is_attending === null ? (
-                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium">Pending</Badge>
+                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>Pending</Badge>
                         ) : invitee.is_attending ? (
-                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium">Yes</Badge>
+                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>Yes</Badge>
                         ) : (
-                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] font-medium">No</Badge>
+                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity" onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}>No</Badge>
                         )}
                         <Button
                           size="icon"
