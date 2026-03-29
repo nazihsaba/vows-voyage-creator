@@ -95,6 +95,7 @@ const ManageLinks = () => {
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
+  const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
 
   useEffect(() => {
     if (weddingId) {
@@ -413,53 +414,88 @@ const ManageLinks = () => {
               </div>
             </CardHeader>
             <CardContent>
-              {/* Table Occupancy Summary */}
-              {(() => {
-                const tableMap: Record<number, { total: number; attending: number }> = {};
+              {/* View Toggle Tabs */}
+              <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted/40 w-fit">
+                <Button
+                  variant={activeView === "guests" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView("guests")}
+                  className="rounded-md text-xs h-8 px-3"
+                >
+                  <Users className="w-3.5 h-3.5 mr-1.5" />
+                  Guest List
+                </Button>
+                <Button
+                  variant={activeView === "tables" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView("tables")}
+                  className="rounded-md text-xs h-8 px-3"
+                >
+                  Table Occupancy
+                </Button>
+              </div>
+
+              {activeView === "tables" && (() => {
+                const tableMap: Record<number, { total: number; attending: number; groups: { name: string; attending: number; total: number }[] }> = {};
                 links.forEach((link) => {
                   if (link.table_number != null) {
                     if (!tableMap[link.table_number]) {
-                      tableMap[link.table_number] = { total: 0, attending: 0 };
+                      tableMap[link.table_number] = { total: 0, attending: 0, groups: [] };
                     }
                     const linkInvitees = invitees[link.id] || [];
+                    const att = linkInvitees.filter((i) => i.is_attending === true).length;
                     tableMap[link.table_number].total += linkInvitees.length;
-                    tableMap[link.table_number].attending += linkInvitees.filter((i) => i.is_attending === true).length;
+                    tableMap[link.table_number].attending += att;
+                    tableMap[link.table_number].groups.push({ name: link.link_name, attending: att, total: linkInvitees.length });
                   }
                 });
                 const tableNumbers = Object.keys(tableMap).map(Number).sort((a, b) => a - b);
-                if (tableNumbers.length === 0) return null;
+                if (tableNumbers.length === 0) return (
+                  <div className="text-center py-12 text-muted-foreground text-sm">
+                    No table numbers assigned yet. Edit a group to assign a table number.
+                  </div>
+                );
                 return (
-                  <div className="mb-4 p-3 rounded-xl border border-border/30 bg-muted/20">
-                    <h3 className="text-sm font-semibold text-foreground mb-2">Table Occupancy</h3>
-                    <div className="flex flex-wrap gap-2">
-                      {tableNumbers.map((tableNum) => {
-                        const { total, attending } = tableMap[tableNum];
-                        const isFull = attending >= total && total > 0;
-                        return (
-                          <div
-                            key={tableNum}
-                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium ${
-                              isFull
-                                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
-                                : "bg-background border-border/50 text-muted-foreground"
-                            }`}
-                          >
-                            <span className="font-semibold">Table {tableNum}</span>
-                            <span className="text-[10px]">
-                              {attending}/{total}
-                            </span>
-                            {isFull && (
-                              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1 py-0">
-                                Full
-                              </Badge>
-                            )}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                    {tableNumbers.map((tableNum) => {
+                      const { total, attending, groups } = tableMap[tableNum];
+                      const isFull = attending >= total && total > 0;
+                      return (
+                        <div
+                          key={tableNum}
+                          className={`rounded-xl border p-4 ${
+                            isFull
+                              ? "bg-emerald-50 border-emerald-200"
+                              : "bg-background border-border/50"
+                          }`}
+                        >
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
+                            <div className="flex items-center gap-1.5">
+                              <span className="text-xs text-muted-foreground">{attending}/{total} attending</span>
+                              {isFull && (
+                                <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0">
+                                  Full
+                                </Badge>
+                              )}
+                            </div>
                           </div>
-                        );
-                      })}
-                    </div>
+                          <div className="space-y-1">
+                            {groups.map((g, i) => (
+                              <div key={i} className="flex items-center justify-between text-xs text-muted-foreground">
+                                <span className="truncate mr-2">{g.name}</span>
+                                <span>{g.attending}/{g.total}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })()}
+
+              {activeView === "guests" && (<>
               {/* Desktop Table View */}
               <div className="hidden md:block rounded-xl overflow-hidden border border-border/30">
                 <div className="overflow-x-auto">
@@ -870,6 +906,7 @@ const ManageLinks = () => {
                   })
                 )}
               </div>
+              </>)}
             </CardContent>
           </Card>
         )}
