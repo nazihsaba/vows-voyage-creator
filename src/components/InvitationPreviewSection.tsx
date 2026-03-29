@@ -91,9 +91,10 @@ const TemplateCard = ({
     </div>
 
     {/* Preview hint */}
-    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <div className="bg-white/20 backdrop-blur-md border border-white/30 rounded-full p-4">
-        <Eye className="w-6 h-6 text-white" />
+    <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400">
+      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-6 py-3 flex items-center gap-2.5 shadow-lg">
+        <Eye className="w-4 h-4 text-white" />
+        <span className="text-white text-sm font-medium tracking-wide">Preview</span>
       </div>
     </div>
 
