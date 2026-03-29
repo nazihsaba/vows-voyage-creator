@@ -14,7 +14,7 @@ import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
 const VeritePreview = lazy(() => import("@/components/templates/VeritePreview"));
 const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
-const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then(m => ({ default: m.AuraPreview })));
+const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then((m) => ({ default: m.AuraPreview })));
 
 type TemplateKey = "grace" | "verite" | "eclat" | "aura";
 
@@ -72,7 +72,8 @@ const TemplateCard = ({
   card: (typeof previewCards)[0];
   onPreview: (key: TemplateKey) => void;
 }) => (
-  <div className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-500 aspect-[3/4] cursor-pointer"
+  <div
+    className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-500 aspect-[3/4] cursor-pointer"
     onClick={() => onPreview(card.templateKey)}
   >
     <img
@@ -89,7 +90,6 @@ const TemplateCard = ({
         {card.label}
       </span>
     </div>
-
 
     {/* Tagline */}
     <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
@@ -150,23 +150,19 @@ const InvitationPreviewSection = () => {
         <DialogContent className="max-w-full w-full h-[100dvh] p-0 border-none rounded-none bg-white [&>button]:hidden overflow-hidden">
           {/* Sticky header bar */}
           <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-border/50">
-            <span className="text-sm font-semibold text-foreground tracking-wide">
-              {activeLabel} — Preview
-            </span>
+            <span className="text-sm font-semibold text-foreground tracking-wide">{activeLabel} — Preview</span>
             <button
               onClick={() => setActivePreview(null)}
               className="p-2 rounded-full hover:bg-muted transition-colors"
               aria-label="Close preview"
             >
-              <X className="w-5 h-5 text-foreground" />
+              <X className="w-5 h-5 text-foreground border-none" />
             </button>
           </div>
 
           {/* Scrollable preview body */}
           <div className="overflow-y-auto h-[calc(100dvh-52px)]">
-            <Suspense fallback={<PreviewLoadingFallback />}>
-              {ActiveComponent && <ActiveComponent />}
-            </Suspense>
+            <Suspense fallback={<PreviewLoadingFallback />}>{ActiveComponent && <ActiveComponent />}</Suspense>
           </div>
         </DialogContent>
       </Dialog>
