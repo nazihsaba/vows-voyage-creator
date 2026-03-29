@@ -755,33 +755,35 @@ const ManageLinks = () => {
 
       {/* Edit Link Dialog */}
       <Dialog open={!!editingLink} onOpenChange={(open) => !open && setEditingLink(null)}>
-        <DialogContent className="sm:max-w-lg max-h-[85vh] flex flex-col">
-          <DialogHeader>
-            <DialogTitle>Edit Invitation Link</DialogTitle>
-            <DialogDescription>Update the details and manage guests.</DialogDescription>
+        <DialogContent className="w-[calc(100%-2rem)] max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col rounded-2xl sm:rounded-lg p-4 sm:p-6">
+          <DialogHeader className="pb-1">
+            <DialogTitle className="text-lg sm:text-xl">Edit Invitation Link</DialogTitle>
+            <DialogDescription className="text-sm">Update the details and manage guests.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2 overflow-y-auto flex-1">
-            <div className="space-y-2">
-              <Label htmlFor="edit-link-name">Link Name</Label>
+          <div className="space-y-4 py-2 overflow-y-auto flex-1 -mx-4 px-4 sm:-mx-6 sm:px-6">
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-link-name" className="text-sm font-medium">Link Name</Label>
               <Input
                 id="edit-link-name"
                 value={editForm.link_name}
                 onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
+                className="h-11 text-base sm:h-9 sm:text-sm"
               />
             </div>
-            <div className="grid grid-cols-3 gap-3">
-              <div className="space-y-2">
-                <Label htmlFor="edit-guests">Number of Guests</Label>
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">Guests</Label>
                 <Input
                   id="edit-guests"
                   type="number"
                   min={1}
                   value={editForm.number_of_persons}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+                  className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="edit-table">Table #</Label>
+              <div className="space-y-1.5">
+                <Label htmlFor="edit-table" className="text-xs sm:text-sm font-medium">Table #</Label>
                 <Input
                   id="edit-table"
                   type="number"
@@ -789,16 +791,17 @@ const ManageLinks = () => {
                   placeholder="—"
                   value={editForm.table_number}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, table_number: e.target.value }))}
+                  className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
-              <div className="space-y-2">
-                <Label>Side</Label>
+              <div className="space-y-1.5">
+                <Label className="text-xs sm:text-sm font-medium">Side</Label>
                 <Select
                   value={editForm.side}
                   onValueChange={(value) => setEditForm((prev) => ({ ...prev, side: value }))}
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select side" />
+                  <SelectTrigger className="h-11 text-base sm:h-9 sm:text-sm">
+                    <SelectValue placeholder="Side" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="GROOM">Groom</SelectItem>
@@ -810,8 +813,8 @@ const ManageLinks = () => {
             </div>
 
             {/* Invitees Section */}
-            <div className="space-y-2 pt-2 border-t">
-              <Label>Guests ({editInvitees.length})</Label>
+            <div className="space-y-2 pt-3 border-t">
+              <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
                 {editInvitees.length === 0 ? (
                   <p className="text-sm text-muted-foreground italic py-2">No guests added yet</p>
@@ -819,7 +822,7 @@ const ManageLinks = () => {
                   editInvitees.map((invitee) => (
                     <div
                       key={invitee.id}
-                      className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
+                      className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5 sm:py-2"
                     >
                       <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -833,7 +836,7 @@ const ManageLinks = () => {
                         <Button
                           size="icon"
                           variant="ghost"
-                          className="h-6 w-6 text-destructive/70 hover:text-destructive"
+                          className="h-7 w-7 sm:h-6 sm:w-6 text-destructive/70 hover:text-destructive"
                           onClick={() => handleDeleteInvitee(invitee.id)}
                         >
                           <X className="w-3.5 h-3.5" />
@@ -849,12 +852,13 @@ const ManageLinks = () => {
                   value={newInviteeName}
                   onChange={(e) => setNewInviteeName(e.target.value)}
                   onKeyDown={(e) => e.key === "Enter" && handleAddInvitee()}
+                  className="h-11 text-base sm:h-9 sm:text-sm"
                 />
                 <Button
                   size="sm"
                   onClick={handleAddInvitee}
                   disabled={!newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons}
-                  className="flex-shrink-0"
+                  className="flex-shrink-0 h-11 sm:h-9 px-4"
                 >
                   <Plus className="w-4 h-4 mr-1" />
                   Add
@@ -862,11 +866,11 @@ const ManageLinks = () => {
               </div>
             </div>
           </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => { setEditingLink(null); setRefresh((prev) => prev + 1); }}>Close</Button>
-            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}>Save Changes</Button>
+          <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
+            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons} className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm">Save Changes</Button>
+            <Button variant="outline" onClick={() => { setEditingLink(null); setRefresh((prev) => prev + 1); }} className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm">Close</Button>
             {editInvitees.length !== editForm.number_of_persons && (
-              <p className="text-xs text-destructive mt-1 w-full text-right">
+              <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>
             )}
