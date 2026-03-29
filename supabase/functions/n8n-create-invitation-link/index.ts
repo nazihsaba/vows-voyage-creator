@@ -10,6 +10,7 @@ interface InvitationLinkRequest {
   wedding_id: string;
   link_name: string;
   number_of_persons?: number;
+  unique_slug?: string;
   side?: string | null;
   table_number?: number | null;
 }
@@ -38,7 +39,7 @@ serve(async (req) => {
 
     // Parse request body
     const body: InvitationLinkRequest = await req.json();
-    const { wedding_id, link_name, number_of_persons = 1, side = null, table_number = null } = body;
+    const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null, table_number = null } = body;
 
     // Validate required fields
     if (!wedding_id || !link_name) {
@@ -96,13 +97,9 @@ serve(async (req) => {
       );
     }
 
-    // Generate slug for the link
-    const generateSlug = () => {
-      return Math.random().toString(36).substring(2, 15) + 
-             Math.random().toString(36).substring(2, 15);
-    };
-
-    const slug = generateSlug();
+    // Use provided slug or generate one
+    const slug = unique_slug || (Math.random().toString(36).substring(2, 15) + 
+             Math.random().toString(36).substring(2, 15));
 
     // Create the invitation link in the database
     const linkData = {
