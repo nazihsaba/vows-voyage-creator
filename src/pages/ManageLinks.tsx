@@ -57,6 +57,7 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
+  table_number: number | null;
   created_at: string;
 }
 
@@ -90,7 +91,7 @@ const ManageLinks = () => {
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
-  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "" });
+  const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "", table_number: "" as string });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
@@ -179,6 +180,7 @@ const ManageLinks = () => {
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      table_number: link.table_number != null ? String(link.table_number) : "",
     });
     setNewInviteeName("");
     // Load invitees for this link
@@ -223,12 +225,13 @@ const ManageLinks = () => {
   const handleEditSave = async () => {
     if (!editingLink) return;
     try {
-      const { error } = await supabase
+      const { error } = await (supabase as any)
         .from("invitation_links")
         .update({
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
+          table_number: editForm.table_number ? parseInt(editForm.table_number) : null,
         })
         .eq("id", editingLink.id);
 
@@ -410,6 +413,53 @@ const ManageLinks = () => {
               </div>
             </CardHeader>
             <CardContent>
+              {/* Table Occupancy Summary */}
+              {(() => {
+                const tableMap: Record<number, { total: number; attending: number }> = {};
+                links.forEach((link) => {
+                  if (link.table_number != null) {
+                    if (!tableMap[link.table_number]) {
+                      tableMap[link.table_number] = { total: 0, attending: 0 };
+                    }
+                    const linkInvitees = invitees[link.id] || [];
+                    tableMap[link.table_number].total += linkInvitees.length;
+                    tableMap[link.table_number].attending += linkInvitees.filter((i) => i.is_attending === true).length;
+                  }
+                });
+                const tableNumbers = Object.keys(tableMap).map(Number).sort((a, b) => a - b);
+                if (tableNumbers.length === 0) return null;
+                return (
+                  <div className="mb-4 p-3 rounded-xl border border-border/30 bg-muted/20">
+                    <h3 className="text-sm font-semibold text-foreground mb-2">Table Occupancy</h3>
+                    <div className="flex flex-wrap gap-2">
+                      {tableNumbers.map((tableNum) => {
+                        const { total, attending } = tableMap[tableNum];
+                        const isFull = attending >= total && total > 0;
+                        return (
+                          <div
+                            key={tableNum}
+                            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-xs font-medium ${
+                              isFull
+                                ? "bg-emerald-50 border-emerald-200 text-emerald-700"
+                                : "bg-background border-border/50 text-muted-foreground"
+                            }`}
+                          >
+                            <span className="font-semibold">Table {tableNum}</span>
+                            <span className="text-[10px]">
+                              {attending}/{total}
+                            </span>
+                            {isFull && (
+                              <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1 py-0">
+                                Full
+                              </Badge>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })()}
               {/* Desktop Table View */}
               <div className="hidden md:block rounded-xl overflow-hidden border border-border/30">
                 <div className="overflow-x-auto">
@@ -419,6 +469,9 @@ const ManageLinks = () => {
                         <TableHead className="w-12"></TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Link Name
+                        </TableHead>
+                        <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                          Table #
                         </TableHead>
                         <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                           Created
@@ -437,7 +490,7 @@ const ManageLinks = () => {
                     <TableBody>
                       {filteredLinks.length === 0 ? (
                         <TableRow>
-                          <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                          <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                             {searchQuery
                               ? "No invitation links or guests match your search"
                               : "No invitation links created yet"}
@@ -465,6 +518,15 @@ const ManageLinks = () => {
                                   </Button>
                                 </TableCell>
                                 <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
+                                <TableCell className="text-sm text-muted-foreground">
+                                  {link.table_number != null ? (
+                                    <Badge variant="outline" className="text-xs font-medium">
+                                      {link.table_number}
+                                    </Badge>
+                                  ) : (
+                                    <span className="text-muted-foreground/50">—</span>
+                                  )}
+                                </TableCell>
                                 <TableCell className="text-sm text-muted-foreground">
                                   {new Date(link.created_at).toLocaleDateString("en-US", {
                                     month: "short",
@@ -563,7 +625,7 @@ const ManageLinks = () => {
                                     className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                   >
                                     <TableCell></TableCell>
-                                    <TableCell colSpan={3} className="pl-8 font-medium">
+                                    <TableCell colSpan={4} className="pl-8 font-medium">
                                       {invitee.name}
                                     </TableCell>
                                     <TableCell>
@@ -602,7 +664,7 @@ const ManageLinks = () => {
                                 <TableRow className="bg-muted/20">
                                   <TableCell></TableCell>
                                   <TableCell
-                                    colSpan={5}
+                                    colSpan={6}
                                     className="text-center py-4 text-sm text-muted-foreground italic"
                                   >
                                     No guests added to this invitation yet
@@ -721,6 +783,11 @@ const ManageLinks = () => {
                               >
                                 {link.side === "GROOM" ? "Groom" : "Bride"}
                               </span>
+                            )}
+                            {link.table_number != null && (
+                              <Badge variant="outline" className="text-[10px] font-medium px-1.5 py-0">
+                                Table {link.table_number}
+                              </Badge>
                             )}
                             <div className="flex items-center gap-1.5">
                               <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -855,7 +922,7 @@ const ManageLinks = () => {
                 onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
               />
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-3 gap-3">
               <div className="space-y-2">
                 <Label htmlFor="edit-guests">Number of Guests</Label>
                 <Input
@@ -864,6 +931,17 @@ const ManageLinks = () => {
                   min={1}
                   value={editForm.number_of_persons}
                   onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="edit-table">Table #</Label>
+                <Input
+                  id="edit-table"
+                  type="number"
+                  min={1}
+                  placeholder="—"
+                  value={editForm.table_number}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, table_number: e.target.value }))}
                 />
               </div>
               <div className="space-y-2">
