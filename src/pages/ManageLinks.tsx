@@ -939,7 +939,12 @@ const ManageLinks = () => {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => { setEditingLink(null); setRefresh((prev) => prev + 1); }}>Close</Button>
-            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim()}>Save Changes</Button>
+            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}>Save Changes</Button>
+            {editInvitees.length !== editForm.number_of_persons && (
+              <p className="text-xs text-destructive mt-1 w-full text-right">
+                {editInvitees.length} of {editForm.number_of_persons} guests added — must match to save
+              </p>
+            )}
           </DialogFooter>
         </DialogContent>
       </Dialog>
