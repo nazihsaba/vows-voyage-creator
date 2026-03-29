@@ -91,6 +91,9 @@ const ManageLinks = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({ link_name: "", number_of_persons: 1, side: "" });
+  const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
+  const [newInviteeName, setNewInviteeName] = useState("");
+  const [savingInvitee, setSavingInvitee] = useState(false);
 
   useEffect(() => {
     if (weddingId) {
@@ -177,6 +180,44 @@ const ManageLinks = () => {
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
     });
+    setNewInviteeName("");
+    // Load invitees for this link
+    const linkInvitees = invitees[link.id] || [];
+    setEditInvitees([...linkInvitees]);
+  };
+
+  const handleAddInvitee = async () => {
+    if (!editingLink || !newInviteeName.trim()) return;
+    setSavingInvitee(true);
+    try {
+      const { data, error } = await supabase
+        .from("invitees")
+        .insert({ invitation_link_id: editingLink.id, name: newInviteeName.trim() })
+        .select()
+        .single();
+
+      if (error) throw error;
+      setEditInvitees((prev) => [...prev, data]);
+      setNewInviteeName("");
+      toast({ title: "Success", description: "Guest added" });
+    } catch (error) {
+      console.error("Error adding invitee:", error);
+      toast({ title: "Error", description: "Failed to add guest", variant: "destructive" });
+    } finally {
+      setSavingInvitee(false);
+    }
+  };
+
+  const handleDeleteInvitee = async (inviteeId: string) => {
+    try {
+      const { error } = await supabase.from("invitees").delete().eq("id", inviteeId);
+      if (error) throw error;
+      setEditInvitees((prev) => prev.filter((i) => i.id !== inviteeId));
+      toast({ title: "Success", description: "Guest removed" });
+    } catch (error) {
+      console.error("Error deleting invitee:", error);
+      toast({ title: "Error", description: "Failed to remove guest", variant: "destructive" });
+    }
   };
 
   const handleEditSave = async () => {
@@ -800,12 +841,12 @@ const ManageLinks = () => {
 
       {/* Edit Link Dialog */}
       <Dialog open={!!editingLink} onOpenChange={(open) => !open && setEditingLink(null)}>
-        <DialogContent className="sm:max-w-md">
+        <DialogContent className="sm:max-w-lg max-h-[85vh] flex flex-col">
           <DialogHeader>
             <DialogTitle>Edit Invitation Link</DialogTitle>
-            <DialogDescription>Update the details for this invitation link.</DialogDescription>
+            <DialogDescription>Update the details and manage guests.</DialogDescription>
           </DialogHeader>
-          <div className="space-y-4 py-2">
+          <div className="space-y-4 py-2 overflow-y-auto flex-1">
             <div className="space-y-2">
               <Label htmlFor="edit-link-name">Link Name</Label>
               <Input
@@ -814,35 +855,90 @@ const ManageLinks = () => {
                 onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
               />
             </div>
-            <div className="space-y-2">
-              <Label htmlFor="edit-guests">Number of Guests</Label>
-              <Input
-                id="edit-guests"
-                type="number"
-                min={1}
-                value={editForm.number_of_persons}
-                onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
-              />
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="edit-guests">Number of Guests</Label>
+                <Input
+                  id="edit-guests"
+                  type="number"
+                  min={1}
+                  value={editForm.number_of_persons}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Side</Label>
+                <Select
+                  value={editForm.side}
+                  onValueChange={(value) => setEditForm((prev) => ({ ...prev, side: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select side" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="GROOM">Groom</SelectItem>
+                    <SelectItem value="BRIDE">Bride</SelectItem>
+                    <SelectItem value="NONE">None</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
-            <div className="space-y-2">
-              <Label>Side</Label>
-              <Select
-                value={editForm.side}
-                onValueChange={(value) => setEditForm((prev) => ({ ...prev, side: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select side" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="GROOM">Groom</SelectItem>
-                  <SelectItem value="BRIDE">Bride</SelectItem>
-                  <SelectItem value="NONE">None</SelectItem>
-                </SelectContent>
-              </Select>
+
+            {/* Invitees Section */}
+            <div className="space-y-2 pt-2 border-t">
+              <Label>Guests ({editInvitees.length})</Label>
+              <div className="space-y-1.5 max-h-40 overflow-y-auto">
+                {editInvitees.length === 0 ? (
+                  <p className="text-sm text-muted-foreground italic py-2">No guests added yet</p>
+                ) : (
+                  editInvitees.map((invitee) => (
+                    <div
+                      key={invitee.id}
+                      className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2"
+                    >
+                      <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        {invitee.is_attending === null ? (
+                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium">Pending</Badge>
+                        ) : invitee.is_attending ? (
+                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium">Yes</Badge>
+                        ) : (
+                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] font-medium">No</Badge>
+                        )}
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-6 w-6 text-destructive/70 hover:text-destructive"
+                          onClick={() => handleDeleteInvitee(invitee.id)}
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+              <div className="flex gap-2">
+                <Input
+                  placeholder="Guest name"
+                  value={newInviteeName}
+                  onChange={(e) => setNewInviteeName(e.target.value)}
+                  onKeyDown={(e) => e.key === "Enter" && handleAddInvitee()}
+                />
+                <Button
+                  size="sm"
+                  onClick={handleAddInvitee}
+                  disabled={!newInviteeName.trim() || savingInvitee}
+                  className="flex-shrink-0"
+                >
+                  <Plus className="w-4 h-4 mr-1" />
+                  Add
+                </Button>
+              </div>
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setEditingLink(null)}>Cancel</Button>
+            <Button variant="outline" onClick={() => { setEditingLink(null); setRefresh((prev) => prev + 1); }}>Close</Button>
             <Button onClick={handleEditSave} disabled={!editForm.link_name.trim()}>Save Changes</Button>
           </DialogFooter>
         </DialogContent>
