@@ -797,6 +797,56 @@ const ManageLinks = () => {
           onSuccess={() => setRefresh((prev) => prev + 1)}
         />
       )}
+
+      {/* Edit Link Dialog */}
+      <Dialog open={!!editingLink} onOpenChange={(open) => !open && setEditingLink(null)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Edit Invitation Link</DialogTitle>
+            <DialogDescription>Update the details for this invitation link.</DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="space-y-2">
+              <Label htmlFor="edit-link-name">Link Name</Label>
+              <Input
+                id="edit-link-name"
+                value={editForm.link_name}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, link_name: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="edit-guests">Number of Guests</Label>
+              <Input
+                id="edit-guests"
+                type="number"
+                min={1}
+                value={editForm.number_of_persons}
+                onChange={(e) => setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label>Side</Label>
+              <Select
+                value={editForm.side}
+                onValueChange={(value) => setEditForm((prev) => ({ ...prev, side: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select side" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="GROOM">Groom</SelectItem>
+                  <SelectItem value="BRIDE">Bride</SelectItem>
+                  <SelectItem value="">None</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setEditingLink(null)}>Cancel</Button>
+            <Button onClick={handleEditSave} disabled={!editForm.link_name.trim()}>Save Changes</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
