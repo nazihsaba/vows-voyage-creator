@@ -142,6 +142,8 @@ Deno.serve(async (req) => {
             link_name: displayName,
             unique_slug: uniqueSlug,
             number_of_persons: guestCount,
+            side: linkData.side,
+            table_number: linkData.tableNumber,
           })
           .select()
           .single();
