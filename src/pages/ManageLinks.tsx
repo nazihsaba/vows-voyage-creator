@@ -87,7 +87,7 @@ const ManageLinks = () => {
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
-    number_of_persons: 1,
+    number_of_persons: 1 as number | string,
     side: "",
     table_number: "" as string,
   });
@@ -243,7 +243,7 @@ const ManageLinks = () => {
   };
 
   const handleEditSave = async () => {
-    if (!editingLink) return;
+    if (!editingLink || !editForm.number_of_persons) return;
     try {
       const { error } = await (supabase as any)
         .from("invitation_links")
@@ -1017,7 +1017,10 @@ const ManageLinks = () => {
                   min={1}
                   value={editForm.number_of_persons}
                   onChange={(e) =>
-                    setEditForm((prev) => ({ ...prev, number_of_persons: parseInt(e.target.value) || 1 }))
+                    setEditForm((prev) => ({
+                      ...prev,
+                      number_of_persons: e.target.value === "" ? "" : (parseInt(e.target.value) || ""),
+                    }))
                   }
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
@@ -1118,7 +1121,7 @@ const ManageLinks = () => {
                   size="sm"
                   onClick={handleAddInvitee}
                   disabled={
-                    !newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons
+                    !newInviteeName.trim() || savingInvitee || !editForm.number_of_persons || editInvitees.length >= Number(editForm.number_of_persons)
                   }
                   className="flex-shrink-0 h-11 sm:h-9 px-4"
                 >
@@ -1131,7 +1134,7 @@ const ManageLinks = () => {
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
             <Button
               onClick={handleEditSave}
-              disabled={!editForm.link_name.trim() || editInvitees.length !== editForm.number_of_persons}
+              disabled={!editForm.link_name.trim() || !editForm.number_of_persons || editInvitees.length !== editForm.number_of_persons}
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
               Save Changes
