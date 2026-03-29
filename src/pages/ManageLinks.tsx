@@ -95,6 +95,7 @@ const ManageLinks = () => {
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
+  const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
 
   useEffect(() => {
     if (weddingId) {
