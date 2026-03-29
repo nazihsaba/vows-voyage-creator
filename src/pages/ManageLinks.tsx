@@ -243,6 +243,7 @@ const ManageLinks = () => {
     }
   };
 
+  const handleEditSave = async () => {
     if (!editingLink) return;
     try {
       const { error } = await (supabase as any)
