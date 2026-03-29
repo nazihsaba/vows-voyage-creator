@@ -14,7 +14,7 @@ import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
 const VeritePreview = lazy(() => import("@/components/templates/VeritePreview"));
 const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
-const AuraPreview = lazy(() => import("@/components/templates/AuraPreview"));
+const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then(m => ({ default: m.AuraPreview })));
 
 type TemplateKey = "grace" | "verite" | "eclat" | "aura";
 
