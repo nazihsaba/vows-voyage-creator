@@ -836,7 +836,7 @@ const ManageLinks = () => {
                 <SelectContent>
                   <SelectItem value="GROOM">Groom</SelectItem>
                   <SelectItem value="BRIDE">Bride</SelectItem>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="NONE">None</SelectItem>
                 </SelectContent>
               </Select>
             </div>
