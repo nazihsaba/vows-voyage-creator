@@ -336,7 +336,7 @@ const Index = () => {
               </svg>
             </a>
             <a
-              href="https://wa.me/"
+href="https://wa.me/96171944174"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
