@@ -578,7 +578,7 @@ const ManageLinks = () => {
                                     className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                   >
                                     <TableCell></TableCell>
-                                    <TableCell colSpan={3} className="pl-8 font-medium">
+                                    <TableCell colSpan={4} className="pl-8 font-medium">
                                       {invitee.name}
                                     </TableCell>
                                     <TableCell>
