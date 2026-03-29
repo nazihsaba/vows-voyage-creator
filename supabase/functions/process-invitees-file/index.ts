@@ -11,6 +11,12 @@ interface InviteeRow {
   invitees?: string;
   nbOfPersons?: number;
   side?: string;
+  'Link Name'?: string;
+  'Number Of Guests'?: number;
+  'Guest Name'?: string;
+  Side?: string;
+  'Table Number'?: number;
+  tableNumber?: number;
 }
 
 Deno.serve(async (req) => {
