@@ -587,7 +587,9 @@ const ManageLinks = () => {
                                     </span>
                                   )}
                                   {link.table_number != null && (
-                                    <Badge variant="outline" className="text-[10px] font-medium px-1.5 py-0">Table {link.table_number}</Badge>
+                                    <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
+                                      <span className="text-xs">Table {link.table_number}</span>
+                                    </span>
                                   )}
                                   <div className="flex items-center gap-1.5">
                                     <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
