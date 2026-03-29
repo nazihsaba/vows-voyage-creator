@@ -147,7 +147,7 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
               <TableHead>Link Name</TableHead>
               <TableHead>Side</TableHead>
               <TableHead>Invitees</TableHead>
-              
+              <TableHead>Created</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
@@ -176,7 +176,7 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
                     {link.number_of_persons}
                   </div>
                 </TableCell>
-                
+                <TableCell>{new Date(link.created_at).toLocaleDateString()}</TableCell>
                 <TableCell className="text-right">
                   <div className="flex justify-end gap-1">
                     <Button
