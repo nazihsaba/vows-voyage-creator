@@ -187,7 +187,7 @@ const ManageLinks = () => {
         .update({
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
-          side: editForm.side || null,
+          side: editForm.side === "NONE" ? null : editForm.side || null,
         })
         .eq("id", editingLink.id);
 
