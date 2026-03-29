@@ -154,93 +154,12 @@ export const GenerateLinkDialog = ({
   };
 
   const handleDownloadTemplate = () => {
-    // Create sample data with random example names
-    const templateData = [
-      {
-        DisplayName: "Smith Family",
-        nbOfPersons: 3,
-        invitees: "John Smith",
-        side: "GROOM",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Sarah Smith",
-        side: "",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Emily Smith",
-        side: "",
-      },
-      {
-        DisplayName: "Johnson Couple",
-        nbOfPersons: 2,
-        invitees: "Michael Johnson",
-        side: "BRIDE",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Lisa Johnson",
-        side: "",
-      },
-      {
-        DisplayName: "Williams Family",
-        nbOfPersons: 4,
-        invitees: "David Williams",
-        side: "GROOM",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Emma Williams",
-        side: "",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Oliver Williams",
-        side: "",
-      },
-      {
-        DisplayName: "",
-        nbOfPersons: "",
-        invitees: "Sophia Williams",
-        side: "",
-      },
-      {
-        DisplayName: "Robert Brown",
-        nbOfPersons: 1,
-        invitees: "Robert Brown",
-        side: "BRIDE",
-      },
-      {
-        DisplayName: "Jennifer Davis",
-        nbOfPersons: 1,
-        invitees: "Jennifer Davis",
-        side: "GROOM",
-      },
-    ];
-
-    // Create worksheet
-    const worksheet = XLSX.utils.json_to_sheet(templateData);
-
-    // Set column widths
-    worksheet["!cols"] = [
-      { wch: 25 }, // DisplayName
-      { wch: 15 }, // nbOfPersons
-      { wch: 20 }, // invitees
-      { wch: 10 }, // side
-    ];
-
-    // Create workbook
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Invitees");
-
-    // Download file
-    XLSX.writeFile(workbook, "invitation_template.xlsx");
+    const link = document.createElement('a');
+    link.href = '/invitation_template.xlsx';
+    link.download = 'invitation_template.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 
     toast({
       title: "Success",
