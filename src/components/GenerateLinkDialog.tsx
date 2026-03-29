@@ -218,9 +218,11 @@ export const GenerateLinkDialog = ({
       });
 
       setSelectedFile(null);
-      onSuccess();
-      // Don't close the dialog immediately so users can see the success message
-      setTimeout(() => onOpenChange(false), 500);
+      // Wait for n8n to finish inserting data into the database before refreshing
+      setTimeout(() => {
+        onSuccess();
+        onOpenChange(false);
+      }, 2000);
     } catch (error) {
       console.error("Error sending file to n8n:", error);
       toast({
