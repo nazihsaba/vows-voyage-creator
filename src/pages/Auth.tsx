@@ -15,7 +15,7 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
-  
+
   const [showForgotPassword, setShowForgotPassword] = useState(false);
   const [resetEmailSent, setResetEmailSent] = useState(false);
   const [isProcessingCallback, setIsProcessingCallback] = useState(true);
@@ -32,12 +32,14 @@ const Auth = () => {
     window.addEventListener("popstate", handlePopState);
 
     // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       console.log("Auth state change:", event, session?.user?.email);
-      if (event === 'SIGNED_IN' && session) {
+      if (event === "SIGNED_IN" && session) {
         navigate("/dashboard");
       }
-      if (event === 'PASSWORD_RECOVERY') {
+      if (event === "PASSWORD_RECOVERY") {
         setIsProcessingCallback(false);
         toast.info("Please enter your new password");
       }
@@ -60,7 +62,7 @@ const Auth = () => {
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password.trim()) {
       toast.error("Please enter both email and password");
       return;
@@ -91,7 +93,6 @@ const Auth = () => {
       if (error) throw error;
 
       setEmailSent(true);
-      toast.success("Check your email to verify your account!");
     } catch (error: any) {
       console.error("Sign up error:", error);
       toast.error(error.message || "Failed to create account");
@@ -102,7 +103,7 @@ const Auth = () => {
 
   const handleSignInWithPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim() || !password.trim()) {
       toast.error("Please enter both email and password");
       return;
@@ -129,7 +130,7 @@ const Auth = () => {
 
   const handleSignInWithMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim()) {
       toast.error("Please enter your email address");
       return;
@@ -165,7 +166,7 @@ const Auth = () => {
 
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!email.trim()) {
       toast.error("Please enter your email address");
       return;
@@ -181,8 +182,9 @@ const Auth = () => {
 
     try {
       // Check if email exists in the database
-      const { data: emailExists, error: checkError } = await supabase
-        .rpc("check_email_exists" as any, { check_email: email.trim().toLowerCase() });
+      const { data: emailExists, error: checkError } = await supabase.rpc("check_email_exists" as any, {
+        check_email: email.trim().toLowerCase(),
+      });
 
       if (checkError) throw checkError;
 
@@ -192,12 +194,9 @@ const Auth = () => {
         return;
       }
 
-      const { error } = await supabase.auth.resetPasswordForEmail(
-        email.trim().toLowerCase(),
-        {
-          redirectTo: `${window.location.origin}/reset-password`,
-        }
-      );
+      const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
 
       if (error) throw error;
 
@@ -248,14 +247,13 @@ const Auth = () => {
             {emailSent || resetEmailSent ? "Check Your Email" : showForgotPassword ? "Reset Password" : "Welcome"}
           </CardTitle>
           <CardDescription className="text-center">
-            {emailSent 
+            {emailSent
               ? `We sent a verification link to ${email}`
               : resetEmailSent
-              ? `We sent a password reset link to ${email}`
-              : showForgotPassword
-              ? "Enter your email to receive a password reset link"
-              : "Create an account or sign in to continue"
-            }
+                ? `We sent a password reset link to ${email}`
+                : showForgotPassword
+                  ? "Enter your email to receive a password reset link"
+                  : "Create an account or sign in to continue"}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -291,12 +289,7 @@ const Auth = () => {
                     </>
                   )}
                 </Button>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  onClick={() => setShowForgotPassword(false)}
-                  className="w-full"
-                >
+                <Button type="button" variant="ghost" onClick={() => setShowForgotPassword(false)} className="w-full">
                   Back to Sign In
                 </Button>
               </form>
@@ -306,7 +299,7 @@ const Auth = () => {
                   <TabsTrigger value="signin">Sign In</TabsTrigger>
                   <TabsTrigger value="signup">Sign Up</TabsTrigger>
                 </TabsList>
-                
+
                 <TabsContent value="signin" className="space-y-4 mt-4">
                   <form onSubmit={handleSignInWithPassword} className="space-y-4">
                     <div className="space-y-2">
@@ -426,25 +419,19 @@ const Auth = () => {
                       {resetEmailSent ? "Password reset link sent" : "Verification link sent"}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {resetEmailSent 
+                      {resetEmailSent
                         ? "Click the link in your email to reset your password. The link will expire in 1 hour."
-                        : "Click the link in your email to continue. The link will expire in 1 hour."
-                      }
+                        : "Click the link in your email to continue. The link will expire in 1 hour."}
                     </p>
                   </div>
                 </div>
               </div>
-              
+
               <div className="space-y-2">
                 <p className="text-xs text-muted-foreground text-center">
                   Didn't receive the email? Check your spam folder or try again.
                 </p>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={handleTryAgain}
-                  className="w-full"
-                >
+                <Button type="button" variant="outline" onClick={handleTryAgain} className="w-full">
                   Try Again
                 </Button>
               </div>
