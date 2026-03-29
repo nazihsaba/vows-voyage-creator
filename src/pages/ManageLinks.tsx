@@ -477,9 +477,7 @@ const ManageLinks = () => {
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Table #
                               </TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                                Created
-                              </TableHead>
+
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Guests
                               </TableHead>
@@ -725,7 +723,10 @@ const ManageLinks = () => {
                                     {link.link_name}
                                   </h3>
                                   {link.side && (
-                                    <Badge variant="secondary" className="text-[10px] font-medium border-0 flex-shrink-0">
+                                    <Badge
+                                      variant="secondary"
+                                      className="text-[10px] font-medium border-0 flex-shrink-0"
+                                    >
                                       {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </Badge>
                                   )}
@@ -734,13 +735,13 @@ const ManageLinks = () => {
                                 {/* Row 2: Meta info */}
                                 <div className="flex items-center gap-3 mt-1.5 ml-8">
                                   {link.table_number != null && (
-                                    <span className="text-[11px] text-muted-foreground">
-                                      Table {link.table_number}
-                                    </span>
+                                    <span className="text-[11px] text-muted-foreground">Table {link.table_number}</span>
                                   )}
                                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                     <Users className="w-3 h-3" />
-                                    <span>{stats.total} {stats.total === 1 ? "guest" : "guests"}</span>
+                                    <span>
+                                      {stats.total} {stats.total === 1 ? "guest" : "guests"}
+                                    </span>
                                   </span>
                                 </div>
 
@@ -1019,7 +1020,7 @@ const ManageLinks = () => {
                   onChange={(e) =>
                     setEditForm((prev) => ({
                       ...prev,
-                      number_of_persons: e.target.value === "" ? "" : (parseInt(e.target.value) || ""),
+                      number_of_persons: e.target.value === "" ? "" : parseInt(e.target.value) || "",
                     }))
                   }
                   className="h-11 text-base sm:h-9 sm:text-sm"
@@ -1121,7 +1122,10 @@ const ManageLinks = () => {
                   size="sm"
                   onClick={handleAddInvitee}
                   disabled={
-                    !newInviteeName.trim() || savingInvitee || !editForm.number_of_persons || editInvitees.length >= Number(editForm.number_of_persons)
+                    !newInviteeName.trim() ||
+                    savingInvitee ||
+                    !editForm.number_of_persons ||
+                    editInvitees.length >= Number(editForm.number_of_persons)
                   }
                   className="flex-shrink-0 h-11 sm:h-9 px-4"
                 >
@@ -1134,7 +1138,11 @@ const ManageLinks = () => {
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
             <Button
               onClick={handleEditSave}
-              disabled={!editForm.link_name.trim() || !editForm.number_of_persons || editInvitees.length !== editForm.number_of_persons}
+              disabled={
+                !editForm.link_name.trim() ||
+                !editForm.number_of_persons ||
+                editInvitees.length !== editForm.number_of_persons
+              }
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
               Save Changes
