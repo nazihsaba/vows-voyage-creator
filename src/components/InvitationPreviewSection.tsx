@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, Eye } from "lucide-react";
+import { X } from "lucide-react";
 import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
@@ -90,13 +90,6 @@ const TemplateCard = ({
       </span>
     </div>
 
-    {/* Preview hint — desktop hover only, non-interactive */}
-    <div className="absolute inset-0 hidden lg:flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-400 pointer-events-none">
-      <div className="bg-white/10 backdrop-blur-lg border border-white/20 rounded-xl px-6 py-3 flex items-center gap-2.5 shadow-lg">
-        <Eye className="w-4 h-4 text-white" />
-        <span className="text-white text-sm font-medium tracking-wide">Preview</span>
-      </div>
-    </div>
 
     {/* Tagline */}
     <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
