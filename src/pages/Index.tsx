@@ -273,7 +273,7 @@ const Index = () => {
                   ))}
                 </div>
                 <Button
-                  onClick={() => window.open("https://wa.me/", "_blank")}
+                  onClick={() => window.open("https://wa.me/96171944174", "_blank")}
                   className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 sm:px-10 py-5 rounded-lg text-base w-full sm:w-auto"
                 >
                   Contact Us
@@ -336,7 +336,7 @@ const Index = () => {
               </svg>
             </a>
             <a
-              href="https://wa.me/"
+href="https://wa.me/96171944174"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
