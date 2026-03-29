@@ -157,7 +157,13 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
                 <TableCell className="font-medium">{link.link_name}</TableCell>
                 <TableCell>
                   {link.side ? (
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-white`}>
+                    <span
+                      className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                        link.side === "GROOM"
+                          ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+                          : "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200"
+                      }`}
+                    >
                       {link.side === "GROOM" ? "Groom" : "Bride"}
                     </span>
                   ) : (
