@@ -435,7 +435,14 @@ const ManageLinks = () => {
                 </Button>
               </div>
 
-              {activeView === "tables" && (() => {
+              <div className="relative overflow-hidden">
+              <div
+                className="flex transition-transform duration-400 ease-in-out"
+                style={{ transform: activeView === "tables" ? "translateX(-100%)" : "translateX(0)" }}
+              >
+              {/* Guests View */}
+              <div className="w-full flex-shrink-0">
+              
                 const tableMap: Record<number, { total: number; attending: number; groups: { name: string; attending: number; total: number }[] }> = {};
                 links.forEach((link) => {
                   if (link.table_number != null) {
