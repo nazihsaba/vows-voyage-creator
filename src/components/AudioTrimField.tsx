@@ -45,10 +45,10 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Math.min(60, d));
+      setEndTime(Math.min(30, d));
       // Auto-trim on load
       if (file) {
-        await autoTrim(file, 0, Math.min(60, d));
+        await autoTrim(file, 0, Math.min(30, d));
       }
     }
   };
