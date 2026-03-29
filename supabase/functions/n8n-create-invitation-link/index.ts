@@ -97,13 +97,9 @@ serve(async (req) => {
       );
     }
 
-    // Generate slug for the link
-    const generateSlug = () => {
-      return Math.random().toString(36).substring(2, 15) + 
-             Math.random().toString(36).substring(2, 15);
-    };
-
-    const slug = generateSlug();
+    // Use provided slug or generate one
+    const slug = unique_slug || (Math.random().toString(36).substring(2, 15) + 
+             Math.random().toString(36).substring(2, 15));
 
     // Create the invitation link in the database
     const linkData = {
