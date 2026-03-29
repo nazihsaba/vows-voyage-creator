@@ -57,6 +57,7 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
+  table_number: number | null;
   created_at: string;
 }
 
