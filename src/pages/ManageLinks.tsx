@@ -470,6 +470,7 @@ const ManageLinks = () => {
                             <TableRow className="bg-primary/10 border-b border-primary/20">
                               <TableHead className="w-12"></TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Link Name</TableHead>
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Side</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Table #</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Created</TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">Guests</TableHead>
@@ -480,7 +481,7 @@ const ManageLinks = () => {
                           <TableBody>
                             {filteredLinks.length === 0 ? (
                               <TableRow>
-                                <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
                                   {searchQuery ? "No invitation links or guests match your search" : "No invitation links created yet"}
                                 </TableCell>
                               </TableRow>
@@ -501,6 +502,13 @@ const ManageLinks = () => {
                                         </Button>
                                       </TableCell>
                                       <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
+                                      <TableCell className="text-sm text-muted-foreground">
+                                        {link.side ? (
+                                          <Badge variant="secondary" className="text-xs font-medium border-0">{link.side}</Badge>
+                                        ) : (
+                                          <span className="text-muted-foreground/50">—</span>
+                                        )}
+                                      </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.table_number != null ? (
                                           <Badge variant="secondary" className="text-xs font-medium border-0">{link.table_number}</Badge>
