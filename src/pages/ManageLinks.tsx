@@ -928,7 +928,7 @@ const ManageLinks = () => {
                 <Button
                   size="sm"
                   onClick={handleAddInvitee}
-                  disabled={!newInviteeName.trim() || savingInvitee}
+                  disabled={!newInviteeName.trim() || savingInvitee || editInvitees.length >= editForm.number_of_persons}
                   className="flex-shrink-0"
                 >
                   <Plus className="w-4 h-4 mr-1" />
