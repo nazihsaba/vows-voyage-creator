@@ -521,7 +521,7 @@ const ManageLinks = () => {
                                       <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.side ? (
-                                          <Badge variant="secondary" className="text-xs font-medium border-0">
+                                          <Badge variant="secondary" className="text-xs font-medium border-0 bg-white text-foreground">
                                             {link.side}
                                           </Badge>
                                         ) : (
@@ -719,7 +719,7 @@ const ManageLinks = () => {
                                   {link.side && (
                                     <Badge
                                       variant="secondary"
-                                      className="text-[10px] font-medium border-0 flex-shrink-0"
+                                      className="text-[10px] font-medium border-0 flex-shrink-0 bg-white text-foreground"
                                     >
                                       {link.side === "GROOM" ? "Groom" : "Bride"}
                                     </Badge>
