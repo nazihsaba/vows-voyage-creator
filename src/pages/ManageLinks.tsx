@@ -906,6 +906,7 @@ const ManageLinks = () => {
                   })
                 )}
               </div>
+              </>)}
             </CardContent>
           </Card>
         )}
