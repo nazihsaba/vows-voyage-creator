@@ -175,7 +175,7 @@ const ManageLinks = () => {
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
-      side: link.side || "",
+      side: link.side || "NONE",
     });
   };
 
@@ -187,7 +187,7 @@ const ManageLinks = () => {
         .update({
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
-          side: editForm.side || null,
+          side: editForm.side === "NONE" ? null : editForm.side || null,
         })
         .eq("id", editingLink.id);
 
@@ -836,7 +836,7 @@ const ManageLinks = () => {
                 <SelectContent>
                   <SelectItem value="GROOM">Groom</SelectItem>
                   <SelectItem value="BRIDE">Bride</SelectItem>
-                  <SelectItem value="">None</SelectItem>
+                  <SelectItem value="NONE">None</SelectItem>
                 </SelectContent>
               </Select>
             </div>
