@@ -158,15 +158,35 @@ const Index = () => {
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {[
-              { icon: Calendar, title: "Countdown Timer", desc: "Real-time countdown to your special day" },
-              { icon: Image, title: "Photo Gallery", desc: "Showcase your memorable moments" },
-              { icon: Gift, title: "Gift Registry", desc: "Share gift card and registry information" },
-              { icon: Calendar, title: "RSVP", desc: "Manage guest attendance and responses" },
-              { icon: LinkIcon, title: "Custom Links", desc: "Auto-generated unique invitation URLs" },
+              {
+                icon: Calendar,
+                title: "Countdown",
+                desc: "A live countdown to your special day, building excitement for your guests 💍✨",
+              },
+              {
+                icon: Image,
+                title: "Gallery & Video",
+                desc: "Showcase your moments with photos and immersive video backgrounds for a stunning experience",
+              },
+              {
+                icon: Gift,
+                title: "Gifts",
+                desc: "Share your gift registry or preferred gift cards in a simple and elegant way",
+              },
+              {
+                icon: Calendar,
+                title: "RSVP",
+                desc: "Collect and manage guest responses smoothly in one place",
+              },
               {
                 icon: Users,
-                title: "Guest Tracking & Table Management",
-                desc: "Track attendance in real time and effortlessly organize guests into tables for a seamless event experience.",
+                title: "Guests & Tables",
+                desc: "Track RSVPs in real time and organize guests into tables effortlessly",
+              },
+              {
+                icon: LinkIcon,
+                title: "Smart Links",
+                desc: "Generate and share unique invitation links for each guest with ease",
               },
             ].map((feature) => (
               <div
