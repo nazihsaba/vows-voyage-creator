@@ -147,7 +147,7 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
               <TableHead>Link Name</TableHead>
               <TableHead>Side</TableHead>
               <TableHead>Invitees</TableHead>
-              <TableHead>Created</TableHead>
+              
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
