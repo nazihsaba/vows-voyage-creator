@@ -153,10 +153,10 @@ const InvitationPreviewSection = () => {
             <span className="text-sm font-semibold text-foreground tracking-wide">{activeLabel} — Preview</span>
             <button
               onClick={() => setActivePreview(null)}
-              className="p-2 rounded-full hover:bg-muted transition-colors"
+              className="p-2 rounded-full hover:bg-muted transition-colors border-none"
               aria-label="Close preview"
             >
-              <X className="w-5 h-5 text-foreground border-none" />
+              <X className="w-5 h-5 text-foreground" />
             </button>
           </div>
 
