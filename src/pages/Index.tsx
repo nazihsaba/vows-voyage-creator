@@ -179,14 +179,14 @@ const Index = () => {
                 desc: "Collect and manage guest responses smoothly in one place",
               },
               {
-                icon: Users,
-                title: "Guests & Tables",
-                desc: "Track RSVPs in real time and organize guests into tables effortlessly",
-              },
-              {
                 icon: LinkIcon,
                 title: "Smart Links",
                 desc: "Generate and share unique invitation links for each guest with ease",
+              },
+              {
+                icon: Users,
+                title: "Guests & Tables",
+                desc: "Track RSVPs in real time and organize guests into tables effortlessly",
               },
             ].map((feature) => (
               <div
