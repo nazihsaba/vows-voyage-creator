@@ -2,6 +2,13 @@ import { useState } from "react";
 import { InlineFieldEditor } from "./InlineFieldEditor";
 import { cn } from "@/lib/utils";
 import { Edit3 } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-mobile";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@/components/ui/sheet";
 
 interface FieldStyle {
   fontSize?: string;
@@ -37,28 +44,28 @@ export const EditableField = ({
 }: EditableFieldProps) => {
   const [isEditing, setIsEditing] = useState(false);
   const [position, setPosition] = useState({ x: 0, y: 0 });
+  const isMobile = useIsMobile();
 
   const handleClick = (e: React.MouseEvent) => {
     if (!isPreview) return;
     
     e.stopPropagation();
-    const rect = e.currentTarget.getBoundingClientRect();
-    
-    // Calculate position ensuring it stays within viewport
-    let x = rect.left + window.scrollX;
-    let y = rect.bottom + window.scrollY + 8;
-    
-    // Adjust if popup would go off right edge
-    if (x + 400 > window.innerWidth) {
-      x = window.innerWidth - 420; // 400 + 20 padding
+
+    if (!isMobile) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      let x = rect.left + window.scrollX;
+      let y = rect.bottom + window.scrollY + 8;
+      
+      if (x + 400 > window.innerWidth) {
+        x = window.innerWidth - 420;
+      }
+      if (y + 500 > window.innerHeight + window.scrollY) {
+        y = rect.top + window.scrollY - 508;
+      }
+      
+      setPosition({ x, y });
     }
     
-    // Adjust if popup would go off bottom edge
-    if (y + 500 > window.innerHeight + window.scrollY) {
-      y = rect.top + window.scrollY - 508; // Place above element
-    }
-    
-    setPosition({ x, y });
     setIsEditing(true);
   };
 
@@ -73,13 +80,11 @@ export const EditableField = ({
 
   const Tag = tag as any;
 
-  // Only apply inline styles when they are explicitly set and non-empty
   const appliedStyle: React.CSSProperties = {
     ...(style.fontFamily && style.fontFamily.trim() ? { fontFamily: style.fontFamily } : {}),
     ...(style.color && style.color.trim() ? { color: style.color } : {}),
   };
 
-  // Only add fontSize className when it's explicitly set
   const fontSizeClass = style.fontSize && style.fontSize.trim() ? style.fontSize : undefined;
 
   if (!isPreview) {
@@ -89,6 +94,19 @@ export const EditableField = ({
       </Tag>
     );
   }
+
+  const editorContent = (
+    <InlineFieldEditor
+      fieldId={fieldId}
+      currentText={text}
+      currentStyle={style}
+      onSave={handleSave}
+      onCancel={handleCancel}
+      isLocked={isLocked}
+      multiline={multiline}
+      className={isMobile ? "border-0 shadow-none p-0 min-w-0 w-full" : undefined}
+    />
+  );
 
   return (
     <>
@@ -105,7 +123,7 @@ export const EditableField = ({
         <Edit3 className="w-3 h-3 absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 transition-opacity text-primary bg-white rounded-full p-0.5 shadow" />
       </Tag>
 
-      {isEditing && (
+      {isEditing && !isMobile && (
         <div
           style={{
             position: "fixed",
@@ -114,16 +132,19 @@ export const EditableField = ({
             zIndex: 9999,
           }}
         >
-          <InlineFieldEditor
-            fieldId={fieldId}
-            currentText={text}
-            currentStyle={style}
-            onSave={handleSave}
-            onCancel={handleCancel}
-            isLocked={isLocked}
-            multiline={multiline}
-          />
+          {editorContent}
         </div>
+      )}
+
+      {isMobile && (
+        <Sheet open={isEditing} onOpenChange={(open) => !open && handleCancel()}>
+          <SheetContent side="bottom" className="max-h-[85vh] overflow-y-auto rounded-t-2xl px-4 pb-8">
+            <SheetHeader className="pb-2">
+              <SheetTitle className="text-base">Edit Field</SheetTitle>
+            </SheetHeader>
+            {editorContent}
+          </SheetContent>
+        </Sheet>
       )}
     </>
   );
