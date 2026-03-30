@@ -292,9 +292,6 @@ const MyEvents = () => {
             </div>
             <h2 className="text-xl sm:text-2xl font-serif font-bold mb-2">No Events Yet</h2>
             <p className="text-muted-foreground mb-6 text-sm">Create your first event invitation to get started</p>
-            <Button onClick={() => navigate("/dashboard/select-event-type")} className="rounded-full px-6 shadow-sm">
-              Create Event
-            </Button>
           </div>
         ) : (
           <div className="space-y-10 sm:space-y-14">
