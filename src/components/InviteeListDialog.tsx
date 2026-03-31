@@ -132,6 +132,11 @@ export const InviteeListDialog = ({
                       <span className="font-medium">{invitee.name}</span>
                     </div>
                     <div className="flex items-center gap-2">
+                      {invitee.table_number != null && (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-muted text-muted-foreground">
+                          Table {invitee.table_number}
+                        </span>
+                      )}
                       {getAttendanceIcon(invitee.is_attending)}
                       <span className="text-sm text-muted-foreground">
                         {getAttendanceText(invitee.is_attending)}
