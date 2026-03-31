@@ -322,6 +322,7 @@ const ManageLinks = () => {
     setDeleteAllOpen(false);
   };
 
+  const getRSVPStats = (linkId: string) => {
     const linkInvitees = invitees[linkId] || [];
     const attending = linkInvitees.filter((i) => i.is_attending === true).length;
     const notAttending = linkInvitees.filter((i) => i.is_attending === false).length;
