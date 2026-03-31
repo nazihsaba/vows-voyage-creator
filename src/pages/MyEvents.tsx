@@ -339,7 +339,7 @@ const MyEvents = () => {
                                   onClick={() => handlePublishClick(wedding.id)}
                                 >
                                   <CreditCard className="w-4 h-4 mr-2" />
-                                  Publish Event (${PUBLISH_FEE_USD})
+                                  Publish Event
                                 </Button>
                               )}
 
