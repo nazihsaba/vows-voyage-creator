@@ -128,7 +128,7 @@ const ManageLinks = () => {
       // Fetch all invitees for these links
       if (linksData && linksData.length > 0) {
         const linkIds = linksData.map((link) => link.id);
-        const { data: inviteesData, error: inviteesError } = await supabase
+        const { data: inviteesData, error: inviteesError } = await (supabase as any)
           .from("invitees")
           .select("*")
           .in("invitation_link_id", linkIds)
@@ -138,7 +138,7 @@ const ManageLinks = () => {
 
         // Group invitees by invitation_link_id
         const groupedInvitees: Record<string, Invitee[]> = {};
-        (inviteesData || []).forEach((invitee) => {
+        ((inviteesData || []) as Invitee[]).forEach((invitee) => {
           if (!groupedInvitees[invitee.invitation_link_id]) {
             groupedInvitees[invitee.invitation_link_id] = [];
           }
