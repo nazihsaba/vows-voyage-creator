@@ -354,12 +354,14 @@ const MyEvents = () => {
                           </CardHeader>
                           <CardContent className="px-5 pb-5 pt-0">
                             <div className="space-y-3">
-                              <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-sm text-amber-800">
-                                <p className="font-medium text-xs">Not published yet</p>
-                                <p className="text-[11px] mt-0.5 text-amber-600">
-                                  Edit and publish to generate invitation links
-                                </p>
-                              </div>
+                              {wedding.status === "draft" && (
+                                <div className="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200/60 rounded-xl p-3 text-sm text-amber-800">
+                                  <p className="font-medium text-xs">Not published yet</p>
+                                  <p className="text-[11px] mt-0.5 text-amber-600">
+                                    Edit and publish to generate invitation links
+                                  </p>
+                                </div>
+                              )}
 
                               {wedding.status === "draft" && (
                                 <Button
