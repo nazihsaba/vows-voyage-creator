@@ -655,9 +655,20 @@ const ManageLinks = () => {
                                           className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                         >
                                           <TableCell></TableCell>
-                                          <TableCell colSpan={4} className="pl-8 font-medium">
+                                          <TableCell className="pl-8 font-medium">
                                             {invitee.name}
                                           </TableCell>
+                                          <TableCell></TableCell>
+                                          <TableCell className="text-sm">
+                                            {invitee.table_number != null ? (
+                                              <Badge variant="secondary" className="text-xs font-medium border-0 bg-white">
+                                                {invitee.table_number}
+                                              </Badge>
+                                            ) : (
+                                              <span className="text-muted-foreground/50">—</span>
+                                            )}
+                                          </TableCell>
+                                          <TableCell></TableCell>
                                           <TableCell>
                                             {invitee.is_attending === null ? (
                                               <Badge
