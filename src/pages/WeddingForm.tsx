@@ -56,9 +56,7 @@ const WeddingForm = () => {
   ]);
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
-  const [auraQuote, setAuraQuote] = useState(
-    "Two are better than one. For if they fall, one will lift up the other."
-  );
+  const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [formData, setFormData] = useState({
     groom_name: "",
@@ -87,7 +85,7 @@ const WeddingForm = () => {
 
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
-    return 7; // Vérité and Aura templates
+    return 6; // Vérité and Aura templates
   };
   const maxGalleryImages = getMaxGalleryImages();
 
@@ -116,7 +114,10 @@ const WeddingForm = () => {
       setFormData(data);
       // Load Aura quote/reference from field_customizations
       if (data.field_customizations) {
-        const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
+        const fc =
+          typeof data.field_customizations === "string"
+            ? JSON.parse(data.field_customizations)
+            : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
       }
@@ -146,7 +147,10 @@ const WeddingForm = () => {
       if (galleryData) {
         setExistingGalleryImages(galleryData);
         // Load Grace featured image preview if applicable
-        if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
+        if (
+          (data.template_type === "video-cinematic" || data.template_type === "template6") &&
+          galleryData.length > 0
+        ) {
           setGraceFeaturedPreview(galleryData[0].image_url);
         }
       }
@@ -177,7 +181,7 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData.map(c => ({ card_name: c.card_name, card_number: c.card_number })));
+        setGiftCards(cardsData.map((c) => ({ card_name: c.card_name, card_number: c.card_number })));
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -326,12 +330,10 @@ const WeddingForm = () => {
       const filePath = `invites/${slug}/main.${ext}`;
 
       // Upload (upsert) to invitation-images bucket
-      await supabase.storage
-        .from("invitation-images")
-        .upload(filePath, blob, {
-          contentType,
-          upsert: true,
-        });
+      await supabase.storage.from("invitation-images").upload(filePath, blob, {
+        contentType,
+        upsert: true,
+      });
     } catch (err) {
       console.warn("OG image copy failed (non-blocking):", err);
     }
@@ -417,9 +419,7 @@ const WeddingForm = () => {
 
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
-      const existingCustomizations = typeof rawFc === 'string'
-        ? JSON.parse(rawFc || '{}')
-        : (rawFc || {});
+      const existingCustomizations = typeof rawFc === "string" ? JSON.parse(rawFc || "{}") : rawFc || {};
       const fieldCustomizations = isAuraTemplate
         ? {
             ...existingCustomizations,
@@ -523,7 +523,10 @@ const WeddingForm = () => {
       }
 
       // Upload Grace featured image (single image for gallery section)
-      if ((formData.template_type === "video-cinematic" || formData.template_type === "template6") && graceFeaturedFile) {
+      if (
+        (formData.template_type === "video-cinematic" || formData.template_type === "template6") &&
+        graceFeaturedFile
+      ) {
         // Remove existing gallery images for Grace (only 1 allowed)
         if (id) {
           await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
@@ -625,14 +628,18 @@ const WeddingForm = () => {
 
         <Card className="shadow-elegant overflow-hidden">
           <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
-            <CardTitle className="text-2xl sm:text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl font-serif">
+              {id ? "Edit Wedding" : "Create Wedding Invitation"}
+            </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_name" className="text-sm font-medium">Groom Name *</Label>
+                  <Label htmlFor="groom_name" className="text-sm font-medium">
+                    Groom Name *
+                  </Label>
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
@@ -644,7 +651,9 @@ const WeddingForm = () => {
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
+                  <Label htmlFor="bride_name" className="text-sm font-medium">
+                    Bride Name *
+                  </Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
@@ -660,7 +669,9 @@ const WeddingForm = () => {
               {/* Family Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_family" className="text-sm font-medium">Groom's Family *</Label>
+                  <Label htmlFor="groom_family" className="text-sm font-medium">
+                    Groom's Family *
+                  </Label>
                   <Input
                     id="groom_family"
                     required
@@ -670,7 +681,9 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
+                  <Label htmlFor="bride_family" className="text-sm font-medium">
+                    Bride's Family *
+                  </Label>
                   <Input
                     id="bride_family"
                     required
@@ -684,7 +697,9 @@ const WeddingForm = () => {
               {/* Dates */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="wedding_date" className="text-sm font-medium">Wedding Date *</Label>
+                  <Label htmlFor="wedding_date" className="text-sm font-medium">
+                    Wedding Date *
+                  </Label>
                   <Input
                     id="wedding_date"
                     type="date"
@@ -695,7 +710,9 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">Confirmation Deadline *</Label>
+                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">
+                    Confirmation Deadline *
+                  </Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
@@ -708,7 +725,9 @@ const WeddingForm = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="main_description" className="text-sm font-medium">Description</Label>
+                <Label htmlFor="main_description" className="text-sm font-medium">
+                  Description
+                </Label>
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
@@ -770,7 +789,9 @@ const WeddingForm = () => {
               {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
-                  <Label htmlFor="wedding_video">Upload Video <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="wedding_video">
+                    Upload Video <span className="text-foreground">*</span>
+                  </Label>
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
@@ -806,11 +827,18 @@ const WeddingForm = () => {
                 </div>
               ) : (
                 <div className="space-y-2">
-                  <Label htmlFor="main_picture">Main Wedding Photo <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="main_picture">
+                    Main Wedding Photo <span className="text-foreground">*</span>
+                  </Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img src={imagePreview} alt="Wedding preview" loading="lazy" className="w-full h-full object-cover" />
+                        <img
+                          src={imagePreview}
+                          alt="Wedding preview"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
                         <Button
                           type="button"
                           variant="destructive"
@@ -862,13 +890,20 @@ const WeddingForm = () => {
               {/* Grace Featured Image */}
               {isGraceTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="grace_featured">Featured Image <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="grace_featured">
+                    Featured Image <span className="text-foreground">*</span>
+                  </Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     This image will be displayed as a full-width photo in your invitation
                   </p>
                   {graceFeaturedPreview ? (
                     <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <img src={graceFeaturedPreview} alt="Featured" loading="lazy" className="w-full h-full object-cover" />
+                      <img
+                        src={graceFeaturedPreview}
+                        alt="Featured"
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                      />
                       <Button
                         type="button"
                         variant="destructive"
@@ -969,7 +1004,7 @@ const WeddingForm = () => {
                           <SelectValue>
                             <span className="flex items-center gap-2">
                               <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.ceremony_icon)?.label}
+                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.ceremony_icon)?.label}
                             </span>
                           </SelectValue>
                         </SelectTrigger>
@@ -1039,7 +1074,7 @@ const WeddingForm = () => {
                           <SelectValue>
                             <span className="flex items-center gap-2">
                               <Icon icon={locations.venue_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.venue_icon)?.label}
+                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.venue_icon)?.label}
                             </span>
                           </SelectValue>
                         </SelectTrigger>
@@ -1127,7 +1162,9 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
-                  <Label>Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span></Label>
+                  <Label>
+                    Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span>
+                  </Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                   </p>
@@ -1140,7 +1177,12 @@ const WeddingForm = () => {
                           key={image.id}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
                         >
-                          <img src={image.image_url} alt="Gallery" loading="lazy" className="w-full h-full object-cover" />
+                          <img
+                            src={image.image_url}
+                            alt="Gallery"
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
                           <Button
                             type="button"
                             variant="destructive"
@@ -1163,7 +1205,12 @@ const WeddingForm = () => {
                           key={index}
                           className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
                         >
-                          <img src={preview} alt={`Gallery ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
+                          <img
+                            src={preview}
+                            alt={`Gallery ${index + 1}`}
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                          />
                           <Button
                             type="button"
                             variant="destructive"
@@ -1205,7 +1252,9 @@ const WeddingForm = () => {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="slug" className="text-sm font-medium">Custom URL Slug</Label>
+                <Label htmlFor="slug" className="text-sm font-medium">
+                  Custom URL Slug
+                </Label>
                 <Input
                   id="slug"
                   value={formData.slug}
