@@ -93,6 +93,10 @@ const ManageLinks = () => {
     side: "",
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
+  const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
+  const [pendingNewInvitees, setPendingNewInvitees] = useState<Invitee[]>([]);
+  const [pendingDeleteIds, setPendingDeleteIds] = useState<string[]>([]);
+  const [pendingUpdates, setPendingUpdates] = useState<Record<string, Partial<Invitee>>>({});
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
   const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
