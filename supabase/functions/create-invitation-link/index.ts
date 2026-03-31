@@ -11,7 +11,6 @@ interface CreateInvitationRequest {
   unique_slug: string;
   number_of_persons: number;
   side?: string | null;
-  table_number?: number | string | null;
 }
 
 Deno.serve(async (req) => {
