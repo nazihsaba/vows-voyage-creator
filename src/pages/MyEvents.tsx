@@ -183,56 +183,26 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
-  const handlePublishClick = (id: string) => {
-    setPublishingWeddingId(id);
-    setPaymentDialogOpen(true);
-  };
-
-  const handlePaymentProceed = async () => {
-    if (!publishingWeddingId) return;
-
-    setProcessingPayment(true);
-    setPaymentUrl(null);
-    setPaymentError(null);
-
+  const handlePublishClick = async (id: string) => {
+    // Payment bypassed - publish directly
     try {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error("Not authenticated");
-      }
+      const { error } = await supabase
+        .from("weddings")
+        .update({ status: "published", payment_status: "paid" })
+        .eq("id", id);
 
-      const wedding = weddings.find((w) => w.id === publishingWeddingId);
+      if (error) throw error;
 
-      const response = await supabase.functions.invoke("whish-pay-collect", {
-        body: {
-          weddingId: publishingWeddingId,
-          amount: PUBLISH_FEE_USD,
-          currency: "USD",
-          invoice: `Event publishing: ${wedding?.bride_name} & ${wedding?.groom_name}`,
-        },
-      });
-
-      if (response.error) {
-        throw new Error(response.error.message || "Failed to create payment link");
-      }
-
-      const { collectUrl } = response.data;
-
-      if (collectUrl) {
-        // Store URL and show in dialog - user will click to open
-        setPaymentUrl(collectUrl);
-        setProcessingPayment(false);
-      } else {
-        throw new Error("No payment URL received");
-      }
+      toast.success("Event published successfully!");
+      refetch();
     } catch (error) {
-      console.error("Error initiating payment:", error);
-      setPaymentError(error instanceof Error ? error.message : "We couldn't start the payment. Please try again.");
-      setProcessingPayment(false);
+      console.error("Error publishing event:", error);
+      toast.error("Failed to publish event. Please try again.");
     }
   };
+
+  // Payment flow commented out
+  // const handlePaymentProceed = async () => { ... };
 
   const handleClosePaymentDialog = () => {
     setPaymentDialogOpen(false);
