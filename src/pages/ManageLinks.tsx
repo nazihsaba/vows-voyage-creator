@@ -479,7 +479,7 @@ const ManageLinks = () => {
             </CardHeader>
             <CardContent>
               {/* View Toggle Tabs */}
-              <div className="flex items-center gap-2 mb-4">
+              <div className="flex items-center justify-between gap-2 mb-4">
                 <div className="flex gap-1 p-1 rounded-lg bg-muted/40 w-fit">
                   <Button
                     variant={activeView === "guests" ? "default" : "ghost"}
