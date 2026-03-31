@@ -80,6 +80,7 @@ const ManageLinks = () => {
   const [links, setLinks] = useState<InvitationLink[]>([]);
   const [invitees, setInvitees] = useState<Record<string, Invitee[]>>({});
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false);
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
