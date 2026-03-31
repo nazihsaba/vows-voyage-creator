@@ -373,7 +373,7 @@ const MyEvents = () => {
                                 </Button>
                               )}
 
-                              {wedding.status === "published" && (
+                              {wedding.status !== "published" && (
                                 <>
                                   {!wedding.template_type?.includes("bachelor") ? (
                                     <div className="space-y-2">
