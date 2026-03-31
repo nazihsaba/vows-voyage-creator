@@ -478,24 +478,37 @@ const ManageLinks = () => {
             </CardHeader>
             <CardContent>
               {/* View Toggle Tabs */}
-              <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted/40 w-fit">
-                <Button
-                  variant={activeView === "guests" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setActiveView("guests")}
-                  className="rounded-md text-xs h-8 px-3"
-                >
-                  <Users className="w-3.5 h-3.5 mr-1.5" />
-                  Guest List
-                </Button>
-                <Button
-                  variant={activeView === "tables" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setActiveView("tables")}
-                  className="rounded-md text-xs h-8 px-3"
-                >
-                  Table Occupancy
-                </Button>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-1 p-1 rounded-lg bg-muted/40 w-fit">
+                  <Button
+                    variant={activeView === "guests" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("guests")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    <Users className="w-3.5 h-3.5 mr-1.5" />
+                    Guest List
+                  </Button>
+                  <Button
+                    variant={activeView === "tables" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("tables")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    Table Occupancy
+                  </Button>
+                </div>
+                {links.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDeleteAllOpen(true)}
+                    className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
+                    <span className="hidden sm:inline">Delete All</span>
+                  </Button>
+                )}
               </div>
 
               <div className="relative overflow-hidden">
