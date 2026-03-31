@@ -196,7 +196,9 @@ const MyEvents = () => {
     setPaymentError(null);
 
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
 
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
@@ -359,7 +361,7 @@ const MyEvents = () => {
                                   onClick={() => handlePublishClick(wedding.id)}
                                 >
                                   <CreditCard className="w-4 h-4 mr-2" />
-                                  Publish Event — ${PUBLISH_FEE_USD}
+                                  Publish Event (${PUBLISH_FEE_USD})
                                 </Button>
                               )}
 
@@ -514,7 +516,11 @@ const MyEvents = () => {
             <DialogDescription>
               {getPublishingWedding() && (
                 <span>
-                  Publish <strong>{getPublishingWedding()!.bride_name} & {getPublishingWedding()!.groom_name}</strong>'s event
+                  Publish{" "}
+                  <strong>
+                    {getPublishingWedding()!.bride_name} & {getPublishingWedding()!.groom_name}
+                  </strong>
+                  's event
                 </span>
               )}
             </DialogDescription>
@@ -559,11 +565,7 @@ const MyEvents = () => {
 
           <DialogFooter>
             {!paymentUrl && !paymentError && (
-              <Button
-                onClick={handlePaymentProceed}
-                disabled={processingPayment}
-                className="w-full rounded-full"
-              >
+              <Button onClick={handlePaymentProceed} disabled={processingPayment} className="w-full rounded-full">
                 {processingPayment ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
