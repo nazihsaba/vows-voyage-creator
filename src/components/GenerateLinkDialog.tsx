@@ -218,11 +218,24 @@ export const GenerateLinkDialog = ({
       });
 
       setSelectedFile(null);
-      // Wait for n8n to finish inserting data into the database before refreshing
-      setTimeout(() => {
-        onSuccess();
-        onOpenChange(false);
-      }, 2000);
+      // Poll for new data to appear in the database before closing
+      const initialCount = await getLinksCount();
+      let attempts = 0;
+      const maxAttempts = 10;
+      const pollInterval = 1500;
+      
+      const poll = async () => {
+        attempts++;
+        const currentCount = await getLinksCount();
+        if (currentCount > initialCount || attempts >= maxAttempts) {
+          onSuccess();
+          onOpenChange(false);
+        } else {
+          setTimeout(poll, pollInterval);
+        }
+      };
+      
+      setTimeout(poll, pollInterval);
     } catch (error) {
       console.error("Error sending file to n8n:", error);
       toast({
