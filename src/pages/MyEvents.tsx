@@ -193,11 +193,11 @@ const MyEvents = () => {
 
       if (error) throw error;
 
-      toast.success("Event published successfully!");
-      refetch();
+      toast({ title: "Event published successfully!" });
+      checkUserAndFetchWeddings();
     } catch (error) {
       console.error("Error publishing event:", error);
-      toast.error("Failed to publish event. Please try again.");
+      toast({ title: "Failed to publish event", description: "Please try again.", variant: "destructive" });
     }
   };
 
