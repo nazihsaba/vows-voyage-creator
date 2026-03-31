@@ -986,7 +986,9 @@ const ManageLinks = () => {
                                 <div
                                   className="flex items-center justify-between cursor-pointer"
                                   onClick={() =>
-                                    setExpandedTables((prev) => (prev.includes(tableNum) ? [] : [tableNum]))
+                                    setCollapsedTables((prev) =>
+                                      prev.includes(tableNum) ? prev.filter((t) => t !== tableNum) : [...prev, tableNum]
+                                    )
                                   }
                                 >
                                   <div className="flex items-center gap-1.5">
