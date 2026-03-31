@@ -37,7 +37,7 @@ serve(async (req) => {
 
     // Parse request body
     const body: InviteeRequest = await req.json();
-    const { invitation_link_id, name, is_attending } = body;
+    const { invitation_link_id, name, is_attending, table_number } = body;
 
     // Validate required fields
     if (!invitation_link_id || !name) {
