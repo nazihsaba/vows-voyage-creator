@@ -84,6 +84,7 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [expandedTables, setExpandedTables] = useState<number[]>([]);
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
