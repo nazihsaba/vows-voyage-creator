@@ -102,6 +102,7 @@ serve(async (req) => {
       invitation_link_id,
       name: name.trim(),
       is_attending: is_attending ?? null,
+      table_number: table_number ?? null,
     };
 
     console.log(`Inserting invitee ${name} for link ${invitation_link_id}`);
