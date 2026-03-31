@@ -195,83 +195,61 @@ const ManageLinks = () => {
     setPendingUpdates({});
   };
 
-  const handleAddInvitee = async () => {
+  const handleAddInvitee = () => {
     if (!editingLink || !newInviteeName.trim()) return;
-    setSavingInvitee(true);
-    try {
-      const { data, error } = await supabase
-        .from("invitees")
-        .insert({ invitation_link_id: editingLink.id, name: newInviteeName.trim() })
-        .select()
-        .single();
+    const tempInvitee: Invitee = {
+      id: `temp-${Date.now()}-${Math.random()}`,
+      name: newInviteeName.trim(),
+      is_attending: null,
+      invitation_link_id: editingLink.id,
+      created_at: new Date().toISOString(),
+      table_number: null,
+    };
+    setEditInvitees((prev) => [...prev, tempInvitee]);
+    setPendingNewInvitees((prev) => [...prev, tempInvitee]);
+    setNewInviteeName("");
+  };
 
-      if (error) throw error;
-      setEditInvitees((prev) => [...prev, data]);
-      setNewInviteeName("");
-      toast({ title: "Success", description: "Guest added" });
-    } catch (error) {
-      console.error("Error adding invitee:", error);
-      toast({ title: "Error", description: "Failed to add guest", variant: "destructive" });
-    } finally {
-      setSavingInvitee(false);
+  const handleDeleteInvitee = (inviteeId: string) => {
+    setEditInvitees((prev) => prev.filter((i) => i.id !== inviteeId));
+    if (inviteeId.startsWith("temp-")) {
+      setPendingNewInvitees((prev) => prev.filter((i) => i.id !== inviteeId));
+    } else {
+      setPendingDeleteIds((prev) => [...prev, inviteeId]);
     }
   };
 
-  const handleDeleteInvitee = async (inviteeId: string) => {
-    try {
-      const { error } = await supabase.from("invitees").delete().eq("id", inviteeId);
-      if (error) throw error;
-      setEditInvitees((prev) => prev.filter((i) => i.id !== inviteeId));
-      toast({ title: "Success", description: "Guest removed" });
-    } catch (error) {
-      console.error("Error deleting invitee:", error);
-      toast({ title: "Error", description: "Failed to remove guest", variant: "destructive" });
-    }
-  };
-
-  const handleToggleInviteeStatus = async (inviteeId: string, currentStatus: boolean | null) => {
+  const handleToggleInviteeStatus = (inviteeId: string, currentStatus: boolean | null) => {
     const nextStatus = currentStatus === null ? true : currentStatus === true ? false : null;
-    try {
-      const { error } = await supabase.from("invitees").update({ is_attending: nextStatus }).eq("id", inviteeId);
-      if (error) throw error;
-      setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)));
-      // Also update the main invitees state
-      const linkId = editingLink?.id;
-      if (linkId) {
-        setInvitees((prev) => ({
-          ...prev,
-          [linkId]: (prev[linkId] || []).map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)),
-        }));
-      }
-    } catch (error) {
-      console.error("Error updating invitee status:", error);
-      toast({ title: "Error", description: "Failed to update status", variant: "destructive" });
+    setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)));
+    if (!inviteeId.startsWith("temp-")) {
+      setPendingUpdates((prev) => ({
+        ...prev,
+        [inviteeId]: { ...prev[inviteeId], is_attending: nextStatus },
+      }));
+    } else {
+      setPendingNewInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, is_attending: nextStatus } : i)));
     }
   };
 
-  const handleUpdateInviteeTable = async (inviteeId: string, tableNum: string) => {
+  const handleUpdateInviteeTable = (inviteeId: string, tableNum: string) => {
     const value = tableNum ? parseInt(tableNum) : null;
-    try {
-      const { error } = await supabase.from("invitees").update({ table_number: value } as any).eq("id", inviteeId);
-      if (error) throw error;
-      setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)));
-      const linkId = editingLink?.id;
-      if (linkId) {
-        setInvitees((prev) => ({
-          ...prev,
-          [linkId]: (prev[linkId] || []).map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)),
-        }));
-      }
-    } catch (error) {
-      console.error("Error updating table number:", error);
-      toast({ title: "Error", description: "Failed to update table number", variant: "destructive" });
+    setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)));
+    if (!inviteeId.startsWith("temp-")) {
+      setPendingUpdates((prev) => ({
+        ...prev,
+        [inviteeId]: { ...prev[inviteeId], table_number: value },
+      }));
+    } else {
+      setPendingNewInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)));
     }
   };
 
   const handleEditSave = async () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
-      const { error } = await (supabase as any)
+      // Save link fields
+      const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
           link_name: editForm.link_name,
@@ -279,15 +257,41 @@ const ManageLinks = () => {
           side: editForm.side === "NONE" ? null : editForm.side || null,
         })
         .eq("id", editingLink.id);
+      if (linkError) throw linkError;
 
-      if (error) throw error;
+      // Delete removed invitees
+      for (const id of pendingDeleteIds) {
+        const { error } = await supabase.from("invitees").delete().eq("id", id);
+        if (error) throw error;
+      }
+
+      // Insert new invitees
+      for (const inv of pendingNewInvitees) {
+        const { error } = await supabase
+          .from("invitees")
+          .insert({
+            invitation_link_id: inv.invitation_link_id,
+            name: inv.name,
+            is_attending: inv.is_attending,
+            table_number: inv.table_number,
+          } as any);
+        if (error) throw error;
+      }
+
+      // Update modified invitees
+      for (const [id, updates] of Object.entries(pendingUpdates)) {
+        if (!pendingDeleteIds.includes(id)) {
+          const { error } = await supabase.from("invitees").update(updates as any).eq("id", id);
+          if (error) throw error;
+        }
+      }
 
       toast({ title: "Success", description: "Link updated successfully" });
       setEditingLink(null);
       setRefresh((prev) => prev + 1);
     } catch (error) {
-      console.error("Error updating link:", error);
-      toast({ title: "Error", description: "Failed to update link", variant: "destructive" });
+      console.error("Error saving changes:", error);
+      toast({ title: "Error", description: "Failed to save changes", variant: "destructive" });
     }
   };
 
