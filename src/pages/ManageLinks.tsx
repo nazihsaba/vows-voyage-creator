@@ -1249,10 +1249,7 @@ const ManageLinks = () => {
             </Button>
             <Button
               variant="outline"
-              onClick={() => {
-                setEditingLink(null);
-                setRefresh((prev) => prev + 1);
-              }}
+              onClick={() => setEditingLink(null)}
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
               Close
