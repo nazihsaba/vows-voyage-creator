@@ -1023,7 +1023,7 @@ const ManageLinks = () => {
                 className="h-11 text-base sm:h-9 sm:text-sm"
               />
             </div>
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">
                   Guests
@@ -1039,20 +1039,6 @@ const ManageLinks = () => {
                       number_of_persons: e.target.value === "" ? "" : parseInt(e.target.value) || "",
                     }))
                   }
-                  className="h-11 text-base sm:h-9 sm:text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-table" className="text-xs sm:text-sm font-medium">
-                  Table #
-                </Label>
-                <Input
-                  id="edit-table"
-                  type="number"
-                  min={1}
-                  placeholder="—"
-                  value={editForm.table_number}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, table_number: e.target.value }))}
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
