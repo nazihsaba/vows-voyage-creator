@@ -307,7 +307,21 @@ const ManageLinks = () => {
     setDeleteId(null);
   };
 
-  const getRSVPStats = (linkId: string) => {
+  const deleteAllLinks = async () => {
+    try {
+      for (const link of links) {
+        const { error } = await supabase.from("invitation_links").delete().eq("id", link.id);
+        if (error) throw error;
+      }
+      toast({ title: "Success", description: "All links deleted successfully" });
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error deleting all links:", error);
+      toast({ title: "Error", description: "Failed to delete all links", variant: "destructive" });
+    }
+    setDeleteAllOpen(false);
+  };
+
     const linkInvitees = invitees[linkId] || [];
     const attending = linkInvitees.filter((i) => i.is_attending === true).length;
     const notAttending = linkInvitees.filter((i) => i.is_attending === false).length;
