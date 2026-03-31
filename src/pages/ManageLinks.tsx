@@ -1091,8 +1091,16 @@ const ManageLinks = () => {
                       key={invitee.id}
                       className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5 sm:py-2"
                     >
-                      <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
+                      <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="T#"
+                          value={invitee.table_number ?? ""}
+                          onChange={(e) => handleUpdateInviteeTable(invitee.id, e.target.value)}
+                          className="h-7 w-14 text-xs text-center px-1"
+                        />
                         {invitee.is_attending === null ? (
                           <Badge
                             variant="secondary"
