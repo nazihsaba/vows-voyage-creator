@@ -736,9 +736,13 @@ const ManageLinks = () => {
 
                                 {/* Row 2: Meta info */}
                                 <div className="flex items-center gap-3 mt-1.5 ml-8">
-                                  {link.table_number != null && (
-                                    <span className="text-[11px] text-muted-foreground">Table {link.table_number}</span>
-                                  )}
+                                  {(() => {
+                                    const linkInvs = invitees[link.id] || [];
+                                    const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
+                                    return tables.length > 0 ? (
+                                      <span className="text-[11px] text-muted-foreground">Table {tables.join(", ")}</span>
+                                    ) : null;
+                                  })()}
                                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                     <Users className="w-3 h-3" />
                                     <span>
