@@ -593,7 +593,7 @@ const MyEvents = () => {
         <DialogContent className="p-0 gap-0 border-0 overflow-hidden w-full h-[100dvh] max-w-none max-h-none top-0 left-0 translate-x-0 translate-y-0 sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[95vw] sm:h-[95vh] sm:rounded-lg">
           <div className="absolute top-3 right-3 z-10">
             <Button
-              variant="secondary"
+              variant="primary"
               size="icon"
               className="h-8 w-8 rounded-full shadow-md"
               onClick={() => setPreviewSlug(null)}

@@ -85,7 +85,7 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [collapsedTables, setCollapsedTables] = useState<number[]>([]);
+  const [expandedTables, setExpandedTables] = useState<number[]>([]);
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
@@ -267,21 +267,22 @@ const ManageLinks = () => {
 
       // Insert new invitees
       for (const inv of pendingNewInvitees) {
-        const { error } = await supabase
-          .from("invitees")
-          .insert({
-            invitation_link_id: inv.invitation_link_id,
-            name: inv.name,
-            is_attending: inv.is_attending,
-            table_number: inv.table_number,
-          } as any);
+        const { error } = await supabase.from("invitees").insert({
+          invitation_link_id: inv.invitation_link_id,
+          name: inv.name,
+          is_attending: inv.is_attending,
+          table_number: inv.table_number,
+        } as any);
         if (error) throw error;
       }
 
       // Update modified invitees
       for (const [id, updates] of Object.entries(pendingUpdates)) {
         if (!pendingDeleteIds.includes(id)) {
-          const { error } = await supabase.from("invitees").update(updates as any).eq("id", id);
+          const { error } = await supabase
+            .from("invitees")
+            .update(updates as any)
+            .eq("id", id);
           if (error) throw error;
         }
       }
@@ -397,6 +398,16 @@ const ManageLinks = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
+            {links.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => setDeleteAllOpen(true)}
+                className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-sm"
+              >
+                <Trash2 className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Delete All</span>
+              </Button>
+            )}
             <Button
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
@@ -478,37 +489,24 @@ const ManageLinks = () => {
             </CardHeader>
             <CardContent>
               {/* View Toggle Tabs */}
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex gap-1 p-1 rounded-lg bg-muted/40 w-fit">
-                  <Button
-                    variant={activeView === "guests" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setActiveView("guests")}
-                    className="rounded-md text-xs h-8 px-3"
-                  >
-                    <Users className="w-3.5 h-3.5 mr-1.5" />
-                    Guest List
-                  </Button>
-                  <Button
-                    variant={activeView === "tables" ? "default" : "ghost"}
-                    size="sm"
-                    onClick={() => setActiveView("tables")}
-                    className="rounded-md text-xs h-8 px-3"
-                  >
-                    Table Occupancy
-                  </Button>
-                </div>
-                {links.length > 0 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setDeleteAllOpen(true)}
-                    className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
-                    <span className="hidden sm:inline">Delete All</span>
-                  </Button>
-                )}
+              <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted/40 w-fit">
+                <Button
+                  variant={activeView === "guests" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView("guests")}
+                  className="rounded-md text-xs h-8 px-3"
+                >
+                  <Users className="w-3.5 h-3.5 mr-1.5" />
+                  Guest List
+                </Button>
+                <Button
+                  variant={activeView === "tables" ? "default" : "ghost"}
+                  size="sm"
+                  onClick={() => setActiveView("tables")}
+                  className="rounded-md text-xs h-8 px-3"
+                >
+                  Table Occupancy
+                </Button>
               </div>
 
               <div className="relative overflow-hidden">
@@ -680,13 +678,14 @@ const ManageLinks = () => {
                                           className="bg-white border-l-4 border-l-primary/30 transition-colors"
                                         >
                                           <TableCell></TableCell>
-                                          <TableCell className="pl-8 font-medium">
-                                            {invitee.name}
-                                          </TableCell>
+                                          <TableCell className="pl-8 font-medium">{invitee.name}</TableCell>
                                           <TableCell></TableCell>
                                           <TableCell className="text-sm">
                                             {invitee.table_number != null ? (
-                                              <Badge variant="secondary" className="text-xs font-medium border-0 bg-white">
+                                              <Badge
+                                                variant="secondary"
+                                                className="text-xs font-medium border-0 bg-white"
+                                              >
                                                 {invitee.table_number}
                                               </Badge>
                                             ) : (
@@ -793,9 +792,13 @@ const ManageLinks = () => {
                                 <div className="flex items-center gap-3 mt-1.5 ml-8">
                                   {(() => {
                                     const linkInvs = invitees[link.id] || [];
-                                    const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
+                                    const tables = [
+                                      ...new Set(linkInvs.map((i) => i.table_number).filter((t) => t != null)),
+                                    ];
                                     return tables.length > 0 ? (
-                                      <span className="text-[11px] text-muted-foreground">Table {tables.join(", ")}</span>
+                                      <span className="text-[11px] text-muted-foreground">
+                                        Table {tables.join(", ")}
+                                      </span>
                                     ) : null;
                                   })()}
                                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -940,21 +943,23 @@ const ManageLinks = () => {
                           inviteeList: { name: string; is_attending: boolean | null }[];
                         }
                       > = {};
-                      Object.values(invitees).flat().forEach((invitee) => {
-                        if (invitee.table_number != null) {
-                          if (!tableMap[invitee.table_number]) {
-                            tableMap[invitee.table_number] = { total: 0, attending: 0, inviteeList: [] };
+                      Object.values(invitees)
+                        .flat()
+                        .forEach((invitee) => {
+                          if (invitee.table_number != null) {
+                            if (!tableMap[invitee.table_number]) {
+                              tableMap[invitee.table_number] = { total: 0, attending: 0, inviteeList: [] };
+                            }
+                            tableMap[invitee.table_number].total += 1;
+                            if (invitee.is_attending === true) {
+                              tableMap[invitee.table_number].attending += 1;
+                            }
+                            tableMap[invitee.table_number].inviteeList.push({
+                              name: invitee.name,
+                              is_attending: invitee.is_attending,
+                            });
                           }
-                          tableMap[invitee.table_number].total += 1;
-                          if (invitee.is_attending === true) {
-                            tableMap[invitee.table_number].attending += 1;
-                          }
-                          tableMap[invitee.table_number].inviteeList.push({
-                            name: invitee.name,
-                            is_attending: invitee.is_attending,
-                          });
-                        }
-                      });
+                        });
                       const tableNumbers = Object.keys(tableMap)
                         .map(Number)
                         .sort((a, b) => a - b);
@@ -969,7 +974,7 @@ const ManageLinks = () => {
                           {tableNumbers.map((tableNum) => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
-                            const isTableExpanded = !collapsedTables.includes(tableNum);
+                            const isTableExpanded = expandedTables.includes(tableNum);
                             return (
                               <div
                                 key={tableNum}
@@ -978,11 +983,7 @@ const ManageLinks = () => {
                                 <div
                                   className="flex items-center justify-between cursor-pointer"
                                   onClick={() =>
-                                    setCollapsedTables((prev) =>
-                                      prev.includes(tableNum)
-                                        ? prev.filter((t) => t !== tableNum)
-                                        : [...prev, tableNum]
-                                    )
+                                    setExpandedTables((prev) => (prev.includes(tableNum) ? [] : [tableNum]))
                                   }
                                 >
                                   <div className="flex items-center gap-1.5">
@@ -1010,21 +1011,27 @@ const ManageLinks = () => {
                                 {isTableExpanded && (
                                   <div className="mt-2 space-y-1 border-t pt-2">
                                     {inviteeList.map((inv, i) => (
-                                      <div
-                                        key={i}
-                                        className="flex items-center justify-between text-xs"
-                                      >
+                                      <div key={i} className="flex items-center justify-between text-xs">
                                         <span className="truncate mr-2 text-foreground">{inv.name}</span>
                                         {inv.is_attending === true ? (
-                                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0">
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
+                                          >
                                             Attending
                                           </Badge>
                                         ) : inv.is_attending === false ? (
-                                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0">
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0"
+                                          >
                                             Not Attending
                                           </Badge>
                                         ) : (
-                                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0">
+                                          <Badge
+                                            variant="secondary"
+                                            className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0"
+                                          >
                                             Pending
                                           </Badge>
                                         )}
@@ -1072,7 +1079,8 @@ const ManageLinks = () => {
           <AlertDialogHeader>
             <AlertDialogTitle>Delete all links?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete all {links.length} invitation links and all associated invitee responses.
+              This action cannot be undone. This will permanently delete all {links.length} invitation links and all
+              associated invitee responses.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -1167,17 +1175,14 @@ const ManageLinks = () => {
                     >
                       <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
-                        <div className="flex items-center gap-1">
-                          <span className="text-[10px] text-muted-foreground whitespace-nowrap">Table #</span>
-                          <Input
-                            type="number"
-                            min={1}
-                            placeholder="T#"
-                            value={invitee.table_number ?? ""}
-                            onChange={(e) => handleUpdateInviteeTable(invitee.id, e.target.value)}
-                            className="h-7 w-14 text-xs text-center px-1"
-                          />
-                        </div>
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="T#"
+                          value={invitee.table_number ?? ""}
+                          onChange={(e) => handleUpdateInviteeTable(invitee.id, e.target.value)}
+                          className="h-7 w-14 text-xs text-center px-1"
+                        />
                         {invitee.is_attending === null ? (
                           <Badge
                             variant="secondary"
