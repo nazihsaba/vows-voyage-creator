@@ -10,6 +10,7 @@ interface InviteeRequest {
   invitation_link_id: string;
   name: string;
   is_attending?: boolean;
+  table_number?: number | null;
 }
 
 serve(async (req) => {
@@ -36,7 +37,7 @@ serve(async (req) => {
 
     // Parse request body
     const body: InviteeRequest = await req.json();
-    const { invitation_link_id, name, is_attending } = body;
+    const { invitation_link_id, name, is_attending, table_number } = body;
 
     // Validate required fields
     if (!invitation_link_id || !name) {
@@ -101,6 +102,7 @@ serve(async (req) => {
       invitation_link_id,
       name: name.trim(),
       is_attending: is_attending ?? null,
+      table_number: table_number ?? null,
     };
 
     console.log(`Inserting invitee ${name} for link ${invitation_link_id}`);
