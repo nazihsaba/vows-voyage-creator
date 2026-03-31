@@ -94,7 +94,6 @@ export type Database = {
           link_name: string
           number_of_persons: number
           side: string | null
-          table_number: number | null
           unique_slug: string
           wedding_id: string
         }
@@ -104,7 +103,6 @@ export type Database = {
           link_name: string
           number_of_persons?: number
           side?: string | null
-          table_number?: number | null
           unique_slug: string
           wedding_id: string
         }
@@ -114,7 +112,6 @@ export type Database = {
           link_name?: string
           number_of_persons?: number
           side?: string | null
-          table_number?: number | null
           unique_slug?: string
           wedding_id?: string
         }
@@ -135,6 +132,7 @@ export type Database = {
           invitation_link_id: string
           is_attending: boolean | null
           name: string
+          table_number: number | null
         }
         Insert: {
           created_at?: string
@@ -142,6 +140,7 @@ export type Database = {
           invitation_link_id: string
           is_attending?: boolean | null
           name: string
+          table_number?: number | null
         }
         Update: {
           created_at?: string
@@ -149,6 +148,7 @@ export type Database = {
           invitation_link_id?: string
           is_attending?: boolean | null
           name?: string
+          table_number?: number | null
         }
         Relationships: [
           {

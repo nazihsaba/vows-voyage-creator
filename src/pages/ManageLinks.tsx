@@ -51,7 +51,6 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
-  table_number: number | null;
   created_at: string;
 }
 
@@ -61,6 +60,7 @@ interface Invitee {
   is_attending: boolean | null;
   invitation_link_id: string;
   created_at: string;
+  table_number: number | null;
 }
 
 interface Wedding {
@@ -89,7 +89,6 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
-    table_number: "" as string,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
@@ -180,7 +179,6 @@ const ManageLinks = () => {
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
-      table_number: link.table_number != null ? String(link.table_number) : "",
     });
     setNewInviteeName("");
     // Load invitees for this link
@@ -242,6 +240,25 @@ const ManageLinks = () => {
     }
   };
 
+  const handleUpdateInviteeTable = async (inviteeId: string, tableNum: string) => {
+    const value = tableNum ? parseInt(tableNum) : null;
+    try {
+      const { error } = await supabase.from("invitees").update({ table_number: value } as any).eq("id", inviteeId);
+      if (error) throw error;
+      setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)));
+      const linkId = editingLink?.id;
+      if (linkId) {
+        setInvitees((prev) => ({
+          ...prev,
+          [linkId]: (prev[linkId] || []).map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating table number:", error);
+      toast({ title: "Error", description: "Failed to update table number", variant: "destructive" });
+    }
+  };
+
   const handleEditSave = async () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
@@ -251,7 +268,6 @@ const ManageLinks = () => {
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
-          table_number: editForm.table_number ? parseInt(editForm.table_number) : null,
         })
         .eq("id", editingLink.id);
 
@@ -532,13 +548,21 @@ const ManageLinks = () => {
                                         )}
                                       </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
-                                        {link.table_number != null ? (
-                                          <Badge variant="secondary" className="text-xs font-medium border-0 bg-white">
-                                            {link.table_number}
-                                          </Badge>
-                                        ) : (
-                                          <span className="text-muted-foreground/50">—</span>
-                                        )}
+                                        {(() => {
+                                          const linkInvs = invitees[link.id] || [];
+                                          const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
+                                          return tables.length > 0 ? (
+                                            <div className="flex gap-1 flex-wrap">
+                                              {tables.map(t => (
+                                                <Badge key={t} variant="secondary" className="text-xs font-medium border-0 bg-white">
+                                                  {t}
+                                                </Badge>
+                                              ))}
+                                            </div>
+                                          ) : (
+                                            <span className="text-muted-foreground/50">—</span>
+                                          );
+                                        })()}
                                       </TableCell>
 
                                       <TableCell>
@@ -731,9 +755,13 @@ const ManageLinks = () => {
 
                                 {/* Row 2: Meta info */}
                                 <div className="flex items-center gap-3 mt-1.5 ml-8">
-                                  {link.table_number != null && (
-                                    <span className="text-[11px] text-muted-foreground">Table {link.table_number}</span>
-                                  )}
+                                  {(() => {
+                                    const linkInvs = invitees[link.id] || [];
+                                    const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
+                                    return tables.length > 0 ? (
+                                      <span className="text-[11px] text-muted-foreground">Table {tables.join(", ")}</span>
+                                    ) : null;
+                                  })()}
                                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                     <Users className="w-3 h-3" />
                                     <span>
@@ -876,20 +904,30 @@ const ManageLinks = () => {
                           groups: { name: string; attending: number; total: number }[];
                         }
                       > = {};
-                      links.forEach((link) => {
-                        if (link.table_number != null) {
-                          if (!tableMap[link.table_number]) {
-                            tableMap[link.table_number] = { total: 0, attending: 0, groups: [] };
+                      // Build table map from invitees (table_number is now per-invitee)
+                      Object.values(invitees).flat().forEach((invitee) => {
+                        if (invitee.table_number != null) {
+                          if (!tableMap[invitee.table_number]) {
+                            tableMap[invitee.table_number] = { total: 0, attending: 0, groups: [] };
                           }
-                          const linkInvitees = invitees[link.id] || [];
-                          const att = linkInvitees.filter((i) => i.is_attending === true).length;
-                          tableMap[link.table_number].total += linkInvitees.length;
-                          tableMap[link.table_number].attending += att;
-                          tableMap[link.table_number].groups.push({
-                            name: link.link_name,
-                            attending: att,
-                            total: linkInvitees.length,
-                          });
+                          tableMap[invitee.table_number].total += 1;
+                          if (invitee.is_attending === true) {
+                            tableMap[invitee.table_number].attending += 1;
+                          }
+                          // Find the link for this invitee to get group name
+                          const link = links.find(l => l.id === invitee.invitation_link_id);
+                          const groupName = link?.link_name || "Unknown";
+                          const existingGroup = tableMap[invitee.table_number].groups.find(g => g.name === groupName);
+                          if (existingGroup) {
+                            existingGroup.total += 1;
+                            if (invitee.is_attending === true) existingGroup.attending += 1;
+                          } else {
+                            tableMap[invitee.table_number].groups.push({
+                              name: groupName,
+                              attending: invitee.is_attending === true ? 1 : 0,
+                              total: 1,
+                            });
+                          }
                         }
                       });
                       const tableNumbers = Object.keys(tableMap)
@@ -1004,7 +1042,7 @@ const ManageLinks = () => {
                 className="h-11 text-base sm:h-9 sm:text-sm"
               />
             </div>
-            <div className="grid grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">
                   Guests
@@ -1020,20 +1058,6 @@ const ManageLinks = () => {
                       number_of_persons: e.target.value === "" ? "" : parseInt(e.target.value) || "",
                     }))
                   }
-                  className="h-11 text-base sm:h-9 sm:text-sm"
-                />
-              </div>
-              <div className="space-y-1.5">
-                <Label htmlFor="edit-table" className="text-xs sm:text-sm font-medium">
-                  Table #
-                </Label>
-                <Input
-                  id="edit-table"
-                  type="number"
-                  min={1}
-                  placeholder="—"
-                  value={editForm.table_number}
-                  onChange={(e) => setEditForm((prev) => ({ ...prev, table_number: e.target.value }))}
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
@@ -1067,8 +1091,16 @@ const ManageLinks = () => {
                       key={invitee.id}
                       className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5 sm:py-2"
                     >
-                      <span className="text-sm font-medium truncate mr-2">{invitee.name}</span>
+                      <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
+                        <Input
+                          type="number"
+                          min={1}
+                          placeholder="T#"
+                          value={invitee.table_number ?? ""}
+                          onChange={(e) => handleUpdateInviteeTable(invitee.id, e.target.value)}
+                          className="h-7 w-14 text-xs text-center px-1"
+                        />
                         {invitee.is_attending === null ? (
                           <Badge
                             variant="secondary"

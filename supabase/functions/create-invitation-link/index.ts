@@ -11,7 +11,6 @@ interface CreateInvitationRequest {
   unique_slug: string;
   number_of_persons: number;
   side?: string | null;
-  table_number?: number | string | null;
 }
 
 Deno.serve(async (req) => {
@@ -41,7 +40,6 @@ Deno.serve(async (req) => {
       unique_slug,
       number_of_persons,
       side = null,
-      table_number = null,
     } = body;
 
     // Validate required fields
@@ -66,25 +64,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate optional side and table_number
+    // Validate optional side
     const normalizedSide = typeof side === 'string' && side.trim().length > 0 ? side.trim() : null;
-
-    let normalizedTableNumber: number | null = null;
-    if (table_number !== null && table_number !== undefined && table_number !== '') {
-      const parsedTableNumber = typeof table_number === 'string' ? Number(table_number) : table_number;
-
-      if (!Number.isInteger(parsedTableNumber) || parsedTableNumber < 1) {
-        return new Response(
-          JSON.stringify({
-            error: 'Validation error',
-            message: 'table_number must be a positive integer when provided'
-          }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      normalizedTableNumber = parsedTableNumber;
-    }
 
     // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -122,7 +103,6 @@ Deno.serve(async (req) => {
         unique_slug,
         number_of_persons,
         side: normalizedSide,
-        table_number: normalizedTableNumber,
       })
       .select()
       .single();
@@ -152,7 +132,6 @@ Deno.serve(async (req) => {
           unique_slug: invitationLink.unique_slug,
           number_of_persons: invitationLink.number_of_persons,
           side: invitationLink.side,
-          table_number: invitationLink.table_number,
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
