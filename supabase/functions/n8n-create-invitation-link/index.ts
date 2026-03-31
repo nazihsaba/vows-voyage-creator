@@ -12,7 +12,6 @@ interface InvitationLinkRequest {
   number_of_persons?: number;
   unique_slug?: string;
   side?: string | null;
-  table_number?: number | null;
 }
 
 serve(async (req) => {
