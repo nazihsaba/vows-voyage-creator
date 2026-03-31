@@ -103,7 +103,6 @@ Deno.serve(async (req) => {
         unique_slug,
         number_of_persons,
         side: normalizedSide,
-        table_number: normalizedTableNumber,
       })
       .select()
       .single();
