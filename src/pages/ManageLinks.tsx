@@ -386,6 +386,16 @@ const ManageLinks = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
+            {links.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => setDeleteAllOpen(true)}
+                className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-sm"
+              >
+                <Trash2 className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Delete All</span>
+              </Button>
+            )}
             <Button
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
