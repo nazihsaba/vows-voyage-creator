@@ -490,9 +490,6 @@ const ManageLinks = () => {
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Side
                               </TableHead>
-                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
-                                Table #
-                              </TableHead>
 
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Guests
@@ -546,23 +543,6 @@ const ManageLinks = () => {
                                         ) : (
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
-                                      </TableCell>
-                                      <TableCell className="text-sm text-muted-foreground">
-                                        {(() => {
-                                          const linkInvs = invitees[link.id] || [];
-                                          const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
-                                          return tables.length > 0 ? (
-                                            <div className="flex gap-1 flex-wrap">
-                                              {tables.map(t => (
-                                                <Badge key={t} variant="secondary" className="text-xs font-medium border-0 bg-white">
-                                                  {t}
-                                                </Badge>
-                                              ))}
-                                            </div>
-                                          ) : (
-                                            <span className="text-muted-foreground/50">—</span>
-                                          );
-                                        })()}
                                       </TableCell>
 
                                       <TableCell>
@@ -755,13 +735,6 @@ const ManageLinks = () => {
 
                                 {/* Row 2: Meta info */}
                                 <div className="flex items-center gap-3 mt-1.5 ml-8">
-                                  {(() => {
-                                    const linkInvs = invitees[link.id] || [];
-                                    const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
-                                    return tables.length > 0 ? (
-                                      <span className="text-[11px] text-muted-foreground">Table {tables.join(", ")}</span>
-                                    ) : null;
-                                  })()}
                                   <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
                                     <Users className="w-3 h-3" />
                                     <span>
