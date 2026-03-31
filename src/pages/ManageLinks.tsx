@@ -51,7 +51,6 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
-  table_number: number | null;
   created_at: string;
 }
 
@@ -61,6 +60,7 @@ interface Invitee {
   is_attending: boolean | null;
   invitation_link_id: string;
   created_at: string;
+  table_number: number | null;
 }
 
 interface Wedding {
