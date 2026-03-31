@@ -529,13 +529,21 @@ const ManageLinks = () => {
                                         )}
                                       </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
-                                        {link.table_number != null ? (
-                                          <Badge variant="secondary" className="text-xs font-medium border-0 bg-white">
-                                            {link.table_number}
-                                          </Badge>
-                                        ) : (
-                                          <span className="text-muted-foreground/50">—</span>
-                                        )}
+                                        {(() => {
+                                          const linkInvs = invitees[link.id] || [];
+                                          const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
+                                          return tables.length > 0 ? (
+                                            <div className="flex gap-1 flex-wrap">
+                                              {tables.map(t => (
+                                                <Badge key={t} variant="secondary" className="text-xs font-medium border-0 bg-white">
+                                                  {t}
+                                                </Badge>
+                                              ))}
+                                            </div>
+                                          ) : (
+                                            <span className="text-muted-foreground/50">—</span>
+                                          );
+                                        })()}
                                       </TableCell>
 
                                       <TableCell>
