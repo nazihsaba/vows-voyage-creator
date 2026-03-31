@@ -940,8 +940,8 @@ const ManageLinks = () => {
                                   onClick={() =>
                                     setExpandedTables((prev) =>
                                       prev.includes(tableNum)
-                                        ? prev.filter((t) => t !== tableNum)
-                                        : [...prev, tableNum]
+                                        ? []
+                                        : [tableNum]
                                     )
                                   }
                                 >
