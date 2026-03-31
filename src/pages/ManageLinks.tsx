@@ -969,7 +969,7 @@ const ManageLinks = () => {
                           {tableNumbers.map((tableNum) => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
-                            const isTableExpanded = expandedTables.includes(tableNum);
+                            const isTableExpanded = !collapsedTables.includes(tableNum);
                             return (
                               <div
                                 key={tableNum}
@@ -978,10 +978,10 @@ const ManageLinks = () => {
                                 <div
                                   className="flex items-center justify-between cursor-pointer"
                                   onClick={() =>
-                                    setExpandedTables((prev) =>
+                                    setCollapsedTables((prev) =>
                                       prev.includes(tableNum)
-                                        ? []
-                                        : [tableNum]
+                                        ? prev.filter((t) => t !== tableNum)
+                                        : [...prev, tableNum]
                                     )
                                   }
                                 >
