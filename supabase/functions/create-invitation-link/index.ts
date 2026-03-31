@@ -64,25 +64,8 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Validate optional side and table_number
+    // Validate optional side
     const normalizedSide = typeof side === 'string' && side.trim().length > 0 ? side.trim() : null;
-
-    let normalizedTableNumber: number | null = null;
-    if (table_number !== null && table_number !== undefined && table_number !== '') {
-      const parsedTableNumber = typeof table_number === 'string' ? Number(table_number) : table_number;
-
-      if (!Number.isInteger(parsedTableNumber) || parsedTableNumber < 1) {
-        return new Response(
-          JSON.stringify({
-            error: 'Validation error',
-            message: 'table_number must be a positive integer when provided'
-          }),
-          { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
-      }
-
-      normalizedTableNumber = parsedTableNumber;
-    }
 
     // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
