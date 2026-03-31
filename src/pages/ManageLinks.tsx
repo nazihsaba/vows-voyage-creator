@@ -85,7 +85,7 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
-  const [expandedTables, setExpandedTables] = useState<number[]>([]);
+  const [collapsedTables, setCollapsedTables] = useState<number[]>([]);
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
@@ -397,16 +397,6 @@ const ManageLinks = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
-            {links.length > 0 && (
-              <Button
-                variant="outline"
-                onClick={() => setDeleteAllOpen(true)}
-                className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-sm"
-              >
-                <Trash2 className="w-4 h-4 sm:mr-1" />
-                <span className="hidden sm:inline">Delete All</span>
-              </Button>
-            )}
             <Button
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
@@ -488,24 +478,37 @@ const ManageLinks = () => {
             </CardHeader>
             <CardContent>
               {/* View Toggle Tabs */}
-              <div className="flex gap-1 mb-4 p-1 rounded-lg bg-muted/40 w-fit">
-                <Button
-                  variant={activeView === "guests" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setActiveView("guests")}
-                  className="rounded-md text-xs h-8 px-3"
-                >
-                  <Users className="w-3.5 h-3.5 mr-1.5" />
-                  Guest List
-                </Button>
-                <Button
-                  variant={activeView === "tables" ? "default" : "ghost"}
-                  size="sm"
-                  onClick={() => setActiveView("tables")}
-                  className="rounded-md text-xs h-8 px-3"
-                >
-                  Table Occupancy
-                </Button>
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex gap-1 p-1 rounded-lg bg-muted/40 w-fit">
+                  <Button
+                    variant={activeView === "guests" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("guests")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    <Users className="w-3.5 h-3.5 mr-1.5" />
+                    Guest List
+                  </Button>
+                  <Button
+                    variant={activeView === "tables" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("tables")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    Table Occupancy
+                  </Button>
+                </div>
+                {links.length > 0 && (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setDeleteAllOpen(true)}
+                    className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
+                    <span className="hidden sm:inline">Delete All</span>
+                  </Button>
+                )}
               </div>
 
               <div className="relative overflow-hidden">
@@ -966,7 +969,7 @@ const ManageLinks = () => {
                           {tableNumbers.map((tableNum) => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
-                            const isTableExpanded = expandedTables.includes(tableNum);
+                            const isTableExpanded = !collapsedTables.includes(tableNum);
                             return (
                               <div
                                 key={tableNum}
@@ -975,10 +978,10 @@ const ManageLinks = () => {
                                 <div
                                   className="flex items-center justify-between cursor-pointer"
                                   onClick={() =>
-                                    setExpandedTables((prev) =>
+                                    setCollapsedTables((prev) =>
                                       prev.includes(tableNum)
-                                        ? []
-                                        : [tableNum]
+                                        ? prev.filter((t) => t !== tableNum)
+                                        : [...prev, tableNum]
                                     )
                                   }
                                 >
