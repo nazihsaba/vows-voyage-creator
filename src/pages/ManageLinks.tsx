@@ -80,6 +80,7 @@ const ManageLinks = () => {
   const [links, setLinks] = useState<InvitationLink[]>([]);
   const [invitees, setInvitees] = useState<Record<string, Invitee[]>>({});
   const [deleteId, setDeleteId] = useState<string | null>(null);
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false);
   const [generateLinkOpen, setGenerateLinkOpen] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
@@ -306,6 +307,21 @@ const ManageLinks = () => {
     setDeleteId(null);
   };
 
+  const deleteAllLinks = async () => {
+    try {
+      for (const link of links) {
+        const { error } = await supabase.from("invitation_links").delete().eq("id", link.id);
+        if (error) throw error;
+      }
+      toast({ title: "Success", description: "All links deleted successfully" });
+      setRefresh((prev) => prev + 1);
+    } catch (error) {
+      console.error("Error deleting all links:", error);
+      toast({ title: "Error", description: "Failed to delete all links", variant: "destructive" });
+    }
+    setDeleteAllOpen(false);
+  };
+
   const getRSVPStats = (linkId: string) => {
     const linkInvitees = invitees[linkId] || [];
     const attending = linkInvitees.filter((i) => i.is_attending === true).length;
@@ -370,6 +386,16 @@ const ManageLinks = () => {
             </div>
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
+            {links.length > 0 && (
+              <Button
+                variant="outline"
+                onClick={() => setDeleteAllOpen(true)}
+                className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-sm"
+              >
+                <Trash2 className="w-4 h-4 sm:mr-1" />
+                <span className="hidden sm:inline">Delete All</span>
+              </Button>
+            )}
             <Button
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
@@ -1022,6 +1048,26 @@ const ManageLinks = () => {
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
               Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog open={deleteAllOpen} onOpenChange={setDeleteAllOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete all links?</AlertDialogTitle>
+            <AlertDialogDescription>
+              This action cannot be undone. This will permanently delete all {links.length} invitation links and all associated invitee responses.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={deleteAllLinks}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              Delete All
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
