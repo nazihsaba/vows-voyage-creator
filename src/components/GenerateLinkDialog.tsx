@@ -167,6 +167,14 @@ export const GenerateLinkDialog = ({
     });
   };
 
+  const getLinksCount = async () => {
+    const { count } = await supabase
+      .from("invitation_links")
+      .select("*", { count: "exact", head: true })
+      .eq("wedding_id", weddingId);
+    return count ?? 0;
+  };
+
   const handleAutomaticGeneration = async () => {
     if (!selectedFile) {
       toast({
