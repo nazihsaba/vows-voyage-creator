@@ -53,7 +53,7 @@ interface Wedding {
   payment_external_id?: string;
 }
 
-const PUBLISH_FEE_USD = 0; // Fee for publishing an event
+const PUBLISH_FEE_USD = 100; // Fee for publishing an event
 
 const getEventType = (templateType: string): string => {
   if (templateType?.includes("bachelor")) return "Bachelor Party";
@@ -183,26 +183,46 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
-  const handlePublishClick = async (id: string) => {
-    // Payment bypassed - publish directly
-    try {
-      const { error } = await supabase
-        .from("weddings")
-        .update({ status: "published", payment_status: "paid" })
-        .eq("id", id);
-
-      if (error) throw error;
-
-      toast({ title: "Event published successfully!" });
-      checkUserAndFetchWeddings();
-    } catch (error) {
-      console.error("Error publishing event:", error);
-      toast({ title: "Failed to publish event", description: "Please try again.", variant: "destructive" });
-    }
+  const handlePublishClick = (id: string) => {
+    setPublishingWeddingId(id);
+    setPaymentDialogOpen(true);
+    setPaymentUrl(null);
+    setPaymentError(null);
   };
 
-  // Payment flow commented out
-  // const handlePaymentProceed = async () => { ... };
+  const handlePaymentProceed = async () => {
+    if (!publishingWeddingId) return;
+    setProcessingPayment(true);
+    setPaymentError(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
+        body: {
+          weddingId: publishingWeddingId,
+          amount: PUBLISH_FEE_USD,
+          currency: "USD",
+          invoice: `Event publishing fee - $${PUBLISH_FEE_USD}`,
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (data?.collectUrl) {
+        setPaymentUrl(data.collectUrl);
+      } else {
+        throw new Error("No payment URL received");
+      }
+    } catch (error: any) {
+      console.error("Payment error:", error);
+      setPaymentError(error.message || "Failed to create payment link");
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
 
   const handleClosePaymentDialog = () => {
     setPaymentDialogOpen(false);
@@ -483,7 +503,88 @@ const MyEvents = () => {
         />
       )}
 
-      {/* Payment dialog commented out - publishing is now direct */}
+      {/* Payment Dialog */}
+      <Dialog open={paymentDialogOpen} onOpenChange={handleClosePaymentDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              Publish Event
+            </DialogTitle>
+            <DialogDescription>
+              {getPublishingWedding() && (
+                <span>
+                  Publish <strong>{getPublishingWedding()!.bride_name} & {getPublishingWedding()!.groom_name}</strong>'s event
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          {!paymentUrl && !paymentError && (
+            <div className="space-y-4">
+              <div className="bg-muted/50 rounded-xl p-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Publishing fee</span>
+                  <span className="font-semibold">${PUBLISH_FEE_USD} USD</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Payment is processed securely via Whish Pay. Once confirmed, your event will be live.
+              </p>
+            </div>
+          )}
+
+          {paymentUrl && (
+            <div className="space-y-4 text-center">
+              <div className="bg-green-50 text-green-700 rounded-xl p-4 text-sm">
+                Payment link created! Click below to complete your payment.
+              </div>
+              <Button asChild className="w-full rounded-full">
+                <a href={paymentUrl} target="_blank" rel="noopener noreferrer">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Pay Now
+                </a>
+              </Button>
+            </div>
+          )}
+
+          {paymentError && (
+            <div className="space-y-4">
+              <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-sm flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>{paymentError}</span>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            {!paymentUrl && !paymentError && (
+              <Button
+                onClick={handlePaymentProceed}
+                disabled={processingPayment}
+                className="w-full rounded-full"
+              >
+                {processingPayment ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Proceed to Payment
+                  </>
+                )}
+              </Button>
+            )}
+            {paymentError && (
+              <Button onClick={handlePaymentProceed} className="w-full rounded-full">
+                Try Again
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Preview Dialog */}
       <Dialog open={!!previewSlug} onOpenChange={(open) => !open && setPreviewSlug(null)}>
