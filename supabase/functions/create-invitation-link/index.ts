@@ -40,7 +40,6 @@ Deno.serve(async (req) => {
       unique_slug,
       number_of_persons,
       side = null,
-      table_number = null,
     } = body;
 
     // Validate required fields
