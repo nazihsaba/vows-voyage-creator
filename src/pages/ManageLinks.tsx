@@ -249,7 +249,6 @@ const ManageLinks = () => {
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
-          table_number: editForm.table_number ? parseInt(editForm.table_number) : null,
         })
         .eq("id", editingLink.id);
 
