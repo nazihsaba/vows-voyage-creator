@@ -183,26 +183,46 @@ const MyEvents = () => {
     setDeleteId(null);
   };
 
-  const handlePublishClick = async (id: string) => {
-    // Payment bypassed - publish directly
-    try {
-      const { error } = await supabase
-        .from("weddings")
-        .update({ status: "published", payment_status: "paid" })
-        .eq("id", id);
-
-      if (error) throw error;
-
-      toast({ title: "Event published successfully!" });
-      checkUserAndFetchWeddings();
-    } catch (error) {
-      console.error("Error publishing event:", error);
-      toast({ title: "Failed to publish event", description: "Please try again.", variant: "destructive" });
-    }
+  const handlePublishClick = (id: string) => {
+    setPublishingWeddingId(id);
+    setPaymentDialogOpen(true);
+    setPaymentUrl(null);
+    setPaymentError(null);
   };
 
-  // Payment flow commented out
-  // const handlePaymentProceed = async () => { ... };
+  const handlePaymentProceed = async () => {
+    if (!publishingWeddingId) return;
+    setProcessingPayment(true);
+    setPaymentError(null);
+
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
+      const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
+        body: {
+          weddingId: publishingWeddingId,
+          amount: PUBLISH_FEE_USD,
+          currency: "USD",
+          invoice: `Event publishing fee - $${PUBLISH_FEE_USD}`,
+        },
+      });
+
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
+      if (data?.collectUrl) {
+        setPaymentUrl(data.collectUrl);
+      } else {
+        throw new Error("No payment URL received");
+      }
+    } catch (error: any) {
+      console.error("Payment error:", error);
+      setPaymentError(error.message || "Failed to create payment link");
+    } finally {
+      setProcessingPayment(false);
+    }
+  };
 
   const handleClosePaymentDialog = () => {
     setPaymentDialogOpen(false);
