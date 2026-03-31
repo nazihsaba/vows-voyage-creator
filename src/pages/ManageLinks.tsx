@@ -187,9 +187,12 @@ const ManageLinks = () => {
       side: link.side || "NONE",
     });
     setNewInviteeName("");
-    // Load invitees for this link
     const linkInvitees = invitees[link.id] || [];
     setEditInvitees([...linkInvitees]);
+    setOriginalInvitees([...linkInvitees]);
+    setPendingNewInvitees([]);
+    setPendingDeleteIds([]);
+    setPendingUpdates({});
   };
 
   const handleAddInvitee = async () => {
