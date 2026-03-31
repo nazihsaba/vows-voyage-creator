@@ -16,6 +16,7 @@ interface Invitee {
   id: string;
   name: string;
   is_attending: boolean | null;
+  table_number: number | null;
 }
 
 interface InviteeListDialogProps {
