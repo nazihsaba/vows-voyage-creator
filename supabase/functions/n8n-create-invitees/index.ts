@@ -10,6 +10,7 @@ interface InviteeRequest {
   invitation_link_id: string;
   name: string;
   is_attending?: boolean;
+  table_number?: number | null;
 }
 
 serve(async (req) => {
