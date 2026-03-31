@@ -977,7 +977,7 @@ const ManageLinks = () => {
                           {tableNumbers.map((tableNum) => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
-                            const isTableExpanded = expandedTables.includes(tableNum);
+                            const isTableExpanded = !collapsedTables.includes(tableNum);
                             return (
                               <div
                                 key={tableNum}
