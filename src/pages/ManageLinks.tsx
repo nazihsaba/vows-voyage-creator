@@ -544,23 +544,6 @@ const ManageLinks = () => {
                                           <span className="text-muted-foreground/50">—</span>
                                         )}
                                       </TableCell>
-                                      <TableCell className="text-sm text-muted-foreground">
-                                        {(() => {
-                                          const linkInvs = invitees[link.id] || [];
-                                          const tables = [...new Set(linkInvs.map(i => i.table_number).filter(t => t != null))];
-                                          return tables.length > 0 ? (
-                                            <div className="flex gap-1 flex-wrap">
-                                              {tables.map(t => (
-                                                <Badge key={t} variant="secondary" className="text-xs font-medium border-0 bg-white">
-                                                  {t}
-                                                </Badge>
-                                              ))}
-                                            </div>
-                                          ) : (
-                                            <span className="text-muted-foreground/50">—</span>
-                                          );
-                                        })()}
-                                      </TableCell>
 
                                       <TableCell>
                                         <div className="flex items-center gap-1.5">
