@@ -1113,10 +1113,10 @@ const ManageLinks = () => {
                 className="h-11 text-base sm:h-9 sm:text-sm"
               />
             </div>
-            <div className="grid grid-cols-2 gap-2 sm:gap-3">
+            <div className="grid grid-cols-[1.2fr_1fr] gap-2 sm:gap-3">
               <div className="space-y-1.5">
                 <Label htmlFor="edit-guests" className="text-xs sm:text-sm font-medium">
-                  Guests
+                  Number of Guests
                 </Label>
                 <Input
                   id="edit-guests"
