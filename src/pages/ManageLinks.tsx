@@ -89,7 +89,6 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
-    table_number: "" as string,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [newInviteeName, setNewInviteeName] = useState("");
