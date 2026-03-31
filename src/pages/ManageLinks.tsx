@@ -240,6 +240,25 @@ const ManageLinks = () => {
     }
   };
 
+  const handleUpdateInviteeTable = async (inviteeId: string, tableNum: string) => {
+    const value = tableNum ? parseInt(tableNum) : null;
+    try {
+      const { error } = await supabase.from("invitees").update({ table_number: value } as any).eq("id", inviteeId);
+      if (error) throw error;
+      setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)));
+      const linkId = editingLink?.id;
+      if (linkId) {
+        setInvitees((prev) => ({
+          ...prev,
+          [linkId]: (prev[linkId] || []).map((i) => (i.id === inviteeId ? { ...i, table_number: value } : i)),
+        }));
+      }
+    } catch (error) {
+      console.error("Error updating table number:", error);
+      toast({ title: "Error", description: "Failed to update table number", variant: "destructive" });
+    }
+  };
+
   const handleEditSave = async () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
