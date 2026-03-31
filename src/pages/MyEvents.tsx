@@ -53,7 +53,7 @@ interface Wedding {
   payment_external_id?: string;
 }
 
-const PUBLISH_FEE_USD = 0; // Fee for publishing an event
+const PUBLISH_FEE_USD = 100; // Fee for publishing an event
 
 const getEventType = (templateType: string): string => {
   if (templateType?.includes("bachelor")) return "Bachelor Party";
