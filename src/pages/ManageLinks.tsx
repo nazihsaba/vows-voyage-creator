@@ -84,6 +84,7 @@ const ManageLinks = () => {
   const [refresh, setRefresh] = useState(0);
   const [expandedLinks, setExpandedLinks] = useState<Record<string, boolean>>({});
   const [searchQuery, setSearchQuery] = useState("");
+  const [expandedTables, setExpandedTables] = useState<number[]>([]);
   const [editingLink, setEditingLink] = useState<InvitationLink | null>(null);
   const [editForm, setEditForm] = useState({
     link_name: "",
@@ -896,33 +897,22 @@ const ManageLinks = () => {
                         {
                           total: number;
                           attending: number;
-                          groups: { name: string; attending: number; total: number }[];
+                          inviteeList: { name: string; is_attending: boolean | null }[];
                         }
                       > = {};
-                      // Build table map from invitees (table_number is now per-invitee)
                       Object.values(invitees).flat().forEach((invitee) => {
                         if (invitee.table_number != null) {
                           if (!tableMap[invitee.table_number]) {
-                            tableMap[invitee.table_number] = { total: 0, attending: 0, groups: [] };
+                            tableMap[invitee.table_number] = { total: 0, attending: 0, inviteeList: [] };
                           }
                           tableMap[invitee.table_number].total += 1;
                           if (invitee.is_attending === true) {
                             tableMap[invitee.table_number].attending += 1;
                           }
-                          // Find the link for this invitee to get group name
-                          const link = links.find(l => l.id === invitee.invitation_link_id);
-                          const groupName = link?.link_name || "Unknown";
-                          const existingGroup = tableMap[invitee.table_number].groups.find(g => g.name === groupName);
-                          if (existingGroup) {
-                            existingGroup.total += 1;
-                            if (invitee.is_attending === true) existingGroup.attending += 1;
-                          } else {
-                            tableMap[invitee.table_number].groups.push({
-                              name: groupName,
-                              attending: invitee.is_attending === true ? 1 : 0,
-                              total: 1,
-                            });
-                          }
+                          tableMap[invitee.table_number].inviteeList.push({
+                            name: invitee.name,
+                            is_attending: invitee.is_attending,
+                          });
                         }
                       });
                       const tableNumbers = Object.keys(tableMap)
@@ -937,15 +927,32 @@ const ManageLinks = () => {
                       return (
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                           {tableNumbers.map((tableNum) => {
-                            const { total, attending, groups } = tableMap[tableNum];
+                            const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
+                            const isTableExpanded = expandedTables.includes(tableNum);
                             return (
                               <div
                                 key={tableNum}
                                 className={`rounded-xl border p-4 ${isFull ? "bg-emerald-50 border-emerald-200" : "bg-background border-border/50"}`}
                               >
-                                <div className="flex items-center justify-between mb-2">
-                                  <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
+                                <div
+                                  className="flex items-center justify-between cursor-pointer"
+                                  onClick={() =>
+                                    setExpandedTables((prev) =>
+                                      prev.includes(tableNum)
+                                        ? prev.filter((t) => t !== tableNum)
+                                        : [...prev, tableNum]
+                                    )
+                                  }
+                                >
+                                  <div className="flex items-center gap-1.5">
+                                    {isTableExpanded ? (
+                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                                    ) : (
+                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                                    )}
+                                    <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
+                                  </div>
                                   <div className="flex items-center gap-1.5">
                                     <span className="text-xs text-muted-foreground">
                                       {attending}/{total} attending
@@ -960,19 +967,31 @@ const ManageLinks = () => {
                                     )}
                                   </div>
                                 </div>
-                                <div className="space-y-1">
-                                  {groups.map((g, i) => (
-                                    <div
-                                      key={i}
-                                      className="flex items-center justify-between text-xs text-muted-foreground"
-                                    >
-                                      <span className="truncate mr-2">{g.name}</span>
-                                      <span>
-                                        {g.attending}/{g.total}
-                                      </span>
-                                    </div>
-                                  ))}
-                                </div>
+                                {isTableExpanded && (
+                                  <div className="mt-2 space-y-1 border-t pt-2">
+                                    {inviteeList.map((inv, i) => (
+                                      <div
+                                        key={i}
+                                        className="flex items-center justify-between text-xs"
+                                      >
+                                        <span className="truncate mr-2 text-foreground">{inv.name}</span>
+                                        {inv.is_attending === true ? (
+                                          <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0">
+                                            Attending
+                                          </Badge>
+                                        ) : inv.is_attending === false ? (
+                                          <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0">
+                                            Not Attending
+                                          </Badge>
+                                        ) : (
+                                          <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0">
+                                            Pending
+                                          </Badge>
+                                        )}
+                                      </div>
+                                    ))}
+                                  </div>
+                                )}
                               </div>
                             );
                           })}
