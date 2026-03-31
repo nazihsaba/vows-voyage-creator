@@ -236,6 +236,7 @@ export const GenerateLinkDialog = ({
         attempts++;
         const currentCount = await getLinksCount();
         if (currentCount > initialCount || attempts >= maxAttempts) {
+          setLoading(false);
           onSuccess();
           onOpenChange(false);
         } else {
@@ -251,7 +252,6 @@ export const GenerateLinkDialog = ({
         description: "Failed to generate invitation links. Please try again.",
         variant: "destructive",
       });
-    } finally {
       setLoading(false);
     }
   };
