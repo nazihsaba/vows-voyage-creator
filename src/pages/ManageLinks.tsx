@@ -885,20 +885,30 @@ const ManageLinks = () => {
                           groups: { name: string; attending: number; total: number }[];
                         }
                       > = {};
-                      links.forEach((link) => {
-                        if (link.table_number != null) {
-                          if (!tableMap[link.table_number]) {
-                            tableMap[link.table_number] = { total: 0, attending: 0, groups: [] };
+                      // Build table map from invitees (table_number is now per-invitee)
+                      Object.values(invitees).flat().forEach((invitee) => {
+                        if (invitee.table_number != null) {
+                          if (!tableMap[invitee.table_number]) {
+                            tableMap[invitee.table_number] = { total: 0, attending: 0, groups: [] };
                           }
-                          const linkInvitees = invitees[link.id] || [];
-                          const att = linkInvitees.filter((i) => i.is_attending === true).length;
-                          tableMap[link.table_number].total += linkInvitees.length;
-                          tableMap[link.table_number].attending += att;
-                          tableMap[link.table_number].groups.push({
-                            name: link.link_name,
-                            attending: att,
-                            total: linkInvitees.length,
-                          });
+                          tableMap[invitee.table_number].total += 1;
+                          if (invitee.is_attending === true) {
+                            tableMap[invitee.table_number].attending += 1;
+                          }
+                          // Find the link for this invitee to get group name
+                          const link = links.find(l => l.id === invitee.invitation_link_id);
+                          const groupName = link?.link_name || "Unknown";
+                          const existingGroup = tableMap[invitee.table_number].groups.find(g => g.name === groupName);
+                          if (existingGroup) {
+                            existingGroup.total += 1;
+                            if (invitee.is_attending === true) existingGroup.attending += 1;
+                          } else {
+                            tableMap[invitee.table_number].groups.push({
+                              name: groupName,
+                              attending: invitee.is_attending === true ? 1 : 0,
+                              total: 1,
+                            });
+                          }
                         }
                       });
                       const tableNumbers = Object.keys(tableMap)
