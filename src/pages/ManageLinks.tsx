@@ -93,6 +93,8 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
+    country_code: "+961",
+    phone_number: "",
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
