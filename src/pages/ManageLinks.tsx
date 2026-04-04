@@ -646,6 +646,17 @@ const ManageLinks = () => {
                                             >
                                               <Copy className="w-3.5 h-3.5" />
                                             </Button>
+                                            {link.phone_number && (
+                                              <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                onClick={() => openWhatsApp(link)}
+                                                title="Send via WhatsApp"
+                                                className="h-8 w-8 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
+                                              >
+                                                <MessageCircle className="w-3.5 h-3.5" />
+                                              </Button>
+                                            )}
                                             <Button
                                               size="icon"
                                               variant="ghost"
