@@ -187,7 +187,7 @@ const ManageLinks = () => {
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = encodeURIComponent(`You're invited! Here's your invitation link: ${inviteUrl}`);
+    const message = encodeURIComponent(`With love and joy, we invite you to celebrate our wedding💍✨\n\nWe would be honored to have you with us on this beautiful day.\n\nCheck your invitation here:\n${inviteUrl}`);
     const phone = link.phone_number.replace(/[^0-9]/g, "");
     window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };
