@@ -294,9 +294,13 @@ const ManageLinks = () => {
       // Update modified invitees
       for (const [id, updates] of Object.entries(pendingUpdates)) {
         if (!pendingDeleteIds.includes(id)) {
+          const sanitizedUpdates = { ...(updates as any) };
+          if (sanitizedUpdates.name) {
+            sanitizedUpdates.name = sanitizedUpdates.name.replace(/\b\w/g, (c: string) => c.toUpperCase());
+          }
           const { error } = await supabase
             .from("invitees")
-            .update(updates as any)
+            .update(sanitizedUpdates)
             .eq("id", id);
           if (error) throw error;
         }
