@@ -166,27 +166,6 @@ const Dashboard = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         <div className="space-y-10 sm:space-y-16">
-          {/* My Events CTA */}
-          <Card className="border-0 bg-gradient-to-r from-primary/10 via-primary/5 to-transparent shadow-sm rounded-2xl">
-            <CardContent className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6">
-              <div className="flex items-center gap-3">
-                <div className="p-2.5 rounded-xl bg-primary/10">
-                  <Users className="w-5 h-5 text-primary" />
-                </div>
-                <div>
-                  <h3 className="text-base font-serif font-semibold text-foreground">My Events</h3>
-                  <p className="text-xs text-muted-foreground">View and manage your created events</p>
-                </div>
-              </div>
-              <Button
-                onClick={() => navigate("/dashboard/my-events")}
-                className="rounded-full px-6 shadow-sm hover:shadow-md transition-all"
-              >
-                Go to My Events
-              </Button>
-            </CardContent>
-          </Card>
-
           {/* Weddings Section */}
           <div>
             <div className="flex items-center gap-3 mb-6 sm:mb-8">
