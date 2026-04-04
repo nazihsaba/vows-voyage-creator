@@ -410,7 +410,7 @@ const ManageLinks = () => {
               </p>
             </div>
           </div>
-            <div className="flex items-center gap-2 sm:gap-3">
+          <div className="flex items-center gap-2 sm:gap-3">
             <Button
               onClick={() => setGenerateLinkOpen(true)}
               className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
@@ -637,15 +637,6 @@ const ManageLinks = () => {
                                       <TableCell className="text-right">
                                         <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
                                           <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
-                                            <Button
-                                              size="icon"
-                                              variant="ghost"
-                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                              title="Copy Link"
-                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                            >
-                                              <Copy className="w-3.5 h-3.5" />
-                                            </Button>
                                             {link.phone_number && (
                                               <Button
                                                 size="icon"
@@ -657,6 +648,15 @@ const ManageLinks = () => {
                                                 <MessageCircle className="w-3.5 h-3.5" />
                                               </Button>
                                             )}
+                                            <Button
+                                              size="icon"
+                                              variant="ghost"
+                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                              title="Copy Link"
+                                              className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                            >
+                                              <Copy className="w-3.5 h-3.5" />
+                                            </Button>
                                             <Button
                                               size="icon"
                                               variant="ghost"
@@ -1022,7 +1022,9 @@ const ManageLinks = () => {
                                   className="flex items-center justify-between cursor-pointer"
                                   onClick={() =>
                                     setCollapsedTables((prev) =>
-                                      prev.includes(tableNum) ? prev.filter((t) => t !== tableNum) : [...prev, tableNum]
+                                      prev.includes(tableNum)
+                                        ? prev.filter((t) => t !== tableNum)
+                                        : [...prev, tableNum],
                                     )
                                   }
                                 >
