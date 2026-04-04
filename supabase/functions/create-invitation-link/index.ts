@@ -11,6 +11,7 @@ interface CreateInvitationRequest {
   unique_slug: string;
   number_of_persons: number;
   side?: string | null;
+  phone_number?: string | number | null;
 }
 
 Deno.serve(async (req) => {
@@ -40,6 +41,7 @@ Deno.serve(async (req) => {
       unique_slug,
       number_of_persons,
       side = null,
+      phone_number = null,
     } = body;
 
     // Validate required fields
@@ -66,6 +68,7 @@ Deno.serve(async (req) => {
 
     // Validate optional side
     const normalizedSide = typeof side === 'string' && side.trim().length > 0 ? side.trim() : null;
+    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 ? String(phone_number).trim() : null;
 
     // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -103,6 +106,7 @@ Deno.serve(async (req) => {
         unique_slug,
         number_of_persons,
         side: normalizedSide,
+        phone_number: normalizedPhone,
       })
       .select()
       .single();
