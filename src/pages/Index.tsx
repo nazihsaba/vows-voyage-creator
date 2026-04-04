@@ -66,13 +66,11 @@ const Index = () => {
           <div className="flex items-center gap-2">
             <img src={aureaLogo} alt="Auréa" loading="lazy" className="h-14" />
           </div>
-          <div className="flex items-center gap-3">
-            {isAuthenticated ? (
-              <Button onClick={() => navigate("/my-events")}>My Events</Button>
-            ) : (
+          {!isAuthenticated && (
+            <div className="flex items-center gap-3">
               <Button onClick={() => navigate("/auth")}>Sign In</Button>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </header>
 
