@@ -97,7 +97,7 @@ export const GenerateLinkDialog = ({
         .from("invitation_links")
         .insert({
           wedding_id: weddingId,
-          link_name: linkName,
+          link_name: linkName.replace(/\b\w/g, (c) => c.toUpperCase()),
           unique_slug: uniqueSlug,
           number_of_persons: validInvitees.length,
           side: side.trim() || null,
