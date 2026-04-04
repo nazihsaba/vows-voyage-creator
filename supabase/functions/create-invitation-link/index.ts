@@ -136,6 +136,7 @@ Deno.serve(async (req) => {
           unique_slug: invitationLink.unique_slug,
           number_of_persons: invitationLink.number_of_persons,
           side: invitationLink.side,
+          phone_number: invitationLink.phone_number,
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
