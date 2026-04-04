@@ -109,6 +109,7 @@ serve(async (req) => {
       unique_slug: slug,
       number_of_persons,
       side,
+      phone_number: normalizedPhone,
     };
 
     const { data: insertedLink, error: insertError } = await supabase
