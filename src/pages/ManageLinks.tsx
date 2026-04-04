@@ -1218,6 +1218,24 @@ const ManageLinks = () => {
                 </Select>
               </div>
             </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Phone Number</Label>
+              <div className="flex gap-1.5">
+                <Input
+                  value={editForm.country_code}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, country_code: e.target.value }))}
+                  className="w-20 shrink-0 h-11 text-base sm:h-9 sm:text-sm"
+                  placeholder="+961"
+                />
+                <Input
+                  type="tel"
+                  value={editForm.phone_number}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))}
+                  placeholder="Phone number"
+                  className="h-11 text-base sm:h-9 sm:text-sm"
+                />
+              </div>
+            </div>
 
             {/* Invitees Section */}
             <div className="space-y-2 pt-3 border-t">
