@@ -196,10 +196,22 @@ const ManageLinks = () => {
 
   const openEditDialog = (link: InvitationLink) => {
     setEditingLink(link);
+    const rawPhone = link.phone_number || "";
+    let countryCode = "+961";
+    let phoneNum = rawPhone;
+    if (rawPhone.startsWith("+")) {
+      const match = rawPhone.match(/^(\+\d{1,4})(.*)/);
+      if (match) {
+        countryCode = match[1];
+        phoneNum = match[2];
+      }
+    }
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      country_code: countryCode,
+      phone_number: phoneNum,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
