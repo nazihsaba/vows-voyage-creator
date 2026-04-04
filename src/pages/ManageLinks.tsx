@@ -284,7 +284,7 @@ const ManageLinks = () => {
       for (const inv of pendingNewInvitees) {
         const { error } = await supabase.from("invitees").insert({
           invitation_link_id: inv.invitation_link_id,
-          name: inv.name,
+          name: inv.name.replace(/\b\w/g, (c) => c.toUpperCase()),
           is_attending: inv.is_attending,
           table_number: inv.table_number,
         } as any);
