@@ -282,6 +282,7 @@ const ManageLinks = () => {
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
+          phone_number: editForm.phone_number.trim() ? `${editForm.country_code}${editForm.phone_number.trim()}` : null,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
