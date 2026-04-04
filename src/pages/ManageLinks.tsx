@@ -267,7 +267,7 @@ const ManageLinks = () => {
       const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
-          link_name: editForm.link_name,
+          link_name: editForm.link_name.replace(/\b\w/g, (c) => c.toUpperCase()),
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
         })
