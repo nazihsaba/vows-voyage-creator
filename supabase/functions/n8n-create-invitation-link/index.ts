@@ -40,7 +40,7 @@ serve(async (req) => {
     // Parse request body
     const body: InvitationLinkRequest = await req.json();
     const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null, phone_number = null } = body;
-    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 ? String(phone_number).trim() : null;
+    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 && String(phone_number).trim() !== '0' ? String(phone_number).trim() : null;
 
     // Validate required fields
     if (!wedding_id || !link_name) {
