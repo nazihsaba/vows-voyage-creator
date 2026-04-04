@@ -166,19 +166,30 @@ const ManageLinks = () => {
     }
   };
 
-  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
+  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const sanitizedLinkName = linkName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    // Use the clean application URL format for shared links
     const siteOrigin = "https://aureainvites.com";
-    const inviteUrl = `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+  };
+
+  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
+    const inviteUrl = getInviteUrl(linkName, numberOfPersons);
     await navigator.clipboard.writeText(inviteUrl);
     toast({
       title: "Copied!",
       description: "Invitation link copied",
     });
+  };
+
+  const openWhatsApp = (link: InvitationLink) => {
+    if (!link.phone_number) return;
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const message = encodeURIComponent(`You're invited! Here's your invitation link: ${inviteUrl}`);
+    const phone = link.phone_number.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
