@@ -125,6 +125,8 @@ export const GenerateLinkDialog = ({
       setLinkName("");
       setUniqueSlug("");
       setSide("");
+      setCountryCode("+961");
+      setPhoneNumber("");
       setInvitees([""]);
       setSlugManuallyEdited(false);
       onSuccess();
