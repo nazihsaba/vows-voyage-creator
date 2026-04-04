@@ -371,6 +371,9 @@ export const GenerateLinkDialog = ({
                     className="h-9 sm:h-10 text-sm rounded-lg"
                   />
                 </div>
+              </div>
+
+              {previewUrl && (
                 <Card className="p-2.5 sm:p-3 bg-muted/50 rounded-lg border-border/50">
                   <Label className="text-[10px] sm:text-xs text-muted-foreground">Preview URL:</Label>
                   <p className="text-[11px] sm:text-sm font-mono break-all mt-0.5">{previewUrl}</p>
