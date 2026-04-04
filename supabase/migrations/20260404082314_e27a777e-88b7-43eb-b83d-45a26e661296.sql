@@ -1,0 +1,1 @@
+ALTER TABLE public.invitation_links ADD COLUMN phone_number text DEFAULT NULL;

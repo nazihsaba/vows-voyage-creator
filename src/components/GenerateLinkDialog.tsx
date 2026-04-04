@@ -38,6 +38,8 @@ export const GenerateLinkDialog = ({
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
+  const [countryCode, setCountryCode] = useState("+961");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [invitees, setInvitees] = useState<string[]>([""]);
   const [loading, setLoading] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
@@ -99,6 +101,7 @@ export const GenerateLinkDialog = ({
           unique_slug: uniqueSlug,
           number_of_persons: validInvitees.length,
           side: side.trim() || null,
+          phone_number: phoneNumber.trim() ? `${countryCode}${phoneNumber.trim()}` : null,
         })
         .select()
         .single();
@@ -122,6 +125,8 @@ export const GenerateLinkDialog = ({
       setLinkName("");
       setUniqueSlug("");
       setSide("");
+      setCountryCode("+961");
+      setPhoneNumber("");
       setInvitees([""]);
       setSlugManuallyEdited(false);
       onSuccess();
@@ -345,6 +350,30 @@ export const GenerateLinkDialog = ({
                   <option value="GROOM">Groom</option>
                   <option value="BRIDE">Bride</option>
                 </select>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="phoneNumber" className="text-xs sm:text-sm font-medium">Phone Number</Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Guest's phone number with country code
+                </p>
+                <div className="flex gap-1.5">
+                  <Input
+                    id="countryCode"
+                    placeholder="+961"
+                    value={countryCode}
+                    onChange={(e) => setCountryCode(e.target.value)}
+                    className="h-9 sm:h-10 text-sm rounded-lg w-20 shrink-0"
+                  />
+                  <Input
+                    id="phoneNumber"
+                    type="tel"
+                    placeholder="e.g., 71123456"
+                    value={phoneNumber}
+                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    className="h-9 sm:h-10 text-sm rounded-lg"
+                  />
+                </div>
               </div>
 
               {previewUrl && (
