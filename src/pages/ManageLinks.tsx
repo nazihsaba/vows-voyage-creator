@@ -93,6 +93,8 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
+    country_code: "+961",
+    phone_number: "",
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -194,10 +196,22 @@ const ManageLinks = () => {
 
   const openEditDialog = (link: InvitationLink) => {
     setEditingLink(link);
+    const rawPhone = link.phone_number || "";
+    let countryCode = "+961";
+    let phoneNum = rawPhone;
+    if (rawPhone.startsWith("+")) {
+      const match = rawPhone.match(/^(\+\d{1,4})(.*)/);
+      if (match) {
+        countryCode = match[1];
+        phoneNum = match[2];
+      }
+    }
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      country_code: countryCode,
+      phone_number: phoneNum,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -268,6 +282,7 @@ const ManageLinks = () => {
           link_name: editForm.link_name,
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
+          phone_number: editForm.phone_number.trim() ? `${editForm.country_code}${editForm.phone_number.trim()}` : null,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -1201,6 +1216,24 @@ const ManageLinks = () => {
                     <SelectItem value="NONE">None</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+            <div className="space-y-1.5">
+              <Label className="text-sm font-medium">Phone Number</Label>
+              <div className="flex gap-1.5">
+                <Input
+                  value={editForm.country_code}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, country_code: e.target.value }))}
+                  className="w-20 shrink-0 h-11 text-base sm:h-9 sm:text-sm"
+                  placeholder="+961"
+                />
+                <Input
+                  type="tel"
+                  value={editForm.phone_number}
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))}
+                  placeholder="Phone number"
+                  className="h-11 text-base sm:h-9 sm:text-sm"
+                />
               </div>
             </div>
 
