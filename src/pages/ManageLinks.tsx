@@ -862,15 +862,6 @@ const ManageLinks = () => {
                                     className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
                                     onClick={(e) => e.stopPropagation()}
                                   >
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                      title="Copy Link"
-                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <Copy className="w-3 h-3" />
-                                    </Button>
                                     {link.phone_number && (
                                       <Button
                                         size="icon"
@@ -882,6 +873,16 @@ const ManageLinks = () => {
                                         <MessageCircle className="w-3 h-3" />
                                       </Button>
                                     )}
+                                    <Button
+                                      size="icon"
+                                      variant="ghost"
+                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                      title="Copy Link"
+                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                    >
+                                      <Copy className="w-3 h-3" />
+                                    </Button>
+
                                     <Button
                                       size="icon"
                                       variant="ghost"
