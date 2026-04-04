@@ -267,7 +267,7 @@ const ManageLinks = () => {
       const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
-          link_name: editForm.link_name,
+          link_name: editForm.link_name.replace(/\b\w/g, (c) => c.toUpperCase()),
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
         })
@@ -284,7 +284,7 @@ const ManageLinks = () => {
       for (const inv of pendingNewInvitees) {
         const { error } = await supabase.from("invitees").insert({
           invitation_link_id: inv.invitation_link_id,
-          name: inv.name,
+          name: inv.name.replace(/\b\w/g, (c) => c.toUpperCase()),
           is_attending: inv.is_attending,
           table_number: inv.table_number,
         } as any);
@@ -294,9 +294,13 @@ const ManageLinks = () => {
       // Update modified invitees
       for (const [id, updates] of Object.entries(pendingUpdates)) {
         if (!pendingDeleteIds.includes(id)) {
+          const sanitizedUpdates = { ...(updates as any) };
+          if (sanitizedUpdates.name) {
+            sanitizedUpdates.name = sanitizedUpdates.name.replace(/\b\w/g, (c: string) => c.toUpperCase());
+          }
           const { error } = await supabase
             .from("invitees")
-            .update(updates as any)
+            .update(sanitizedUpdates)
             .eq("id", id);
           if (error) throw error;
         }
