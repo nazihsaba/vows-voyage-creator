@@ -30,6 +30,7 @@ import {
   Plus,
   Link2,
   Pencil,
+  MessageCircle,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
@@ -51,6 +52,7 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
+  phone_number: string | null;
   created_at: string;
 }
 
@@ -164,19 +166,30 @@ const ManageLinks = () => {
     }
   };
 
-  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
+  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const sanitizedLinkName = linkName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    // Use the clean application URL format for shared links
     const siteOrigin = "https://aureainvites.com";
-    const inviteUrl = `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+  };
+
+  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
+    const inviteUrl = getInviteUrl(linkName, numberOfPersons);
     await navigator.clipboard.writeText(inviteUrl);
     toast({
       title: "Copied!",
       description: "Invitation link copied",
     });
+  };
+
+  const openWhatsApp = (link: InvitationLink) => {
+    if (!link.phone_number) return;
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const message = encodeURIComponent(`You're invited! Here's your invitation link: ${inviteUrl}`);
+    const phone = link.phone_number.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
@@ -633,6 +646,17 @@ const ManageLinks = () => {
                                             >
                                               <Copy className="w-3.5 h-3.5" />
                                             </Button>
+                                            {link.phone_number && (
+                                              <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                onClick={() => openWhatsApp(link)}
+                                                title="Send via WhatsApp"
+                                                className="h-8 w-8 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
+                                              >
+                                                <MessageCircle className="w-3.5 h-3.5" />
+                                              </Button>
+                                            )}
                                             <Button
                                               size="icon"
                                               variant="ghost"
@@ -847,6 +871,17 @@ const ManageLinks = () => {
                                     >
                                       <Copy className="w-3 h-3" />
                                     </Button>
+                                    {link.phone_number && (
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => openWhatsApp(link)}
+                                        title="Send via WhatsApp"
+                                        className="h-7 w-7 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
+                                      >
+                                        <MessageCircle className="w-3 h-3" />
+                                      </Button>
+                                    )}
                                     <Button
                                       size="icon"
                                       variant="ghost"
