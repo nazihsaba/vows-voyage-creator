@@ -12,6 +12,7 @@ interface InvitationLinkRequest {
   number_of_persons?: number;
   unique_slug?: string;
   side?: string | null;
+  phone_number?: string | number | null;
 }
 
 serve(async (req) => {
@@ -38,7 +39,8 @@ serve(async (req) => {
 
     // Parse request body
     const body: InvitationLinkRequest = await req.json();
-    const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null } = body;
+    const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null, phone_number = null } = body;
+    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 ? String(phone_number).trim() : null;
 
     // Validate required fields
     if (!wedding_id || !link_name) {
@@ -107,6 +109,7 @@ serve(async (req) => {
       unique_slug: slug,
       number_of_persons,
       side,
+      phone_number: normalizedPhone,
     };
 
     const { data: insertedLink, error: insertError } = await supabase
