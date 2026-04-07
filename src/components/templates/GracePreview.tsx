@@ -45,7 +45,8 @@ const DEFAULT_TEXTS = {
   closingMessage:
     "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
   joinOurCelebration: "Join Our Celebration",
-  rsvpDescription: "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+  rsvpDescription:
+    "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
   attending: "Attending ✓",
   willAttend: "Will Attend?",
   numberOfGuests: "Number of Guests",
@@ -57,8 +58,8 @@ const DEFAULT_TEXTS = {
 };
 
 const DEFAULT_WEDDING_CONTENT = {
-  groom_name: "Noah",
-  bride_name: "Mia",
+  groom_name: "Jean",
+  bride_name: "Josette",
   groom_family: "The Elin Family",
   bride_family: "The Soren Family",
 };
@@ -166,89 +167,96 @@ export const GracePreview = () => {
   const ceremony = content.locations.find((loc) => loc.type === "ceremony");
   const venue = content.locations.find((loc) => loc.type === "venue");
 
-  const translateTexts = useCallback(async (targetLang: string) => {
-    if (targetLang === "en") {
-      setContent(DEFAULT_TRANSLATED_CONTENT);
-      return;
-    }
+  const translateTexts = useCallback(
+    async (targetLang: string) => {
+      if (targetLang === "en") {
+        setContent(DEFAULT_TRANSLATED_CONTENT);
+        return;
+      }
 
-    if (translationCache[targetLang]) {
-      setContent(translationCache[targetLang]);
-      return;
-    }
+      if (translationCache[targetLang]) {
+        setContent(translationCache[targetLang]);
+        return;
+      }
 
-    setIsTranslating(true);
-    try {
-      const textKeys = Object.keys(DEFAULT_TEXTS) as (keyof typeof DEFAULT_TEXTS)[];
-      const weddingKeys = Object.keys(DEFAULT_WEDDING_CONTENT) as (keyof typeof DEFAULT_WEDDING_CONTENT)[];
+      setIsTranslating(true);
+      try {
+        const textKeys = Object.keys(DEFAULT_TEXTS) as (keyof typeof DEFAULT_TEXTS)[];
+        const weddingKeys = Object.keys(DEFAULT_WEDDING_CONTENT) as (keyof typeof DEFAULT_WEDDING_CONTENT)[];
 
-      const items = [
-        ...textKeys.map((key) => ({ type: "text" as const, key, value: DEFAULT_TEXTS[key] })),
-        ...weddingKeys.map((key) => ({ type: "wedding" as const, key, value: DEFAULT_WEDDING_CONTENT[key] })),
-        ...DEFAULT_LOCATIONS.flatMap((location) => [
-          { type: "locationName" as const, locationId: location.id, value: location.location_name },
-          { type: "locationTime" as const, locationId: location.id, value: location.time },
-        ]),
-        ...DEFAULT_INVITEES.map((invitee) => ({ type: "invitee" as const, inviteeId: invitee.id, value: invitee.name })),
-      ];
+        const items = [
+          ...textKeys.map((key) => ({ type: "text" as const, key, value: DEFAULT_TEXTS[key] })),
+          ...weddingKeys.map((key) => ({ type: "wedding" as const, key, value: DEFAULT_WEDDING_CONTENT[key] })),
+          ...DEFAULT_LOCATIONS.flatMap((location) => [
+            { type: "locationName" as const, locationId: location.id, value: location.location_name },
+            { type: "locationTime" as const, locationId: location.id, value: location.time },
+          ]),
+          ...DEFAULT_INVITEES.map((invitee) => ({
+            type: "invitee" as const,
+            inviteeId: invitee.id,
+            value: invitee.name,
+          })),
+        ];
 
-      const langLabel = LANGUAGES.find((item) => item.code === targetLang)?.label || targetLang;
-      const { data, error } = await supabase.functions.invoke("translate-text", {
-        body: { texts: items.map((item) => item.value), targetLanguage: langLabel },
-      });
+        const langLabel = LANGUAGES.find((item) => item.code === targetLang)?.label || targetLang;
+        const { data, error } = await supabase.functions.invoke("translate-text", {
+          body: { texts: items.map((item) => item.value), targetLanguage: langLabel },
+        });
 
-      if (error) throw error;
+        if (error) throw error;
 
-      const translatedTexts = { ...DEFAULT_TEXTS };
-      const translatedWedding = { ...DEFAULT_WEDDING_CONTENT };
-      const translatedLocations = DEFAULT_LOCATIONS.map((location) => ({ ...location }));
-      const translatedInvitees = DEFAULT_INVITEES.map((invitee) => ({ ...invitee }));
+        const translatedTexts = { ...DEFAULT_TEXTS };
+        const translatedWedding = { ...DEFAULT_WEDDING_CONTENT };
+        const translatedLocations = DEFAULT_LOCATIONS.map((location) => ({ ...location }));
+        const translatedInvitees = DEFAULT_INVITEES.map((invitee) => ({ ...invitee }));
 
-      items.forEach((item, index) => {
-        const translatedValue = data?.translations?.[index] || item.value;
+        items.forEach((item, index) => {
+          const translatedValue = data?.translations?.[index] || item.value;
 
-        switch (item.type) {
-          case "text":
-            translatedTexts[item.key] = translatedValue;
-            break;
-          case "wedding":
-            translatedWedding[item.key] = translatedValue;
-            break;
-          case "locationName": {
-            const location = translatedLocations.find((entry) => entry.id === item.locationId);
-            if (location) location.location_name = translatedValue;
-            break;
+          switch (item.type) {
+            case "text":
+              translatedTexts[item.key] = translatedValue;
+              break;
+            case "wedding":
+              translatedWedding[item.key] = translatedValue;
+              break;
+            case "locationName": {
+              const location = translatedLocations.find((entry) => entry.id === item.locationId);
+              if (location) location.location_name = translatedValue;
+              break;
+            }
+            case "locationTime": {
+              const location = translatedLocations.find((entry) => entry.id === item.locationId);
+              if (location) location.time = translatedValue;
+              break;
+            }
+            case "invitee": {
+              const invitee = translatedInvitees.find((entry) => entry.id === item.inviteeId);
+              if (invitee) invitee.name = translatedValue;
+              break;
+            }
           }
-          case "locationTime": {
-            const location = translatedLocations.find((entry) => entry.id === item.locationId);
-            if (location) location.time = translatedValue;
-            break;
-          }
-          case "invitee": {
-            const invitee = translatedInvitees.find((entry) => entry.id === item.inviteeId);
-            if (invitee) invitee.name = translatedValue;
-            break;
-          }
-        }
-      });
+        });
 
-      const result: LocalizedPreviewContent = {
-        texts: translatedTexts,
-        wedding: translatedWedding,
-        locations: translatedLocations,
-        invitees: translatedInvitees,
-      };
+        const result: LocalizedPreviewContent = {
+          texts: translatedTexts,
+          wedding: translatedWedding,
+          locations: translatedLocations,
+          invitees: translatedInvitees,
+        };
 
-      setTranslationCache((prev) => ({ ...prev, [targetLang]: result }));
-      setContent(result);
-    } catch (err: any) {
-      console.error("Translation error:", err);
-      toast.error(err?.message || "Translation failed. Showing original text.");
-      setContent(DEFAULT_TRANSLATED_CONTENT);
-    } finally {
-      setIsTranslating(false);
-    }
-  }, [translationCache]);
+        setTranslationCache((prev) => ({ ...prev, [targetLang]: result }));
+        setContent(result);
+      } catch (err: any) {
+        console.error("Translation error:", err);
+        toast.error(err?.message || "Translation failed. Showing original text.");
+        setContent(DEFAULT_TRANSLATED_CONTENT);
+      } finally {
+        setIsTranslating(false);
+      }
+    },
+    [translationCache],
+  );
 
   useEffect(() => {
     translateTexts(language);
@@ -264,7 +272,10 @@ export const GracePreview = () => {
   const isRtl = language === "ar";
 
   return (
-    <div className={`w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] ${isRtl ? "direction-rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
+    <div
+      className={`w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] ${isRtl ? "direction-rtl" : ""}`}
+      dir={isRtl ? "rtl" : "ltr"}
+    >
       <div className="sticky top-0 z-40 flex justify-end p-3">
         {isTranslating && <Loader2 className="w-4 h-4 animate-spin text-white" />}
         <Select value={language} onValueChange={setLanguage}>
