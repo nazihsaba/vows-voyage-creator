@@ -1,12 +1,45 @@
-import { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { ChevronDown, Globe, Loader2 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
+
+const LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "ar", label: "العربية" },
+  { code: "fr", label: "Français" },
+  { code: "es", label: "Español" },
+  { code: "tr", label: "Türkçe" },
+];
+
+// All translatable strings keyed for easy lookup
+const DEFAULT_TEXTS = {
+  theWeddingOf: "The Wedding Of",
+  tapToStart: "Tap To Start",
+  requestHonor: "Request the honor of your presence at the wedding celebration",
+  countdownTitle: "Counting Down To Our Special Day",
+  days: "Days",
+  hours: "Hours",
+  minutes: "Minutes",
+  seconds: "Seconds",
+  weddingEvents: "Wedding Events",
+  joinUs: "Join us in celebrating this special day",
+  ceremony: "Ceremony",
+  venue: "Venue",
+  eventLocation: "Event Location",
+  viewOnMap: "View on Map",
+  weddingGift: "Wedding Gift",
+  giftDescription: "For those who desire a wedding list is available",
+  closingMessage:
+    "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
+};
 
 const staticWedding = {
   groom_name: "Noah",
