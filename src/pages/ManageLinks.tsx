@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import whatsappIcon from "@/assets/whatsapp.png";
+import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
