@@ -49,11 +49,12 @@ ${JSON.stringify(texts)}`;
       },
       body: JSON.stringify({
         model: "google/gemini-2.5-flash",
+        max_tokens: 8192,
         messages: [
           {
             role: "system",
             content:
-              "You are a professional translator specializing in wedding and formal event content. You translate text accurately while preserving tone, meaning, and cultural nuances. For Arabic, always use Modern Standard Arabic with elegant, formal phrasing appropriate for wedding invitations. Never translate proper nouns or names.",
+              "You are a professional translator specializing in wedding and formal event content. You translate text accurately while preserving tone, meaning, and cultural nuances. For Arabic, always use Modern Standard Arabic with elegant, formal phrasing appropriate for wedding invitations. Never translate proper nouns or names. You MUST translate ALL provided texts completely — never truncate or skip any.",
           },
           { role: "user", content: prompt },
         ],
