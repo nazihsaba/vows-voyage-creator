@@ -118,9 +118,56 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
 export const GracePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
+  const [language, setLanguage] = useState("en");
+  const [isTranslating, setIsTranslating] = useState(false);
+  const [texts, setTexts] = useState(DEFAULT_TEXTS);
+  const [translationCache, setTranslationCache] = useState<Record<string, typeof DEFAULT_TEXTS>>({ en: DEFAULT_TEXTS });
+
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
 
+  const translateTexts = useCallback(async (targetLang: string) => {
+    if (targetLang === "en") {
+      setTexts(DEFAULT_TEXTS);
+      return;
+    }
+    if (translationCache[targetLang]) {
+      setTexts(translationCache[targetLang]);
+      return;
+    }
+
+    setIsTranslating(true);
+    try {
+      const keys = Object.keys(DEFAULT_TEXTS) as (keyof typeof DEFAULT_TEXTS)[];
+      const values = keys.map((k) => DEFAULT_TEXTS[k]);
+
+      const langLabel = LANGUAGES.find((l) => l.code === targetLang)?.label || targetLang;
+      const { data, error } = await supabase.functions.invoke("translate-text", {
+        body: { texts: values, targetLanguage: langLabel },
+      });
+
+      if (error) throw error;
+
+      const translated: Record<string, string> = {};
+      keys.forEach((key, i) => {
+        translated[key] = data.translations?.[i] || DEFAULT_TEXTS[key];
+      });
+
+      const result = translated as typeof DEFAULT_TEXTS;
+      setTranslationCache((prev) => ({ ...prev, [targetLang]: result }));
+      setTexts(result);
+    } catch (err) {
+      console.error("Translation error:", err);
+      toast.error("Translation failed. Showing original text.");
+      setTexts(DEFAULT_TEXTS);
+    } finally {
+      setIsTranslating(false);
+    }
+  }, [translationCache]);
+
+  useEffect(() => {
+    translateTexts(language);
+  }, [language, translateTexts]);
   const handleStart = () => {
     setHasStarted(true);
     setTimeout(() => {
