@@ -30,7 +30,7 @@ import {
   Plus,
   Link2,
   Pencil,
-  MessageCircle,
+  
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
