@@ -265,7 +265,7 @@ export const GracePreview = () => {
 
   return (
     <div className={`w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] ${isRtl ? "direction-rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
-      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+      <div className="sticky top-0 z-40 flex justify-end p-3">
         {isTranslating && <Loader2 className="w-4 h-4 animate-spin text-white" />}
         <Select value={language} onValueChange={setLanguage}>
           <SelectTrigger className="w-[140px] bg-white/90 backdrop-blur-sm border-none shadow-lg">
