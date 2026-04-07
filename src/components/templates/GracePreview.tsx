@@ -16,7 +16,6 @@ const LANGUAGES = [
   { code: "ar", label: "العربية" },
   { code: "fr", label: "Français" },
   { code: "es", label: "Español" },
-  { code: "tr", label: "Türkçe" },
 ];
 
 // All translatable strings keyed for easy lookup
