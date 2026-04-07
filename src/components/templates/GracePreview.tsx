@@ -38,6 +38,16 @@ const DEFAULT_TEXTS = {
   giftDescription: "For those who desire a wedding list is available",
   closingMessage:
     "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
+  joinOurCelebration: "Join Our Celebration",
+  rsvpDescription: "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+  attending: "Attending ✓",
+  willAttend: "Will Attend?",
+  numberOfGuests: "Number of Guests",
+  rsvpDeadlinePassed: "RSVP deadline has passed",
+  submitting: "Submitting...",
+  submitRsvp: "Submit RSVP",
+  pleaseRsvpBy: "Please RSVP by:",
+  kindlyConfirm: "Kindly confirm your attendance before this date:",
 };
 
 const staticWedding = {
