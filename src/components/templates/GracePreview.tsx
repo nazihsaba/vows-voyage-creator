@@ -175,8 +175,28 @@ export const GracePreview = () => {
     }, 100);
   };
 
+  const isRtl = language === "ar";
+
   return (
-    <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
+    <div className={`w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] ${isRtl ? "direction-rtl" : ""}`} dir={isRtl ? "rtl" : "ltr"}>
+      {/* Language Switcher */}
+      <div className="fixed top-4 right-4 z-50 flex items-center gap-2">
+        {isTranslating && <Loader2 className="w-4 h-4 animate-spin text-white" />}
+        <Select value={language} onValueChange={setLanguage}>
+          <SelectTrigger className="w-[140px] bg-white/90 backdrop-blur-sm border-none shadow-lg">
+            <Globe className="w-4 h-4 mr-2" />
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent>
+            {LANGUAGES.map((lang) => (
+              <SelectItem key={lang.code} value={lang.code}>
+                {lang.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
@@ -184,14 +204,14 @@ export const GracePreview = () => {
         </video>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-          <p className="text-template-small">The Wedding Of</p>
+          <p className="text-template-small">{texts.theWeddingOf}</p>
           <div className="space-y-2">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
             <p className="text-4xl md:text-5xl">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
-            {staticWedding.wedding_date.toLocaleDateString("en-US", {
+            {staticWedding.wedding_date.toLocaleDateString(language === "ar" ? "ar-SA" : language === "fr" ? "fr-FR" : language === "es" ? "es-ES" : language === "tr" ? "tr-TR" : "en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
@@ -203,7 +223,7 @@ export const GracePreview = () => {
               onClick={handleStart}
               className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
             >
-              Tap To Start
+              {texts.tapToStart}
             </Button>
           )}
         </div>
