@@ -368,6 +368,19 @@ export const GracePreview = () => {
         rsvpResponses={{ "1": true, "2": false }}
         numberOfPersons={2}
         isPreview
+        translations={{
+          joinOurCelebration: texts.joinOurCelebration,
+          rsvpDescription: texts.rsvpDescription,
+          attending: texts.attending,
+          willAttend: texts.willAttend,
+          numberOfGuests: texts.numberOfGuests,
+          rsvpDeadlinePassed: texts.rsvpDeadlinePassed,
+          submitting: texts.submitting,
+          submitRsvp: texts.submitRsvp,
+          pleaseRsvpBy: texts.pleaseRsvpBy,
+          kindlyConfirm: texts.kindlyConfirm,
+        }}
+        dateLocale={language === "ar" ? "ar-SA" : language === "fr" ? "fr-FR" : language === "es" ? "es-ES" : "en-US"}
       />
 
       {/* Closing */}
