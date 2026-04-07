@@ -34,9 +34,12 @@ serve(async (req) => {
     }
 
     const isArabic = targetLanguage.includes("العربية") || targetLanguage.toLowerCase().includes("arabic");
-    
-    const prompt = `Translate the following texts to ${targetLanguage}. Return ONLY a JSON array of translated strings in the same order. Do not add any explanation or markdown formatting.
-${isArabic ? "\nIMPORTANT: Use Modern Standard Arabic (فصحى). Use natural, fluent Arabic phrasing — not word-by-word translation. For wedding/formal contexts, use elegant and culturally appropriate Arabic expressions." : ""}
+
+    const prompt = `Translate the following texts to ${targetLanguage}. Translate EVERY string in the list, including person names, family names, guest names, venue names, place names, and time labels. Return ONLY a JSON array of translated strings in the same order. Do not add any explanation or markdown formatting. Do not skip or truncate anything.${
+      isArabic
+        ? "\nIMPORTANT: Use Modern Standard Arabic (فصحى). Use natural, fluent Arabic phrasing — not word-by-word translation. For wedding/formal contexts, use elegant and culturally appropriate Arabic expressions. Transliterate names, family names, guest names, and venue/place names naturally into Arabic script instead of leaving them in English."
+        : "\nIMPORTANT: If a name, family name, guest name, venue, or place should appear in the target language's script, transliterate it naturally so every visible string matches the selected language."
+    }
 
 Input texts:
 ${JSON.stringify(texts)}`;
@@ -48,13 +51,13 @@ ${JSON.stringify(texts)}`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
+        model: "google/gemini-3-flash-preview",
         max_tokens: 8192,
         messages: [
           {
             role: "system",
             content:
-              "You are a professional translator specializing in wedding and formal event content. You translate text accurately while preserving tone, meaning, and cultural nuances. For Arabic, always use Modern Standard Arabic with elegant, formal phrasing appropriate for wedding invitations. Never translate proper nouns or names. You MUST translate ALL provided texts completely — never truncate or skip any.",
+              "You are a professional translator specializing in wedding and formal event content. Translate every visible string accurately while preserving tone, meaning, and cultural nuance. Always translate or transliterate person names, family names, guest names, venue names, place names, and similar proper nouns into the target language/script when appropriate. For Arabic, always use elegant Modern Standard Arabic suitable for wedding invitations. Keep the output order exactly the same as the input order and never skip or truncate any item.",
           },
           { role: "user", content: prompt },
         ],
@@ -112,7 +115,6 @@ ${JSON.stringify(texts)}`;
       );
     }
 
-    // Fallback: try parsing content directly
     const content = data.choices?.[0]?.message?.content || "[]";
     const translations = JSON.parse(content);
     return new Response(
