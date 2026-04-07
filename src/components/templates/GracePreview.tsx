@@ -38,6 +38,16 @@ const DEFAULT_TEXTS = {
   giftDescription: "For those who desire a wedding list is available",
   closingMessage:
     "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
+  joinOurCelebration: "Join Our Celebration",
+  rsvpDescription: "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+  attending: "Attending ✓",
+  willAttend: "Will Attend?",
+  numberOfGuests: "Number of Guests",
+  rsvpDeadlinePassed: "RSVP deadline has passed",
+  submitting: "Submitting...",
+  submitRsvp: "Submit RSVP",
+  pleaseRsvpBy: "Please RSVP by:",
+  kindlyConfirm: "Kindly confirm your attendance before this date:",
 };
 
 const staticWedding = {
@@ -358,6 +368,19 @@ export const GracePreview = () => {
         rsvpResponses={{ "1": true, "2": false }}
         numberOfPersons={2}
         isPreview
+        translations={{
+          joinOurCelebration: texts.joinOurCelebration,
+          rsvpDescription: texts.rsvpDescription,
+          attending: texts.attending,
+          willAttend: texts.willAttend,
+          numberOfGuests: texts.numberOfGuests,
+          rsvpDeadlinePassed: texts.rsvpDeadlinePassed,
+          submitting: texts.submitting,
+          submitRsvp: texts.submitRsvp,
+          pleaseRsvpBy: texts.pleaseRsvpBy,
+          kindlyConfirm: texts.kindlyConfirm,
+        }}
+        dateLocale={language === "ar" ? "ar-SA" : language === "fr" ? "fr-FR" : language === "es" ? "es-ES" : "en-US"}
       />
 
       {/* Closing */}
