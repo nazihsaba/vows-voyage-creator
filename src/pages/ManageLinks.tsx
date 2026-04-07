@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import whatsappIcon from "@/assets/whatsapp.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,7 @@ import {
   Plus,
   Link2,
   Pencil,
-  MessageCircle,
+  
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
@@ -651,7 +652,7 @@ const ManageLinks = () => {
                                                 title="Send via WhatsApp"
                                                 className="h-8 w-8 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
                                               >
-                                                <MessageCircle className="w-3.5 h-3.5" />
+                                                <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4" />
                                               </Button>
                                             )}
                                             <Button
@@ -876,7 +877,7 @@ const ManageLinks = () => {
                                         title="Send via WhatsApp"
                                         className="h-7 w-7 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
                                       >
-                                        <MessageCircle className="w-3 h-3" />
+                                        <img src={whatsappIcon} alt="WhatsApp" className="w-3.5 h-3.5" />
                                       </Button>
                                     )}
                                     <Button
