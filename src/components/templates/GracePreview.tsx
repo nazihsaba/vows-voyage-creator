@@ -73,7 +73,7 @@ const staticGiftCards = [
   { id: "2", card_name: "Whish", card_number: "987654321" },
 ];
 
-const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
+const StaticCountdownTimer = ({ targetDate, texts }: { targetDate: Date; texts: typeof DEFAULT_TEXTS }) => {
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -96,13 +96,13 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
   return (
     <div className="text-center">
-      <h2 className="text-template-subtitle mb-6 text-white">Counting Down To Our Special Day</h2>
+      <h2 className="text-template-subtitle mb-6 text-white">{texts.countdownTitle}</h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
+          { value: timeRemaining.days, label: texts.days },
+          { value: timeRemaining.hours, label: texts.hours },
+          { value: timeRemaining.minutes, label: texts.minutes },
+          { value: timeRemaining.seconds, label: texts.seconds },
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
