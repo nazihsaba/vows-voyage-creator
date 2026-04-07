@@ -210,7 +210,7 @@ export const GracePreview = () => {
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
-            {staticWedding.wedding_date.toLocaleDateString(language === "ar" ? "ar-SA" : language === "fr" ? "fr-FR" : language === "es" ? "es-ES" : language === "tr" ? "tr-TR" : "en-US", {
+            {staticWedding.wedding_date.toLocaleDateString(language === "ar" ? "ar-SA" : language === "fr" ? "fr-FR" : language === "es" ? "es-ES" : "en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
