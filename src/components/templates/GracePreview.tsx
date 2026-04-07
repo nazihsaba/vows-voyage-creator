@@ -1,76 +1,24 @@
-import { useState, useEffect, useCallback } from "react";
-import { ChevronDown, Globe, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 
-const LANGUAGES = [
-  { code: "en", label: "English" },
-  { code: "ar", label: "العربية" },
-  { code: "fr", label: "Français" },
-  { code: "es", label: "Español" },
-];
-
-const DATE_LOCALES = {
-  en: "en-US",
-  ar: "ar-SA",
-  fr: "fr-FR",
-  es: "es-ES",
-} as const;
-
-const DEFAULT_TEXTS = {
-  theWeddingOf: "The Wedding Of",
-  tapToStart: "Tap To Start",
-  requestHonor: "Request the honor of your presence at the wedding celebration",
-  countdownTitle: "Counting Down To Our Special Day",
-  days: "Days",
-  hours: "Hours",
-  minutes: "Minutes",
-  seconds: "Seconds",
-  weddingEvents: "Wedding Events",
-  joinUs: "Join us in celebrating this special day",
-  ceremony: "Ceremony",
-  venue: "Venue",
-  eventLocation: "Event Location",
-  viewOnMap: "View on Map",
-  weddingGift: "Wedding Gift",
-  giftDescription: "For those who desire a wedding list is available",
-  closingMessage:
-    "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
-  joinOurCelebration: "Join Our Celebration",
-  rsvpDescription:
-    "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-  attending: "Attending ✓",
-  willAttend: "Will Attend?",
-  numberOfGuests: "Number of Guests",
-  rsvpDeadlinePassed: "RSVP deadline has passed",
-  submitting: "Submitting...",
-  submitRsvp: "Submit RSVP",
-  pleaseRsvpBy: "Please RSVP by:",
-  kindlyConfirm: "Kindly confirm your attendance before this date:",
-};
-
-const DEFAULT_WEDDING_CONTENT = {
-  groom_name: "Jean",
-  bride_name: "Josette",
+const staticWedding = {
+  groom_name: "Noah",
+  bride_name: "Mia",
   groom_family: "The Elin Family",
   bride_family: "The Soren Family",
-};
-
-const STATIC_WEDDING = {
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   video_url: graceVideo,
 };
 
-const DEFAULT_LOCATIONS = [
+const staticLocations = [
   {
     id: "1",
     type: "ceremony",
@@ -87,31 +35,12 @@ const DEFAULT_LOCATIONS = [
   },
 ];
 
-const DEFAULT_GIFT_CARDS = [
+const staticGiftCards = [
   { id: "1", card_name: "OMT", card_number: "123456789" },
   { id: "2", card_name: "Whish", card_number: "987654321" },
 ];
 
-const DEFAULT_INVITEES = [
-  { id: "1", name: "Noah Elin" },
-  { id: "2", name: "Mia Soren" },
-];
-
-type LocalizedPreviewContent = {
-  texts: typeof DEFAULT_TEXTS;
-  wedding: typeof DEFAULT_WEDDING_CONTENT;
-  locations: typeof DEFAULT_LOCATIONS;
-  invitees: typeof DEFAULT_INVITEES;
-};
-
-const DEFAULT_TRANSLATED_CONTENT: LocalizedPreviewContent = {
-  texts: DEFAULT_TEXTS,
-  wedding: DEFAULT_WEDDING_CONTENT,
-  locations: DEFAULT_LOCATIONS,
-  invitees: DEFAULT_INVITEES,
-};
-
-const StaticCountdownTimer = ({ targetDate, texts }: { targetDate: Date; texts: typeof DEFAULT_TEXTS }) => {
+const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
@@ -134,13 +63,13 @@ const StaticCountdownTimer = ({ targetDate, texts }: { targetDate: Date; texts: 
 
   return (
     <div className="text-center">
-      <h2 className="text-template-subtitle mb-6 text-white">{texts.countdownTitle}</h2>
+      <h2 className="text-template-subtitle mb-6 text-white">Counting Down To Our Special Day</h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
-          { value: timeRemaining.days, label: texts.days },
-          { value: timeRemaining.hours, label: texts.hours },
-          { value: timeRemaining.minutes, label: texts.minutes },
-          { value: timeRemaining.seconds, label: texts.seconds },
+          { value: timeRemaining.days, label: "Days" },
+          { value: timeRemaining.hours, label: "Hours" },
+          { value: timeRemaining.minutes, label: "Minutes" },
+          { value: timeRemaining.seconds, label: "Seconds" },
         ].map((item, index) => (
           <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
             <div className="text-center">
@@ -156,111 +85,8 @@ const StaticCountdownTimer = ({ targetDate, texts }: { targetDate: Date; texts: 
 
 export const GracePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
-  const [language, setLanguage] = useState("en");
-  const [isTranslating, setIsTranslating] = useState(false);
-  const [content, setContent] = useState<LocalizedPreviewContent>(DEFAULT_TRANSLATED_CONTENT);
-  const [translationCache, setTranslationCache] = useState<Record<string, LocalizedPreviewContent>>({
-    en: DEFAULT_TRANSLATED_CONTENT,
-  });
-
-  const dateLocale = DATE_LOCALES[language as keyof typeof DATE_LOCALES] ?? "en-US";
-  const ceremony = content.locations.find((loc) => loc.type === "ceremony");
-  const venue = content.locations.find((loc) => loc.type === "venue");
-
-  const translateTexts = useCallback(
-    async (targetLang: string) => {
-      if (targetLang === "en") {
-        setContent(DEFAULT_TRANSLATED_CONTENT);
-        return;
-      }
-
-      if (translationCache[targetLang]) {
-        setContent(translationCache[targetLang]);
-        return;
-      }
-
-      setIsTranslating(true);
-      try {
-        const textKeys = Object.keys(DEFAULT_TEXTS) as (keyof typeof DEFAULT_TEXTS)[];
-        const weddingKeys = Object.keys(DEFAULT_WEDDING_CONTENT) as (keyof typeof DEFAULT_WEDDING_CONTENT)[];
-
-        const items = [
-          ...textKeys.map((key) => ({ type: "text" as const, key, value: DEFAULT_TEXTS[key] })),
-          ...weddingKeys.map((key) => ({ type: "wedding" as const, key, value: DEFAULT_WEDDING_CONTENT[key] })),
-          ...DEFAULT_LOCATIONS.flatMap((location) => [
-            { type: "locationName" as const, locationId: location.id, value: location.location_name },
-            { type: "locationTime" as const, locationId: location.id, value: location.time },
-          ]),
-          ...DEFAULT_INVITEES.map((invitee) => ({
-            type: "invitee" as const,
-            inviteeId: invitee.id,
-            value: invitee.name,
-          })),
-        ];
-
-        const langLabel = LANGUAGES.find((item) => item.code === targetLang)?.label || targetLang;
-        const { data, error } = await supabase.functions.invoke("translate-text", {
-          body: { texts: items.map((item) => item.value), targetLanguage: langLabel },
-        });
-
-        if (error) throw error;
-
-        const translatedTexts = { ...DEFAULT_TEXTS };
-        const translatedWedding = { ...DEFAULT_WEDDING_CONTENT };
-        const translatedLocations = DEFAULT_LOCATIONS.map((location) => ({ ...location }));
-        const translatedInvitees = DEFAULT_INVITEES.map((invitee) => ({ ...invitee }));
-
-        items.forEach((item, index) => {
-          const translatedValue = data?.translations?.[index] || item.value;
-
-          switch (item.type) {
-            case "text":
-              translatedTexts[item.key] = translatedValue;
-              break;
-            case "wedding":
-              translatedWedding[item.key] = translatedValue;
-              break;
-            case "locationName": {
-              const location = translatedLocations.find((entry) => entry.id === item.locationId);
-              if (location) location.location_name = translatedValue;
-              break;
-            }
-            case "locationTime": {
-              const location = translatedLocations.find((entry) => entry.id === item.locationId);
-              if (location) location.time = translatedValue;
-              break;
-            }
-            case "invitee": {
-              const invitee = translatedInvitees.find((entry) => entry.id === item.inviteeId);
-              if (invitee) invitee.name = translatedValue;
-              break;
-            }
-          }
-        });
-
-        const result: LocalizedPreviewContent = {
-          texts: translatedTexts,
-          wedding: translatedWedding,
-          locations: translatedLocations,
-          invitees: translatedInvitees,
-        };
-
-        setTranslationCache((prev) => ({ ...prev, [targetLang]: result }));
-        setContent(result);
-      } catch (err: any) {
-        console.error("Translation error:", err);
-        toast.error(err?.message || "Translation failed. Showing original text.");
-        setContent(DEFAULT_TRANSLATED_CONTENT);
-      } finally {
-        setIsTranslating(false);
-      }
-    },
-    [translationCache],
-  );
-
-  useEffect(() => {
-    translateTexts(language);
-  }, [language, translateTexts]);
+  const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
+  const venue = staticLocations.find((loc) => loc.type === "venue");
 
   const handleStart = () => {
     setHasStarted(true);
@@ -269,44 +95,23 @@ export const GracePreview = () => {
     }, 100);
   };
 
-  const isRtl = language === "ar";
-
   return (
-    <div
-      className={`w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] ${isRtl ? "direction-rtl" : ""}`}
-      dir={isRtl ? "rtl" : "ltr"}
-    >
-      <div className="sticky top-0 z-40 flex justify-end p-3">
-        {isTranslating && <Loader2 className="w-4 h-4 animate-spin text-white" />}
-        <Select value={language} onValueChange={setLanguage}>
-          <SelectTrigger className="w-[140px] bg-white/90 backdrop-blur-sm border-none shadow-lg">
-            <Globe className="w-4 h-4 mr-2" />
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            {LANGUAGES.map((lang) => (
-              <SelectItem key={lang.code} value={lang.code}>
-                {lang.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
+    <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
+      {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={STATIC_WEDDING.video_url} type="video/mp4" />
+          <source src={staticWedding.video_url} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-          <p className="text-template-small">{content.texts.theWeddingOf}</p>
+          <p className="text-template-small">The Wedding Of</p>
           <div className="space-y-2">
-            <h1 className="text-template-title">{content.wedding.groom_name}</h1>
+            <h1 className="text-template-title">{staticWedding.groom_name}</h1>
             <p className="text-4xl md:text-5xl">&</p>
-            <h1 className="text-template-title">{content.wedding.bride_name}</h1>
+            <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
           <p className="text-template-body tracking-wide">
-            {STATIC_WEDDING.wedding_date.toLocaleDateString(dateLocale, {
+            {staticWedding.wedding_date.toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
               month: "long",
@@ -318,7 +123,7 @@ export const GracePreview = () => {
               onClick={handleStart}
               className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
             >
-              {content.texts.tapToStart}
+              Tap To Start
             </Button>
           )}
         </div>
@@ -327,35 +132,38 @@ export const GracePreview = () => {
         </div>
       </section>
 
+      {/* Family Names */}
       <section id="family-section-grace" className="py-16 px-4 text-center bg-white">
         <AnimatedSection animation="fade-up">
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="space-y-4">
-              <h2 className="text-template-subtitle">{content.wedding.groom_family}</h2>
+              <h2 className="text-template-subtitle">{staticWedding.groom_family}</h2>
               <p className="text-2xl">&</p>
-              <h2 className="text-template-subtitle">{content.wedding.bride_family}</h2>
+              <h2 className="text-template-subtitle">{staticWedding.bride_family}</h2>
             </div>
-            <p className="text-template-body">{content.texts.requestHonor}</p>
+            <p className="text-template-body">Request the honor of your presence at the wedding celebration</p>
           </div>
         </AnimatedSection>
       </section>
 
+      {/* Countdown with Video */}
       <section className="relative py-16 px-4 overflow-hidden">
         <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={STATIC_WEDDING.video_url} type="video/mp4" />
+          <source src={staticWedding.video_url} type="video/mp4" />
         </video>
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
-          <StaticCountdownTimer targetDate={STATIC_WEDDING.wedding_date} texts={content.texts} />
+          <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
         </div>
       </section>
 
+      {/* Wedding Events */}
       <section className="py-16 px-4 bg-white">
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <AnimatedSection animation="fade-up">
             <div>
-              <h2 className="text-template-subtitle mb-6 text-primary">{content.texts.weddingEvents}</h2>
-              <p className="text-template-body max-w-2xl mx-auto">{content.texts.joinUs}</p>
+              <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
+              <p className="text-template-body max-w-2xl mx-auto">Join us in celebrating this special day</p>
             </div>
           </AnimatedSection>
 
@@ -366,10 +174,10 @@ export const GracePreview = () => {
                   <div className="flex items-center justify-center w-full">
                     <Icon icon="material-symbols:church-rounded" className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{content.texts.ceremony}</h3>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{ceremony.time}</p>
                   <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">{content.texts.eventLocation}</p>
+                    <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
                   </div>
                   <a
@@ -378,7 +186,7 @@ export const GracePreview = () => {
                     rel="noopener noreferrer"
                     className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
-                    {content.texts.viewOnMap}
+                    View on Map
                   </a>
                 </div>
               </AnimatedSection>
@@ -389,10 +197,10 @@ export const GracePreview = () => {
                   <div className="flex items-center justify-center w-full">
                     <Icon icon="solar:confetti-bold" className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{content.texts.venue}</h3>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{venue.time}</p>
                   <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">{content.texts.eventLocation}</p>
+                    <p className="text-template-small text-gray-600">Event Location</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                   </div>
                   <a
@@ -401,7 +209,7 @@ export const GracePreview = () => {
                     rel="noopener noreferrer"
                     className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                   >
-                    {content.texts.viewOnMap}
+                    View on Map
                   </a>
                 </div>
               </AnimatedSection>
@@ -410,6 +218,7 @@ export const GracePreview = () => {
         </div>
       </section>
 
+      {/* Gallery Image - Full Width */}
       <AnimatedSection animation="fade-in">
         <section className="relative w-full">
           <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
@@ -418,13 +227,16 @@ export const GracePreview = () => {
         </section>
       </AnimatedSection>
 
+      {/* Gift Cards */}
       <AnimatedSection animation="fade-up">
         <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">{content.texts.weddingGift}</h2>
-            <p className="text-center text-template-body mb-8 text-gray-600">{content.texts.giftDescription}</p>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
+            <p className="text-center text-template-body mb-8 text-gray-600">
+              For those who desire a wedding list is available
+            </p>
             <div className="grid gap-4 md:grid-cols-2">
-              {DEFAULT_GIFT_CARDS.map((card, index) => (
+              {staticGiftCards.map((card, index) => (
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-white p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
@@ -437,35 +249,31 @@ export const GracePreview = () => {
         </section>
       </AnimatedSection>
 
+      {/* RSVP */}
       <RsvpSection
-        staticDeadline={STATIC_WEDDING.rsvp_deadline}
-        invitees={content.invitees}
+        staticDeadline={staticWedding.rsvp_deadline}
+        invitees={[
+          { id: "1", name: "Noah Elin" },
+          { id: "2", name: "Mia Soren" },
+        ]}
         rsvpResponses={{ "1": true, "2": false }}
         numberOfPersons={2}
         isPreview
-        translations={{
-          joinOurCelebration: content.texts.joinOurCelebration,
-          rsvpDescription: content.texts.rsvpDescription,
-          attending: content.texts.attending,
-          willAttend: content.texts.willAttend,
-          numberOfGuests: content.texts.numberOfGuests,
-          rsvpDeadlinePassed: content.texts.rsvpDeadlinePassed,
-          submitting: content.texts.submitting,
-          submitRsvp: content.texts.submitRsvp,
-          pleaseRsvpBy: content.texts.pleaseRsvpBy,
-          kindlyConfirm: content.texts.kindlyConfirm,
-        }}
-        dateLocale={dateLocale}
       />
 
+      {/* Closing */}
       <AnimatedSection animation="fade-in">
         <section className="py-16 px-4 bg-[#faf8f5] text-center">
           <div className="max-w-3xl mx-auto space-y-8">
-            <p className="text-template-body">{content.texts.closingMessage}</p>
+            <p className="text-template-body">
+              We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures,
+              and make wonderful memories with us.
+            </p>
           </div>
         </section>
       </AnimatedSection>
 
+      {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
   );
