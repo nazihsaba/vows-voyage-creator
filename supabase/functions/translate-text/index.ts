@@ -33,7 +33,10 @@ serve(async (req) => {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
 
+    const isArabic = targetLanguage.includes("العربية") || targetLanguage.toLowerCase().includes("arabic");
+    
     const prompt = `Translate the following texts to ${targetLanguage}. Return ONLY a JSON array of translated strings in the same order. Do not add any explanation or markdown formatting.
+${isArabic ? "\nIMPORTANT: Use Modern Standard Arabic (فصحى). Use natural, fluent Arabic phrasing — not word-by-word translation. For wedding/formal contexts, use elegant and culturally appropriate Arabic expressions." : ""}
 
 Input texts:
 ${JSON.stringify(texts)}`;
@@ -45,12 +48,12 @@ ${JSON.stringify(texts)}`;
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        model: "google/gemini-2.5-flash-lite",
+        model: "google/gemini-2.5-flash",
         messages: [
           {
             role: "system",
             content:
-              "You are a professional translator. You translate text accurately while preserving tone and meaning. Always return ONLY a valid JSON array of strings, nothing else.",
+              "You are a professional translator specializing in wedding and formal event content. You translate text accurately while preserving tone, meaning, and cultural nuances. For Arabic, always use Modern Standard Arabic with elegant, formal phrasing appropriate for wedding invitations. Never translate proper nouns or names.",
           },
           { role: "user", content: prompt },
         ],
