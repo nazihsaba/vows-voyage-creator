@@ -241,7 +241,7 @@ export const GracePreview = () => {
               <p className="text-2xl">&</p>
               <h2 className="text-template-subtitle">{staticWedding.bride_family}</h2>
             </div>
-            <p className="text-template-body">Request the honor of your presence at the wedding celebration</p>
+            <p className="text-template-body">{texts.requestHonor}</p>
           </div>
         </AnimatedSection>
       </section>
@@ -253,7 +253,7 @@ export const GracePreview = () => {
         </video>
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
-          <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
+          <StaticCountdownTimer targetDate={staticWedding.wedding_date} texts={texts} />
         </div>
       </section>
 
