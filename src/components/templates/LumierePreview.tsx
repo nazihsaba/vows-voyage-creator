@@ -7,14 +7,17 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Glassmorphic card style for content sections ── */
-const cardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.85)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  borderRadius: "1rem",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.4)",
+/* ── Watercolor brush-edge card style (matches reference) ── */
+const brushCardStyle: React.CSSProperties = {
+  background: "#faf8f5",
+  WebkitMaskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  WebkitMaskComposite: "source-in" as any,
+  maskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  maskComposite: "intersect" as any,
 };
 
 const LumierePreview = () => {
@@ -71,7 +74,7 @@ const LumierePreview = () => {
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10" style={brushCardStyle}>
               <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 I have found the one whom my soul loves.
               </p>
@@ -99,7 +102,7 @@ const LumierePreview = () => {
         {/* ===== CEREMONY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Wedding Ceremony
               </h2>
@@ -126,7 +129,7 @@ const LumierePreview = () => {
         {/* ===== CELEBRATION ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 The Celebration
               </h2>
@@ -153,7 +156,7 @@ const LumierePreview = () => {
         {/* ===== GIFT REGISTRY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={brushCardStyle}>
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Gift Registry
               </h2>
@@ -180,7 +183,7 @@ const LumierePreview = () => {
 
         {/* ===== RSVP ===== */}
         <div className="px-6 py-16">
-          <div className="max-w-md mx-auto" style={cardStyle}>
+          <div className="max-w-md mx-auto" style={brushCardStyle}>
             <RsvpSection
               staticDeadline={new Date("2025-08-01")}
               bgClassName="bg-transparent"

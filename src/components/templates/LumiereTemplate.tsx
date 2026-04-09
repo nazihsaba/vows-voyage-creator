@@ -10,14 +10,17 @@ import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 
-/* ── Glassmorphic card style for content sections ── */
-const cardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.85)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  borderRadius: "1rem",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.4)",
+/* ── Watercolor brush-edge card style (matches reference) ── */
+const brushCardStyle: React.CSSProperties = {
+  background: "#faf8f5",
+  WebkitMaskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  WebkitMaskComposite: "source-in" as any,
+  maskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  maskComposite: "intersect" as any,
 };
 
 interface LumiereTemplateProps {
@@ -179,7 +182,7 @@ export const LumiereTemplate = ({
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 text-center" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 text-center" style={brushCardStyle}>
               <EditableField
                 fieldId="lumiere-quote"
                 text={getFieldValue(
@@ -251,7 +254,7 @@ export const LumiereTemplate = ({
         {ceremony && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("events.ceremony")}
                 </h2>
@@ -281,7 +284,7 @@ export const LumiereTemplate = ({
         {venue && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("events.venue")}
                 </h2>
@@ -311,7 +314,7 @@ export const LumiereTemplate = ({
         {hasGiftCards && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("gifts.title")}
                 </h2>
@@ -329,7 +332,7 @@ export const LumiereTemplate = ({
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
           <div className="px-6 py-16">
-            <div className="max-w-md mx-auto" style={cardStyle}>
+            <div className="max-w-md mx-auto" style={brushCardStyle}>
               <RsvpSection
                 wedding={wedding}
                 isPreview={isPreview}
