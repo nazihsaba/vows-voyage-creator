@@ -939,6 +939,19 @@ const WeddingForm = () => {
                       }}
                       placeholder="— Ecclesiastes 4:9-12"
                     />
+                    {enableArabic && (
+                      <div className="space-y-1 mt-2">
+                        <Label className="text-xs text-muted-foreground">المرجع (Arabic)</Label>
+                        <Input
+                          value={arabicFields.aura_reference}
+                          onChange={(e) => setArabicFields(prev => ({ ...prev, aura_reference: e.target.value }))}
+                          dir="rtl"
+                          className="h-10 text-right font-arabic"
+                          placeholder={translatingFields.aura_reference ? "Translating..." : ""}
+                          disabled={translatingFields.aura_reference}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
