@@ -365,7 +365,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="whatsappIcon"
             >
-              <MessageCircle size={22} />
+              <img src={whatsappIcon} alt="WhatsApp" className="w-[22px] h-[22px]" />
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
