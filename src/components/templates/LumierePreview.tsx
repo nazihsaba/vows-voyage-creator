@@ -31,7 +31,7 @@ const DeckledCard = ({ children, className = "" }: { children: React.ReactNode; 
       }}
     />
     {/* Clean content on top — no filter */}
-    <div className="relative" style={{ padding: "2rem" }}>
+    <div className="relative" style={{ padding: "2rem 0" }}>
       {children}
     </div>
   </div>
