@@ -7,14 +7,36 @@ import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import VideoBackground from "@/components/templates/shared/VideoBackground";
-import EventDetailsSection from "@/components/templates/shared/EventDetailsSection";
-import GiftCardsSection from "@/components/templates/shared/GiftCardsSection";
-import GallerySection from "@/components/templates/shared/GallerySection";
+import { GiftCards } from "@/components/GiftCards";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Icon } from "@iconify/react";
 import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
+
+/* Torn / deckled edge SVG — placed at top or bottom of white sections */
+const TornEdgeTop = () => (
+  <div className="relative w-full -mt-px">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="block w-full h-[30px] md:h-[40px]">
+      <path
+        d="M0,40 C60,38 90,10 120,12 C150,14 180,35 240,32 C300,29 330,8 390,10 C450,12 480,30 540,28 C600,26 630,6 690,8 C750,10 780,32 840,30 C900,28 930,5 990,8 C1050,11 1080,28 1140,26 C1200,24 1230,8 1290,10 C1350,12 1380,30 1440,28 L1440,40 L0,40 Z"
+        fill="white"
+      />
+    </svg>
+  </div>
+);
+
+const TornEdgeBottom = () => (
+  <div className="relative w-full -mb-px">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="block w-full h-[30px] md:h-[40px]">
+      <path
+        d="M0,0 C60,2 90,30 120,28 C150,26 180,5 240,8 C300,11 330,32 390,30 C450,28 480,10 540,12 C600,14 630,34 690,32 C750,30 780,8 840,10 C900,12 930,35 990,32 C1050,29 1080,12 1140,14 C1200,16 1230,32 1290,30 C1350,28 1380,10 1440,12 L1440,0 L0,0 Z"
+        fill="white"
+      />
+    </svg>
+  </div>
+);
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -68,15 +90,11 @@ export const LumiereTemplate = ({
     } else {
       document.body.style.overflow = "auto";
     }
-    return () => {
-      document.body.style.overflow = "auto";
-    };
+    return () => { document.body.style.overflow = "auto"; };
   }, [hasStarted]);
 
   useEffect(() => {
-    return () => {
-      document.documentElement.dir = "ltr";
-    };
+    return () => { document.documentElement.dir = "ltr"; };
   }, []);
 
   const handleTimeUpdate = () => {
@@ -98,11 +116,7 @@ export const LumiereTemplate = ({
           audio.addEventListener("seeked", () => resolve(), { once: true });
         });
       }
-      try {
-        await audio.play();
-      } catch (err) {
-        console.log("Audio playback failed:", err);
-      }
+      try { await audio.play(); } catch (err) { console.log("Audio playback failed:", err); }
     }
     setTimeout(() => {
       document.getElementById("lumiere-story")?.scrollIntoView({ behavior: "smooth" });
@@ -112,7 +126,7 @@ export const LumiereTemplate = ({
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (
-    <div className="w-full overflow-x-hidden" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="w-full overflow-x-hidden font-serif" dir={isArabic ? "rtl" : "ltr"}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -122,11 +136,11 @@ export const LumiereTemplate = ({
       )}
 
       {/* Fixed Video Background */}
-      <VideoBackground videoUrl={videoUrl} overlayOpacity={0.45} fixed />
+      <VideoBackground videoUrl={videoUrl} overlayOpacity={0.3} fixed />
 
       {/* Scrollable Foreground */}
       <div className="relative z-10">
-        {/* Hero */}
+        {/* Hero — video shows through */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white px-4">
           <div className="space-y-6 max-w-2xl animate-fade-in">
             <EditableField
@@ -164,10 +178,7 @@ export const LumiereTemplate = ({
               text={getFieldValue(
                 "wedding-date-display",
                 new Date(wedding.wedding_date).toLocaleDateString(dateLocale, {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
+                  weekday: "long", year: "numeric", month: "long", day: "numeric",
                 })
               )}
               style={getFieldStyle("wedding-date-display")}
@@ -190,35 +201,11 @@ export const LumiereTemplate = ({
           </div>
         </section>
 
-        {/* Story / Family Names */}
-        <section id="lumiere-story" className="py-20 px-4 text-center">
+        {/* ─── White Section: Story / Family ─── */}
+        <TornEdgeTop />
+        <section id="lumiere-story" className="bg-white py-16 text-center text-[#3e2723]">
           <AnimatedSection animation="fade-up">
-            <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 space-y-8">
-              <div className="space-y-4">
-                <EditableField
-                  fieldId="groom-family"
-                  text={t("family.theFamily", {
-                    name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom's Family")),
-                  })}
-                  style={getFieldStyle("groom-family")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h2"
-                  className="text-template-subtitle text-white"
-                />
-                <p className="text-2xl text-white/80">&</p>
-                <EditableField
-                  fieldId="bride-family"
-                  text={t("family.theFamily", {
-                    name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")),
-                  })}
-                  style={getFieldStyle("bride-family")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h2"
-                  className="text-template-subtitle text-white"
-                />
-              </div>
+            <div className="max-w-xl mx-auto px-6 space-y-8">
               <EditableField
                 fieldId="invitation-text"
                 text={getFieldValue(
@@ -230,87 +217,158 @@ export const LumiereTemplate = ({
                 isPreview={isPreview}
                 multiline
                 tag="p"
-                className="text-template-body text-white/90"
+                className="text-template-body"
+              />
+              <div className="space-y-2">
+                <EditableField
+                  fieldId="groom-family"
+                  text={getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom's Family"))}
+                  style={getFieldStyle("groom-family")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-subtitle font-bold"
+                />
+                <EditableField
+                  fieldId="bride-family"
+                  text={getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family"))}
+                  style={getFieldStyle("bride-family")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-subtitle font-bold"
+                />
+              </div>
+              <p className="text-template-body text-gray-600">{t("family.kindlyJoin", "Kindly join us as we unite in marriage.")}</p>
+              <div className="space-y-1">
+                <EditableField
+                  fieldId="groom-name-story"
+                  text={getFieldValue("groom-name-story", getLocalizedValue("groom_name", wedding.groom_name))}
+                  style={getFieldStyle("groom-name-story")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-title text-[#3e2723]"
+                />
+                <p className="text-2xl">&</p>
+                <EditableField
+                  fieldId="bride-name-story"
+                  text={getFieldValue("bride-name-story", getLocalizedValue("bride_name", wedding.bride_name))}
+                  style={getFieldStyle("bride-name-story")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-title text-[#3e2723]"
+                />
+              </div>
+              <EditableField
+                fieldId="wedding-date-story"
+                text={getFieldValue(
+                  "wedding-date-story",
+                  new Date(wedding.wedding_date).toLocaleDateString(dateLocale, {
+                    weekday: "long", year: "numeric", month: "long", day: "numeric",
+                  })
+                )}
+                style={getFieldStyle("wedding-date-story")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-template-body"
               />
             </div>
           </AnimatedSection>
         </section>
+        <TornEdgeBottom />
 
-        {/* Countdown */}
+        {/* Video gap — countdown area */}
         <section className="py-16 px-4">
-          <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
+          <div className="relative z-10">
             <CountdownTimer targetDate={wedding.wedding_date} variant="dark" />
           </div>
         </section>
 
-        {/* Events */}
-        <EventDetailsSection
-          title={t("events.title")}
-          subtitle={getFieldValue("events-subtitle", t("events.defaultSubtitle"))}
-          ceremony={ceremony}
-          venue={venue}
-          ceremonyLabel={t("events.ceremony")}
-          venueLabel={t("events.venue")}
-          locationLabel={t("events.eventLocation")}
-          mapButtonText={t("events.viewOnMap")}
-          className="py-16 px-4"
-          cardClassName="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 space-y-6"
-          titleClassName="text-white"
-          textClassName="text-white"
-          buttonClassName="inline-block bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-md transition-colors border border-white/30"
-          formatTime={formatTimeTo12Hour}
-          getLocalizedLocation={getLocalizedValue}
-        />
-
-        {/* Gallery */}
-        {gallery.length > 0 && (
-          <section className="py-16 px-4">
-            <div className="max-w-5xl mx-auto">
+        {/* ─── White Section: Ceremony ─── */}
+        {ceremony && (
+          <>
+            <TornEdgeTop />
+            <section className="bg-white py-16 text-center text-[#3e2723]">
               <AnimatedSection animation="fade-up">
-                <h2 className="text-template-subtitle text-center mb-10 text-white">{t("gallery.title", "Gallery")}</h2>
+                <div className="max-w-xl mx-auto px-6 space-y-6">
+                  <h2 className="text-template-title">{t("events.ceremony")}</h2>
+                  <MapPin className="w-6 h-6 mx-auto text-[#3e2723]" />
+                  <p className="text-template-body">
+                    {getLocalizedValue("ceremony_location", ceremony.location_name)}
+                    {ceremony.time ? ` - ${formatTimeTo12Hour(ceremony.time)}` : ""}
+                  </p>
+                  {ceremony.location_link && (
+                    <a
+                      href={ceremony.location_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block border border-[#3e2723] text-[#3e2723] px-8 py-2 rounded-sm transition-colors hover:bg-[#3e2723] hover:text-white"
+                    >
+                      {t("events.viewOnMap", "Map")}
+                    </a>
+                  )}
+                </div>
               </AnimatedSection>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                {gallery.map((img, i) => (
-                  <AnimatedSection key={img.id} delay={i * 100} animation="scale-in">
-                    <div className="aspect-square overflow-hidden rounded-xl border border-white/20">
-                      <img
-                        src={img.image_url}
-                        alt={img.alt_text || `Photo ${i + 1}`}
-                        loading="lazy"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  </AnimatedSection>
-                ))}
-              </div>
-            </div>
-          </section>
+            </section>
+            <TornEdgeBottom />
+          </>
         )}
 
-        {/* Gift Cards */}
+        {/* ─── White Section: Venue ─── */}
+        {venue && (
+          <>
+            <TornEdgeTop />
+            <section className="bg-white py-16 text-center text-[#3e2723]">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-xl mx-auto px-6 space-y-6">
+                  <h2 className="text-template-title">{t("events.venue")}</h2>
+                  <MapPin className="w-6 h-6 mx-auto text-[#3e2723]" />
+                  <p className="text-template-body">
+                    {getLocalizedValue("venue_location", venue.location_name)}
+                    {venue.time ? ` - ${formatTimeTo12Hour(venue.time)}` : ""}
+                  </p>
+                  {venue.location_link && (
+                    <a
+                      href={venue.location_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block border border-[#3e2723] text-[#3e2723] px-8 py-2 rounded-sm transition-colors hover:bg-[#3e2723] hover:text-white"
+                    >
+                      {t("events.viewOnMap", "Map")}
+                    </a>
+                  )}
+                </div>
+              </AnimatedSection>
+            </section>
+            <TornEdgeBottom />
+          </>
+        )}
+
+        {/* ─── White Section: Gift Cards ─── */}
         {giftCards.length > 0 && (
-          <section className="py-16 px-4">
-            <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-              <h2 className="text-template-subtitle text-center mb-12 text-white">{t("gifts.title")}</h2>
-              <p className="text-center text-template-body mb-8 text-white/70">{t("gifts.subtitle")}</p>
-              <div className="grid gap-4 md:grid-cols-2">
-                {giftCards.map((card, index) => (
-                  <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
-                    <div className="bg-white/10 p-6 rounded-lg text-center border border-white/20">
-                      <p className="font-semibold text-lg text-white">{card.card_name}</p>
-                      <p className="text-white/70 mt-2">{card.card_number}</p>
-                    </div>
-                  </AnimatedSection>
-                ))}
-              </div>
-            </div>
-          </section>
+          <>
+            <TornEdgeTop />
+            <section className="bg-white py-16 text-center text-[#3e2723]">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-xl mx-auto px-6 space-y-6">
+                  <h2 className="text-template-title">{t("gifts.title")}</h2>
+                  <p className="text-template-body text-gray-600">{t("gifts.subtitle")}</p>
+                  <GiftCards giftCards={giftCards} isOwner={isOwner} />
+                </div>
+              </AnimatedSection>
+            </section>
+            <TornEdgeBottom />
+          </>
         )}
 
-        {/* RSVP */}
+        {/* ─── White Section: RSVP ─── */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <div className="py-8 px-4">
-            <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
+          <>
+            <TornEdgeTop />
+            <div className="bg-white">
               <RsvpSection
                 wedding={wedding}
                 isPreview={isPreview}
@@ -321,17 +379,16 @@ export const LumiereTemplate = ({
                 numberOfPersons={numberOfPersons}
                 isRsvpDeadlinePassed={isRsvpDeadlinePassed}
                 submittingRsvp={submittingRsvp}
-                bgClassName="bg-transparent"
-                cardBgClassName="bg-white/10"
               />
             </div>
-          </div>
+            <TornEdgeBottom />
+          </>
         )}
 
-        {/* Closing */}
+        {/* Closing — over video */}
         <AnimatedSection animation="fade-in">
           <section className="py-16 px-4 text-center">
-            <div className="max-w-3xl mx-auto space-y-8">
+            <div className="max-w-3xl mx-auto">
               <EditableField
                 fieldId="closing-message"
                 text={getFieldValue("closing-message", t("closing.defaultMessage"))}
@@ -340,7 +397,7 @@ export const LumiereTemplate = ({
                 isPreview={isPreview}
                 multiline
                 tag="p"
-                className="text-template-body text-white/90"
+                className="text-template-body text-white"
               />
             </div>
           </section>
