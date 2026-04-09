@@ -27,10 +27,12 @@ import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
+import lumiereTemplate from "@/assets/lumiere-preview.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
+import LumierePreview from "@/components/templates/LumierePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -107,6 +109,19 @@ const Dashboard = () => {
         { icon: Sparkles, text: "Bible Verse" },
         { icon: Heart, text: "Family Names" },
         { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+      ],
+    },
+    {
+      id: "lumiere-editorial",
+      name: "Lumière",
+      description: "Romantic editorial design with premium minimal typography",
+      image: lumiereTemplate,
+      features: [
+        { icon: Images, text: "Photo Gallery" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
       ],
@@ -243,6 +258,7 @@ const Dashboard = () => {
                           template2: "/dashboard/verite-form",
                           "classic-romance": "/dashboard/eclat-form",
                           template6: "/dashboard/grace-form",
+                          "lumiere-editorial": "/dashboard/lumiere-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -316,6 +332,7 @@ const Dashboard = () => {
             {showPreview === "template6" && <GracePreview />}
             {showPreview === "classic-romance" && <EclatPreview />}
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
+            {showPreview === "lumiere-editorial" && <LumierePreview />}
           </div>
         </DialogContent>
       </Dialog>
