@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next';
+import { Globe } from 'lucide-react';
 
 interface LanguageToggleProps {
   className?: string;
@@ -17,12 +18,31 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
   return (
     <button
       onClick={toggle}
-      className={`fixed top-4 left-4 z-50 flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold backdrop-blur-md bg-white/80 text-foreground shadow-md border border-border/50 hover:bg-white transition-colors ${className}`}
+      className={`fixed top-4 left-4 z-50 flex items-center gap-2 h-9 pl-2.5 pr-1 rounded-full backdrop-blur-xl bg-black/60 text-white shadow-lg border border-white/10 hover:bg-black/70 transition-all duration-300 ${className}`}
       aria-label="Switch language"
     >
-      <span className={`transition-opacity ${isArabic ? 'opacity-50' : 'opacity-100'}`}>EN</span>
-      <span className="text-muted-foreground">/</span>
-      <span className={`transition-opacity ${isArabic ? 'opacity-100' : 'opacity-50'}`}>AR</span>
+      <Globe className="w-3.5 h-3.5 opacity-70" />
+      <div className="relative flex items-center bg-white/10 rounded-full p-0.5">
+        <div
+          className={`absolute h-6 w-9 rounded-full bg-white/20 shadow-sm transition-transform duration-300 ease-out ${
+            isArabic ? 'translate-x-9' : 'translate-x-0'
+          }`}
+        />
+        <span
+          className={`relative z-10 w-9 text-center text-xs font-semibold py-1 rounded-full transition-colors duration-300 ${
+            !isArabic ? 'text-white' : 'text-white/50'
+          }`}
+        >
+          EN
+        </span>
+        <span
+          className={`relative z-10 w-9 text-center text-xs font-semibold py-1 rounded-full transition-colors duration-300 ${
+            isArabic ? 'text-white' : 'text-white/50'
+          }`}
+        >
+          AR
+        </span>
+      </div>
     </button>
   );
 };
