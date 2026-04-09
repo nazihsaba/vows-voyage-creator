@@ -151,7 +151,7 @@ export const LumiereTemplate = ({
                 isPreview={isPreview}
                 tag="p"
                 className="text-lg italic leading-relaxed text-foreground/70"
-                customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                
               />
 
               <div className="space-y-6">
@@ -163,7 +163,7 @@ export const LumiereTemplate = ({
                   isPreview={isPreview}
                   tag="p"
                   className="text-xs tracking-[0.35em] uppercase text-foreground/50"
-                  customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                  
                 />
 
                 <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12">
@@ -188,7 +188,7 @@ export const LumiereTemplate = ({
                       isPreview={isPreview}
                       tag="p"
                       className="text-xl font-light"
-                      customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                      
                     />
                   </div>
                   <span className="text-2xl font-extralight text-foreground/30">&</span>
@@ -213,7 +213,7 @@ export const LumiereTemplate = ({
                       isPreview={isPreview}
                       tag="p"
                       className="text-xl font-light"
-                      customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                      
                     />
                   </div>
                 </div>
@@ -231,7 +231,7 @@ export const LumiereTemplate = ({
                 multiline={true}
                 tag="p"
                 className="text-sm leading-relaxed text-foreground/60 whitespace-pre-line"
-                customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                
               />
 
               <div className="w-12 h-px bg-foreground/20 mx-auto" />
@@ -265,7 +265,7 @@ export const LumiereTemplate = ({
                 isPreview={isPreview}
                 tag="p"
                 className="text-base tracking-widest text-foreground/70"
-                customStyle={{ fontFamily: "'Cormorant Garamond', serif" }}
+                
               />
               <div className="w-16 h-px bg-foreground/15 mx-auto" />
             </div>
@@ -425,7 +425,7 @@ export const LumiereTemplate = ({
               isPreview={isPreview}
               tag="p"
               className="text-3xl text-foreground/70"
-              customStyle={{ fontFamily: "'Dancing Script', cursive" }}
+              
             />
             <div className="w-12 h-px bg-foreground/15 mx-auto mt-8" />
           </AnimatedSection>
