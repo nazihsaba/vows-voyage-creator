@@ -72,7 +72,7 @@ const LumierePreview = () => {
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10" className="lumiere-torn-card">
+            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 lumiere-torn-card">
               <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 I have found the one whom my soul loves.
               </p>
@@ -100,7 +100,7 @@ const LumierePreview = () => {
         {/* ===== CEREMONY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" className="lumiere-torn-card">
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Wedding Ceremony
               </h2>
@@ -127,7 +127,7 @@ const LumierePreview = () => {
         {/* ===== CELEBRATION ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" className="lumiere-torn-card">
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 The Celebration
               </h2>
@@ -154,7 +154,7 @@ const LumierePreview = () => {
         {/* ===== GIFT REGISTRY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" className="lumiere-torn-card">
+            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Gift Registry
               </h2>
@@ -181,7 +181,7 @@ const LumierePreview = () => {
 
         {/* ===== RSVP ===== */}
         <div className="px-6 py-16">
-          <div className="max-w-md mx-auto" className="lumiere-torn-card">
+          <div className="max-w-md mx-auto lumiere-torn-card">
             <RsvpSection
               staticDeadline={new Date("2025-08-01")}
               bgClassName="bg-transparent"
