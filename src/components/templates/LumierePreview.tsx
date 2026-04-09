@@ -21,10 +21,10 @@ const DeckledEdgeFilter = () => (
 
 /* ── Card wrapper that applies deckled edge ONLY to the silhouette ── */
 const DeckledCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <div className={`relative ${className}`}>
-    {/* Background shape with deckled edges */}
+  <div className={`relative w-full ${className}`}>
+    {/* Background shape with deckled edges — full width */}
     <div
-      className="absolute inset-0 -left-8 -right-8"
+      className="absolute -inset-x-4 inset-y-0"
       style={{
         background: "rgba(255, 255, 255, 0.92)",
         filter: "url(#deckled-edge)",
