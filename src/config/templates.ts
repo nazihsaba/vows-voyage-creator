@@ -468,42 +468,6 @@ export const templates: Template[] = [
       animations: true,
     },
   },
-  {
-    id: 'lumiere-editorial',
-    name: 'Lumière',
-    category: 'elegant',
-    description: 'Cinematic fixed video background with glassmorphic scrollable content cards',
-    thumbnail: '/placeholder.svg',
-    isPremium: true,
-    isPopular: true,
-    component: 'LumiereTemplate',
-    sections: [
-      { id: 'hero', enabled: true, order: 1, customizable: true },
-      { id: 'story', enabled: true, order: 2, customizable: true },
-      { id: 'countdown', enabled: true, order: 3, customizable: true },
-      { id: 'location', enabled: true, order: 4, customizable: true },
-      { id: 'gallery', enabled: true, order: 5, customizable: true },
-      { id: 'gifts', enabled: true, order: 6, customizable: true },
-      { id: 'rsvp', enabled: true, order: 7, customizable: true },
-    ],
-    style: {
-      layout: 'single-page',
-      spacing: 'spacious',
-      fontPrimary: 'Dancing Script',
-      fontSecondary: 'Inter',
-      headingSize: 'xl',
-      colorScheme: {
-        primary: '#ffffff',
-        secondary: '#D4AF37',
-        accent: '#ffffff',
-        background: 'transparent',
-        text: '#ffffff',
-      },
-      borderRadius: 'lg',
-      shadows: 'medium',
-      animations: true,
-    },
-  },
 ];
 
 export const templateConfig: TemplateConfig = {
