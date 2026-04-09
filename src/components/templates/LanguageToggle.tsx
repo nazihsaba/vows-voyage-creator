@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next';
 
-
 interface LanguageToggleProps {
   className?: string;
 }
@@ -18,27 +17,28 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
   return (
     <button
       onClick={toggle}
-      className={`fixed top-4 left-4 z-50 flex items-center gap-2 h-9 pl-2.5 pr-1 rounded-full backdrop-blur-xl bg-black/60 text-white shadow-lg border border-white/10 hover:bg-black/70 transition-all duration-300 ${className}`}
+      className={`fixed top-4 left-4 z-50 rounded-full p-[3px] bg-gradient-to-br from-white/30 via-white/10 to-white/5 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-all duration-300 hover:shadow-[0_6px_32px_rgba(0,0,0,0.35)] hover:scale-[1.03] active:scale-[0.97] ${className}`}
       aria-label="Switch language"
     >
-      
-      <div className="relative flex items-center bg-white/10 rounded-full p-0.5">
+      <div className="relative flex items-center bg-black/50 rounded-full overflow-hidden">
+        {/* Sliding active indicator */}
         <div
-          className={`absolute h-6 rounded-full bg-white/20 shadow-sm transition-transform duration-300 ease-out ${
-            isArabic ? 'translate-x-[52px] w-[52px]' : 'translate-x-0 w-[52px]'
+          className={`absolute top-0 bottom-0 w-1/2 rounded-full bg-white/20 border border-white/15 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+            isArabic ? 'left-1/2' : 'left-0'
           }`}
         />
         <span
-          className={`relative z-10 w-[52px] text-center text-[11px] font-semibold py-1 rounded-full transition-colors duration-300 ${
-            !isArabic ? 'text-white' : 'text-white/50'
+          className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 tracking-wide transition-all duration-300 ${
+            !isArabic ? 'text-white' : 'text-white/40'
           }`}
         >
           English
         </span>
         <span
-          className={`relative z-10 w-[52px] text-center text-[11px] font-semibold py-1 rounded-full transition-colors duration-300 ${
-            isArabic ? 'text-white' : 'text-white/50'
+          className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 transition-all duration-300 ${
+            isArabic ? 'text-white' : 'text-white/40'
           }`}
+          style={{ fontFamily: isArabic ? 'inherit' : undefined }}
         >
           العربية
         </span>
