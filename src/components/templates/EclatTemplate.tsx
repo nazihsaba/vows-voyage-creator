@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
@@ -8,7 +9,9 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
+import { useArabicContent } from "@/hooks/useArabicContent";
 
 interface EclatTemplateProps {
   wedding: any;
@@ -47,6 +50,8 @@ export const EclatTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: EclatTemplateProps) => {
+  const { t } = useTranslation();
+  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -85,6 +90,10 @@ export const EclatTemplate = ({
     };
   }, [hasStarted]);
 
+  useEffect(() => {
+    return () => { document.documentElement.dir = 'ltr'; };
+  }, []);
+
   const handleTimeUpdate = () => {
     if (audioRef.current && wedding.audio_end_time) {
       if (audioRef.current.currentTime >= wedding.audio_end_time) {
@@ -113,8 +122,12 @@ export const EclatTemplate = ({
     </AnimatedSection>
   );
 
+  const dateLocale = isArabic ? "ar-SA" : "en-US";
+
   return (
-    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
+    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
+      {hasArabic && <LanguageToggle />}
+
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
           <source src={wedding.audio_url} type="audio/mpeg" />
@@ -136,7 +149,7 @@ export const EclatTemplate = ({
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
           <EditableField
             fieldId="hero-subtitle"
-            text={getFieldValue("hero-subtitle", "The Wedding Of")}
+            text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
             style={getFieldStyle("hero-subtitle")}
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
@@ -146,7 +159,7 @@ export const EclatTemplate = ({
           <div className="space-y-2">
             <EditableField
               fieldId="groom-name"
-              text={getFieldValue("groom-name", wedding.groom_name)}
+              text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
               style={getFieldStyle("groom-name")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -156,7 +169,7 @@ export const EclatTemplate = ({
             <p className="text-4xl md:text-5xl">&</p>
             <EditableField
               fieldId="bride-name"
-              text={getFieldValue("bride-name", wedding.bride_name)}
+              text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
               style={getFieldStyle("bride-name")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -168,7 +181,7 @@ export const EclatTemplate = ({
             fieldId="wedding-date-display"
             text={getFieldValue(
               "wedding-date-display",
-              new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+              new Date(wedding.wedding_date).toLocaleDateString(dateLocale, {
                 weekday: "long",
                 year: "numeric",
                 month: "long",
@@ -186,7 +199,7 @@ export const EclatTemplate = ({
               onClick={handleStart}
               className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
             >
-              Tap To Start
+              {t("hero.tapToStart")}
             </Button>
           )}
         </div>
@@ -202,7 +215,7 @@ export const EclatTemplate = ({
             <div className="space-y-4">
               <EditableField
                 fieldId="groom-family"
-                text={`The ${getFieldValue("groom-family", wedding.groom_family || "Groom's Family")} Family`}
+                text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom's Family")) })}
                 style={getFieldStyle("groom-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -212,7 +225,7 @@ export const EclatTemplate = ({
               <p className="text-2xl">&</p>
               <EditableField
                 fieldId="bride-family"
-                text={`The ${getFieldValue("bride-family", wedding.bride_family || "Bride's Family")} Family`}
+                text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
                 style={getFieldStyle("bride-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -224,8 +237,7 @@ export const EclatTemplate = ({
               fieldId="invitation-text"
               text={getFieldValue(
                 "invitation-text",
-                wedding.main_description ||
-                  "Request the honor of your presence at the wedding of their Son and Daughter",
+                getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
               )}
               style={getFieldStyle("invitation-text")}
               onUpdate={onFieldUpdate}
@@ -256,13 +268,10 @@ export const EclatTemplate = ({
         <div className="max-w-4xl mx-auto text-center space-y-12">
           <AnimatedSection animation="fade-up">
             <div>
-              <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
+              <h2 className="text-template-subtitle mb-6 text-primary">{t("events.title")}</h2>
               <EditableField
                 fieldId="events-subtitle"
-                text={getFieldValue(
-                  "events-subtitle",
-                  "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:",
-                )}
+                text={getFieldValue("events-subtitle", t("events.defaultSubtitle"))}
                 style={getFieldStyle("events-subtitle")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -280,11 +289,13 @@ export const EclatTemplate = ({
                   <div className="flex items-center justify-center w-full">
                     <Icon icon={ceremony.icon || "material-symbols:church-rounded"} className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Ceremony</h3>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.ceremony")}</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
                   <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">Event Location</p>
-                    <p className="text-template-body font-medium text-[#3e2723]">{ceremony.location_name}</p>
+                    <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">
+                      {getLocalizedValue("ceremony_location", ceremony.location_name)}
+                    </p>
                   </div>
                   {ceremony.location_link && (
                     <a
@@ -293,7 +304,7 @@ export const EclatTemplate = ({
                       rel="noopener noreferrer"
                       className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                     >
-                      View on Map
+                      {t("events.viewOnMap")}
                     </a>
                   )}
                 </div>
@@ -305,10 +316,10 @@ export const EclatTemplate = ({
                   <div className="flex items-center justify-center w-full">
                     <Icon icon={venue.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
                   </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">Venue</h3>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.venue")}</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">Event Location</p>
+                    <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
                     <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
                   </div>
                   {venue.location_link && (
@@ -318,7 +329,7 @@ export const EclatTemplate = ({
                       rel="noopener noreferrer"
                       className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
                     >
-                      View on Map
+                      {t("events.viewOnMap")}
                     </a>
                   )}
                 </div>
@@ -336,10 +347,8 @@ export const EclatTemplate = ({
         <AnimatedSection animation="fade-up">
           <section className="py-16 px-4 bg-white">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">
-                For those who desire a wedding list is available
-              </p>
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
+              <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>
@@ -370,10 +379,7 @@ export const EclatTemplate = ({
           <div className="max-w-3xl mx-auto space-y-8">
             <EditableField
               fieldId="closing-message"
-              text={getFieldValue(
-                "closing-message",
-                "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us.",
-              )}
+              text={getFieldValue("closing-message", t("closing.defaultMessage"))}
               style={getFieldStyle("closing-message")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -385,7 +391,6 @@ export const EclatTemplate = ({
         </section>
       </AnimatedSection>
 
-      {/* ===== BRANDED FOOTER ===== */}
       <TemplatePreviewFooter />
     </div>
   );

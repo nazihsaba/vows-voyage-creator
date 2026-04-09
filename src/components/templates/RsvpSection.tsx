@@ -1,8 +1,8 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
-import { CalendarHeart } from "lucide-react";
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
@@ -33,17 +33,18 @@ export const RsvpSection = ({
   bgClassName = "bg-white",
   cardBgClassName = "bg-[#faf8f5]",
 }: RsvpSectionProps) => {
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === 'ar';
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) : null);
+  const dateLocale = isArabic ? "ar-SA" : "en-US";
 
   return (
     <AnimatedSection animation="fade-up">
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">Join Our Celebration</h2>
-            <p className="text-center text-template-body mb-8 text-muted-foreground">
-              Please let us know if you can join us on our special day. Your presence would mean the world to us.
-            </p>
+            <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("rsvp.title")}</h2>
+            <p className="text-center text-template-body mb-8 text-muted-foreground">{t("rsvp.subtitle")}</p>
           </div>
 
           {invitees.length > 0 && (
@@ -67,7 +68,7 @@ export const RsvpSection = ({
                         htmlFor={`rsvp-${invitee.id}`}
                         className={`text-base cursor-pointer font-medium ${isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"}`}
                       >
-                        {rsvpResponses[invitee.id] === true ? "Attending ✓" : "Will Attend?"}
+                        {rsvpResponses[invitee.id] === true ? t("rsvp.attending") : t("rsvp.willAttend")}
                       </Label>
                     </div>
                   </div>
@@ -75,10 +76,10 @@ export const RsvpSection = ({
               </div>
               <div className="pt-6 border-t border-gray-300 space-y-4">
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
-                  Number of Guests: {numberOfPersons || invitees.length}
+                  {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
                 {isRsvpDeadlinePassed ? (
-                  <p className="text-sm text-red-600 text-center font-medium">RSVP deadline has passed</p>
+                  <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
                 ) : (
                   <Button
                     onClick={handleRsvpSubmit}
@@ -86,7 +87,7 @@ export const RsvpSection = ({
                     className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90"
                     size="lg"
                   >
-                    {submittingRsvp ? "Submitting..." : "Submit RSVP"}
+                    {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submit")}
                   </Button>
                 )}
               </div>
@@ -96,10 +97,10 @@ export const RsvpSection = ({
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">
               <p className="text-template-small text-center mb-2 text-gray-600">
-                {invitees.length > 0 ? "Please RSVP by:" : "Kindly confirm your attendance before this date:"}
+                {invitees.length > 0 ? t("rsvp.rsvpBy") : t("rsvp.confirmBefore")}
               </p>
               <p className="text-template-heading text-primary text-center">
-                {rsvpDeadline.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                {rsvpDeadline.toLocaleDateString(dateLocale, { year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
           )}

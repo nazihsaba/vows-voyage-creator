@@ -1,14 +1,16 @@
 import { useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { Calendar, MapPin } from "lucide-react";
 import { Icon } from "@iconify/react";
-import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
+import { useArabicContent } from "@/hooks/useArabicContent";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -47,6 +49,8 @@ export const AuraTemplate = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
 }: AuraTemplateProps) => {
+  const { t } = useTranslation();
+  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
@@ -60,7 +64,6 @@ export const AuraTemplate = ({
       const playPromise = audio.play();
       if (playPromise) {
         playPromise.catch(() => {
-          // Autoplay blocked by browser; play on first user interaction
           const playOnInteraction = () => {
             audio.play().catch(() => {});
             document.removeEventListener("click", playOnInteraction);
@@ -73,6 +76,10 @@ export const AuraTemplate = ({
     }
   }, [wedding.audio_url, wedding.audio_start_time]);
 
+  useEffect(() => {
+    return () => { document.documentElement.dir = 'ltr'; };
+  }, []);
+
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
     if (audio && wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
@@ -80,17 +87,18 @@ export const AuraTemplate = ({
     }
   };
 
+  const dateLocale = isArabic ? "ar-SA" : "en-US";
   const weddingDate = new Date(wedding.wedding_date);
-  const dateFormatted = weddingDate.toLocaleDateString("en-US", { day: "numeric", month: "long" });
+  const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
 
   const timelineEvents = [
     ...(ceremony
       ? [
           {
             id: "ceremony",
-            title: "Ceremony",
+            title: t("events.ceremony"),
             time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
-            location: ceremony.location_name,
+            location: getLocalizedValue("ceremony_location", ceremony.location_name),
             link: ceremony.location_link,
             icon: ceremony.icon || "material-symbols:church-rounded",
           },
@@ -100,7 +108,7 @@ export const AuraTemplate = ({
       ? [
           {
             id: "venue",
-            title: "Venue",
+            title: t("events.venue"),
             time: formatTimeTo12Hour(venue.time) || "8:00 PM",
             location: venue.location_name,
             link: venue.location_link,
@@ -113,7 +121,9 @@ export const AuraTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
+      {hasArabic && <LanguageToggle />}
+
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
       )}
@@ -132,7 +142,7 @@ export const AuraTemplate = ({
                 fieldId="bible-verse"
                 text={getFieldValue(
                   "bible-verse",
-                  '"Two are better than one. For if they fall, one will lift up the other."',
+                  getLocalizedValue("quote", '"Two are better than one. For if they fall, one will lift up the other."'),
                 )}
                 style={getFieldStyle("bible-verse")}
                 onUpdate={onFieldUpdate}
@@ -142,7 +152,7 @@ export const AuraTemplate = ({
               />
               <EditableField
                 fieldId="bible-verse-reference"
-                text={getFieldValue("bible-verse-reference", "— Ecclesiastes 4:9-12")}
+                text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
                 style={getFieldStyle("bible-verse-reference")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -155,7 +165,7 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
               <EditableField
                 fieldId="together-text"
-                text={getFieldValue("together-text", "Together with their families")}
+                text={getFieldValue("together-text", t("aura.togetherWithFamilies"))}
                 style={getFieldStyle("together-text")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -169,7 +179,7 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="groom-parents"
-                    text={getFieldValue("groom-parents", `Mr. & Mrs.`)}
+                    text={getFieldValue("groom-parents", t("aura.mrAndMrs"))}
                     style={getFieldStyle("groom-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -180,7 +190,7 @@ export const AuraTemplate = ({
                     fieldId="groom-family-name"
                     text={getFieldValue(
                       "groom-family-name",
-                      wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
+                      getLocalizedValue("groom_family", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family"),
                     )}
                     style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
@@ -193,7 +203,7 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-parents"
-                    text={getFieldValue("bride-parents", `Mr. & Mrs.`)}
+                    text={getFieldValue("bride-parents", t("aura.mrAndMrs"))}
                     style={getFieldStyle("bride-parents")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -204,7 +214,7 @@ export const AuraTemplate = ({
                     fieldId="bride-family-name"
                     text={getFieldValue(
                       "bride-family-name",
-                      wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
+                      getLocalizedValue("bride_family", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family"),
                     )}
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
@@ -221,8 +231,7 @@ export const AuraTemplate = ({
                 fieldId="invitation-line"
                 text={getFieldValue(
                   "invitation-line",
-                  wedding.main_description ||
-                    "Request the honor of your presence at the wedding of their Son and Daughter",
+                  getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
                 )}
                 style={getFieldStyle("invitation-line")}
                 onUpdate={onFieldUpdate}
@@ -236,7 +245,7 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
                 <h1 className="text-template-title text-primary">
-                  {wedding.groom_name} & {wedding.bride_name}
+                  {getLocalizedValue("groom_name", wedding.groom_name)} & {getLocalizedValue("bride_name", wedding.bride_name)}
                 </h1>
               </div>
             </div>
@@ -248,7 +257,7 @@ export const AuraTemplate = ({
                   fieldId="wedding-date-formatted"
                   text={getFieldValue(
                     "wedding-date-formatted",
-                    new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                    new Date(wedding.wedding_date).toLocaleDateString(dateLocale, {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
@@ -308,7 +317,7 @@ export const AuraTemplate = ({
                             className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
                           >
                             <MapPin className="w-4 h-4" />
-                            Location
+                            {t("events.location")}
                           </a>
                         )}
                       </div>
@@ -324,7 +333,7 @@ export const AuraTemplate = ({
         {gallery && gallery.length > 0 && (
           <section className="mb-16">
             <AnimatedSection animation="fade-in">
-              <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
+              <h2 className="text-template-subtitle text-center text-primary mb-8">{t("gallery.title")}</h2>
             </AnimatedSection>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               {gallery.map((image: any, index: number) => (
@@ -348,10 +357,8 @@ export const AuraTemplate = ({
           <section className="py-16 px-4 bg-card">
             <div className="max-w-4xl mx-auto">
               <AnimatedSection animation="fade-in">
-                <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
-                <p className="text-center text-template-body mb-8 text-muted-foreground">
-                  For those who desire a wedding list is available
-                </p>
+                <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
+                <p className="text-center text-template-body mb-8 text-muted-foreground">{t("gifts.subtitle")}</p>
               </AnimatedSection>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
@@ -395,7 +402,6 @@ export const AuraTemplate = ({
           />
         )}
 
-        {/* ===== BRANDED FOOTER ===== */}
         <TemplatePreviewFooter />
       </div>
     </div>
