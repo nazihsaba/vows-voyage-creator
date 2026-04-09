@@ -363,9 +363,9 @@ const Index = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
-              aria-label="whatsappIcon"
+              aria-label="WhatsApp"
             >
-              <MessageCircle size={22} />
+              <Icon icon="basil:whatsapp-outline" className="w-6 h-6" />
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
