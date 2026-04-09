@@ -85,24 +85,24 @@ const LumierePreview = () => {
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
             <div className="max-w-md mx-auto space-y-8 p-8 md:p-10" style={cardStyle}>
-              <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 I have found the one whom my soul loves.
               </p>
 
               <div className="flex flex-col items-center gap-1">
-                <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Mr. & Mrs. Vale
                 </p>
-                <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Mr. & Mrs. Maris
                 </p>
               </div>
 
-              <p className="text-base leading-relaxed text-foreground/70 text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-base leading-relaxed text-foreground/70 text-center" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 Kindly join us as we unite in marriage.
               </p>
 
-              <p className="text-sm italic text-foreground/50 text-center" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-sm italic text-foreground/50 text-center" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 The wedding day has arrived!
               </p>
             </div>
@@ -118,17 +118,17 @@ const LumierePreview = () => {
               </h2>
               <MapPin className="w-6 h-6 mx-auto text-foreground/80 fill-foreground/80" />
               <div className="space-y-1">
-                <p className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-base text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Couvent Saint Sauveur - Sarba - 07:00 PM
                 </p>
-                <p className="text-base text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-base text-foreground/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Jounieh, Lebanon
                 </p>
               </div>
               <a
                 href="#"
                 className="inline-block text-sm border border-foreground/30 px-8 py-2.5 text-foreground/70 hover:text-foreground hover:border-foreground/50 transition-colors"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
                 Map
               </a>
@@ -145,17 +145,17 @@ const LumierePreview = () => {
               </h2>
               <MapPin className="w-6 h-6 mx-auto text-foreground/80 fill-foreground/80" />
               <div className="space-y-1">
-                <p className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-base text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Carma - Jeita Country Club - 08:00 PM
                 </p>
-                <p className="text-base text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                <p className="text-base text-foreground/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   Jeita, Lebanon
                 </p>
               </div>
               <a
                 href="#"
                 className="inline-block text-sm border border-foreground/30 px-8 py-2.5 text-foreground/70 hover:text-foreground hover:border-foreground/50 transition-colors"
-                style={{ fontFamily: "'Cormorant Garamond', serif" }}
+                style={{ fontFamily: "'Montserrat', sans-serif" }}
               >
                 Map
               </a>
@@ -170,7 +170,7 @@ const LumierePreview = () => {
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Gift Registry
               </h2>
-              <p className="text-base leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-base leading-relaxed text-foreground/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                 Your love, laughter and presence are all we could wish for on our special day. For those who wish, a wedding list is available
               </p>
 
@@ -180,7 +180,7 @@ const LumierePreview = () => {
                   { id: "2", card_name: "Whish", card_number: "#123456" },
                 ].map((card) => (
                   <div key={card.id} className="space-y-1">
-                    <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                       {card.card_name}
                     </p>
                     <p className="text-foreground/60 text-sm">{card.card_number}</p>
