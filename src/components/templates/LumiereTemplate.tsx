@@ -116,6 +116,7 @@ export const LumiereTemplate = ({
 
   return (
     <div className="relative w-full min-h-screen text-foreground" dir={isArabic ? 'rtl' : 'ltr'}>
+      <TornPaperFilter />
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
