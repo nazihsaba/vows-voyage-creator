@@ -18,6 +18,7 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
     <button
       onClick={toggle}
       className={`fixed top-4 left-4 z-50 rounded-full p-[3px] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-2xl transition-all duration-300 hover:shadow-[0_6px_32px_rgba(0,0,0,0.18)] hover:scale-[1.03] active:scale-[0.97] ${className}`}
+      dir="ltr"
       aria-label="Switch language"
     >
       <div className="relative flex items-center bg-white rounded-full overflow-hidden">
