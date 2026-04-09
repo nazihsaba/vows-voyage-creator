@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { MapPin } from "lucide-react";
-import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -12,153 +11,119 @@ import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
 import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
 import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 
-const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const diff = targetDate.getTime() - Date.now();
-      if (diff > 0) {
-        setTimeRemaining({
-          days: Math.floor(diff / (1000 * 60 * 60 * 24)),
-          hours: Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
-          minutes: Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)),
-          seconds: Math.floor((diff % (1000 * 60)) / 1000),
-        });
-      }
-    };
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <div className="text-center">
-      <p className="text-xs tracking-[0.4em] uppercase text-foreground/40 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-        Counting Down
-      </p>
-      <div className="flex justify-center gap-6 md:gap-10">
-        {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
-        ].map((item) => (
-          <div key={item.label} className="text-center">
-            <div className="text-3xl md:text-4xl font-light text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{item.value}</div>
-            <div className="text-[10px] tracking-[0.2em] uppercase text-foreground/40 mt-2">{item.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+/* ── Watercolor / brush-stroke edge mask applied to divider images ── */
+const brushMaskStyle: React.CSSProperties = {
+  WebkitMaskImage:
+    "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
+  WebkitMaskComposite: "source-in" as any,
+  maskImage:
+    "linear-gradient(to bottom, transparent 0%, black 8%, black 92%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%)",
+  maskComposite: "intersect" as any,
 };
 
 const weddingDate = new Date("2025-08-16");
 
 const LumierePreview = () => {
+  const dividerImages = [eclatWedding2, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7];
+
   return (
     <div className="relative w-full min-h-screen bg-white text-foreground lg:px-[25%]">
       <div>
-        {/* ===== HERO ===== */}
+        {/* ===== HERO — full-width image with brush edges ===== */}
         <section className="relative w-full">
-          <div className="w-full h-[85vh] overflow-hidden">
-            <img src={eclatWedding2} alt="Wedding" className="w-full h-full object-cover" />
+          <div className="w-full h-[85vh] overflow-hidden" style={brushMaskStyle}>
+            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover" />
           </div>
-          <div className="py-16 px-6 text-center">
+
+          {/* Monogram with heart */}
+          <div className="py-14 px-6 text-center">
             <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
-              <div className="flex items-center justify-center gap-3 mb-8">
-                <span className="text-2xl font-light tracking-[0.2em] text-foreground/40" style={{ fontFamily: "'Cormorant Garamond', serif" }}>A</span>
-                <div className="w-8 h-px bg-foreground/20" />
-                <span className="text-2xl font-light tracking-[0.2em] text-foreground/40" style={{ fontFamily: "'Cormorant Garamond', serif" }}>E</span>
-              </div>
-              <h1 className="text-template-title text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
-                Adrian & Elena
-              </h1>
+              <p className="text-xl tracking-widest text-foreground/80 mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                A<span className="text-foreground/50 mx-1">♥</span>E
+              </p>
             </div>
           </div>
         </section>
 
         {/* ===== INVITATION MESSAGE ===== */}
-        <section className="py-20 px-6 text-center">
+        <section className="py-10 px-6 text-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-10">
-              <div className="w-12 h-px bg-foreground/20 mx-auto" />
+            <div className="max-w-md mx-auto space-y-8">
               <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                "I have found the one whom my soul loves."
+                I have found the one whom my soul loves.
               </p>
 
-              <div className="space-y-6">
-                <p className="text-xs tracking-[0.35em] uppercase text-foreground/50" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                  Together with their families
-                </p>
-
-                <div className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-12">
-                  <div className="text-center space-y-1">
-                    <p className="text-xs tracking-widest uppercase text-foreground/50">Mr. & Mrs.</p>
-                    <p className="text-xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Vale</p>
-                  </div>
-                  <span className="text-2xl font-extralight text-foreground/30">&</span>
-                  <div className="text-center space-y-1">
-                    <p className="text-xs tracking-widest uppercase text-foreground/50">Mr. & Mrs.</p>
-                    <p className="text-xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>Maris</p>
-                  </div>
+              <div className="space-y-4">
+                <div className="flex flex-col items-center justify-center gap-1">
+                  <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    Mr. & Mrs. Vale
+                  </p>
+                  <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                    Mr. & Mrs. Maris
+                  </p>
                 </div>
               </div>
 
-              <p className="text-sm leading-relaxed text-foreground/60 whitespace-pre-line" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                joyfully invite you to the wedding of their{"\n"}beloved son and daughter
+              <p className="text-base leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Kindly join us as we unite in marriage.
               </p>
 
-              <div className="w-12 h-px bg-foreground/20 mx-auto" />
-            </div>
-          </AnimatedSection>
-        </section>
+              {/* Couple names in script */}
+              <div className="space-y-1">
+                <p className="text-4xl md:text-5xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                  Adrian
+                </p>
+                <p className="text-2xl text-foreground/40" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                  &
+                </p>
+                <p className="text-4xl md:text-5xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                  Elena
+                </p>
+              </div>
 
-        {/* ===== DATE SECTION ===== */}
-        <section className="py-20 px-6 text-center bg-[#faf9f7]">
-          <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6">
-              <p className="text-xs tracking-[0.4em] uppercase text-foreground/40" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Save the Date
-              </p>
-              <h2 className="text-4xl md:text-5xl font-light text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
-                Adrian & Elena
-              </h2>
-              <p className="text-base tracking-widest text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              {/* Date */}
+              <p className="text-lg tracking-wide text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 Saturday, August 16th, 2025
               </p>
-              <div className="w-16 h-px bg-foreground/15 mx-auto" />
+
+              <p className="text-sm italic text-foreground/50" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                The wedding day has arrived!
+              </p>
             </div>
           </AnimatedSection>
         </section>
 
-        {/* ===== COUNTDOWN ===== */}
-        <section className="py-16 px-4">
-          <StaticCountdownTimer targetDate={weddingDate} />
-        </section>
+        {/* ===== DIVIDER IMAGE ===== */}
+        <AnimatedSection animation="fade-in">
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <img src={dividerImages[0]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
+          </div>
+        </AnimatedSection>
 
         {/* ===== CEREMONY ===== */}
-        <section className="py-20 px-6 text-center">
+        <section className="py-16 px-6 text-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6">
-              <p className="text-xs tracking-[0.4em] uppercase text-foreground/40" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <div className="max-w-md mx-auto space-y-5">
+              <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Wedding Ceremony
-              </p>
-              <Icon icon="material-symbols:church-rounded" className="w-8 h-8 mx-auto text-foreground/30" />
-              <p className="text-lg font-light text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Couvent Saint Sauveur - Sarba
-              </p>
-              <p className="text-sm text-foreground/60" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                7:00 PM
-              </p>
+              </h2>
+              <MapPin className="w-6 h-6 mx-auto text-foreground/80 fill-foreground/80" />
+              <div className="space-y-1">
+                <p className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  Couvent Saint Sauveur - Sarba - 07:00 PM
+                </p>
+                <p className="text-base text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  Jounieh, Lebanon
+                </p>
+              </div>
               <a
                 href="#"
-                className="inline-flex items-center gap-2 text-sm border border-foreground/20 rounded-full px-6 py-2.5 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors"
+                className="inline-block text-sm border border-foreground/30 px-8 py-2.5 text-foreground/70 hover:text-foreground hover:border-foreground/50 transition-colors"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
-                <MapPin className="w-4 h-4" />
-                Location
+                Map
               </a>
             </div>
           </AnimatedSection>
@@ -166,90 +131,84 @@ const LumierePreview = () => {
 
         {/* ===== DIVIDER IMAGE ===== */}
         <AnimatedSection animation="fade-in">
-          <div className="w-full h-[50vh] overflow-hidden">
-            <img src={eclatWedding1} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <img src={dividerImages[1]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
           </div>
         </AnimatedSection>
 
         {/* ===== CELEBRATION ===== */}
-        <section className="py-20 px-6 text-center">
+        <section className="py-16 px-6 text-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6">
-              <p className="text-xs tracking-[0.4em] uppercase text-foreground/40" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <div className="max-w-md mx-auto space-y-5">
+              <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 The Celebration
-              </p>
-              <Icon icon="solar:confetti-bold" className="w-8 h-8 mx-auto text-foreground/30" />
-              <p className="text-lg font-light text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Carma - Jeita Country Club
-              </p>
-              <p className="text-sm text-foreground/60" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                8:00 PM
-              </p>
+              </h2>
+              <MapPin className="w-6 h-6 mx-auto text-foreground/80 fill-foreground/80" />
+              <div className="space-y-1">
+                <p className="text-base text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  Carma - Jeita Country Club - 08:00 PM
+                </p>
+                <p className="text-base text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                  Jeita, Lebanon
+                </p>
+              </div>
               <a
                 href="#"
-                className="inline-flex items-center gap-2 text-sm border border-foreground/20 rounded-full px-6 py-2.5 text-foreground/60 hover:text-foreground hover:border-foreground/40 transition-colors"
+                className="inline-block text-sm border border-foreground/30 px-8 py-2.5 text-foreground/70 hover:text-foreground hover:border-foreground/50 transition-colors"
                 style={{ fontFamily: "'Cormorant Garamond', serif" }}
               >
-                <MapPin className="w-4 h-4" />
-                Location
+                Map
               </a>
             </div>
           </AnimatedSection>
         </section>
 
-        {/* ===== GALLERY ===== */}
-        <section className="py-20 px-6 bg-[#faf9f7]">
-          <AnimatedSection animation="fade-in">
-            <p className="text-xs tracking-[0.4em] uppercase text-foreground/40 text-center mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-              Our Moments
-            </p>
-          </AnimatedSection>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
-            {[eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7, eclatWedding1].map((src, index) => (
-              <AnimatedSection key={index} delay={index * 80} animation="scale-in">
-                <div className="aspect-square overflow-hidden bg-muted">
-                  <img
-                    src={src}
-                    alt={`Wedding moment ${index + 1}`}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  />
-                </div>
-              </AnimatedSection>
-            ))}
+        {/* ===== DIVIDER IMAGE ===== */}
+        <AnimatedSection animation="fade-in">
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <img src={dividerImages[2]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
           </div>
+        </AnimatedSection>
+
+        {/* ===== GIFT REGISTRY ===== */}
+        <section className="py-16 px-6 text-center">
+          <AnimatedSection animation="fade-in">
+            <div className="max-w-md mx-auto space-y-6">
+              <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
+                Gift Registry
+              </h2>
+              <p className="text-base leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                Your love, laughter and presence are all we could wish for on our special day. For those who wish, a wedding list is available
+              </p>
+
+              <div className="space-y-6 pt-4">
+                {[
+                  { id: "1", card_name: "Bank Account", card_number: "IBAN: 20249265" },
+                  { id: "2", card_name: "Whish", card_number: "#123456" },
+                ].map((card) => (
+                  <div key={card.id} className="space-y-1">
+                    <p className="text-lg font-semibold text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+                      {card.card_name}
+                    </p>
+                    <p className="text-foreground/60 text-sm">{card.card_number}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </AnimatedSection>
         </section>
 
-        {/* ===== GIFTS ===== */}
-        <section className="py-20 px-6">
-          <div className="max-w-4xl mx-auto">
-            <AnimatedSection animation="fade-in">
-              <p className="text-xs tracking-[0.4em] uppercase text-foreground/40 text-center mb-3" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                Wedding Gift
-              </p>
-              <p className="text-center text-sm mb-10 text-foreground/50" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
-                For those who desire a wedding list is available
-              </p>
-            </AnimatedSection>
-            <div className="grid gap-4 md:grid-cols-2">
-              {[
-                { id: "1", card_name: "OMT", card_number: "123456789" },
-                { id: "2", card_name: "Whish", card_number: "123456789" },
-              ].map((card, index) => (
-                <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
-                  <div className="bg-[#faf9f7] p-6 text-center">
-                    <p className="font-semibold text-lg text-foreground" style={{ fontFamily: "'Cormorant Garamond', serif" }}>{card.card_name}</p>
-                    <p className="text-foreground/50 mt-2 text-sm">{card.card_number}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
+        {/* ===== DIVIDER IMAGE ===== */}
+        <AnimatedSection animation="fade-in">
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <img src={dividerImages[3]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
           </div>
-        </section>
+        </AnimatedSection>
 
         {/* ===== RSVP ===== */}
         <RsvpSection
           staticDeadline={new Date("2025-08-01")}
-          bgClassName="bg-[#faf9f7]"
+          bgClassName="bg-white"
           invitees={[
             { id: "1", name: "Daniel Farah" },
             { id: "2", name: "Sara Mansour" },
@@ -259,13 +218,19 @@ const LumierePreview = () => {
           isPreview
         />
 
+        {/* ===== DIVIDER IMAGE ===== */}
+        <AnimatedSection animation="fade-in">
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <img src={dividerImages[4]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
+          </div>
+        </AnimatedSection>
+
         {/* ===== FOOTER ===== */}
-        <section className="py-20 px-6 text-center">
+        <section className="py-16 px-6 text-center">
           <AnimatedSection animation="fade-in">
-            <p className="text-3xl text-foreground/70" style={{ fontFamily: "'Dancing Script', cursive" }}>
-              Happily Ever After
+            <p className="text-xl text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              ♡ Happily ever after ♡
             </p>
-            <div className="w-12 h-px bg-foreground/15 mx-auto mt-8" />
           </AnimatedSection>
         </section>
 
