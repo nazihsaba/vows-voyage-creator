@@ -34,6 +34,7 @@ const LumierePreview = () => {
 
   return (
     <div className="relative w-full min-h-screen text-foreground">
+      <DeckledEdgeFilter />
       {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
       <div className="fixed inset-0 z-0 w-full h-full">
         {!videoFailed ? (
