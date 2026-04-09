@@ -230,7 +230,7 @@ const LumierePreview = () => {
               numberOfPersons={2}
               isPreview
             />
-          </div>
+          </DeckledCard>
         </div>
 
         {/* ===== FOOTER ===== */}
