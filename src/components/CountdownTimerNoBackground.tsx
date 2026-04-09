@@ -9,7 +9,10 @@ interface CountdownTimerNoBackgroundProps {
 }
 
 export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackgroundProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isArabic = i18n.language === "ar";
+  const formatNum = (n: number) =>
+    isArabic ? n.toLocaleString("ar-SA") : String(n);
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -43,7 +46,7 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
 
   const TimeUnit = ({ value, label }: { value: number; label: string }) => (
     <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[100px] px-2">
-      <span className="text-2xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-1 md:mb-2">{value}</span>
+      <span className="text-2xl md:text-6xl font-serif font-bold text-white drop-shadow-lg mb-1 md:mb-2">{formatNum(value)}</span>
       <span className="text-[9px] md:text-sm uppercase tracking-widest text-white drop-shadow-md">{label}</span>
     </div>
   );

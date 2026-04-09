@@ -9,7 +9,7 @@ interface CountdownTimerProps {
 }
 
 export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTimerProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
