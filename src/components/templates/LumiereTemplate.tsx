@@ -104,8 +104,22 @@ export const LumiereTemplate = ({
   const groomInitial = wedding.groom_name?.charAt(0)?.toUpperCase() || "";
   const brideInitial = wedding.bride_name?.charAt(0)?.toUpperCase() || "";
 
-  // Use gallery images as dividers between sections
-  const dividerImage = (index: number) => {
+  // Divider media block — video if available, otherwise gallery image
+  const dividerMedia = (index: number) => {
+    if (wedding.video_url) {
+      return (
+        <AnimatedSection animation="fade-in">
+          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+            <video
+              autoPlay loop muted playsInline
+              className="w-full h-full object-cover"
+            >
+              <source src={wedding.video_url} type="video/mp4" />
+            </video>
+          </div>
+        </AnimatedSection>
+      );
+    }
     if (!gallery || gallery.length === 0) return null;
     const img = gallery[index % gallery.length];
     if (!img) return null;
@@ -134,7 +148,16 @@ export const LumiereTemplate = ({
       <div>
         {/* ===== HERO ===== */}
         <section className="relative w-full">
-          {wedding.main_picture_url && (
+          {wedding.video_url ? (
+            <div className="w-full h-[85vh] overflow-hidden" style={brushMaskStyle}>
+              <video
+                autoPlay loop muted playsInline
+                className="w-full h-full object-cover"
+              >
+                <source src={wedding.video_url} type="video/mp4" />
+              </video>
+            </div>
+          ) : wedding.main_picture_url ? (
             <div className="w-full h-[85vh] overflow-hidden" style={brushMaskStyle}>
               <img
                 src={wedding.main_picture_url}
@@ -142,7 +165,7 @@ export const LumiereTemplate = ({
                 className="w-full h-full object-cover"
               />
             </div>
-          )}
+          ) : null}
 
           {/* Monogram with heart */}
           <div className="py-14 px-6 text-center">
@@ -263,7 +286,7 @@ export const LumiereTemplate = ({
         </section>
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(0)}
+        {dividerMedia(0)}
 
         {/* ===== CEREMONY ===== */}
         {ceremony && (
@@ -296,7 +319,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(1)}
+        {dividerMedia(1)}
 
         {/* ===== CELEBRATION ===== */}
         {venue && (
@@ -329,7 +352,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(2)}
+        {dividerMedia(2)}
 
         {/* ===== GIFT REGISTRY ===== */}
         {hasGiftCards && (
@@ -351,7 +374,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(3)}
+        {dividerMedia(3)}
 
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
@@ -371,7 +394,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(4)}
+        {dividerMedia(4)}
 
         {/* ===== FOOTER ===== */}
         <section className="py-16 px-6 text-center">
