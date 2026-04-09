@@ -80,6 +80,77 @@ const WeddingForm = () => {
     audio_end_time: 0,
   });
 
+  // Arabic toggle and fields
+  const [enableArabic, setEnableArabic] = useState(false);
+  const [arabicFields, setArabicFields] = useState<Record<string, string>>({
+    groom_name: "",
+    bride_name: "",
+    groom_family: "",
+    bride_family: "",
+    main_description: "",
+    aura_quote: "",
+    aura_reference: "",
+    ceremony_location: "",
+    venue_location: "",
+  });
+  const [translatingFields, setTranslatingFields] = useState<Record<string, boolean>>({});
+  const translationTimers = useRef<Record<string, ReturnType<typeof setTimeout>>>({});
+
+  const translateToArabic = useCallback(async (fieldName: string, text: string) => {
+    if (!text || text.trim().length === 0) {
+      setArabicFields(prev => ({ ...prev, [fieldName]: "" }));
+      return;
+    }
+    setTranslatingFields(prev => ({ ...prev, [fieldName]: true }));
+    try {
+      const { data, error } = await supabase.functions.invoke("translate-arabic", {
+        body: { text, fieldName },
+      });
+      if (error) throw error;
+      if (data?.translatedText) {
+        setArabicFields(prev => ({ ...prev, [fieldName]: data.translatedText }));
+      }
+    } catch (err) {
+      console.error(`Translation error for ${fieldName}:`, err);
+    } finally {
+      setTranslatingFields(prev => ({ ...prev, [fieldName]: false }));
+    }
+  }, []);
+
+  const debouncedTranslate = useCallback((fieldName: string, text: string) => {
+    if (translationTimers.current[fieldName]) {
+      clearTimeout(translationTimers.current[fieldName]);
+    }
+    translationTimers.current[fieldName] = setTimeout(() => {
+      translateToArabic(fieldName, text);
+    }, 800);
+  }, [translateToArabic]);
+
+  // When Arabic is enabled, translate all fields that already have values
+  const handleEnableArabic = useCallback((enabled: boolean) => {
+    setEnableArabic(enabled);
+    if (enabled) {
+      const fieldsToTranslate: Record<string, string> = {
+        groom_name: formData.groom_name,
+        bride_name: formData.bride_name,
+        groom_family: formData.groom_family || "",
+        bride_family: formData.bride_family || "",
+        main_description: formData.main_description || "",
+        ceremony_location: locations.ceremony_location,
+        venue_location: locations.venue_location,
+      };
+      if (isAuraTemplate) {
+        fieldsToTranslate.aura_quote = auraQuote;
+        fieldsToTranslate.aura_reference = auraReference;
+      }
+      Object.entries(fieldsToTranslate).forEach(([key, value]) => {
+        if (value && value.trim().length > 0 && !arabicFields[key]) {
+          translateToArabic(key, value);
+        }
+      });
+    }
+  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic]);
+
   const template = formData.template_type;
   const isAuraTemplate = template === "bible-verse-tabs";
   const isVideoTemplate = template === "template6" || template === "video-cinematic";
