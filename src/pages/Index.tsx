@@ -5,7 +5,6 @@ import {
   Gift,
   Link as LinkIcon,
   Instagram,
-  MessageCircle,
   Users,
   Languages,
   Mail,
