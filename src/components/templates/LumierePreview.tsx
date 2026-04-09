@@ -50,7 +50,7 @@ const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen text-foreground overflow-hidden lg:max-w-[600px] lg:mx-auto">
+    <div className="relative w-full min-h-screen text-foreground overflow-hidden lg:px-[25%]">
       <DeckledEdgeFilter />
       {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
       <div className="fixed inset-0 z-0 w-full h-dvh">
