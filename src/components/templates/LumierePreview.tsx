@@ -7,18 +7,7 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Watercolor brush-edge card style (matches reference) ── */
-const brushCardStyle: React.CSSProperties = {
-  background: "#faf8f5",
-  WebkitMaskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  WebkitMaskComposite: "source-in" as any,
-  maskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  maskComposite: "intersect" as any,
-};
+/* Torn paper SVG filter is defined inline below */
 
 const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
