@@ -906,17 +906,37 @@ const WeddingForm = () => {
                     <Textarea
                       id="aura_quote"
                       value={auraQuote}
-                      onChange={(e) => setAuraQuote(e.target.value)}
+                      onChange={(e) => {
+                        setAuraQuote(e.target.value);
+                        if (enableArabic) debouncedTranslate("aura_quote", e.target.value);
+                      }}
                       rows={3}
                       placeholder="Two are better than one..."
                     />
+                    {enableArabic && (
+                      <div className="space-y-1 mt-2">
+                        <Label className="text-xs text-muted-foreground">الاقتباس (Arabic)</Label>
+                        <Textarea
+                          value={arabicFields.aura_quote}
+                          onChange={(e) => setArabicFields(prev => ({ ...prev, aura_quote: e.target.value }))}
+                          dir="rtl"
+                          rows={3}
+                          className="text-right font-arabic"
+                          placeholder={translatingFields.aura_quote ? "Translating..." : ""}
+                          disabled={translatingFields.aura_quote}
+                        />
+                      </div>
+                    )}
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="aura_reference">Reference</Label>
                     <Input
                       id="aura_reference"
                       value={auraReference}
-                      onChange={(e) => setAuraReference(e.target.value)}
+                      onChange={(e) => {
+                        setAuraReference(e.target.value);
+                        if (enableArabic) debouncedTranslate("aura_reference", e.target.value);
+                      }}
                       placeholder="— Ecclesiastes 4:9-12"
                     />
                   </div>
