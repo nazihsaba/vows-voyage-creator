@@ -7,17 +7,22 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Watercolor brush-edge card style (matches reference) ── */
-const brushCardStyle: React.CSSProperties = {
+/* ── Torn paper / deckled edge SVG filter ── */
+const TornPaperFilter = () => (
+  <svg width="0" height="0" style={{ position: "absolute" }}>
+    <defs>
+      <filter id="torn-edge">
+        <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="5" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+);
+
+const tornCardStyle: React.CSSProperties = {
   background: "#faf8f5",
-  WebkitMaskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  WebkitMaskComposite: "source-in" as any,
-  maskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  maskComposite: "intersect" as any,
+  filter: "url(#torn-edge)",
+  padding: "2.5rem 2rem",
 };
 
 const LumierePreview = () => {
