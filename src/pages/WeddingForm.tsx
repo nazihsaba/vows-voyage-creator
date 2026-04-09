@@ -80,6 +80,12 @@ const WeddingForm = () => {
     audio_end_time: 0,
   });
 
+  const template = formData.template_type;
+  const isAuraTemplate = template === "bible-verse-tabs";
+  const isVideoTemplate = template === "template6" || template === "video-cinematic";
+  const isOpulenceTemplate = template === "opulence-curtain";
+  const isGraceTemplate = template === "video-cinematic" || template === "template6";
+
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
   const [arabicFields, setArabicFields] = useState<Record<string, string>>({
@@ -126,7 +132,6 @@ const WeddingForm = () => {
     }, 800);
   }, [translateToArabic]);
 
-  // When Arabic is enabled, translate all fields that already have values
   const handleEnableArabic = useCallback((enabled: boolean) => {
     setEnableArabic(enabled);
     if (enabled) {
@@ -150,12 +155,6 @@ const WeddingForm = () => {
       });
     }
   }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic]);
-
-  const template = formData.template_type;
-  const isAuraTemplate = template === "bible-verse-tabs";
-  const isVideoTemplate = template === "template6" || template === "video-cinematic";
-  const isOpulenceTemplate = template === "opulence-curtain";
-  const isGraceTemplate = template === "video-cinematic" || template === "template6";
 
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
