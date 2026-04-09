@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useMemo } from "react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface CountdownTimerProps {
@@ -8,7 +9,7 @@ interface CountdownTimerProps {
 }
 
 export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTimerProps) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -38,6 +39,9 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
   }, [targetDate]);
 
   const isDark = variant === "dark";
+  const isArabic = i18n.language === "ar";
+  const formatNum = (n: number) =>
+    isArabic ? n.toLocaleString("ar-SA") : String(n);
 
   return (
     <div className="text-center">
@@ -46,10 +50,10 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
       </h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
-          { value: timeRemaining.days, label: t("countdown.days") },
-          { value: timeRemaining.hours, label: t("countdown.hours") },
-          { value: timeRemaining.minutes, label: t("countdown.minutes") },
-          { value: timeRemaining.seconds, label: t("countdown.seconds") },
+          { value: formatNum(timeRemaining.days), label: t("countdown.days") },
+          { value: formatNum(timeRemaining.hours), label: t("countdown.hours") },
+          { value: formatNum(timeRemaining.minutes), label: t("countdown.minutes") },
+          { value: formatNum(timeRemaining.seconds), label: t("countdown.seconds") },
         ].map((item, index) => (
           <AnimatedSection key={index} delay={index * 100} animation="scale-in">
             <div className="text-center">
