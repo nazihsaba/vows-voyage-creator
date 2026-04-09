@@ -40,7 +40,7 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
           }`}
           style={{ fontFamily: isArabic ? 'inherit' : undefined }}
         >
-          العربية
+          عربي
         </span>
       </div>
     </button>
