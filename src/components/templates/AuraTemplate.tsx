@@ -87,7 +87,7 @@ export const AuraTemplate = ({
     }
   };
 
-  const dateLocale = isArabic ? "ar-SA" : "en-US";
+  const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = new Date(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
 

@@ -36,7 +36,7 @@ export const RsvpSection = ({
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) : null);
-  const dateLocale = isArabic ? "ar-SA" : "en-US";
+  const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (
     <AnimatedSection animation="fade-up">
