@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Icon } from "@iconify/react";
 import {
   Calendar,
   Image,
@@ -28,6 +27,7 @@ import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 import whatsappIcon from "@/assets/whatsappIcon.png";
+import { Icon } from "@iconify/react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -364,9 +364,9 @@ const Index = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
-              aria-label="WhatsApp"
+              aria-label="whatsappIcon"
             >
-              <Icon icon="basil:whatsapp-outline" className="w-6 h-6" />
+              <MessageCircle size={22} />
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
