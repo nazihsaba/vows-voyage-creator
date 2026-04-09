@@ -1,40 +1,53 @@
 import { useState, useEffect } from "react";
-import { ChevronDown } from "lucide-react";
-import { Icon } from "@iconify/react";
+import { ChevronDown, MapPin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import VideoBackground from "@/components/templates/shared/VideoBackground";
 import graceVideo from "@/assets/grace-preview-video.mp4";
-import previewWedding4 from "@/assets/preview-wedding-4.jpg";
-import verite1 from "@/assets/verite-preview-1.jpg";
-import verite2 from "@/assets/verite-preview-2.jpg";
 
 const staticWedding = {
-  groom_name: "Noah",
-  bride_name: "Mia",
-  groom_family: "The Elin Family",
-  bride_family: "The Soren Family",
+  groom_name: "Chris",
+  bride_name: "Karen",
+  groom_family: "Mr. & Mrs. Bitar",
+  bride_family: "Mr. & Mrs. Khoury",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
 };
 
 const staticLocations = [
-  { id: "1", type: "ceremony", time: "2:00 PM", location_name: "St. Mary's Cathedral", location_link: "https://maps.google.com" },
-  { id: "2", type: "venue", time: "5:00 PM", location_name: "Grand Ballroom Hotel", location_link: "https://maps.google.com" },
+  { id: "1", type: "ceremony", time: "5:30 PM", location_name: "St. Mary's Cathedral", location_link: "https://maps.google.com" },
+  { id: "2", type: "venue", time: "8:30 PM", location_name: "Grand Ballroom Hotel", location_link: "https://maps.google.com" },
 ];
 
 const staticGiftCards = [
-  { id: "1", card_name: "OMT", card_number: "123456789" },
-  { id: "2", card_name: "Whish", card_number: "987654321" },
+  { id: "1", card_name: "Bank Account", card_number: "IBAN: 20249265" },
+  { id: "2", card_name: "Whish", card_number: "#123456" },
 ];
 
-const staticGallery = [
-  { id: "1", image_url: previewWedding4 },
-  { id: "2", image_url: verite1 },
-  { id: "3", image_url: verite2 },
-];
+/* Torn / deckled edge SVG */
+const TornEdgeTop = () => (
+  <div className="relative w-full -mt-px">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="block w-full h-[30px] md:h-[40px]">
+      <path
+        d="M0,40 C60,38 90,10 120,12 C150,14 180,35 240,32 C300,29 330,8 390,10 C450,12 480,30 540,28 C600,26 630,6 690,8 C750,10 780,32 840,30 C900,28 930,5 990,8 C1050,11 1080,28 1140,26 C1200,24 1230,8 1290,10 C1350,12 1380,30 1440,28 L1440,40 L0,40 Z"
+        fill="white"
+      />
+    </svg>
+  </div>
+);
+
+const TornEdgeBottom = () => (
+  <div className="relative w-full -mb-px">
+    <svg viewBox="0 0 1440 40" preserveAspectRatio="none" className="block w-full h-[30px] md:h-[40px]">
+      <path
+        d="M0,0 C60,2 90,30 120,28 C150,26 180,5 240,8 C300,11 330,32 390,30 C450,28 480,10 540,12 C600,14 630,34 690,32 C750,30 780,8 840,10 C900,12 930,35 990,32 C1050,29 1080,12 1140,14 C1200,16 1230,32 1290,30 C1350,28 1380,10 1440,12 L1440,0 L0,0 Z"
+        fill="white"
+      />
+    </svg>
+  </div>
+);
 
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   const [time, setTime] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
@@ -93,11 +106,11 @@ export const LumierePreview = () => {
   return (
     <div className="w-full overflow-x-hidden font-serif">
       {/* Fixed Video Background */}
-      <VideoBackground videoUrl={graceVideo} overlayOpacity={0.45} fixed />
+      <VideoBackground videoUrl={graceVideo} overlayOpacity={0.3} fixed />
 
       {/* Scrollable Foreground */}
       <div className="relative z-10">
-        {/* Hero */}
+        {/* Hero — video shows through */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white px-4">
           <div className="space-y-6 max-w-2xl animate-fade-in">
             <p className="text-template-small text-white/80">The Wedding Of</p>
@@ -108,10 +121,7 @@ export const LumierePreview = () => {
             </div>
             <p className="text-template-body tracking-wide text-white/90">
               {staticWedding.wedding_date.toLocaleDateString("en-US", {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric",
+                weekday: "long", year: "numeric", month: "long", day: "numeric",
               })}
             </p>
             {!hasStarted && (
@@ -128,149 +138,132 @@ export const LumierePreview = () => {
           </div>
         </section>
 
-        {/* Family / Story */}
-        <section id="lumiere-preview-story" className="py-20 px-4 text-center">
+        {/* ─── White Section: Story / Family ─── */}
+        <TornEdgeTop />
+        <section id="lumiere-preview-story" className="bg-white py-16 text-center text-[#3e2723]">
           <AnimatedSection animation="fade-up">
-            <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 md:p-12 border border-white/20 space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-template-subtitle text-white">{staticWedding.groom_family}</h2>
-                <p className="text-2xl text-white/80">&</p>
-                <h2 className="text-template-subtitle text-white">{staticWedding.bride_family}</h2>
+            <div className="max-w-xl mx-auto px-6 space-y-8">
+              <p className="text-template-body text-gray-600 italic">I have found the one whom my soul loves.</p>
+              <div className="space-y-2">
+                <h2 className="text-template-subtitle font-bold">{staticWedding.groom_family}</h2>
+                <h2 className="text-template-subtitle font-bold">{staticWedding.bride_family}</h2>
               </div>
-              <p className="text-template-body text-white/90">
-                Request the honor of your presence at the wedding celebration
+              <p className="text-template-body text-gray-600">Kindly join us as we unite in marriage.</p>
+              <div className="space-y-1">
+                <h2 className="text-template-title text-[#3e2723]">{staticWedding.groom_name}</h2>
+                <p className="text-2xl">&</p>
+                <h2 className="text-template-title text-[#3e2723]">{staticWedding.bride_name}</h2>
+              </div>
+              <p className="text-template-body">
+                {staticWedding.wedding_date.toLocaleDateString("en-US", {
+                  weekday: "long", year: "numeric", month: "long", day: "numeric",
+                })}
               </p>
             </div>
           </AnimatedSection>
         </section>
+        <TornEdgeBottom />
 
-        {/* Countdown */}
+        {/* Video gap — countdown */}
         <section className="py-16 px-4">
-          <div className="max-w-3xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-            <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
-          </div>
+          <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
         </section>
 
-        {/* Events */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto text-center space-y-12">
-            <AnimatedSection animation="fade-up">
-              <h2 className="text-template-subtitle mb-6 text-white">Wedding Events</h2>
-              <p className="text-template-body max-w-2xl mx-auto text-white/80">
-                Join us in celebrating this special day
+        {/* ─── White Section: Ceremony ─── */}
+        {ceremony && (
+          <>
+            <TornEdgeTop />
+            <section className="bg-white py-16 text-center text-[#3e2723]">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-xl mx-auto px-6 space-y-6">
+                  <h2 className="text-template-title">Wedding Ceremony</h2>
+                  <MapPin className="w-6 h-6 mx-auto text-[#3e2723]" />
+                  <p className="text-template-body">
+                    {ceremony.location_name} - {ceremony.time}
+                  </p>
+                  <a
+                    href={ceremony.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block border border-[#3e2723] text-[#3e2723] px-8 py-2 rounded-sm transition-colors hover:bg-[#3e2723] hover:text-white"
+                  >
+                    Map
+                  </a>
+                </div>
+              </AnimatedSection>
+            </section>
+            <TornEdgeBottom />
+          </>
+        )}
+
+        {/* ─── White Section: Venue ─── */}
+        {venue && (
+          <>
+            <TornEdgeTop />
+            <section className="bg-white py-16 text-center text-[#3e2723]">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-xl mx-auto px-6 space-y-6">
+                  <h2 className="text-template-title">The Celebration</h2>
+                  <MapPin className="w-6 h-6 mx-auto text-[#3e2723]" />
+                  <p className="text-template-body">
+                    {venue.location_name} - {venue.time}
+                  </p>
+                  <a
+                    href={venue.location_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block border border-[#3e2723] text-[#3e2723] px-8 py-2 rounded-sm transition-colors hover:bg-[#3e2723] hover:text-white"
+                  >
+                    Map
+                  </a>
+                </div>
+              </AnimatedSection>
+            </section>
+            <TornEdgeBottom />
+          </>
+        )}
+
+        {/* ─── White Section: Gift Cards ─── */}
+        <TornEdgeTop />
+        <section className="bg-white py-16 text-center text-[#3e2723]">
+          <AnimatedSection animation="fade-up">
+            <div className="max-w-xl mx-auto px-6 space-y-6">
+              <h2 className="text-template-title">Gift Registry</h2>
+              <p className="text-template-body text-gray-600">
+                Your love, laughter and presence are all we could wish for on our special day. For those who wish, a wedding list is available
               </p>
-            </AnimatedSection>
-            <div className="grid md:grid-cols-2 gap-8 mt-12">
-              {ceremony && (
-                <AnimatedSection delay={0} animation="fade-in">
-                  <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 space-y-6">
-                    <Icon icon="material-symbols:church-rounded" className="w-8 h-8 text-white mx-auto" />
-                    <h3 className="text-template-heading mb-2 text-white">Ceremony</h3>
-                    <p className="text-template-body font-bold text-white">{ceremony.time}</p>
-                    <div className="space-y-2">
-                      <p className="text-template-small text-white/60">Event Location</p>
-                      <p className="text-template-body font-medium text-white">{ceremony.location_name}</p>
-                    </div>
-                    <a
-                      href={ceremony.location_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-md transition-colors border border-white/30"
-                    >
-                      View on Map
-                    </a>
-                  </div>
-                </AnimatedSection>
-              )}
-              {venue && (
-                <AnimatedSection delay={200} animation="fade-in">
-                  <div className="bg-white/10 backdrop-blur-md p-8 rounded-2xl border border-white/20 space-y-6">
-                    <Icon icon="solar:confetti-bold" className="w-8 h-8 text-white mx-auto" />
-                    <h3 className="text-template-heading mb-2 text-white">Venue</h3>
-                    <p className="text-template-body font-bold text-white">{venue.time}</p>
-                    <div className="space-y-2">
-                      <p className="text-template-small text-white/60">Event Location</p>
-                      <p className="text-template-body font-medium text-white">{venue.location_name}</p>
-                    </div>
-                    <a
-                      href={venue.location_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-white/20 hover:bg-white/30 text-white px-6 py-2 rounded-md transition-colors border border-white/30"
-                    >
-                      View on Map
-                    </a>
-                  </div>
-                </AnimatedSection>
-              )}
-            </div>
-          </div>
-        </section>
-
-        {/* Gallery */}
-        <section className="py-16 px-4">
-          <div className="max-w-5xl mx-auto">
-            <AnimatedSection animation="fade-up">
-              <h2 className="text-template-subtitle text-center mb-10 text-white">Gallery</h2>
-            </AnimatedSection>
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-              {staticGallery.map((img, i) => (
-                <AnimatedSection key={img.id} delay={i * 100} animation="scale-in">
-                  <div className="aspect-square overflow-hidden rounded-xl border border-white/20">
-                    <img src={img.image_url} alt={`Photo ${i + 1}`} loading="lazy" className="w-full h-full object-cover" />
-                  </div>
-                </AnimatedSection>
+              {staticGiftCards.map((card) => (
+                <div key={card.id} className="space-y-1">
+                  <p className="font-semibold text-lg">{card.card_name}</p>
+                  <p className="text-gray-600">{card.card_number}</p>
+                </div>
               ))}
             </div>
-          </div>
+          </AnimatedSection>
         </section>
+        <TornEdgeBottom />
 
-        {/* Gift Cards */}
-        <section className="py-16 px-4">
-          <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-            <h2 className="text-template-subtitle text-center mb-12 text-white">Wedding Gift</h2>
-            <p className="text-center text-template-body mb-8 text-white/70">
-              For those who desire a wedding list is available
-            </p>
-            <div className="grid gap-4 md:grid-cols-2">
-              {staticGiftCards.map((card, i) => (
-                <AnimatedSection key={card.id} delay={i * 150} animation="scale-in">
-                  <div className="bg-white/10 p-6 rounded-lg text-center border border-white/20">
-                    <p className="font-semibold text-lg text-white">{card.card_name}</p>
-                    <p className="text-white/70 mt-2">{card.card_number}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* RSVP */}
-        <div className="py-8 px-4">
-          <div className="max-w-2xl mx-auto bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
-            <RsvpSection
-              staticDeadline={staticWedding.rsvp_deadline}
-              invitees={[
-                { id: "1", name: "Noah Elin" },
-                { id: "2", name: "Mia Soren" },
-              ]}
-              rsvpResponses={{ "1": true, "2": false }}
-              numberOfPersons={2}
-              isPreview
-              bgClassName="bg-transparent"
-              cardBgClassName="bg-white/10"
-            />
-          </div>
+        {/* ─── White Section: RSVP ─── */}
+        <TornEdgeTop />
+        <div className="bg-white">
+          <RsvpSection
+            staticDeadline={staticWedding.rsvp_deadline}
+            invitees={[
+              { id: "1", name: "Noah Elin" },
+              { id: "2", name: "Mia Soren" },
+            ]}
+            rsvpResponses={{ "1": true, "2": false }}
+            numberOfPersons={2}
+            isPreview
+          />
         </div>
+        <TornEdgeBottom />
 
-        {/* Closing */}
+        {/* Closing — over video */}
         <AnimatedSection animation="fade-in">
           <section className="py-16 px-4 text-center">
-            <div className="max-w-3xl mx-auto space-y-8">
-              <p className="text-template-body text-white/90">
-                We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures,
-                and make wonderful memories with us.
-              </p>
+            <div className="max-w-3xl mx-auto">
+              <p className="text-template-body text-white">♡ Happily ever after ♡</p>
             </div>
           </section>
         </AnimatedSection>
