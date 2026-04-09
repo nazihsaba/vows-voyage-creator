@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { differenceInDays, differenceInHours, differenceInMinutes, differenceInSeconds } from "date-fns";
 import AOS from "aos";
 import "aos/dist/aos.css";
@@ -8,6 +9,7 @@ interface CountdownTimerNoBackgroundProps {
 }
 
 export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackgroundProps) => {
+  const { t } = useTranslation();
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -48,12 +50,12 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
 
   return (
     <div className="flex flex-col items-center justify-center py-8 md:py-12">
-      <h3 className="text-template-subtitle mb-6 text-white">Counting down to our big day</h3>
+      <h3 className="text-template-subtitle mb-6 text-white">{t("countdown.title")}</h3>
       <div className="flex flex-row items-center justify-center gap-4 md:gap-8">
-        <TimeUnit value={timeRemaining.days} label="Days" />
-        <TimeUnit value={timeRemaining.hours} label="Hours" />
-        <TimeUnit value={timeRemaining.minutes} label="Minutes" />
-        <TimeUnit value={timeRemaining.seconds} label="Seconds" />
+        <TimeUnit value={timeRemaining.days} label={t("countdown.days")} />
+        <TimeUnit value={timeRemaining.hours} label={t("countdown.hours")} />
+        <TimeUnit value={timeRemaining.minutes} label={t("countdown.minutes")} />
+        <TimeUnit value={timeRemaining.seconds} label={t("countdown.seconds")} />
       </div>
     </div>
   );
