@@ -1162,7 +1162,7 @@ const WeddingForm = () => {
                               disabled={translatingFields.ceremony_location}
                             />
                           </div>
-                        )
+                        )}
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor="ceremony_time">Time *</Label>
