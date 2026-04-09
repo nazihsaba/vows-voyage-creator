@@ -7,25 +7,42 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Deckled / torn-paper edge SVG filter ── */
+/* ── Deckled / torn-paper edge via SVG filter ── */
 const DeckledEdgeFilter = () => (
   <svg width="0" height="0" style={{ position: "absolute" }}>
     <defs>
       <filter id="deckled-edge">
         <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
-        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G" />
       </filter>
     </defs>
   </svg>
 );
 
-/* ── Torn-paper card style for content sections ── */
+/* ── Card wrapper that applies deckled edge ONLY to the silhouette ── */
+const DeckledCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
+  <div className={`relative ${className}`}>
+    {/* Background shape with deckled edges */}
+    <div
+      className="absolute inset-0"
+      style={{
+        background: "rgba(255, 255, 255, 0.92)",
+        filter: "url(#deckled-edge)",
+      }}
+    />
+    {/* Clean content on top — no filter */}
+    <div className="relative" style={{ padding: "2rem" }}>
+      {children}
+    </div>
+  </div>
+);
+
+/* ── Simple card style kept for non-deckled uses ── */
 const cardStyle: React.CSSProperties = {
   background: "rgba(255, 255, 255, 0.92)",
   backdropFilter: "blur(12px)",
   WebkitBackdropFilter: "blur(12px)",
   boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06)",
-  filter: "url(#deckled-edge)",
   padding: "2rem",
 };
 
