@@ -61,7 +61,7 @@ const LumierePreview = () => {
         {/* ===== HERO ===== */}
         <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
           <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
-            <p className="text-xl tracking-widest text-white/80 mb-6" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-xl tracking-widest text-white/80 mb-6" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               A<span className="text-white/50 mx-1">♥</span>E
             </p>
             <div className="space-y-1">
@@ -75,7 +75,7 @@ const LumierePreview = () => {
                 Elena
               </p>
             </div>
-            <p className="text-lg tracking-wide text-white/80 mt-8" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-lg tracking-wide text-white/80 mt-8" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               Saturday, August 16th, 2025
             </p>
           </div>
@@ -211,7 +211,7 @@ const LumierePreview = () => {
         {/* ===== FOOTER ===== */}
         <section className="py-16 px-6 text-center">
           <AnimatedSection animation="fade-in">
-            <p className="text-xl text-white/80" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <p className="text-xl text-white/80" style={{ fontFamily: "'Montserrat', sans-serif" }}>
               ♡ Happily ever after ♡
             </p>
           </AnimatedSection>
