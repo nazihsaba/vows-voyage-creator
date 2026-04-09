@@ -336,7 +336,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Instagram"
             >
-              <img src={instagramIcon} alt="Instagram" className="w-[22px] h-[22px]" />
+              <img src={instagramIcon} alt="Instagram" className="w-[22px] h-[22px] object-cover" />
             </a>
             {/* <a
               href="https://tiktok.com"
