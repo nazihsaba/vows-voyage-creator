@@ -496,13 +496,22 @@ const WeddingForm = () => {
       const existingCustomizations = typeof rawFc === 'string'
         ? JSON.parse(rawFc || '{}')
         : (rawFc || {});
-      const fieldCustomizations = isAuraTemplate
+      let fieldCustomizations = isAuraTemplate
         ? {
             ...existingCustomizations,
             "bible-verse": { text: auraQuote },
             "bible-verse-reference": { text: auraReference },
           }
         : existingCustomizations;
+
+      // Save Arabic translations if enabled
+      if (enableArabic) {
+        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
+      } else {
+        // Remove arabic key if disabled
+        const { arabic, ...rest } = fieldCustomizations;
+        fieldCustomizations = rest;
+      }
 
       let weddingId = id;
 
