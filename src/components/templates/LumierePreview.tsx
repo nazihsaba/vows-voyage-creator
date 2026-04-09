@@ -21,10 +21,10 @@ const DeckledEdgeFilter = () => (
 
 /* ── Card wrapper that applies deckled edge ONLY to the silhouette ── */
 const DeckledCard = ({ children, className = "" }: { children: React.ReactNode; className?: string }) => (
-  <div className={`relative ${className}`}>
-    {/* Background shape with deckled edges */}
+  <div className={`relative w-full ${className}`}>
+    {/* Background shape with deckled edges — full width */}
     <div
-      className="absolute inset-0 -left-8 -right-8"
+      className="absolute -inset-x-4 inset-y-0"
       style={{
         background: "rgba(255, 255, 255, 0.92)",
         filter: "url(#deckled-edge)",
@@ -50,11 +50,11 @@ const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
-    <div className="w-full lg:px-[25%]">
+    <div className="w-full">
       <div className="relative w-full min-h-screen text-foreground overflow-hidden">
         <DeckledEdgeFilter />
-        {/* ===== LAYER 1 — Fullscreen background video ===== */}
-        <div className="absolute inset-0 z-0 w-full h-full">
+        {/* ===== LAYER 1 — Fixed background video, 100vh ===== */}
+        <div className="fixed inset-0 z-0 w-full h-dvh">
           {!videoFailed ? (
             <video
               autoPlay
@@ -62,17 +62,17 @@ const LumierePreview = () => {
               muted
               playsInline
               onError={() => setVideoFailed(true)}
-              className="w-full h-full object-cover fixed lg:absolute lg:inset-0"
+              className="w-full h-full object-cover"
             >
               <source src={previewVideoUrl} type="video/mp4" />
             </video>
           ) : (
-            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover fixed lg:absolute lg:inset-0" />
+            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover" />
           )}
         </div>
 
         {/* ===== LAYER 2 — Dark overlay for readability ===== */}
-        <div className="fixed inset-0 z-[1] bg-black/40 lg:absolute lg:inset-0" />
+        <div className="fixed inset-0 z-[1] bg-black/40" />
 
         {/* ===== LAYER 3 — Scrollable content ===== */}
         <div className="relative z-[2]">
