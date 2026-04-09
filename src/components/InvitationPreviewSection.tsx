@@ -155,7 +155,7 @@ const InvitationPreviewSection = () => {
         </div>
 
         {/* Desktop grid */}
-        <div className="hidden lg:grid grid-cols-4 gap-6 mb-14">
+        <div className="hidden lg:grid grid-cols-5 gap-5 mb-14">
           {previewCards.map((card) => (
             <TemplateCard key={card.label} card={card} onPreview={setActivePreview} />
           ))}
