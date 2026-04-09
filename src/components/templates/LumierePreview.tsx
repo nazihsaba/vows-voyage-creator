@@ -109,11 +109,7 @@ const LumierePreview = () => {
         </section>
 
         {/* ===== DIVIDER IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
-            <img src={dividerImages[0]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        </AnimatedSection>
+        {dividerMedia(0)}
 
         {/* ===== CEREMONY ===== */}
         <section className="py-16 px-6 text-center">
@@ -143,11 +139,7 @@ const LumierePreview = () => {
         </section>
 
         {/* ===== DIVIDER IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
-            <img src={dividerImages[1]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        </AnimatedSection>
+        {dividerMedia(1)}
 
         {/* ===== CELEBRATION ===== */}
         <section className="py-16 px-6 text-center">
@@ -177,11 +169,7 @@ const LumierePreview = () => {
         </section>
 
         {/* ===== DIVIDER IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
-            <img src={dividerImages[2]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        </AnimatedSection>
+        {dividerMedia(2)}
 
         {/* ===== GIFT REGISTRY ===== */}
         <section className="py-16 px-6 text-center">
@@ -211,12 +199,7 @@ const LumierePreview = () => {
           </AnimatedSection>
         </section>
 
-        {/* ===== DIVIDER IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
-            <img src={dividerImages[3]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        </AnimatedSection>
+        {dividerMedia(3)}
 
         {/* ===== RSVP ===== */}
         <RsvpSection
@@ -231,12 +214,7 @@ const LumierePreview = () => {
           isPreview
         />
 
-        {/* ===== DIVIDER IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
-            <img src={dividerImages[4]} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
-          </div>
-        </AnimatedSection>
+        {dividerMedia(4)}
 
         {/* ===== FOOTER ===== */}
         <section className="py-16 px-6 text-center">
