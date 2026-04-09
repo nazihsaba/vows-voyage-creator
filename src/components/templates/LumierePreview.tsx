@@ -50,31 +50,32 @@ const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen text-foreground overflow-hidden lg:px-[25%]">
-      <DeckledEdgeFilter />
-      {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
-      <div className="fixed inset-0 z-0 w-full h-dvh">
-        {!videoFailed ? (
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            onError={() => setVideoFailed(true)}
-            className="w-full h-full object-cover"
-          >
-            <source src={previewVideoUrl} type="video/mp4" />
-          </video>
-        ) : (
-          <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover" />
-        )}
-      </div>
+    <div className="w-full lg:px-[25%]">
+      <div className="relative w-full min-h-screen text-foreground overflow-hidden">
+        <DeckledEdgeFilter />
+        {/* ===== LAYER 1 — Fullscreen background video ===== */}
+        <div className="absolute inset-0 z-0 w-full h-full">
+          {!videoFailed ? (
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              onError={() => setVideoFailed(true)}
+              className="w-full h-full object-cover fixed lg:absolute lg:inset-0"
+            >
+              <source src={previewVideoUrl} type="video/mp4" />
+            </video>
+          ) : (
+            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover fixed lg:absolute lg:inset-0" />
+          )}
+        </div>
 
-      {/* ===== LAYER 2 — Dark overlay for readability ===== */}
-      <div className="fixed inset-0 z-[1] bg-black/40" />
+        {/* ===== LAYER 2 — Dark overlay for readability ===== */}
+        <div className="fixed inset-0 z-[1] bg-black/40 lg:absolute lg:inset-0" />
 
-      {/* ===== LAYER 3 — Scrollable content ===== */}
-      <div className="relative z-[2]">
+        {/* ===== LAYER 3 — Scrollable content ===== */}
+        <div className="relative z-[2]">
         {/* ===== HERO ===== */}
         <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
           <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
@@ -243,6 +244,7 @@ const LumierePreview = () => {
         </section>
 
         <TemplatePreviewFooter />
+      </div>
       </div>
     </div>
   );
