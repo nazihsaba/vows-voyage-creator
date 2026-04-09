@@ -332,6 +332,7 @@ const Dashboard = () => {
             {showPreview === "template6" && <GracePreview />}
             {showPreview === "classic-romance" && <EclatPreview />}
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
+            {showPreview === "lumiere-editorial" && <LumierePreview />}
           </div>
         </DialogContent>
       </Dialog>
