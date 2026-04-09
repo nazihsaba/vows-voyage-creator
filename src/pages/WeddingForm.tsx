@@ -190,6 +190,11 @@ const WeddingForm = () => {
         const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
+        // Load Arabic fields
+        if (fc["arabic"]) {
+          setEnableArabic(true);
+          setArabicFields(prev => ({ ...prev, ...fc["arabic"] }));
+        }
       }
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
