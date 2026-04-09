@@ -9,14 +9,16 @@ import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
+import lumiereTemplate from "@/assets/lumiere-preview.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
 const VeritePreview = lazy(() => import("@/components/templates/VeritePreview"));
 const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
 const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then((m) => ({ default: m.AuraPreview })));
+const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
@@ -44,8 +46,15 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     image: auraTemplate,
     label: "Dorée",
     tagline: "Quote highlight & botanical elegance",
-    featured: true,
+    featured: false,
     templateKey: "aura",
+  },
+  {
+    image: lumiereTemplate,
+    label: "Lumière",
+    tagline: "Romantic editorial minimal design",
+    featured: true,
+    templateKey: "lumiere",
   },
 ];
 
@@ -54,6 +63,7 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   verite: VeritePreview,
   eclat: EclatPreview,
   aura: AuraPreview,
+  lumiere: LumierePreview,
 };
 
 const PreviewLoadingFallback = () => (
