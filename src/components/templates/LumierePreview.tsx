@@ -54,7 +54,7 @@ const LumierePreview = () => {
       <div className="relative w-full min-h-screen text-foreground overflow-hidden">
         <DeckledEdgeFilter />
         {/* ===== LAYER 1 — Fullscreen background video ===== */}
-        <div className="absolute inset-0 z-0 w-full h-full">
+        <div className="fixed inset-0 z-0 w-full h-full lg:absolute lg:inset-0 lg:h-full">
           {!videoFailed ? (
             <video
               autoPlay
@@ -62,12 +62,12 @@ const LumierePreview = () => {
               muted
               playsInline
               onError={() => setVideoFailed(true)}
-              className="w-full h-full object-cover fixed lg:absolute lg:inset-0"
+              className="w-full h-full object-cover"
             >
               <source src={previewVideoUrl} type="video/mp4" />
             </video>
           ) : (
-            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover fixed lg:absolute lg:inset-0" />
+            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover" />
           )}
         </div>
 
