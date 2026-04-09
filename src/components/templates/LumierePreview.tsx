@@ -24,7 +24,7 @@ const DeckledCard = ({ children, className = "" }: { children: React.ReactNode; 
   <div className={`relative ${className}`}>
     {/* Background shape with deckled edges */}
     <div
-      className="absolute inset-0 -left-4 -right-4"
+      className="absolute inset-0 -left-8 -right-8"
       style={{
         background: "rgba(255, 255, 255, 0.92)",
         filter: "url(#deckled-edge)",
