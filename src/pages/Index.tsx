@@ -5,6 +5,7 @@ import {
   Gift,
   Link as LinkIcon,
   Instagram,
+  MessageCircle,
   Users,
   Languages,
   Mail,
@@ -25,8 +26,6 @@ import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
 import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
-import whatsappIcon from "@/assets/whatsappIcon.png";
-import instagramIcon from "@/assets/instagramIcon.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -336,7 +335,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Instagram"
             >
-              <img src={instagramIcon} alt="Instagram" className="w-7 h-7 object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+              <Instagram size={22} />
             </a>
             {/* <a
               href="https://tiktok.com"
@@ -363,9 +362,9 @@ const Index = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
-              aria-label="whatsappIcon"
+              aria-label="WhatsApp"
             >
-              <img src={whatsappIcon} alt="WhatsApp" className="w-[22px] h-[22px] grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
+              <MessageCircle size={22} />
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
