@@ -101,7 +101,7 @@ const LumierePreview = () => {
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <DeckledCard className="max-w-md mx-auto">
+            <DeckledCard className="w-full">
               <div className="space-y-8 text-center">
                 <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Montserrat', sans-serif" }}>
                   I have found the one whom my soul loves.
@@ -131,7 +131,7 @@ const LumierePreview = () => {
         {/* ===== CEREMONY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <DeckledCard className="max-w-md mx-auto">
+            <DeckledCard className="w-full">
               <div className="space-y-5 text-center">
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   Wedding Ceremony
@@ -160,7 +160,7 @@ const LumierePreview = () => {
         {/* ===== CELEBRATION ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <DeckledCard className="max-w-md mx-auto">
+            <DeckledCard className="w-full">
               <div className="space-y-5 text-center">
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   The Celebration
@@ -189,7 +189,7 @@ const LumierePreview = () => {
         {/* ===== GIFT REGISTRY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <DeckledCard className="max-w-md mx-auto">
+            <DeckledCard className="w-full">
               <div className="space-y-6 text-center">
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   Gift Registry
@@ -218,7 +218,7 @@ const LumierePreview = () => {
 
         {/* ===== RSVP ===== */}
         <div className="px-6 py-16">
-          <DeckledCard className="max-w-md mx-auto">
+          <DeckledCard className="w-full">
             <RsvpSection
               staticDeadline={new Date("2025-08-01")}
               bgClassName="bg-transparent"
