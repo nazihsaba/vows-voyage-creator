@@ -24,23 +24,23 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
       <Globe className="w-3.5 h-3.5 opacity-70" />
       <div className="relative flex items-center bg-white/10 rounded-full p-0.5">
         <div
-          className={`absolute h-6 w-9 rounded-full bg-white/20 shadow-sm transition-transform duration-300 ease-out ${
-            isArabic ? 'translate-x-9' : 'translate-x-0'
+          className={`absolute h-6 rounded-full bg-white/20 shadow-sm transition-transform duration-300 ease-out ${
+            isArabic ? 'translate-x-[52px] w-[52px]' : 'translate-x-0 w-[52px]'
           }`}
         />
         <span
-          className={`relative z-10 w-9 text-center text-xs font-semibold py-1 rounded-full transition-colors duration-300 ${
+          className={`relative z-10 w-[52px] text-center text-[11px] font-semibold py-1 rounded-full transition-colors duration-300 ${
             !isArabic ? 'text-white' : 'text-white/50'
           }`}
         >
-          EN
+          English
         </span>
         <span
-          className={`relative z-10 w-9 text-center text-xs font-semibold py-1 rounded-full transition-colors duration-300 ${
+          className={`relative z-10 w-[52px] text-center text-[11px] font-semibold py-1 rounded-full transition-colors duration-300 ${
             isArabic ? 'text-white' : 'text-white/50'
           }`}
         >
-          AR
+          العربية
         </span>
       </div>
     </button>
