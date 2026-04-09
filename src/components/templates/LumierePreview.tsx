@@ -7,14 +7,26 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Glassmorphic card style for content sections ── */
+/* ── Deckled / torn-paper edge SVG filter ── */
+const DeckledEdgeFilter = () => (
+  <svg width="0" height="0" style={{ position: "absolute" }}>
+    <defs>
+      <filter id="deckled-edge">
+        <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
+        <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </defs>
+  </svg>
+);
+
+/* ── Torn-paper card style for content sections ── */
 const cardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.85)",
+  background: "rgba(255, 255, 255, 0.92)",
   backdropFilter: "blur(12px)",
   WebkitBackdropFilter: "blur(12px)",
-  borderRadius: "1rem",
   boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.4)",
+  filter: "url(#deckled-edge)",
+  padding: "2rem",
 };
 
 const LumierePreview = () => {
@@ -22,6 +34,7 @@ const LumierePreview = () => {
 
   return (
     <div className="relative w-full min-h-screen text-foreground">
+      <DeckledEdgeFilter />
       {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
       <div className="fixed inset-0 z-0 w-full h-full">
         {!videoFailed ? (
