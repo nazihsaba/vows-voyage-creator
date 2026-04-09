@@ -286,7 +286,7 @@ export const LumiereTemplate = ({
         </section>
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(0)}
+        {dividerMedia(0)}
 
         {/* ===== CEREMONY ===== */}
         {ceremony && (
@@ -319,7 +319,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(1)}
+        {dividerMedia(1)}
 
         {/* ===== CELEBRATION ===== */}
         {venue && (
@@ -352,7 +352,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(2)}
+        {dividerMedia(2)}
 
         {/* ===== GIFT REGISTRY ===== */}
         {hasGiftCards && (
@@ -374,7 +374,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(3)}
+        {dividerMedia(3)}
 
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
@@ -394,7 +394,7 @@ export const LumiereTemplate = ({
         )}
 
         {/* ===== DIVIDER IMAGE ===== */}
-        {dividerImage(4)}
+        {dividerMedia(4)}
 
         {/* ===== FOOTER ===== */}
         <section className="py-16 px-6 text-center">
