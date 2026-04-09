@@ -7,24 +7,22 @@ import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 
 const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
-/* ── Watercolor brush-edge card style (matches reference) ── */
-const brushCardStyle: React.CSSProperties = {
-  background: "#faf8f5",
-  WebkitMaskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  WebkitMaskComposite: "source-in" as any,
-  maskImage:
-    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
-    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
-  maskComposite: "intersect" as any,
-};
+/* Torn paper SVG filter is defined inline below */
 
 const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
     <div className="relative w-full min-h-screen text-foreground">
+      {/* SVG filter for torn/deckled paper edges */}
+      <svg className="absolute w-0 h-0" aria-hidden="true">
+        <defs>
+          <filter id="lumiere-torn-edge">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
       {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
       <div className="fixed inset-0 z-0 w-full h-full">
         {!videoFailed ? (
@@ -74,7 +72,7 @@ const LumierePreview = () => {
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10" style={brushCardStyle}>
+            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 lumiere-torn-card">
               <p className="text-lg italic leading-relaxed text-foreground/70" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
                 I have found the one whom my soul loves.
               </p>
@@ -102,7 +100,7 @@ const LumierePreview = () => {
         {/* ===== CEREMONY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Wedding Ceremony
               </h2>
@@ -129,7 +127,7 @@ const LumierePreview = () => {
         {/* ===== CELEBRATION ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
+            <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 The Celebration
               </h2>
@@ -156,7 +154,7 @@ const LumierePreview = () => {
         {/* ===== GIFT REGISTRY ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={brushCardStyle}>
+            <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center lumiere-torn-card">
               <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                 Gift Registry
               </h2>
@@ -183,7 +181,7 @@ const LumierePreview = () => {
 
         {/* ===== RSVP ===== */}
         <div className="px-6 py-16">
-          <div className="max-w-md mx-auto" style={brushCardStyle}>
+          <div className="max-w-md mx-auto lumiere-torn-card">
             <RsvpSection
               staticDeadline={new Date("2025-08-01")}
               bgClassName="bg-transparent"

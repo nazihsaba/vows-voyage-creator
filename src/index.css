@@ -264,3 +264,10 @@ All colors MUST be HSL.
     text-align: left;
   }
 }
+
+/* ── Lumière torn / deckled paper edge effect ── */
+.lumiere-torn-card {
+  position: relative;
+  background: hsl(40 33% 96%); /* #faf8f5 equivalent */
+  filter: url(#lumiere-torn-edge);
+}
