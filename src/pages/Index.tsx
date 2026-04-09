@@ -26,6 +26,7 @@ import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
 import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
+import whatsappIcon from "@/assets/whatsappIcon.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -362,7 +363,7 @@ const Index = () => {
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
-              aria-label="WhatsApp"
+              aria-label="whatsappIcon"
             >
               <MessageCircle size={22} />
             </a>
