@@ -714,6 +714,19 @@ const WeddingForm = () => {
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
+              {/* Enable Arabic Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+                <div className="flex items-center gap-2">
+                  <Languages className="w-4 h-4 text-muted-foreground" />
+                  <Label htmlFor="enable-arabic" className="text-sm font-medium cursor-pointer">Enable Arabic</Label>
+                </div>
+                <Switch
+                  id="enable-arabic"
+                  checked={enableArabic}
+                  onCheckedChange={handleEnableArabic}
+                />
+              </div>
+
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
@@ -721,24 +734,56 @@ const WeddingForm = () => {
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
-                    onChange={(e) => setFormData({ ...formData, groom_name: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, groom_name: e.target.value });
+                      if (enableArabic) debouncedTranslate("groom_name", e.target.value);
+                    }}
                     required
                     disabled={!!id}
                     className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
+                  {enableArabic && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">اسم العريس (Arabic)</Label>
+                      <Input
+                        value={arabicFields.groom_name}
+                        onChange={(e) => setArabicFields(prev => ({ ...prev, groom_name: e.target.value }))}
+                        dir="rtl"
+                        className="h-10 text-right font-arabic"
+                        placeholder={translatingFields.groom_name ? "Translating..." : ""}
+                        disabled={translatingFields.groom_name}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
-                    onChange={(e) => setFormData({ ...formData, bride_name: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, bride_name: e.target.value });
+                      if (enableArabic) debouncedTranslate("bride_name", e.target.value);
+                    }}
                     required
                     disabled={!!id}
                     className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
+                  {enableArabic && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">اسم العروس (Arabic)</Label>
+                      <Input
+                        value={arabicFields.bride_name}
+                        onChange={(e) => setArabicFields(prev => ({ ...prev, bride_name: e.target.value }))}
+                        dir="rtl"
+                        className="h-10 text-right font-arabic"
+                        placeholder={translatingFields.bride_name ? "Translating..." : ""}
+                        disabled={translatingFields.bride_name}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -750,9 +795,25 @@ const WeddingForm = () => {
                     id="groom_family"
                     required
                     value={formData.groom_family}
-                    onChange={(e) => setFormData({ ...formData, groom_family: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, groom_family: e.target.value });
+                      if (enableArabic) debouncedTranslate("groom_family", e.target.value);
+                    }}
                     className="h-11 sm:h-10"
                   />
+                  {enableArabic && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">عائلة العريس (Arabic)</Label>
+                      <Input
+                        value={arabicFields.groom_family}
+                        onChange={(e) => setArabicFields(prev => ({ ...prev, groom_family: e.target.value }))}
+                        dir="rtl"
+                        className="h-10 text-right font-arabic"
+                        placeholder={translatingFields.groom_family ? "Translating..." : ""}
+                        disabled={translatingFields.groom_family}
+                      />
+                    </div>
+                  )}
                 </div>
                 <div className="space-y-1.5">
                   <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
@@ -760,9 +821,25 @@ const WeddingForm = () => {
                     id="bride_family"
                     required
                     value={formData.bride_family}
-                    onChange={(e) => setFormData({ ...formData, bride_family: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, bride_family: e.target.value });
+                      if (enableArabic) debouncedTranslate("bride_family", e.target.value);
+                    }}
                     className="h-11 sm:h-10"
                   />
+                  {enableArabic && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">عائلة العروس (Arabic)</Label>
+                      <Input
+                        value={arabicFields.bride_family}
+                        onChange={(e) => setArabicFields(prev => ({ ...prev, bride_family: e.target.value }))}
+                        dir="rtl"
+                        className="h-10 text-right font-arabic"
+                        placeholder={translatingFields.bride_family ? "Translating..." : ""}
+                        disabled={translatingFields.bride_family}
+                      />
+                    </div>
+                  )}
                 </div>
               </div>
 
@@ -797,7 +874,10 @@ const WeddingForm = () => {
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
-                  onChange={(e) => setFormData({ ...formData, main_description: e.target.value })}
+                  onChange={(e) => {
+                    setFormData({ ...formData, main_description: e.target.value });
+                    if (enableArabic) debouncedTranslate("main_description", e.target.value);
+                  }}
                   rows={3}
                   className="min-h-[80px] text-base sm:text-sm"
                 />
