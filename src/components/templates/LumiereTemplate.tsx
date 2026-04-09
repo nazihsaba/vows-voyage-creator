@@ -100,6 +100,15 @@ export const LumiereTemplate = ({
 
   return (
     <div className="relative w-full min-h-screen text-foreground" dir={isArabic ? 'rtl' : 'ltr'}>
+      {/* SVG filter for torn/deckled paper edges */}
+      <svg className="absolute w-0 h-0" aria-hidden="true">
+        <defs>
+          <filter id="lumiere-torn-edge">
+            <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="4" seed="2" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+        </defs>
+      </svg>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
