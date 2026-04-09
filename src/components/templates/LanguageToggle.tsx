@@ -17,26 +17,26 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
   return (
     <button
       onClick={toggle}
-      className={`fixed top-4 left-4 z-50 rounded-full p-[3px] bg-gradient-to-br from-white/30 via-white/10 to-white/5 shadow-[0_4px_24px_rgba(0,0,0,0.25)] backdrop-blur-2xl transition-all duration-300 hover:shadow-[0_6px_32px_rgba(0,0,0,0.35)] hover:scale-[1.03] active:scale-[0.97] ${className}`}
+      className={`fixed top-4 left-4 z-50 rounded-full p-[3px] bg-white shadow-[0_4px_24px_rgba(0,0,0,0.12)] backdrop-blur-2xl transition-all duration-300 hover:shadow-[0_6px_32px_rgba(0,0,0,0.18)] hover:scale-[1.03] active:scale-[0.97] ${className}`}
       aria-label="Switch language"
     >
-      <div className="relative flex items-center bg-black/50 rounded-full overflow-hidden">
+      <div className="relative flex items-center bg-white rounded-full overflow-hidden">
         {/* Sliding active indicator */}
         <div
-          className={`absolute top-0 bottom-0 w-1/2 rounded-full bg-white/20 border border-white/15 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+          className={`absolute top-0 bottom-0 w-1/2 rounded-full bg-primary transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             isArabic ? 'left-1/2' : 'left-0'
           }`}
         />
         <span
           className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 tracking-wide transition-all duration-300 ${
-            !isArabic ? 'text-white' : 'text-white/40'
+            !isArabic ? 'text-primary-foreground' : 'text-primary'
           }`}
         >
           English
         </span>
         <span
           className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 transition-all duration-300 ${
-            isArabic ? 'text-white' : 'text-white/40'
+            isArabic ? 'text-primary-foreground' : 'text-primary'
           }`}
           style={{ fontFamily: isArabic ? 'inherit' : undefined }}
         >
