@@ -245,6 +245,7 @@ const LumierePreview = () => {
 
         <TemplatePreviewFooter />
       </div>
+      </div>
     </div>
   );
 };
