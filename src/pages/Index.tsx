@@ -7,7 +7,7 @@ import {
   Instagram,
   MessageCircle,
   Users,
-  Wand2,
+  Languages,
   Mail,
   Check,
 } from "lucide-react";
@@ -186,7 +186,7 @@ const Index = () => {
                 desc: "Generate and share unique invitation links for each guest with ease",
               },
               {
-                icon: MessageCircle,
+                icon: Languages,
                 title: "Multi-Language",
                 desc: "Seamlessly switch between English and Arabic to welcome every guest in their preferred language",
               },
