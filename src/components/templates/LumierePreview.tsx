@@ -50,10 +50,10 @@ const LumierePreview = () => {
   const [videoFailed, setVideoFailed] = useState(false);
 
   return (
-    <div className="relative w-full min-h-screen text-foreground">
+    <div className="relative w-full min-h-screen text-foreground overflow-hidden lg:max-w-[600px] lg:mx-auto">
       <DeckledEdgeFilter />
       {/* ===== LAYER 1 — Fixed fullscreen background video ===== */}
-      <div className="fixed inset-0 z-0 w-full h-full">
+      <div className="absolute inset-0 z-0 w-full h-full">
         {!videoFailed ? (
           <video
             autoPlay
@@ -71,10 +71,10 @@ const LumierePreview = () => {
       </div>
 
       {/* ===== LAYER 2 — Dark overlay for readability ===== */}
-      <div className="fixed inset-0 z-[1] bg-black/40" />
+      <div className="absolute inset-0 z-[1] bg-black/40" />
 
       {/* ===== LAYER 3 — Scrollable content ===== */}
-      <div className="relative z-[2] lg:px-[25%]">
+      <div className="relative z-[2]">
         {/* ===== HERO ===== */}
         <section className="relative w-full min-h-[90vh] flex flex-col items-center justify-center px-6 text-center">
           <div className="opacity-0 animate-[fadeInUp_0.8s_ease-out_0.2s_forwards]">
