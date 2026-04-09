@@ -176,9 +176,9 @@ const Index = () => {
                 desc: "Share your gift registry or preferred gift cards in a simple and elegant way",
               },
               {
-                icon: Calendar,
-                title: "RSVP",
-                desc: "Collect and manage guest responses smoothly in one place",
+                icon: Users,
+                title: "RSVP & Guest Management",
+                desc: "Collect responses, track RSVPs in real time, and organize guests into tables effortlessly",
               },
               {
                 icon: LinkIcon,
@@ -186,9 +186,9 @@ const Index = () => {
                 desc: "Generate and share unique invitation links for each guest with ease",
               },
               {
-                icon: Users,
-                title: "Guests & Tables",
-                desc: "Track RSVPs in real time and organize guests into tables effortlessly",
+                icon: MessageCircle,
+                title: "Multi-Language",
+                desc: "Seamlessly switch between English and Arabic to welcome every guest in their preferred language",
               },
             ].map((feature) => (
               <div
