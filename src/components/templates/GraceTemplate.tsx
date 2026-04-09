@@ -113,7 +113,7 @@ export const GraceTemplate = ({
     }, 100);
   };
 
-  const dateLocale = isArabic ? "ar-SA" : "en-US";
+  const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
