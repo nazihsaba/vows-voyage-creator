@@ -1,0 +1,51 @@
+{
+  "hero": {
+    "theWeddingOf": "The Wedding Of",
+    "tapToStart": "Tap To Start"
+  },
+  "family": {
+    "theFamily": "The {{name}} Family",
+    "defaultInvitation": "Request the honor of your presence at the wedding of their Son and Daughter"
+  },
+  "countdown": {
+    "days": "Days",
+    "hours": "Hours",
+    "minutes": "Minutes",
+    "seconds": "Seconds"
+  },
+  "events": {
+    "title": "Wedding Events",
+    "defaultSubtitle": "Join us in celebrating this special day",
+    "ceremony": "Ceremony",
+    "venue": "Venue",
+    "eventLocation": "Event Location",
+    "viewOnMap": "View on Map",
+    "location": "Location"
+  },
+  "gallery": {
+    "title": "Our Moments"
+  },
+  "gifts": {
+    "title": "Wedding Gift",
+    "subtitle": "For those who desire a wedding list is available"
+  },
+  "rsvp": {
+    "title": "Join Our Celebration",
+    "subtitle": "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
+    "attending": "Attending ✓",
+    "willAttend": "Will Attend?",
+    "numberOfGuests": "Number of Guests: {{count}}",
+    "deadlinePassed": "RSVP deadline has passed",
+    "submit": "Submit RSVP",
+    "submitting": "Submitting...",
+    "rsvpBy": "Please RSVP by:",
+    "confirmBefore": "Kindly confirm your attendance before this date:"
+  },
+  "closing": {
+    "defaultMessage": "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us."
+  },
+  "aura": {
+    "togetherWithFamilies": "Together with their families",
+    "mrAndMrs": "Mr. & Mrs."
+  }
+}
