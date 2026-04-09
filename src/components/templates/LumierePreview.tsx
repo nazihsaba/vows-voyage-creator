@@ -54,7 +54,7 @@ const LumierePreview = () => {
       <div className="relative w-full min-h-screen text-foreground overflow-hidden">
         <DeckledEdgeFilter />
         {/* ===== LAYER 1 — Fullscreen background video ===== */}
-        <div className="fixed inset-0 z-0 w-full h-full lg:absolute lg:inset-0 lg:h-full">
+        <div className="fixed inset-0 z-0 w-full h-full">
           {!videoFailed ? (
             <video
               autoPlay
@@ -72,7 +72,7 @@ const LumierePreview = () => {
         </div>
 
         {/* ===== LAYER 2 — Dark overlay for readability ===== */}
-        <div className="fixed inset-0 z-[1] bg-black/40 lg:absolute lg:inset-0" />
+        <div className="fixed inset-0 z-[1] bg-black/40" />
 
         {/* ===== LAYER 3 — Scrollable content ===== */}
         <div className="relative z-[2]">
