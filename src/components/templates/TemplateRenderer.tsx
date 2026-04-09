@@ -9,6 +9,7 @@ import { GraceTemplate } from './GraceTemplate';
 import { EclatTemplate } from './EclatTemplate';
 import { AuraTemplate } from './AuraTemplate';
 import { OpulenceTemplate } from './OpulenceTemplate';
+import { LumiereTemplate } from './LumiereTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -148,6 +149,29 @@ export const TemplateRenderer = ({
   if (template.component === 'OpulenceTemplate') {
     return (
       <OpulenceTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'LumiereTemplate') {
+    return (
+      <LumiereTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

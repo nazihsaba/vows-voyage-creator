@@ -15,8 +15,9 @@ const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
 const VeritePreview = lazy(() => import("@/components/templates/VeritePreview"));
 const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
 const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then((m) => ({ default: m.AuraPreview })));
+const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
@@ -47,6 +48,13 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     featured: true,
     templateKey: "aura",
   },
+  {
+    image: graceTemplate,
+    label: "Lumière",
+    tagline: "Cinematic fixed video experience",
+    featured: false,
+    templateKey: "lumiere",
+  },
 ];
 
 const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.ComponentType>> = {
@@ -54,6 +62,7 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   verite: VeritePreview,
   eclat: EclatPreview,
   aura: AuraPreview,
+  lumiere: LumierePreview,
 };
 
 const PreviewLoadingFallback = () => (
@@ -146,7 +155,7 @@ const InvitationPreviewSection = () => {
         </div>
 
         {/* Desktop grid */}
-        <div className="hidden lg:grid grid-cols-4 gap-6 mb-14">
+        <div className="hidden lg:grid grid-cols-5 gap-5 mb-14">
           {previewCards.map((card) => (
             <TemplateCard key={card.label} card={card} onPreview={setActivePreview} />
           ))}
