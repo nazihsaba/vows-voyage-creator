@@ -10,14 +10,17 @@ import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 
-/* ── Glassmorphic card style for content sections ── */
-const cardStyle: React.CSSProperties = {
-  background: "rgba(255, 255, 255, 0.85)",
-  backdropFilter: "blur(12px)",
-  WebkitBackdropFilter: "blur(12px)",
-  borderRadius: "1rem",
-  boxShadow: "0 4px 30px rgba(0, 0, 0, 0.06)",
-  border: "1px solid rgba(255, 255, 255, 0.4)",
+/* ── Watercolor brush-edge card style (matches reference) ── */
+const brushCardStyle: React.CSSProperties = {
+  background: "#faf8f5",
+  WebkitMaskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  WebkitMaskComposite: "source-in" as any,
+  maskImage:
+    "linear-gradient(to bottom, transparent 0%, black 6%, black 94%, transparent 100%), " +
+    "linear-gradient(to right, transparent 0%, black 4%, black 96%, transparent 100%)",
+  maskComposite: "intersect" as any,
 };
 
 interface LumiereTemplateProps {
