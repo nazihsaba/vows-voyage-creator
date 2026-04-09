@@ -24,17 +24,30 @@ const brushMaskStyle: React.CSSProperties = {
 };
 
 const weddingDate = new Date("2025-08-16");
+const previewVideoUrl = "/videos/lumiere-preview.mp4";
 
 const LumierePreview = () => {
   const dividerImages = [eclatWedding2, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7];
 
+  const dividerMedia = (index: number) => (
+    <AnimatedSection animation="fade-in">
+      <div className="w-full h-[55vh] overflow-hidden my-4" style={brushMaskStyle}>
+        <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+          <source src={previewVideoUrl} type="video/mp4" />
+        </video>
+      </div>
+    </AnimatedSection>
+  );
+
   return (
     <div className="relative w-full min-h-screen bg-white text-foreground lg:px-[25%]">
       <div>
-        {/* ===== HERO — full-width image with brush edges ===== */}
+        {/* ===== HERO — full-width video with brush edges ===== */}
         <section className="relative w-full">
           <div className="w-full h-[85vh] overflow-hidden" style={brushMaskStyle}>
-            <img src={eclatWedding1} alt="Wedding" className="w-full h-full object-cover" />
+            <video autoPlay loop muted playsInline className="w-full h-full object-cover">
+              <source src={previewVideoUrl} type="video/mp4" />
+            </video>
           </div>
 
           {/* Monogram with heart */}
