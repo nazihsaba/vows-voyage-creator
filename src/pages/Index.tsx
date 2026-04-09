@@ -336,7 +336,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Instagram"
             >
-              <img src={instagramIcon} alt="Instagram" className="w-7 h-7 object-contain" />
+              <img src={instagramIcon} alt="Instagram" className="w-7 h-7 object-contain grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
             </a>
             {/* <a
               href="https://tiktok.com"
@@ -365,7 +365,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="whatsappIcon"
             >
-              <img src={whatsappIcon} alt="WhatsApp" className="w-[22px] h-[22px]" />
+              <img src={whatsappIcon} alt="WhatsApp" className="w-[22px] h-[22px] grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300" />
             </a>
           </div>
           <p className="text-xs text-muted-foreground/60 mt-2">
