@@ -182,7 +182,7 @@ export const LumiereTemplate = ({
         {/* ===== INVITATION MESSAGE ===== */}
         <section className="py-16 px-6 flex justify-center">
           <AnimatedSection animation="fade-in">
-            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 text-center" style={cardStyle}>
+            <div className="max-w-md mx-auto space-y-8 p-8 md:p-10 text-center" style={brushCardStyle}>
               <EditableField
                 fieldId="lumiere-quote"
                 text={getFieldValue(
@@ -254,7 +254,7 @@ export const LumiereTemplate = ({
         {ceremony && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("events.ceremony")}
                 </h2>
@@ -284,7 +284,7 @@ export const LumiereTemplate = ({
         {venue && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-5 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("events.venue")}
                 </h2>
@@ -314,7 +314,7 @@ export const LumiereTemplate = ({
         {hasGiftCards && (
           <section className="py-16 px-6 flex justify-center">
             <AnimatedSection animation="fade-in">
-              <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={cardStyle}>
+              <div className="max-w-md mx-auto space-y-6 p-8 md:p-10 text-center" style={brushCardStyle}>
                 <h2 className="text-3xl md:text-4xl text-foreground" style={{ fontFamily: "'Dancing Script', cursive" }}>
                   {t("gifts.title")}
                 </h2>
@@ -332,7 +332,7 @@ export const LumiereTemplate = ({
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
           <div className="px-6 py-16">
-            <div className="max-w-md mx-auto" style={cardStyle}>
+            <div className="max-w-md mx-auto" style={brushCardStyle}>
               <RsvpSection
                 wedding={wedding}
                 isPreview={isPreview}
