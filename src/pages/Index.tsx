@@ -26,6 +26,7 @@ import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 import whatsappIcon from "@/assets/whatsappIcon.png";
+import instagramIcon from "@/assets/instagramIcon.png";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -335,7 +336,7 @@ const Index = () => {
               className="text-muted-foreground hover:text-primary transition-colors"
               aria-label="Instagram"
             >
-              <Instagram size={22} />
+              <img src={instagramIcon} alt="Instagram" className="w-[22px] h-[22px]" />
             </a>
             {/* <a
               href="https://tiktok.com"
