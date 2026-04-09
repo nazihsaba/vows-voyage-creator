@@ -881,6 +881,20 @@ const WeddingForm = () => {
                   rows={3}
                   className="min-h-[80px] text-base sm:text-sm"
                 />
+                {enableArabic && (
+                  <div className="space-y-1 mt-2">
+                    <Label className="text-xs text-muted-foreground">الوصف (Arabic)</Label>
+                    <Textarea
+                      value={arabicFields.main_description}
+                      onChange={(e) => setArabicFields(prev => ({ ...prev, main_description: e.target.value }))}
+                      dir="rtl"
+                      rows={3}
+                      className="min-h-[80px] text-right font-arabic"
+                      placeholder={translatingFields.main_description ? "Translating..." : ""}
+                      disabled={translatingFields.main_description}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Aura Template: Quote & Reference */}
