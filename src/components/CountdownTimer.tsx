@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 
 interface CountdownTimerProps {
@@ -7,6 +8,7 @@ interface CountdownTimerProps {
 }
 
 export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTimerProps) => {
+  const { t } = useTranslation();
   const [timeRemaining, setTimeRemaining] = useState({
     days: 0,
     hours: 0,
@@ -40,16 +42,16 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
   return (
     <div className="text-center">
       <h2 className={`text-template-subtitle mb-6 ${isDark ? "text-white" : ""}`}>
-        Counting Down To Our Special Day
+        {t("countdown.title")}
       </h2>
       <div className="flex justify-center gap-4 md:gap-8">
         {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
+          { value: timeRemaining.days, label: t("countdown.days") },
+          { value: timeRemaining.hours, label: t("countdown.hours") },
+          { value: timeRemaining.minutes, label: t("countdown.minutes") },
+          { value: timeRemaining.seconds, label: t("countdown.seconds") },
         ].map((item, index) => (
-          <AnimatedSection key={item.label} delay={index * 100} animation="scale-in">
+          <AnimatedSection key={index} delay={index * 100} animation="scale-in">
             <div className="text-center">
               <div className={`text-3xl md:text-5xl font-bold ${isDark ? "text-white" : "text-primary"}`}>
                 {item.value}
