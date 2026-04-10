@@ -41,6 +41,7 @@ const LumiereRsvp = ({
         staticDeadline={staticDeadline}
         bgClassName="bg-transparent"
         cardBgClassName="bg-gray-50"
+        accentColorClass="text-black"
       />
     </LumiereTornCard>
   );
