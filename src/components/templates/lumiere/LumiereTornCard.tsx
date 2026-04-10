@@ -22,18 +22,18 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
 
       {/* Top ripped edge */}
       <div
-        className="relative w-full h-[20px] bg-white/95 -mb-[10px]"
+        className="relative w-full h-[20px] bg-white -mb-[10px]"
         style={{ filter: `url(#rip-${id})` }}
       />
 
       {/* Clean content area */}
-      <div className="relative bg-white/95 backdrop-blur-sm">
+      <div className="relative bg-white">
         {children}
       </div>
 
       {/* Bottom ripped edge */}
       <div
-        className="relative w-full h-[20px] bg-white/95 -mt-[10px]"
+        className="relative w-full h-[20px] bg-white -mt-[10px]"
         style={{ filter: `url(#rip-${id})` }}
       />
     </div>
