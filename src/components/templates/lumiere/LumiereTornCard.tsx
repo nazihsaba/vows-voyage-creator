@@ -10,34 +10,34 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
 
   return (
     <div className={`relative w-full ${className}`} style={{ margin: 0, padding: 0, boxSizing: "border-box" }}>
-      {/* SVG filter for ripped paper edge */}
+      {/* SVG filter for ripped paper edge — stronger displacement */}
       <svg className="absolute" width="0" height="0" aria-hidden="true">
         <defs>
           <filter id={`rip-${id}`}>
-            <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="5" seed="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="12" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="6" seed="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
 
-      {/* Top ripped edge — overflow visible so displacement isn't clipped */}
+      {/* Top ripped edge */}
       <div className="relative overflow-hidden">
         <div
-          className="h-[20px] bg-white -mb-[10px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-16px", marginRight: "-16px" }}
+          className="h-[30px] bg-white -mb-[14px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-20px", marginRight: "-20px" }}
         />
       </div>
 
-      {/* Clean content area — full width white background */}
+      {/* Clean content area */}
       <div className="relative bg-white w-full" style={{ margin: 0, padding: 0 }}>
         {children}
       </div>
 
-      {/* Bottom ripped edge */}
+      {/* Bottom ripped edge — same filter for consistent look */}
       <div className="relative overflow-hidden">
         <div
-          className="h-[20px] bg-white -mt-[10px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-16px", marginRight: "-16px" }}
+          className="h-[30px] bg-white -mt-[14px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-20px", marginRight: "-20px" }}
         />
       </div>
     </div>
