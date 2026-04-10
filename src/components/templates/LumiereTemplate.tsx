@@ -343,7 +343,6 @@ export const LumiereTemplate = ({
           <TemplatePreviewFooter />
         </div>
       </div>
-      </div>
     </div>
   );
 };
