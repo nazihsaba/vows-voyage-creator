@@ -1,4 +1,5 @@
-import { useState, lazy, Suspense } from "react";
+import { useState, lazy, Suspense, useRef } from "react";
+import Autoplay from "embla-carousel-autoplay";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Carousel, CarouselContent, CarouselItem, CarouselPrevious, CarouselNext } from "@/components/ui/carousel";
@@ -128,6 +129,8 @@ const TemplateCard = ({
 const InvitationPreviewSection = () => {
   const navigate = useNavigate();
   const [activePreview, setActivePreview] = useState<TemplateKey | null>(null);
+  const autoplayMobile = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
+  const autoplayDesktop = useRef(Autoplay({ delay: 3500, stopOnInteraction: false, stopOnMouseEnter: true }));
 
   const ActiveComponent = activePreview ? templateComponents[activePreview] : null;
   const activeLabel = activePreview ? previewCards.find((c) => c.templateKey === activePreview)?.label : "";
@@ -152,7 +155,7 @@ const InvitationPreviewSection = () => {
 
         {/* Mobile carousel */}
         <div className="mb-14 lg:hidden">
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <Carousel opts={{ align: "start", loop: true }} plugins={[autoplayMobile.current]} className="w-full">
             <CarouselContent className="-ml-4">
               {previewCards.map((card) => (
                 <CarouselItem key={card.label} className="pl-4 basis-[85%] sm:basis-1/2">
@@ -167,7 +170,7 @@ const InvitationPreviewSection = () => {
 
         {/* Desktop carousel */}
         <div className="hidden lg:block mb-14">
-          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+          <Carousel opts={{ align: "start", loop: true }} plugins={[autoplayDesktop.current]} className="w-full">
             <CarouselContent className="-ml-6">
               {previewCards.map((card) => (
                 <CarouselItem key={card.label} className="pl-6 basis-1/4">
