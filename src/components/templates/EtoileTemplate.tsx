@@ -67,7 +67,7 @@ export const EtoileTemplate = ({
 
   useEffect(() => {
     if (carouselImages.length <= 1) return;
-    const interval = setInterval(nextSlide, 4000);
+    const interval = setInterval(nextSlide, 2000);
     return () => clearInterval(interval);
   }, [nextSlide, carouselImages.length]);
 
@@ -161,9 +161,7 @@ export const EtoileTemplate = ({
             style={{ opacity: index === currentSlide ? 1 : 0 }}
           />
         ))}
-        {carouselImages.length === 0 && (
-          <div className="absolute inset-0 bg-black" />
-        )}
+        {carouselImages.length === 0 && <div className="absolute inset-0 bg-black" />}
       </div>
 
       {/* Layer 2: Dark overlay */}
