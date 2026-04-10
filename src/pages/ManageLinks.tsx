@@ -502,7 +502,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "attending" ? "Clear filter" : "Filter by attending"}
+                              {statusFilter === "attending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only confirmed guests (${attending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                           <Tooltip>
@@ -520,7 +522,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "pending" ? "Clear filter" : "Filter by pending"}
+                              {statusFilter === "pending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only guests who haven't responded yet (${pending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                           <Tooltip>
@@ -538,7 +542,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "not_attending" ? "Clear filter" : "Filter by not attending"}
+                              {statusFilter === "not_attending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only declined guests (${notAttending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                         </div>
@@ -766,7 +772,15 @@ const ManageLinks = () => {
                                     </TableRow>
                                     {isExpanded &&
                                       linkInvitees.length > 0 &&
-                                      linkInvitees.map((invitee) => (
+                                      linkInvitees
+                                        .filter((invitee) => {
+                                          if (!statusFilter) return true;
+                                          if (statusFilter === "attending") return invitee.is_attending === true;
+                                          if (statusFilter === "not_attending") return invitee.is_attending === false;
+                                          if (statusFilter === "pending") return invitee.is_attending === null;
+                                          return true;
+                                        })
+                                        .map((invitee) => (
                                         <TableRow
                                           key={invitee.id}
                                           className="bg-white border-l-4 border-l-primary/30 transition-colors"
@@ -996,7 +1010,15 @@ const ManageLinks = () => {
                                       No guests added yet
                                     </p>
                                   ) : (
-                                    linkInvitees.map((invitee) => (
+                                    linkInvitees
+                                      .filter((invitee) => {
+                                        if (!statusFilter) return true;
+                                        if (statusFilter === "attending") return invitee.is_attending === true;
+                                        if (statusFilter === "not_attending") return invitee.is_attending === false;
+                                        if (statusFilter === "pending") return invitee.is_attending === null;
+                                        return true;
+                                      })
+                                      .map((invitee) => (
                                       <div
                                         key={invitee.id}
                                         className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
