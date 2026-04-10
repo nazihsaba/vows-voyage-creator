@@ -193,6 +193,94 @@ export type Database = {
         }
         Relationships: []
       }
+      venue_projects: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          plan_image_url: string | null
+          scale: number | null
+          updated_at: string | null
+          wedding_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          plan_image_url?: string | null
+          scale?: number | null
+          updated_at?: string | null
+          wedding_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          plan_image_url?: string | null
+          scale?: number | null
+          updated_at?: string | null
+          wedding_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_projects_wedding_id_fkey"
+            columns: ["wedding_id"]
+            isOneToOne: false
+            referencedRelation: "weddings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      venue_tables: {
+        Row: {
+          created_at: string | null
+          guest_count: number
+          height: number
+          id: string
+          name: string
+          rotation: number
+          shape: string
+          venue_project_id: string
+          width: number
+          x_position: number
+          y_position: number
+        }
+        Insert: {
+          created_at?: string | null
+          guest_count?: number
+          height?: number
+          id?: string
+          name?: string
+          rotation?: number
+          shape?: string
+          venue_project_id: string
+          width?: number
+          x_position?: number
+          y_position?: number
+        }
+        Update: {
+          created_at?: string | null
+          guest_count?: number
+          height?: number
+          id?: string
+          name?: string
+          rotation?: number
+          shape?: string
+          venue_project_id?: string
+          width?: number
+          x_position?: number
+          y_position?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "venue_tables_venue_project_id_fkey"
+            columns: ["venue_project_id"]
+            isOneToOne: false
+            referencedRelation: "venue_projects"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       wedding_locations: {
         Row: {
           created_at: string | null
