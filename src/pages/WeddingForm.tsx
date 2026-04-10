@@ -985,7 +985,7 @@ const WeddingForm = () => {
                 </p>
               </div> */}
 
-              {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
+              {/* Conditional: Show Video Upload for Video Template, Photo Upload for non-carousel, or nothing for carousel */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
                   <Label htmlFor="wedding_video">Upload Video <span className="text-foreground">*</span></Label>
@@ -1022,7 +1022,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : (
+              ) : template !== "etoile-carousel" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">Main Wedding Photo <span className="text-foreground">*</span></Label>
                   <div className="flex flex-col gap-4">
