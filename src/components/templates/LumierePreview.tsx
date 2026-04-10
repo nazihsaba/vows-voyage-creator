@@ -39,12 +39,12 @@ const sampleEvents = [
 ];
 
 const sampleGallery = [
-  { id: "1", image_url: eclatWedding1, alt_text: "Moment 1" },
-  { id: "2", image_url: eclatWedding3, alt_text: "Moment 2" },
-  { id: "3", image_url: eclatWedding4, alt_text: "Moment 3" },
-  { id: "4", image_url: eclatWedding5, alt_text: "Moment 4" },
-  { id: "5", image_url: eclatWedding6, alt_text: "Moment 5" },
-  { id: "6", image_url: eclatWedding7, alt_text: "Moment 6" },
+  { id: "1", image_url: lumiere1, alt_text: "Moment 1" },
+  { id: "2", image_url: lumiere2, alt_text: "Moment 2" },
+  { id: "3", image_url: lumiere3, alt_text: "Moment 3" },
+  { id: "4", image_url: lumiere4, alt_text: "Moment 4" },
+  { id: "5", image_url: lumiere5, alt_text: "Moment 5" },
+  { id: "6", image_url: lumiere6, alt_text: "Moment 6" },
 ];
 
 const sampleGifts = [
