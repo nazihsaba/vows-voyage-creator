@@ -172,169 +172,115 @@ export const EtoileTemplate = ({
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
-        {/* ===== MONOGRAM SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
-          <div className="flex items-center gap-4 md:gap-6">
-            <span className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0 animate-[curtainLeft_1s_ease-out_0.2s_forwards]">
-              {wedding.groom_name?.charAt(0)?.toUpperCase() || "G"}
-            </span>
-            <svg className="w-8 h-8 md:w-10 md:h-10 text-white/70 opacity-0 animate-[zoomIn_0.8s_ease-out_0.7s_forwards]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-            <span className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0 animate-[curtainRight_1s_ease-out_0.2s_forwards]">
-              {wedding.bride_name?.charAt(0)?.toUpperCase() || "B"}
-            </span>
+        {/* ===== HERO SECTION (Vérité-style) ===== */}
+        <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
+          <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
+            <EditableField
+              fieldId="hero-subtitle"
+              text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
+              style={getFieldStyle("hero-subtitle")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-template-small"
+            />
+            <div className="space-y-2">
+              <EditableField
+                fieldId="groom-name"
+                text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
+                style={getFieldStyle("groom-name")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h1"
+                className="text-template-title"
+              />
+              <p className="text-4xl md:text-5xl">&</p>
+              <EditableField
+                fieldId="bride-name"
+                text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
+                style={getFieldStyle("bride-name")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="h1"
+                className="text-template-title"
+              />
+            </div>
+            <EditableField
+              fieldId="wedding-date-display"
+              text={getFieldValue(
+                "wedding-date-display",
+                weddingDate.toLocaleDateString(dateLocale, {
+                  weekday: "long",
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
+                }),
+              )}
+              style={getFieldStyle("wedding-date-display")}
+              onUpdate={onFieldUpdate}
+              isPreview={isPreview}
+              tag="p"
+              className="text-template-body tracking-wide"
+            />
+            {!hasStarted && (
+              <Button
+                onClick={() => {
+                  setHasStarted(true);
+                  setTimeout(() => {
+                    document.getElementById("family-section-etoile")?.scrollIntoView({ behavior: "smooth" });
+                  }, 100);
+                }}
+                className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+              >
+                {t("hero.tapToStart")}
+              </Button>
+            )}
+          </div>
+          <div className="absolute bottom-8 animate-bounce">
+            <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>
 
-        {/* ===== HERO SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
-          <div className="px-6 py-16 max-w-xl mx-auto space-y-10">
-            <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
-              <div className="w-12 h-px bg-white/40 mx-auto" />
-              <EditableField
-                fieldId="bible-verse"
-                text={getFieldValue(
-                  "bible-verse",
-                  getLocalizedValue(
-                    "quote",
-                    '"Two are better than one. For if they fall, one will lift up the other."',
-                  ),
-                )}
-                style={getFieldStyle("bible-verse")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-body italic max-w-sm mx-auto leading-relaxed text-white/80"
-              />
-              <EditableField
-                fieldId="bible-verse-reference"
-                text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
-                style={getFieldStyle("bible-verse-reference")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-small text-white/60 mt-1"
-              />
-              <div className="w-12 h-px bg-white/40 mx-auto" />
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
-              <EditableField
-                fieldId="together-text"
-                text={getFieldValue("together-text", t("aura.togetherWithFamilies"))}
-                style={getFieldStyle("together-text")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-small tracking-[0.3em] text-white/70"
-              />
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
-                <div className="text-center space-y-1">
-                  <EditableField
-                    fieldId="groom-parents"
-                    text={getFieldValue("groom-parents", t("aura.mrAndMrs"))}
-                    style={getFieldStyle("groom-parents")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-template-small font-medium tracking-wide text-white/90"
-                  />
-                  <EditableField
-                    fieldId="groom-family-name"
-                    text={getFieldValue(
-                      "groom-family-name",
-                      getLocalizedValue(
-                        "groom_family",
-                        wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
-                      ),
-                    )}
-                    style={getFieldStyle("groom-family-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-template-subtitle text-white"
-                  />
-                </div>
-                <span className="text-template-subtitle font-light text-white/70">&</span>
-                <div className="text-center space-y-1">
-                  <EditableField
-                    fieldId="bride-parents"
-                    text={getFieldValue("bride-parents", t("aura.mrAndMrs"))}
-                    style={getFieldStyle("bride-parents")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-template-small font-medium tracking-wide text-white/90"
-                  />
-                  <EditableField
-                    fieldId="bride-family-name"
-                    text={getFieldValue(
-                      "bride-family-name",
-                      getLocalizedValue(
-                        "bride_family",
-                        wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
-                      ),
-                    )}
-                    style={getFieldStyle("bride-family-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="p"
-                    className="text-template-subtitle text-white"
-                  />
-                </div>
+        {/* ===== FAMILY NAMES (Vérité-style) ===== */}
+        <section id="family-section-etoile" className="py-16 px-4 text-center bg-white">
+          <AnimatedSection animation="fade-up">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <div className="space-y-4">
+                <EditableField
+                  fieldId="groom-family"
+                  text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom")) })}
+                  style={getFieldStyle("groom-family")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-subtitle text-[#3e2723]"
+                />
+                <p className="text-2xl text-[#3e2723]">&</p>
+                <EditableField
+                  fieldId="bride-family"
+                  text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
+                  style={getFieldStyle("bride-family")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h2"
+                  className="text-template-subtitle text-[#3e2723]"
+                />
               </div>
-            </div>
-
-            <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <EditableField
-                fieldId="invitation-line"
+                fieldId="invitation-text"
                 text={getFieldValue(
-                  "invitation-line",
+                  "invitation-text",
                   getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
                 )}
-                style={getFieldStyle("invitation-line")}
+                style={getFieldStyle("invitation-text")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 multiline={true}
                 tag="p"
-                className="text-template-body text-white/70 whitespace-pre-line leading-relaxed"
+                className="text-template-body text-[#3e2723]"
               />
             </div>
-
-            <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
-              <h1 className="text-template-title text-white">
-                {getLocalizedValue("groom_name", wedding.groom_name)} &{" "}
-                {getLocalizedValue("bride_name", wedding.bride_name)}
-              </h1>
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
-              <div className="space-y-3">
-                <div className="w-16 h-px bg-white/30 mx-auto" />
-                <EditableField
-                  fieldId="wedding-date-formatted"
-                  text={getFieldValue(
-                    "wedding-date-formatted",
-                    weddingDate.toLocaleDateString(dateLocale, {
-                      weekday: "long",
-                      month: "long",
-                      day: "numeric",
-                      year: "numeric",
-                    }),
-                  )}
-                  style={getFieldStyle("wedding-date-formatted")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="p"
-                  className="text-template-body font-semibold tracking-wide text-white"
-                />
-              </div>
-            </div>
-          </div>
+          </AnimatedSection>
         </section>
 
         {/* ===== COUNTDOWN ===== */}
