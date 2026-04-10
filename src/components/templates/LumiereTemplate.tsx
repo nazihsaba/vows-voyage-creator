@@ -77,8 +77,12 @@ export const LumiereTemplate = ({
   }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
+    document.documentElement.classList.add("hide-scrollbar");
+    document.body.classList.add("hide-scrollbar");
     return () => {
       document.documentElement.dir = "ltr";
+      document.documentElement.classList.remove("hide-scrollbar");
+      document.body.classList.remove("hide-scrollbar");
     };
   }, []);
 
