@@ -129,6 +129,8 @@ const TemplateCard = ({
 const InvitationPreviewSection = () => {
   const navigate = useNavigate();
   const [activePreview, setActivePreview] = useState<TemplateKey | null>(null);
+  const autoplayMobile = useRef(Autoplay({ delay: 3000, stopOnInteraction: false, stopOnMouseEnter: true }));
+  const autoplayDesktop = useRef(Autoplay({ delay: 3500, stopOnInteraction: false, stopOnMouseEnter: true }));
 
   const ActiveComponent = activePreview ? templateComponents[activePreview] : null;
   const activeLabel = activePreview ? previewCards.find((c) => c.templateKey === activePreview)?.label : "";
