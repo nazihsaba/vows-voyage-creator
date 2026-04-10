@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { EditableField } from "@/components/EditableField";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -57,7 +57,7 @@ export const EtoileTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
-  const [hasStarted, setHasStarted] = useState(false);
+  
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -175,7 +175,7 @@ export const EtoileTemplate = ({
       <div className="relative z-[2]">
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
-          <div className="relative z-10 space-y-6 px-4 max-w-2xl">
+          <div className="relative z-10 px-4 max-w-2xl">
             <div style={{ animation: 'gentleFadeUp 1.2s ease-out both' }}>
               <EditableField
                 fieldId="hero-subtitle"
@@ -184,10 +184,10 @@ export const EtoileTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-template-small"
+                className="text-lg md:text-xl tracking-[0.3em] uppercase"
               />
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 mt-12">
               <div className="text-left pl-4 md:pl-12" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s both' }}>
                 <EditableField
                   fieldId="groom-name"
@@ -212,7 +212,7 @@ export const EtoileTemplate = ({
                 />
               </div>
             </div>
-            <div className="mt-10" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>
+            <div className="mt-12" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>
               <EditableField
                 fieldId="wedding-date-display"
                 text={getFieldValue(
@@ -231,19 +231,6 @@ export const EtoileTemplate = ({
                 className="text-xl md:text-2xl tracking-[0.2em]"
               />
             </div>
-            {!hasStarted && (
-              <Button
-                onClick={() => {
-                  setHasStarted(true);
-                  setTimeout(() => {
-                    document.getElementById("family-section-etoile")?.scrollIntoView({ behavior: "smooth" });
-                  }, 100);
-                }}
-                className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
-              >
-                {t("hero.tapToStart")}
-              </Button>
-            )}
           </div>
           <div className="absolute bottom-8 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
