@@ -100,13 +100,36 @@ const EtoilePreview = () => {
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
-            <p className="text-lg md:text-xl tracking-[0.3em] uppercase" style={{ animation: 'gentleFadeUp 1.2s ease-out both' }}>The Wedding Of</p>
-            <div className="space-y-4 mt-12">
-              <h1 className="text-template-title text-left pl-4 md:pl-12" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s both' }}>Adrian</h1>
-              <Heart className="w-8 h-8 mx-auto text-white fill-white/40" style={{ animation: 'heartPulseIn 1.2s ease-out 0.8s both' }} />
-              <h1 className="text-template-title text-right pr-4 md:pr-12" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s both' }}>Elena</h1>
+            <p
+              className="text-lg md:text-xl tracking-[0.3em] uppercase"
+              style={{ animation: "gentleFadeUp 1.2s ease-out both" }}
+            >
+              The Wedding Of
+            </p>
+            <div className="space-y-4 mt-24">
+              <h1
+                className="text-template-title text-left pl-4 md:pl-12"
+                style={{ animation: "slideFromLeft 1.5s ease-out 0.3s both" }}
+              >
+                Adrian
+              </h1>
+              <Heart
+                className="w-8 h-8 mx-auto text-white fill-white/40"
+                style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
+              />
+              <h1
+                className="text-template-title text-right pr-4 md:pr-12"
+                style={{ animation: "slideFromRight 1.5s ease-out 0.3s both" }}
+              >
+                Elena
+              </h1>
             </div>
-            <p className="text-xl md:text-2xl tracking-[0.2em] mt-12" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>Saturday, August 16, 2025</p>
+            <p
+              className="text-xl md:text-2xl tracking-[0.2em] mt-12"
+              style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}
+            >
+              Saturday, August 16, 2025
+            </p>
           </div>
           <div className="absolute bottom-8 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
