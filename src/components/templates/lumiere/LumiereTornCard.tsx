@@ -18,11 +18,14 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
           </filter>
         </defs>
       </svg>
-      <div
-        className={`relative w-full ${className}`}
-        style={{ filter: `url(#torn-${filterId})` }}
-      >
-        <div className="bg-white/95 backdrop-blur-sm">
+      <div className={`relative w-full ${className}`}>
+        {/* Background layer with torn edge effect */}
+        <div
+          className="absolute inset-0 bg-white/95"
+          style={{ filter: `url(#torn-${filterId})` }}
+        />
+        {/* Content layer - no filter, clean text */}
+        <div className="relative backdrop-blur-sm">
           {children}
         </div>
       </div>
