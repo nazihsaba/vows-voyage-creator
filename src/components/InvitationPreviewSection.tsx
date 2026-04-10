@@ -9,6 +9,7 @@ import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
+import lumiereTemplate from "@/assets/lumiere-4.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
@@ -49,7 +50,7 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "aura",
   },
   {
-    image: graceTemplate,
+    image: lumiereTemplate,
     label: "Lumière",
     tagline: "Cinematic video & torn-edge cards",
     featured: false,
