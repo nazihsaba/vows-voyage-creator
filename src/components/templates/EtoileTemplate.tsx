@@ -56,6 +56,7 @@ export const EtoileTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+  const [hasStarted, setHasStarted] = useState(false);
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
