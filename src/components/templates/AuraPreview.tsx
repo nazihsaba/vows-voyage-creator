@@ -149,6 +149,17 @@ export const AuraPreview = () => {
           </div>
         </section>
 
+        {/* ===== MAIN WEDDING PHOTO ===== */}
+        <AnimatedSection animation="fade-in">
+          <section className="w-full px-4 py-8">
+            <div className="max-w-2xl mx-auto">
+              <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
+                <img src={eclatWedding1} alt="Wedding photo" loading="lazy" className="w-full h-full object-cover" />
+              </div>
+            </div>
+          </section>
+        </AnimatedSection>
+
         <div className="w-24 h-px mx-auto" />
 
         {/* ===== COUNTDOWN SECTION ===== */}
