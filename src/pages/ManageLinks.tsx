@@ -34,7 +34,6 @@ import {
   Download,
   Grid2x2,
   MoreVertical,
-  LayoutDashboard,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -57,7 +56,6 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import VenueLayoutSheet from "@/components/venue/VenueLayoutSheet";
 
 interface InvitationLink {
   id: string;
@@ -117,7 +115,6 @@ const ManageLinks = () => {
   const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
-  const [venueLayoutOpen, setVenueLayoutOpen] = useState(false);
 
   useEffect(() => {
     if (weddingId) {
@@ -675,15 +672,6 @@ const ManageLinks = () => {
                     Table Occupancy
                   </Button>
                 </div>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => setVenueLayoutOpen(true)}
-                  className="rounded-md text-xs h-8 px-3"
-                >
-                  <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
-                  Venue Layout
-                </Button>
                 {links.length > 0 && (
                   <>
                     {/* Desktop buttons */}
@@ -1544,13 +1532,6 @@ const ManageLinks = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-      {weddingId && (
-        <VenueLayoutSheet
-          open={venueLayoutOpen}
-          onClose={() => setVenueLayoutOpen(false)}
-          weddingId={weddingId}
-        />
-      )}
     </div>
   );
 };

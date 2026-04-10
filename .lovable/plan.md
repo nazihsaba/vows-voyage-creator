@@ -1,53 +1,82 @@
 
 
-## Plan: 2D Venue Layout as Slide-in Panel
+# Plan: Add Lumière Template
 
-### What Changes
-Add a "Venue Layout" button next to Guest List and Table Occupancy tabs. Clicking it slides in the full venue layout planner from the right (using a Sheet component), keeping the user on the same page.
+## Overview
+Create a new "Lumière" wedding template with a fixed fullscreen background video, dark overlay, and clean torn-paper-edge cards floating above. Follow the exact same architecture as AuraTemplate/AuraPreview.
 
-### Database Migration
-Same as the previously approved schema:
-- **`venue_projects`** table: id, wedding_id, name, plan_image_url, scale, created_at, updated_at (with `update_updated_at_column` trigger)
-- **`venue_tables`** table: id, venue_project_id, name, shape, width, height, x_position, y_position, rotation, guest_count, created_at
-- RLS policies: owner access via wedding_id join to weddings.user_id (same pattern as gallery_images)
+## Files to Create
 
-### New Dependency
-- `react-konva` + `konva` for the 2D canvas
+### 1. `src/components/templates/lumiere/LumiereTornCard.tsx`
+Reusable card wrapper with SVG filter-based deckled/torn edges (using `feTurbulence` + `feDisplacementMap` on the card boundary only). Interior stays clean white. Full-width cards with hidden left/right borders for seamless vertical flow.
 
-### UI Approach
-- Add a third button "Venue Layout" in the tab toggle group (lines 655-674 of ManageLinks.tsx)
-- Clicking it opens a **full-width Sheet** (sliding from the right) containing the venue layout editor
-- The Sheet contains the three-panel layout: left toolbar, center Konva canvas, right properties panel
-- Sheet can be closed to return to the guest list/table occupancy view
+### 2. `src/components/templates/lumiere/LumiereCountdown.tsx`
+Countdown timer section inside a torn card. Uses the same countdown logic as existing templates. Typography: Dancing Script for headers, Montserrat for body. No background — transparent over the video.
 
-### New Files
+### 3. `src/components/templates/lumiere/LumiereEvents.tsx`
+Wedding events/timeline section in a torn card. Same timeline data structure as Aura (ceremony, venue from locations array). Vertical timeline with icons.
 
-1. **`src/components/venue/VenueLayoutSheet.tsx`** — Sheet wrapper containing the full editor layout with top bar (project name, save status, close button)
+### 4. `src/components/templates/lumiere/LumiereGifts.tsx`
+Gift cards section in a torn card. Reuses the same `giftCards` data structure. Copy-to-clipboard functionality.
 
-2. **`src/components/venue/VenueCanvas.tsx`** — Konva Stage with background image layer + tables layer. Zoom (scroll wheel), pan (drag), optional grid overlay.
+### 5. `src/components/templates/lumiere/LumiereGallery.tsx`
+Gallery section with watercolor/brush-mask effect on images. Displays gallery images in a grid inside a torn card.
 
-3. **`src/components/venue/VenueToolbar.tsx`** — Left panel: add table (round/rect/square/oval), upload venue plan, grid toggle, zoom controls.
+### 6. `src/components/templates/lumiere/LumiereRsvp.tsx`
+RSVP section in a torn card. Wraps the shared `RsvpSection` component with Lumière styling.
 
-4. **`src/components/venue/VenueTableProperties.tsx`** — Right panel when table selected: name, guest count, shape, size, rotation, delete/duplicate.
+### 7. `src/components/templates/LumiereTemplate.tsx`
+Main live template component. Same props interface as `AuraTemplateProps`. Three-layer architecture:
+- **Layer 1**: Fixed fullscreen `<video>` using `wedding.hero_media` (autoplay, muted, loop, `object-fit: cover`, `position: fixed`, `100dvh`)
+- **Layer 2**: Semi-transparent dark overlay (`bg-black/30`, fixed, z-index 1)
+- **Layer 3**: Scrollable content (z-index 2) — Hero intro, then torn-card sections for Countdown, Events, Gallery, Gifts, RSVP
 
-5. **`src/components/venue/VenueTableShape.tsx`** — Konva Group rendering correct shape with drag, resize/rotate handles via Transformer, label text.
+No section padding — edge-to-edge cards. Uses `EditableField` for all editable text. Reuses existing audio, language toggle, and footer components.
 
-6. **`src/hooks/useVenueProject.ts`** — Fetches/auto-creates venue_project for the wedding. CRUD for venue_tables. Debounced auto-save (1.5s) with status indicator. Image upload to `wedding-images` bucket.
+### 8. `src/components/templates/LumierePreview.tsx`
+Static preview with the uploaded video (`src/assets/lumiere-preview-video.mp4`), sample data, and all sections. Same structure as `AuraPreview` but with Lumière design.
 
-### Modified Files
+## Files to Modify
 
-1. **`src/pages/ManageLinks.tsx`**
-   - Add state: `venueLayoutOpen` (boolean)
-   - Add third button in the tab group with `LayoutGrid` icon labeled "Venue Layout"
-   - Clicking it sets `venueLayoutOpen = true`
-   - Render `<VenueLayoutSheet open={venueLayoutOpen} onClose={...} weddingId={weddingId} />` at bottom of component
+### 9. `src/config/templates.ts`
+Add `lumiere-editorial` template entry with component `'LumiereTemplate'`, Dancing Script / Montserrat fonts, dark color scheme.
 
-No new routes or pages needed.
+### 10. `src/components/templates/TemplateRenderer.tsx`
+Add `LumiereTemplate` import and `if (template.component === 'LumiereTemplate')` block passing all props.
 
-### Technical Notes
-- Sheet uses `side="right"` with full width (`w-full` or `w-[95vw]`) so the canvas has enough space
-- Auto-save with visual status: "Saved", "Saving...", "Error"
-- Konva handles 50-100 tables performantly
-- Venue plan images uploaded to `wedding-images` bucket at `{userId}/{filename}` path
-- Uses auto-generated Supabase types only
+### 11. `src/utils/templateMapping.ts`
+Add `'lumiere-editorial'` mapping so it resolves correctly.
+
+### 12. `src/components/InvitationPreviewSection.tsx`
+Add Lumière to the preview cards array and lazy-load `LumierePreview`. Add `"lumiere"` to `TemplateKey` union.
+
+### 13. `src/pages/WeddingTemplates.tsx`
+Add Lumière card to the wedding templates array with route to `/dashboard/lumiere-form`.
+
+### 14. `src/App.tsx`
+Add route: `<Route path="/dashboard/lumiere-form" element={<WeddingForm />} />`
+
+### 15. Copy uploaded video
+Copy `user-uploads://WhatsApp_Video_2026-04-09_at_1.44.59_PM-3.mp4` to `src/assets/lumiere-preview-video.mp4` for use in the preview.
+
+## Technical Details
+
+**Torn paper edge implementation** (SVG filter approach):
+```tsx
+<svg className="absolute" width="0" height="0">
+  <filter id="torn-edge">
+    <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="5" result="noise" />
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
+  </filter>
+</svg>
+```
+Applied via CSS `filter: url(#torn-edge)` on the card container — affects only the silhouette/edges while keeping interior clean.
+
+**Video background**:
+```tsx
+<video className="fixed inset-0 w-full h-[100dvh] object-cover z-0"
+  autoPlay muted loop playsInline />
+```
+
+**No CountdownTimer component reuse** — Lumière intentionally omits the countdown per the memory note, but since the user explicitly requested countdown sections, it will be included with a dark variant for readability over the video.
 
