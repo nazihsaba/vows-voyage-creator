@@ -113,7 +113,7 @@ export const AuraPreview = () => {
 
         {/* ===== COUNTDOWN SECTION ===== */}
         <section className="py-16 px-4 bg-card">
-          <StaticCountdownTimer targetDate={weddingDate} />
+          <CountdownTimer targetDate={weddingDate} />
         </section>
 
         <div className="w-24 mx-auto mb-16" />
