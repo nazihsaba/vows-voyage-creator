@@ -25,8 +25,8 @@ const LumiereEvents = ({ events, dateFormatted }: LumiereEventsProps) => {
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
           <div className="flex items-center justify-center gap-3 mb-10">
-            <Calendar className="w-6 h-6 text-primary" />
-            <h2 className="text-template-subtitle text-primary">{dateFormatted}</h2>
+            <Calendar className="w-6 h-6 text-black" />
+            <h2 className="text-template-subtitle text-black">{dateFormatted}</h2>
           </div>
         </AnimatedSection>
 
@@ -40,9 +40,9 @@ const LumiereEvents = ({ events, dateFormatted }: LumiereEventsProps) => {
                     <h3 className="text-template-body font-medium">{event.title}</h3>
                     <p className="text-template-body font-semibold">{event.time}</p>
                   </div>
-                  <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
+                  <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-10" />
                   <div className="flex-1 pl-8">
-                    <Icon icon={event.icon} className="w-6 h-6 mb-1 text-primary" />
+                    <Icon icon={event.icon} className="w-6 h-6 mb-1 text-black" />
                     <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                     {event.link && (
                       <a

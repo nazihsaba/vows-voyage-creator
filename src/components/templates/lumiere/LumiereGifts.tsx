@@ -28,7 +28,7 @@ const LumiereGifts = ({ giftCards, title = "Wedding Gift", subtitle = "For those
     <LumiereTornCard>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-subtitle text-center text-primary mb-3">{title}</h2>
+          <h2 className="text-template-subtitle text-center text-black mb-3">{title}</h2>
           <p className="text-center text-template-body text-muted-foreground mb-10">{subtitle}</p>
         </AnimatedSection>
         <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
