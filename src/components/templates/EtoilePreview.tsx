@@ -1,4 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
@@ -54,6 +57,7 @@ const sampleGifts = [
 
 const EtoilePreview = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [hasStarted, setHasStarted] = useState(false);
   const images = sampleGallery.map((g) => g.image_url);
 
   const nextSlide = useCallback(() => {
@@ -73,6 +77,13 @@ const EtoilePreview = () => {
       document.body.classList.remove("hide-scrollbar");
     };
   }, []);
+
+  const handleStart = () => {
+    setHasStarted(true);
+    setTimeout(() => {
+      document.getElementById("family-section-etoile")?.scrollIntoView({ behavior: "smooth" });
+    }, 100);
+  };
 
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
@@ -94,64 +105,44 @@ const EtoilePreview = () => {
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
-        {/* ===== MONOGRAM SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
-          <div className="flex items-center gap-4 md:gap-6">
-            <span className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0 animate-[curtainLeft_1s_ease-out_0.2s_forwards]">A</span>
-            <svg className="w-8 h-8 md:w-10 md:h-10 text-white/70 opacity-0 animate-[zoomIn_0.8s_ease-out_0.7s_forwards]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-            </svg>
-            <span className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0 animate-[curtainRight_1s_ease-out_0.2s_forwards]">E</span>
+        {/* ===== HERO SECTION (Vérité-style) ===== */}
+        <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
+          <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
+            <p className="text-template-small">The Wedding Of</p>
+            <div className="space-y-2">
+              <h1 className="text-template-title">Adrian</h1>
+              <p className="text-4xl md:text-5xl">&</p>
+              <h1 className="text-template-title">Elena</h1>
+            </div>
+            <p className="text-template-body tracking-wide">Saturday, August 16, 2025</p>
+            {!hasStarted && (
+              <Button
+                onClick={handleStart}
+                className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+              >
+                Tap To Start
+              </Button>
+            )}
+          </div>
+          <div className="absolute bottom-8 animate-bounce">
+            <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>
 
-        {/* ===== HERO ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
-          <div className="px-6 py-16 max-w-xl mx-auto space-y-10">
-            <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
-              <div className="w-12 h-px bg-white/40 mx-auto" />
-              <p className="text-template-body italic max-w-sm mx-auto leading-relaxed text-white/80">
-                "Two are better than one. For if they fall, one will lift up the other."
-              </p>
-              <p className="text-template-small text-white/60 mt-1">— Ecclesiastes 4:9-12</p>
-              <div className="w-12 h-px bg-white/40 mx-auto" />
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
-              <p className="text-template-small tracking-[0.3em] text-white/70">Together with their families</p>
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
-              <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
-                <div className="text-center space-y-1">
-                  <p className="text-template-small font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
-                  <p className="text-template-subtitle text-white">Vale</p>
-                </div>
-                <span className="text-template-subtitle font-light text-white/70">&</span>
-                <div className="text-center space-y-1">
-                  <p className="text-template-small font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
-                  <p className="text-template-subtitle text-white">Maris</p>
-                </div>
+        {/* ===== FAMILY NAMES (Vérité-style) ===== */}
+        <section id="family-section-etoile" className="py-16 px-4 text-center bg-white">
+          <AnimatedSection animation="fade-up">
+            <div className="max-w-3xl mx-auto space-y-8">
+              <div className="space-y-4">
+                <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
+                <p className="text-2xl text-[#3e2723]">&</p>
+                <h2 className="text-template-subtitle text-[#3e2723]">The Maris Family</h2>
               </div>
-            </div>
-
-            <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
-              <p className="text-template-body text-white/70 whitespace-pre-line leading-relaxed">
-                joyfully invite you to the wedding of their{"\n"}beloved son and daughter
+              <p className="text-template-body text-[#3e2723]">
+                Request the honor of your presence at the wedding of their beloved Son and Daughter
               </p>
             </div>
-
-            <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
-              <h1 className="text-template-title text-white">Adrian & Elena</h1>
-            </div>
-
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
-              <div className="space-y-3">
-                <div className="w-16 h-px bg-white/30 mx-auto" />
-                <p className="text-template-body font-semibold tracking-wide text-white">Saturday, August 16th, 2025</p>
-              </div>
-            </div>
-          </div>
+          </AnimatedSection>
         </section>
 
         {/* ===== SECTIONS ===== */}
