@@ -1,7 +1,7 @@
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Heart } from "lucide-react";
-import { Button } from "@/components/ui/button";
+
 import { EditableField } from "@/components/EditableField";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
