@@ -77,7 +77,9 @@ export const LumiereTemplate = ({
   }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
-    return () => { document.documentElement.dir = 'ltr'; };
+    return () => {
+      document.documentElement.dir = "ltr";
+    };
   }, []);
 
   const handleTimeUpdate = () => {
@@ -93,28 +95,36 @@ export const LumiereTemplate = ({
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
 
   const timelineEvents = [
-    ...(ceremony ? [{
-      id: "ceremony",
-      title: t("events.ceremony"),
-      time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
-      location: getLocalizedValue("ceremony_location", ceremony.location_name),
-      link: ceremony.location_link,
-      icon: ceremony.icon || "material-symbols:church-rounded",
-    }] : []),
-    ...(venue ? [{
-      id: "venue",
-      title: t("events.venue"),
-      time: formatTimeTo12Hour(venue.time) || "8:00 PM",
-      location: venue.location_name,
-      link: venue.location_link,
-      icon: venue.icon || "solar:confetti-bold",
-    }] : []),
+    ...(ceremony
+      ? [
+          {
+            id: "ceremony",
+            title: t("events.ceremony"),
+            time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
+            location: getLocalizedValue("ceremony_location", ceremony.location_name),
+            link: ceremony.location_link,
+            icon: ceremony.icon || "material-symbols:church-rounded",
+          },
+        ]
+      : []),
+    ...(venue
+      ? [
+          {
+            id: "venue",
+            title: t("events.venue"),
+            time: formatTimeTo12Hour(venue.time) || "8:00 PM",
+            location: venue.location_name,
+            link: venue.location_link,
+            icon: venue.icon || "solar:confetti-bold",
+          },
+        ]
+      : []),
   ];
 
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen font-serif" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="relative w-full min-h-screen font-serif" dir={isArabic ? "rtl" : "ltr"}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -147,7 +157,10 @@ export const LumiereTemplate = ({
                 fieldId="bible-verse"
                 text={getFieldValue(
                   "bible-verse",
-                  getLocalizedValue("quote", '"Two are better than one. For if they fall, one will lift up the other."'),
+                  getLocalizedValue(
+                    "quote",
+                    '"Two are better than one. For if they fall, one will lift up the other."',
+                  ),
                 )}
                 style={getFieldStyle("bible-verse")}
                 onUpdate={onFieldUpdate}
@@ -195,7 +208,10 @@ export const LumiereTemplate = ({
                     fieldId="groom-family-name"
                     text={getFieldValue(
                       "groom-family-name",
-                      getLocalizedValue("groom_family", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family"),
+                      getLocalizedValue(
+                        "groom_family",
+                        wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
+                      ),
                     )}
                     style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
@@ -219,7 +235,10 @@ export const LumiereTemplate = ({
                     fieldId="bride-family-name"
                     text={getFieldValue(
                       "bride-family-name",
-                      getLocalizedValue("bride_family", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family"),
+                      getLocalizedValue(
+                        "bride_family",
+                        wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
+                      ),
                     )}
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
@@ -249,7 +268,8 @@ export const LumiereTemplate = ({
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <h1 className="text-template-title text-white">
-                {getLocalizedValue("groom_name", wedding.groom_name)} & {getLocalizedValue("bride_name", wedding.bride_name)}
+                {getLocalizedValue("groom_name", wedding.groom_name)} &{" "}
+                {getLocalizedValue("bride_name", wedding.bride_name)}
               </h1>
             </div>
 
@@ -279,47 +299,47 @@ export const LumiereTemplate = ({
         </section>
 
         {/* ===== COUNTDOWN ===== */}
-        <div className="mt-28">
+        <div className="mt-64">
           <LumiereCountdown targetDate={wedding.wedding_date} />
         </div>
 
         {/* ===== EVENTS ===== */}
-        <div className="mt-28">
+        <div className="mt-64">
           <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
         </div>
 
         {/* ===== GALLERY ===== */}
         {gallery && gallery.length > 0 && (
-          <div className="mt-28">
+          <div className="mt-64">
             <LumiereGallery images={gallery} />
           </div>
         )}
 
         {/* ===== GIFTS ===== */}
         {hasGiftCards && (
-          <div className="mt-28">
+          <div className="mt-64">
             <LumiereGifts giftCards={giftCards} />
           </div>
         )}
 
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <div className="mt-28">
-          <LumiereRsvp
-            wedding={wedding}
-            isPreview={isPreview}
-            invitees={invitees}
-            rsvpResponses={rsvpResponses}
-            handleRsvpToggle={handleRsvpToggle}
-            handleRsvpSubmit={handleRsvpSubmit}
-            numberOfPersons={numberOfPersons}
-            isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-            submittingRsvp={submittingRsvp}
-          />
+          <div className="mt-64">
+            <LumiereRsvp
+              wedding={wedding}
+              isPreview={isPreview}
+              invitees={invitees}
+              rsvpResponses={rsvpResponses}
+              handleRsvpToggle={handleRsvpToggle}
+              handleRsvpSubmit={handleRsvpSubmit}
+              numberOfPersons={numberOfPersons}
+              isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+              submittingRsvp={submittingRsvp}
+            />
           </div>
         )}
 
-        <div className="mt-28">
+        <div className="mt-64">
           <TemplatePreviewFooter />
         </div>
       </div>
