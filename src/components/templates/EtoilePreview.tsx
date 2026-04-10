@@ -1,4 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
+import { ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
