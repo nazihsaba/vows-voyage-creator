@@ -5,12 +5,12 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
-import lumiere1 from "@/assets/lumiere-1.jpg";
-import lumiere2 from "@/assets/lumiere-2.jpg";
-import lumiere3 from "@/assets/lumiere-3.jpg";
-import lumiere4 from "@/assets/lumiere-4.jpg";
-import lumiere5 from "@/assets/lumiere-5.jpg";
-import lumiere6 from "@/assets/lumiere-6.jpg";
+import etoile1 from "@/assets/etoile-1.jpg";
+import etoile2 from "@/assets/etoile-2.jpg";
+import etoile3 from "@/assets/etoile-3.jpg";
+import etoile4 from "@/assets/etoile-4.jpg";
+import etoile5 from "@/assets/etoile-5.jpg";
+import etoile6 from "@/assets/etoile-6.jpg";
 
 const weddingDate = new Date("2025-08-16");
 
@@ -39,12 +39,12 @@ const sampleEvents = [
 ];
 
 const sampleGallery = [
-  { id: "1", image_url: lumiere1, alt_text: "Moment 1" },
-  { id: "2", image_url: lumiere2, alt_text: "Moment 2" },
-  { id: "3", image_url: lumiere3, alt_text: "Moment 3" },
-  { id: "4", image_url: lumiere4, alt_text: "Moment 4" },
-  { id: "5", image_url: lumiere5, alt_text: "Moment 5" },
-  { id: "6", image_url: lumiere6, alt_text: "Moment 6" },
+  { id: "1", image_url: etoile1, alt_text: "Moment 1" },
+  { id: "2", image_url: etoile2, alt_text: "Moment 2" },
+  { id: "3", image_url: etoile3, alt_text: "Moment 3" },
+  { id: "4", image_url: etoile4, alt_text: "Moment 4" },
+  { id: "5", image_url: etoile5, alt_text: "Moment 5" },
+  { id: "6", image_url: etoile6, alt_text: "Moment 6" },
 ];
 
 const sampleGifts = [
