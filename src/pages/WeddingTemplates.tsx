@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles, Theater } from "lucide-react";
+import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles, Theater, Clapperboard } from "lucide-react";
 import modernRomance from "@/assets/eclat-wedding-1.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/eclat-wedding-2.jpg";
@@ -59,6 +59,18 @@ const WeddingTemplates = () => {
         { icon: Clock, text: "Countdown Timer" }
       ]
     },
+    {
+      id: "lumiere-editorial",
+      name: "Lumière",
+      description: "Cinematic video background with elegant torn-edge cards",
+      image: modernRomance,
+      features: [
+        { icon: Clapperboard, text: "Video Background" },
+        { icon: Sparkles, text: "Torn Edge Cards" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Gift, text: "Gift Registry" }
+      ]
+    },
     { 
       id: "opulence-curtain", 
       name: "Opulence", 
@@ -109,6 +121,8 @@ const WeddingTemplates = () => {
                   navigate(`/dashboard/aura-form?template=${template.id}`);
                 } else if (template.id === 'opulence-curtain') {
                   navigate(`/dashboard/opulence-form?template=${template.id}`);
+                } else if (template.id === 'lumiere-editorial') {
+                  navigate(`/dashboard/lumiere-form?template=${template.id}`);
                 } else {
                   navigate(`/dashboard/create?eventType=weddings&template=${template.id}`);
                 }
