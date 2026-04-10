@@ -17,8 +17,9 @@ const VeritePreview = lazy(() => import("@/components/templates/VeritePreview"))
 const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
 const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then((m) => ({ default: m.AuraPreview })));
 const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"));
+const EtoilePreview = lazy(() => import("@/components/templates/EtoilePreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
@@ -56,6 +57,13 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     featured: false,
     templateKey: "lumiere",
   },
+  {
+    image: lumiereTemplate,
+    label: "Étoile",
+    tagline: "Photo carousel & torn-edge cards",
+    featured: false,
+    templateKey: "etoile",
+  },
 ];
 
 const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.ComponentType>> = {
@@ -64,6 +72,7 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   eclat: EclatPreview,
   aura: AuraPreview,
   lumiere: LumierePreview,
+  etoile: EtoilePreview,
 };
 
 const PreviewLoadingFallback = () => (
