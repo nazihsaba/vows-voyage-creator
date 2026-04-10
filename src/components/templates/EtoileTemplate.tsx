@@ -57,7 +57,6 @@ export const EtoileTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
-  
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -176,19 +175,19 @@ export const EtoileTemplate = ({
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
-            <div style={{ animation: 'gentleFadeUp 1.2s ease-out both' }}>
+            <div style={{ animation: "gentleFadeUp 1.2s ease-out both" }}>
               <EditableField
                 fieldId="hero-subtitle"
                 text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
                 style={getFieldStyle("hero-subtitle")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
-                tag="p"
+                tag="span"
                 className="text-lg md:text-xl tracking-[0.3em] uppercase"
               />
             </div>
-            <div className="space-y-4 mt-12">
-              <div className="text-left pl-4 md:pl-12" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s both' }}>
+            <div className="space-y-4 mt-[9rem] mb-[9rem]">
+              <div className="text-left pl-4 md:pl-12" style={{ animation: "slideFromLeft 1.5s ease-out 0.3s both" }}>
                 <EditableField
                   fieldId="groom-name"
                   text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
@@ -199,8 +198,11 @@ export const EtoileTemplate = ({
                   className="text-template-title"
                 />
               </div>
-              <Heart className="w-8 h-8 mx-auto text-white fill-white/40" style={{ animation: 'heartPulseIn 1.2s ease-out 0.8s both' }} />
-              <div className="text-right pr-4 md:pr-12" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s both' }}>
+              <Heart
+                className="w-8 h-8 mx-auto text-white fill-white/40"
+                style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
+              />
+              <div className="text-right pr-4 md:pr-12" style={{ animation: "slideFromRight 1.5s ease-out 0.3s both" }}>
                 <EditableField
                   fieldId="bride-name"
                   text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
@@ -212,7 +214,7 @@ export const EtoileTemplate = ({
                 />
               </div>
             </div>
-            <div className="mt-12" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>
+            <div style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}>
               <EditableField
                 fieldId="wedding-date-display"
                 text={getFieldValue(
@@ -227,7 +229,7 @@ export const EtoileTemplate = ({
                 style={getFieldStyle("wedding-date-display")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
-                tag="p"
+                tag="span"
                 className="text-xl md:text-2xl tracking-[0.2em]"
               />
             </div>
@@ -246,7 +248,12 @@ export const EtoileTemplate = ({
                   <div className="space-y-4">
                     <EditableField
                       fieldId="groom-family"
-                      text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom")) })}
+                      text={t("family.theFamily", {
+                        name: getFieldValue(
+                          "groom-family",
+                          getLocalizedValue("groom_family", wedding.groom_family || "Groom"),
+                        ),
+                      })}
                       style={getFieldStyle("groom-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
@@ -256,7 +263,12 @@ export const EtoileTemplate = ({
                     <p className="text-2xl text-[#3e2723]">&</p>
                     <EditableField
                       fieldId="bride-family"
-                      text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
+                      text={t("family.theFamily", {
+                        name: getFieldValue(
+                          "bride-family",
+                          getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family"),
+                        ),
+                      })}
                       style={getFieldStyle("bride-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
