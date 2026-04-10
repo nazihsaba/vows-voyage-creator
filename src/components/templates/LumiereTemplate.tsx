@@ -279,32 +279,32 @@ export const LumiereTemplate = ({
         </section>
 
         {/* ===== COUNTDOWN ===== */}
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereCountdown targetDate={wedding.wedding_date} />
         </div>
 
         {/* ===== EVENTS ===== */}
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
         </div>
 
         {/* ===== GALLERY ===== */}
         {gallery && gallery.length > 0 && (
-          <div className="mt-16">
+          <div className="mt-28">
             <LumiereGallery images={gallery} />
           </div>
         )}
 
         {/* ===== GIFTS ===== */}
         {hasGiftCards && (
-          <div className="mt-16">
+          <div className="mt-28">
             <LumiereGifts giftCards={giftCards} />
           </div>
         )}
 
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <div className="mt-16">
+          <div className="mt-28">
           <LumiereRsvp
             wedding={wedding}
             isPreview={isPreview}
@@ -319,7 +319,7 @@ export const LumiereTemplate = ({
           </div>
         )}
 
-        <div className="mt-16">
+        <div className="mt-28">
           <TemplatePreviewFooter />
         </div>
       </div>
