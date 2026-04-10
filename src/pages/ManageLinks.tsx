@@ -46,6 +46,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface InvitationLink {
   id: string;
@@ -103,6 +104,7 @@ const ManageLinks = () => {
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
   const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
+  const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
 
   useEffect(() => {
     if (weddingId) {
@@ -376,7 +378,18 @@ const ManageLinks = () => {
     const matchesGuestName = linkInvitees.some((invitee) =>
       invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
     );
-    return matchesLinkName || matchesGuestName;
+    const matchesSearch = matchesLinkName || matchesGuestName;
+
+    if (!statusFilter) return matchesSearch;
+
+    // Filter: only show links that have at least one invitee matching the status
+    const hasMatchingStatus = linkInvitees.some((invitee) => {
+      if (statusFilter === "attending") return invitee.is_attending === true;
+      if (statusFilter === "not_attending") return invitee.is_attending === false;
+      if (statusFilter === "pending") return invitee.is_attending === null;
+      return true;
+    });
+    return matchesSearch && hasMatchingStatus;
   });
 
   if (loading) {
@@ -468,21 +481,68 @@ const ManageLinks = () => {
                     const attending = allInvitees.filter((i) => i.is_attending === true).length;
                     const notAttending = allInvitees.filter((i) => i.is_attending === false).length;
                     const pending = allInvitees.filter((i) => i.is_attending === null).length;
+                    const toggleFilter = (filter: "attending" | "pending" | "not_attending") => {
+                      setStatusFilter((prev) => (prev === filter ? null : filter));
+                    };
                     return (
-                      <div className="flex flex-wrap gap-3 mt-2">
-                        <Badge
-                          variant="secondary"
-                          className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
-                        >
-                          <Check className="w-3 h-3 mr-1" /> {attending} attending
-                        </Badge>
-                        <Badge variant="secondary" className="bg-amber-100 text-amber-700 border-0 text-xs font-medium">
-                          <Loader2 className="w-3 h-3 mr-1" /> {pending} pending
-                        </Badge>
-                        <Badge variant="secondary" className="bg-red-100 text-red-700 border-0 text-xs font-medium">
-                          <X className="w-3 h-3 mr-1" /> {notAttending} not attending
-                        </Badge>
-                      </div>
+                      <TooltipProvider>
+                        <div className="flex flex-wrap gap-3 mt-2">
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                onClick={() => toggleFilter("attending")}
+                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
+                                  statusFilter === "attending"
+                                    ? "bg-emerald-200 text-emerald-800 ring-2 ring-emerald-400"
+                                    : "bg-emerald-100 text-emerald-700 hover:bg-emerald-200"
+                                }`}
+                              >
+                                <Check className="w-3 h-3 mr-1" /> {attending} attending
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {statusFilter === "attending" ? "Clear filter" : "Filter by attending"}
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                onClick={() => toggleFilter("pending")}
+                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
+                                  statusFilter === "pending"
+                                    ? "bg-amber-200 text-amber-800 ring-2 ring-amber-400"
+                                    : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                                }`}
+                              >
+                                <Loader2 className="w-3 h-3 mr-1" /> {pending} pending
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {statusFilter === "pending" ? "Clear filter" : "Filter by pending"}
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                onClick={() => toggleFilter("not_attending")}
+                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
+                                  statusFilter === "not_attending"
+                                    ? "bg-red-200 text-red-800 ring-2 ring-red-400"
+                                    : "bg-red-100 text-red-700 hover:bg-red-200"
+                                }`}
+                              >
+                                <X className="w-3 h-3 mr-1" /> {notAttending} not attending
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {statusFilter === "not_attending" ? "Clear filter" : "Filter by not attending"}
+                            </TooltipContent>
+                          </Tooltip>
+                        </div>
+                      </TooltipProvider>
                     );
                   })()}
                 </div>
