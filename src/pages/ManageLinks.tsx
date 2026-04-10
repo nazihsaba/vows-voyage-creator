@@ -33,8 +33,15 @@ import {
   Pencil,
   Download,
   Grid2x2,
+  MoreVertical,
 } from "lucide-react";
 import * as XLSX from "xlsx";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -666,26 +673,52 @@ const ManageLinks = () => {
                   </Button>
                 </div>
                 {links.length > 0 && (
-                  <div className="flex items-center gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
-                      className="rounded-full text-xs h-8 px-3"
-                    >
-                      <Download className="w-3.5 h-3.5 sm:mr-1" />
-                      <span className="hidden sm:inline">{activeView === "guests" ? "Export Guest List" : "Export Tables"}</span>
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => setDeleteAllOpen(true)}
-                      className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8 px-3"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
-                      <span className="hidden sm:inline">Delete All</span>
-                    </Button>
-                  </div>
+                  <>
+                    {/* Desktop buttons */}
+                    <div className="hidden sm:flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
+                        className="rounded-full text-xs h-8 px-3"
+                      >
+                        <Download className="w-3.5 h-3.5 mr-1" />
+                        {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setDeleteAllOpen(true)}
+                        className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8 px-3"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 mr-1" />
+                        Delete All
+                      </Button>
+                    </div>
+                    {/* Mobile dropdown */}
+                    <div className="sm:hidden">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon" className="h-8 w-8">
+                            <MoreVertical className="w-4 h-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
+                            <Download className="w-4 h-4 mr-2" />
+                            {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => setDeleteAllOpen(true)}
+                            className="text-destructive focus:text-destructive"
+                          >
+                            <Trash2 className="w-4 h-4 mr-2" />
+                            Delete All
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </>
                 )}
               </div>
 
