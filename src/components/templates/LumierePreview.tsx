@@ -148,8 +148,9 @@ const LumierePreview = () => {
         </div>
         <div className="mt-64">
           <TemplatePreviewFooter />
-        </div>
       </div>
+      </div>
+    </div>
     </div>
   );
 };
