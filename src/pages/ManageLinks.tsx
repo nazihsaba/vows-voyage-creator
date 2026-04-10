@@ -105,6 +105,7 @@ const ManageLinks = () => {
   const [savingInvitee, setSavingInvitee] = useState(false);
   const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
+  const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
 
   useEffect(() => {
     if (weddingId) {
@@ -380,6 +381,9 @@ const ManageLinks = () => {
     );
     const matchesSearch = matchesLinkName || matchesGuestName;
 
+    // Side filter
+    if (sideFilter && link.side !== sideFilter) return false;
+
     if (!statusFilter) return matchesSearch;
 
     // Filter: only show links that have at least one invitee matching the status
@@ -545,6 +549,47 @@ const ManageLinks = () => {
                               {statusFilter === "not_attending"
                                 ? "Click to clear filter and show all guests"
                                 : `Show only declined guests (${notAttending} out of ${attending + pending + notAttending})`}
+                            </TooltipContent>
+                          </Tooltip>
+                          <span className="w-px h-4 bg-border/50 mx-1" />
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                onClick={() => setSideFilter((prev) => (prev === "GROOM" ? null : "GROOM"))}
+                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
+                                  sideFilter === "GROOM"
+                                    ? "bg-blue-200 text-blue-800 ring-2 ring-blue-400"
+                                    : "bg-blue-100 text-blue-700 hover:bg-blue-200"
+                                }`}
+                              >
+                                Groom
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {sideFilter === "GROOM"
+                                ? "Click to clear side filter"
+                                : `Show only Groom's side invitations (${links.filter(l => l.side === "GROOM").length} links)`}
+                            </TooltipContent>
+                          </Tooltip>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Badge
+                                variant="secondary"
+                                onClick={() => setSideFilter((prev) => (prev === "BRIDE" ? null : "BRIDE"))}
+                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
+                                  sideFilter === "BRIDE"
+                                    ? "bg-pink-200 text-pink-800 ring-2 ring-pink-400"
+                                    : "bg-pink-100 text-pink-700 hover:bg-pink-200"
+                                }`}
+                              >
+                                Bride
+                              </Badge>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              {sideFilter === "BRIDE"
+                                ? "Click to clear side filter"
+                                : `Show only Bride's side invitations (${links.filter(l => l.side === "BRIDE").length} links)`}
                             </TooltipContent>
                           </Tooltip>
                         </div>
