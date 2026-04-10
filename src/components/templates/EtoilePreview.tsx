@@ -40,11 +40,11 @@ const sampleEvents = [
 
 const sampleGallery = [
   { id: "1", image_url: etoile5, alt_text: "Moment 1" },
-  { id: "2", image_url: etoile2, alt_text: "Moment 2" },
-  { id: "3", image_url: etoile3, alt_text: "Moment 3" },
-  { id: "4", image_url: etoile4, alt_text: "Moment 4" },
-  { id: "5", image_url: etoile1, alt_text: "Moment 5" },
-  { id: "6", image_url: etoile6, alt_text: "Moment 6" },
+  { id: "2", image_url: etoile6, alt_text: "Moment 2" },
+  { id: "3", image_url: etoile1, alt_text: "Moment 3" },
+  { id: "4", image_url: etoile1, alt_text: "Moment 4" },
+  { id: "5", image_url: etoile2, alt_text: "Moment 5" },
+  { id: "6", image_url: etoile4, alt_text: "Moment 6" },
 ];
 
 const sampleGifts = [
