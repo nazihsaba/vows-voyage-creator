@@ -202,7 +202,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm font-medium tracking-wide text-white/90"
+                    className="text-template-small font-medium tracking-wide text-white/90"
                   />
                   <EditableField
                     fieldId="groom-family-name"
@@ -220,7 +220,7 @@ export const LumiereTemplate = ({
                     className="text-template-subtitle text-white"
                   />
                 </div>
-                <span className="text-3xl font-light text-white/70">&</span>
+                <span className="text-template-subtitle font-light text-white/70">&</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-parents"
@@ -229,7 +229,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-sm font-medium tracking-wide text-white/90"
+                    className="text-template-small font-medium tracking-wide text-white/90"
                   />
                   <EditableField
                     fieldId="bride-family-name"
