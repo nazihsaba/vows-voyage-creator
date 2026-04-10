@@ -9,8 +9,8 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
   const id = useId().replace(/:/g, "");
 
   return (
-    <div className={`relative w-full overflow-hidden ${className}`}>
-      {/* SVG filter for ripped paper edge — applied only to top/bottom edge strips */}
+    <div className={`relative w-full ${className}`} style={{ margin: 0, padding: 0, boxSizing: "border-box" }}>
+      {/* SVG filter for ripped paper edge */}
       <svg className="absolute" width="0" height="0" aria-hidden="true">
         <defs>
           <filter id={`rip-${id}`}>
@@ -20,22 +20,26 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
         </defs>
       </svg>
 
-      {/* Top ripped edge — extra wide to compensate for displacement */}
-      <div
-        className="relative h-[20px] bg-white -mb-[10px] -mx-4"
-        style={{ filter: `url(#rip-${id})` }}
-      />
+      {/* Top ripped edge — overflow visible so displacement isn't clipped */}
+      <div className="relative overflow-hidden">
+        <div
+          className="h-[20px] bg-white -mb-[10px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-16px", marginRight: "-16px" }}
+        />
+      </div>
 
-      {/* Clean content area */}
-      <div className="relative bg-white">
+      {/* Clean content area — full width white background */}
+      <div className="relative bg-white w-full" style={{ margin: 0, padding: 0 }}>
         {children}
       </div>
 
-      {/* Bottom ripped edge — extra wide to compensate for displacement */}
-      <div
-        className="relative h-[20px] bg-white -mt-[10px] -mx-4"
-        style={{ filter: `url(#rip-${id})` }}
-      />
+      {/* Bottom ripped edge */}
+      <div className="relative overflow-hidden">
+        <div
+          className="h-[20px] bg-white -mt-[10px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-16px", marginRight: "-16px" }}
+        />
+      </div>
     </div>
   );
 };
