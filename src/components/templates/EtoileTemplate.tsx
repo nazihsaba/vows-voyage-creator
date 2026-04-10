@@ -13,6 +13,7 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
+import LumiereTornCard from "./lumiere/LumiereTornCard";
 
 interface EtoileTemplateProps {
   wedding: any;
@@ -241,46 +242,50 @@ export const EtoileTemplate = ({
           </div>
         </section>
 
-        {/* ===== FAMILY NAMES (Vérité-style) ===== */}
-        <section id="family-section-etoile" className="py-16 px-4 text-center bg-white">
-          <AnimatedSection animation="fade-up">
-            <div className="max-w-3xl mx-auto space-y-8">
-              <div className="space-y-4">
-                <EditableField
-                  fieldId="groom-family"
-                  text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom")) })}
-                  style={getFieldStyle("groom-family")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h2"
-                  className="text-template-subtitle text-[#3e2723]"
-                />
-                <p className="text-2xl text-[#3e2723]">&</p>
-                <EditableField
-                  fieldId="bride-family"
-                  text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
-                  style={getFieldStyle("bride-family")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h2"
-                  className="text-template-subtitle text-[#3e2723]"
-                />
-              </div>
-              <EditableField
-                fieldId="invitation-text"
-                text={getFieldValue(
-                  "invitation-text",
-                  getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
-                )}
-                style={getFieldStyle("invitation-text")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline={true}
-                tag="p"
-                className="text-template-body text-[#3e2723]"
-              />
+        {/* ===== FAMILY NAMES with ripped borders ===== */}
+        <section id="family-section-etoile">
+          <LumiereTornCard>
+            <div className="py-16 px-4 text-center">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="space-y-4">
+                    <EditableField
+                      fieldId="groom-family"
+                      text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom")) })}
+                      style={getFieldStyle("groom-family")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="h2"
+                      className="text-template-subtitle text-[#3e2723]"
+                    />
+                    <p className="text-2xl text-[#3e2723]">&</p>
+                    <EditableField
+                      fieldId="bride-family"
+                      text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
+                      style={getFieldStyle("bride-family")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="h2"
+                      className="text-template-subtitle text-[#3e2723]"
+                    />
+                  </div>
+                  <EditableField
+                    fieldId="invitation-text"
+                    text={getFieldValue(
+                      "invitation-text",
+                      getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
+                    )}
+                    style={getFieldStyle("invitation-text")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    multiline={true}
+                    tag="p"
+                    className="text-template-body text-[#3e2723]"
+                  />
+                </div>
+              </AnimatedSection>
             </div>
-          </AnimatedSection>
+          </LumiereTornCard>
         </section>
 
         {/* ===== COUNTDOWN ===== */}
