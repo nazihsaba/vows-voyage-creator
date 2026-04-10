@@ -175,54 +175,62 @@ export const EtoileTemplate = ({
       <div className="relative z-[2]">
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
-          <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-            <EditableField
-              fieldId="hero-subtitle"
-              text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
-              style={getFieldStyle("hero-subtitle")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-template-small"
-            />
-            <div className="space-y-2">
+          <div className="relative z-10 space-y-6 px-4 max-w-2xl">
+            <div style={{ animation: 'gentleFadeUp 1.2s ease-out both' }}>
               <EditableField
-                fieldId="groom-name"
-                text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
-                style={getFieldStyle("groom-name")}
+                fieldId="hero-subtitle"
+                text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
+                style={getFieldStyle("hero-subtitle")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
-                tag="h1"
-                className="text-template-title"
-              />
-              <p className="text-4xl md:text-5xl">&</p>
-              <EditableField
-                fieldId="bride-name"
-                text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
-                style={getFieldStyle("bride-name")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="h1"
-                className="text-template-title"
+                tag="p"
+                className="text-template-small"
               />
             </div>
-            <EditableField
-              fieldId="wedding-date-display"
-              text={getFieldValue(
-                "wedding-date-display",
-                weddingDate.toLocaleDateString(dateLocale, {
-                  weekday: "long",
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                }),
-              )}
-              style={getFieldStyle("wedding-date-display")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-template-body tracking-wide"
-            />
+            <div className="space-y-4">
+              <div className="text-left pl-4 md:pl-12" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s both' }}>
+                <EditableField
+                  fieldId="groom-name"
+                  text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
+                  style={getFieldStyle("groom-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h1"
+                  className="text-template-title"
+                />
+              </div>
+              <Heart className="w-8 h-8 mx-auto text-white fill-white/40" style={{ animation: 'heartPulseIn 1.2s ease-out 0.8s both' }} />
+              <div className="text-right pr-4 md:pr-12" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s both' }}>
+                <EditableField
+                  fieldId="bride-name"
+                  text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
+                  style={getFieldStyle("bride-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h1"
+                  className="text-template-title"
+                />
+              </div>
+            </div>
+            <div className="mt-10" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>
+              <EditableField
+                fieldId="wedding-date-display"
+                text={getFieldValue(
+                  "wedding-date-display",
+                  weddingDate.toLocaleDateString(dateLocale, {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  }),
+                )}
+                style={getFieldStyle("wedding-date-display")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                tag="p"
+                className="text-xl md:text-2xl tracking-[0.2em]"
+              />
+            </div>
             {!hasStarted && (
               <Button
                 onClick={() => {

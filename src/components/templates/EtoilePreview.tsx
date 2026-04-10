@@ -108,14 +108,14 @@ const EtoilePreview = () => {
       <div className="relative z-[2]">
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
-          <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
-            <p className="text-template-small">The Wedding Of</p>
-            <div className="space-y-2">
-              <h1 className="text-template-title">Adrian</h1>
-              <p className="text-4xl md:text-5xl">&</p>
-              <h1 className="text-template-title">Elena</h1>
+          <div className="relative z-10 space-y-6 px-4 max-w-2xl">
+            <p className="text-template-small" style={{ animation: 'gentleFadeUp 1.2s ease-out both' }}>The Wedding Of</p>
+            <div className="space-y-4">
+              <h1 className="text-template-title text-left pl-4 md:pl-12" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s both' }}>Adrian</h1>
+              <Heart className="w-8 h-8 mx-auto text-white fill-white/40" style={{ animation: 'heartPulseIn 1.2s ease-out 0.8s both' }} />
+              <h1 className="text-template-title text-right pr-4 md:pr-12" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s both' }}>Elena</h1>
             </div>
-            <p className="text-template-body tracking-wide">Saturday, August 16, 2025</p>
+            <p className="text-xl md:text-2xl tracking-[0.2em] mt-10" style={{ animation: 'gentleFadeUp 1.2s ease-out 1.2s both' }}>Saturday, August 16, 2025</p>
             {!hasStarted && (
               <Button
                 onClick={handleStart}
