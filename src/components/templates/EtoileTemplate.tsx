@@ -241,7 +241,7 @@ export const EtoileTemplate = ({
 
         {/* ===== FAMILY NAMES with ripped borders ===== */}
         <section id="family-section-etoile">
-          <LumiereTornCard>
+          <LumiereTornCard variant="glass">
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
@@ -258,9 +258,9 @@ export const EtoileTemplate = ({
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
-                      className="text-template-subtitle text-[#3e2723]"
+                      className="text-template-subtitle text-white"
                     />
-                    <p className="text-2xl text-[#3e2723]">&</p>
+                    <p className="text-2xl text-white/70">&</p>
                     <EditableField
                       fieldId="bride-family"
                       text={t("family.theFamily", {
@@ -273,7 +273,7 @@ export const EtoileTemplate = ({
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
-                      className="text-template-subtitle text-[#3e2723]"
+                      className="text-template-subtitle text-white"
                     />
                   </div>
                   <EditableField
@@ -287,7 +287,7 @@ export const EtoileTemplate = ({
                     isPreview={isPreview}
                     multiline={true}
                     tag="p"
-                    className="text-template-body text-[#3e2723]"
+                    className="text-template-body text-white/80"
                   />
                 </div>
               </AnimatedSection>
@@ -297,12 +297,12 @@ export const EtoileTemplate = ({
 
         {/* ===== COUNTDOWN ===== */}
         <div className="mt-64">
-          <LumiereCountdown targetDate={wedding.wedding_date} />
+          <LumiereCountdown targetDate={wedding.wedding_date} cardVariant="glass" />
         </div>
 
         {/* ===== EVENTS ===== */}
         <div className="mt-64">
-          <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
+          <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} cardVariant="glass" />
         </div>
 
         {/* ===== GALLERY ===== */}
@@ -315,7 +315,7 @@ export const EtoileTemplate = ({
         {/* ===== GIFTS ===== */}
         {hasGiftCards && (
           <div className="mt-64">
-            <LumiereGifts giftCards={giftCards} />
+            <LumiereGifts giftCards={giftCards} cardVariant="glass" />
           </div>
         )}
 
@@ -332,6 +332,7 @@ export const EtoileTemplate = ({
               numberOfPersons={numberOfPersons}
               isRsvpDeadlinePassed={isRsvpDeadlinePassed}
               submittingRsvp={submittingRsvp}
+              cardVariant="glass"
             />
           </div>
         )}
