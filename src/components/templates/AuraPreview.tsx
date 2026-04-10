@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { Calendar, MapPin, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
@@ -11,58 +11,7 @@ import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
 import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
 import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
 import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
-
-// Static Countdown Timer Component
-const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
-  const [timeRemaining, setTimeRemaining] = useState({
-    days: 0,
-    hours: 0,
-    minutes: 0,
-    seconds: 0,
-  });
-
-  useEffect(() => {
-    const updateCountdown = () => {
-      const now = new Date();
-      const diff = targetDate.getTime() - now.getTime();
-
-      if (diff > 0) {
-        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-        setTimeRemaining({ days, hours, minutes, seconds });
-      }
-    };
-
-    updateCountdown();
-    const interval = setInterval(updateCountdown, 1000);
-    return () => clearInterval(interval);
-  }, [targetDate]);
-
-  return (
-    <div className="text-center">
-      <h2 className="text-template-subtitle mb-6">Counting Down To Our Special Day</h2>
-      <div className="flex justify-center gap-4 md:gap-8">
-        {[
-          { value: timeRemaining.days, label: "Days" },
-          { value: timeRemaining.hours, label: "Hours" },
-          { value: timeRemaining.minutes, label: "Minutes" },
-          { value: timeRemaining.seconds, label: "Seconds" },
-        ].map((item, index) => (
-          <AnimatedSection key={item.label} delay={index * 100} animation="fade-in">
-            <div className="text-center">
-              <div className="text-3xl md:text-5xl font-bold text-primary">{item.value}</div>
-              <div className="text-sm md:text-base text-muted-foreground mt-2">{item.label}</div>
-            </div>
-          </AnimatedSection>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const weddingDate = new Date("2025-08-16");
+const weddingDate = new Date("2026-08-16");
 
 export const AuraPreview = () => {
   const timelineEvents = [
@@ -164,7 +113,7 @@ export const AuraPreview = () => {
 
         {/* ===== COUNTDOWN SECTION ===== */}
         <section className="py-16 px-4 bg-card">
-          <StaticCountdownTimer targetDate={weddingDate} />
+          <CountdownTimer targetDate={weddingDate} />
         </section>
 
         <div className="w-24 mx-auto mb-16" />
