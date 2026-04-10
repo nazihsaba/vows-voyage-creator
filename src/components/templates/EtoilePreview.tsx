@@ -3,6 +3,7 @@ import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import LumiereTornCard from "./lumiere/LumiereTornCard";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
@@ -129,20 +130,24 @@ const EtoilePreview = () => {
           </div>
         </section>
 
-        {/* ===== FAMILY NAMES (Vérité-style) ===== */}
-        <section id="family-section-etoile" className="py-16 px-4 text-center bg-white">
-          <AnimatedSection animation="fade-up">
-            <div className="max-w-3xl mx-auto space-y-8">
-              <div className="space-y-4">
-                <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
-                <p className="text-2xl text-[#3e2723]">&</p>
-                <h2 className="text-template-subtitle text-[#3e2723]">The Maris Family</h2>
-              </div>
-              <p className="text-template-body text-[#3e2723]">
-                Request the honor of your presence at the wedding of their beloved Son and Daughter
-              </p>
+        {/* ===== FAMILY NAMES with ripped borders ===== */}
+        <section id="family-section-etoile">
+          <LumiereTornCard>
+            <div className="py-16 px-4 text-center">
+              <AnimatedSection animation="fade-up">
+                <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="space-y-4">
+                    <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
+                    <p className="text-2xl text-[#3e2723]">&</p>
+                    <h2 className="text-template-subtitle text-[#3e2723]">The Maris Family</h2>
+                  </div>
+                  <p className="text-template-body text-[#3e2723]">
+                    Request the honor of your presence at the wedding of their beloved Son and Daughter
+                  </p>
+                </div>
+              </AnimatedSection>
             </div>
-          </AnimatedSection>
+          </LumiereTornCard>
         </section>
 
         {/* ===== SECTIONS ===== */}
