@@ -17,6 +17,7 @@ interface RsvpSectionProps {
   submittingRsvp?: boolean;
   bgClassName?: string;
   cardBgClassName?: string;
+  accentColorClass?: string;
 }
 
 export const RsvpSection = ({
@@ -32,6 +33,7 @@ export const RsvpSection = ({
   submittingRsvp = false,
   bgClassName = "bg-white",
   cardBgClassName = "bg-[#faf8f5]",
+  accentColorClass = "text-primary",
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
@@ -43,7 +45,7 @@ export const RsvpSection = ({
       <section className={`py-16 px-4 ${bgClassName}`}>
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
-            <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("rsvp.title")}</h2>
+            <h2 className={`text-template-subtitle text-center mb-12 ${accentColorClass}`}>{t("rsvp.title")}</h2>
             <p className="text-center text-template-body mb-8 text-muted-foreground">{t("rsvp.subtitle")}</p>
           </div>
 
@@ -55,7 +57,7 @@ export const RsvpSection = ({
                     key={invitee.id}
                     className={`flex items-center justify-between py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors`}
                   >
-                    <span className="text-xl font-serif text-primary">{invitee.name}</span>
+                    <span className={`text-xl font-serif ${accentColorClass}`}>{invitee.name}</span>
                     <div className="flex items-center gap-3">
                       <Checkbox
                         id={`rsvp-${invitee.id}`}
@@ -84,7 +86,7 @@ export const RsvpSection = ({
                   <Button
                     onClick={handleRsvpSubmit}
                     disabled={submittingRsvp}
-                    className="w-full text-lg py-6 bg-primary text-white hover:bg-primary/90"
+                    className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                     size="lg"
                   >
                     {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submit")}
@@ -99,7 +101,7 @@ export const RsvpSection = ({
               <p className="text-template-small text-center mb-2 text-gray-600">
                 {invitees.length > 0 ? t("rsvp.rsvpBy") : t("rsvp.confirmBefore")}
               </p>
-              <p className="text-template-heading text-primary text-center">
+              <p className={`text-template-heading ${accentColorClass} text-center`}>
                 {rsvpDeadline.toLocaleDateString(dateLocale, { year: "numeric", month: "long", day: "numeric" })}
               </p>
             </div>
