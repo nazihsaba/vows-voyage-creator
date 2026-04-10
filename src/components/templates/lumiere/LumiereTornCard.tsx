@@ -9,7 +9,7 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
   const id = useId().replace(/:/g, "");
 
   return (
-    <div className={`relative w-full ${className}`}>
+    <div className={`relative w-full overflow-hidden ${className}`}>
       {/* SVG filter for ripped paper edge — applied only to top/bottom edge strips */}
       <svg className="absolute" width="0" height="0" aria-hidden="true">
         <defs>
