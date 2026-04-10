@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
 import { Calendar, MapPin, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
