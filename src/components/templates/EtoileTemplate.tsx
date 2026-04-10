@@ -67,7 +67,7 @@ export const EtoileTemplate = ({
 
   useEffect(() => {
     if (carouselImages.length <= 1) return;
-    const interval = setInterval(nextSlide, 2000);
+    const interval = setInterval(nextSlide, 3000);
     return () => clearInterval(interval);
   }, [nextSlide, carouselImages.length]);
 
