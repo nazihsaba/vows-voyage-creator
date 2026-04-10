@@ -1,4 +1,3 @@
-import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
@@ -16,27 +15,9 @@ import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 const weddingDate = new Date("2025-08-16");
 
 const sampleEvents = [
-  {
-    id: "ceremony",
-    title: "Ceremony",
-    time: "7:00 PM",
-    location: "Couvent Saint Sauveur - Sarba",
-    icon: "material-symbols:church-rounded",
-  },
-  {
-    id: "welcome",
-    title: "Welcome Drink",
-    time: "8:00 PM",
-    location: "Carma - Jeita Country Club",
-    icon: "streamline:champagne-party-alcohol-remix",
-  },
-  {
-    id: "dinner",
-    title: "Dinner & Party",
-    time: "9:00 PM",
-    location: "Carma - Jeita Country Club",
-    icon: "solar:confetti-bold",
-  },
+  { id: "ceremony", title: "Ceremony", time: "7:00 PM", location: "Couvent Saint Sauveur - Sarba", icon: "material-symbols:church-rounded" },
+  { id: "welcome", title: "Welcome Drink", time: "8:00 PM", location: "Carma - Jeita Country Club", icon: "streamline:champagne-party-alcohol-remix" },
+  { id: "dinner", title: "Dinner & Party", time: "9:00 PM", location: "Carma - Jeita Country Club", icon: "solar:confetti-bold" },
 ];
 
 const sampleGallery = [
@@ -55,7 +36,7 @@ const sampleGifts = [
 
 const LumierePreview = () => {
   return (
-    <div className="relative w-full min-h-screen">
+    <div className="relative w-full min-h-screen font-serif">
       {/* Layer 1: Fixed background video */}
       <video
         className="fixed inset-0 w-full h-[100dvh] object-cover z-0"
@@ -76,15 +57,15 @@ const LumierePreview = () => {
           <div className="px-6 py-16 max-w-xl mx-auto space-y-10">
             <div className="space-y-3 opacity-0 animate-[fadeInUp_0.7s_ease-out_0.1s_forwards]">
               <div className="w-12 h-px bg-white/40 mx-auto" />
-              <p className="font-['Montserrat'] text-sm italic max-w-sm mx-auto leading-relaxed text-white/80">
+              <p className="text-template-body italic max-w-sm mx-auto leading-relaxed text-white/80">
                 "Two are better than one. For if they fall, one will lift up the other."
               </p>
-              <p className="font-['Montserrat'] text-xs text-white/60 mt-1">— Ecclesiastes 4:9-12</p>
+              <p className="text-template-small text-white/60 mt-1">— Ecclesiastes 4:9-12</p>
               <div className="w-12 h-px bg-white/40 mx-auto" />
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
-              <p className="font-['Montserrat'] text-xs tracking-[0.3em] text-white/70 uppercase">
+              <p className="text-template-small tracking-[0.3em] text-white/70">
                 Together with their families
               </p>
             </div>
@@ -92,25 +73,25 @@ const LumierePreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
-                  <p className="font-['Montserrat'] text-sm font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
-                  <p className="font-['Dancing_Script'] text-2xl text-white">Vale</p>
+                  <p className="text-sm font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
+                  <p className="text-template-subtitle text-white">Vale</p>
                 </div>
                 <span className="text-3xl font-light text-white/70">&</span>
                 <div className="text-center space-y-1">
-                  <p className="font-['Montserrat'] text-sm font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
-                  <p className="font-['Dancing_Script'] text-2xl text-white">Maris</p>
+                  <p className="text-sm font-medium tracking-wide text-white/90">Mr. & Mrs.</p>
+                  <p className="text-template-subtitle text-white">Maris</p>
                 </div>
               </div>
             </div>
 
             <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
-              <p className="font-['Montserrat'] text-sm text-white/70 whitespace-pre-line leading-relaxed">
+              <p className="text-template-body text-white/70 whitespace-pre-line leading-relaxed">
                 joyfully invite you to the wedding of their{"\n"}beloved son and daughter
               </p>
             </div>
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
-              <h1 className="font-['Dancing_Script'] text-5xl md:text-6xl text-white">
+              <h1 className="text-template-title text-white">
                 Adrian & Elena
               </h1>
             </div>
@@ -118,7 +99,7 @@ const LumierePreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-white/30 mx-auto" />
-                <p className="font-['Montserrat'] text-sm font-semibold tracking-wide text-white">
+                <p className="text-template-body font-semibold tracking-wide text-white">
                   Saturday, August 16th, 2025
                 </p>
               </div>
@@ -127,22 +108,34 @@ const LumierePreview = () => {
         </section>
 
         {/* ===== SECTIONS ===== */}
-        <LumiereCountdown targetDate={weddingDate.toISOString()} />
-        <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
-        <LumiereGallery images={sampleGallery} />
-        <LumiereGifts giftCards={sampleGifts} />
-        <LumiereRsvp
-          wedding={{ rsvp_deadline: "2025-08-01" }}
-          isPreview
-          staticDeadline={new Date("2025-08-01")}
-          invitees={[
-            { id: "1", name: "Daniel Farah" },
-            { id: "2", name: "Sara Mansour" },
-          ]}
-          rsvpResponses={{ "1": true, "2": false }}
-          numberOfPersons={2}
-        />
-        <TemplatePreviewFooter />
+        <div className="mt-16">
+          <LumiereCountdown targetDate={weddingDate.toISOString()} />
+        </div>
+        <div className="mt-16">
+          <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
+        </div>
+        <div className="mt-16">
+          <LumiereGallery images={sampleGallery} />
+        </div>
+        <div className="mt-16">
+          <LumiereGifts giftCards={sampleGifts} />
+        </div>
+        <div className="mt-16">
+          <LumiereRsvp
+            wedding={{ rsvp_deadline: "2025-08-01" }}
+            isPreview
+            staticDeadline={new Date("2025-08-01")}
+            invitees={[
+              { id: "1", name: "Daniel Farah" },
+              { id: "2", name: "Sara Mansour" },
+            ]}
+            rsvpResponses={{ "1": true, "2": false }}
+            numberOfPersons={2}
+          />
+        </div>
+        <div className="mt-16">
+          <TemplatePreviewFooter />
+        </div>
       </div>
     </div>
   );
