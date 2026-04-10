@@ -663,15 +663,26 @@ const ManageLinks = () => {
                   </Button>
                 </div>
                 {links.length > 0 && (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setDeleteAllOpen(true)}
-                    className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8 px-3"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
-                    <span className="hidden sm:inline">Delete All</span>
-                  </Button>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
+                      className="rounded-full text-xs h-8 px-3"
+                    >
+                      <Download className="w-3.5 h-3.5 sm:mr-1" />
+                      <span className="hidden sm:inline">Export</span>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setDeleteAllOpen(true)}
+                      className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8 px-3"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 sm:mr-1" />
+                      <span className="hidden sm:inline">Delete All</span>
+                    </Button>
+                  </div>
                 )}
               </div>
 
