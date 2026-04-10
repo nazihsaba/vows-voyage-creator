@@ -5,6 +5,7 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
+import LumiereTornCard from "./lumiere/LumiereTornCard";
 import lumiereVideo from "@/assets/lumiere-video.mp4";
 import lumiere1 from "@/assets/lumiere-1.jpg";
 import lumiere2 from "@/assets/lumiere-2.jpg";
@@ -167,7 +168,9 @@ const LumierePreview = () => {
           />
         </div>
         <div className="mt-64">
-          <TemplatePreviewFooter />
+          <LumiereTornCard>
+            <TemplatePreviewFooter />
+          </LumiereTornCard>
         </div>
       </div>
     </div>
