@@ -28,7 +28,7 @@ import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
-import lumiere2Template from "@/assets/lumiere-4.jpg";
+import lumiere2Template from "@/assets/lumiere-2.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
