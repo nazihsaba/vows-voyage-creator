@@ -123,8 +123,17 @@ export const LumiereTemplate = ({
 
   const hasGiftCards = giftCards && giftCards.length > 0;
 
+  useEffect(() => {
+    document.documentElement.classList.add("hide-scrollbar");
+    document.body.classList.add("hide-scrollbar");
+    return () => {
+      document.documentElement.classList.remove("hide-scrollbar");
+      document.body.classList.remove("hide-scrollbar");
+    };
+  }, []);
+
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%] hide-scrollbar" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? "rtl" : "ltr"}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
