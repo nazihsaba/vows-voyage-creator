@@ -661,6 +661,7 @@ const ManageLinks = () => {
                     onClick={() => setActiveView("tables")}
                     className="rounded-md text-xs h-8 px-3"
                   >
+                    <Grid2x2 className="w-3.5 h-3.5 mr-1.5" />
                     Table Occupancy
                   </Button>
                 </div>
