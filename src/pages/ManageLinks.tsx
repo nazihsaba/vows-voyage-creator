@@ -672,7 +672,7 @@ const ManageLinks = () => {
                       className="rounded-full text-xs h-8 px-3"
                     >
                       <Download className="w-3.5 h-3.5 sm:mr-1" />
-                      <span className="hidden sm:inline">Export</span>
+                      <span className="hidden sm:inline">{activeView === "guests" ? "Export Guest List" : "Export Tables"}</span>
                     </Button>
                     <Button
                       variant="outline"
