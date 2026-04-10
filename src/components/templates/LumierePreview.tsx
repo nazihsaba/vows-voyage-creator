@@ -4,13 +4,13 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
-import lumiereVideo from "@/assets/grace-preview-video.mp4";
-import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
-import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
-import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
-import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
-import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
+import lumiereVideo from "@/assets/lumiere-video.mp4";
+import lumiere1 from "@/assets/lumiere-1.jpg";
+import lumiere2 from "@/assets/lumiere-2.jpg";
+import lumiere3 from "@/assets/lumiere-3.jpg";
+import lumiere4 from "@/assets/lumiere-4.jpg";
+import lumiere5 from "@/assets/lumiere-5.jpg";
+import lumiere6 from "@/assets/lumiere-6.jpg";
 
 const weddingDate = new Date("2025-08-16");
 
