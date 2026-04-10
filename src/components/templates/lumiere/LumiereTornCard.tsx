@@ -10,11 +10,15 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
 
   return (
     <div className={`relative w-full ${className}`} style={{ margin: 0, padding: 0, boxSizing: "border-box" }}>
-      {/* SVG filter for ripped paper edge — stronger displacement */}
+      {/* SVG filters — separate seeds for top and bottom so both look fully ripped */}
       <svg className="absolute" width="0" height="0" aria-hidden="true">
         <defs>
-          <filter id={`rip-${id}`}>
+          <filter id={`rip-top-${id}`}>
             <feTurbulence type="turbulence" baseFrequency="0.013" numOctaves="6" seed="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
+          </filter>
+          <filter id={`rip-bottom-${id}`}>
+            <feTurbulence type="turbulence" baseFrequency="0.013" numOctaves="6" seed="17" result="noise" />
             <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
@@ -24,7 +28,7 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
       <div className="relative overflow-hidden">
         <div
           className="h-[36px] bg-white -mb-[16px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
+          style={{ filter: `url(#rip-top-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
         />
       </div>
 
@@ -33,11 +37,16 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
         {children}
       </div>
 
-      {/* Bottom ripped edge — same filter for consistent look */}
+      {/* Bottom ripped edge — different seed + rotated for a distinct rip */}
       <div className="relative overflow-hidden">
         <div
           className="h-[36px] bg-white -mt-[16px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
+          style={{
+            filter: `url(#rip-bottom-${id})`,
+            marginLeft: "-24px",
+            marginRight: "-24px",
+            transform: "rotate(180deg)",
+          }}
         />
       </div>
     </div>
