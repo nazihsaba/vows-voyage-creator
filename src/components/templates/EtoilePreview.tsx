@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { Heart } from "lucide-react";
+import { ChevronDown, Heart } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
