@@ -7,14 +7,13 @@ interface LumiereTornCardProps {
 
 const WaveTop = () => (
   <svg
-    className="block w-full"
-    viewBox="0 0 1440 40"
+    className="block w-full -mb-px"
+    viewBox="0 0 1440 30"
     preserveAspectRatio="none"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M0 40V20C120 8 240 0 360 4C480 8 600 24 720 28C840 32 960 24 1080 16C1200 8 1320 0 1380 0H1440V40H0Z"
+      d="M0 30V18C20 14 40 20 80 16C120 12 160 18 200 14C240 10 280 16 320 13C360 10 400 17 440 15C480 13 520 9 560 12C600 15 640 11 680 14C720 17 760 10 800 12C840 14 880 18 920 15C960 12 1000 16 1040 13C1080 10 1120 15 1160 17C1200 19 1240 12 1280 10C1320 8 1360 14 1400 16C1420 17 1440 15 1440 15V30H0Z"
       fill="rgba(255,255,255,0.95)"
     />
   </svg>
@@ -22,14 +21,13 @@ const WaveTop = () => (
 
 const WaveBottom = () => (
   <svg
-    className="block w-full"
-    viewBox="0 0 1440 40"
+    className="block w-full -mt-px"
+    viewBox="0 0 1440 30"
     preserveAspectRatio="none"
-    fill="none"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path
-      d="M0 0V20C120 32 240 40 360 36C480 32 600 16 720 12C840 8 960 16 1080 24C1200 32 1320 40 1380 40H1440V0H0Z"
+      d="M0 0V12C20 16 40 10 80 14C120 18 160 12 200 16C240 20 280 14 320 17C360 20 400 13 440 15C480 17 520 21 560 18C600 15 640 19 680 16C720 13 760 20 800 18C840 16 880 12 920 15C960 18 1000 14 1040 17C1080 20 1120 15 1160 13C1200 11 1240 18 1280 20C1320 22 1360 16 1400 14C1420 13 1440 15 1440 15V0H0Z"
       fill="rgba(255,255,255,0.95)"
     />
   </svg>
