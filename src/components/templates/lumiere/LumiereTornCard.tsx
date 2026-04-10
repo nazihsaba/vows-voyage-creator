@@ -14,8 +14,8 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
       <svg className="absolute" width="0" height="0" aria-hidden="true">
         <defs>
           <filter id={`rip-${id}`}>
-            <feTurbulence type="turbulence" baseFrequency="0.015" numOctaves="6" seed="3" result="noise" />
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="25" xChannelSelector="R" yChannelSelector="G" />
+            <feTurbulence type="turbulence" baseFrequency="0.013" numOctaves="6" seed="3" result="noise" />
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="32" xChannelSelector="R" yChannelSelector="G" />
           </filter>
         </defs>
       </svg>
