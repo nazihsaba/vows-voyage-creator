@@ -54,11 +54,10 @@ const sampleGifts = [
 
 const LumierePreview = () => {
   return (
-    <div className="w-full min-h-screen lg:flex lg:justify-center lg:bg-black">
-      <div className="relative w-full lg:max-w-[500px] xl:max-w-[480px] min-h-screen font-serif">
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
       {/* Layer 1: Fixed background video */}
       <video
-        className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:w-[500px] xl:w-[480px] lg:left-1/2 lg:-translate-x-1/2"
+        className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
         src={lumiereVideo}
         autoPlay
         muted
@@ -67,7 +66,7 @@ const LumierePreview = () => {
       />
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:w-[500px] xl:w-[480px] lg:left-1/2 lg:-translate-x-1/2" />
+      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
@@ -148,9 +147,8 @@ const LumierePreview = () => {
         </div>
         <div className="mt-64">
           <TemplatePreviewFooter />
+        </div>
       </div>
-      </div>
-    </div>
     </div>
   );
 };
