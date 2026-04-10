@@ -108,19 +108,19 @@ const LumierePreview = () => {
         </section>
 
         {/* ===== SECTIONS ===== */}
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereCountdown targetDate={weddingDate.toISOString()} />
         </div>
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
         </div>
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereGallery images={sampleGallery} />
         </div>
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereGifts giftCards={sampleGifts} />
         </div>
-        <div className="mt-16">
+        <div className="mt-28">
           <LumiereRsvp
             wedding={{ rsvp_deadline: "2025-08-01" }}
             isPreview
@@ -133,7 +133,7 @@ const LumierePreview = () => {
             numberOfPersons={2}
           />
         </div>
-        <div className="mt-16">
+        <div className="mt-28">
           <TemplatePreviewFooter />
         </div>
       </div>
