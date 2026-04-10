@@ -34,7 +34,7 @@ import {
   Download,
   Grid2x2,
   MoreVertical,
-  LayoutGrid,
+  LayoutDashboard,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -681,7 +681,7 @@ const ManageLinks = () => {
                   onClick={() => setVenueLayoutOpen(true)}
                   className="rounded-md text-xs h-8 px-3"
                 >
-                  <LayoutGrid className="w-3.5 h-3.5 mr-1.5" />
+                  <LayoutDashboard className="w-3.5 h-3.5 mr-1.5" />
                   Venue Layout
                 </Button>
                 {links.length > 0 && (
