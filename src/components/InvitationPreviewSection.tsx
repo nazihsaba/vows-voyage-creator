@@ -155,11 +155,19 @@ const InvitationPreviewSection = () => {
           </Carousel>
         </div>
 
-        {/* Desktop grid */}
-        <div className="hidden lg:grid grid-cols-4 gap-6 mb-14">
-          {previewCards.map((card) => (
-            <TemplateCard key={card.label} card={card} onPreview={setActivePreview} />
-          ))}
+        {/* Desktop carousel */}
+        <div className="hidden lg:block mb-14">
+          <Carousel opts={{ align: "start", loop: true }} className="w-full">
+            <CarouselContent className="-ml-6">
+              {previewCards.map((card) => (
+                <CarouselItem key={card.label} className="pl-6 basis-1/4">
+                  <TemplateCard card={card} onPreview={setActivePreview} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="-left-5" />
+            <CarouselNext className="-right-5" />
+          </Carousel>
         </div>
       </div>
 
