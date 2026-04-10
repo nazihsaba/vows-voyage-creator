@@ -81,7 +81,7 @@ const WeddingForm = () => {
   });
 
   const template = formData.template_type;
-  const isAuraTemplate = template === "bible-verse-tabs" || template === "lumiere-editorial";
+  const isAuraTemplate = template === "bible-verse-tabs" || template === "lumiere-editorial" || template === "etoile-carousel";
   const isVideoTemplate = template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
@@ -158,7 +158,7 @@ const WeddingForm = () => {
 
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
-    if (template === "lumiere-editorial") return 6;
+    if (template === "lumiere-editorial" || template === "etoile-carousel") return 6;
     return 7; // Vérité and Aura templates
   };
   const maxGalleryImages = getMaxGalleryImages();
@@ -173,7 +173,8 @@ const WeddingForm = () => {
     template === "classic-romance" ||
     template === "bible-verse-tabs" ||
     template === "opulence-curtain" ||
-    template === "lumiere-editorial";
+    template === "lumiere-editorial" ||
+    template === "etoile-carousel";
 
   useEffect(() => {
     if (id) {
@@ -428,8 +429,9 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate main wedding photo is required (skip for video templates which use video instead)
-    if (!isVideoTemplate && !imageFile && !formData.main_picture_url) {
+    // Validate main wedding photo is required (skip for video templates and carousel templates which use video/gallery instead)
+    const isEtoileTemplate = template === "etoile-carousel";
+    if (!isVideoTemplate && !isEtoileTemplate && !imageFile && !formData.main_picture_url) {
       toast({
         title: "Main photo required",
         description: "Please upload a main wedding photo.",
@@ -584,6 +586,7 @@ const WeddingForm = () => {
         "classic-romance",
         "bible-verse-tabs",
         "lumiere-editorial",
+        "etoile-carousel",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
@@ -982,7 +985,7 @@ const WeddingForm = () => {
                 </p>
               </div> */}
 
-              {/* Conditional: Show Video Upload for Video Template, otherwise Photo Upload */}
+              {/* Conditional: Show Video Upload for Video Template, Photo Upload for non-carousel, or nothing for carousel */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
                   <Label htmlFor="wedding_video">Upload Video <span className="text-foreground">*</span></Label>
@@ -1019,7 +1022,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : (
+              ) : template !== "etoile-carousel" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">Main Wedding Photo <span className="text-foreground">*</span></Label>
                   <div className="flex flex-col gap-4">
@@ -1055,7 +1058,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Audio Trim Field */}
               <AudioTrimField
