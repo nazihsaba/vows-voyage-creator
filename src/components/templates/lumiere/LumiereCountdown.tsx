@@ -1,17 +1,14 @@
 import { useState, useEffect } from "react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
-import LumiereTornCard, { TornCardVariant } from "./LumiereTornCard";
+import LumiereTornCard from "./LumiereTornCard";
 
 interface LumiereCountdownProps {
   targetDate: string;
   title?: string;
-  cardVariant?: TornCardVariant;
 }
 
-const LumiereCountdown = ({ targetDate, title = "Counting Down To Our Special Day", cardVariant = "solid" }: LumiereCountdownProps) => {
+const LumiereCountdown = ({ targetDate, title = "Counting Down To Our Special Day" }: LumiereCountdownProps) => {
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
-  const isGlass = cardVariant === "glass";
-  const textColor = isGlass ? "text-white" : "text-black";
 
   useEffect(() => {
     const update = () => {
@@ -38,17 +35,17 @@ const LumiereCountdown = ({ targetDate, title = "Counting Down To Our Special Da
   ];
 
   return (
-    <LumiereTornCard variant={cardVariant}>
+    <LumiereTornCard>
       <div className="py-14 px-6 text-center">
         <AnimatedSection animation="fade-in">
-          <h2 className={`text-template-subtitle ${textColor} mb-8`}>{title}</h2>
+          <h2 className="text-template-subtitle text-black mb-8">{title}</h2>
         </AnimatedSection>
         <div className="flex justify-center gap-6 md:gap-10">
           {units.map((item, i) => (
             <AnimatedSection key={item.label} delay={i * 100} animation="fade-in">
               <div className="text-center">
-                <div className={`text-3xl md:text-5xl font-light ${textColor}`}>{item.value}</div>
-                <div className={`text-template-small mt-2 ${isGlass ? "text-white/70" : ""}`}>{item.label}</div>
+                <div className="text-3xl md:text-5xl font-light text-black">{item.value}</div>
+                <div className="text-template-small mt-2">{item.label}</div>
               </div>
             </AnimatedSection>
           ))}

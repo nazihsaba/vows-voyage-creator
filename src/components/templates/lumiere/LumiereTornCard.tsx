@@ -1,25 +1,12 @@
 import { ReactNode, useId } from "react";
 
-export type TornCardVariant = "solid" | "glass";
-
 interface LumiereTornCardProps {
   children: ReactNode;
   className?: string;
-  variant?: TornCardVariant;
 }
 
-const LumiereTornCard = ({ children, className = "", variant = "solid" }: LumiereTornCardProps) => {
+const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => {
   const id = useId().replace(/:/g, "");
-
-  const isGlass = variant === "glass";
-  const bgClass = isGlass ? "" : "bg-white";
-  const bgStyle = isGlass
-    ? { background: "rgba(255,255,255,0.12)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }
-    : {};
-  const edgeBgClass = isGlass ? "" : "bg-white";
-  const edgeStyle = isGlass
-    ? { background: "rgba(255,255,255,0.12)", backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }
-    : {};
 
   return (
     <div className={`relative w-full ${className}`} style={{ margin: 0, padding: 0, boxSizing: "border-box" }}>
@@ -40,26 +27,25 @@ const LumiereTornCard = ({ children, className = "", variant = "solid" }: Lumier
       {/* Top ripped edge */}
       <div className="relative overflow-hidden">
         <div
-          className={`h-[36px] ${edgeBgClass} -mb-[16px]`}
-          style={{ filter: `url(#rip-top-${id})`, marginLeft: "-24px", marginRight: "-24px", ...edgeStyle }}
+          className="h-[36px] bg-white -mb-[16px]"
+          style={{ filter: `url(#rip-top-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
         />
       </div>
 
       {/* Clean content area */}
-      <div className={`relative ${bgClass} w-full`} style={{ margin: 0, padding: 0, ...bgStyle }}>
+      <div className="relative bg-white w-full" style={{ margin: 0, padding: 0 }}>
         {children}
       </div>
 
       {/* Bottom ripped edge — different seed + rotated for a distinct rip */}
       <div className="relative overflow-hidden">
         <div
-          className={`h-[36px] ${edgeBgClass} -mt-[16px]`}
+          className="h-[36px] bg-white -mt-[16px]"
           style={{
             filter: `url(#rip-bottom-${id})`,
             marginLeft: "-24px",
             marginRight: "-24px",
             transform: "rotate(180deg)",
-            ...edgeStyle,
           }}
         />
       </div>

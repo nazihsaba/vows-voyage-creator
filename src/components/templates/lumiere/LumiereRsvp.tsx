@@ -1,5 +1,5 @@
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import LumiereTornCard, { TornCardVariant } from "./LumiereTornCard";
+import LumiereTornCard from "./LumiereTornCard";
 
 interface LumiereRsvpProps {
   wedding: any;
@@ -12,7 +12,6 @@ interface LumiereRsvpProps {
   isRsvpDeadlinePassed?: boolean;
   submittingRsvp?: boolean;
   staticDeadline?: Date;
-  cardVariant?: TornCardVariant;
 }
 
 const LumiereRsvp = ({
@@ -26,12 +25,9 @@ const LumiereRsvp = ({
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
   staticDeadline,
-  cardVariant = "solid",
 }: LumiereRsvpProps) => {
-  const isGlass = cardVariant === "glass";
-
   return (
-    <LumiereTornCard variant={cardVariant}>
+    <LumiereTornCard>
       <RsvpSection
         wedding={wedding}
         isPreview={isPreview}
@@ -44,8 +40,8 @@ const LumiereRsvp = ({
         submittingRsvp={submittingRsvp}
         staticDeadline={staticDeadline}
         bgClassName="bg-transparent"
-        cardBgClassName={isGlass ? "bg-white/10" : "bg-gray-50"}
-        accentColorClass={isGlass ? "text-white" : "text-black"}
+        cardBgClassName="bg-gray-50"
+        accentColorClass="text-black"
       />
     </LumiereTornCard>
   );
