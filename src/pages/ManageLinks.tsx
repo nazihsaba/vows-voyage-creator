@@ -31,7 +31,6 @@ import {
   Plus,
   Link2,
   Pencil,
-  
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
@@ -302,10 +301,7 @@ const ManageLinks = () => {
           if (sanitizedUpdates.name) {
             sanitizedUpdates.name = sanitizedUpdates.name.replace(/\b\w/g, (c: string) => c.toUpperCase());
           }
-          const { error } = await supabase
-            .from("invitees")
-            .update(sanitizedUpdates)
-            .eq("id", id);
+          const { error } = await supabase.from("invitees").update(sanitizedUpdates).eq("id", id);
           if (error) throw error;
         }
       }
@@ -554,13 +550,13 @@ const ManageLinks = () => {
                           <span className="w-px h-4 bg-border/50 mx-1" />
                           <Select
                             value={sideFilter || "all"}
-                            onValueChange={(val) => setSideFilter(val === "all" ? null : val as "GROOM" | "BRIDE")}
+                            onValueChange={(val) => setSideFilter(val === "all" ? null : (val as "GROOM" | "BRIDE"))}
                           >
                             <SelectTrigger className="h-6 w-auto min-w-[90px] text-xs rounded-full border-0 bg-muted/60 px-2.5 gap-1">
                               <SelectValue placeholder="Side" />
                             </SelectTrigger>
                             <SelectContent>
-                              <SelectItem value="all">All Sides</SelectItem>
+                              <SelectItem value="all">Both Sides</SelectItem>
                               <SelectItem value="GROOM">Groom</SelectItem>
                               <SelectItem value="BRIDE">Bride</SelectItem>
                             </SelectContent>
@@ -799,57 +795,57 @@ const ManageLinks = () => {
                                           return true;
                                         })
                                         .map((invitee) => (
-                                        <TableRow
-                                          key={invitee.id}
-                                          className="bg-white border-l-4 border-l-primary/30 transition-colors"
-                                        >
-                                          <TableCell></TableCell>
-                                          <TableCell className="pl-8 font-medium">{invitee.name}</TableCell>
-                                          <TableCell></TableCell>
-                                          <TableCell className="text-sm">
-                                            {invitee.table_number != null ? (
-                                              <Badge
-                                                variant="secondary"
-                                                className="text-xs font-medium border-0 bg-white"
-                                              >
-                                                {invitee.table_number}
-                                              </Badge>
-                                            ) : (
-                                              <span className="text-muted-foreground/50">—</span>
-                                            )}
-                                          </TableCell>
-                                          <TableCell></TableCell>
-                                          <TableCell>
-                                            {invitee.is_attending === null ? (
-                                              <Badge
-                                                variant="secondary"
-                                                className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
-                                              >
-                                                Pending
-                                              </Badge>
-                                            ) : invitee.is_attending ? (
-                                              <Badge
-                                                variant="secondary"
-                                                className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
-                                              >
-                                                Attending
-                                              </Badge>
-                                            ) : (
-                                              <Badge
-                                                variant="secondary"
-                                                className="bg-red-100 text-red-700 border-0 text-xs font-medium"
-                                              >
-                                                Not Attending
-                                              </Badge>
-                                            )}
-                                          </TableCell>
-                                          <TableCell colSpan={3} className="text-sm text-muted-foreground">
-                                            {invitee.is_attending !== null
-                                              ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
-                                              : "-"}
-                                          </TableCell>
-                                        </TableRow>
-                                      ))}
+                                          <TableRow
+                                            key={invitee.id}
+                                            className="bg-white border-l-4 border-l-primary/30 transition-colors"
+                                          >
+                                            <TableCell></TableCell>
+                                            <TableCell className="pl-8 font-medium">{invitee.name}</TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell className="text-sm">
+                                              {invitee.table_number != null ? (
+                                                <Badge
+                                                  variant="secondary"
+                                                  className="text-xs font-medium border-0 bg-white"
+                                                >
+                                                  {invitee.table_number}
+                                                </Badge>
+                                              ) : (
+                                                <span className="text-muted-foreground/50">—</span>
+                                              )}
+                                            </TableCell>
+                                            <TableCell></TableCell>
+                                            <TableCell>
+                                              {invitee.is_attending === null ? (
+                                                <Badge
+                                                  variant="secondary"
+                                                  className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                                >
+                                                  Pending
+                                                </Badge>
+                                              ) : invitee.is_attending ? (
+                                                <Badge
+                                                  variant="secondary"
+                                                  className="bg-emerald-100 text-emerald-700 border-0 text-xs font-medium"
+                                                >
+                                                  Attending
+                                                </Badge>
+                                              ) : (
+                                                <Badge
+                                                  variant="secondary"
+                                                  className="bg-red-100 text-red-700 border-0 text-xs font-medium"
+                                                >
+                                                  Not Attending
+                                                </Badge>
+                                              )}
+                                            </TableCell>
+                                            <TableCell colSpan={3} className="text-sm text-muted-foreground">
+                                              {invitee.is_attending !== null
+                                                ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                                : "-"}
+                                            </TableCell>
+                                          </TableRow>
+                                        ))}
                                     {isExpanded && linkInvitees.length === 0 && (
                                       <TableRow className="bg-muted/20">
                                         <TableCell></TableCell>
@@ -1037,37 +1033,37 @@ const ManageLinks = () => {
                                         return true;
                                       })
                                       .map((invitee) => (
-                                      <div
-                                        key={invitee.id}
-                                        className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
-                                      >
-                                        <span className="text-sm font-medium text-foreground truncate mr-2">
-                                          {invitee.name}
-                                        </span>
-                                        {invitee.is_attending === null ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
-                                          >
-                                            Pending
-                                          </Badge>
-                                        ) : invitee.is_attending ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
-                                          >
-                                            Yes
-                                          </Badge>
-                                        ) : (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
-                                          >
-                                            No
-                                          </Badge>
-                                        )}
-                                      </div>
-                                    ))
+                                        <div
+                                          key={invitee.id}
+                                          className="flex items-center justify-between px-4 py-2.5 border-b border-border/10 last:border-b-0 bg-white"
+                                        >
+                                          <span className="text-sm font-medium text-foreground truncate mr-2">
+                                            {invitee.name}
+                                          </span>
+                                          {invitee.is_attending === null ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                            >
+                                              Pending
+                                            </Badge>
+                                          ) : invitee.is_attending ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                            >
+                                              Yes
+                                            </Badge>
+                                          ) : (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                            >
+                                              No
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      ))
                                   )}
                                 </div>
                               )}
