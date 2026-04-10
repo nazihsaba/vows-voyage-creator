@@ -1544,6 +1544,13 @@ const ManageLinks = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {weddingId && (
+        <VenueLayoutSheet
+          open={venueLayoutOpen}
+          onClose={() => setVenueLayoutOpen(false)}
+          weddingId={weddingId}
+        />
+      )}
     </div>
   );
 };
