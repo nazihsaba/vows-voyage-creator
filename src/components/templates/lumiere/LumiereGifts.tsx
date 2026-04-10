@@ -28,20 +28,20 @@ const LumiereGifts = ({ giftCards, title = "Wedding Gift", subtitle = "For those
     <LumiereTornCard>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="font-['Dancing_Script'] text-3xl md:text-4xl text-center text-gray-800 mb-3">{title}</h2>
-          <p className="text-center font-['Montserrat'] text-sm text-gray-500 mb-10">{subtitle}</p>
+          <h2 className="text-template-subtitle text-center text-primary mb-3">{title}</h2>
+          <p className="text-center text-template-body text-muted-foreground mb-10">{subtitle}</p>
         </AnimatedSection>
         <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
           {giftCards.map((card, index) => (
             <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
               <div
-                className="bg-gray-50 p-5 rounded-lg text-center cursor-pointer hover:bg-gray-100 transition-colors"
+                className="bg-muted p-5 rounded-lg text-center cursor-pointer hover:bg-muted/80 transition-colors"
                 onClick={() => copyToClipboard(card.card_number)}
               >
-                <p className="font-['Montserrat'] font-semibold text-gray-800">{card.card_name}</p>
+                <p className="font-semibold text-foreground">{card.card_name}</p>
                 <div className="flex items-center justify-center gap-2 mt-2">
-                  <p className="font-['Montserrat'] text-sm text-gray-500">{card.card_number}</p>
-                  <Copy className="w-3.5 h-3.5 text-gray-400" />
+                  <p className="text-sm text-muted-foreground">{card.card_number}</p>
+                  <Copy className="w-3.5 h-3.5 text-muted-foreground" />
                 </div>
               </div>
             </AnimatedSection>

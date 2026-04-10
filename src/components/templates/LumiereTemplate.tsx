@@ -114,7 +114,7 @@ export const LumiereTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="relative w-full min-h-screen font-serif" dir={isArabic ? 'rtl' : 'ltr'}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -153,7 +153,7 @@ export const LumiereTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="font-['Montserrat'] text-sm italic max-w-sm mx-auto leading-relaxed text-white/80"
+                className="text-template-body italic max-w-sm mx-auto leading-relaxed text-white/80"
               />
               <EditableField
                 fieldId="bible-verse-reference"
@@ -162,7 +162,7 @@ export const LumiereTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="font-['Montserrat'] text-xs text-white/60 mt-1"
+                className="text-template-small text-white/60 mt-1"
               />
               <div className="w-12 h-px bg-white/40 mx-auto" />
             </div>
@@ -175,7 +175,7 @@ export const LumiereTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="font-['Montserrat'] text-xs tracking-[0.3em] text-white/70 uppercase"
+                className="text-template-small tracking-[0.3em] text-white/70"
               />
             </div>
 
@@ -189,7 +189,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="font-['Montserrat'] text-sm font-medium tracking-wide text-white/90"
+                    className="text-sm font-medium tracking-wide text-white/90"
                   />
                   <EditableField
                     fieldId="groom-family-name"
@@ -201,7 +201,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="font-['Dancing_Script'] text-2xl text-white"
+                    className="text-template-subtitle text-white"
                   />
                 </div>
                 <span className="text-3xl font-light text-white/70">&</span>
@@ -213,7 +213,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="font-['Montserrat'] text-sm font-medium tracking-wide text-white/90"
+                    className="text-sm font-medium tracking-wide text-white/90"
                   />
                   <EditableField
                     fieldId="bride-family-name"
@@ -225,7 +225,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="font-['Dancing_Script'] text-2xl text-white"
+                    className="text-template-subtitle text-white"
                   />
                 </div>
               </div>
@@ -243,12 +243,12 @@ export const LumiereTemplate = ({
                 isPreview={isPreview}
                 multiline={true}
                 tag="p"
-                className="font-['Montserrat'] text-sm text-white/70 whitespace-pre-line leading-relaxed"
+                className="text-template-body text-white/70 whitespace-pre-line leading-relaxed"
               />
             </div>
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
-              <h1 className="font-['Dancing_Script'] text-5xl md:text-6xl text-white">
+              <h1 className="text-template-title text-white">
                 {getLocalizedValue("groom_name", wedding.groom_name)} & {getLocalizedValue("bride_name", wedding.bride_name)}
               </h1>
             </div>
@@ -271,7 +271,7 @@ export const LumiereTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
-                  className="font-['Montserrat'] text-sm font-semibold tracking-wide text-white"
+                  className="text-template-body font-semibold tracking-wide text-white"
                 />
               </div>
             </div>
@@ -279,23 +279,32 @@ export const LumiereTemplate = ({
         </section>
 
         {/* ===== COUNTDOWN ===== */}
-        <LumiereCountdown targetDate={wedding.wedding_date} />
+        <div className="mt-16">
+          <LumiereCountdown targetDate={wedding.wedding_date} />
+        </div>
 
         {/* ===== EVENTS ===== */}
-        <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
+        <div className="mt-16">
+          <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
+        </div>
 
         {/* ===== GALLERY ===== */}
         {gallery && gallery.length > 0 && (
-          <LumiereGallery images={gallery} />
+          <div className="mt-16">
+            <LumiereGallery images={gallery} />
+          </div>
         )}
 
         {/* ===== GIFTS ===== */}
         {hasGiftCards && (
-          <LumiereGifts giftCards={giftCards} />
+          <div className="mt-16">
+            <LumiereGifts giftCards={giftCards} />
+          </div>
         )}
 
         {/* ===== RSVP ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
+          <div className="mt-16">
           <LumiereRsvp
             wedding={wedding}
             isPreview={isPreview}
@@ -307,9 +316,12 @@ export const LumiereTemplate = ({
             isRsvpDeadlinePassed={isRsvpDeadlinePassed}
             submittingRsvp={submittingRsvp}
           />
+          </div>
         )}
 
-        <TemplatePreviewFooter />
+        <div className="mt-16">
+          <TemplatePreviewFooter />
+        </div>
       </div>
     </div>
   );
