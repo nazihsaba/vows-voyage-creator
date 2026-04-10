@@ -20,9 +20,9 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
         </defs>
       </svg>
 
-      {/* Top ripped edge */}
+      {/* Top ripped edge — extra wide to compensate for displacement */}
       <div
-        className="relative w-full h-[20px] bg-white -mb-[10px]"
+        className="relative h-[20px] bg-white -mb-[10px] -mx-4"
         style={{ filter: `url(#rip-${id})` }}
       />
 
@@ -31,9 +31,9 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
         {children}
       </div>
 
-      {/* Bottom ripped edge */}
+      {/* Bottom ripped edge — extra wide to compensate for displacement */}
       <div
-        className="relative w-full h-[20px] bg-white -mt-[10px]"
+        className="relative h-[20px] bg-white -mt-[10px] -mx-4"
         style={{ filter: `url(#rip-${id})` }}
       />
     </div>
