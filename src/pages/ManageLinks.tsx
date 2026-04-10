@@ -672,6 +672,15 @@ const ManageLinks = () => {
                     Table Occupancy
                   </Button>
                 </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setVenueLayoutOpen(true)}
+                  className="rounded-md text-xs h-8 px-3"
+                >
+                  <LayoutGrid className="w-3.5 h-3.5 mr-1.5" />
+                  Venue Layout
+                </Button>
                 {links.length > 0 && (
                   <>
                     {/* Desktop buttons */}

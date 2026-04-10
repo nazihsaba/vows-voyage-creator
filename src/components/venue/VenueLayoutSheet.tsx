@@ -58,7 +58,7 @@ const VenueLayoutSheet: React.FC<VenueLayoutSheetProps> = ({ open, onClose, wedd
         );
       case "saved":
         return (
-          <span className="flex items-center gap-1.5 text-xs text-emerald-600">
+          <span className="flex items-center gap-1.5 text-xs text-primary">
             <Check className="w-3 h-3" /> Saved
           </span>
         );

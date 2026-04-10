@@ -125,7 +125,7 @@ const VenueCanvas: React.FC<VenueCanvasProps> = ({
         }}
         onWheel={handleWheel}
         onClick={handleStageClick}
-        onTap={handleStageClick}
+        onTap={(e) => { if (e.target === e.target.getStage()) onSelectTable(null); }}
       >
         {/* Background layer */}
         <Layer>
