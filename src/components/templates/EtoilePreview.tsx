@@ -138,16 +138,16 @@ const EtoilePreview = () => {
 
         {/* ===== FAMILY NAMES with ripped borders ===== */}
         <section id="family-section-etoile">
-          <LumiereTornCard>
+          <LumiereTornCard variant="glass">
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
                   <div className="space-y-4">
-                    <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
-                    <p className="text-2xl text-[#3e2723]">&</p>
-                    <h2 className="text-template-subtitle text-[#3e2723]">The Maris Family</h2>
+                    <h2 className="text-template-subtitle text-white">The Vale Family</h2>
+                    <p className="text-2xl text-white/70">&</p>
+                    <h2 className="text-template-subtitle text-white">The Maris Family</h2>
                   </div>
-                  <p className="text-template-body text-[#3e2723]">
+                  <p className="text-template-body text-white/80">
                     Request the honor of your presence at the wedding of their beloved Son and Daughter
                   </p>
                 </div>
@@ -158,16 +158,16 @@ const EtoilePreview = () => {
 
         {/* ===== SECTIONS ===== */}
         <div className="mt-64">
-          <LumiereCountdown targetDate={weddingDate.toISOString()} />
+          <LumiereCountdown targetDate={weddingDate.toISOString()} cardVariant="glass" />
         </div>
         <div className="mt-64">
-          <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
+          <LumiereEvents events={sampleEvents} dateFormatted="16 August" cardVariant="glass" />
         </div>
         <div className="mt-64">
           <LumiereGallery images={sampleGallery} />
         </div>
         <div className="mt-64">
-          <LumiereGifts giftCards={sampleGifts} />
+          <LumiereGifts giftCards={sampleGifts} cardVariant="glass" />
         </div>
         <div className="mt-64">
           <LumiereRsvp
@@ -180,6 +180,7 @@ const EtoilePreview = () => {
             ]}
             rsvpResponses={{ "1": true, "2": false }}
             numberOfPersons={2}
+            cardVariant="glass"
           />
         </div>
         <div className="mt-64">
