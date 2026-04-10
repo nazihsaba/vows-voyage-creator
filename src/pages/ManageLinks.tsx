@@ -502,7 +502,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "attending" ? "Clear filter" : "Filter by attending"}
+                              {statusFilter === "attending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only confirmed guests (${attending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                           <Tooltip>
@@ -520,7 +522,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "pending" ? "Clear filter" : "Filter by pending"}
+                              {statusFilter === "pending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only guests who haven't responded yet (${pending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                           <Tooltip>
@@ -538,7 +542,9 @@ const ManageLinks = () => {
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent>
-                              {statusFilter === "not_attending" ? "Clear filter" : "Filter by not attending"}
+                              {statusFilter === "not_attending"
+                                ? "Click to clear filter and show all guests"
+                                : `Show only declined guests (${notAttending} out of ${attending + pending + notAttending})`}
                             </TooltipContent>
                           </Tooltip>
                         </div>
