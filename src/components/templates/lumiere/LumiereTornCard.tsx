@@ -23,8 +23,8 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
       {/* Top ripped edge */}
       <div className="relative overflow-hidden">
         <div
-          className="h-[30px] bg-white -mb-[14px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-20px", marginRight: "-20px" }}
+          className="h-[36px] bg-white -mb-[16px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
         />
       </div>
 
@@ -36,8 +36,8 @@ const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => 
       {/* Bottom ripped edge — same filter for consistent look */}
       <div className="relative overflow-hidden">
         <div
-          className="h-[30px] bg-white -mt-[14px]"
-          style={{ filter: `url(#rip-${id})`, marginLeft: "-20px", marginRight: "-20px" }}
+          className="h-[36px] bg-white -mt-[16px]"
+          style={{ filter: `url(#rip-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
         />
       </div>
     </div>
