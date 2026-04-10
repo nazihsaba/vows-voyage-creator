@@ -552,46 +552,19 @@ const ManageLinks = () => {
                             </TooltipContent>
                           </Tooltip>
                           <span className="w-px h-4 bg-border/50 mx-1" />
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Badge
-                                variant="secondary"
-                                onClick={() => setSideFilter((prev) => (prev === "GROOM" ? null : "GROOM"))}
-                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
-                                  sideFilter === "GROOM"
-                                    ? "bg-blue-200 text-blue-800 ring-2 ring-blue-400"
-                                    : "bg-blue-100 text-blue-700 hover:bg-blue-200"
-                                }`}
-                              >
-                                Groom
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              {sideFilter === "GROOM"
-                                ? "Click to clear side filter"
-                                : `Show only Groom's side invitations (${links.filter(l => l.side === "GROOM").length} links)`}
-                            </TooltipContent>
-                          </Tooltip>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Badge
-                                variant="secondary"
-                                onClick={() => setSideFilter((prev) => (prev === "BRIDE" ? null : "BRIDE"))}
-                                className={`cursor-pointer transition-all text-xs font-medium border-0 ${
-                                  sideFilter === "BRIDE"
-                                    ? "bg-pink-200 text-pink-800 ring-2 ring-pink-400"
-                                    : "bg-pink-100 text-pink-700 hover:bg-pink-200"
-                                }`}
-                              >
-                                Bride
-                              </Badge>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                              {sideFilter === "BRIDE"
-                                ? "Click to clear side filter"
-                                : `Show only Bride's side invitations (${links.filter(l => l.side === "BRIDE").length} links)`}
-                            </TooltipContent>
-                          </Tooltip>
+                          <Select
+                            value={sideFilter || "all"}
+                            onValueChange={(val) => setSideFilter(val === "all" ? null : val as "GROOM" | "BRIDE")}
+                          >
+                            <SelectTrigger className="h-6 w-auto min-w-[90px] text-xs rounded-full border-0 bg-muted/60 px-2.5 gap-1">
+                              <SelectValue placeholder="Side" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="all">All Sides</SelectItem>
+                              <SelectItem value="GROOM">Groom</SelectItem>
+                              <SelectItem value="BRIDE">Bride</SelectItem>
+                            </SelectContent>
+                          </Select>
                         </div>
                       </TooltipProvider>
                     );
