@@ -100,12 +100,12 @@ const EtoilePreview = () => {
         {/* ===== HERO SECTION (Vérité-style) ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
-            <p
+            <span
               className="text-lg md:text-xl tracking-[0.3em] uppercase"
               style={{ animation: "gentleFadeUp 1.2s ease-out both" }}
             >
               The Wedding Of
-            </p>
+            </span>
             <div className="space-y-4 mt-12">
               <h1
                 className="text-template-title text-left pl-4 md:pl-12"
@@ -124,12 +124,12 @@ const EtoilePreview = () => {
                 Elena
               </h1>
             </div>
-            <p
+            <span
               className="text-xl md:text-2xl tracking-[0.2em] mt-12"
               style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}
             >
               Saturday, August 16, 2025
-            </p>
+            </span>
           </div>
           <div className="absolute bottom-8 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
