@@ -31,7 +31,9 @@ import {
   Plus,
   Link2,
   Pencil,
+  Download,
 } from "lucide-react";
+import * as XLSX from "xlsx";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
