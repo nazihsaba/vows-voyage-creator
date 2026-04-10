@@ -123,10 +123,10 @@ const LumierePreview = () => {
         <div className="mt-28">
           <LumiereCountdown targetDate={weddingDate.toISOString()} />
         </div>
-        <div className="mt-48">
+        <div className="mt-64">
           <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
         </div>
-        <div className="mt-28">
+        <div className="mt-64">
           <LumiereGallery images={sampleGallery} />
         </div>
         <div className="mt-28">
