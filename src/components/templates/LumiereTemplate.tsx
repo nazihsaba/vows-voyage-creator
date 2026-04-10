@@ -124,8 +124,7 @@ export const LumiereTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="w-full min-h-screen lg:flex lg:justify-center lg:bg-black">
-      <div className="relative w-full lg:max-w-[500px] xl:max-w-[480px] min-h-screen font-serif" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? "rtl" : "ltr"}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -135,7 +134,7 @@ export const LumiereTemplate = ({
       {/* Layer 1: Fixed background video */}
       {videoUrl && (
         <video
-          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:w-[500px] xl:w-[480px] lg:left-1/2 lg:-translate-x-1/2"
+          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
           src={videoUrl}
           autoPlay
           muted
@@ -145,7 +144,7 @@ export const LumiereTemplate = ({
       )}
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:w-[500px] xl:w-[480px] lg:left-1/2 lg:-translate-x-1/2" />
+      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
