@@ -196,6 +196,14 @@ All colors MUST be HSL.
   }
 }
 
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
 @keyframes fadeInUp {
   from {
     opacity: 0;

@@ -54,7 +54,7 @@ const sampleGifts = [
 
 const LumierePreview = () => {
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%] hide-scrollbar">
       {/* Layer 1: Fixed background video */}
       <video
         className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
