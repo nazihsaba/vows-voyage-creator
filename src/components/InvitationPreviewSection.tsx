@@ -58,7 +58,7 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "lumiere",
   },
   {
-    image: lumiereTemplate,
+    image: lumiere2Template,
     label: "Étoile",
     tagline: "Photo carousel & torn-edge cards",
     featured: false,
