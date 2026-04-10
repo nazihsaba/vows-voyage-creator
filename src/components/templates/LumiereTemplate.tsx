@@ -11,6 +11,7 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
+import LumiereTornCard from "./lumiere/LumiereTornCard";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -368,7 +369,9 @@ export const LumiereTemplate = ({
         )}
 
         <div className="mt-64">
-          <TemplatePreviewFooter />
+          <LumiereTornCard>
+            <TemplatePreviewFooter />
+          </LumiereTornCard>
         </div>
       </div>
     </div>

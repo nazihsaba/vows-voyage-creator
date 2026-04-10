@@ -337,7 +337,9 @@ export const EtoileTemplate = ({
         )}
 
         <div className="mt-64">
-          <TemplatePreviewFooter />
+          <LumiereTornCard>
+            <TemplatePreviewFooter />
+          </LumiereTornCard>
         </div>
       </div>
     </div>
