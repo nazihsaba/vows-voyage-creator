@@ -106,7 +106,7 @@ const EtoilePreview = () => {
             >
               The Wedding Of
             </span>
-            <div className="space-y-4 mt-12">
+            <div className="space-y-4 mt-12 mb-12">
               <h1
                 className="text-template-title text-left pl-4 md:pl-12"
                 style={{ animation: "slideFromLeft 1.5s ease-out 0.3s both" }}
@@ -125,7 +125,7 @@ const EtoilePreview = () => {
               </h1>
             </div>
             <span
-              className="text-xl md:text-2xl tracking-[0.2em] mt-12"
+              className="text-xl md:text-2xl tracking-[0.2em]"
               style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}
             >
               Saturday, August 16, 2025
