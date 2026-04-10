@@ -15,9 +15,27 @@ import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
 const weddingDate = new Date("2025-08-16");
 
 const sampleEvents = [
-  { id: "ceremony", title: "Ceremony", time: "7:00 PM", location: "Couvent Saint Sauveur - Sarba", icon: "material-symbols:church-rounded" },
-  { id: "welcome", title: "Welcome Drink", time: "8:00 PM", location: "Carma - Jeita Country Club", icon: "streamline:champagne-party-alcohol-remix" },
-  { id: "dinner", title: "Dinner & Party", time: "9:00 PM", location: "Carma - Jeita Country Club", icon: "solar:confetti-bold" },
+  {
+    id: "ceremony",
+    title: "Ceremony",
+    time: "7:00 PM",
+    location: "Couvent Saint Sauveur - Sarba",
+    icon: "material-symbols:church-rounded",
+  },
+  {
+    id: "welcome",
+    title: "Welcome Drink",
+    time: "8:00 PM",
+    location: "Carma - Jeita Country Club",
+    icon: "streamline:champagne-party-alcohol-remix",
+  },
+  {
+    id: "dinner",
+    title: "Dinner & Party",
+    time: "9:00 PM",
+    location: "Carma - Jeita Country Club",
+    icon: "solar:confetti-bold",
+  },
 ];
 
 const sampleGallery = [
@@ -65,9 +83,7 @@ const LumierePreview = () => {
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
-              <p className="text-template-small tracking-[0.3em] text-white/70">
-                Together with their families
-              </p>
+              <p className="text-template-small tracking-[0.3em] text-white/70">Together with their families</p>
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
@@ -91,17 +107,13 @@ const LumierePreview = () => {
             </div>
 
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
-              <h1 className="text-template-title text-white">
-                Adrian & Elena
-              </h1>
+              <h1 className="text-template-title text-white">Adrian & Elena</h1>
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-white/30 mx-auto" />
-                <p className="text-template-body font-semibold tracking-wide text-white">
-                  Saturday, August 16th, 2025
-                </p>
+                <p className="text-template-body font-semibold tracking-wide text-white">Saturday, August 16th, 2025</p>
               </div>
             </div>
           </div>
@@ -111,7 +123,7 @@ const LumierePreview = () => {
         <div className="mt-28">
           <LumiereCountdown targetDate={weddingDate.toISOString()} />
         </div>
-        <div className="mt-28">
+        <div className="mt-48">
           <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
         </div>
         <div className="mt-28">
