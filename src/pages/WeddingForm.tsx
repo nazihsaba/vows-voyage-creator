@@ -1058,7 +1058,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Audio Trim Field */}
               <AudioTrimField
