@@ -82,7 +82,7 @@ const WeddingForm = () => {
 
   const template = formData.template_type;
   const isAuraTemplate = template === "bible-verse-tabs";
-  const isVideoTemplate = template === "template6" || template === "video-cinematic";
+  const isVideoTemplate = template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
 
@@ -158,6 +158,7 @@ const WeddingForm = () => {
 
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
+    if (template === "lumiere-editorial") return 6;
     return 7; // Vérité and Aura templates
   };
   const maxGalleryImages = getMaxGalleryImages();
@@ -171,7 +172,8 @@ const WeddingForm = () => {
     template === "modern-wedding" ||
     template === "classic-romance" ||
     template === "bible-verse-tabs" ||
-    template === "opulence-curtain";
+    template === "opulence-curtain" ||
+    template === "lumiere-editorial";
 
   useEffect(() => {
     if (id) {
@@ -581,6 +583,7 @@ const WeddingForm = () => {
         "modern-wedding",
         "classic-romance",
         "bible-verse-tabs",
+        "lumiere-editorial",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
