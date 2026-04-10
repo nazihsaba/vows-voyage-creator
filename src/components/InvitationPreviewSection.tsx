@@ -10,7 +10,7 @@ import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
-import lumiere2Template from "@/assets/lumiere-2.jpg";
+import etoileTemplate from "@/assets/etoile-1.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
@@ -59,7 +59,7 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "lumiere",
   },
   {
-    image: lumiere2Template,
+    image: etoileTemplate,
     label: "Étoile",
     tagline: "Photo carousel & torn-edge cards",
     featured: false,
