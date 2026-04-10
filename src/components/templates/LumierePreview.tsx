@@ -5,7 +5,7 @@ import LumiereEvents from "./lumiere/LumiereEvents";
 import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
-import lumiereVideo from "@/assets/lumiere-preview-video.mp4";
+import lumiereVideo from "@/assets/grace-preview-video.mp4";
 import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
 import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
 import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
