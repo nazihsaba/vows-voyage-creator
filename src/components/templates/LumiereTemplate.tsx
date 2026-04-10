@@ -114,7 +114,7 @@ export const LumiereTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div className="relative w-full min-h-screen font-serif" dir={isArabic ? 'rtl' : 'ltr'}>
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
