@@ -394,7 +394,68 @@ const ManageLinks = () => {
     return matchesSearch && hasMatchingStatus;
   });
 
-  if (loading) {
+  const exportGuestList = () => {
+    const rows: any[] = [];
+    filteredLinks.forEach((link) => {
+      const linkInvitees = (invitees[link.id] || []).filter((invitee) => {
+        if (!statusFilter) return true;
+        if (statusFilter === "attending") return invitee.is_attending === true;
+        if (statusFilter === "not_attending") return invitee.is_attending === false;
+        if (statusFilter === "pending") return invitee.is_attending === null;
+        return true;
+      });
+      linkInvitees.forEach((invitee) => {
+        rows.push({
+          "Link Name": link.link_name,
+          Side: link.side || "—",
+          "Guest Name": invitee.name,
+          "Table #": invitee.table_number ?? "—",
+          Status: invitee.is_attending === true ? "Attending" : invitee.is_attending === false ? "Not Attending" : "Pending",
+        });
+      });
+    });
+    if (rows.length === 0) {
+      toast({ title: "No data", description: "No guests to export", variant: "destructive" });
+      return;
+    }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Guest List");
+    XLSX.writeFile(wb, `guest_list_${wedding?.slug || "export"}.xlsx`);
+  };
+
+  const exportTableOccupancy = () => {
+    const allInvitees = Object.values(invitees).flat();
+    const tableMap: Record<number, Invitee[]> = {};
+    allInvitees.forEach((inv) => {
+      if (inv.table_number != null) {
+        if (!tableMap[inv.table_number]) tableMap[inv.table_number] = [];
+        tableMap[inv.table_number].push(inv);
+      }
+    });
+    const rows: any[] = [];
+    Object.keys(tableMap).sort((a, b) => Number(a) - Number(b)).forEach((tableNum) => {
+      tableMap[Number(tableNum)].forEach((inv) => {
+        const link = links.find((l) => l.id === inv.invitation_link_id);
+        rows.push({
+          "Table #": Number(tableNum),
+          "Guest Name": inv.name,
+          Side: link?.side || "—",
+          Status: inv.is_attending === true ? "Attending" : inv.is_attending === false ? "Not Attending" : "Pending",
+        });
+      });
+    });
+    if (rows.length === 0) {
+      toast({ title: "No data", description: "No table assignments to export", variant: "destructive" });
+      return;
+    }
+    const ws = XLSX.utils.json_to_sheet(rows);
+    const wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, "Table Occupancy");
+    XLSX.writeFile(wb, `table_occupancy_${wedding?.slug || "export"}.xlsx`);
+  };
+
+
     return (
       <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
         <Loader2 className="w-8 h-8 animate-spin text-primary" />
