@@ -522,7 +522,7 @@ const ManageLinks = () => {
         </div>
       </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
+      <main className="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-8">
         {links.length === 0 ? (
           <Card className="border-0 bg-white/90 backdrop-blur-sm shadow-lg rounded-2xl">
             <CardContent className="py-16 text-center">
