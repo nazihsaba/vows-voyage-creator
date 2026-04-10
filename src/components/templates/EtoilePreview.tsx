@@ -114,7 +114,7 @@ const EtoilePreview = () => {
                 Adrian
               </h1>
               <Heart
-                className="w-8 h-8 mx-auto text-white fill-white/40"
+                className="w-8 h-8 mx-auto text-transparent fill-white"
                 style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
               />
               <h1

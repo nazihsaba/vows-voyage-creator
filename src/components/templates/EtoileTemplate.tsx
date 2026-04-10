@@ -199,7 +199,7 @@ export const EtoileTemplate = ({
                 />
               </div>
               <Heart
-                className="w-8 h-8 mx-auto text-white fill-white/40"
+                className="w-8 h-8 mx-auto text-transparent fill-white"
                 style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
               />
               <div className="text-right pr-4 md:pr-12" style={{ animation: "slideFromRight 1.5s ease-out 0.3s both" }}>
