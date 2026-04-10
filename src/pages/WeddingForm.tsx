@@ -429,8 +429,9 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate main wedding photo is required (skip for video templates which use video instead)
-    if (!isVideoTemplate && !imageFile && !formData.main_picture_url) {
+    // Validate main wedding photo is required (skip for video templates and carousel templates which use video/gallery instead)
+    const isEtoileTemplate = template === "etoile-carousel";
+    if (!isVideoTemplate && !isEtoileTemplate && !imageFile && !formData.main_picture_url) {
       toast({
         title: "Main photo required",
         description: "Please upload a main wedding photo.",
