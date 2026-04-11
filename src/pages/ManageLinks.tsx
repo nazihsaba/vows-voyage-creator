@@ -734,7 +734,7 @@ const ManageLinks = () => {
                     className="rounded-md text-xs h-8 px-3"
                   >
                     <Users className="w-3.5 h-3.5 mr-1.5" />
-                    Guest List
+                    Guests
                   </Button>
                   <Button
                     variant={activeView === "tables" ? "default" : "ghost"}
@@ -743,7 +743,7 @@ const ManageLinks = () => {
                     className="rounded-md text-xs h-8 px-3"
                   >
                     <Grid2x2 className="w-3.5 h-3.5 mr-1.5" />
-                    Table Occupancy
+                    Tables
                   </Button>
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
