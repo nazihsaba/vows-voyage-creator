@@ -31,8 +31,15 @@ export interface VenueLayoutPlannerRef {
   clearAllTables: () => Promise<void>;
 }
 
+export interface VenueInvitee {
+  name: string;
+  table_number: number | null;
+  is_attending: boolean | null;
+}
+
 interface Props {
   weddingId: string;
+  invitees?: VenueInvitee[];
 }
 
 export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ weddingId }, ref) => {
