@@ -124,6 +124,22 @@ const ManageLinks = () => {
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
+  // Handle venue payment return
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const venuePayment = params.get("venue_payment");
+    if (venuePayment === "success") {
+      toast({ title: "Venue Unlocked!", description: "You now have access to the venue layout planner." });
+      setActiveView("venue");
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      setRefresh((r) => r + 1);
+    } else if (venuePayment === "failed") {
+      toast({ title: "Payment Failed", description: "Venue payment was not completed. Please try again.", variant: "destructive" });
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
+
   useEffect(() => {
     if (weddingId) {
       fetchData();
