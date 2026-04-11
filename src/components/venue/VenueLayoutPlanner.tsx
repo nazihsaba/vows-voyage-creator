@@ -46,6 +46,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
   const [showGrid, setShowGrid] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const canvasExportRef = useRef<HTMLDivElement>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
@@ -305,6 +306,26 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
     }
   };
 
+  const exportCanvasImage = async () => {
+    if (!canvasExportRef.current) return;
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(canvasExportRef.current, {
+        backgroundColor: null,
+        useCORS: true,
+        scale: 2,
+      });
+      const link = document.createElement("a");
+      link.download = `venue-layout-${Date.now()}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast({ title: "Exported", description: "Venue layout image downloaded." });
+    } catch (err: any) {
+      console.error("Export error:", err);
+      toast({ title: "Export failed", description: err.message, variant: "destructive" });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
@@ -342,7 +363,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left toolbar */}
-        <VenueToolbar
+         <VenueToolbar
           onAddTable={addTable}
           showGrid={showGrid}
           onToggleGrid={() => setShowGrid(!showGrid)}
@@ -351,6 +372,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onRemovePlan={removePlanImage}
           onDetectTables={() => detectTables()}
           isDetecting={isDetecting}
+          onExportImage={exportCanvasImage}
         />
 
         {/* Canvas */}
@@ -361,6 +383,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onUpdateTable={updateTable}
           planImageUrl={project?.plan_image_url || null}
           showGrid={showGrid}
+          exportRef={canvasExportRef}
         />
 
         {/* Properties panel */}

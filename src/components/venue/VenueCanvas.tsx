@@ -8,6 +8,7 @@ interface Props {
   onUpdateTable: (id: string, updates: Partial<VenueTable>) => void;
   planImageUrl: string | null;
   showGrid: boolean;
+  exportRef?: React.RefObject<HTMLDivElement | null>;
 }
 
 export const VenueCanvas: React.FC<Props> = ({
@@ -17,6 +18,7 @@ export const VenueCanvas: React.FC<Props> = ({
   onUpdateTable,
   planImageUrl,
   showGrid,
+  exportRef,
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [zoom, setZoom] = useState(1);
@@ -155,6 +157,7 @@ export const VenueCanvas: React.FC<Props> = ({
 
       {/* Transform layer */}
       <div
+        ref={exportRef}
         style={{
           transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
           transformOrigin: "0 0",
