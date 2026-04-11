@@ -151,12 +151,13 @@ serve(async (req: Request) => {
     }
 
     // Store payment reference in the wedding record for tracking
+    const updateData = paymentType === "venue"
+      ? { venue_payment_status: "pending" }
+      : { payment_external_id: externalId.toString(), payment_status: "pending" };
+
     await supabase
       .from("weddings")
-      .update({
-        payment_external_id: externalId.toString(),
-        payment_status: "pending",
-      })
+      .update(updateData)
       .eq("id", weddingId);
 
     return new Response(
