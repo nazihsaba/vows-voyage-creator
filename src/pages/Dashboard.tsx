@@ -131,7 +131,7 @@ const Dashboard = () => {
     {
       id: "etoile-carousel",
       name: "Étoile",
-      description: "Fullscreen photo carousel with torn-edge editorial cards & cinematic reveals",
+      description: "Fullscreen photo carousel with animated cards & cinematic reveals",
       image: etoileTemplate,
       features: [
         { icon: Images, text: "Photo Carousel" },
