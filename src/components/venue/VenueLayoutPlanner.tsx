@@ -49,6 +49,21 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
+  const clearAllTables = async () => {
+    if (!project) return;
+    try {
+      await supabase.from("venue_tables").delete().eq("venue_project_id", project.id);
+      setTables([]);
+      setSelectedTableId(null);
+      toast({ title: "Cleared", description: "All tables have been removed." });
+    } catch (err: any) {
+      console.error("Error clearing tables:", err);
+      toast({ title: "Error", description: "Failed to clear tables", variant: "destructive" });
+    }
+  };
+
+  useImperativeHandle(ref, () => ({ clearAllTables }), [project, tables]);
+
   // Load or create project
   useEffect(() => {
     const init = async () => {
