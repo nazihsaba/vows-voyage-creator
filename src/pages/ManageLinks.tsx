@@ -33,6 +33,7 @@ import {
   Pencil,
   Download,
   Grid2x2,
+  MapPin,
   MoreVertical,
 } from "lucide-react";
 import * as XLSX from "xlsx";
@@ -112,7 +113,7 @@ const ManageLinks = () => {
   const [pendingUpdates, setPendingUpdates] = useState<Record<string, Partial<Invitee>>>({});
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
-  const [activeView, setActiveView] = useState<"guests" | "tables">("guests");
+  const [activeView, setActiveView] = useState<"guests" | "tables" | "venue">("guests");
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
 
@@ -671,6 +672,15 @@ const ManageLinks = () => {
                     <Grid2x2 className="w-3.5 h-3.5 mr-1.5" />
                     Table Occupancy
                   </Button>
+                  <Button
+                    variant={activeView === "venue" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("venue")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                    Venue
+                  </Button>
                 </div>
                 {links.length > 0 && (
                   <>
@@ -725,7 +735,7 @@ const ManageLinks = () => {
               <div className="relative overflow-hidden">
                 <div
                   className="flex transition-transform duration-500 ease-in-out will-change-transform"
-                  style={{ transform: activeView === "tables" ? "translateX(-100%)" : "translateX(0)" }}
+                  style={{ transform: activeView === "tables" ? "translateX(-100%)" : activeView === "venue" ? "translateX(-200%)" : "translateX(0)" }}
                 >
                   {/* Guests Panel */}
                   <div className="w-full flex-shrink-0">
@@ -1301,6 +1311,17 @@ const ManageLinks = () => {
                         </div>
                       );
                     })()}
+                  </div>
+
+                  {/* Venue Panel */}
+                  <div className="w-full flex-shrink-0">
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <MapPin className="w-12 h-12 text-muted-foreground/40 mb-4" />
+                      <h3 className="text-lg font-semibold text-foreground mb-2">Venue Management</h3>
+                      <p className="text-sm text-muted-foreground max-w-md">
+                        Venue layout and seating arrangement tools coming soon.
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
