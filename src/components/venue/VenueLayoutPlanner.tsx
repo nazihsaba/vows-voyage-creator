@@ -267,7 +267,16 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
 
       setTables(newTables);
       setSelectedTableId(null);
-      setShowPlanImage(false);
+
+      // If the AI returned a cleaned image (tables removed), use it as background
+      if (data.cleanedImageUrl) {
+        await supabase
+          .from("venue_projects")
+          .update({ plan_image_url: data.cleanedImageUrl })
+          .eq("id", project.id);
+        setProject({ ...project, plan_image_url: data.cleanedImageUrl });
+      }
+
       toast({ title: "Tables detected", description: `Found ${newTables.length} tables in your venue plan.` });
     } catch (err: any) {
       console.error("Detection error:", err);

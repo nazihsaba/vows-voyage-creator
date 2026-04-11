@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2.49.2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -21,10 +22,12 @@ serve(async (req) => {
     }
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
+    if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
+    // Get auth token from request for storage upload
+    const authHeader = req.headers.get("authorization") || "";
+
+    // ---- STEP 1: Detect tables ----
     const systemPrompt = `You are a venue layout analysis assistant. You analyze venue floor plan images and detect all tables, seating areas, and notable elements (like bars, cake tables, DJ booths, dance floors).
 
 For each detected element, return its:
@@ -44,7 +47,7 @@ CRITICAL SIZING RULES:
 
     const userPrompt = `Analyze this venue floor plan image and detect all tables and notable elements. Return ONLY a valid JSON array of objects with the fields: name, shape, x_percent, y_percent, width_percent, height_percent, guest_count. No markdown, no explanation, just the JSON array.`;
 
-    const response = await fetch(
+    const detectResponse = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
         method: "POST",
@@ -68,42 +71,111 @@ CRITICAL SIZING RULES:
       }
     );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-
-      if (response.status === 429) {
-        return new Response(
-          JSON.stringify({ error: "Rate limited. Please try again later." }),
-          { status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+    if (!detectResponse.ok) {
+      const errorText = await detectResponse.text();
+      console.error("AI detection error:", detectResponse.status, errorText);
+      if (detectResponse.status === 429) {
+        return new Response(JSON.stringify({ error: "Rate limited. Please try again later." }), {
+          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
-      if (response.status === 402) {
-        return new Response(
-          JSON.stringify({ error: "AI credits exhausted. Please add funds." }),
-          { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      if (detectResponse.status === 402) {
+        return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
+          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
       }
-
-      throw new Error(`AI gateway error: ${response.status}`);
+      throw new Error(`AI detection error: ${detectResponse.status}`);
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "";
+    const detectData = await detectResponse.json();
+    const detectContent = detectData.choices?.[0]?.message?.content || "";
 
-    // Extract JSON array from response (handle potential markdown wrapping)
-    let jsonStr = content.trim();
+    let jsonStr = detectContent.trim();
     if (jsonStr.startsWith("```")) {
       jsonStr = jsonStr.replace(/^```(?:json)?\n?/, "").replace(/\n?```$/, "");
     }
 
     const tables = JSON.parse(jsonStr);
+    if (!Array.isArray(tables)) throw new Error("AI response is not an array");
 
-    if (!Array.isArray(tables)) {
-      throw new Error("AI response is not an array");
+    console.log(`Detected ${tables.length} tables. Now editing image to remove them...`);
+
+    // ---- STEP 2: Edit image to remove detected elements ----
+    const elementDescriptions = tables.map((t: any) =>
+      `${t.name} (${t.shape}, at ${t.x_percent}%/${t.y_percent}%)`
+    ).join(", ");
+
+    const editPrompt = `Remove ALL tables, chairs, seating elements, and furniture from this venue floor plan image. The elements to remove are: ${elementDescriptions}. Replace each removed element with the floor/background pattern that surrounds it, so the result looks like an empty venue with no tables or chairs — just the bare room layout (walls, doors, stage, etc.). Keep everything else intact.`;
+
+    const editResponse = await fetch(
+      "https://ai.gateway.lovable.dev/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          model: "google/gemini-2.5-flash-image",
+          messages: [
+            {
+              role: "user",
+              content: [
+                { type: "text", text: editPrompt },
+                { type: "image_url", image_url: { url: imageUrl } },
+              ],
+            },
+          ],
+          modalities: ["image", "text"],
+        }),
+      }
+    );
+
+    if (!editResponse.ok) {
+      const errText = await editResponse.text();
+      console.error("AI image edit error:", editResponse.status, errText);
+      // If image editing fails, still return the detected tables with the original image
+      return new Response(JSON.stringify({ tables, cleanedImageUrl: null }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
     }
 
-    return new Response(JSON.stringify({ tables }), {
+    const editData = await editResponse.json();
+    const editedImageBase64 = editData.choices?.[0]?.message?.images?.[0]?.image_url?.url;
+
+    let cleanedImageUrl: string | null = null;
+
+    if (editedImageBase64) {
+      // Upload the cleaned image to storage
+      try {
+        const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
+        const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+        const supabaseAdmin = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
+
+        // Extract base64 data
+        const base64Data = editedImageBase64.replace(/^data:image\/\w+;base64,/, "");
+        const binaryData = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0));
+
+        const path = `venue-cleaned/cleaned-${Date.now()}.png`;
+        const { error: uploadErr } = await supabaseAdmin.storage
+          .from("wedding-images")
+          .upload(path, binaryData, { contentType: "image/png", upsert: true });
+
+        if (uploadErr) {
+          console.error("Upload error:", uploadErr);
+        } else {
+          const { data: urlData } = supabaseAdmin.storage
+            .from("wedding-images")
+            .getPublicUrl(path);
+          cleanedImageUrl = urlData.publicUrl;
+          console.log("Cleaned image uploaded:", cleanedImageUrl);
+        }
+      } catch (uploadErr) {
+        console.error("Failed to upload cleaned image:", uploadErr);
+      }
+    }
+
+    return new Response(JSON.stringify({ tables, cleanedImageUrl }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
