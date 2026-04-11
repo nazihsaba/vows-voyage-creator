@@ -245,6 +245,31 @@ export const EtoileTemplate = ({
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="space-y-3">
+                    <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
+                    <EditableField
+                      fieldId="bible-verse"
+                      text={getFieldValue(
+                        "bible-verse",
+                        getLocalizedValue("quote", '"Two are better than one. For if they fall, one will lift up the other."'),
+                      )}
+                      style={getFieldStyle("bible-verse")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="p"
+                      className="text-template-body italic text-[#3e2723]/80"
+                    />
+                    <EditableField
+                      fieldId="bible-verse-reference"
+                      text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
+                      style={getFieldStyle("bible-verse-reference")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="p"
+                      className="text-sm text-[#3e2723]/60"
+                    />
+                    <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
+                  </div>
                   <div className="space-y-4">
                     <EditableField
                       fieldId="groom-family"
