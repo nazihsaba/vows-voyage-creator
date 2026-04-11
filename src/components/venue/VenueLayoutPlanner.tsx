@@ -46,6 +46,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
   const [showGrid, setShowGrid] = useState(false);
   const [isDetecting, setIsDetecting] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const canvasExportRef = useRef<HTMLDivElement>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
