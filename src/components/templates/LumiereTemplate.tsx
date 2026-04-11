@@ -115,9 +115,17 @@ export const LumiereTemplate = ({
     ...(venue
       ? [
           {
-            id: "venue",
-            title: t("events.venue"),
+            id: "welcome-drink",
+            title: t("events.welcomeDrink"),
             time: formatTimeTo12Hour(venue.time) || "8:00 PM",
+            location: venue.location_name,
+            link: venue.location_link,
+            icon: "mdi:glass-cocktail",
+          },
+          {
+            id: "dinner-party",
+            title: t("events.dinnerParty"),
+            time: formatTimeTo12Hour(addMinutesToTime(venue.time, 30)) || "8:30 PM",
             location: venue.location_name,
             link: venue.location_link,
             icon: venue.icon || "solar:confetti-bold",
