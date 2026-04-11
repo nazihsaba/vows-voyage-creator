@@ -7,7 +7,6 @@ const corsHeaders = {
 };
 
 serve(async (req: Request) => {
-  // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
   }
@@ -16,6 +15,7 @@ serve(async (req: Request) => {
     const url = new URL(req.url);
     const status = url.searchParams.get('status');
     const weddingId = url.searchParams.get('weddingId');
+    const paymentType = url.searchParams.get('type') || 'publish'; // 'publish' or 'venue'
 
     if (!status || !weddingId) {
       return new Response(
@@ -28,35 +28,57 @@ serve(async (req: Request) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    console.log(`Payment callback received: status=${status}, weddingId=${weddingId}`);
+    console.log(`Payment callback received: status=${status}, weddingId=${weddingId}, type=${paymentType}`);
 
-    if (status === 'success') {
-      // Update wedding status to published and mark payment as successful
-      const { error } = await supabase
-        .from('weddings')
-        .update({ 
-          status: 'published',
-          payment_status: 'paid'
-        })
-        .eq('id', weddingId);
+    if (paymentType === 'venue') {
+      // Handle venue feature payment
+      if (status === 'success') {
+        const { error } = await supabase
+          .from('weddings')
+          .update({ venue_payment_status: 'paid' })
+          .eq('id', weddingId);
 
-      if (error) {
-        console.error('Error updating wedding after successful payment:', error);
-        return new Response(
-          JSON.stringify({ error: 'Failed to update wedding status' }),
-          { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-        );
+        if (error) {
+          console.error('Error updating venue payment status:', error);
+          return new Response(
+            JSON.stringify({ error: 'Failed to update venue payment status' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        console.log(`Venue feature unlocked for wedding ${weddingId}`);
+      } else {
+        await supabase
+          .from('weddings')
+          .update({ venue_payment_status: 'failed' })
+          .eq('id', weddingId);
+        console.log(`Venue payment failed for wedding ${weddingId}`);
       }
-
-      console.log(`Wedding ${weddingId} published successfully after payment`);
     } else {
-      // Mark payment as failed
-      await supabase
-        .from('weddings')
-        .update({ payment_status: 'failed' })
-        .eq('id', weddingId);
+      // Handle publish payment (original logic)
+      if (status === 'success') {
+        const { error } = await supabase
+          .from('weddings')
+          .update({ 
+            status: 'published',
+            payment_status: 'paid'
+          })
+          .eq('id', weddingId);
 
-      console.log(`Payment failed for wedding ${weddingId}`);
+        if (error) {
+          console.error('Error updating wedding after successful payment:', error);
+          return new Response(
+            JSON.stringify({ error: 'Failed to update wedding status' }),
+            { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+          );
+        }
+        console.log(`Wedding ${weddingId} published successfully after payment`);
+      } else {
+        await supabase
+          .from('weddings')
+          .update({ payment_status: 'failed' })
+          .eq('id', weddingId);
+        console.log(`Payment failed for wedding ${weddingId}`);
+      }
     }
 
     return new Response(
