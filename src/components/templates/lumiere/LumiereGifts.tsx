@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Copy } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { toast } from "sonner";
@@ -12,11 +13,10 @@ interface GiftCard {
 
 interface LumiereGiftsProps {
   giftCards: GiftCard[];
-  title?: string;
-  subtitle?: string;
 }
 
-const LumiereGifts = ({ giftCards, title = "Wedding Gift", subtitle = "For those who desire, a gift list is available" }: LumiereGiftsProps) => {
+const LumiereGifts = ({ giftCards }: LumiereGiftsProps) => {
+  const { t } = useTranslation();
   if (!giftCards || giftCards.length === 0) return null;
 
   const copyToClipboard = (text: string) => {
@@ -28,8 +28,8 @@ const LumiereGifts = ({ giftCards, title = "Wedding Gift", subtitle = "For those
     <LumiereTornCard>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-subtitle text-center text-black mb-3">{title}</h2>
-          <p className="text-center text-template-body text-muted-foreground mb-10">{subtitle}</p>
+          <h2 className="text-template-subtitle text-center text-black mb-3">{t("gifts.title")}</h2>
+          <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
         </AnimatedSection>
         <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
           {giftCards.map((card, index) => (
