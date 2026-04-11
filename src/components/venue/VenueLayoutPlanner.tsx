@@ -39,7 +39,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const [showGrid, setShowGrid] = useState(false);
-  const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
