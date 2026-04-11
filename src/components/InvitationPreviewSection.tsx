@@ -9,7 +9,7 @@ import bibleVerseTabs from "@/assets/template-bible-verse.jpg";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
-import auraTemplate from "@/assets/doree1.jpg";
+import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
 
