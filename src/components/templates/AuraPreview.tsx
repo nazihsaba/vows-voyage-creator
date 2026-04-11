@@ -90,7 +90,7 @@ export const AuraPreview = () => {
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
                 <p className="text-template-body font-semibold tracking-wide text-primary">
-                  Saturday, August 16th, 2025
+                  Saturday, August 16th, 2026
                 </p>
               </div>
             </div>
@@ -216,7 +216,7 @@ export const AuraPreview = () => {
 
         {/* ===== RSVP SECTION ===== */}
         <RsvpSection
-          staticDeadline={new Date("2025-08-01")}
+          staticDeadline={new Date("2026-08-01")}
           bgClassName="bg-card"
           invitees={[
             { id: "1", name: "Daniel Farah" },

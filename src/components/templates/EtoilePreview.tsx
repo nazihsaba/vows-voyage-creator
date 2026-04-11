@@ -15,7 +15,7 @@ import etoile4 from "@/assets/etoile-4.jpg";
 import etoile5 from "@/assets/etoile-5.jpg";
 import etoile6 from "@/assets/etoile-6.jpg";
 
-const weddingDate = new Date("2025-08-16");
+const weddingDate = new Date("2026-08-16");
 
 const sampleEvents = [
   {
@@ -131,7 +131,7 @@ const EtoilePreview = () => {
               className="text-xl md:text-2xl tracking-[0.2em]"
               style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}
             >
-              Saturday, August 16, 2025
+              Saturday, August 16, 2026
             </span>
           </div>
           <div className="absolute bottom-8 animate-bounce">
@@ -190,9 +190,9 @@ const EtoilePreview = () => {
         {/* ===== RSVP — slides from RIGHT ===== */}
         <div className="mt-64">
           <EtoileRsvp
-            wedding={{ rsvp_deadline: "2025-08-01" }}
+            wedding={{ rsvp_deadline: "2026-08-01" }}
             isPreview
-            staticDeadline={new Date("2025-08-01")}
+            staticDeadline={new Date("2026-08-01")}
             invitees={[
               { id: "1", name: "Daniel Farah" },
               { id: "2", name: "Sara Mansour" },
