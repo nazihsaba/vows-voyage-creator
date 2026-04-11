@@ -21,6 +21,8 @@ export const VenueToolbar: React.FC<Props> = ({
   onUploadPlan,
   hasPlanImage,
   onRemovePlan,
+  onDetectTables,
+  isDetecting,
 }) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
