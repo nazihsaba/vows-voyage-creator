@@ -84,6 +84,7 @@ interface Wedding {
   groom_name: string;
   slug: string;
   status: string;
+  venue_payment_status?: string;
 }
 
 const ManageLinks = () => {
