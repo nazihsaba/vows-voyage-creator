@@ -156,7 +156,7 @@ export const LumiereTemplate = ({
       {/* Layer 1: Fixed background video */}
       {videoUrl && (
         <video
-          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
+          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
           src={videoUrl}
           autoPlay
           muted
@@ -166,7 +166,7 @@ export const LumiereTemplate = ({
       )}
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
+      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]" dir={isArabic ? "rtl" : "ltr"}>
