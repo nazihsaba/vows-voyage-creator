@@ -209,7 +209,10 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
         .eq("id", project.id);
 
       setProject({ ...project, plan_image_url: publicUrl });
-      toast({ title: "Plan uploaded", description: "Your venue plan has been set as the background." });
+      toast({ title: "Plan uploaded", description: "Detecting tables from your plan..." });
+
+      // Auto-detect tables after upload
+      detectTablesFromImage(publicUrl);
     } catch (err: any) {
       console.error("Upload error:", err);
       toast({ title: "Upload failed", description: err.message, variant: "destructive" });
@@ -222,12 +225,13 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
     setProject({ ...project, plan_image_url: null });
   };
 
-  const detectTables = async () => {
-    if (!project?.plan_image_url) return;
+  const detectTablesFromImage = async (imageUrl?: string) => {
+    const url = imageUrl || project?.plan_image_url;
+    if (!url) return;
     setIsDetecting(true);
     try {
       const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
-        body: { imageUrl: project.plan_image_url },
+        body: { imageUrl: url },
       });
       if (error) throw error;
 
@@ -315,7 +319,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
           onUploadPlan={uploadPlanImage}
           hasPlanImage={!!project?.plan_image_url}
           onRemovePlan={removePlanImage}
-          onDetectTables={detectTables}
+          onDetectTables={() => detectTablesFromImage()}
           isDetecting={isDetecting}
         />
 
