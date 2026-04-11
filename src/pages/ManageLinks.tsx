@@ -1333,7 +1333,7 @@ const ManageLinks = () => {
 
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
-                    {weddingId && <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} />}
+                    {weddingId && <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />}
                   </div>
                 </div>
               </div>
