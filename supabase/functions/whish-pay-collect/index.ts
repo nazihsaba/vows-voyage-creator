@@ -39,7 +39,8 @@ serve(async (req: Request) => {
       throw new Error("Whish Pay credentials not configured");
     }
 
-    const { weddingId, amount, currency, invoice }: WhishCollectRequest = await req.json();
+    const { weddingId, amount, currency, invoice, type }: WhishCollectRequest = await req.json();
+    const paymentType = type || "publish";
 
     if (!weddingId || !amount || !currency) {
       return new Response(JSON.stringify({ error: "Missing required fields: weddingId, amount, currency" }), {
