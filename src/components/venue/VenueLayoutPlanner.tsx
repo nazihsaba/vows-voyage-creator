@@ -227,10 +227,11 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
 
   const detectTablesFromImage = async (imageUrl?: string) => {
     const url = imageUrl || project?.plan_image_url;
+    if (!url) return;
     setIsDetecting(true);
     try {
       const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
-        body: { imageUrl: project.plan_image_url },
+        body: { imageUrl: url },
       });
       if (error) throw error;
 
