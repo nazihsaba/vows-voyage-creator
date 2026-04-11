@@ -4,13 +4,12 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
-import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
-import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
-import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
-import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
-import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
+import doree1 from "@/assets/doree1.jpeg";
+import doree2 from "@/assets/doree2.jpeg";
+import doree3 from "@/assets/doree3.jpeg";
+import doree4 from "@/assets/doree4.jpeg";
+import doree5 from "@/assets/doree5.jpeg";
+import doree6 from "@/assets/doree6.jpeg";
 const weddingDate = new Date("2026-08-16");
 
 export const AuraPreview = () => {
