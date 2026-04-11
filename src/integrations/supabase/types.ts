@@ -357,6 +357,7 @@ export type Database = {
           template_type: string | null
           updated_at: string | null
           user_id: string
+          venue_payment_status: string | null
           video_url: string | null
           wedding_date: string
           welcoming_text: string | null
@@ -395,6 +396,7 @@ export type Database = {
           template_type?: string | null
           updated_at?: string | null
           user_id: string
+          venue_payment_status?: string | null
           video_url?: string | null
           wedding_date: string
           welcoming_text?: string | null
@@ -433,6 +435,7 @@ export type Database = {
           template_type?: string | null
           updated_at?: string | null
           user_id?: string
+          venue_payment_status?: string | null
           video_url?: string | null
           wedding_date?: string
           welcoming_text?: string | null
