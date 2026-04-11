@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useImperativeHandle, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { VenueCanvas } from "./VenueCanvas";
@@ -27,11 +27,15 @@ export interface VenueProject {
   scale: number | null;
 }
 
+export interface VenueLayoutPlannerRef {
+  clearAllTables: () => Promise<void>;
+}
+
 interface Props {
   weddingId: string;
 }
 
-export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
+export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ weddingId }, ref) => {
   const { toast } = useToast();
   const [project, setProject] = useState<VenueProject | null>(null);
   const [tables, setTables] = useState<VenueTable[]>([]);
