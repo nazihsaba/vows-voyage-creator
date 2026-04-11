@@ -2,12 +2,12 @@ import { useEffect, useState, useCallback } from "react";
 import { ChevronDown, Heart } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import LumiereTornCard from "./lumiere/LumiereTornCard";
-import LumiereCountdown from "./lumiere/LumiereCountdown";
-import LumiereEvents from "./lumiere/LumiereEvents";
-import LumiereGallery from "./lumiere/LumiereGallery";
-import LumiereGifts from "./lumiere/LumiereGifts";
-import LumiereRsvp from "./lumiere/LumiereRsvp";
+import EtoileTornCard from "./etoile/EtoileTornCard";
+import EtoileCountdown from "./etoile/EtoileCountdown";
+import EtoileEvents from "./etoile/EtoileEvents";
+import EtoileGallery from "./etoile/EtoileGallery";
+import EtoileGifts from "./etoile/EtoileGifts";
+import EtoileRsvp from "./etoile/EtoileRsvp";
 import etoile1 from "@/assets/etoile-1.jpg";
 import etoile2 from "@/assets/etoile-2.jpg";
 import etoile3 from "@/assets/etoile-3.jpg";
@@ -97,7 +97,7 @@ const EtoilePreview = () => {
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
-        {/* ===== HERO SECTION (Vérité-style) ===== */}
+        {/* ===== HERO SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
             <span
@@ -136,9 +136,9 @@ const EtoilePreview = () => {
           </div>
         </section>
 
-        {/* ===== FAMILY NAMES with ripped borders ===== */}
+        {/* ===== FAMILY NAMES — slides from LEFT ===== */}
         <section id="family-section-etoile">
-          <LumiereTornCard>
+          <EtoileTornCard align="left">
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
@@ -153,24 +153,32 @@ const EtoilePreview = () => {
                 </div>
               </AnimatedSection>
             </div>
-          </LumiereTornCard>
+          </EtoileTornCard>
         </section>
 
-        {/* ===== SECTIONS ===== */}
+        {/* ===== COUNTDOWN — slides from RIGHT ===== */}
         <div className="mt-64">
-          <LumiereCountdown targetDate={weddingDate.toISOString()} />
+          <EtoileCountdown targetDate={weddingDate.toISOString()} align="right" />
         </div>
+
+        {/* ===== EVENTS — slides from LEFT ===== */}
         <div className="mt-64">
-          <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
+          <EtoileEvents events={sampleEvents} dateFormatted="16 August" align="left" />
         </div>
+
+        {/* ===== GALLERY — slides from RIGHT ===== */}
         <div className="mt-64">
-          <LumiereGallery images={sampleGallery} />
+          <EtoileGallery images={sampleGallery} align="right" />
         </div>
+
+        {/* ===== GIFTS — slides from LEFT ===== */}
         <div className="mt-64">
-          <LumiereGifts giftCards={sampleGifts} />
+          <EtoileGifts giftCards={sampleGifts} align="left" />
         </div>
+
+        {/* ===== RSVP — slides from RIGHT ===== */}
         <div className="mt-64">
-          <LumiereRsvp
+          <EtoileRsvp
             wedding={{ rsvp_deadline: "2025-08-01" }}
             isPreview
             staticDeadline={new Date("2025-08-01")}
@@ -180,12 +188,15 @@ const EtoilePreview = () => {
             ]}
             rsvpResponses={{ "1": true, "2": false }}
             numberOfPersons={2}
+            align="right"
           />
         </div>
+
+        {/* ===== FOOTER — slides from LEFT ===== */}
         <div className="mt-64">
-          <LumiereTornCard>
+          <EtoileTornCard align="left">
             <TemplatePreviewFooter />
-          </LumiereTornCard>
+          </EtoileTornCard>
         </div>
       </div>
     </div>
