@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
+import { VenueLayoutPlanner } from "@/components/venue/VenueLayoutPlanner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -1315,13 +1316,7 @@ const ManageLinks = () => {
 
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
-                    <div className="flex flex-col items-center justify-center py-16 text-center">
-                      <MapPin className="w-12 h-12 text-muted-foreground/40 mb-4" />
-                      <h3 className="text-lg font-semibold text-foreground mb-2">Venue Management</h3>
-                      <p className="text-sm text-muted-foreground max-w-md">
-                        Venue layout and seating arrangement tools coming soon.
-                      </p>
-                    </div>
+                    {weddingId && <VenueLayoutPlanner weddingId={weddingId} />}
                   </div>
                 </div>
               </div>
