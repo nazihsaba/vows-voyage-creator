@@ -339,9 +339,9 @@ export const EtoileTemplate = ({
 
         {/* ===== FOOTER — LEFT ===== */}
         <div className="mt-64">
-          <EtoileTornCard align="left">
+          <div className="bg-white w-full">
             <TemplatePreviewFooter />
-          </EtoileTornCard>
+          </div>
         </div>
       </div>
     </div>
