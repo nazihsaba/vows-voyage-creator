@@ -494,7 +494,7 @@ const ManageLinks = () => {
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId,
-          amount: 10,
+          amount: 20,
           currency: "USD",
           invoice: `Venue Layout Planner for ${wedding?.bride_name} & ${wedding?.groom_name}`,
           type: "venue",
