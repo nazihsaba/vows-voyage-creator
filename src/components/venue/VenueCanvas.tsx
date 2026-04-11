@@ -177,13 +177,13 @@ export const VenueCanvas: React.FC<Props> = ({
           </svg>
         )}
 
-        {/* Plan image */}
+        {/* Plan image — scaled to ~1000px wide so tables look proportional */}
         {planImageUrl && (
           <img
             src={planImageUrl}
             alt="Venue plan"
-            className="absolute top-0 left-0 max-w-none opacity-60 pointer-events-none"
-            style={{ width: "auto", height: "auto", maxHeight: 1500, maxWidth: 1500 }}
+            className="absolute top-0 left-0 max-w-none opacity-50 pointer-events-none"
+            style={{ width: 1000, height: "auto" }}
             loading="lazy"
           />
         )}
