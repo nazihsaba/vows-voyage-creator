@@ -4,13 +4,12 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
-import eclatWedding1 from "@/assets/eclat-wedding-1.jpg";
-import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
-import eclatWedding3 from "@/assets/eclat-wedding-3.jpg";
-import eclatWedding4 from "@/assets/eclat-wedding-4.jpg";
-import eclatWedding5 from "@/assets/eclat-wedding-5.jpg";
-import eclatWedding6 from "@/assets/eclat-wedding-6.jpg";
-import eclatWedding7 from "@/assets/eclat-wedding-7.jpg";
+import doree1 from "@/assets/doree1.jpeg";
+import doree2 from "@/assets/doree2.jpeg";
+import doree3 from "@/assets/doree3.jpeg";
+import doree4 from "@/assets/doree4.jpeg";
+import doree5 from "@/assets/doree5.jpeg";
+import doree6 from "@/assets/doree6.jpeg";
 const weddingDate = new Date("2026-08-16");
 
 export const AuraPreview = () => {
@@ -103,7 +102,7 @@ export const AuraPreview = () => {
           <section className="w-full px-4 py-8">
             <div className="max-w-2xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                <img src={eclatWedding1} alt="Wedding photo" loading="lazy" className="w-full h-full object-cover" />
+                <img src={doree1} alt="Wedding photo" loading="lazy" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>
@@ -163,7 +162,7 @@ export const AuraPreview = () => {
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {[eclatWedding1, eclatWedding3, eclatWedding4, eclatWedding5, eclatWedding6, eclatWedding7].map(
+            {[doree1, doree2, doree3, doree4, doree5, doree6].map(
               (src, index) => (
                 <AnimatedSection key={index} delay={index * 80} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
@@ -209,7 +208,7 @@ export const AuraPreview = () => {
           <section className="w-full px-4">
             <div className="max-w-6xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                <img src={eclatWedding2} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
+                <img src={doree3} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
               </div>
             </div>
           </section>
