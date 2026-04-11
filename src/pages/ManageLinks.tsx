@@ -830,9 +830,9 @@ const ManageLinks = () => {
                           <DropdownMenuItem
                             onClick={() => {
                               if (activeView === "venue") {
-                                handleClearAllVenueTables();
+                                venueRef.current?.clearAllTables();
                               } else {
-                                setShowDeleteAllDialog(true);
+                                setDeleteAllOpen(true);
                               }
                             }}
                             className="text-destructive focus:text-destructive"
