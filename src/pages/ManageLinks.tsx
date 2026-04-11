@@ -749,7 +749,7 @@ const ManageLinks = () => {
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
-                    className="rounded-md text-xs h-8 px-3"
+                    className="hidden sm:inline-flex rounded-md text-xs h-8 px-3"
                     disabled={venuePayLoading}
                   >
                     {venuePayLoading ? (
