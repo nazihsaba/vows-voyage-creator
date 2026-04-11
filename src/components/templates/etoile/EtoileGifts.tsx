@@ -1,0 +1,56 @@
+import { Copy } from "lucide-react";
+import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { toast } from "sonner";
+import EtoileTornCard from "./EtoileTornCard";
+
+interface GiftCard {
+  id: string;
+  card_name: string;
+  card_number: string;
+  logo_url?: string | null;
+}
+
+interface EtoileGiftsProps {
+  giftCards: GiftCard[];
+  align?: "left" | "right";
+  title?: string;
+  subtitle?: string;
+}
+
+const EtoileGifts = ({ giftCards, align = "right", title = "Wedding Gift", subtitle = "For those who desire, a gift list is available" }: EtoileGiftsProps) => {
+  if (!giftCards || giftCards.length === 0) return null;
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    toast.success("Copied to clipboard!");
+  };
+
+  return (
+    <EtoileTornCard align={align}>
+      <div className="py-14 px-6">
+        <AnimatedSection animation="fade-in">
+          <h2 className="text-template-subtitle text-center text-black mb-3">{title}</h2>
+          <p className="text-center text-template-body text-muted-foreground mb-10">{subtitle}</p>
+        </AnimatedSection>
+        <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
+          {giftCards.map((card, index) => (
+            <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
+              <div
+                className="bg-muted p-5 rounded-lg text-center cursor-pointer hover:bg-muted/80 transition-colors"
+                onClick={() => copyToClipboard(card.card_number)}
+              >
+                <p className="font-semibold text-foreground">{card.card_name}</p>
+                <div className="flex items-center justify-center gap-2 mt-2">
+                  <p className="text-sm text-muted-foreground">{card.card_number}</p>
+                  <Copy className="w-3.5 h-3.5 text-muted-foreground" />
+                </div>
+              </div>
+            </AnimatedSection>
+          ))}
+        </div>
+      </div>
+    </EtoileTornCard>
+  );
+};
+
+export default EtoileGifts;
