@@ -724,11 +724,19 @@ const ManageLinks = () => {
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setActiveView("venue")}
+                    onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
                     className="rounded-md text-xs h-8 px-3"
+                    disabled={venuePayLoading}
                   >
-                    <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                    {venuePayLoading ? (
+                      <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                    ) : !isVenueUnlocked ? (
+                      <Lock className="w-3.5 h-3.5 mr-1.5" />
+                    ) : (
+                      <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                    )}
                     Venue
+                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$10</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
