@@ -1,0 +1,206 @@
+import React, { useRef, useState, useCallback, useEffect } from "react";
+import type { VenueTable } from "./VenueLayoutPlanner";
+
+interface Props {
+  tables: VenueTable[];
+  selectedTableId: string | null;
+  onSelectTable: (id: string | null) => void;
+  onUpdateTable: (id: string, updates: Partial<VenueTable>) => void;
+  planImageUrl: string | null;
+  showGrid: boolean;
+}
+
+export const VenueCanvas: React.FC<Props> = ({
+  tables,
+  selectedTableId,
+  onSelectTable,
+  onUpdateTable,
+  planImageUrl,
+  showGrid,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
+  const [isPanning, setIsPanning] = useState(false);
+  const [panStart, setPanStart] = useState({ x: 0, y: 0 });
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+
+  // Zoom with mouse wheel
+  const handleWheel = useCallback((e: React.WheelEvent) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 0.9 : 1.1;
+    setZoom((z) => Math.min(Math.max(z * delta, 0.2), 5));
+  }, []);
+
+  // Pan with middle-click or ctrl+click
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (e.button === 1 || (e.button === 0 && e.ctrlKey)) {
+      e.preventDefault();
+      setIsPanning(true);
+      setPanStart({ x: e.clientX - pan.x, y: e.clientY - pan.y });
+    } else if (e.button === 0 && !(e.target as HTMLElement).closest("[data-table-id]")) {
+      onSelectTable(null);
+    }
+  };
+
+  const handleMouseMove = useCallback(
+    (e: React.MouseEvent) => {
+      if (isPanning) {
+        setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
+        return;
+      }
+      if (draggingId && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const x = (e.clientX - rect.left - pan.x) / zoom - dragOffset.x;
+        const y = (e.clientY - rect.top - pan.y) / zoom - dragOffset.y;
+        onUpdateTable(draggingId, { x_position: x, y_position: y });
+      }
+    },
+    [isPanning, panStart, draggingId, dragOffset, zoom, pan, onUpdateTable]
+  );
+
+  const handleMouseUp = useCallback(() => {
+    setIsPanning(false);
+    setDraggingId(null);
+  }, []);
+
+  const startDragTable = (e: React.MouseEvent, table: VenueTable) => {
+    e.stopPropagation();
+    if (e.ctrlKey) return; // allow pan
+    onSelectTable(table.id);
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+      const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+      setDragOffset({ x: mouseX - table.x_position, y: mouseY - table.y_position });
+      setDraggingId(table.id);
+    }
+  };
+
+  const renderTableShape = (table: VenueTable) => {
+    const isSelected = table.id === selectedTableId;
+    const baseClasses = `absolute cursor-move transition-shadow ${
+      isSelected ? "ring-2 ring-primary shadow-lg" : "hover:ring-1 hover:ring-primary/50"
+    }`;
+
+    const style: React.CSSProperties = {
+      left: table.x_position,
+      top: table.y_position,
+      width: table.width,
+      height: table.height,
+      transform: `rotate(${table.rotation}deg)`,
+      transformOrigin: "center center",
+    };
+
+    const borderRadius =
+      table.shape === "round"
+        ? "50%"
+        : table.shape === "oval"
+        ? "50%"
+        : table.shape === "square"
+        ? "8px"
+        : "8px";
+
+    return (
+      <div
+        key={table.id}
+        data-table-id={table.id}
+        className={baseClasses}
+        style={{ ...style, borderRadius }}
+        onMouseDown={(e) => startDragTable(e, table)}
+      >
+        <div
+          className="w-full h-full flex flex-col items-center justify-center bg-primary/15 border-2 border-primary/40"
+          style={{ borderRadius }}
+        >
+          <span className="text-[10px] font-semibold text-foreground leading-tight truncate max-w-[90%]">
+            {table.name}
+          </span>
+          <span className="text-[9px] text-muted-foreground">
+            {table.guest_count} guests
+          </span>
+        </div>
+      </div>
+    );
+  };
+
+  return (
+    <div
+      ref={containerRef}
+      className="flex-1 relative overflow-hidden bg-muted/30"
+      style={{ cursor: isPanning ? "grabbing" : draggingId ? "grabbing" : "default" }}
+      onWheel={handleWheel}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseUp}
+    >
+      {/* Zoom controls */}
+      <div className="absolute top-3 right-3 z-10 flex items-center gap-1 bg-background/90 backdrop-blur-sm rounded-lg border border-border/30 p-1">
+        <button
+          className="w-7 h-7 flex items-center justify-center rounded text-sm font-medium hover:bg-muted"
+          onClick={() => setZoom((z) => Math.min(z * 1.2, 5))}
+        >
+          +
+        </button>
+        <span className="text-[10px] text-muted-foreground w-10 text-center">{Math.round(zoom * 100)}%</span>
+        <button
+          className="w-7 h-7 flex items-center justify-center rounded text-sm font-medium hover:bg-muted"
+          onClick={() => setZoom((z) => Math.max(z * 0.8, 0.2))}
+        >
+          −
+        </button>
+      </div>
+
+      {/* Transform layer */}
+      <div
+        style={{
+          transform: `translate(${pan.x}px, ${pan.y}px) scale(${zoom})`,
+          transformOrigin: "0 0",
+          position: "absolute",
+          top: 0,
+          left: 0,
+          width: 2000,
+          height: 2000,
+        }}
+      >
+        {/* Grid */}
+        {showGrid && (
+          <svg className="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
+                <path d="M 50 0 L 0 0 0 50" fill="none" stroke="hsl(var(--border))" strokeWidth="0.5" opacity="0.5" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+          </svg>
+        )}
+
+        {/* Plan image */}
+        {planImageUrl && (
+          <img
+            src={planImageUrl}
+            alt="Venue plan"
+            className="absolute top-0 left-0 max-w-none opacity-60 pointer-events-none"
+            style={{ width: "auto", height: "auto", maxHeight: 1500, maxWidth: 1500 }}
+            loading="lazy"
+          />
+        )}
+
+        {/* Tables */}
+        {tables.map(renderTableShape)}
+      </div>
+
+      {/* Empty state */}
+      {tables.length === 0 && !planImageUrl && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="text-center">
+            <p className="text-sm text-muted-foreground">Upload a venue plan or start adding tables</p>
+            <p className="text-xs text-muted-foreground/60 mt-1">Use the toolbar on the left</p>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
