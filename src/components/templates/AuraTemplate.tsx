@@ -9,7 +9,7 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LanguageToggle from "@/components/templates/LanguageToggle";
-import { formatTimeTo12Hour } from "@/lib/formatTime";
+import { formatTimeTo12Hour, addMinutesToTime } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 
 interface AuraTemplateProps {
