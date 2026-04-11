@@ -52,6 +52,7 @@ const Index = () => {
     { src: tableDecor, alt: "Wedding celebration" },
     { src: eclatWedding2, alt: "Birthday party" },
     { src: flowerVase, alt: "Party celebration" },
+    { src: carouselRings, alt: "Wedding rings with flowers" },
   ];
 
   useEffect(() => {
