@@ -358,4 +358,4 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
       </div>
     </div>
   );
-};
+});
