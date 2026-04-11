@@ -111,7 +111,7 @@ export const VenueCanvas: React.FC<Props> = ({
         onMouseDown={(e) => startDragTable(e, table)}
       >
         <div
-          className="w-full h-full flex flex-col items-center justify-center bg-primary/15 border-2 border-primary/40"
+          className="w-full h-full flex flex-col items-center justify-center bg-background border-2 border-primary/40"
           style={{ borderRadius }}
         >
           <span className="text-[10px] font-semibold text-foreground leading-tight truncate max-w-[90%]">
