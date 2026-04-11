@@ -494,7 +494,7 @@ const ManageLinks = () => {
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId,
-          amount: 10,
+          amount: 20,
           currency: "USD",
           invoice: `Venue Layout Planner for ${wedding?.bride_name} & ${wedding?.groom_name}`,
           type: "venue",
@@ -736,7 +736,7 @@ const ManageLinks = () => {
                       <MapPin className="w-3.5 h-3.5 mr-1.5" />
                     )}
                     Venue
-                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$10</span>}
+                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$20</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
@@ -1407,7 +1407,7 @@ const ManageLinks = () => {
                           ) : (
                             <Lock className="w-4 h-4 mr-2" />
                           )}
-                          Unlock for $10
+                          Unlock for $20
                         </Button>
                       </div>
                     )}
