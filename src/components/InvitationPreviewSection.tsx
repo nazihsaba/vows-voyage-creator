@@ -62,7 +62,7 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
   {
     image: etoileTemplate,
     label: "Étoile",
-    tagline: "Photo carousel & torn-edge cards",
+    tagline: "PHOTO CAROUSEL & ANIMATED CARDS",
     featured: false,
     templateKey: "etoile",
   },
