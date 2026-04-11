@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { VenueCanvas } from "./VenueCanvas";
 import { VenueToolbar } from "./VenueToolbar";
 import { VenuePropertiesPanel } from "./VenuePropertiesPanel";
-import { Loader2, Save, CheckCircle2 } from "lucide-react";
+import { Loader2, Save, CheckCircle2, Sparkles } from "lucide-react";
 
 export interface VenueTable {
   id: string;
@@ -39,6 +39,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const [showGrid, setShowGrid] = useState(false);
+  const [isDetecting, setIsDetecting] = useState(false);
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
@@ -208,7 +209,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
         .eq("id", project.id);
 
       setProject({ ...project, plan_image_url: publicUrl });
-      toast({ title: "Plan uploaded", description: "Your venue plan has been set as the background." });
+      toast({ title: "Plan uploaded", description: "Detecting tables..." });
+      detectTables(publicUrl);
     } catch (err: any) {
       console.error("Upload error:", err);
       toast({ title: "Upload failed", description: err.message, variant: "destructive" });
@@ -219,6 +221,58 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
     if (!project) return;
     await supabase.from("venue_projects").update({ plan_image_url: null }).eq("id", project.id);
     setProject({ ...project, plan_image_url: null });
+  };
+
+  const detectTables = async (imageUrl?: string) => {
+    const url = imageUrl || project?.plan_image_url;
+    if (!url || !project) return;
+    setIsDetecting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
+        body: { imageUrl: url },
+      });
+      if (error) throw error;
+      if (!data?.tables || !Array.isArray(data.tables)) {
+        throw new Error("No tables detected");
+      }
+
+      const IMAGE_WIDTH = 1000;
+      // We need image aspect ratio to map y coordinates
+      const img = new Image();
+      img.src = url;
+      await new Promise<void>((resolve) => {
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+      });
+      const aspectRatio = img.naturalHeight / img.naturalWidth || 1;
+      const imageHeight = IMAGE_WIDTH * aspectRatio;
+
+      const newTables: VenueTable[] = data.tables.map((t: any, i: number) => {
+        const w = Math.max(40, (t.width_percent / 100) * IMAGE_WIDTH);
+        const h = Math.max(40, (t.height_percent / 100) * imageHeight);
+        return {
+          id: crypto.randomUUID(),
+          venue_project_id: project.id,
+          name: t.name || `Table ${i + 1}`,
+          shape: ["round", "rectangle", "square", "oval"].includes(t.shape) ? t.shape : "round",
+          width: Math.round(w),
+          height: Math.round(h),
+          x_position: Math.round((t.x_percent / 100) * IMAGE_WIDTH - w / 2),
+          y_position: Math.round((t.y_percent / 100) * imageHeight - h / 2),
+          rotation: 0,
+          guest_count: t.guest_count || 0,
+        };
+      });
+
+      setTables(newTables);
+      setSelectedTableId(null);
+      toast({ title: "Tables detected", description: `Found ${newTables.length} tables in your venue plan.` });
+    } catch (err: any) {
+      console.error("Detection error:", err);
+      toast({ title: "Detection failed", description: err.message || "Could not detect tables", variant: "destructive" });
+    } finally {
+      setIsDetecting(false);
+    }
   };
 
   if (loading) {
@@ -265,6 +319,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
           onUploadPlan={uploadPlanImage}
           hasPlanImage={!!project?.plan_image_url}
           onRemovePlan={removePlanImage}
+          onDetectTables={() => detectTables()}
+          isDetecting={isDetecting}
         />
 
         {/* Canvas */}
