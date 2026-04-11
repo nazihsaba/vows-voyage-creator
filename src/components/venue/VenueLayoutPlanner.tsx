@@ -57,6 +57,34 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
 
+  // Build occupancy map from invitees: table_number -> count of assigned guests
+  const occupancyMap = React.useMemo(() => {
+    const map: Record<number, number> = {};
+    externalInvitees.forEach((inv) => {
+      if (inv.table_number != null) {
+        map[inv.table_number] = (map[inv.table_number] || 0) + 1;
+      }
+    });
+    return map;
+  }, [externalInvitees]);
+
+  // Extract table number from name (e.g. "Table 3" -> 3, "Table 12" -> 12)
+  const extractTableNumber = (name: string): number | null => {
+    const match = name.match(/(\d+)/);
+    return match ? parseInt(match[1], 10) : null;
+  };
+
+  // Enrich tables with real guest counts from invitee assignments
+  const enrichedTables = React.useMemo(() => {
+    return tables.map((t) => {
+      const num = extractTableNumber(t.name);
+      if (num !== null && occupancyMap[num] !== undefined) {
+        return { ...t, guest_count: occupancyMap[num] };
+      }
+      return t;
+    });
+  }, [tables, occupancyMap]);
+
   const clearAllTables = async () => {
     if (!project) return;
     try {
