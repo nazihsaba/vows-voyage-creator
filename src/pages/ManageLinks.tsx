@@ -36,6 +36,9 @@ import {
   MapPin,
   MoreVertical,
   Lock,
+  CreditCard,
+  Shield,
+  AlertCircle,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -1659,6 +1662,86 @@ const ManageLinks = () => {
               <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Venue Payment Dialog */}
+      <Dialog open={venuePayDialogOpen} onOpenChange={handleCloseVenuePayDialog}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Shield className="w-5 h-5 text-primary" />
+              Unlock Venue Planner
+            </DialogTitle>
+            <DialogDescription>
+              {wedding && (
+                <span>
+                  Unlock the venue layout planner for{" "}
+                  <strong>{wedding.bride_name} & {wedding.groom_name}</strong>'s event
+                </span>
+              )}
+            </DialogDescription>
+          </DialogHeader>
+
+          {!venuePayUrl && !venuePayError && (
+            <div className="space-y-4">
+              <div className="bg-muted/50 rounded-xl p-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-muted-foreground">Venue Layout Planner</span>
+                  <span className="font-semibold">$20 USD</span>
+                </div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Payment is processed securely via Whish Pay. Once confirmed, the venue planner will be unlocked.
+              </p>
+            </div>
+          )}
+
+          {venuePayUrl && (
+            <div className="space-y-4 text-center">
+              <div className="bg-green-50 text-green-700 rounded-xl p-4 text-sm">
+                Payment link created! Click below to complete your payment.
+              </div>
+              <Button asChild className="w-full rounded-full">
+                <a href={venuePayUrl} target="_blank" rel="noopener noreferrer">
+                  <CreditCard className="w-4 h-4 mr-2" />
+                  Pay Now
+                </a>
+              </Button>
+            </div>
+          )}
+
+          {venuePayError && (
+            <div className="space-y-4">
+              <div className="bg-destructive/10 text-destructive rounded-xl p-4 text-sm flex items-start gap-2">
+                <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
+                <span>{venuePayError}</span>
+              </div>
+            </div>
+          )}
+
+          <DialogFooter>
+            {!venuePayUrl && !venuePayError && (
+              <Button onClick={handleVenuePayProceed} disabled={venuePayLoading} className="w-full rounded-full">
+                {venuePayLoading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    Proceed to Payment
+                  </>
+                )}
+              </Button>
+            )}
+            {venuePayError && (
+              <Button onClick={handleVenuePayProceed} className="w-full rounded-full">
+                Try Again
+              </Button>
             )}
           </DialogFooter>
         </DialogContent>
