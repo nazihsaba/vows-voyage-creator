@@ -249,8 +249,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
       const imageHeight = IMAGE_WIDTH * aspectRatio;
 
       const newTables: VenueTable[] = data.tables.map((t: any, i: number) => {
-        const w = Math.max(40, (t.width_percent / 100) * IMAGE_WIDTH);
-        const h = Math.max(40, (t.height_percent / 100) * imageHeight);
+        const w = Math.min(150, Math.max(30, (t.width_percent / 100) * IMAGE_WIDTH));
+        const h = Math.min(150, Math.max(30, (t.height_percent / 100) * imageHeight));
         return {
           id: crypto.randomUUID(),
           venue_project_id: project.id,
