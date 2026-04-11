@@ -306,6 +306,26 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
     }
   };
 
+  const exportCanvasImage = async () => {
+    if (!canvasExportRef.current) return;
+    try {
+      const html2canvas = (await import("html2canvas")).default;
+      const canvas = await html2canvas(canvasExportRef.current, {
+        backgroundColor: null,
+        useCORS: true,
+        scale: 2,
+      });
+      const link = document.createElement("a");
+      link.download = `venue-layout-${Date.now()}.png`;
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      toast({ title: "Exported", description: "Venue layout image downloaded." });
+    } catch (err: any) {
+      console.error("Export error:", err);
+      toast({ title: "Export failed", description: err.message, variant: "destructive" });
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
