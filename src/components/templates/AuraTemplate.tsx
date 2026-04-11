@@ -140,10 +140,10 @@ export const AuraTemplate = ({
               <div className="w-12 h-px bg-primary/40 mx-auto" />
               <EditableField
                 fieldId="bible-verse"
-                text={getFieldValue(
-                  "bible-verse",
-                  getLocalizedValue("quote", '"Two are better than one. For if they fall, one will lift up the other."'),
-                )}
+                text={isArabic
+                  ? getLocalizedValue("aura_quote", getFieldValue("bible-verse", '"Two are better than one. For if they fall, one will lift up the other."'))
+                  : getFieldValue("bible-verse", '"Two are better than one. For if they fall, one will lift up the other."')
+                }
                 style={getFieldStyle("bible-verse")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -152,7 +152,10 @@ export const AuraTemplate = ({
               />
               <EditableField
                 fieldId="bible-verse-reference"
-                text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
+                text={isArabic
+                  ? getLocalizedValue("aura_reference", getFieldValue("bible-verse-reference", "— Ecclesiastes 4:9-12"))
+                  : getFieldValue("bible-verse-reference", "— Ecclesiastes 4:9-12")
+                }
                 style={getFieldStyle("bible-verse-reference")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
