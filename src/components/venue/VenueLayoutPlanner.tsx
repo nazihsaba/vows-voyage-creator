@@ -343,7 +343,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
       <div className="flex flex-1 overflow-hidden">
         {/* Left toolbar */}
-        <VenueToolbar
+         <VenueToolbar
           onAddTable={addTable}
           showGrid={showGrid}
           onToggleGrid={() => setShowGrid(!showGrid)}
@@ -352,6 +352,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onRemovePlan={removePlanImage}
           onDetectTables={() => detectTables()}
           isDetecting={isDetecting}
+          onExportImage={exportCanvasImage}
         />
 
         {/* Canvas */}
@@ -362,6 +363,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onUpdateTable={updateTable}
           planImageUrl={project?.plan_image_url || null}
           showGrid={showGrid}
+          exportRef={canvasExportRef}
         />
 
         {/* Properties panel */}
