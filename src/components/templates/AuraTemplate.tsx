@@ -112,7 +112,7 @@ export const AuraTemplate = ({
             time: formatTimeTo12Hour(venue.time) || "8:00 PM",
             location: venue.location_name,
             link: venue.location_link,
-            icon: "mdi:glass-cocktail",
+            icon: "streamline:champagne-party-alcohol-remix",
           },
           {
             id: "dinner-party",
