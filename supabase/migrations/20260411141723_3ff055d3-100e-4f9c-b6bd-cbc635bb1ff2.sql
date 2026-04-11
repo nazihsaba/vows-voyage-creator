@@ -1,0 +1,1 @@
+ALTER TABLE public.weddings ADD COLUMN venue_payment_status text DEFAULT 'none';

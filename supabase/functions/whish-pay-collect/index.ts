@@ -11,6 +11,7 @@ interface WhishCollectRequest {
   amount: number;
   currency: "USD" | "LBP";
   invoice: string;
+  type?: "publish" | "venue";
 }
 
 interface WhishCollectResponse {
@@ -38,7 +39,8 @@ serve(async (req: Request) => {
       throw new Error("Whish Pay credentials not configured");
     }
 
-    const { weddingId, amount, currency, invoice }: WhishCollectRequest = await req.json();
+    const { weddingId, amount, currency, invoice, type }: WhishCollectRequest = await req.json();
+    const paymentType = type || "publish";
 
     if (!weddingId || !amount || !currency) {
       return new Response(JSON.stringify({ error: "Missing required fields: weddingId, amount, currency" }), {
@@ -123,10 +125,14 @@ serve(async (req: Request) => {
         currency: currency,
         invoice: invoice || `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}`,
         externalId: externalId,
-        successCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=success&weddingId=${weddingId}`,
-        failureCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=failed&weddingId=${weddingId}`,
-        successRedirectUrl: `${baseUrl}/dashboard/my-events?payment=success&weddingId=${weddingId}`,
-        failureRedirectUrl: `${baseUrl}/dashboard/my-events?payment=failed&weddingId=${weddingId}`,
+        successCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=success&weddingId=${weddingId}&type=${paymentType}`,
+        failureCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=failed&weddingId=${weddingId}&type=${paymentType}`,
+        successRedirectUrl: paymentType === "venue"
+          ? `${baseUrl}/dashboard/manage-links/${weddingId}?venue_payment=success`
+          : `${baseUrl}/dashboard/my-events?payment=success&weddingId=${weddingId}`,
+        failureRedirectUrl: paymentType === "venue"
+          ? `${baseUrl}/dashboard/manage-links/${weddingId}?venue_payment=failed`
+          : `${baseUrl}/dashboard/my-events?payment=failed&weddingId=${weddingId}`,
       }),
     });
 
@@ -145,12 +151,13 @@ serve(async (req: Request) => {
     }
 
     // Store payment reference in the wedding record for tracking
+    const updateData = paymentType === "venue"
+      ? { venue_payment_status: "pending" }
+      : { payment_external_id: externalId.toString(), payment_status: "pending" };
+
     await supabase
       .from("weddings")
-      .update({
-        payment_external_id: externalId.toString(),
-        payment_status: "pending",
-      })
+      .update(updateData)
       .eq("id", weddingId);
 
     return new Response(

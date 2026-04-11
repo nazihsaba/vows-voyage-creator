@@ -35,6 +35,7 @@ import {
   Grid2x2,
   MapPin,
   MoreVertical,
+  Lock,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -84,6 +85,7 @@ interface Wedding {
   groom_name: string;
   slug: string;
   status: string;
+  venue_payment_status?: string;
 }
 
 const ManageLinks = () => {
@@ -118,6 +120,25 @@ const ManageLinks = () => {
   const venueRef = useRef<VenueLayoutPlannerRef>(null);
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
+  const [venuePayLoading, setVenuePayLoading] = useState(false);
+
+  const isVenueUnlocked = wedding?.venue_payment_status === "paid";
+
+  // Handle venue payment return
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const venuePayment = params.get("venue_payment");
+    if (venuePayment === "success") {
+      toast({ title: "Venue Unlocked!", description: "You now have access to the venue layout planner." });
+      setActiveView("venue");
+      // Clean URL
+      window.history.replaceState({}, "", window.location.pathname);
+      setRefresh((r) => r + 1);
+    } else if (venuePayment === "failed") {
+      toast({ title: "Payment Failed", description: "Venue payment was not completed. Please try again.", variant: "destructive" });
+      window.history.replaceState({}, "", window.location.pathname);
+    }
+  }, []);
 
   useEffect(() => {
     if (weddingId) {
@@ -466,6 +487,32 @@ const ManageLinks = () => {
     XLSX.writeFile(wb, `table_occupancy_${wedding?.slug || "export"}.xlsx`);
   };
 
+  const handleVenuePayment = async () => {
+    if (!weddingId) return;
+    setVenuePayLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
+        body: {
+          weddingId,
+          amount: 10,
+          currency: "USD",
+          invoice: `Venue Layout Planner for ${wedding?.bride_name} & ${wedding?.groom_name}`,
+          type: "venue",
+        },
+      });
+      if (error) throw error;
+      if (data?.collectUrl) {
+        window.location.href = data.collectUrl;
+      } else {
+        throw new Error(data?.error || "Failed to create payment");
+      }
+    } catch (err: any) {
+      console.error("Venue payment error:", err);
+      toast({ title: "Payment Error", description: err.message || "Could not initiate payment", variant: "destructive" });
+    } finally {
+      setVenuePayLoading(false);
+    }
+  };
 
   if (loading) {
     return (
@@ -677,11 +724,19 @@ const ManageLinks = () => {
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => setActiveView("venue")}
+                    onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
                     className="rounded-md text-xs h-8 px-3"
+                    disabled={venuePayLoading}
                   >
-                    <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                    {venuePayLoading ? (
+                      <Loader2 className="w-3.5 h-3.5 mr-1.5 animate-spin" />
+                    ) : !isVenueUnlocked ? (
+                      <Lock className="w-3.5 h-3.5 mr-1.5" />
+                    ) : (
+                      <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                    )}
                     Venue
+                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$10</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
@@ -1333,7 +1388,29 @@ const ManageLinks = () => {
 
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
-                    {weddingId && <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />}
+                    {weddingId && isVenueUnlocked ? (
+                      <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <Lock className="w-12 h-12 text-muted-foreground/40 mb-4" />
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Venue Layout Planner</h3>
+                        <p className="text-sm text-muted-foreground mb-6 max-w-md">
+                          Unlock the venue layout planner to upload floor plans, detect tables with AI, and manage your seating arrangement visually.
+                        </p>
+                        <Button
+                          onClick={handleVenuePayment}
+                          disabled={venuePayLoading}
+                          className="rounded-full px-6"
+                        >
+                          {venuePayLoading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <Lock className="w-4 h-4 mr-2" />
+                          )}
+                          Unlock for $10
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
