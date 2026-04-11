@@ -120,6 +120,9 @@ const ManageLinks = () => {
   const venueRef = useRef<VenueLayoutPlannerRef>(null);
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
+  const [venuePayLoading, setVenuePayLoading] = useState(false);
+
+  const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
   useEffect(() => {
     if (weddingId) {
