@@ -45,6 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
+import { VenueLayoutPlanner } from "@/components/venue/VenueLayoutPlanner";
 import {
   AlertDialog,
   AlertDialogAction,
