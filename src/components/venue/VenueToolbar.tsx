@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2, Sparkles, Loader2 } from "lucide-react";
+import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2, Sparkles, Loader2, Download } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
@@ -12,6 +12,7 @@ interface Props {
   onRemovePlan: () => void;
   onDetectTables?: () => void;
   isDetecting?: boolean;
+  onExportImage?: () => void;
 }
 
 export const VenueToolbar: React.FC<Props> = ({
@@ -23,6 +24,7 @@ export const VenueToolbar: React.FC<Props> = ({
   onRemovePlan,
   onDetectTables,
   isDetecting,
+  onExportImage,
 }) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -113,6 +115,22 @@ export const VenueToolbar: React.FC<Props> = ({
               </Button>
             </TooltipTrigger>
             <TooltipContent side="right">{isDetecting ? "Detecting..." : "Detect Tables"}</TooltipContent>
+          </Tooltip>
+        )}
+
+        {onExportImage && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-lg"
+                onClick={onExportImage}
+              >
+                <Download className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Export Image</TooltipContent>
           </Tooltip>
         )}
 
