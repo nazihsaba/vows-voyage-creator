@@ -420,11 +420,6 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           showGrid={showGrid}
           exportRef={canvasExportRef}
         />
-          onUpdateTable={updateTable}
-          planImageUrl={project?.plan_image_url || null}
-          showGrid={showGrid}
-          exportRef={canvasExportRef}
-        />
 
         {/* Properties panel */}
         <VenuePropertiesPanel
