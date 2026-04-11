@@ -6,7 +6,7 @@ import { EditableField } from "@/components/EditableField";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LanguageToggle from "@/components/templates/LanguageToggle";
-import { formatTimeTo12Hour } from "@/lib/formatTime";
+import { formatTimeTo12Hour, addMinutesToTime } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import EtoileTornCard from "./etoile/EtoileTornCard";
 import EtoileCountdown from "./etoile/EtoileCountdown";
