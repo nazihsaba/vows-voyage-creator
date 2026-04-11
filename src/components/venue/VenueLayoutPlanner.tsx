@@ -225,8 +225,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
     setProject({ ...project, plan_image_url: null });
   };
 
-  const detectTables = async () => {
-    if (!project?.plan_image_url) return;
+  const detectTablesFromImage = async (imageUrl?: string) => {
+    const url = imageUrl || project?.plan_image_url;
     setIsDetecting(true);
     try {
       const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
