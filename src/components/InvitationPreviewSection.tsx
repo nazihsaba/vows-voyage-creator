@@ -11,7 +11,7 @@ import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/eclat-wedding-2.jpg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
-import etoileTemplate from "@/assets/etoile-1.jpg";
+import etoileTemplate from "@/assets/etoile-6.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
