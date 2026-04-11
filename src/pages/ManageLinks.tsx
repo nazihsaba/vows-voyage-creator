@@ -121,6 +121,9 @@ const ManageLinks = () => {
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
   const [venuePayLoading, setVenuePayLoading] = useState(false);
+  const [venuePayDialogOpen, setVenuePayDialogOpen] = useState(false);
+  const [venuePayUrl, setVenuePayUrl] = useState<string | null>(null);
+  const [venuePayError, setVenuePayError] = useState<string | null>(null);
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
