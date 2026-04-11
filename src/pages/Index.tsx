@@ -22,7 +22,7 @@ import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-10.jpg";
-import eclatWedding2 from "@/assets/eclat-wedding-2.jpg";
+
 import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
 import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
 import carouselRings from "@/assets/carousel-rings.jpg";
@@ -50,7 +50,7 @@ const Index = () => {
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
-    { src: eclatWedding2, alt: "Birthday party" },
+    { src: sparklers, alt: "Celebration sparklers" },
     { src: flowerVase, alt: "Party celebration" },
     { src: carouselRings, alt: "Wedding rings with flowers" },
   ];
