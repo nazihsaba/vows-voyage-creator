@@ -127,6 +127,14 @@ export const LumiereTemplate = ({
   ];
 
   const hasGiftCards = giftCards && giftCards.length > 0;
+  const quoteDefault = '"Two are better than one. For if they fall, one will lift up the other."';
+  const referenceDefault = "— Ecclesiastes 4:9-12";
+  const quoteText = isArabic
+    ? getLocalizedValue("quote", getFieldValue("bible-verse", quoteDefault))
+    : getFieldValue("bible-verse", quoteDefault);
+  const referenceText = isArabic
+    ? getLocalizedValue("reference", getFieldValue("bible-verse-reference", referenceDefault))
+    : getFieldValue("bible-verse-reference", referenceDefault);
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
@@ -184,13 +192,7 @@ export const LumiereTemplate = ({
               <div className="w-12 h-px bg-white/40 mx-auto" />
               <EditableField
                 fieldId="bible-verse"
-                text={getFieldValue(
-                  "bible-verse",
-                  getLocalizedValue(
-                    "quote",
-                    '"Two are better than one. For if they fall, one will lift up the other."',
-                  ),
-                )}
+                text={quoteText}
                 style={getFieldStyle("bible-verse")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -199,7 +201,7 @@ export const LumiereTemplate = ({
               />
               <EditableField
                 fieldId="bible-verse-reference"
-                text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
+                text={referenceText}
                 style={getFieldStyle("bible-verse-reference")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}

@@ -144,6 +144,14 @@ export const EtoileTemplate = ({
   ];
 
   const hasGiftCards = giftCards && giftCards.length > 0;
+  const quoteDefault = '"Two are better than one. For if they fall, one will lift up the other."';
+  const referenceDefault = "— Ecclesiastes 4:9-12";
+  const quoteText = isArabic
+    ? getLocalizedValue("quote", getFieldValue("bible-verse", quoteDefault))
+    : getFieldValue("bible-verse", quoteDefault);
+  const referenceText = isArabic
+    ? getLocalizedValue("reference", getFieldValue("bible-verse-reference", referenceDefault))
+    : getFieldValue("bible-verse-reference", referenceDefault);
 
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? "rtl" : "ltr"}>
@@ -249,10 +257,7 @@ export const EtoileTemplate = ({
                     <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
                     <EditableField
                       fieldId="bible-verse"
-                      text={getFieldValue(
-                        "bible-verse",
-                        getLocalizedValue("quote", '"Two are better than one. For if they fall, one will lift up the other."'),
-                      )}
+                      text={quoteText}
                       style={getFieldStyle("bible-verse")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
@@ -261,7 +266,7 @@ export const EtoileTemplate = ({
                     />
                     <EditableField
                       fieldId="bible-verse-reference"
-                      text={getFieldValue("bible-verse-reference", getLocalizedValue("reference", "— Ecclesiastes 4:9-12"))}
+                      text={referenceText}
                       style={getFieldStyle("bible-verse-reference")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
