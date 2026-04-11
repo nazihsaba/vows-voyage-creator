@@ -222,6 +222,58 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
     setProject({ ...project, plan_image_url: null });
   };
 
+  const detectTables = async (imageUrl?: string) => {
+    const url = imageUrl || project?.plan_image_url;
+    if (!url || !project) return;
+    setIsDetecting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
+        body: { imageUrl: url },
+      });
+      if (error) throw error;
+      if (!data?.tables || !Array.isArray(data.tables)) {
+        throw new Error("No tables detected");
+      }
+
+      const IMAGE_WIDTH = 1000;
+      // We need image aspect ratio to map y coordinates
+      const img = new Image();
+      img.src = url;
+      await new Promise<void>((resolve) => {
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+      });
+      const aspectRatio = img.naturalHeight / img.naturalWidth || 1;
+      const imageHeight = IMAGE_WIDTH * aspectRatio;
+
+      const newTables: VenueTable[] = data.tables.map((t: any, i: number) => {
+        const w = Math.max(40, (t.width_percent / 100) * IMAGE_WIDTH);
+        const h = Math.max(40, (t.height_percent / 100) * imageHeight);
+        return {
+          id: crypto.randomUUID(),
+          venue_project_id: project.id,
+          name: t.name || `Table ${i + 1}`,
+          shape: ["round", "rectangle", "square", "oval"].includes(t.shape) ? t.shape : "round",
+          width: Math.round(w),
+          height: Math.round(h),
+          x_position: Math.round((t.x_percent / 100) * IMAGE_WIDTH - w / 2),
+          y_position: Math.round((t.y_percent / 100) * imageHeight - h / 2),
+          rotation: 0,
+          guest_count: t.guest_count || 0,
+        };
+      });
+
+      setTables(newTables);
+      setSelectedTableId(null);
+      toast({ title: "Tables detected", description: `Found ${newTables.length} tables in your venue plan.` });
+    } catch (err: any) {
+      console.error("Detection error:", err);
+      toast({ title: "Detection failed", description: err.message || "Could not detect tables", variant: "destructive" });
+    } finally {
+      setIsDetecting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
