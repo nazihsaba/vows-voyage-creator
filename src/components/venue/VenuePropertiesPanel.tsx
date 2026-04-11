@@ -63,29 +63,44 @@ export const VenuePropertiesPanel: React.FC<Props> = ({ table, onUpdate, onDelet
           </Select>
         </div>
 
-        <div>
-          <Label className="text-xs">Width: {Math.round(table.width)}</Label>
-          <Slider
-            value={[table.width]}
-            min={40}
-            max={300}
-            step={5}
-            onValueChange={([v]) => onUpdate({ width: v })}
-            className="mt-2"
-          />
-        </div>
-
-        <div>
-          <Label className="text-xs">Height: {Math.round(table.height)}</Label>
-          <Slider
-            value={[table.height]}
-            min={40}
-            max={300}
-            step={5}
-            onValueChange={([v]) => onUpdate({ height: v })}
-            className="mt-2"
-          />
-        </div>
+        {table.shape === "round" ? (
+          <div>
+            <Label className="text-xs">Diameter: {Math.round(table.width)}</Label>
+            <Slider
+              value={[table.width]}
+              min={40}
+              max={300}
+              step={5}
+              onValueChange={([v]) => onUpdate({ width: v, height: v })}
+              className="mt-2"
+            />
+          </div>
+        ) : (
+          <>
+            <div>
+              <Label className="text-xs">Width: {Math.round(table.width)}</Label>
+              <Slider
+                value={[table.width]}
+                min={40}
+                max={300}
+                step={5}
+                onValueChange={([v]) => onUpdate({ width: v })}
+                className="mt-2"
+              />
+            </div>
+            <div>
+              <Label className="text-xs">Height: {Math.round(table.height)}</Label>
+              <Slider
+                value={[table.height]}
+                min={40}
+                max={300}
+                step={5}
+                onValueChange={([v]) => onUpdate({ height: v })}
+                className="mt-2"
+              />
+            </div>
+          </>
+        )}
 
         <div>
           <Label className="text-xs">Rotation: {Math.round(table.rotation)}°</Label>
