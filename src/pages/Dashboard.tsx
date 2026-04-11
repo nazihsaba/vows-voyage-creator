@@ -131,7 +131,7 @@ const Dashboard = () => {
     {
       id: "etoile-carousel",
       name: "Étoile",
-      description: "A luxurious fullscreen photo carousel that crossfades your gallery images behind elegant torn-edge cards. Names sweep in from opposite sides with a pulsing heart reveal, creating a cinematic, editorial experience.",
+      description: "Fullscreen photo carousel with torn-edge editorial cards & cinematic reveals",
       image: etoileTemplate,
       features: [
         { icon: Images, text: "Photo Carousel" },
