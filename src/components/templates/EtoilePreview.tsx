@@ -23,6 +23,7 @@ const sampleEvents = [
     title: "Ceremony",
     time: "7:00 PM",
     location: "Couvent Saint Sauveur - Sarba",
+    link: "https://maps.google.com/?q=Couvent+Saint+Sauveur+Sarba",
     icon: "material-symbols:church-rounded",
   },
   {
@@ -30,6 +31,7 @@ const sampleEvents = [
     title: "Welcome Drink",
     time: "8:00 PM",
     location: "Carma - Jeita Country Club",
+    link: "https://maps.google.com/?q=Carma+Jeita+Country+Club",
     icon: "streamline:champagne-party-alcohol-remix",
   },
   {
@@ -37,6 +39,7 @@ const sampleEvents = [
     title: "Dinner & Party",
     time: "9:00 PM",
     location: "Carma - Jeita Country Club",
+    link: "https://maps.google.com/?q=Carma+Jeita+Country+Club",
     icon: "solar:confetti-bold",
   },
 ];
