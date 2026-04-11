@@ -316,21 +316,21 @@ export const AuraTemplate = ({
               <div className="space-y-12">
                 {timelineEvents.map((event, index) => (
                   <AnimatedSection key={event.id} delay={index * 150} animation="fade-in">
-                    <div className="relative flex items-start">
-                      <div className="flex-1 text-right pr-8">
+                    <div className={`relative flex items-start ${isArabic ? "flex-row-reverse" : ""}`}>
+                      <div className={`flex-1 ${isArabic ? "pl-8 text-left" : "pr-8 text-right"}`}>
                         <h3 className="text-template-body font-medium">{event.title}</h3>
                         <p className="text-template-body font-semibold">{event.time}</p>
                       </div>
                       <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-primary rounded-full z-10" />
-                      <div className="flex-1 pl-8">
-                        <Icon icon={event.icon} className="w-6 h-6 mb-1 text-primary" />
+                      <div className={`flex-1 ${isArabic ? "pr-8 text-right" : "pl-8 text-left"}`}>
+                        <Icon icon={event.icon} className={`w-6 h-6 mb-1 text-primary ${isArabic ? "mr-auto" : ""}`} />
                         <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                         {event.link && (
                           <a
                             href={event.link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors"
+                            className={`inline-flex items-center gap-1 text-template-small underline mt-1 hover:text-primary transition-colors ${isArabic ? "flex-row-reverse" : ""}`}
                           >
                             <MapPin className="w-4 h-4" />
                             {t("events.location")}
