@@ -11,6 +11,7 @@ interface WhishCollectRequest {
   amount: number;
   currency: "USD" | "LBP";
   invoice: string;
+  type?: "publish" | "venue";
 }
 
 interface WhishCollectResponse {
