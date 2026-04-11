@@ -142,6 +142,14 @@ const EtoilePreview = () => {
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
+                  <div className="space-y-3">
+                    <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
+                    <p className="text-template-body italic text-[#3e2723]/80">
+                      "Two are better than one. For if they fall, one will lift up the other."
+                    </p>
+                    <p className="text-sm text-[#3e2723]/60">— Ecclesiastes 4:9-12</p>
+                    <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
+                  </div>
                   <div className="space-y-4">
                     <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
                     <p className="text-2xl text-[#3e2723]">&</p>
