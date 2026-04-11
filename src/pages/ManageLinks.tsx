@@ -490,31 +490,49 @@ const ManageLinks = () => {
     XLSX.writeFile(wb, `table_occupancy_${wedding?.slug || "export"}.xlsx`);
   };
 
-  const handleVenuePayment = async () => {
+  const handleVenuePayment = () => {
+    setVenuePayDialogOpen(true);
+    setVenuePayUrl(null);
+    setVenuePayError(null);
+  };
+
+  const handleVenuePayProceed = async () => {
     if (!weddingId) return;
     setVenuePayLoading(true);
+    setVenuePayError(null);
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId,
           amount: 20,
           currency: "USD",
-          invoice: `Venue Layout Planner for ${wedding?.bride_name} & ${wedding?.groom_name}`,
+          invoice: `Venue Layout Planner - $20`,
           type: "venue",
         },
       });
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+
       if (data?.collectUrl) {
-        window.location.href = data.collectUrl;
+        setVenuePayUrl(data.collectUrl);
       } else {
-        throw new Error(data?.error || "Failed to create payment");
+        throw new Error("No payment URL received");
       }
     } catch (err: any) {
       console.error("Venue payment error:", err);
-      toast({ title: "Payment Error", description: err.message || "Could not initiate payment", variant: "destructive" });
+      setVenuePayError(err.message || "Could not initiate payment");
     } finally {
       setVenuePayLoading(false);
     }
+  };
+
+  const handleCloseVenuePayDialog = () => {
+    setVenuePayDialogOpen(false);
+    setVenuePayUrl(null);
+    setVenuePayError(null);
   };
 
   if (loading) {
