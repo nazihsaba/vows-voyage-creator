@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2 } from "lucide-react";
+import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2, Sparkles, Loader2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
@@ -10,6 +10,8 @@ interface Props {
   onUploadPlan: (file: File) => void;
   hasPlanImage: boolean;
   onRemovePlan: () => void;
+  onDetectTables?: () => void;
+  isDetecting?: boolean;
 }
 
 export const VenueToolbar: React.FC<Props> = ({
