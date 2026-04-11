@@ -147,10 +147,10 @@ export const EtoileTemplate = ({
   const quoteDefault = '"Two are better than one. For if they fall, one will lift up the other."';
   const referenceDefault = "— Ecclesiastes 4:9-12";
   const quoteText = isArabic
-    ? getLocalizedValue("quote", getFieldValue("bible-verse", quoteDefault))
+    ? getLocalizedValue("aura_quote", getFieldValue("bible-verse", quoteDefault))
     : getFieldValue("bible-verse", quoteDefault);
   const referenceText = isArabic
-    ? getLocalizedValue("reference", getFieldValue("bible-verse-reference", referenceDefault))
+    ? getLocalizedValue("aura_reference", getFieldValue("bible-verse-reference", referenceDefault))
     : getFieldValue("bible-verse-reference", referenceDefault);
 
   return (
