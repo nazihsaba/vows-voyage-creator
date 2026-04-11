@@ -1,6 +1,6 @@
 import React, { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2, ScanSearch } from "lucide-react";
+import { Circle, Square, RectangleHorizontal, Ellipsis, Grid3X3, Upload, Trash2 } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Props {
@@ -10,8 +10,6 @@ interface Props {
   onUploadPlan: (file: File) => void;
   hasPlanImage: boolean;
   onRemovePlan: () => void;
-  onDetectTables?: () => void;
-  isDetecting?: boolean;
 }
 
 export const VenueToolbar: React.FC<Props> = ({
@@ -21,8 +19,6 @@ export const VenueToolbar: React.FC<Props> = ({
   onUploadPlan,
   hasPlanImage,
   onRemovePlan,
-  onDetectTables,
-  isDetecting,
 }) => {
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -84,40 +80,19 @@ export const VenueToolbar: React.FC<Props> = ({
         </Tooltip>
 
         {hasPlanImage && (
-          <>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-9 w-9 rounded-lg text-destructive hover:bg-destructive/10"
-                  onClick={onRemovePlan}
-                >
-                  <Trash2 className="w-4 h-4" />
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="right">Remove Plan</TooltipContent>
-            </Tooltip>
-
-            {onDetectTables && (
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="h-9 w-9 rounded-lg hover:bg-primary/10"
-                    onClick={onDetectTables}
-                    disabled={isDetecting}
-                  >
-                    <ScanSearch className={`w-4 h-4 ${isDetecting ? "animate-pulse" : ""}`} />
-                  </Button>
-                </TooltipTrigger>
-                <TooltipContent side="right">
-                  {isDetecting ? "Detecting..." : "Detect Tables from Plan"}
-                </TooltipContent>
-              </Tooltip>
-            )}
-          </>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-lg text-destructive hover:bg-destructive/10"
+                onClick={onRemovePlan}
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">Remove Plan</TooltipContent>
+          </Tooltip>
         )}
 
         <input
