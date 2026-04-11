@@ -154,7 +154,7 @@ export const EtoileTemplate = ({
     : getFieldValue("bible-verse-reference", referenceDefault);
 
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
