@@ -1,82 +1,47 @@
 
 
-# Plan: Add Lumière Template
+## Plan: Auto-detect tables from uploaded venue plan image
 
-## Overview
-Create a new "Lumière" wedding template with a fixed fullscreen background video, dark overlay, and clean torn-paper-edge cards floating above. Follow the exact same architecture as AuraTemplate/AuraPreview.
+### What it does
+After a venue plan image is uploaded, an AI model analyzes it to detect tables (the white circles with chairs, rectangular tables, etc.) and automatically creates editable VenueTable objects at their approximate positions on the canvas. No manual table adding needed — the tables from the image become interactive.
 
-## Files to Create
+### How it works
 
-### 1. `src/components/templates/lumiere/LumiereTornCard.tsx`
-Reusable card wrapper with SVG filter-based deckled/torn edges (using `feTurbulence` + `feDisplacementMap` on the card boundary only). Interior stays clean white. Full-width cards with hidden left/right borders for seamless vertical flow.
+1. **New edge function `detect-venue-tables`**
+   - Receives the uploaded image URL
+   - Sends it to Gemini 2.5 Pro (via Lovable AI gateway) with a prompt asking it to identify all tables in the image and return their approximate positions (as percentage of image width/height), shapes, names, and guest counts
+   - Returns a JSON array of detected tables
 
-### 2. `src/components/templates/lumiere/LumiereCountdown.tsx`
-Countdown timer section inside a torn card. Uses the same countdown logic as existing templates. Typography: Dancing Script for headers, Montserrat for body. No background — transparent over the video.
+2. **Update `VenueLayoutPlanner.tsx`**
+   - After a successful plan image upload, call the new edge function
+   - Show a loading indicator ("Detecting tables...")
+   - Map the AI response (percentage-based coordinates) to canvas pixel positions (relative to the 1000px-wide image)
+   - Create VenueTable objects for each detected table and add them to state
+   - Auto-save triggers as usual
 
-### 3. `src/components/templates/lumiere/LumiereEvents.tsx`
-Wedding events/timeline section in a torn card. Same timeline data structure as Aura (ceremony, venue from locations array). Vertical timeline with icons.
+3. **Update `VenueToolbar.tsx`**
+   - Add a "Detect Tables" button (with a Wand/Sparkles icon) that appears when a plan image is loaded, allowing re-detection if needed
 
-### 4. `src/components/templates/lumiere/LumiereGifts.tsx`
-Gift cards section in a torn card. Reuses the same `giftCards` data structure. Copy-to-clipboard functionality.
+### Technical details
 
-### 5. `src/components/templates/lumiere/LumiereGallery.tsx`
-Gallery section with watercolor/brush-mask effect on images. Displays gallery images in a grid inside a torn card.
+**Edge function prompt strategy:**
+The prompt will ask Gemini to return JSON with each table's:
+- `name` (e.g. "Table 1", "Bridal Table", "Cake", "Bar")
+- `shape` ("round" | "rectangle" | "square" | "oval")
+- `x_percent` / `y_percent` (center position as 0-100% of image dimensions)
+- `width_percent` / `height_percent` (size as % of image)
+- `guest_count` (estimated from chairs visible)
 
-### 6. `src/components/templates/lumiere/LumiereRsvp.tsx`
-RSVP section in a torn card. Wraps the shared `RsvpSection` component with Lumière styling.
+**Coordinate mapping:**
+- Image renders at 1000px wide on canvas
+- `x_position = (x_percent / 100) * 1000 - (width / 2)`
+- `y_position = (y_percent / 100) * imageAspectRatio * 1000 - (height / 2)`
+- Sizes similarly scaled from percentages to pixels
 
-### 7. `src/components/templates/LumiereTemplate.tsx`
-Main live template component. Same props interface as `AuraTemplateProps`. Three-layer architecture:
-- **Layer 1**: Fixed fullscreen `<video>` using `wedding.hero_media` (autoplay, muted, loop, `object-fit: cover`, `position: fixed`, `100dvh`)
-- **Layer 2**: Semi-transparent dark overlay (`bg-black/30`, fixed, z-index 1)
-- **Layer 3**: Scrollable content (z-index 2) — Hero intro, then torn-card sections for Countdown, Events, Gallery, Gifts, RSVP
+**Files to create:**
+- `supabase/functions/detect-venue-tables/index.ts`
 
-No section padding — edge-to-edge cards. Uses `EditableField` for all editable text. Reuses existing audio, language toggle, and footer components.
-
-### 8. `src/components/templates/LumierePreview.tsx`
-Static preview with the uploaded video (`src/assets/lumiere-preview-video.mp4`), sample data, and all sections. Same structure as `AuraPreview` but with Lumière design.
-
-## Files to Modify
-
-### 9. `src/config/templates.ts`
-Add `lumiere-editorial` template entry with component `'LumiereTemplate'`, Dancing Script / Montserrat fonts, dark color scheme.
-
-### 10. `src/components/templates/TemplateRenderer.tsx`
-Add `LumiereTemplate` import and `if (template.component === 'LumiereTemplate')` block passing all props.
-
-### 11. `src/utils/templateMapping.ts`
-Add `'lumiere-editorial'` mapping so it resolves correctly.
-
-### 12. `src/components/InvitationPreviewSection.tsx`
-Add Lumière to the preview cards array and lazy-load `LumierePreview`. Add `"lumiere"` to `TemplateKey` union.
-
-### 13. `src/pages/WeddingTemplates.tsx`
-Add Lumière card to the wedding templates array with route to `/dashboard/lumiere-form`.
-
-### 14. `src/App.tsx`
-Add route: `<Route path="/dashboard/lumiere-form" element={<WeddingForm />} />`
-
-### 15. Copy uploaded video
-Copy `user-uploads://WhatsApp_Video_2026-04-09_at_1.44.59_PM-3.mp4` to `src/assets/lumiere-preview-video.mp4` for use in the preview.
-
-## Technical Details
-
-**Torn paper edge implementation** (SVG filter approach):
-```tsx
-<svg className="absolute" width="0" height="0">
-  <filter id="torn-edge">
-    <feTurbulence type="turbulence" baseFrequency="0.04" numOctaves="5" result="noise" />
-    <feDisplacementMap in="SourceGraphic" in2="noise" scale="6" />
-  </filter>
-</svg>
-```
-Applied via CSS `filter: url(#torn-edge)` on the card container — affects only the silhouette/edges while keeping interior clean.
-
-**Video background**:
-```tsx
-<video className="fixed inset-0 w-full h-[100dvh] object-cover z-0"
-  autoPlay muted loop playsInline />
-```
-
-**No CountdownTimer component reuse** — Lumière intentionally omits the countdown per the memory note, but since the user explicitly requested countdown sections, it will be included with a dark variant for readability over the video.
+**Files to modify:**
+- `src/components/venue/VenueLayoutPlanner.tsx` — add detection call after upload
+- `src/components/venue/VenueToolbar.tsx` — add re-detect button
 
