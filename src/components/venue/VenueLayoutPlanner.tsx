@@ -315,6 +315,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
           onUploadPlan={uploadPlanImage}
           hasPlanImage={!!project?.plan_image_url}
           onRemovePlan={removePlanImage}
+          onDetectTables={detectTables}
+          isDetecting={isDetecting}
         />
 
         {/* Canvas */}
