@@ -804,9 +804,27 @@ const ManageLinks = () => {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                           {activeView !== "venue" && (
-                            <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
-                              <Download className="w-4 h-4 mr-2" />
-                              {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                            <>
+                              <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
+                                <Download className="w-4 h-4 mr-2" />
+                                {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                              </DropdownMenuItem>
+                            </>
+                          )}
+                          {activeView !== "venue" && (
+                            <DropdownMenuItem
+                              onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
+                              disabled={venuePayLoading}
+                            >
+                              {venuePayLoading ? (
+                                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                              ) : !isVenueUnlocked ? (
+                                <Lock className="w-4 h-4 mr-2" />
+                              ) : (
+                                <MapPin className="w-4 h-4 mr-2" />
+                              )}
+                              Venue
+                              {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$20</span>}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
