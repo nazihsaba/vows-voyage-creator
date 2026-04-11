@@ -42,7 +42,7 @@ interface Props {
   invitees?: VenueInvitee[];
 }
 
-export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ weddingId }, ref) => {
+export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ weddingId, invitees: externalInvitees = [] }, ref) => {
   const { toast } = useToast();
   const [project, setProject] = useState<VenueProject | null>(null);
   const [tables, setTables] = useState<VenueTable[]>([]);
