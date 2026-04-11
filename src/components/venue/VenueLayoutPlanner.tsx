@@ -331,7 +331,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
           selectedTableId={selectedTableId}
           onSelectTable={setSelectedTableId}
           onUpdateTable={updateTable}
-          planImageUrl={project?.plan_image_url || null}
+          planImageUrl={showPlanImage ? (project?.plan_image_url || null) : null}
           showGrid={showGrid}
         />
 
