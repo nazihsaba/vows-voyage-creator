@@ -162,7 +162,7 @@ export const EtoileTemplate = ({
       )}
 
       {/* Layer 1: Fixed background carousel */}
-      <div className="fixed inset-0 z-0 lg:left-[25%] lg:w-[50%]">
+      <div className="fixed inset-0 z-0 lg:left-[25%] lg:right-auto lg:w-[50%]">
         {carouselImages.map((src: string, index: number) => (
           <img
             key={index}
@@ -176,7 +176,7 @@ export const EtoileTemplate = ({
       </div>
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
+      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]" dir={isArabic ? "rtl" : "ltr"}>
