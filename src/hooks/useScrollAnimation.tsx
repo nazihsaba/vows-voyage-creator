@@ -52,21 +52,22 @@ export const AnimatedSection = ({
       visible: "opacity-100 scale-100",
     },
     "slide-left": {
-      hidden: "opacity-0 -translate-x-8",
+      hidden: "opacity-0 -translate-x-16",
       visible: "opacity-100 translate-x-0",
     },
     "slide-right": {
-      hidden: "opacity-0 translate-x-8",
+      hidden: "opacity-0 translate-x-16",
       visible: "opacity-100 translate-x-0",
     },
   };
 
   const style = animationStyles[animation];
+  const isSlide = animation === "slide-left" || animation === "slide-right";
 
   return (
     <div
       ref={ref}
-      className={`transition-all duration-700 ease-out ${isVisible ? style.visible : style.hidden} ${className}`}
+      className={`transition-all ${isSlide ? "duration-1000" : "duration-700"} ease-[cubic-bezier(0.25,0.1,0.25,1)] ${isVisible ? style.visible : style.hidden} ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >
       {children}
