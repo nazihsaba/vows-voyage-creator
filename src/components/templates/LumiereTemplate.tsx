@@ -146,7 +146,7 @@ export const LumiereTemplate = ({
   }, []);
 
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? "rtl" : "ltr"}>
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -169,7 +169,7 @@ export const LumiereTemplate = ({
       <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
-      <div className="relative z-[2]">
+      <div className="relative z-[2]" dir={isArabic ? "rtl" : "ltr"}>
         {/* ===== MONOGRAM SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="flex items-center gap-4 md:gap-6">
