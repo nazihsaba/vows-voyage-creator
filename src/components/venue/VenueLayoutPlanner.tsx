@@ -36,6 +36,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
   const [project, setProject] = useState<VenueProject | null>(null);
   const [tables, setTables] = useState<VenueTable[]>([]);
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
+  const [showPlanImage, setShowPlanImage] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const [showGrid, setShowGrid] = useState(false);
@@ -248,8 +249,8 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
       const imageHeight = IMAGE_WIDTH * aspectRatio;
 
       const newTables: VenueTable[] = data.tables.map((t: any, i: number) => {
-        const w = Math.max(40, (t.width_percent / 100) * IMAGE_WIDTH);
-        const h = Math.max(40, (t.height_percent / 100) * imageHeight);
+        const w = Math.min(150, Math.max(30, (t.width_percent / 100) * IMAGE_WIDTH));
+        const h = Math.min(150, Math.max(30, (t.height_percent / 100) * imageHeight));
         return {
           id: crypto.randomUUID(),
           venue_project_id: project.id,
@@ -266,6 +267,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
 
       setTables(newTables);
       setSelectedTableId(null);
+      setShowPlanImage(false);
       toast({ title: "Tables detected", description: `Found ${newTables.length} tables in your venue plan.` });
     } catch (err: any) {
       console.error("Detection error:", err);
@@ -329,7 +331,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
           selectedTableId={selectedTableId}
           onSelectTable={setSelectedTableId}
           onUpdateTable={updateTable}
-          planImageUrl={project?.plan_image_url || null}
+          planImageUrl={showPlanImage ? (project?.plan_image_url || null) : null}
           showGrid={showGrid}
         />
 
