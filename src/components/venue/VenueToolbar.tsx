@@ -99,6 +99,23 @@ export const VenueToolbar: React.FC<Props> = ({
           </Tooltip>
         )}
 
+        {hasPlanImage && onDetectTables && (
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                className="h-9 w-9 rounded-lg text-primary hover:bg-primary/10"
+                onClick={onDetectTables}
+                disabled={isDetecting}
+              >
+                {isDetecting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent side="right">{isDetecting ? "Detecting..." : "Detect Tables"}</TooltipContent>
+          </Tooltip>
+        )
+
         <input
           ref={fileRef}
           type="file"
