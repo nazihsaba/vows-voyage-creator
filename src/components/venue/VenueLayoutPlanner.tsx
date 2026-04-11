@@ -222,6 +222,55 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
     setProject({ ...project, plan_image_url: null });
   };
 
+  const detectTables = async () => {
+    if (!project?.plan_image_url) return;
+    setIsDetecting(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("detect-venue-tables", {
+        body: { imageUrl: project.plan_image_url },
+      });
+      if (error) throw error;
+
+      const detected = data?.tables || [];
+      if (detected.length === 0) {
+        toast({ title: "No tables detected", description: "Could not find any tables in the plan image." });
+        return;
+      }
+
+      // Canvas reference size (plan image is rendered at 1000px wide)
+      const canvasW = 1000;
+      const canvasH = 1000; // approximate; height scales with aspect ratio
+
+      const newTables: VenueTable[] = detected.map((t: any, i: number) => {
+        const w = (t.width_percent / 100) * canvasW;
+        const h = (t.height_percent / 100) * canvasH;
+        return {
+          id: crypto.randomUUID(),
+          venue_project_id: project.id,
+          name: t.name || `Table ${tables.length + i + 1}`,
+          shape: t.shape || "round",
+          width: Math.max(40, Math.round(w)),
+          height: Math.max(40, Math.round(h)),
+          x_position: Math.round((t.x_percent / 100) * canvasW - w / 2),
+          y_position: Math.round((t.y_percent / 100) * canvasH - h / 2),
+          rotation: 0,
+          guest_count: t.guest_count || 8,
+        };
+      });
+
+      setTables((prev) => [...prev, ...newTables]);
+      toast({
+        title: "Tables detected",
+        description: `Found and added ${newTables.length} table(s) from the plan.`,
+      });
+    } catch (err: any) {
+      console.error("Detection error:", err);
+      toast({ title: "Detection failed", description: err.message, variant: "destructive" });
+    } finally {
+      setIsDetecting(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center py-16">
