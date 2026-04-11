@@ -487,6 +487,32 @@ const ManageLinks = () => {
     XLSX.writeFile(wb, `table_occupancy_${wedding?.slug || "export"}.xlsx`);
   };
 
+  const handleVenuePayment = async () => {
+    if (!weddingId) return;
+    setVenuePayLoading(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
+        body: {
+          weddingId,
+          amount: 10,
+          currency: "USD",
+          invoice: `Venue Layout Planner for ${wedding?.bride_name} & ${wedding?.groom_name}`,
+          type: "venue",
+        },
+      });
+      if (error) throw error;
+      if (data?.collectUrl) {
+        window.location.href = data.collectUrl;
+      } else {
+        throw new Error(data?.error || "Failed to create payment");
+      }
+    } catch (err: any) {
+      console.error("Venue payment error:", err);
+      toast({ title: "Payment Error", description: err.message || "Could not initiate payment", variant: "destructive" });
+    } finally {
+      setVenuePayLoading(false);
+    }
+  };
 
   if (loading) {
     return (
