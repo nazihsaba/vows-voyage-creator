@@ -267,6 +267,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
 
       setTables(newTables);
       setSelectedTableId(null);
+      setShowPlanImage(false);
       toast({ title: "Tables detected", description: `Found ${newTables.length} tables in your venue plan.` });
     } catch (err: any) {
       console.error("Detection error:", err);
