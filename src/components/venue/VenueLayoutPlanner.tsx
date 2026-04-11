@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useImperativeHandle, forwardRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { VenueCanvas } from "./VenueCanvas";
@@ -27,11 +27,15 @@ export interface VenueProject {
   scale: number | null;
 }
 
+export interface VenueLayoutPlannerRef {
+  clearAllTables: () => Promise<void>;
+}
+
 interface Props {
   weddingId: string;
 }
 
-export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
+export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ weddingId }, ref) => {
   const { toast } = useToast();
   const [project, setProject] = useState<VenueProject | null>(null);
   const [tables, setTables] = useState<VenueTable[]>([]);
@@ -44,6 +48,21 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
   const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const selectedTable = tables.find((t) => t.id === selectedTableId) || null;
+
+  const clearAllTables = async () => {
+    if (!project) return;
+    try {
+      await supabase.from("venue_tables").delete().eq("venue_project_id", project.id);
+      setTables([]);
+      setSelectedTableId(null);
+      toast({ title: "Cleared", description: "All tables have been removed." });
+    } catch (err: any) {
+      console.error("Error clearing tables:", err);
+      toast({ title: "Error", description: "Failed to clear tables", variant: "destructive" });
+    }
+  };
+
+  useImperativeHandle(ref, () => ({ clearAllTables }), [project, tables]);
 
   // Load or create project
   useEffect(() => {
@@ -354,4 +373,4 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
       </div>
     </div>
   );
-};
+});
