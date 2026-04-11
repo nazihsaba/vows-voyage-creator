@@ -32,11 +32,15 @@ For each detected element, return its:
 - shape: One of "round", "rectangle", "square", or "oval"
 - x_percent: Center X position as a percentage (0-100) of the image width
 - y_percent: Center Y position as a percentage (0-100) of the image height
-- width_percent: Width as a percentage of the image width
-- height_percent: Height as a percentage of the image height
+- width_percent: Width as a percentage of the image width. IMPORTANT: Tables are typically SMALL — round tables are usually 3-7% of the image width. Do NOT overestimate sizes.
+- height_percent: Height as a percentage of the image height. IMPORTANT: Keep proportional to width_percent for round/square tables.
 - guest_count: Estimated number of guests/chairs visible around the table (0 for non-table elements)
 
-Focus on accuracy of positions. Round tables with chairs around them are the most common element. Count chairs carefully for guest_count.`;
+CRITICAL SIZING RULES:
+- Round tables with chairs typically occupy only 4-6% of a venue plan's width
+- Rectangle/banquet tables are typically 8-12% wide and 3-5% tall
+- Do NOT include chairs in the table dimensions — measure only the table surface itself
+- When in doubt, make tables SMALLER rather than larger`;
 
     const userPrompt = `Analyze this venue floor plan image and detect all tables and notable elements. Return ONLY a valid JSON array of objects with the fields: name, shape, x_percent, y_percent, width_percent, height_percent, guest_count. No markdown, no explanation, just the JSON array.`;
 
