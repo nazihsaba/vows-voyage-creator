@@ -8,12 +8,12 @@ import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter"
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
-import LumiereCountdown from "./lumiere/LumiereCountdown";
-import LumiereEvents from "./lumiere/LumiereEvents";
-import LumiereGallery from "./lumiere/LumiereGallery";
-import LumiereGifts from "./lumiere/LumiereGifts";
-import LumiereRsvp from "./lumiere/LumiereRsvp";
-import LumiereTornCard from "./lumiere/LumiereTornCard";
+import EtoileTornCard from "./etoile/EtoileTornCard";
+import EtoileCountdown from "./etoile/EtoileCountdown";
+import EtoileEvents from "./etoile/EtoileEvents";
+import EtoileGallery from "./etoile/EtoileGallery";
+import EtoileGifts from "./etoile/EtoileGifts";
+import EtoileRsvp from "./etoile/EtoileRsvp";
 
 interface EtoileTemplateProps {
   wedding: any;
@@ -172,7 +172,7 @@ export const EtoileTemplate = ({
 
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
-        {/* ===== HERO SECTION (Vérité-style) ===== */}
+        {/* ===== HERO SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
             <div style={{ animation: "gentleFadeUp 1.2s ease-out both" }}>
@@ -239,9 +239,9 @@ export const EtoileTemplate = ({
           </div>
         </section>
 
-        {/* ===== FAMILY NAMES with ripped borders ===== */}
+        {/* ===== FAMILY NAMES — LEFT ===== */}
         <section id="family-section-etoile">
-          <LumiereTornCard>
+          <EtoileTornCard align="left">
             <div className="py-16 px-4 text-center">
               <AnimatedSection animation="fade-up">
                 <div className="max-w-3xl mx-auto space-y-8">
@@ -292,37 +292,37 @@ export const EtoileTemplate = ({
                 </div>
               </AnimatedSection>
             </div>
-          </LumiereTornCard>
+          </EtoileTornCard>
         </section>
 
-        {/* ===== COUNTDOWN ===== */}
+        {/* ===== COUNTDOWN — RIGHT ===== */}
         <div className="mt-64">
-          <LumiereCountdown targetDate={wedding.wedding_date} />
+          <EtoileCountdown targetDate={wedding.wedding_date} align="right" />
         </div>
 
-        {/* ===== EVENTS ===== */}
+        {/* ===== EVENTS — LEFT ===== */}
         <div className="mt-64">
-          <LumiereEvents events={timelineEvents} dateFormatted={dateFormatted} />
+          <EtoileEvents events={timelineEvents} dateFormatted={dateFormatted} align="left" />
         </div>
 
-        {/* ===== GALLERY ===== */}
+        {/* ===== GALLERY — RIGHT ===== */}
         {gallery && gallery.length > 0 && (
           <div className="mt-64">
-            <LumiereGallery images={gallery} />
+            <EtoileGallery images={gallery} align="right" />
           </div>
         )}
 
-        {/* ===== GIFTS ===== */}
+        {/* ===== GIFTS — LEFT ===== */}
         {hasGiftCards && (
           <div className="mt-64">
-            <LumiereGifts giftCards={giftCards} />
+            <EtoileGifts giftCards={giftCards} align="left" />
           </div>
         )}
 
-        {/* ===== RSVP ===== */}
+        {/* ===== RSVP — RIGHT ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
           <div className="mt-64">
-            <LumiereRsvp
+            <EtoileRsvp
               wedding={wedding}
               isPreview={isPreview}
               invitees={invitees}
@@ -332,14 +332,16 @@ export const EtoileTemplate = ({
               numberOfPersons={numberOfPersons}
               isRsvpDeadlinePassed={isRsvpDeadlinePassed}
               submittingRsvp={submittingRsvp}
+              align="right"
             />
           </div>
         )}
 
+        {/* ===== FOOTER — LEFT ===== */}
         <div className="mt-64">
-          <LumiereTornCard>
+          <EtoileTornCard align="left">
             <TemplatePreviewFooter />
-          </LumiereTornCard>
+          </EtoileTornCard>
         </div>
       </div>
     </div>
