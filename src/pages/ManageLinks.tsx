@@ -1388,7 +1388,29 @@ const ManageLinks = () => {
 
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
-                    {weddingId && <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />}
+                    {weddingId && isVenueUnlocked ? (
+                      <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />
+                    ) : (
+                      <div className="flex flex-col items-center justify-center py-20 text-center">
+                        <Lock className="w-12 h-12 text-muted-foreground/40 mb-4" />
+                        <h3 className="text-lg font-semibold text-foreground mb-2">Venue Layout Planner</h3>
+                        <p className="text-sm text-muted-foreground mb-6 max-w-md">
+                          Unlock the venue layout planner to upload floor plans, detect tables with AI, and manage your seating arrangement visually.
+                        </p>
+                        <Button
+                          onClick={handleVenuePayment}
+                          disabled={venuePayLoading}
+                          className="rounded-full px-6"
+                        >
+                          {venuePayLoading ? (
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                          ) : (
+                            <Lock className="w-4 h-4 mr-2" />
+                          )}
+                          Unlock for $10
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
