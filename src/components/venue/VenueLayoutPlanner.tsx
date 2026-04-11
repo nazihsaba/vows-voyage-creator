@@ -36,6 +36,7 @@ export const VenueLayoutPlanner: React.FC<Props> = ({ weddingId }) => {
   const [project, setProject] = useState<VenueProject | null>(null);
   const [tables, setTables] = useState<VenueTable[]>([]);
   const [selectedTableId, setSelectedTableId] = useState<string | null>(null);
+  const [showPlanImage, setShowPlanImage] = useState(true);
   const [loading, setLoading] = useState(true);
   const [saveStatus, setSaveStatus] = useState<"saved" | "saving" | "unsaved">("saved");
   const [showGrid, setShowGrid] = useState(false);
