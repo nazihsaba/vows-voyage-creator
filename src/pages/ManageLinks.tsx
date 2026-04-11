@@ -736,7 +736,7 @@ const ManageLinks = () => {
                       <MapPin className="w-3.5 h-3.5 mr-1.5" />
                     )}
                     Venue
-                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$10</span>}
+                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$20</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
@@ -1407,7 +1407,7 @@ const ManageLinks = () => {
                           ) : (
                             <Lock className="w-4 h-4 mr-2" />
                           )}
-                          Unlock for $10
+                          Unlock for $20
                         </Button>
                       </div>
                     )}
