@@ -104,6 +104,10 @@ export const VenueCanvas: React.FC<Props> = ({
         ? "8px"
         : "8px";
 
+    const minDim = Math.min(table.width, table.height);
+    const nameFontSize = Math.max(6, Math.min(12, minDim * 0.22));
+    const guestFontSize = Math.max(5, Math.min(10, minDim * 0.18));
+
     return (
       <div
         key={table.id}
@@ -113,13 +117,16 @@ export const VenueCanvas: React.FC<Props> = ({
         onMouseDown={(e) => startDragTable(e, table)}
       >
         <div
-          className="w-full h-full flex flex-col items-center justify-center bg-background border-2 border-primary/40"
+          className="w-full h-full flex flex-col items-center justify-center bg-background border-2 border-primary/40 overflow-hidden"
           style={{ borderRadius }}
         >
-          <span className="text-[10px] font-semibold text-foreground leading-tight truncate max-w-[90%]">
+          <span
+            className="font-semibold text-foreground leading-tight truncate max-w-[90%] text-center"
+            style={{ fontSize: nameFontSize }}
+          >
             {table.name}
           </span>
-          <span className="text-[9px] text-muted-foreground">
+          <span className="text-muted-foreground" style={{ fontSize: guestFontSize }}>
             {table.guest_count} guests
           </span>
         </div>
