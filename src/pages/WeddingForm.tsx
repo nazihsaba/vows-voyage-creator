@@ -159,7 +159,7 @@ const WeddingForm = () => {
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
     if (template === "lumiere-editorial" || template === "etoile-carousel") return 6;
-    return 7; // Vérité and Aura templates
+    return 6; // Vérité and Aura templates
   };
   const maxGalleryImages = getMaxGalleryImages();
 
