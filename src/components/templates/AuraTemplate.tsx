@@ -391,7 +391,7 @@ export const AuraTemplate = ({
 
         {/* ===== FULL-WIDTH GALLERY IMAGE ===== */}
         <AnimatedSection animation="fade-in">
-          <section className="w-full px-4">
+          <section className="w-full px-4 py-12">
             <div className="max-w-6xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
                 <img
