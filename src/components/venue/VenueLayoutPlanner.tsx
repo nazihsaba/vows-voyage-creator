@@ -412,9 +412,14 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
         {/* Canvas */}
         <VenueCanvas
-          tables={tables}
+          tables={enrichedTables}
           selectedTableId={selectedTableId}
           onSelectTable={setSelectedTableId}
+          onUpdateTable={updateTable}
+          planImageUrl={project?.plan_image_url || null}
+          showGrid={showGrid}
+          exportRef={canvasExportRef}
+        />
           onUpdateTable={updateTable}
           planImageUrl={project?.plan_image_url || null}
           showGrid={showGrid}
