@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -45,7 +45,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
-import { VenueLayoutPlanner } from "@/components/venue/VenueLayoutPlanner";
+import { VenueLayoutPlanner, type VenueLayoutPlannerRef } from "@/components/venue/VenueLayoutPlanner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -115,6 +115,7 @@ const ManageLinks = () => {
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
   const [activeView, setActiveView] = useState<"guests" | "tables" | "venue">("guests");
+  const venueRef = useRef<VenueLayoutPlannerRef>(null);
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
 
@@ -683,27 +684,35 @@ const ManageLinks = () => {
                     Venue
                   </Button>
                 </div>
-                {links.length > 0 && (
+                {(activeView === "venue" || links.length > 0) && (
                   <>
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex items-center gap-2">
+                      {activeView !== "venue" && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
+                          className="rounded-full text-xs h-8 px-3"
+                        >
+                          <Download className="w-3.5 h-3.5 mr-1" />
+                          {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                        </Button>
+                      )}
                       <Button
                         variant="outline"
                         size="sm"
-                        onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
-                        className="rounded-full text-xs h-8 px-3"
-                      >
-                        <Download className="w-3.5 h-3.5 mr-1" />
-                        {activeView === "guests" ? "Export Guest List" : "Export Tables"}
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => setDeleteAllOpen(true)}
+                        onClick={() => {
+                          if (activeView === "venue") {
+                            venueRef.current?.clearAllTables();
+                          } else {
+                            setDeleteAllOpen(true);
+                          }
+                        }}
                         className="rounded-full border-destructive/30 text-destructive hover:bg-destructive/10 hover:border-destructive/50 text-xs h-8 px-3"
                       >
                         <Trash2 className="w-3.5 h-3.5 mr-1" />
-                        Delete All
+                        {activeView === "venue" ? "Clear All" : "Delete All"}
                       </Button>
                     </div>
                     {/* Mobile dropdown */}
@@ -715,16 +724,24 @@ const ManageLinks = () => {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
-                            <Download className="w-4 h-4 mr-2" />
-                            {activeView === "guests" ? "Export Guest List" : "Export Tables"}
-                          </DropdownMenuItem>
+                          {activeView !== "venue" && (
+                            <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
+                              <Download className="w-4 h-4 mr-2" />
+                              {activeView === "guests" ? "Export Guest List" : "Export Tables"}
+                            </DropdownMenuItem>
+                          )}
                           <DropdownMenuItem
-                            onClick={() => setDeleteAllOpen(true)}
+                            onClick={() => {
+                              if (activeView === "venue") {
+                                venueRef.current?.clearAllTables();
+                              } else {
+                                setDeleteAllOpen(true);
+                              }
+                            }}
                             className="text-destructive focus:text-destructive"
                           >
                             <Trash2 className="w-4 h-4 mr-2" />
-                            Delete All
+                            {activeView === "venue" ? "Clear All" : "Delete All"}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -1316,7 +1333,7 @@ const ManageLinks = () => {
 
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
-                    {weddingId && <VenueLayoutPlanner weddingId={weddingId} />}
+                    {weddingId && <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} />}
                   </div>
                 </div>
               </div>
