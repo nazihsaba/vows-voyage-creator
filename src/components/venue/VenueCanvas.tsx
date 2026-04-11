@@ -105,8 +105,11 @@ export const VenueCanvas: React.FC<Props> = ({
         : "8px";
 
     const minDim = Math.min(table.width, table.height);
-    const nameFontSize = Math.max(6, Math.min(12, minDim * 0.22));
-    const guestFontSize = Math.max(5, Math.min(10, minDim * 0.18));
+    // For round/oval shapes, usable text area is ~70% of diameter
+    const effectiveDim = (table.shape === "round" || table.shape === "oval") ? minDim * 0.7 : minDim;
+    const nameFontSize = Math.max(7, Math.min(14, effectiveDim * 0.28));
+    const guestFontSize = Math.max(6, Math.min(11, effectiveDim * 0.2));
+    const showGuests = effectiveDim > 30;
 
     return (
       <div
@@ -115,20 +118,23 @@ export const VenueCanvas: React.FC<Props> = ({
         className={baseClasses}
         style={{ ...style, borderRadius }}
         onMouseDown={(e) => startDragTable(e, table)}
+        title={`${table.name} — ${table.guest_count} guests`}
       >
         <div
           className="w-full h-full flex flex-col items-center justify-center bg-background border-2 border-primary/40 overflow-hidden"
-          style={{ borderRadius }}
+          style={{ borderRadius, padding: table.shape === "round" || table.shape === "oval" ? "15%" : "2px" }}
         >
           <span
-            className="font-semibold text-foreground leading-tight truncate max-w-[90%] text-center"
-            style={{ fontSize: nameFontSize }}
+            className="font-semibold text-foreground leading-none text-center break-words"
+            style={{ fontSize: nameFontSize, maxWidth: "100%", wordBreak: "break-word" }}
           >
             {table.name}
           </span>
-          <span className="text-muted-foreground" style={{ fontSize: guestFontSize }}>
-            {table.guest_count} guests
-          </span>
+          {showGuests && (
+            <span className="text-muted-foreground leading-none mt-0.5" style={{ fontSize: guestFontSize }}>
+              {table.guest_count} guests
+            </span>
+          )}
         </div>
       </div>
     );
