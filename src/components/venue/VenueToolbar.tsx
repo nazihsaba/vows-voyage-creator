@@ -114,7 +114,7 @@ export const VenueToolbar: React.FC<Props> = ({
             </TooltipTrigger>
             <TooltipContent side="right">{isDetecting ? "Detecting..." : "Detect Tables"}</TooltipContent>
           </Tooltip>
-        )
+        )}
 
         <input
           ref={fileRef}
