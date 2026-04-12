@@ -109,7 +109,7 @@ export const VenueCanvas: React.FC<Props> = ({
       const rect = containerRef.current.getBoundingClientRect();
       const mouseX = (e.clientX - rect.left - pan.x) / zoom;
       const mouseY = (e.clientY - rect.top - pan.y) / zoom;
-      setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position });
+      setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position, isRound: table.shape === "round" });
       onSelectTable(table.id);
     }
   };
