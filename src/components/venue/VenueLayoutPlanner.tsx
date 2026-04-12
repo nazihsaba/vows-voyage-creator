@@ -144,19 +144,10 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
     init();
   }, [weddingId]);
 
-  const scheduleAutoSave = useCallback(() => {
-    setSaveStatus("unsaved");
-    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(() => {
-      saveAllTables();
-    }, 1500);
-  }, []);
-
-  const saveAllTables = async () => {
+  const saveTables = useCallback(async (tablesToSave: VenueTable[]) => {
     setSaveStatus("saving");
     try {
-      // Upsert all tables
-      for (const table of tables) {
+      for (const table of tablesToSave) {
         const { error } = await supabase
           .from("venue_tables")
           .upsert({
@@ -179,7 +170,15 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
       setSaveStatus("unsaved");
       toast({ title: "Error", description: "Failed to save layout", variant: "destructive" });
     }
-  };
+  }, [toast]);
+
+  const scheduleAutoSave = useCallback((tablesToSave: VenueTable[]) => {
+    setSaveStatus("unsaved");
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      saveTables(tablesToSave);
+    }, 1500);
+  }, [saveTables]);
 
   // Trigger auto-save when tables change (but not on initial load)
   const tablesRef = useRef(tables);
@@ -187,7 +186,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
     if (loading) return;
     if (tablesRef.current !== tables) {
       tablesRef.current = tables;
-      scheduleAutoSave();
+      scheduleAutoSave(tables);
     }
   }, [tables, loading, scheduleAutoSave]);
 
@@ -322,6 +321,9 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
 
       setTables(newTables);
       setSelectedTableId(null);
+
+      // Immediately persist detected tables
+      await saveTables(newTables);
 
       // If the AI returned a cleaned image (tables removed), use it as background
       if (data.cleanedImageUrl) {
