@@ -65,10 +65,21 @@ export const VenueCanvas: React.FC<Props> = ({
         let newX = resizing.startPosX;
         let newY = resizing.startPosY;
 
-        if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
-        if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
-        if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
-        if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+        if (resizing.isRound) {
+          // Uniform diameter resize for round tables
+          const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+          const sign = handle.includes("w") || handle.includes("n") ? -1 : 1;
+          const newSize = Math.max(20, resizing.startW + delta * sign);
+          newW = newSize;
+          newH = newSize;
+          if (handle.includes("w") || handle.includes("nw") || handle.includes("sw")) newX = resizing.startPosX + (resizing.startW - newSize);
+          if (handle.includes("n") || handle.includes("nw") || handle.includes("ne")) newY = resizing.startPosY + (resizing.startH - newSize);
+        } else {
+          if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
+          if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
+          if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
+          if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+        }
 
         onUpdateTable(resizing.id, { width: newW, height: newH, x_position: newX, y_position: newY });
         return;
