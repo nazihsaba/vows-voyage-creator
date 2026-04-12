@@ -138,6 +138,21 @@ export const VenueCanvas: React.FC<Props> = ({
     }
   };
 
+  const startRotate = (e: React.MouseEvent, table: VenueTable) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = table.x_position + table.width / 2;
+      const centerY = table.y_position + table.height / 2;
+      const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+      const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+      const startAngle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
+      setRotating({ id: table.id, centerX, centerY, startAngle, startRotation: table.rotation });
+      onSelectTable(table.id);
+    }
+  };
+
   const resizeHandles = [
     { key: "n", cursor: "ns-resize", style: { top: -4, left: "50%", transform: "translateX(-50%)", width: 14, height: 8 } },
     { key: "s", cursor: "ns-resize", style: { bottom: -4, left: "50%", transform: "translateX(-50%)", width: 14, height: 8 } },
