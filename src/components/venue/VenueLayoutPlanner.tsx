@@ -322,6 +322,9 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
       setTables(newTables);
       setSelectedTableId(null);
 
+      // Immediately persist detected tables
+      await saveTables(newTables);
+
       // If the AI returned a cleaned image (tables removed), use it as background
       if (data.cleanedImageUrl) {
         await supabase
