@@ -86,6 +86,7 @@ export const VenueCanvas: React.FC<Props> = ({
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
     setDraggingId(null);
+    setResizing(null);
   }, []);
 
   const startDragTable = (e: React.MouseEvent, table: VenueTable) => {
