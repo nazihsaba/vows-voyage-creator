@@ -53,6 +53,26 @@ export const VenueCanvas: React.FC<Props> = ({
         setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
         return;
       }
+      if (resizing && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+        const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+        const dx = mouseX - resizing.startX;
+        const dy = mouseY - resizing.startY;
+        const handle = resizing.handle;
+        let newW = resizing.startW;
+        let newH = resizing.startH;
+        let newX = resizing.startPosX;
+        let newY = resizing.startPosY;
+
+        if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
+        if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
+        if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
+        if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+
+        onUpdateTable(resizing.id, { width: newW, height: newH, x_position: newX, y_position: newY });
+        return;
+      }
       if (draggingId && containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const x = (e.clientX - rect.left - pan.x) / zoom - dragOffset.x;
@@ -60,7 +80,7 @@ export const VenueCanvas: React.FC<Props> = ({
         onUpdateTable(draggingId, { x_position: x, y_position: y });
       }
     },
-    [isPanning, panStart, draggingId, dragOffset, zoom, pan, onUpdateTable]
+    [isPanning, panStart, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
   );
 
   const handleMouseUp = useCallback(() => {
