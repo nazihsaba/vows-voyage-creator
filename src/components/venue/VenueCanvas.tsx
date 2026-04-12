@@ -27,7 +27,7 @@ export const VenueCanvas: React.FC<Props> = ({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number } | null>(null);
+  const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number; isRound: boolean } | null>(null);
 
   // Zoom with mouse wheel
   const handleWheel = useCallback((e: React.WheelEvent) => {
@@ -65,10 +65,21 @@ export const VenueCanvas: React.FC<Props> = ({
         let newX = resizing.startPosX;
         let newY = resizing.startPosY;
 
-        if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
-        if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
-        if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
-        if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+        if (resizing.isRound) {
+          // Uniform diameter resize for round tables
+          const delta = Math.abs(dx) > Math.abs(dy) ? dx : dy;
+          const sign = handle.includes("w") || handle.includes("n") ? -1 : 1;
+          const newSize = Math.max(20, resizing.startW + delta * sign);
+          newW = newSize;
+          newH = newSize;
+          if (handle.includes("w") || handle.includes("nw") || handle.includes("sw")) newX = resizing.startPosX + (resizing.startW - newSize);
+          if (handle.includes("n") || handle.includes("nw") || handle.includes("ne")) newY = resizing.startPosY + (resizing.startH - newSize);
+        } else {
+          if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
+          if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
+          if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
+          if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+        }
 
         onUpdateTable(resizing.id, { width: newW, height: newH, x_position: newX, y_position: newY });
         return;
@@ -109,7 +120,7 @@ export const VenueCanvas: React.FC<Props> = ({
       const rect = containerRef.current.getBoundingClientRect();
       const mouseX = (e.clientX - rect.left - pan.x) / zoom;
       const mouseY = (e.clientY - rect.top - pan.y) / zoom;
-      setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position });
+      setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position, isRound: table.shape === "round" });
       onSelectTable(table.id);
     }
   };
@@ -180,7 +191,9 @@ export const VenueCanvas: React.FC<Props> = ({
             </span>
           )}
         </div>
-        {isSelected && resizeHandles.map((h) => (
+        {isSelected && resizeHandles
+          .filter((h) => table.shape !== "round" || h.key.length === 2)
+          .map((h) => (
           <div
             key={h.key}
             className="absolute bg-primary border border-primary-foreground rounded-sm z-10"
