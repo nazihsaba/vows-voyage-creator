@@ -27,6 +27,7 @@ export const VenueCanvas: React.FC<Props> = ({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number } | null>(null);
 
   // Zoom with mouse wheel
   const handleWheel = useCallback((e: React.WheelEvent) => {
@@ -52,6 +53,26 @@ export const VenueCanvas: React.FC<Props> = ({
         setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
         return;
       }
+      if (resizing && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+        const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+        const dx = mouseX - resizing.startX;
+        const dy = mouseY - resizing.startY;
+        const handle = resizing.handle;
+        let newW = resizing.startW;
+        let newH = resizing.startH;
+        let newX = resizing.startPosX;
+        let newY = resizing.startPosY;
+
+        if (handle.includes("e")) newW = Math.max(20, resizing.startW + dx);
+        if (handle.includes("w")) { newW = Math.max(20, resizing.startW - dx); newX = resizing.startPosX + (resizing.startW - newW); }
+        if (handle.includes("s")) newH = Math.max(20, resizing.startH + dy);
+        if (handle.includes("n")) { newH = Math.max(20, resizing.startH - dy); newY = resizing.startPosY + (resizing.startH - newH); }
+
+        onUpdateTable(resizing.id, { width: newW, height: newH, x_position: newX, y_position: newY });
+        return;
+      }
       if (draggingId && containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const x = (e.clientX - rect.left - pan.x) / zoom - dragOffset.x;
@@ -59,12 +80,13 @@ export const VenueCanvas: React.FC<Props> = ({
         onUpdateTable(draggingId, { x_position: x, y_position: y });
       }
     },
-    [isPanning, panStart, draggingId, dragOffset, zoom, pan, onUpdateTable]
+    [isPanning, panStart, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
   );
 
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
     setDraggingId(null);
+    setResizing(null);
   }, []);
 
   const startDragTable = (e: React.MouseEvent, table: VenueTable) => {
@@ -80,9 +102,32 @@ export const VenueCanvas: React.FC<Props> = ({
     }
   };
 
+  const startResize = (e: React.MouseEvent, table: VenueTable, handle: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+      const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+      setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position });
+      onSelectTable(table.id);
+    }
+  };
+
+  const resizeHandles = [
+    { key: "n", cursor: "ns-resize", style: { top: -4, left: "50%", transform: "translateX(-50%)", width: 14, height: 8 } },
+    { key: "s", cursor: "ns-resize", style: { bottom: -4, left: "50%", transform: "translateX(-50%)", width: 14, height: 8 } },
+    { key: "e", cursor: "ew-resize", style: { right: -4, top: "50%", transform: "translateY(-50%)", width: 8, height: 14 } },
+    { key: "w", cursor: "ew-resize", style: { left: -4, top: "50%", transform: "translateY(-50%)", width: 8, height: 14 } },
+    { key: "ne", cursor: "nesw-resize", style: { top: -4, right: -4, width: 8, height: 8 } },
+    { key: "nw", cursor: "nwse-resize", style: { top: -4, left: -4, width: 8, height: 8 } },
+    { key: "se", cursor: "nwse-resize", style: { bottom: -4, right: -4, width: 8, height: 8 } },
+    { key: "sw", cursor: "nesw-resize", style: { bottom: -4, left: -4, width: 8, height: 8 } },
+  ];
+
   const renderTableShape = (table: VenueTable) => {
     const isSelected = table.id === selectedTableId;
-    const baseClasses = `absolute cursor-move transition-shadow ${
+    const baseClasses = `absolute transition-shadow ${
       isSelected ? "ring-2 ring-primary shadow-lg" : "hover:ring-1 hover:ring-primary/50"
     }`;
 
@@ -105,7 +150,6 @@ export const VenueCanvas: React.FC<Props> = ({
         : "8px";
 
     const minDim = Math.min(table.width, table.height);
-    // For round/oval shapes, usable text area is ~70% of diameter
     const effectiveDim = (table.shape === "round" || table.shape === "oval") ? minDim * 0.7 : minDim;
     const nameFontSize = Math.max(7, Math.min(14, effectiveDim * 0.28));
     const guestFontSize = Math.max(6, Math.min(11, effectiveDim * 0.2));
@@ -116,7 +160,7 @@ export const VenueCanvas: React.FC<Props> = ({
         key={table.id}
         data-table-id={table.id}
         className={baseClasses}
-        style={{ ...style, borderRadius }}
+        style={{ ...style, borderRadius, cursor: resizing ? "default" : "move" }}
         onMouseDown={(e) => startDragTable(e, table)}
         title={`${table.name} — ${table.guest_count} guests`}
       >
@@ -136,6 +180,14 @@ export const VenueCanvas: React.FC<Props> = ({
             </span>
           )}
         </div>
+        {isSelected && resizeHandles.map((h) => (
+          <div
+            key={h.key}
+            className="absolute bg-primary border border-primary-foreground rounded-sm z-10"
+            style={{ ...h.style, cursor: h.cursor, position: "absolute" } as React.CSSProperties}
+            onMouseDown={(e) => startResize(e, table, h.key)}
+          />
+        ))}
       </div>
     );
   };
@@ -144,7 +196,7 @@ export const VenueCanvas: React.FC<Props> = ({
     <div
       ref={containerRef}
       className="flex-1 relative overflow-hidden bg-muted/30"
-      style={{ cursor: isPanning ? "grabbing" : draggingId ? "grabbing" : "default" }}
+      style={{ cursor: isPanning ? "grabbing" : resizing ? "default" : draggingId ? "grabbing" : "default" }}
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
