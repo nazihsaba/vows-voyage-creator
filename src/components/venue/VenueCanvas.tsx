@@ -196,7 +196,7 @@ export const VenueCanvas: React.FC<Props> = ({
     <div
       ref={containerRef}
       className="flex-1 relative overflow-hidden bg-muted/30"
-      style={{ cursor: isPanning ? "grabbing" : draggingId ? "grabbing" : "default" }}
+      style={{ cursor: isPanning ? "grabbing" : resizing ? "default" : draggingId ? "grabbing" : "default" }}
       onWheel={handleWheel}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
