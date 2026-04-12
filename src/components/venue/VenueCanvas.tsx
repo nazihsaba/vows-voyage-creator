@@ -191,7 +191,9 @@ export const VenueCanvas: React.FC<Props> = ({
             </span>
           )}
         </div>
-        {isSelected && resizeHandles.map((h) => (
+        {isSelected && resizeHandles
+          .filter((h) => table.shape !== "round" || h.key.length === 2)
+          .map((h) => (
           <div
             key={h.key}
             className="absolute bg-primary border border-primary-foreground rounded-sm z-10"
