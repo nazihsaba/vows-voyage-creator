@@ -27,7 +27,7 @@ export const VenueCanvas: React.FC<Props> = ({
   const [panStart, setPanStart] = useState({ x: 0, y: 0 });
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
-  const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number } | null>(null);
+  const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number; isRound: boolean } | null>(null);
 
   // Zoom with mouse wheel
   const handleWheel = useCallback((e: React.WheelEvent) => {
