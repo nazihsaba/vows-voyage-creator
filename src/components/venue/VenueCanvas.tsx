@@ -110,6 +110,7 @@ export const VenueCanvas: React.FC<Props> = ({
     setIsPanning(false);
     setDraggingId(null);
     setResizing(null);
+    setRotating(null);
   }, []);
 
   const startDragTable = (e: React.MouseEvent, table: VenueTable) => {
