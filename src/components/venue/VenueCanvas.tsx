@@ -28,6 +28,7 @@ export const VenueCanvas: React.FC<Props> = ({
   const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const [resizing, setResizing] = useState<{ id: string; handle: string; startX: number; startY: number; startW: number; startH: number; startPosX: number; startPosY: number; isRound: boolean } | null>(null);
+  const [rotating, setRotating] = useState<{ id: string; centerX: number; centerY: number; startAngle: number; startRotation: number } | null>(null);
 
   // Zoom with mouse wheel
   const handleWheel = useCallback((e: React.WheelEvent) => {
@@ -51,6 +52,17 @@ export const VenueCanvas: React.FC<Props> = ({
     (e: React.MouseEvent) => {
       if (isPanning) {
         setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
+        return;
+      }
+      if (rotating && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+        const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+        const angle = Math.atan2(mouseY - rotating.centerY, mouseX - rotating.centerX) * (180 / Math.PI);
+        const delta = angle - rotating.startAngle;
+        let newRotation = (rotating.startRotation + delta) % 360;
+        if (newRotation < 0) newRotation += 360;
+        onUpdateTable(rotating.id, { rotation: Math.round(newRotation) });
         return;
       }
       if (resizing && containerRef.current) {
@@ -91,13 +103,14 @@ export const VenueCanvas: React.FC<Props> = ({
         onUpdateTable(draggingId, { x_position: x, y_position: y });
       }
     },
-    [isPanning, panStart, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
+    [isPanning, panStart, rotating, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
   );
 
   const handleMouseUp = useCallback(() => {
     setIsPanning(false);
     setDraggingId(null);
     setResizing(null);
+    setRotating(null);
   }, []);
 
   const startDragTable = (e: React.MouseEvent, table: VenueTable) => {
@@ -121,6 +134,21 @@ export const VenueCanvas: React.FC<Props> = ({
       const mouseX = (e.clientX - rect.left - pan.x) / zoom;
       const mouseY = (e.clientY - rect.top - pan.y) / zoom;
       setResizing({ id: table.id, handle, startX: mouseX, startY: mouseY, startW: table.width, startH: table.height, startPosX: table.x_position, startPosY: table.y_position, isRound: table.shape === "round" });
+      onSelectTable(table.id);
+    }
+  };
+
+  const startRotate = (e: React.MouseEvent, table: VenueTable) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (containerRef.current) {
+      const rect = containerRef.current.getBoundingClientRect();
+      const centerX = table.x_position + table.width / 2;
+      const centerY = table.y_position + table.height / 2;
+      const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+      const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+      const startAngle = Math.atan2(mouseY - centerY, mouseX - centerX) * (180 / Math.PI);
+      setRotating({ id: table.id, centerX, centerY, startAngle, startRotation: table.rotation });
       onSelectTable(table.id);
     }
   };
@@ -201,6 +229,36 @@ export const VenueCanvas: React.FC<Props> = ({
             onMouseDown={(e) => startResize(e, table, h.key)}
           />
         ))}
+        {isSelected && (
+          <>
+            {/* Line from top center to rotation handle */}
+            <div
+              className="absolute z-10 pointer-events-none"
+              style={{
+                left: "50%",
+                top: -24,
+                width: 1,
+                height: 20,
+                backgroundColor: "hsl(var(--primary))",
+                transformOrigin: "bottom center",
+              }}
+            />
+            {/* Rotation handle */}
+            <div
+              className="absolute z-10 bg-primary border-2 border-primary-foreground rounded-full"
+              style={{
+                left: "50%",
+                top: -30,
+                width: 12,
+                height: 12,
+                transform: "translateX(-50%)",
+                cursor: "grab",
+              }}
+              onMouseDown={(e) => startRotate(e, table)}
+              title="Drag to rotate"
+            />
+          </>
+        )}
       </div>
     );
   };
