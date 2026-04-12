@@ -54,6 +54,17 @@ export const VenueCanvas: React.FC<Props> = ({
         setPan({ x: e.clientX - panStart.x, y: e.clientY - panStart.y });
         return;
       }
+      if (rotating && containerRef.current) {
+        const rect = containerRef.current.getBoundingClientRect();
+        const mouseX = (e.clientX - rect.left - pan.x) / zoom;
+        const mouseY = (e.clientY - rect.top - pan.y) / zoom;
+        const angle = Math.atan2(mouseY - rotating.centerY, mouseX - rotating.centerX) * (180 / Math.PI);
+        const delta = angle - rotating.startAngle;
+        let newRotation = (rotating.startRotation + delta) % 360;
+        if (newRotation < 0) newRotation += 360;
+        onUpdateTable(rotating.id, { rotation: Math.round(newRotation) });
+        return;
+      }
       if (resizing && containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
         const mouseX = (e.clientX - rect.left - pan.x) / zoom;
