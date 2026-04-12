@@ -229,6 +229,36 @@ export const VenueCanvas: React.FC<Props> = ({
             onMouseDown={(e) => startResize(e, table, h.key)}
           />
         ))}
+        {isSelected && (
+          <>
+            {/* Line from top center to rotation handle */}
+            <div
+              className="absolute z-10 pointer-events-none"
+              style={{
+                left: "50%",
+                top: -24,
+                width: 1,
+                height: 20,
+                backgroundColor: "hsl(var(--primary))",
+                transformOrigin: "bottom center",
+              }}
+            />
+            {/* Rotation handle */}
+            <div
+              className="absolute z-10 bg-primary border-2 border-primary-foreground rounded-full"
+              style={{
+                left: "50%",
+                top: -30,
+                width: 12,
+                height: 12,
+                transform: "translateX(-50%)",
+                cursor: "grab",
+              }}
+              onMouseDown={(e) => startRotate(e, table)}
+              title="Drag to rotate"
+            />
+          </>
+        )}
       </div>
     );
   };
