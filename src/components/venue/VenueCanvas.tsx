@@ -103,7 +103,7 @@ export const VenueCanvas: React.FC<Props> = ({
         onUpdateTable(draggingId, { x_position: x, y_position: y });
       }
     },
-    [isPanning, panStart, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
+    [isPanning, panStart, rotating, resizing, draggingId, dragOffset, zoom, pan, onUpdateTable]
   );
 
   const handleMouseUp = useCallback(() => {
