@@ -42,46 +42,45 @@ For each detected element, return its:
 CRITICAL SIZING RULES:
 - Round tables with chairs typically occupy only 4-6% of a venue plan's width
 - Rectangle/banquet tables are typically 8-12% wide and 3-5% tall
-- Do NOT include chairs in the table dimensions — measure only the table surface itself
-- When in doubt, make tables SMALLER rather than larger`;
+- When in doubt, make tables SMALLER rather than larger
+- When a table is detected, it should cover the table already available in the image, have the same size and shape`;
 
     const userPrompt = `Analyze this venue floor plan image and detect all tables and notable elements. Return ONLY a valid JSON array of objects with the fields: name, shape, x_percent, y_percent, width_percent, height_percent, guest_count. No markdown, no explanation, just the JSON array.`;
 
-    const detectResponse = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-pro",
-          messages: [
-            { role: "system", content: systemPrompt },
-            {
-              role: "user",
-              content: [
-                { type: "text", text: userPrompt },
-                { type: "image_url", image_url: { url: imageUrl } },
-              ],
-            },
-          ],
-        }),
-      }
-    );
+    const detectResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-pro",
+        messages: [
+          { role: "system", content: systemPrompt },
+          {
+            role: "user",
+            content: [
+              { type: "text", text: userPrompt },
+              { type: "image_url", image_url: { url: imageUrl } },
+            ],
+          },
+        ],
+      }),
+    });
 
     if (!detectResponse.ok) {
       const errorText = await detectResponse.text();
       console.error("AI detection error:", detectResponse.status, errorText);
       if (detectResponse.status === 429) {
         return new Response(JSON.stringify({ error: "Rate limited. Please try again later." }), {
-          status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 429,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (detectResponse.status === 402) {
         return new Response(JSON.stringify({ error: "AI credits exhausted. Please add funds." }), {
-          status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 402,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       throw new Error(`AI detection error: ${detectResponse.status}`);
@@ -101,35 +100,32 @@ CRITICAL SIZING RULES:
     console.log(`Detected ${tables.length} tables. Now editing image to remove them...`);
 
     // ---- STEP 2: Edit image to remove detected elements ----
-    const elementDescriptions = tables.map((t: any) =>
-      `${t.name} (${t.shape}, at ${t.x_percent}%/${t.y_percent}%)`
-    ).join(", ");
+    const elementDescriptions = tables
+      .map((t: any) => `${t.name} (${t.shape}, at ${t.x_percent}%/${t.y_percent}%)`)
+      .join(", ");
 
     const editPrompt = `Remove ALL tables, chairs, seating elements, and furniture from this venue floor plan image. The elements to remove are: ${elementDescriptions}. Replace each removed element with the floor/background pattern that surrounds it, so the result looks like an empty venue with no tables or chairs — just the bare room layout (walls, doors, stage, etc.). Keep everything else intact.`;
 
-    const editResponse = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-image",
-          messages: [
-            {
-              role: "user",
-              content: [
-                { type: "text", text: editPrompt },
-                { type: "image_url", image_url: { url: imageUrl } },
-              ],
-            },
-          ],
-          modalities: ["image", "text"],
-        }),
-      }
-    );
+    const editResponse = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${LOVABLE_API_KEY}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-image",
+        messages: [
+          {
+            role: "user",
+            content: [
+              { type: "text", text: editPrompt },
+              { type: "image_url", image_url: { url: imageUrl } },
+            ],
+          },
+        ],
+        modalities: ["image", "text"],
+      }),
+    });
 
     if (!editResponse.ok) {
       const errText = await editResponse.text();
@@ -164,9 +160,7 @@ CRITICAL SIZING RULES:
         if (uploadErr) {
           console.error("Upload error:", uploadErr);
         } else {
-          const { data: urlData } = supabaseAdmin.storage
-            .from("wedding-images")
-            .getPublicUrl(path);
+          const { data: urlData } = supabaseAdmin.storage.from("wedding-images").getPublicUrl(path);
           cleanedImageUrl = urlData.publicUrl;
           console.log("Cleaned image uploaded:", cleanedImageUrl);
         }
@@ -180,9 +174,9 @@ CRITICAL SIZING RULES:
     });
   } catch (error) {
     console.error("detect-venue-tables error:", error);
-    return new Response(
-      JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }),
-      { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-    );
+    return new Response(JSON.stringify({ error: error instanceof Error ? error.message : "Unknown error" }), {
+      status: 500,
+      headers: { ...corsHeaders, "Content-Type": "application/json" },
+    });
   }
 });
