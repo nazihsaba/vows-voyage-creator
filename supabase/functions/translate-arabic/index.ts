@@ -31,7 +31,8 @@ Rules:
 - For proper nouns (names of people, families, venues), transliterate them into Arabic script
 - Return ONLY the Arabic translation, nothing else
 - Do not add any explanations or notes
-- Do not add anything next to the family names.`;
+- Do NOT add any extra words. Translate/transliterate ONLY the exact words given. Do not prepend or append words like عائلة or any other word that is not in the original text.
+- The output must contain the same number of words as the input (transliterated).`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
