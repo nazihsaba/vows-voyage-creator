@@ -510,9 +510,9 @@ const ManageLinks = () => {
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId,
-          amount: 20,
+          amount: 30,
           currency: "USD",
-          invoice: `Venue Layout Planner - $20`,
+          invoice: `Venue Layout Planner - $30`,
           type: "venue",
         },
       });
@@ -760,7 +760,7 @@ const ManageLinks = () => {
                       <MapPin className="w-3.5 h-3.5 mr-1.5" />
                     )}
                     Venue
-                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$20</span>}
+{!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
@@ -824,7 +824,7 @@ const ManageLinks = () => {
                                 <MapPin className="w-4 h-4 mr-2" />
                               )}
                               Venue
-                              {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$20</span>}
+                              {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                             </DropdownMenuItem>
                           )}
                           <DropdownMenuItem
@@ -1449,7 +1449,7 @@ const ManageLinks = () => {
                           ) : (
                             <Lock className="w-4 h-4 mr-2" />
                           )}
-                          Unlock for $20
+                          Unlock for $30
                         </Button>
                       </div>
                     )}
@@ -1708,7 +1708,7 @@ const ManageLinks = () => {
               <div className="bg-muted/50 rounded-xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Venue Layout Planner</span>
-                  <span className="font-semibold">$20 USD</span>
+                  <span className="font-semibold">$30 USD</span>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
