@@ -38,6 +38,7 @@ For each detected element, return its:
 - width_percent: Width as a percentage of the image width. IMPORTANT: Tables are typically SMALL — round tables are usually 3-7% of the image width. Do NOT overestimate sizes.
 - height_percent: Height as a percentage of the image height. IMPORTANT: Keep proportional to width_percent for round/square tables.
 - guest_count: Estimated number of guests/chairs visible around the table (0 for non-table elements)
+- You must also add the chairs to the tables. Number of chairs should be equal to the number of guests on the table.
 
 CRITICAL SIZING RULES:
 - Round tables with chairs typically occupy only 4-6% of a venue plan's width
