@@ -1449,7 +1449,7 @@ const ManageLinks = () => {
                           ) : (
                             <Lock className="w-4 h-4 mr-2" />
                           )}
-                          Unlock for $20
+                          Unlock for $30
                         </Button>
                       </div>
                     )}
@@ -1708,7 +1708,7 @@ const ManageLinks = () => {
               <div className="bg-muted/50 rounded-xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Venue Layout Planner</span>
-                  <span className="font-semibold">$20 USD</span>
+                  <span className="font-semibold">$30 USD</span>
                 </div>
               </div>
               <p className="text-xs text-muted-foreground">
