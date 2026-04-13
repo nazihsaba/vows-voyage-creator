@@ -381,18 +381,40 @@ const MyEvents = () => {
                                   })}
                                 </CardDescription>
                               </div>
-                              <span
-                                className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
-                                  wedding.status === "published"
-                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-                                    : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
-                                }`}
-                              >
+                              <div className="flex items-center gap-1.5">
+                                {(shareCounts[wedding.id] ?? 0) < 1 && (
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/60">
+                                        <MoreVertical className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setShareWeddingId(wedding.id);
+                                          setShareDialogOpen(true);
+                                        }}
+                                      >
+                                        <Share2 className="w-4 h-4 mr-2" />
+                                        Share with user
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                )}
                                 <span
-                                  className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
-                                ></span>
-                                {wedding.status === "published" ? "Live" : "Draft"}
-                              </span>
+                                  className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
+                                    wedding.status === "published"
+                                      ? "bg-green-50 text-green-700 ring-1 ring-green-200"
+                                      : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
+                                  ></span>
+                                  {wedding.status === "published" ? "Live" : "Draft"}
+                                </span>
+                              </div>
                             </div>
                           </CardHeader>
                           <CardContent className="px-5 pb-5 pt-0">
