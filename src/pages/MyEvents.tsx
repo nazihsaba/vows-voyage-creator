@@ -17,7 +17,16 @@ import {
   CreditCard,
   Shield,
   AlertCircle,
+  MoreVertical,
+  Share2,
 } from "lucide-react";
+import { ShareEventDialog } from "@/components/ShareEventDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
