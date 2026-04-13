@@ -26,24 +26,37 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [needsPassword, setNeedsPassword] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email.trim() || !password.trim()) return;
+    if (!email.trim()) return;
 
     setLoading(true);
     try {
-      const { data, error } = await supabase.functions.invoke("share-event", {
-        body: { weddingId, email: email.trim(), password: password.trim() },
-      });
+      const body: Record<string, string> = { weddingId, email: email.trim() };
+      if (password.trim()) {
+        body.password = password.trim();
+      }
+
+      const { data, error } = await supabase.functions.invoke("share-event", { body });
 
       if (error) throw error;
+
+      // If the server says a password is needed (new account)
+      if (data?.needsPassword) {
+        setNeedsPassword(true);
+        toast({
+          title: "Password required",
+          description: "This email doesn't have an account yet. Please set a password for them.",
+        });
+        return;
+      }
+
       if (data?.error) throw new Error(data.error);
 
       toast({ title: "Success", description: data.message || "Event shared successfully" });
-      setEmail("");
-      setPassword("");
-      onOpenChange(false);
+      resetAndClose();
       onSuccess();
     } catch (err: any) {
       toast({
@@ -56,8 +69,15 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
     }
   };
 
+  const resetAndClose = () => {
+    setEmail("");
+    setPassword("");
+    setNeedsPassword(false);
+    onOpenChange(false);
+  };
+
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={(v) => { if (!v) resetAndClose(); else onOpenChange(v); }}>
       <DialogContent className="sm:max-w-md p-8">
         <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2">
@@ -66,7 +86,7 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
           </DialogTitle>
           <DialogDescription className="space-y-1">
             <span>Link this event to another user. If the account doesn't exist, it will be created.</span>
-            <span className="block text-xs text-amber-600 font-medium mt-1">
+            <span className="block text-xs text-destructive font-medium mt-1">
               Note: Each event can only be shared with one account.
             </span>
           </DialogDescription>
@@ -79,36 +99,38 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
               type="email"
               placeholder="user@example.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => { setEmail(e.target.value); setNeedsPassword(false); }}
               required
             />
           </div>
-          <div className="space-y-2">
-            <Label htmlFor="share-password">Password</Label>
-            <Input
-              id="share-password"
-              type="password"
-              placeholder="Password (used only if creating new account)"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-            <p className="text-xs text-muted-foreground">
-              If the user already exists, the password will be ignored.
-            </p>
-          </div>
+          {needsPassword && (
+            <div className="space-y-2">
+              <Label htmlFor="share-password">Password</Label>
+              <Input
+                id="share-password"
+                type="password"
+                placeholder="Set a password for the new account"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                minLength={6}
+              />
+              <p className="text-xs text-muted-foreground">
+                This email doesn't have an account. A new account will be created with this password.
+              </p>
+            </div>
+          )}
           <DialogFooter>
             <Button type="submit" disabled={loading} className="w-full rounded-full">
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Sharing...
+                  {needsPassword ? "Creating & Sharing..." : "Sharing..."}
                 </>
               ) : (
                 <>
                   <Share2 className="w-4 h-4 mr-2" />
-                  Share Event
+                  {needsPassword ? "Create Account & Share" : "Share Event"}
                 </>
               )}
             </Button>
