@@ -30,8 +30,8 @@ All colors MUST be HSL.
     --muted: 45 20% 92%;
     --muted-foreground: 0 0% 40%;
 
-    /* Olive Green - modern natural tone */
-    --accent: 88 23% 62%;
+    /* Neutral Grey - clean interactive tone */
+    --accent: 0 0% 92%;
     --accent-foreground: 0 0% 17%;
 
     --destructive: 0 84.2% 60.2%;
@@ -48,7 +48,7 @@ All colors MUST be HSL.
     --champagne: 36 57% 74%;
     --blush: 358 44% 80%;
     --slate: 0 0% 17%;
-    --olive: 88 23% 62%;
+    --olive: 0 0% 92%;
 
     /* Gradients */
     --gradient-romantic: linear-gradient(135deg, hsl(36, 57%, 74%), hsl(358, 44%, 80%));
@@ -95,9 +95,9 @@ All colors MUST be HSL.
     --muted: 0 0% 25%;
     --muted-foreground: 0 0% 65%;
 
-    /* Olive Green - darker for dark mode */
-    --accent: 88 23% 55%;
-    --accent-foreground: 45 29% 96%;
+    /* Neutral Grey - darker for dark mode */
+    --accent: 0 0% 30%;
+    --accent-foreground: 0 0% 95%;
 
     --destructive: 0 62.8% 50%;
     --destructive-foreground: 0 0% 100%;
@@ -110,7 +110,7 @@ All colors MUST be HSL.
     --champagne: 36 57% 68%;
     --blush: 358 44% 70%;
     --slate: 0 0% 17%;
-    --olive: 88 23% 55%;
+    --olive: 0 0% 30%;
 
     --gradient-romantic: linear-gradient(135deg, hsl(36, 57%, 55%), hsl(358, 44%, 60%));
     --gradient-soft: linear-gradient(180deg, hsl(0, 0%, 17%), hsl(36, 30%, 25%));
