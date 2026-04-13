@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Share2 } from "lucide-react";
+import { AlertCircle, Loader2, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShareEventDialogProps {
@@ -101,8 +101,9 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
               The shared user will have full admin access: edit card details, create invitation links, and manage invitation links.
             </span>
           </div>
-          <p className="text-xs text-destructive font-medium">
-            Note: This event can only be shared with one account.
+          <p className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+            This event can only be shared with one account.
           </p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-5 mt-2">
