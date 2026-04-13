@@ -185,13 +185,13 @@ const MyEvents = () => {
       allWeddings.forEach((w) => uniqueMap.set(w.id, w as Wedding));
       setWeddings(Array.from(uniqueMap.values()));
 
-      // Fetch share counts for owned weddings
-      const ownedIds = (ownedData || []).map((w: any) => w.id);
-      if (ownedIds.length > 0) {
+      // Fetch share counts for ALL visible weddings
+      const allIds = Array.from(uniqueMap.keys());
+      if (allIds.length > 0) {
         const { data: allShares } = await supabase
           .from("wedding_shares")
           .select("wedding_id")
-          .in("wedding_id", ownedIds);
+          .in("wedding_id", allIds);
 
         const counts: Record<string, number> = {};
         (allShares || []).forEach((s: any) => {
