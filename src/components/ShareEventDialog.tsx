@@ -109,7 +109,7 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
             <span className="text-xs text-muted-foreground">
               The shared user will have full admin access: edit card details, create invitation links, and manage
               invitation links.
-              <p>This event can only be shared with one account.</p>
+              <p className="font-bold">This event can only be shared with one account.</p>
             </span>
           </div>
         </DialogHeader>
