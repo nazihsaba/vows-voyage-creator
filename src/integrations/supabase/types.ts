@@ -515,6 +515,10 @@ export type Database = {
     Functions: {
       check_email_exists: { Args: { check_email: string }; Returns: boolean }
       get_masked_card_number: { Args: { card_number: string }; Returns: string }
+      is_wedding_shared_with: {
+        Args: { _user_id: string; _wedding_id: string }
+        Returns: boolean
+      }
     }
     Enums: {
       [_ in never]: never
