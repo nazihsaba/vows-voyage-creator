@@ -86,6 +86,9 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
           </DialogTitle>
           <DialogDescription className="space-y-1">
             <span>Link this event to another user. If the account doesn't exist, it will be created.</span>
+            <span className="block text-xs text-muted-foreground mt-1">
+              The shared user will have full admin access: edit card details, create invitation links, and manage invitation links.
+            </span>
             <span className="block text-xs text-destructive font-medium mt-1">
               Note: Each event can only be shared with one account.
             </span>
