@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { AlertCircle, Loader2, Share2 } from "lucide-react";
+import { Loader2, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShareEventDialogProps {
@@ -85,7 +85,7 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
       }}
     >
       <DialogContent className="sm:max-w-md p-8">
-        <DialogHeader className="space-y-3">
+        <DialogHeader className="space-y-2">
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="w-5 h-5 text-primary" />
             Share Event
@@ -94,17 +94,24 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
             Link this event to another user. If the account doesn't exist, it will be created.
           </DialogDescription>
           <div className="flex items-start gap-2 rounded-md bg-muted border border-border p-3">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-4 w-4 text-muted-foreground mt-0.5 shrink-0"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+            >
+              <path
+                fillRule="evenodd"
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                clipRule="evenodd"
+              />
             </svg>
             <span className="text-xs text-muted-foreground">
-              The shared user will have full admin access: edit card details, create invitation links, and manage invitation links.
+              The shared user will have full admin access: edit card details, create invitation links, and manage
+              invitation links.
             </span>
           </div>
-          <p className="flex items-center gap-1.5 text-xs text-muted-foreground font-medium">
-            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
-            This event can only be shared with one account.
-          </p>
+          <p className="text-xs text-destructive font-medium">Note: This event can only be shared with one account.</p>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-5 mt-2">
           <div className="space-y-2">
