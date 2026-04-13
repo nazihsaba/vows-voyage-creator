@@ -11,7 +11,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Loader2, Share2 } from "lucide-react";
+import { AlertCircle, Loader2, Share2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShareEventDialogProps {
