@@ -102,6 +102,10 @@ const MyEvents = () => {
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
 
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareWeddingId, setShareWeddingId] = useState<string | null>(null);
+  const [shareCounts, setShareCounts] = useState<Record<string, number>>({});
+
   useEffect(() => {
     checkUserAndFetchWeddings();
   }, []);
