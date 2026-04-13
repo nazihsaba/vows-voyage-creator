@@ -153,14 +153,52 @@ const MyEvents = () => {
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { data, error } = await supabase
+      // Fetch owned weddings
+      const { data: ownedData, error: ownedError } = await supabase
         .from("weddings")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setWeddings(data || []);
+      if (ownedError) throw ownedError;
+
+      // Fetch shared weddings via wedding_shares
+      const { data: shares } = await supabase
+        .from("wedding_shares")
+        .select("wedding_id")
+        .eq("shared_with_user_id", user.id);
+
+      let sharedWeddings: Wedding[] = [];
+      if (shares && shares.length > 0) {
+        const sharedIds = shares.map((s: any) => s.wedding_id);
+        const { data: sharedData } = await supabase
+          .from("weddings")
+          .select("*")
+          .in("id", sharedIds)
+          .order("created_at", { ascending: false });
+        sharedWeddings = (sharedData || []) as Wedding[];
+      }
+
+      // Merge and deduplicate
+      const allWeddings = [...(ownedData || []), ...sharedWeddings];
+      const uniqueMap = new Map<string, Wedding>();
+      allWeddings.forEach((w) => uniqueMap.set(w.id, w as Wedding));
+      setWeddings(Array.from(uniqueMap.values()));
+
+      // Fetch share counts for owned weddings
+      const ownedIds = (ownedData || []).map((w: any) => w.id);
+      if (ownedIds.length > 0) {
+        const { data: allShares } = await supabase
+          .from("wedding_shares")
+          .select("wedding_id")
+          .in("wedding_id", ownedIds);
+
+        const counts: Record<string, number> = {};
+        (allShares || []).forEach((s: any) => {
+          counts[s.wedding_id] = (counts[s.wedding_id] || 0) + 1;
+        });
+        setShareCounts(counts);
+      }
     } catch (error) {
       console.error("Error fetching weddings:", error);
       toast({
