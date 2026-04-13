@@ -118,8 +118,8 @@ Deno.serve(async (req) => {
       // Create new user — password is required for new accounts
       if (!password) {
         return new Response(
-          JSON.stringify({ error: "Password is required when creating a new account", needsPassword: true }),
-          { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+          JSON.stringify({ needsPassword: true, message: "This email doesn't have an account. Please set a password." }),
+          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
 
