@@ -683,6 +683,15 @@ const MyEvents = () => {
           )}
         </DialogContent>
       </Dialog>
+      {/* Share Event Dialog */}
+      {shareWeddingId && (
+        <ShareEventDialog
+          open={shareDialogOpen}
+          onOpenChange={setShareDialogOpen}
+          weddingId={shareWeddingId}
+          onSuccess={() => fetchWeddings()}
+        />
+      )}
     </div>
   );
 };
