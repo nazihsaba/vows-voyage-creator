@@ -398,7 +398,7 @@ const MyEvents = () => {
                                 {wedding.status === "published" ? "Live" : "Draft"}
                                 </span>
                                 {(shareCounts[wedding.id] ?? 0) >= 1 && (
-                                  <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: '#B45309' }}>
+                                  <span className="shrink-0 inline-flex items-center gap-1 text-[10px] font-medium" style={{ color: '#865814' }}>
                                     <Share2 className="w-3 h-3" />
                                     Shared
                                   </span>
