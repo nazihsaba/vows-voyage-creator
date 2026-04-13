@@ -412,6 +412,7 @@ const MyEvents = () => {
                                     </DropdownMenuTrigger>
                                     <DropdownMenuContent align="end">
                                       <DropdownMenuItem
+                                        className="cursor-pointer"
                                         onClick={() => {
                                           setShareWeddingId(wedding.id);
                                           setShareDialogOpen(true);
