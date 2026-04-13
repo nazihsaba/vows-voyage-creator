@@ -661,7 +661,7 @@ const ManageLinks = () => {
                                 className={`cursor-pointer transition-all text-xs font-medium border-0 ${
                                   statusFilter === "pending"
                                     ? "bg-amber-200 text-amber-800 ring-2 ring-amber-400"
-                                    : "bg-amber-100 text-amber-700 hover:bg-amber-200"
+                                    : "bg-amber-100 text-[#865814] hover:bg-amber-200"
                                 }`}
                               >
                                 <Loader2 className="w-3 h-3 mr-1" /> {pending} pending
@@ -944,7 +944,7 @@ const ManageLinks = () => {
                                           </Badge>
                                           <Badge
                                             variant="secondary"
-                                            className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                            className="bg-amber-100 text-[#865814] border-0 text-xs font-medium"
                                           >
                                             {stats.pending}
                                           </Badge>
@@ -1054,7 +1054,7 @@ const ManageLinks = () => {
                                               {invitee.is_attending === null ? (
                                                 <Badge
                                                   variant="secondary"
-                                                  className="bg-amber-100 text-amber-700 border-0 text-xs font-medium"
+                                                  className="bg-amber-100 text-[#865814] border-0 text-xs font-medium"
                                                 >
                                                   Pending
                                                 </Badge>
@@ -1177,7 +1177,7 @@ const ManageLinks = () => {
                                     </Badge>
                                     <Badge
                                       variant="secondary"
-                                      className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0.5 font-medium"
+                                      className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0.5 font-medium"
                                     >
                                       {stats.pending}
                                     </Badge>
@@ -1278,7 +1278,7 @@ const ManageLinks = () => {
                                           {invitee.is_attending === null ? (
                                             <Badge
                                               variant="secondary"
-                                              className="bg-amber-100 text-amber-700 border-0 text-[10px] flex-shrink-0 font-medium"
+                                              className="bg-amber-100 text-[#865814] border-0 text-[10px] flex-shrink-0 font-medium"
                                             >
                                               Pending
                                             </Badge>
@@ -1411,7 +1411,7 @@ const ManageLinks = () => {
                                         ) : (
                                           <Badge
                                             variant="secondary"
-                                            className="bg-amber-100 text-amber-700 border-0 text-[10px] px-1.5 py-0"
+                                            className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0"
                                           >
                                             Pending
                                           </Badge>
@@ -1597,7 +1597,7 @@ const ManageLinks = () => {
                         {invitee.is_attending === null ? (
                           <Badge
                             variant="secondary"
-                            className="bg-amber-100 text-amber-700 border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity"
+                            className="bg-amber-100 text-[#865814] border-0 text-[10px] font-medium cursor-pointer hover:opacity-80 transition-opacity"
                             onClick={() => handleToggleInviteeStatus(invitee.id, invitee.is_attending)}
                           >
                             Pending
