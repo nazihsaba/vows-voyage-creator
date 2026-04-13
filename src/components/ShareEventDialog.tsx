@@ -85,7 +85,7 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
       }}
     >
       <DialogContent className="sm:max-w-md p-8">
-        <DialogHeader className="space-y-2">
+        <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="w-5 h-5 text-primary" />
             Share Event
