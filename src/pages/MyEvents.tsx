@@ -395,8 +395,14 @@ const MyEvents = () => {
                                   <span
                                     className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
                                   ></span>
-                                  {wedding.status === "published" ? "Live" : "Draft"}
+                                {wedding.status === "published" ? "Live" : "Draft"}
                                 </span>
+                                {(shareCounts[wedding.id] ?? 0) >= 1 && (
+                                  <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full bg-blue-50 text-blue-700 ring-1 ring-blue-200">
+                                    <Share2 className="w-2.5 h-2.5" />
+                                    Shared
+                                  </span>
+                                )}
                                 {(shareCounts[wedding.id] ?? 0) < 1 && (
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
