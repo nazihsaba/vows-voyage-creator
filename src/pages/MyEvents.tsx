@@ -17,7 +17,16 @@ import {
   CreditCard,
   Shield,
   AlertCircle,
+  MoreVertical,
+  Share2,
 } from "lucide-react";
+import { ShareEventDialog } from "@/components/ShareEventDialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import {
@@ -93,6 +102,10 @@ const MyEvents = () => {
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
 
+  const [shareDialogOpen, setShareDialogOpen] = useState(false);
+  const [shareWeddingId, setShareWeddingId] = useState<string | null>(null);
+  const [shareCounts, setShareCounts] = useState<Record<string, number>>({});
+
   useEffect(() => {
     checkUserAndFetchWeddings();
   }, []);
@@ -140,14 +153,52 @@ const MyEvents = () => {
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
 
-      const { data, error } = await supabase
+      // Fetch owned weddings
+      const { data: ownedData, error: ownedError } = await supabase
         .from("weddings")
         .select("*")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false });
 
-      if (error) throw error;
-      setWeddings(data || []);
+      if (ownedError) throw ownedError;
+
+      // Fetch shared weddings via wedding_shares
+      const { data: shares } = await supabase
+        .from("wedding_shares")
+        .select("wedding_id")
+        .eq("shared_with_user_id", user.id);
+
+      let sharedWeddings: Wedding[] = [];
+      if (shares && shares.length > 0) {
+        const sharedIds = shares.map((s: any) => s.wedding_id);
+        const { data: sharedData } = await supabase
+          .from("weddings")
+          .select("*")
+          .in("id", sharedIds)
+          .order("created_at", { ascending: false });
+        sharedWeddings = (sharedData || []) as Wedding[];
+      }
+
+      // Merge and deduplicate
+      const allWeddings = [...(ownedData || []), ...sharedWeddings];
+      const uniqueMap = new Map<string, Wedding>();
+      allWeddings.forEach((w) => uniqueMap.set(w.id, w as Wedding));
+      setWeddings(Array.from(uniqueMap.values()));
+
+      // Fetch share counts for owned weddings
+      const ownedIds = (ownedData || []).map((w: any) => w.id);
+      if (ownedIds.length > 0) {
+        const { data: allShares } = await supabase
+          .from("wedding_shares")
+          .select("wedding_id")
+          .in("wedding_id", ownedIds);
+
+        const counts: Record<string, number> = {};
+        (allShares || []).forEach((s: any) => {
+          counts[s.wedding_id] = (counts[s.wedding_id] || 0) + 1;
+        });
+        setShareCounts(counts);
+      }
     } catch (error) {
       console.error("Error fetching weddings:", error);
       toast({
@@ -330,18 +381,40 @@ const MyEvents = () => {
                                   })}
                                 </CardDescription>
                               </div>
-                              <span
-                                className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
-                                  wedding.status === "published"
-                                    ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-                                    : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
-                                }`}
-                              >
+                              <div className="flex items-center gap-1.5">
+                                {(shareCounts[wedding.id] ?? 0) < 1 && (
+                                  <DropdownMenu>
+                                    <DropdownMenuTrigger asChild>
+                                      <Button variant="ghost" size="icon" className="h-7 w-7 rounded-full hover:bg-muted/60">
+                                        <MoreVertical className="h-4 w-4" />
+                                      </Button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent align="end">
+                                      <DropdownMenuItem
+                                        onClick={() => {
+                                          setShareWeddingId(wedding.id);
+                                          setShareDialogOpen(true);
+                                        }}
+                                      >
+                                        <Share2 className="w-4 h-4 mr-2" />
+                                        Share with user
+                                      </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                  </DropdownMenu>
+                                )}
                                 <span
-                                  className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
-                                ></span>
-                                {wedding.status === "published" ? "Live" : "Draft"}
-                              </span>
+                                  className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
+                                    wedding.status === "published"
+                                      ? "bg-green-50 text-green-700 ring-1 ring-green-200"
+                                      : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
+                                  ></span>
+                                  {wedding.status === "published" ? "Live" : "Draft"}
+                                </span>
+                              </div>
                             </div>
                           </CardHeader>
                           <CardContent className="px-5 pb-5 pt-0">
@@ -610,6 +683,15 @@ const MyEvents = () => {
           )}
         </DialogContent>
       </Dialog>
+      {/* Share Event Dialog */}
+      {shareWeddingId && (
+        <ShareEventDialog
+          open={shareDialogOpen}
+          onOpenChange={setShareDialogOpen}
+          weddingId={shareWeddingId}
+          onSuccess={() => fetchWeddings()}
+        />
+      )}
     </div>
   );
 };
