@@ -58,17 +58,20 @@ export const ShareEventDialog = ({ open, onOpenChange, weddingId, onSuccess }: S
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className="sm:max-w-md p-8">
+        <DialogHeader className="space-y-3">
           <DialogTitle className="flex items-center gap-2">
             <Share2 className="w-5 h-5 text-primary" />
             Share Event
           </DialogTitle>
-          <DialogDescription>
-            Link this event to another user. If the account doesn't exist, it will be created.
+          <DialogDescription className="space-y-1">
+            <span>Link this event to another user. If the account doesn't exist, it will be created.</span>
+            <span className="block text-xs text-amber-600 font-medium mt-1">
+              Note: Each event can only be shared with one account.
+            </span>
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-5 mt-2">
           <div className="space-y-2">
             <Label htmlFor="share-email">Email</Label>
             <Input
