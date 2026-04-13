@@ -50,6 +50,7 @@ import {
 
 interface Wedding {
   id: string;
+  user_id: string;
   bride_name: string;
   groom_name: string;
   wedding_date: string;
@@ -101,6 +102,7 @@ const MyEvents = () => {
   const [paymentUrl, setPaymentUrl] = useState<string | null>(null);
   const [paymentError, setPaymentError] = useState<string | null>(null);
   const [previewSlug, setPreviewSlug] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareWeddingId, setShareWeddingId] = useState<string | null>(null);
@@ -152,6 +154,7 @@ const MyEvents = () => {
         data: { user },
       } = await supabase.auth.getUser();
       if (!user) throw new Error("Not authenticated");
+      setCurrentUserId(user.id);
 
       // Fetch owned weddings
       const { data: ownedData, error: ownedError } = await supabase
@@ -515,19 +518,21 @@ const MyEvents = () => {
                                       </TooltipTrigger>
                                       <TooltipContent>Preview</TooltipContent>
                                     </Tooltip>
-                                    <Tooltip>
-                                      <TooltipTrigger asChild>
-                                        <Button
-                                          variant="ghost"
-                                          size="icon"
-                                          onClick={() => setDeleteId(wedding.id)}
-                                          className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                                        >
-                                          <Trash2 className="h-3.5 w-3.5" />
-                                        </Button>
-                                      </TooltipTrigger>
-                                      <TooltipContent>Delete</TooltipContent>
-                                    </Tooltip>
+                                    {wedding.user_id === currentUserId && (
+                                      <Tooltip>
+                                        <TooltipTrigger asChild>
+                                          <Button
+                                            variant="ghost"
+                                            size="icon"
+                                            onClick={() => setDeleteId(wedding.id)}
+                                            className="h-8 w-8 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                          >
+                                            <Trash2 className="h-3.5 w-3.5" />
+                                          </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>Delete</TooltipContent>
+                                      </Tooltip>
+                                    )}
                                   </div>
                                 </TooltipProvider>
                               </div>
