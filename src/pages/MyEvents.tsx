@@ -382,6 +382,18 @@ const MyEvents = () => {
                                 </CardDescription>
                               </div>
                               <div className="flex items-center gap-1.5">
+                                <span
+                                  className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
+                                    wedding.status === "published"
+                                      ? "bg-green-50 text-green-700 ring-1 ring-green-200"
+                                      : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
+                                  ></span>
+                                  {wedding.status === "published" ? "Live" : "Draft"}
+                                </span>
                                 {(shareCounts[wedding.id] ?? 0) < 1 && (
                                   <DropdownMenu>
                                     <DropdownMenuTrigger asChild>
@@ -402,18 +414,6 @@ const MyEvents = () => {
                                     </DropdownMenuContent>
                                   </DropdownMenu>
                                 )}
-                                <span
-                                  className={`shrink-0 inline-flex items-center gap-1.5 px-2.5 py-1 text-[10px] font-medium rounded-full transition-colors ${
-                                    wedding.status === "published"
-                                      ? "bg-green-50 text-green-700 ring-1 ring-green-200"
-                                      : "bg-amber-50 text-amber-700 ring-1 ring-amber-200"
-                                  }`}
-                                >
-                                  <span
-                                    className={`w-1.5 h-1.5 rounded-full ${wedding.status === "published" ? "bg-green-500" : "bg-amber-500"}`}
-                                  ></span>
-                                  {wedding.status === "published" ? "Live" : "Draft"}
-                                </span>
                               </div>
                             </div>
                           </CardHeader>
