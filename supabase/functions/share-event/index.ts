@@ -97,16 +97,10 @@ Deno.serve(async (req) => {
       );
     }
 
-    // Look up target user via auth.users (avoids profile trigger race condition)
+    // Look up target user via auth.users
     let targetUserId: string | null = null;
     let userCreated = false;
 
-    const { data: listData } = await supabaseAdmin.auth.admin.listUsers({
-      page: 1,
-      perPage: 1,
-    });
-
-    // Use admin API to find user by email directly
     const { data: usersData } = await supabaseAdmin.auth.admin.listUsers();
     const existingUser = usersData?.users?.find(
       (u) => u.email?.toLowerCase() === normalizedEmail
@@ -115,17 +109,16 @@ Deno.serve(async (req) => {
     if (existingUser) {
       targetUserId = existingUser.id;
     } else {
-      // Create new user — password is required for new accounts
-      if (!password) {
-        return new Response(
-          JSON.stringify({ needsPassword: true, message: "This email doesn't have an account. Please set a password." }),
-          { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } }
-        );
+      // Generate random 8-char password
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
+      let generatedPassword = "";
+      for (let i = 0; i < 8; i++) {
+        generatedPassword += chars.charAt(Math.floor(Math.random() * chars.length));
       }
 
       const { data: newUser, error: createErr } = await supabaseAdmin.auth.admin.createUser({
         email: normalizedEmail,
-        password,
+        password: generatedPassword,
         email_confirm: true,
         user_metadata: { first_name: "", last_name: "" },
       });
@@ -138,6 +131,17 @@ Deno.serve(async (req) => {
       }
       targetUserId = newUser.user.id;
       userCreated = true;
+
+      // Send credentials to n8n webhook
+      try {
+        await fetch("https://aurea-invites.app.n8n.cloud/webhook-test/share-user-credentials", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email: normalizedEmail, password: generatedPassword }),
+        });
+      } catch (webhookErr) {
+        console.error("Failed to send credentials to webhook:", webhookErr);
+      }
     }
 
     // Prevent sharing with self
