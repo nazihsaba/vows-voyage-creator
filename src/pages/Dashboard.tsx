@@ -64,6 +64,19 @@ const Dashboard = () => {
 
   const weddingTemplates = [
     {
+      id: "lumiere-editorial",
+      name: "Lumière",
+      description: "Cinematic video & torn-edge luxury editorial design",
+      image: lumiereTemplate,
+      features: [
+        { icon: Video, text: "Video Background" },
+        { icon: Images, text: "Photo Gallery" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+      ],
+    },
+    {
       id: "template6",
       name: "Grâce",
       description: "Immersive full-screen video background experience",
@@ -111,19 +124,6 @@ const Dashboard = () => {
         { icon: Sparkles, text: "Bible Verse" },
         { icon: Heart, text: "Family Names" },
         { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-        { icon: Calendar, text: "RSVP" },
-      ],
-    },
-    {
-      id: "lumiere-editorial",
-      name: "Lumière",
-      description: "Cinematic video & torn-edge luxury editorial design",
-      image: lumiereTemplate,
-      features: [
-        { icon: Video, text: "Video Background" },
-        { icon: Images, text: "Photo Gallery" },
-        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
       ],
