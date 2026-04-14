@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { VenueCanvas } from "./VenueCanvas";
 import { VenueToolbar } from "./VenueToolbar";
 import { VenuePropertiesPanel } from "./VenuePropertiesPanel";
-import { Loader2, Save, CheckCircle2, Sparkles } from "lucide-react";
+import { Loader2, Save, CheckCircle2, Sparkles, Monitor } from "lucide-react";
 
 export interface VenueTable {
   id: string;
