@@ -1275,28 +1275,38 @@ const ManageLinks = () => {
                                           <span className="text-sm font-medium text-foreground truncate mr-2">
                                             {invitee.name}
                                           </span>
-                                          {invitee.is_attending === null ? (
-                                            <Badge
-                                              variant="secondary"
-                                              className="bg-amber-100 text-[#865814] border-0 text-[10px] flex-shrink-0 font-medium"
-                                            >
-                                              Pending
-                                            </Badge>
-                                          ) : invitee.is_attending ? (
-                                            <Badge
-                                              variant="secondary"
-                                              className="bg-emerald-100 text-emerald-700 border-0 text-[10px] flex-shrink-0 font-medium"
-                                            >
-                                              Yes
-                                            </Badge>
-                                          ) : (
-                                            <Badge
-                                              variant="secondary"
-                                              className="bg-red-100 text-red-700 border-0 text-[10px] flex-shrink-0 font-medium"
-                                            >
-                                              No
-                                            </Badge>
-                                          )}
+                                          <div className="flex items-center gap-1.5 flex-shrink-0">
+                                            {invitee.table_number != null && (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-muted text-muted-foreground border-0 text-[10px] font-medium"
+                                              >
+                                                Table {invitee.table_number}
+                                              </Badge>
+                                            )}
+                                            {invitee.is_attending === null ? (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-amber-100 text-[#865814] border-0 text-[10px] font-medium"
+                                              >
+                                                Pending
+                                              </Badge>
+                                            ) : invitee.is_attending ? (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-emerald-100 text-emerald-700 border-0 text-[10px] font-medium"
+                                              >
+                                                Attending
+                                              </Badge>
+                                            ) : (
+                                              <Badge
+                                                variant="secondary"
+                                                className="bg-red-100 text-red-700 border-0 text-[10px] font-medium"
+                                              >
+                                                Not Attending
+                                              </Badge>
+                                            )}
+                                          </div>
                                         </div>
                                       ))
                                   )}
