@@ -4,7 +4,7 @@ import { useToast } from "@/hooks/use-toast";
 import { VenueCanvas } from "./VenueCanvas";
 import { VenueToolbar } from "./VenueToolbar";
 import { VenuePropertiesPanel } from "./VenuePropertiesPanel";
-import { Loader2, Save, CheckCircle2, Sparkles } from "lucide-react";
+import { Loader2, Save, CheckCircle2, Sparkles, Monitor } from "lucide-react";
 
 export interface VenueTable {
   id: string;
@@ -372,8 +372,16 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
   }
 
   return (
-    <div className="overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
-      <div className="flex flex-col h-[70vh] min-h-[500px] min-w-[700px] rounded-xl border border-border/30 overflow-hidden bg-muted/20">
+    <>
+    {/* Mobile block message */}
+    <div className="flex sm:hidden flex-col items-center justify-center py-16 px-6 text-center gap-3">
+      <Monitor className="w-10 h-10 text-muted-foreground" />
+      <p className="text-sm font-medium text-foreground">Venue Layout Planner</p>
+      <p className="text-xs text-muted-foreground">This feature is only available on desktop. Please switch to a larger screen to use the venue planner.</p>
+    </div>
+
+    {/* Desktop view */}
+    <div className="hidden sm:flex flex-col h-[70vh] min-h-[500px] rounded-xl border border-border/30 overflow-hidden bg-muted/20">
       {/* Top bar */}
       <div className="flex items-center justify-between px-4 py-2 bg-background border-b border-border/30">
         <span className="text-sm font-medium text-foreground">{project?.name || "Venue Layout"}</span>
@@ -432,7 +440,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onDuplicate={() => selectedTable && duplicateTable(selectedTable.id)}
         />
       </div>
-      </div>
     </div>
+    </>
   );
 });
