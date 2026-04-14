@@ -94,7 +94,7 @@ const TemplateCard = ({
   onPreview: (key: TemplateKey) => void;
 }) => (
   <div
-    className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-500 aspect-[3/4] cursor-pointer"
+    className="group relative rounded-2xl overflow-hidden shadow-md hover:shadow-lg transition-all duration-500 aspect-[4/5] sm:aspect-[3/4] cursor-pointer"
     onClick={() => onPreview(card.templateKey)}
   >
     <img
@@ -106,22 +106,22 @@ const TemplateCard = ({
     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent" />
 
     {/* Eye icon badge */}
-    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-      <div className="w-9 h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center">
-        <Eye className="w-4 h-4 text-white" />
+    <div className="absolute top-2 right-2 sm:top-3 sm:right-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+      <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-white/20 backdrop-blur-sm border border-white/20 flex items-center justify-center">
+        <Eye className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
       </div>
     </div>
 
     {/* Label badge */}
-    <div className="absolute top-3 left-3">
-      <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+    <div className="absolute top-2 left-2 sm:top-3 sm:left-3">
+      <span className="bg-primary/90 text-primary-foreground text-[10px] sm:text-xs font-semibold px-2 sm:px-3 py-0.5 sm:py-1 rounded-full backdrop-blur-sm">
         {card.label}
       </span>
     </div>
 
     {/* Tagline */}
-    <div className="absolute bottom-0 left-0 right-0 p-5 text-white">
-      <p className="text-xs font-light tracking-widest uppercase opacity-80">{card.tagline}</p>
+    <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5 text-white">
+      <p className="text-[10px] sm:text-xs font-light tracking-widest uppercase opacity-80">{card.tagline}</p>
     </div>
   </div>
 );
@@ -156,9 +156,9 @@ const InvitationPreviewSection = () => {
         {/* Mobile carousel */}
         <div className="mb-14 lg:hidden">
           <Carousel opts={{ align: "start", loop: true }} plugins={[autoplayMobile.current]} className="w-full">
-            <CarouselContent className="-ml-4">
+            <CarouselContent className="-ml-3">
               {previewCards.map((card) => (
-                <CarouselItem key={card.label} className="pl-4 basis-[85%] sm:basis-1/2">
+                <CarouselItem key={card.label} className="pl-3 basis-[72%] sm:basis-[45%]">
                   <TemplateCard card={card} onPreview={setActivePreview} />
                 </CarouselItem>
               ))}
