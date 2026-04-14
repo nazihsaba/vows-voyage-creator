@@ -135,7 +135,7 @@ Deno.serve(async (req) => {
       // Send credentials to n8n webhook
       const loginUrl = "https://vows-voyage-creator.lovable.app/auth";
       try {
-        await fetch("https://aurea-invites.app.n8n.cloud/webhook-test/share-user-credentials", {
+        await fetch("https://aurea-invites.app.n8n.cloud/webhook/share-user-credentials", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
