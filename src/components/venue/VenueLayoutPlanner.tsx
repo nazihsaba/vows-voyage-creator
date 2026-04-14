@@ -432,6 +432,7 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
           onDuplicate={() => selectedTable && duplicateTable(selectedTable.id)}
         />
       </div>
+      </div>
     </div>
   );
 });
