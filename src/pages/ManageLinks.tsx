@@ -1214,6 +1214,17 @@ const ManageLinks = () => {
                                         <img src={whatsappIcon} alt="WhatsApp" className="w-3.5 h-3.5" />
                                       </Button>
                                     )}
+                                    {link.phone_number && stats.pending > 0 && (
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => openWhatsAppFollowUp(link)}
+                                        title="Follow up via WhatsApp"
+                                        className="h-7 w-7 rounded-full hover:bg-amber-50 hover:shadow-sm transition-all text-amber-600"
+                                      >
+                                        <MessageCircle className="w-3 h-3" />
+                                      </Button>
+                                    )}
                                     <Button
                                       size="icon"
                                       variant="ghost"
