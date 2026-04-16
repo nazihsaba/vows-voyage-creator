@@ -1198,78 +1198,139 @@ const ManageLinks = () => {
                                       {stats.notAttending}
                                     </Badge>
                                   </div>
-                                  <div
-                                    className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5"
-                                    onClick={(e) => e.stopPropagation()}
-                                  >
-                                    {link.phone_number && (
+                                  <div onClick={(e) => e.stopPropagation()}>
+                                    {/* Desktop / tablet: inline icon toolbar */}
+                                    <div className="hidden sm:inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
+                                      {link.phone_number && (
+                                        <Button
+                                          size="icon"
+                                          variant="ghost"
+                                          onClick={() => openWhatsApp(link)}
+                                          title="Send via WhatsApp"
+                                          className="h-7 w-7 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
+                                        >
+                                          <img src={whatsappIcon} alt="WhatsApp" className="w-3.5 h-3.5" />
+                                        </Button>
+                                      )}
+                                      {link.phone_number && stats.pending > 0 && (
+                                        <Button
+                                          size="icon"
+                                          variant="ghost"
+                                          onClick={() => openWhatsAppFollowUp(link)}
+                                          title="Follow up via WhatsApp"
+                                          className="h-7 w-7 rounded-full hover:bg-amber-50 hover:shadow-sm transition-all text-amber-600"
+                                        >
+                                          <MessageCircle className="w-3 h-3" />
+                                        </Button>
+                                      )}
                                       <Button
                                         size="icon"
                                         variant="ghost"
-                                        onClick={() => openWhatsApp(link)}
-                                        title="Send via WhatsApp"
-                                        className="h-7 w-7 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
+                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        title="Copy Link"
+                                        className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       >
-                                        <img src={whatsappIcon} alt="WhatsApp" className="w-3.5 h-3.5" />
+                                        <Copy className="w-3 h-3" />
                                       </Button>
-                                    )}
-                                    {link.phone_number && stats.pending > 0 && (
                                       <Button
                                         size="icon"
                                         variant="ghost"
-                                        onClick={() => openWhatsAppFollowUp(link)}
-                                        title="Follow up via WhatsApp"
-                                        className="h-7 w-7 rounded-full hover:bg-amber-50 hover:shadow-sm transition-all text-amber-600"
+                                        onClick={() => {
+                                          const sanitizedLinkName = link.link_name
+                                            .toLowerCase()
+                                            .replace(/[^a-z0-9]+/g, "-")
+                                            .replace(/^-+|-+$/g, "");
+                                          window.open(
+                                            `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                            "_blank",
+                                          );
+                                        }}
+                                        title="Open Link"
+                                        className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       >
-                                        <MessageCircle className="w-3 h-3" />
+                                        <Eye className="w-3 h-3" />
                                       </Button>
-                                    )}
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
-                                      title="Copy Link"
-                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <Copy className="w-3 h-3" />
-                                    </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => openEditDialog(link)}
+                                        title="Edit Link"
+                                        className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
+                                      >
+                                        <Pencil className="w-3 h-3" />
+                                      </Button>
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => setDeleteId(link.id)}
+                                        title="Delete Link"
+                                        className="h-7 w-7 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    </div>
 
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => {
-                                        const sanitizedLinkName = link.link_name
-                                          .toLowerCase()
-                                          .replace(/[^a-z0-9]+/g, "-")
-                                          .replace(/^-+|-+$/g, "");
-                                        window.open(
-                                          `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
-                                          "_blank",
-                                        );
-                                      }}
-                                      title="Open Link"
-                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <Eye className="w-3 h-3" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => openEditDialog(link)}
-                                      title="Edit Link"
-                                      className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
-                                    >
-                                      <Pencil className="w-3 h-3" />
-                                    </Button>
-                                    <Button
-                                      size="icon"
-                                      variant="ghost"
-                                      onClick={() => setDeleteId(link.id)}
-                                      title="Delete Link"
-                                      className="h-7 w-7 rounded-full text-destructive/70 hover:text-destructive hover:bg-destructive/10 transition-all"
-                                    >
-                                      <Trash2 className="w-3 h-3" />
-                                    </Button>
+                                    {/* Mobile: 3-dot dropdown menu */}
+                                    <div className="sm:hidden">
+                                      <DropdownMenu>
+                                        <DropdownMenuTrigger asChild>
+                                          <Button
+                                            size="icon"
+                                            variant="ghost"
+                                            className="h-8 w-8 rounded-full hover:bg-muted/60"
+                                            title="Actions"
+                                          >
+                                            <MoreVertical className="w-4 h-4" />
+                                          </Button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent align="end" className="w-48 bg-background z-50">
+                                          {link.phone_number && (
+                                            <DropdownMenuItem onClick={() => openWhatsApp(link)}>
+                                              <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 mr-2" />
+                                              Send via WhatsApp
+                                            </DropdownMenuItem>
+                                          )}
+                                          {link.phone_number && stats.pending > 0 && (
+                                            <DropdownMenuItem onClick={() => openWhatsAppFollowUp(link)}>
+                                              <MessageCircle className="w-4 h-4 mr-2 text-amber-600" />
+                                              Follow up
+                                            </DropdownMenuItem>
+                                          )}
+                                          <DropdownMenuItem
+                                            onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                          >
+                                            <Copy className="w-4 h-4 mr-2" />
+                                            Copy Link
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() => {
+                                              const sanitizedLinkName = link.link_name
+                                                .toLowerCase()
+                                                .replace(/[^a-z0-9]+/g, "-")
+                                                .replace(/^-+|-+$/g, "");
+                                              window.open(
+                                                `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                                "_blank",
+                                              );
+                                            }}
+                                          >
+                                            <Eye className="w-4 h-4 mr-2" />
+                                            Open Link
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem onClick={() => openEditDialog(link)}>
+                                            <Pencil className="w-4 h-4 mr-2" />
+                                            Edit Link
+                                          </DropdownMenuItem>
+                                          <DropdownMenuItem
+                                            onClick={() => setDeleteId(link.id)}
+                                            className="text-destructive focus:text-destructive"
+                                          >
+                                            <Trash2 className="w-4 h-4 mr-2" />
+                                            Delete Link
+                                          </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                      </DropdownMenu>
+                                    </div>
                                   </div>
                                 </div>
                               </div>
