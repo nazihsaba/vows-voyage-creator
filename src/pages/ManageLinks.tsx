@@ -236,7 +236,7 @@ const ManageLinks = () => {
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = `Dear ${link.link_name},\n\n❤️ With love and joy, we invite you to celebrate our wedding!\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\n💕 We can't wait to see you!`;
+    const message = `Dear ${link.link_name},\n\nWith love and joy, we invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
