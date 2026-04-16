@@ -228,22 +228,24 @@ const ManageLinks = () => {
     });
   };
 
+  const buildWhatsAppUrl = (phoneNumber: string, message: string) => {
+    const phone = phoneNumber.replace(/[^0-9]/g, "");
+    const normalizedMessage = message.normalize("NFC");
+    return `https://wa.me/${phone}?text=${encodeURIComponent(normalizedMessage)}`;
+  };
+
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = `Dear ${link.link_name},\n\n💌 With love and joy, we invite you to celebrate our wedding!\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\n💖 We can't wait to see you!`;
-    const phone = link.phone_number.replace(/[^0-9]/g, "");
-    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    const message = `Dear ${link.link_name},\n\n❤️ With love and joy, we invite you to celebrate our wedding!\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\n💕 We can't wait to see you!`;
+    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = `Hi ${link.link_name} 👋\n\nJust a gentle reminder! We'd love to know if you'll be joining us for our special day. 🌸\n\nIf you haven't already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! 💖`;
-    const phone = link.phone_number.replace(/[^0-9]/g, "");
-    const whatsappUrl = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
-    window.open(whatsappUrl, "_blank");
+    const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
+    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
