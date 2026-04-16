@@ -230,8 +230,7 @@ const ManageLinks = () => {
 
   const buildWhatsAppUrl = (phoneNumber: string, message: string) => {
     const phone = phoneNumber.replace(/[^0-9]/g, "");
-    const normalizedMessage = message.normalize("NFC");
-    return `https://wa.me/${phone}?text=${encodeURIComponent(normalizedMessage)}`;
+    return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`;
   };
 
   const openWhatsApp = (link: InvitationLink) => {
