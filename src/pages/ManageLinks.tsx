@@ -39,6 +39,7 @@ import {
   CreditCard,
   Shield,
   AlertCircle,
+  MessageCircle,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -232,6 +233,16 @@ const ManageLinks = () => {
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = encodeURIComponent(
       `Dear ${link.link_name},\n\nWith love and joy, we invite you to celebrate our wedding 💍✨\n\nWe would be honored to have you with us on this beautiful day.\n\nCheck your invitation here:\n${inviteUrl}`,
+    );
+    const phone = link.phone_number.replace(/[^0-9]/g, "");
+    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+  };
+
+  const openWhatsAppFollowUp = (link: InvitationLink) => {
+    if (!link.phone_number) return;
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const message = encodeURIComponent(
+      `Hi ${link.link_name} 🌸\n\nJust a gentle reminder! We'd love to know if you'll be joining us for our special day 💕\n\nIf you haven't already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! 🥰`,
     );
     const phone = link.phone_number.replace(/[^0-9]/g, "");
     window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
@@ -970,6 +981,17 @@ const ManageLinks = () => {
                                                 <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4" />
                                               </Button>
                                             )}
+                                            {link.phone_number && stats.pending > 0 && (
+                                              <Button
+                                                size="icon"
+                                                variant="ghost"
+                                                onClick={() => openWhatsAppFollowUp(link)}
+                                                title="Follow up via WhatsApp"
+                                                className="h-8 w-8 rounded-full hover:bg-amber-50 hover:shadow-sm transition-all text-amber-600"
+                                              >
+                                                <MessageCircle className="w-3.5 h-3.5" />
+                                              </Button>
+                                            )}
                                             <Button
                                               size="icon"
                                               variant="ghost"
@@ -1190,6 +1212,17 @@ const ManageLinks = () => {
                                         className="h-7 w-7 rounded-full hover:bg-emerald-50 hover:shadow-sm transition-all text-emerald-600"
                                       >
                                         <img src={whatsappIcon} alt="WhatsApp" className="w-3.5 h-3.5" />
+                                      </Button>
+                                    )}
+                                    {link.phone_number && stats.pending > 0 && (
+                                      <Button
+                                        size="icon"
+                                        variant="ghost"
+                                        onClick={() => openWhatsAppFollowUp(link)}
+                                        title="Follow up via WhatsApp"
+                                        className="h-7 w-7 rounded-full hover:bg-amber-50 hover:shadow-sm transition-all text-amber-600"
+                                      >
+                                        <MessageCircle className="w-3 h-3" />
                                       </Button>
                                     )}
                                     <Button
