@@ -231,21 +231,17 @@ const ManageLinks = () => {
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = encodeURIComponent(
-      `Dear ${link.link_name},\n\nWith love and joy, we invite you to celebrate our wedding 💍✨\n\nWe would be honored to have you with us on this beautiful day.\n\nCheck your invitation here:\n${inviteUrl}`,
-    );
+    const text = `Dear ${link.link_name},\n\nWith love and joy, we invite you to celebrate our wedding!\n\nWe would be honored to have you with us on this beautiful day.\n\nCheck your invitation here:\n${inviteUrl}`;
     const phone = link.phone_number.replace(/[^0-9]/g, "");
-    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = encodeURIComponent(
-      `Hi ${link.link_name} 🌸\n\nJust a gentle reminder! We'd love to know if you'll be joining us for our special day 💕\n\nIf you haven't already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! 🥰`,
-    );
+    const text = `Hi ${link.link_name},\n\nJust a gentle reminder! We'd love to know if you'll be joining us for our special day.\n\nIf you haven't already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there!`;
     const phone = link.phone_number.replace(/[^0-9]/g, "");
-    window.open(`https://wa.me/${phone}?text=${message}`, "_blank");
+    window.open(`https://wa.me/${phone}?text=${encodeURIComponent(text)}`, "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
