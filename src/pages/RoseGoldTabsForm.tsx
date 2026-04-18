@@ -644,6 +644,8 @@ const RoseGoldTabsForm = () => {
                   <Label>Gallery Images (up to 6)</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
+                    <br />
+                    Use the slider to align the image and highlight what matters most. ✨
                   </p>
 
                   {/* Existing Gallery Images */}
