@@ -14,6 +14,7 @@ import { ArrowLeft, Loader2, Eye, Upload, X, Languages } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
+import GalleryImageEditor from "@/components/GalleryImageEditor";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
@@ -40,6 +41,7 @@ const WeddingForm = () => {
   const [videoPreview, setVideoPreview] = useState<string>("");
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [galleryFilePositions, setGalleryFilePositions] = useState<number[]>([]);
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
   const [graceFeaturedFile, setGraceFeaturedFile] = useState<File | null>(null);
   const [graceFeaturedPreview, setGraceFeaturedPreview] = useState<string>("");
@@ -320,6 +322,7 @@ const WeddingForm = () => {
 
     // Immediately update files state to avoid duplication
     setGalleryFiles((prev) => [...prev, ...files]);
+    setGalleryFilePositions((prev) => [...prev, ...files.map(() => 50)]);
 
     // Use Promise.all to handle all FileReaders properly
     Promise.all(
@@ -343,10 +346,35 @@ const WeddingForm = () => {
   const removeGalleryImage = (index: number) => {
     const newFiles = [...galleryFiles];
     const newPreviews = [...galleryPreviews];
+    const newPositions = [...galleryFilePositions];
     newFiles.splice(index, 1);
     newPreviews.splice(index, 1);
+    newPositions.splice(index, 1);
     setGalleryFiles(newFiles);
     setGalleryPreviews(newPreviews);
+    setGalleryFilePositions(newPositions);
+  };
+
+  /** Persist a single existing gallery image's vertical position immediately. */
+  const updateExistingGalleryPosition = async (imageId: string, value: number) => {
+    const clamped = Math.min(100, Math.max(0, value));
+    setExistingGalleryImages((prev) =>
+      prev.map((img) => (img.id === imageId ? { ...img, position_y: clamped } : img)),
+    );
+    try {
+      await supabase.from("gallery_images").update({ position_y: clamped } as any).eq("id", imageId);
+    } catch (err) {
+      console.error("Failed to save gallery position:", err);
+    }
+  };
+
+  const updatePendingGalleryPosition = (index: number, value: number) => {
+    const clamped = Math.min(100, Math.max(0, value));
+    setGalleryFilePositions((prev) => {
+      const next = [...prev];
+      next[index] = clamped;
+      return next;
+    });
   };
 
   const removeExistingGalleryImage = async (imageId: string) => {
@@ -612,6 +640,7 @@ const WeddingForm = () => {
           wedding_id: weddingId,
           image_url: url,
           image_order: startingOrder + index,
+          position_y: Math.min(100, Math.max(0, galleryFilePositions[index] ?? 50)),
         }));
 
         const { error: galleryError } = await supabase.from("gallery_images").insert(galleryInserts);
@@ -1393,21 +1422,14 @@ const WeddingForm = () => {
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {existingGalleryImages.map((image) => (
-                        <div
+                        <GalleryImageEditor
                           key={image.id}
-                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
-                        >
-                          <img src={image.image_url} alt="Gallery" loading="lazy" className="w-full h-full object-cover" />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeExistingGalleryImage(image.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          imageUrl={image.image_url}
+                          altText={image.alt_text}
+                          positionY={image.position_y ?? 50}
+                          onPositionChange={(v) => updateExistingGalleryPosition(image.id, v)}
+                          onRemove={() => removeExistingGalleryImage(image.id)}
+                        />
                       ))}
                     </div>
                   )}
@@ -1416,21 +1438,14 @@ const WeddingForm = () => {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {galleryPreviews.map((preview, index) => (
-                        <div
+                        <GalleryImageEditor
                           key={index}
-                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
-                        >
-                          <img src={preview} alt={`Gallery ${index + 1}`} loading="lazy" className="w-full h-full object-cover" />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeGalleryImage(index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          imageUrl={preview}
+                          altText={`Gallery ${index + 1}`}
+                          positionY={galleryFilePositions[index] ?? 50}
+                          onPositionChange={(v) => updatePendingGalleryPosition(index, v)}
+                          onRemove={() => removeGalleryImage(index)}
+                        />
                       ))}
                     </div>
                   )}
