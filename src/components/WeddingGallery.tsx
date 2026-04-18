@@ -1,5 +1,5 @@
 interface WeddingGalleryProps {
-  images: Array<{ id: string; image_url: string; alt_text?: string }>;
+  images: Array<{ id: string; image_url: string; alt_text?: string; position_y?: number | null }>;
 }
 
 export const WeddingGallery = ({ images }: WeddingGalleryProps) => {
@@ -18,6 +18,7 @@ export const WeddingGallery = ({ images }: WeddingGalleryProps) => {
                 src={image.image_url}
                 alt={image.alt_text || `Wedding photo ${index + 1}`}
                 className="w-full h-full object-cover"
+                style={{ objectPosition: `50% ${Math.min(100, Math.max(0, image.position_y ?? 50))}%` }}
                 loading="lazy"
               />
             </div>

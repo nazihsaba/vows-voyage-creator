@@ -14,6 +14,7 @@ import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
+import GalleryImageEditor from "@/components/GalleryImageEditor";
 
 const RoseGoldTabsForm = () => {
   const { id } = useParams();
@@ -35,6 +36,7 @@ const RoseGoldTabsForm = () => {
   const [audioEndTime, setAudioEndTime] = useState<number>(0);
   const [galleryFiles, setGalleryFiles] = useState<File[]>([]);
   const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
+  const [galleryFilePositions, setGalleryFilePositions] = useState<number[]>([]);
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
   const [locations, setLocations] = useState({
     ceremony_location: "",
@@ -199,6 +201,7 @@ const RoseGoldTabsForm = () => {
     }
 
     setGalleryFiles([...galleryFiles, ...files]);
+    setGalleryFilePositions([...galleryFilePositions, ...files.map(() => 50)]);
 
     // Create previews
     files.forEach((file) => {
@@ -213,6 +216,29 @@ const RoseGoldTabsForm = () => {
   const removeGalleryFile = (index: number) => {
     setGalleryFiles(galleryFiles.filter((_, i) => i !== index));
     setGalleryPreviews(galleryPreviews.filter((_, i) => i !== index));
+    setGalleryFilePositions(galleryFilePositions.filter((_, i) => i !== index));
+  };
+
+  /** Persist a single existing gallery image's vertical position immediately. */
+  const updateExistingGalleryPosition = async (imageId: string, value: number) => {
+    const clamped = Math.min(100, Math.max(0, value));
+    setExistingGalleryImages((prev) =>
+      prev.map((img) => (img.id === imageId ? { ...img, position_y: clamped } : img)),
+    );
+    try {
+      await supabase.from("gallery_images").update({ position_y: clamped } as any).eq("id", imageId);
+    } catch (err) {
+      console.error("Failed to save gallery position:", err);
+    }
+  };
+
+  const updatePendingGalleryPosition = (index: number, value: number) => {
+    const clamped = Math.min(100, Math.max(0, value));
+    setGalleryFilePositions((prev) => {
+      const next = [...prev];
+      next[index] = clamped;
+      return next;
+    });
   };
 
   const removeExistingGalleryImage = async (imageId: string) => {
@@ -409,6 +435,7 @@ const RoseGoldTabsForm = () => {
             wedding_id: weddingId,
             image_url: await uploadImage(file, user.id, index),
             image_order: startOrder + index,
+            position_y: Math.min(100, Math.max(0, galleryFilePositions[index] ?? 50)),
           })),
         );
 
@@ -622,25 +649,14 @@ const RoseGoldTabsForm = () => {
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {existingGalleryImages.map((image) => (
-                        <div
+                        <GalleryImageEditor
                           key={image.id}
-                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
-                        >
-                          <img
-                            src={image.image_url}
-                            alt={image.alt_text || "Gallery image"}
-                            className="w-full h-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeExistingGalleryImage(image.id)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          imageUrl={image.image_url}
+                          altText={image.alt_text}
+                          positionY={image.position_y ?? 50}
+                          onPositionChange={(v) => updateExistingGalleryPosition(image.id, v)}
+                          onRemove={() => removeExistingGalleryImage(image.id)}
+                        />
                       ))}
                     </div>
                   )}
@@ -649,25 +665,14 @@ const RoseGoldTabsForm = () => {
                   {galleryPreviews.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
                       {galleryPreviews.map((preview, index) => (
-                        <div
+                        <GalleryImageEditor
                           key={index}
-                          className="relative aspect-square rounded-lg overflow-hidden border-2 border-border"
-                        >
-                          <img
-                            src={preview}
-                            alt={`New gallery image ${index + 1}`}
-                            className="w-full h-full object-cover"
-                          />
-                          <Button
-                            type="button"
-                            variant="destructive"
-                            size="icon"
-                            className="absolute top-2 right-2"
-                            onClick={() => removeGalleryFile(index)}
-                          >
-                            <X className="w-4 h-4" />
-                          </Button>
-                        </div>
+                          imageUrl={preview}
+                          altText={`New gallery image ${index + 1}`}
+                          positionY={galleryFilePositions[index] ?? 50}
+                          onPositionChange={(v) => updatePendingGalleryPosition(index, v)}
+                          onRemove={() => removeGalleryFile(index)}
+                        />
                       ))}
                     </div>
                   )}

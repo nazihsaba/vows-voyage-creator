@@ -334,6 +334,7 @@ export const GraceTemplate = ({
               }
               alt="Wedding moment"
               className="w-full h-full object-cover"
+              style={{ objectPosition: `50% ${Math.min(100, Math.max(0, gallery?.[0]?.position_y ?? 50))}%` }}
             />
           </div>
         </section>

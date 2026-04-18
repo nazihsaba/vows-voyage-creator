@@ -102,7 +102,7 @@ export const EclatTemplate = ({
     }
   };
 
-  const renderGalleryImage = (imageUrl: string, altText: string) => (
+  const renderGalleryImage = (imageUrl: string, altText: string, positionY?: number) => (
     <AnimatedSection animation="fade-in">
       <section className="relative w-full">
         <div className="absolute top-0 left-0 w-full overflow-hidden leading-none z-10">
@@ -111,7 +111,13 @@ export const EclatTemplate = ({
           </svg>
         </div>
         <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden">
-          <img src={imageUrl} alt={altText} loading="lazy" className="w-full h-full object-cover" />
+          <img
+            src={imageUrl}
+            alt={altText}
+            loading="lazy"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: `50% ${Math.min(100, Math.max(0, positionY ?? 50))}%` }}
+          />
         </div>
         <div className="absolute bottom-0 left-0 w-full overflow-hidden leading-none rotate-180 z-10">
           <svg viewBox="0 0 1000 120" preserveAspectRatio="none" className="w-full h-8 fill-white">
@@ -251,7 +257,7 @@ export const EclatTemplate = ({
       </section>
 
       {/* Gallery Image 1 */}
-      {gallery[0] && renderGalleryImage(gallery[0].image_url, gallery[0].alt_text || "Gallery 1")}
+      {gallery[0] && renderGalleryImage(gallery[0].image_url, gallery[0].alt_text || "Gallery 1", gallery[0].position_y)}
 
       {/* Countdown */}
       <AnimatedSection animation="fade-up">
@@ -261,7 +267,7 @@ export const EclatTemplate = ({
       </AnimatedSection>
 
       {/* Gallery Image 2 */}
-      {gallery[1] && renderGalleryImage(gallery[1].image_url, gallery[1].alt_text || "Gallery 2")}
+      {gallery[1] && renderGalleryImage(gallery[1].image_url, gallery[1].alt_text || "Gallery 2", gallery[1].position_y)}
 
       {/* Wedding Events */}
       <section className="py-16 px-4">
@@ -340,7 +346,7 @@ export const EclatTemplate = ({
       </section>
 
       {/* Gallery Image 3 */}
-      {gallery[2] && renderGalleryImage(gallery[2].image_url, gallery[2].alt_text || "Gallery 3")}
+      {gallery[2] && renderGalleryImage(gallery[2].image_url, gallery[2].alt_text || "Gallery 3", gallery[2].position_y)}
 
       {/* Gift Cards */}
       {giftCards.length > 0 && (
@@ -356,7 +362,7 @@ export const EclatTemplate = ({
       )}
 
       {/* Gallery Image 4 */}
-      {gallery[3] && renderGalleryImage(gallery[3].image_url, gallery[3].alt_text || "Gallery 4")}
+      {gallery[3] && renderGalleryImage(gallery[3].image_url, gallery[3].alt_text || "Gallery 4", gallery[3].position_y)}
 
       {/* RSVP */}
       {(wedding.rsvp_deadline || invitees.length > 0) && (
