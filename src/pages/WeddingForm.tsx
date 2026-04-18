@@ -530,6 +530,10 @@ const WeddingForm = () => {
         audioUrl = null;
       }
 
+      // Trim name fields before persisting
+      formData.groom_name = formData.groom_name.trim();
+      formData.bride_name = formData.bride_name.trim();
+
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       // Build field_customizations with Aura quote/reference if applicable
@@ -788,8 +792,9 @@ const WeddingForm = () => {
                     id="groom_name"
                     value={formData.groom_name}
                     onChange={(e) => {
-                      setFormData({ ...formData, groom_name: e.target.value });
-                      if (enableArabic) debouncedTranslate("groom_name", e.target.value);
+                      const sanitized = e.target.value.replace(/^\s+/, "");
+                      setFormData({ ...formData, groom_name: sanitized });
+                      if (enableArabic) debouncedTranslate("groom_name", sanitized);
                     }}
                     required
                     disabled={!!id}
@@ -816,8 +821,9 @@ const WeddingForm = () => {
                     id="bride_name"
                     value={formData.bride_name}
                     onChange={(e) => {
-                      setFormData({ ...formData, bride_name: e.target.value });
-                      if (enableArabic) debouncedTranslate("bride_name", e.target.value);
+                      const sanitized = e.target.value.replace(/^\s+/, "");
+                      setFormData({ ...formData, bride_name: sanitized });
+                      if (enableArabic) debouncedTranslate("bride_name", sanitized);
                     }}
                     required
                     disabled={!!id}

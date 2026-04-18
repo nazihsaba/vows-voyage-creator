@@ -307,6 +307,10 @@ const RoseGoldTabsForm = () => {
         uploadedAudioUrl = null;
       }
 
+      // Trim name fields before persisting
+      formData.groom_name = formData.groom_name.trim();
+      formData.bride_name = formData.bride_name.trim();
+
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
       let weddingId = id;
@@ -477,7 +481,7 @@ const RoseGoldTabsForm = () => {
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
-                    onChange={(e) => setFormData({ ...formData, groom_name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, groom_name: e.target.value.replace(/^\s+/, "") })}
                     required
                     disabled={!!id}
                   />
@@ -488,7 +492,7 @@ const RoseGoldTabsForm = () => {
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
-                    onChange={(e) => setFormData({ ...formData, bride_name: e.target.value })}
+                    onChange={(e) => setFormData({ ...formData, bride_name: e.target.value.replace(/^\s+/, "") })}
                     required
                     disabled={!!id}
                   />
