@@ -13,6 +13,8 @@ interface Props {
    * whether the image is being cropped vertically by object-cover.
    */
   imageRef: React.RefObject<HTMLImageElement>;
+  /** Show the helper sentence above the slider (only used for the main photo). */
+  showHelperText?: boolean;
 }
 
 /**
@@ -23,7 +25,7 @@ interface Props {
  * Value is always preserved (other templates may render at different aspect
  * ratios and still benefit from the saved position).
  */
-const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props) => {
+const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef, showHelperText = false }: Props) => {
   const [canAdjustY, setCanAdjustY] = useState(false);
 
   const recompute = useCallback(() => {
@@ -66,9 +68,11 @@ const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props)
 
   return (
     <div className="space-y-2 rounded-lg border border-border bg-muted/20 p-3">
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        Use the slider to align the image and highlight what matters most. ✨
-      </p>
+      {showHelperText && (
+        <p className="text-xs leading-relaxed text-muted-foreground">
+          Use the slider to align the image and highlight what matters most. ✨
+        </p>
+      )}
       <div className="flex items-center justify-between gap-2">
         <Label className="text-xs">Adjust vertical position</Label>
         <Button
