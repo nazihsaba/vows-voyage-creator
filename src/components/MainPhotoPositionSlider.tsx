@@ -88,9 +88,9 @@ const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props)
         disabled={!canAdjustY}
         onValueChange={(v) => onChange(v[0])}
       />
-      <p className="text-xs text-muted-foreground">
+      <p className="text-sm text-muted-foreground">
         {canAdjustY
-          ? "Move the photo up or down to choose what stays visible."
+          ? "Move the slider to choose which part of the photo stays visible."
           : "This image already fits perfectly — no adjustment needed."}
       </p>
     </div>
