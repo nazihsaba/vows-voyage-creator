@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import { ArrowLeft, Loader2, Eye, Upload, X } from "lucide-react";
 import omtLogo from "@/assets/omt-logo.jpg";
 import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
+import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 
 const RoseGoldTabsForm = () => {
   const { id } = useParams();
@@ -65,7 +66,9 @@ const RoseGoldTabsForm = () => {
     video_url: "",
     template_type: searchParams.get("template") || "rose-gold-tabs",
     custom_primary_color: "#fb7185",
+    main_picture_position_y: 50,
   });
+  const mainImgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if (id) {
@@ -78,7 +81,10 @@ const RoseGoldTabsForm = () => {
       const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
-      setFormData(data);
+      setFormData({
+        ...data,
+        main_picture_position_y: data.main_picture_position_y ?? 50,
+      } as any);
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
@@ -158,7 +164,7 @@ const RoseGoldTabsForm = () => {
   const removeImage = () => {
     setImageFile(null);
     setImagePreview("");
-    setFormData({ ...formData, main_picture_url: "" });
+    setFormData({ ...formData, main_picture_url: "", main_picture_position_y: 50 });
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -536,18 +542,35 @@ const RoseGoldTabsForm = () => {
                         </Button>
                       </div>
                     ) : imagePreview ? (
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img src={imagePreview} alt="Wedding preview" loading="lazy" className="w-full h-full object-cover" />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={removeImage}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <>
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                          <img
+                            ref={mainImgRef}
+                            src={imagePreview}
+                            alt="Wedding preview"
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                            style={{
+                              objectPosition: `50% ${Math.min(100, Math.max(0, (formData as any).main_picture_position_y ?? 50))}%`,
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={removeImage}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <MainPhotoPositionSlider
+                          imageUrl={imagePreview}
+                          value={Math.min(100, Math.max(0, (formData as any).main_picture_position_y ?? 50))}
+                          onChange={(v) => setFormData({ ...formData, main_picture_position_y: v } as any)}
+                          imageRef={mainImgRef}
+                        />
+                      </>
                     ) : (
                       <>
                         <label

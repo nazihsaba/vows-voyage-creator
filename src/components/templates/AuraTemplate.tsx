@@ -292,7 +292,15 @@ export const AuraTemplate = ({
             <section className="w-full px-4 py-8">
               <div className="max-w-2xl mx-auto">
                 <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                  <img src={wedding.main_picture_url} alt="Wedding photo" loading="lazy" className="w-full h-full object-cover" />
+                  <img
+                    src={wedding.main_picture_url}
+                    alt="Wedding photo"
+                    loading="lazy"
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: `50% ${Math.min(100, Math.max(0, (wedding as any).main_picture_position_y ?? 50))}%`,
+                    }}
+                  />
                 </div>
               </div>
             </section>

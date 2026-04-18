@@ -375,6 +375,7 @@ export type Database = {
           invitation_text: string | null
           locked_name_style: Json | null
           main_description: string | null
+          main_picture_position_y: number | null
           main_picture_url: string | null
           middle_text: string | null
           payment_external_id: string | null
@@ -414,6 +415,7 @@ export type Database = {
           invitation_text?: string | null
           locked_name_style?: Json | null
           main_description?: string | null
+          main_picture_position_y?: number | null
           main_picture_url?: string | null
           middle_text?: string | null
           payment_external_id?: string | null
@@ -453,6 +455,7 @@ export type Database = {
           invitation_text?: string | null
           locked_name_style?: Json | null
           main_description?: string | null
+          main_picture_position_y?: number | null
           main_picture_url?: string | null
           middle_text?: string | null
           payment_external_id?: string | null

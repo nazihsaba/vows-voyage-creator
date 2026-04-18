@@ -13,6 +13,7 @@ import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Loader2, Eye, Upload, X, Languages } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
+import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
@@ -78,7 +79,9 @@ const WeddingForm = () => {
     audio_url: "",
     audio_start_time: 0,
     audio_end_time: 0,
+    main_picture_position_y: 50,
   });
+  const mainImgRef = useRef<HTMLImageElement>(null);
 
   const template = formData.template_type;
   const isAuraTemplate = template === "bible-verse-tabs" || template === "lumiere-editorial" || template === "etoile-carousel";
@@ -187,7 +190,10 @@ const WeddingForm = () => {
       const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
-      setFormData(data);
+      setFormData({
+        ...data,
+        main_picture_position_y: data.main_picture_position_y ?? 50,
+      } as any);
       // Load Aura quote/reference from field_customizations
       if (data.field_customizations) {
         const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
@@ -278,7 +284,7 @@ const WeddingForm = () => {
   const removeImage = () => {
     setImageFile(null);
     setImagePreview("");
-    setFormData({ ...formData, main_picture_url: "" });
+    setFormData({ ...formData, main_picture_url: "", main_picture_position_y: 50 });
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -1027,18 +1033,35 @@ const WeddingForm = () => {
                   <Label htmlFor="main_picture">Main Wedding Photo <span className="text-foreground">*</span></Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
-                      <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                        <img src={imagePreview} alt="Wedding preview" loading="lazy" className="w-full h-full object-cover" />
-                        <Button
-                          type="button"
-                          variant="destructive"
-                          size="icon"
-                          className="absolute top-2 right-2"
-                          onClick={removeImage}
-                        >
-                          <X className="w-4 h-4" />
-                        </Button>
-                      </div>
+                      <>
+                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                          <img
+                            ref={mainImgRef}
+                            src={imagePreview}
+                            alt="Wedding preview"
+                            loading="lazy"
+                            className="w-full h-full object-cover"
+                            style={{
+                              objectPosition: `50% ${Math.min(100, Math.max(0, (formData as any).main_picture_position_y ?? 50))}%`,
+                            }}
+                          />
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            size="icon"
+                            className="absolute top-2 right-2"
+                            onClick={removeImage}
+                          >
+                            <X className="w-4 h-4" />
+                          </Button>
+                        </div>
+                        <MainPhotoPositionSlider
+                          imageUrl={imagePreview}
+                          value={Math.min(100, Math.max(0, (formData as any).main_picture_position_y ?? 50))}
+                          onChange={(v) => setFormData({ ...formData, main_picture_position_y: v } as any)}
+                          imageRef={mainImgRef}
+                        />
+                      </>
                     ) : (
                       <label
                         htmlFor="main_picture"

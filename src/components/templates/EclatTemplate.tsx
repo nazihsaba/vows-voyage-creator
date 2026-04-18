@@ -142,7 +142,7 @@ export const EclatTemplate = ({
             ? `url(${wedding.main_picture_url})`
             : "linear-gradient(135deg, #c9a6a6 0%, #e8c4c4 100%)",
           backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundPosition: `50% ${Math.min(100, Math.max(0, (wedding as any).main_picture_position_y ?? 50))}%`,
         }}
       >
         <div className="absolute inset-0 bg-black/30" />
