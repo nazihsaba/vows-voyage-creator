@@ -63,9 +63,7 @@ const WeddingForm = () => {
   ]);
   const [audioFile, setAudioFile] = useState<Blob | null>(null);
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
-  const [auraQuote, setAuraQuote] = useState(
-    "Two are better than one. For if they fall, one will lift up the other."
-  );
+  const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [formData, setFormData] = useState({
     groom_name: "",
@@ -89,8 +87,10 @@ const WeddingForm = () => {
   const mainImgRef = useRef<HTMLImageElement>(null);
 
   const template = formData.template_type;
-  const isAuraTemplate = template === "bible-verse-tabs" || template === "lumiere-editorial" || template === "etoile-carousel";
-  const isVideoTemplate = template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
+  const isAuraTemplate =
+    template === "bible-verse-tabs" || template === "lumiere-editorial" || template === "etoile-carousel";
+  const isVideoTemplate =
+    template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
 
@@ -112,57 +112,63 @@ const WeddingForm = () => {
 
   const translateToArabic = useCallback(async (fieldName: string, text: string) => {
     if (!text || text.trim().length === 0) {
-      setArabicFields(prev => ({ ...prev, [fieldName]: "" }));
+      setArabicFields((prev) => ({ ...prev, [fieldName]: "" }));
       return;
     }
-    setTranslatingFields(prev => ({ ...prev, [fieldName]: true }));
+    setTranslatingFields((prev) => ({ ...prev, [fieldName]: true }));
     try {
       const { data, error } = await supabase.functions.invoke("translate-arabic", {
         body: { text, fieldName },
       });
       if (error) throw error;
       if (data?.translatedText) {
-        setArabicFields(prev => ({ ...prev, [fieldName]: data.translatedText }));
+        setArabicFields((prev) => ({ ...prev, [fieldName]: data.translatedText }));
       }
     } catch (err) {
       console.error(`Translation error for ${fieldName}:`, err);
     } finally {
-      setTranslatingFields(prev => ({ ...prev, [fieldName]: false }));
+      setTranslatingFields((prev) => ({ ...prev, [fieldName]: false }));
     }
   }, []);
 
-  const debouncedTranslate = useCallback((fieldName: string, text: string) => {
-    if (translationTimers.current[fieldName]) {
-      clearTimeout(translationTimers.current[fieldName]);
-    }
-    translationTimers.current[fieldName] = setTimeout(() => {
-      translateToArabic(fieldName, text);
-    }, 800);
-  }, [translateToArabic]);
-
-  const handleEnableArabic = useCallback((enabled: boolean) => {
-    setEnableArabic(enabled);
-    if (enabled) {
-      const fieldsToTranslate: Record<string, string> = {
-        groom_name: formData.groom_name,
-        bride_name: formData.bride_name,
-        groom_family: formData.groom_family || "",
-        bride_family: formData.bride_family || "",
-        main_description: formData.main_description || "",
-        ceremony_location: locations.ceremony_location,
-        venue_location: locations.venue_location,
-      };
-      if (isAuraTemplate) {
-        fieldsToTranslate.aura_quote = auraQuote;
-        fieldsToTranslate.aura_reference = auraReference;
+  const debouncedTranslate = useCallback(
+    (fieldName: string, text: string) => {
+      if (translationTimers.current[fieldName]) {
+        clearTimeout(translationTimers.current[fieldName]);
       }
-      Object.entries(fieldsToTranslate).forEach(([key, value]) => {
-        if (value && value.trim().length > 0 && !arabicFields[key]) {
-          translateToArabic(key, value);
+      translationTimers.current[fieldName] = setTimeout(() => {
+        translateToArabic(fieldName, text);
+      }, 800);
+    },
+    [translateToArabic],
+  );
+
+  const handleEnableArabic = useCallback(
+    (enabled: boolean) => {
+      setEnableArabic(enabled);
+      if (enabled) {
+        const fieldsToTranslate: Record<string, string> = {
+          groom_name: formData.groom_name,
+          bride_name: formData.bride_name,
+          groom_family: formData.groom_family || "",
+          bride_family: formData.bride_family || "",
+          main_description: formData.main_description || "",
+          ceremony_location: locations.ceremony_location,
+          venue_location: locations.venue_location,
+        };
+        if (isAuraTemplate) {
+          fieldsToTranslate.aura_quote = auraQuote;
+          fieldsToTranslate.aura_reference = auraReference;
         }
-      });
-    }
-  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic]);
+        Object.entries(fieldsToTranslate).forEach(([key, value]) => {
+          if (value && value.trim().length > 0 && !arabicFields[key]) {
+            translateToArabic(key, value);
+          }
+        });
+      }
+    },
+    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic],
+  );
 
   const getMaxGalleryImages = () => {
     if (template === "classic-romance") return 4;
@@ -201,13 +207,16 @@ const WeddingForm = () => {
       } as any);
       // Load Aura quote/reference from field_customizations
       if (data.field_customizations) {
-        const fc = typeof data.field_customizations === 'string' ? JSON.parse(data.field_customizations) : data.field_customizations;
+        const fc =
+          typeof data.field_customizations === "string"
+            ? JSON.parse(data.field_customizations)
+            : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
         // Load Arabic fields
         if (fc["arabic"]) {
           setEnableArabic(true);
-          setArabicFields(prev => ({ ...prev, ...fc["arabic"] }));
+          setArabicFields((prev) => ({ ...prev, ...fc["arabic"] }));
         }
       }
       if (data.main_picture_url) {
@@ -236,7 +245,10 @@ const WeddingForm = () => {
       if (galleryData) {
         setExistingGalleryImages(galleryData);
         // Load Grace featured image preview if applicable
-        if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
+        if (
+          (data.template_type === "video-cinematic" || data.template_type === "template6") &&
+          galleryData.length > 0
+        ) {
           setGraceFeaturedPreview(galleryData[0].image_url);
           setGraceFeaturedPositionY(galleryData[0].position_y ?? 50);
         }
@@ -270,7 +282,7 @@ const WeddingForm = () => {
         .order("card_order");
 
       if (cardsData && cardsData.length > 0) {
-        setGiftCards(cardsData.map(c => ({ card_name: c.card_name, card_number: c.card_number })));
+        setGiftCards(cardsData.map((c) => ({ card_name: c.card_name, card_number: c.card_number })));
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
@@ -364,11 +376,12 @@ const WeddingForm = () => {
   /** Persist a single existing gallery image's vertical position immediately. */
   const updateExistingGalleryPosition = async (imageId: string, value: number) => {
     const clamped = Math.min(100, Math.max(0, value));
-    setExistingGalleryImages((prev) =>
-      prev.map((img) => (img.id === imageId ? { ...img, position_y: clamped } : img)),
-    );
+    setExistingGalleryImages((prev) => prev.map((img) => (img.id === imageId ? { ...img, position_y: clamped } : img)));
     try {
-      await supabase.from("gallery_images").update({ position_y: clamped } as any).eq("id", imageId);
+      await supabase
+        .from("gallery_images")
+        .update({ position_y: clamped } as any)
+        .eq("id", imageId);
     } catch (err) {
       console.error("Failed to save gallery position:", err);
     }
@@ -445,12 +458,10 @@ const WeddingForm = () => {
       const filePath = `invites/${slug}/main.${ext}`;
 
       // Upload (upsert) to invitation-images bucket
-      await supabase.storage
-        .from("invitation-images")
-        .upload(filePath, blob, {
-          contentType,
-          upsert: true,
-        });
+      await supabase.storage.from("invitation-images").upload(filePath, blob, {
+        contentType,
+        upsert: true,
+      });
     } catch (err) {
       console.warn("OG image copy failed (non-blocking):", err);
     }
@@ -500,16 +511,6 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate welcome drink time is required for Aura/Lumière/Étoile templates
-    if (isAuraTemplate && !locations.welcome_drink_time) {
-      toast({
-        title: "Welcome drink time required",
-        description: "Please specify the welcome drink time.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setLoading(true);
     setUploading(true);
 
@@ -551,9 +552,7 @@ const WeddingForm = () => {
 
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
-      const existingCustomizations = typeof rawFc === 'string'
-        ? JSON.parse(rawFc || '{}')
-        : (rawFc || {});
+      const existingCustomizations = typeof rawFc === "string" ? JSON.parse(rawFc || "{}") : rawFc || {};
       let fieldCustomizations = isAuraTemplate
         ? {
             ...existingCustomizations,
@@ -790,7 +789,9 @@ const WeddingForm = () => {
 
         <Card className="shadow-elegant overflow-hidden">
           <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
-            <CardTitle className="text-2xl sm:text-3xl font-serif">{id ? "Edit Wedding" : "Create Wedding Invitation"}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl font-serif">
+              {id ? "Edit Wedding" : "Create Wedding Invitation"}
+            </CardTitle>
           </CardHeader>
           <CardContent className="px-4 sm:px-6">
             <form onSubmit={handleSubmit} className="space-y-5 sm:space-y-6">
@@ -798,19 +799,19 @@ const WeddingForm = () => {
               <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
                 <div className="flex items-center gap-2">
                   <Languages className="w-4 h-4 text-muted-foreground" />
-                  <Label htmlFor="enable-arabic" className="text-sm font-medium cursor-pointer">Enable Arabic</Label>
+                  <Label htmlFor="enable-arabic" className="text-sm font-medium cursor-pointer">
+                    Enable Arabic
+                  </Label>
                 </div>
-                <Switch
-                  id="enable-arabic"
-                  checked={enableArabic}
-                  onCheckedChange={handleEnableArabic}
-                />
+                <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
               </div>
 
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_name" className="text-sm font-medium">Groom Name *</Label>
+                  <Label htmlFor="groom_name" className="text-sm font-medium">
+                    Groom Name *
+                  </Label>
                   <Input
                     id="groom_name"
                     value={formData.groom_name}
@@ -829,7 +830,7 @@ const WeddingForm = () => {
                       <Label className="text-xs text-muted-foreground">اسم العريس (Arabic)</Label>
                       <Input
                         value={arabicFields.groom_name}
-                        onChange={(e) => setArabicFields(prev => ({ ...prev, groom_name: e.target.value }))}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, groom_name: e.target.value }))}
                         dir="rtl"
                         className="h-10 text-right font-arabic"
                         placeholder={translatingFields.groom_name ? "Translating..." : ""}
@@ -839,7 +840,9 @@ const WeddingForm = () => {
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_name" className="text-sm font-medium">Bride Name *</Label>
+                  <Label htmlFor="bride_name" className="text-sm font-medium">
+                    Bride Name *
+                  </Label>
                   <Input
                     id="bride_name"
                     value={formData.bride_name}
@@ -858,7 +861,7 @@ const WeddingForm = () => {
                       <Label className="text-xs text-muted-foreground">اسم العروس (Arabic)</Label>
                       <Input
                         value={arabicFields.bride_name}
-                        onChange={(e) => setArabicFields(prev => ({ ...prev, bride_name: e.target.value }))}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, bride_name: e.target.value }))}
                         dir="rtl"
                         className="h-10 text-right font-arabic"
                         placeholder={translatingFields.bride_name ? "Translating..." : ""}
@@ -872,7 +875,9 @@ const WeddingForm = () => {
               {/* Family Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="groom_family" className="text-sm font-medium">Groom's Family *</Label>
+                  <Label htmlFor="groom_family" className="text-sm font-medium">
+                    Groom's Family *
+                  </Label>
                   <Input
                     id="groom_family"
                     required
@@ -888,7 +893,7 @@ const WeddingForm = () => {
                       <Label className="text-xs text-muted-foreground">عائلة العريس (Arabic)</Label>
                       <Input
                         value={arabicFields.groom_family}
-                        onChange={(e) => setArabicFields(prev => ({ ...prev, groom_family: e.target.value }))}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, groom_family: e.target.value }))}
                         dir="rtl"
                         className="h-10 text-right font-arabic"
                         placeholder={translatingFields.groom_family ? "Translating..." : ""}
@@ -898,7 +903,9 @@ const WeddingForm = () => {
                   )}
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="bride_family" className="text-sm font-medium">Bride's Family *</Label>
+                  <Label htmlFor="bride_family" className="text-sm font-medium">
+                    Bride's Family *
+                  </Label>
                   <Input
                     id="bride_family"
                     required
@@ -914,7 +921,7 @@ const WeddingForm = () => {
                       <Label className="text-xs text-muted-foreground">عائلة العروس (Arabic)</Label>
                       <Input
                         value={arabicFields.bride_family}
-                        onChange={(e) => setArabicFields(prev => ({ ...prev, bride_family: e.target.value }))}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, bride_family: e.target.value }))}
                         dir="rtl"
                         className="h-10 text-right font-arabic"
                         placeholder={translatingFields.bride_family ? "Translating..." : ""}
@@ -928,7 +935,9 @@ const WeddingForm = () => {
               {/* Dates */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
-                  <Label htmlFor="wedding_date" className="text-sm font-medium">Wedding Date *</Label>
+                  <Label htmlFor="wedding_date" className="text-sm font-medium">
+                    Wedding Date *
+                  </Label>
                   <Input
                     id="wedding_date"
                     type="date"
@@ -939,7 +948,9 @@ const WeddingForm = () => {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">Confirmation Deadline *</Label>
+                  <Label htmlFor="rsvp_deadline" className="text-sm font-medium">
+                    Confirmation Deadline *
+                  </Label>
                   <Input
                     id="rsvp_deadline"
                     type="date"
@@ -952,7 +963,9 @@ const WeddingForm = () => {
               </div>
 
               <div className="space-y-1.5">
-                <Label htmlFor="main_description" className="text-sm font-medium">Description</Label>
+                <Label htmlFor="main_description" className="text-sm font-medium">
+                  Description
+                </Label>
                 <Textarea
                   id="main_description"
                   value={formData.main_description}
@@ -968,7 +981,7 @@ const WeddingForm = () => {
                     <Label className="text-xs text-muted-foreground">الوصف (Arabic)</Label>
                     <Textarea
                       value={arabicFields.main_description}
-                      onChange={(e) => setArabicFields(prev => ({ ...prev, main_description: e.target.value }))}
+                      onChange={(e) => setArabicFields((prev) => ({ ...prev, main_description: e.target.value }))}
                       dir="rtl"
                       rows={3}
                       className="min-h-[80px] text-right font-arabic"
@@ -1000,7 +1013,7 @@ const WeddingForm = () => {
                         <Label className="text-xs text-muted-foreground">الاقتباس (Arabic)</Label>
                         <Textarea
                           value={arabicFields.aura_quote}
-                          onChange={(e) => setArabicFields(prev => ({ ...prev, aura_quote: e.target.value }))}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, aura_quote: e.target.value }))}
                           dir="rtl"
                           rows={3}
                           className="text-right font-arabic"
@@ -1026,7 +1039,7 @@ const WeddingForm = () => {
                         <Label className="text-xs text-muted-foreground">المرجع (Arabic)</Label>
                         <Input
                           value={arabicFields.aura_reference}
-                          onChange={(e) => setArabicFields(prev => ({ ...prev, aura_reference: e.target.value }))}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, aura_reference: e.target.value }))}
                           dir="rtl"
                           className="h-10 text-right font-arabic"
                           placeholder={translatingFields.aura_reference ? "Translating..." : ""}
@@ -1064,7 +1077,9 @@ const WeddingForm = () => {
               {/* Conditional: Show Video Upload for Video Template, Photo Upload for non-carousel, or nothing for carousel */}
               {isVideoTemplate ? (
                 <div className="space-y-2">
-                  <Label htmlFor="wedding_video">Upload Video <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="wedding_video">
+                    Upload Video <span className="text-foreground">*</span>
+                  </Label>
                   <div className="flex flex-col gap-4">
                     {videoPreview ? (
                       <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
@@ -1100,7 +1115,9 @@ const WeddingForm = () => {
                 </div>
               ) : template !== "etoile-carousel" ? (
                 <div className="space-y-2">
-                  <Label htmlFor="main_picture">Main Wedding Photo <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="main_picture">
+                    Main Wedding Photo <span className="text-foreground">*</span>
+                  </Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
                       <>
@@ -1174,7 +1191,9 @@ const WeddingForm = () => {
               {/* Grace Featured Image */}
               {isGraceTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="grace_featured">Featured Image <span className="text-foreground">*</span></Label>
+                  <Label htmlFor="grace_featured">
+                    Featured Image <span className="text-foreground">*</span>
+                  </Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     This image will be displayed as a full-width photo in your invitation
                   </p>
@@ -1274,7 +1293,9 @@ const WeddingForm = () => {
                             <Label className="text-xs text-muted-foreground">اسم موقع الحفل (Arabic)</Label>
                             <Input
                               value={arabicFields.ceremony_location}
-                              onChange={(e) => setArabicFields(prev => ({ ...prev, ceremony_location: e.target.value }))}
+                              onChange={(e) =>
+                                setArabicFields((prev) => ({ ...prev, ceremony_location: e.target.value }))
+                              }
                               dir="rtl"
                               className="h-10 text-right font-arabic"
                               placeholder={translatingFields.ceremony_location ? "Translating..." : ""}
@@ -1316,7 +1337,7 @@ const WeddingForm = () => {
                           <SelectValue>
                             <span className="flex items-center gap-2">
                               <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.ceremony_icon)?.label}
+                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.ceremony_icon)?.label}
                             </span>
                           </SelectValue>
                         </SelectTrigger>
@@ -1354,9 +1375,7 @@ const WeddingForm = () => {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label htmlFor="venue_time">
-                          {isAuraTemplate ? "Dinner & Party Time *" : "Time *"}
-                        </Label>
+                        <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
                         <Input
                           id="venue_time"
                           type="time"
@@ -1369,20 +1388,14 @@ const WeddingForm = () => {
                     </div>
                     {isAuraTemplate && (
                       <div className="space-y-1.5">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                        <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
                         <Input
                           id="welcome_drink_time"
                           type="time"
                           value={locations.welcome_drink_time}
-                          onChange={(e) =>
-                            setLocations({ ...locations, welcome_drink_time: e.target.value })
-                          }
-                          required
+                          onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
                           className="h-11 sm:h-10"
                         />
-                        <p className="text-xs text-muted-foreground">
-                          Shown as a separate timeline event before the dinner & party.
-                        </p>
                       </div>
                     )}
                     <div className="space-y-1.5">
@@ -1406,7 +1419,7 @@ const WeddingForm = () => {
                           <SelectValue>
                             <span className="flex items-center gap-2">
                               <Icon icon={locations.venue_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find(o => o.value === locations.venue_icon)?.label}
+                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.venue_icon)?.label}
                             </span>
                           </SelectValue>
                         </SelectTrigger>
@@ -1494,7 +1507,9 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
-                  <Label>Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span></Label>
+                  <Label>
+                    Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span>
+                  </Label>
                   <p className="text-xs text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
                     <br />
@@ -1560,7 +1575,9 @@ const WeddingForm = () => {
               )}
 
               <div className="space-y-1.5">
-                <Label htmlFor="slug" className="text-sm font-medium">Custom URL Slug</Label>
+                <Label htmlFor="slug" className="text-sm font-medium">
+                  Custom URL Slug
+                </Label>
                 <Input
                   id="slug"
                   value={formData.slug}
