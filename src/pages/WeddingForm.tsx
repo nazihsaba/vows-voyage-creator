@@ -56,6 +56,7 @@ const WeddingForm = () => {
     venue_time: "",
     venue_location_link: "",
     venue_icon: "solar:confetti-bold",
+    welcome_drink_time: "",
   });
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
@@ -247,6 +248,7 @@ const WeddingForm = () => {
       if (locationsData) {
         const ceremony = locationsData.find((l) => l.type === "ceremony");
         const venue = locationsData.find((l) => l.type === "venue");
+        const welcomeDrink = locationsData.find((l) => l.type === "welcome_drink");
         setLocations({
           ceremony_location: ceremony?.location_name || "",
           ceremony_time: ceremony?.time || "",
@@ -256,6 +258,7 @@ const WeddingForm = () => {
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
           venue_icon: venue?.icon || "solar:confetti-bold",
+          welcome_drink_time: welcomeDrink?.time || "",
         });
       }
 
@@ -704,6 +707,16 @@ const WeddingForm = () => {
           time: locations.venue_time,
           location_link: locations.venue_location_link,
           icon: locations.venue_icon,
+        });
+      }
+      if (isAuraTemplate && locations.welcome_drink_time) {
+        locationInserts.push({
+          wedding_id: weddingId,
+          type: "welcome_drink",
+          location_name: locations.venue_location,
+          time: locations.welcome_drink_time,
+          location_link: locations.venue_location_link,
+          icon: "streamline:champagne-party-alcohol-remix",
         });
       }
 
@@ -1331,7 +1344,9 @@ const WeddingForm = () => {
                         />
                       </div>
                       <div className="space-y-1.5">
-                        <Label htmlFor="venue_time">Time *</Label>
+                        <Label htmlFor="venue_time">
+                          {isAuraTemplate ? "Dinner & Party Time *" : "Time *"}
+                        </Label>
                         <Input
                           id="venue_time"
                           type="time"
@@ -1342,6 +1357,23 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
+                    {isAuraTemplate && (
+                      <div className="space-y-1.5">
+                        <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
+                        <Input
+                          id="welcome_drink_time"
+                          type="time"
+                          value={locations.welcome_drink_time}
+                          onChange={(e) =>
+                            setLocations({ ...locations, welcome_drink_time: e.target.value })
+                          }
+                          className="h-11 sm:h-10"
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          Shown as a separate timeline event before the dinner & party.
+                        </p>
+                      </div>
+                    )}
                     <div className="space-y-1.5">
                       <Label htmlFor="venue_location_link">Venue map link</Label>
                       <Input
