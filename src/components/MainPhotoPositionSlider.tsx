@@ -66,6 +66,9 @@ const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props)
 
   return (
     <div className="space-y-2 rounded-lg border border-border bg-muted/20 p-3">
+      <p className="text-xs leading-relaxed text-muted-foreground">
+        Use the slider to align the image and highlight what matters most. ✨
+      </p>
       <div className="flex items-center justify-between gap-2">
         <Label className="text-xs">Adjust vertical position</Label>
         <Button
