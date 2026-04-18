@@ -1089,6 +1089,7 @@ const WeddingForm = () => {
                           value={Math.min(100, Math.max(0, (formData as any).main_picture_position_y ?? 50))}
                           onChange={(v) => setFormData({ ...formData, main_picture_position_y: v } as any)}
                           imageRef={mainImgRef}
+                          showHelperText
                         />
                       </>
                     ) : (
