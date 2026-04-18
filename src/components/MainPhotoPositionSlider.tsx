@@ -67,7 +67,7 @@ const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props)
   return (
     <div className="space-y-2 rounded-lg border border-border bg-muted/20 p-3">
       <div className="flex items-center justify-between gap-2">
-        <Label className="text-sm">Adjust vertical position</Label>
+        <Label className="text-xs">Adjust vertical position</Label>
         <Button
           type="button"
           variant="ghost"
@@ -88,11 +88,11 @@ const MainPhotoPositionSlider = ({ imageUrl, value, onChange, imageRef }: Props)
         disabled={!canAdjustY}
         onValueChange={(v) => onChange(v[0])}
       />
-      <p className="text-sm text-muted-foreground">
-        {canAdjustY
-          ? "Move the slider to choose which part of the photo stays visible."
-          : "This image already fits perfectly — no adjustment needed."}
-      </p>
+      {!canAdjustY && (
+        <p className="text-xs text-muted-foreground">
+          This image already fits perfectly — no adjustment needed.
+        </p>
+      )}
     </div>
   );
 };
