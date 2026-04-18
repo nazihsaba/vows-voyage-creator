@@ -1417,6 +1417,8 @@ const WeddingForm = () => {
                   <Label>Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span></Label>
                   <p className="text-xs text-muted-foreground mb-2">
                     Upload images to showcase in your wedding gallery
+                    <br />
+                    Use the slider to align the image and highlight what matters most. ✨
                   </p>
 
                   {/* Existing Gallery Images */}
