@@ -570,7 +570,7 @@ const RoseGoldTabsForm = () => {
                       </div>
                     ) : imagePreview ? (
                       <>
-                        <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
+                        <div className="relative w-full max-w-sm mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-border bg-muted">
                           <img
                             ref={mainImgRef}
                             src={imagePreview}
