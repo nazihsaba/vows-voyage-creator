@@ -501,6 +501,16 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate Welcome Drink Time is required for Aura/Lumière/Étoile templates
+    if (isAuraTemplate && !locations.welcome_drink_time) {
+      toast({
+        title: "Welcome drink time required",
+        description: "Please set the welcome drink time.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     // Validate video is required for video templates
     if (isVideoTemplate && !videoFile && !formData.video_url) {
       toast({
