@@ -551,6 +551,7 @@ export const OpulenceTemplate = ({
                     src={image.image_url}
                     alt={image.alt_text || `Wedding moment ${index + 1}`}
                     className="w-full h-full object-cover hover:scale-110 transition-transform duration-700"
+                    style={{ objectPosition: `50% ${Math.min(100, Math.max(0, image.position_y ?? 50))}%` }}
                     loading="lazy"
                   />
                 </div>

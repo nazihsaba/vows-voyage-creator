@@ -244,6 +244,7 @@ export const VeriteTemplate = ({
                       src={image.image_url}
                       alt={image.alt_text || `Gallery ${index + 1}`}
                       className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                      style={{ objectPosition: `50% ${Math.min(100, Math.max(0, image.position_y ?? 50))}%` }}
                       loading="lazy"
                     />
                   </div>
@@ -343,7 +344,13 @@ export const VeriteTemplate = ({
           <section className="w-full px-4">
             <div className="max-w-6xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                <img src={gallery[0].image_url} alt="Wedding moment" loading="lazy" className="w-full h-full object-cover" />
+                <img
+                  src={gallery[0].image_url}
+                  alt="Wedding moment"
+                  loading="lazy"
+                  className="w-full h-full object-cover"
+                  style={{ objectPosition: `50% ${Math.min(100, Math.max(0, gallery[0].position_y ?? 50))}%` }}
+                />
               </div>
             </div>
           </section>
