@@ -45,6 +45,8 @@ const WeddingForm = () => {
   const [existingGalleryImages, setExistingGalleryImages] = useState<any[]>([]);
   const [graceFeaturedFile, setGraceFeaturedFile] = useState<File | null>(null);
   const [graceFeaturedPreview, setGraceFeaturedPreview] = useState<string>("");
+  const [graceFeaturedPositionY, setGraceFeaturedPositionY] = useState<number>(50);
+  const graceFeaturedImgRef = useRef<HTMLImageElement>(null);
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -235,6 +237,7 @@ const WeddingForm = () => {
         // Load Grace featured image preview if applicable
         if ((data.template_type === "video-cinematic" || data.template_type === "template6") && galleryData.length > 0) {
           setGraceFeaturedPreview(galleryData[0].image_url);
+          setGraceFeaturedPositionY(galleryData[0].position_y ?? 50);
         }
       }
 
@@ -649,18 +652,27 @@ const WeddingForm = () => {
       }
 
       // Upload Grace featured image (single image for gallery section)
-      if ((formData.template_type === "video-cinematic" || formData.template_type === "template6") && graceFeaturedFile) {
-        // Remove existing gallery images for Grace (only 1 allowed)
-        if (id) {
-          await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
+      if (formData.template_type === "video-cinematic" || formData.template_type === "template6") {
+        if (graceFeaturedFile) {
+          // Remove existing gallery images for Grace (only 1 allowed)
+          if (id) {
+            await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
+          }
+          const featuredUrl = await uploadImage(graceFeaturedFile, user.id);
+          const { error: featuredError } = await supabase.from("gallery_images").insert({
+            wedding_id: weddingId,
+            image_url: featuredUrl,
+            image_order: 1,
+            position_y: graceFeaturedPositionY,
+          });
+          if (featuredError) throw featuredError;
+        } else if (id && existingGalleryImages.length > 0) {
+          // Update position only when image is unchanged
+          await supabase
+            .from("gallery_images")
+            .update({ position_y: graceFeaturedPositionY })
+            .eq("id", existingGalleryImages[0].id);
         }
-        const featuredUrl = await uploadImage(graceFeaturedFile, user.id);
-        const { error: featuredError } = await supabase.from("gallery_images").insert({
-          wedding_id: weddingId,
-          image_url: featuredUrl,
-          image_order: 1,
-        });
-        if (featuredError) throw featuredError;
       }
 
       // Save locations
@@ -1138,25 +1150,44 @@ const WeddingForm = () => {
                     This image will be displayed as a full-width photo in your invitation
                   </p>
                   {graceFeaturedPreview ? (
-                    <div className="relative w-full aspect-video rounded-lg overflow-hidden border-2 border-border">
-                      <img src={graceFeaturedPreview} alt="Featured" loading="lazy" className="w-full h-full object-cover" />
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2"
-                        onClick={() => {
-                          setGraceFeaturedFile(null);
-                          setGraceFeaturedPreview("");
-                          // Also remove existing gallery image if editing
-                          if (id && existingGalleryImages.length > 0) {
-                            removeExistingGalleryImage(existingGalleryImages[0].id);
-                          }
-                        }}
-                      >
-                        <X className="w-4 h-4" />
-                      </Button>
-                    </div>
+                    <>
+                      <div className="relative w-full max-w-sm mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                        <img
+                          ref={graceFeaturedImgRef}
+                          src={graceFeaturedPreview}
+                          alt="Featured"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                          style={{
+                            objectPosition: `50% ${Math.min(100, Math.max(0, graceFeaturedPositionY))}%`,
+                          }}
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={() => {
+                            setGraceFeaturedFile(null);
+                            setGraceFeaturedPreview("");
+                            setGraceFeaturedPositionY(50);
+                            // Also remove existing gallery image if editing
+                            if (id && existingGalleryImages.length > 0) {
+                              removeExistingGalleryImage(existingGalleryImages[0].id);
+                            }
+                          }}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                      <MainPhotoPositionSlider
+                        imageUrl={graceFeaturedPreview}
+                        value={graceFeaturedPositionY}
+                        onChange={setGraceFeaturedPositionY}
+                        imageRef={graceFeaturedImgRef}
+                        showHelperText
+                      />
+                    </>
                   ) : (
                     <label
                       htmlFor="grace_featured"
