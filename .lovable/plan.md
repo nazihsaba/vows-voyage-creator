@@ -1,47 +1,59 @@
 
 
-## Plan: Auto-detect tables from uploaded venue plan image
+## Plan: Manual vertical position slider with smart visibility (final)
 
-### What it does
-After a venue plan image is uploaded, an AI model analyzes it to detect tables (the white circles with chairs, rectangular tables, etc.) and automatically creates editable VenueTable objects at their approximate positions on the canvas. No manual table adding needed — the tables from the image become interactive.
+### Goal
+Slider on the main/cover photo lets users pick which vertical part stays visible. Image keeps `object-cover`; only `object-position` Y changes. Slider is enabled only when the image is actually cropped vertically. Value is always persisted and clamped at render.
 
-### How it works
+### Database
+Migration adds:
+- `weddings.main_picture_position_y numeric` — default `50`, nullable, CHECK `>= 0 AND <= 100`.
 
-1. **New edge function `detect-venue-tables`**
-   - Receives the uploaded image URL
-   - Sends it to Gemini 2.5 Pro (via Lovable AI gateway) with a prompt asking it to identify all tables in the image and return their approximate positions (as percentage of image width/height), shapes, names, and guest counts
-   - Returns a JSON array of detected tables
+### Detection logic (form preview)
+On `onLoad` **and** on container resize (via `ResizeObserver`):
+```ts
+const scale = Math.max(cw / naturalW, ch / naturalH);
+const renderedH = naturalH * scale;
+setCanAdjustY(renderedH > ch + 1);
+```
+- `ResizeObserver` watches the image's parent container; cleanup on unmount.
+- Slider always rendered; **disabled** when `!canAdjustY` with helper text *"This image already fits perfectly — no adjustment needed."*
 
-2. **Update `VenueLayoutPlanner.tsx`**
-   - After a successful plan image upload, call the new edge function
-   - Show a loading indicator ("Detecting tables...")
-   - Map the AI response (percentage-based coordinates) to canvas pixel positions (relative to the 1000px-wide image)
-   - Create VenueTable objects for each detected table and add them to state
-   - Auto-save triggers as usual
+### Form UX (WeddingForm + RoseGoldTabsForm)
+Below the main photo preview:
+- Label: **Adjust vertical position**
+- `Slider` (0–100, step 1) — enabled/disabled based on `canAdjustY`
+- Small **Reset** button → `50`
+- Live preview: `style={{ objectFit: "cover", objectPosition: \`50% ${posY}%\` }}`
+- Initialize from `wedding.main_picture_position_y ?? 50`
+- **Always persist** `main_picture_position_y` on save, even if slider was disabled (other templates have different aspect ratios)
 
-3. **Update `VenueToolbar.tsx`**
-   - Add a "Detect Tables" button (with a Wand/Sparkles icon) that appears when a plan image is loaded, allowing re-detection if needed
+### Render — apply saved position to main hero image
+Helper applied wherever the main `<img>` is rendered:
+```ts
+const posY = Math.min(100, Math.max(0, wedding.main_picture_position_y ?? 50));
+// style={{ objectPosition: `50% ${posY}%` }}
+```
+Files updated (keep `object-cover`):
+- `AuraTemplate` + `AuraPreview`
+- `EclatTemplate` + `EclatPreview`
+- `OpulenceTemplate` + `OpulencePreview`
+- `EtoileTemplate` + `EtoilePreview`
+- `LumiereTemplate` + `LumierePreview`
+- `VeriteTemplate` + `VeritePreview`
+- `GraceTemplate` + `GracePreview`
 
-### Technical details
+### Locked-in safeguards
+1. **DB CHECK** constraint `0–100`.
+2. **Render-time clamp** `Math.min(100, Math.max(0, ... ?? 50))` in every template.
+3. **ResizeObserver** re-runs detection when container size changes.
+4. Always persist value (templates render at different aspect ratios than form preview).
+5. Fallback always `50%` when null/missing/invalid.
+6. Gallery thumbnails unaffected; horizontal axis unchanged.
 
-**Edge function prompt strategy:**
-The prompt will ask Gemini to return JSON with each table's:
-- `name` (e.g. "Table 1", "Bridal Table", "Cake", "Bar")
-- `shape` ("round" | "rectangle" | "square" | "oval")
-- `x_percent` / `y_percent` (center position as 0-100% of image dimensions)
-- `width_percent` / `height_percent` (size as % of image)
-- `guest_count` (estimated from chairs visible)
-
-**Coordinate mapping:**
-- Image renders at 1000px wide on canvas
-- `x_position = (x_percent / 100) * 1000 - (width / 2)`
-- `y_position = (y_percent / 100) * imageAspectRatio * 1000 - (height / 2)`
-- Sizes similarly scaled from percentages to pixels
-
-**Files to create:**
-- `supabase/functions/detect-venue-tables/index.ts`
-
-**Files to modify:**
-- `src/components/venue/VenueLayoutPlanner.tsx` — add detection call after upload
-- `src/components/venue/VenueToolbar.tsx` — add re-detect button
+### Out of scope
+- Per-gallery-image vertical positioning.
+- Horizontal positioning.
+- Per-template adaptive auto-adjust.
+- Face detection.
 
