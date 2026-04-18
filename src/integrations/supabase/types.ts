@@ -21,6 +21,7 @@ export type Database = {
           id: string
           image_order: number | null
           image_url: string
+          position_y: number | null
           wedding_id: string
         }
         Insert: {
@@ -29,6 +30,7 @@ export type Database = {
           id?: string
           image_order?: number | null
           image_url: string
+          position_y?: number | null
           wedding_id: string
         }
         Update: {
@@ -37,6 +39,7 @@ export type Database = {
           id?: string
           image_order?: number | null
           image_url?: string
+          position_y?: number | null
           wedding_id?: string
         }
         Relationships: [
