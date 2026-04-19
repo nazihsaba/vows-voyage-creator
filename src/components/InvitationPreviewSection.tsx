@@ -142,14 +142,14 @@ const InvitationPreviewSection = () => {
         <div className="text-center mb-16 max-w-2xl mx-auto">
           <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">Our Templates</p>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5">
-            See Your Wedding Invitation Come to Life
+            More Than an Invitation — A Complete Wedding Experience
           </h2>
           <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-4">
-            Designed for modern celebrations.
+            Beautifully designed templates, personalized for every guest, and ready to share instantly.
           </p>
           <p className="text-muted-foreground text-lg leading-relaxed">
-            Create and share stunning digital wedding invitations that capture the elegance of your special day —
-            beautifully designed and ready in minutes.
+            Create your invitation, manage your guests, track RSVP responses, and send unique links — all in one
+            seamless experience.
           </p>
         </div>
 
