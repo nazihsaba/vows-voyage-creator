@@ -169,28 +169,28 @@ const Index = () => {
             {[
               {
                 icon: Calendar,
-                title: "Countdown",
+                title: "Live Countdown",
                 desc: "A live countdown to your special day, building excitement for your guests",
               },
               {
                 icon: Image,
-                title: "Gallery & Video",
+                title: "Photos & Video",
                 desc: "Showcase your moments with photos and immersive video backgrounds for a stunning experience",
               },
               {
                 icon: Gift,
-                title: "Gifts",
+                title: "Gifts Registry",
                 desc: "Share your gift registry or preferred gift cards in a simple and elegant way",
               },
               {
                 icon: Users,
-                title: "RSVP & Guest Management",
-                desc: "Collect responses, track RSVPs in real time, and organize guests into tables effortlessly",
+                title: "RSVP & Seating",
+                desc: "Track responses, organize guests, and manage tables with ease",
               },
               {
                 icon: LinkIcon,
-                title: "Smart Links",
-                desc: "Generate and share unique invitation links for each guest with ease",
+                title: "Personal Invitation Links",
+                desc: "Create unique links for each guest or group and share instantly",
               },
               {
                 icon: Languages,
