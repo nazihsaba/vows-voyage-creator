@@ -262,7 +262,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-template-subtitle"
+                    className="text-template-subtitle-white"
                   />
                 </div>
                 <span className="text-template-subtitle font-light text-white/70">&</span>
@@ -281,8 +281,8 @@ export const LumiereTemplate = ({
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
-                    tag="p"
-                    className="text-template-subtitle text-white"
+                    tag="h2"
+                    className="text-template-subtitle-white"
                   />
                 </div>
               </div>
