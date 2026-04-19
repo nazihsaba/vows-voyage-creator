@@ -95,9 +95,12 @@ const Index = () => {
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
         </div>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">Create Beautiful Event Invitations</h1>
+          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
+            The Modern Way to Invite Your Wedding Guests
+          </h1>
           <p className="text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
-            Elegant digital invitations for unforgettable moments.
+            Design your wedding invitation, manage guests, RSVP responses, tables, and share personalized links — all in
+            one place.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
             <Button
@@ -105,7 +108,7 @@ const Index = () => {
               onClick={() => navigate("/dashboard")}
               className="text-lg px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover"
             >
-              Create Event
+              Create My Invitation
             </Button>
             {/* <Button
               size="lg"
