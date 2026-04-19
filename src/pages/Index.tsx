@@ -319,7 +319,7 @@ const Index = () => {
               onClick={() => window.open("https://wa.me/96179077970", "_blank")}
               className="text-base px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg w-full sm:w-auto"
             >
-              Contact Us
+              Let Auréa Handle It
             </Button>
           </div>
         </div>
