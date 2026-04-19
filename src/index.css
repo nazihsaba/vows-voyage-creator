@@ -161,6 +161,10 @@ All colors MUST be HSL.
     @apply text-3xl md:text-4xl font-script;
   }
 
+  .text-template-subtitle-white {
+    @apply text-3xl md:text-4xl font-script text-white;
+  }
+
   .text-template-heading {
     @apply text-2xl md:text-3xl font-script;
   }
