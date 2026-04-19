@@ -316,9 +316,8 @@ const Index = () => {
             </Button>
             <Button
               size="lg"
-              variant="outline"
               onClick={() => window.open("https://wa.me/96179077970", "_blank")}
-              className="text-base px-8 py-6 border-primary/30 text-primary hover:bg-primary/5 rounded-lg w-full sm:w-auto"
+              className="text-base px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg w-full sm:w-auto"
             >
               Contact Us
             </Button>
