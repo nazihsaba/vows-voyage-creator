@@ -31,9 +31,9 @@ const LumiereGifts = ({ giftCards }: LumiereGiftsProps) => {
           <h2 className="text-template-subtitle text-center text-black mb-3">{t("gifts.title")}</h2>
           <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
         </AnimatedSection>
-        <div className="flex flex-wrap justify-center gap-4 max-w-xl mx-auto">
+        <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
           {giftCards.map((card, index) => (
-            <AnimatedSection key={card.id} delay={index * 100} animation="scale-in" className="w-full md:w-[calc(50%-0.5rem)]">
+            <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
               <div
                 className="bg-muted p-5 rounded-lg text-center cursor-pointer hover:bg-muted/80 transition-colors"
                 onClick={() => copyToClipboard(card.card_number)}
