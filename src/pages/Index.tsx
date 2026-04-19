@@ -249,21 +249,13 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 mt-auto">
-                <div className="space-y-3">
-                  {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
-                    <div key={perk} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">{perk}</span>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  onClick={() => navigate("/dashboard")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 sm:px-10 py-5 rounded-lg text-base w-full sm:w-auto"
-                >
-                  Start Creating
-                </Button>
+              <div className="space-y-3 mt-auto">
+                {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
+                  <div key={perk} className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">{perk}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
@@ -292,44 +284,47 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between gap-6 mb-8 mt-auto">
-                <div className="space-y-3">
-                  {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
-                    <div key={perk} className="flex items-center gap-2">
-                      <Check className="w-4 h-4 text-primary" />
-                      <span className="text-sm text-muted-foreground">{perk}</span>
-                    </div>
-                  ))}
-                </div>
-                <Button
-                  onClick={() => window.open("https://wa.me/96179077970", "_blank")}
-                  className="bg-primary text-primary-foreground hover:bg-primary-hover px-8 sm:px-10 py-5 rounded-lg text-base w-full sm:w-auto"
-                >
-                  Contact Us
-                </Button>
+              <div className="space-y-3 mt-auto">
+                {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
+                  <div key={perk} className="flex items-center gap-2">
+                    <Check className="w-4 h-4 text-primary" />
+                    <span className="text-sm text-muted-foreground">{perk}</span>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* <section className="py-20 px-4 bg-white">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-6">
-            Ready to Create Your Invitation?
+      <section className="py-24 px-4 bg-gradient-to-b from-card/50 to-white">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-4">The First Impression</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5 leading-tight">
+            Your invitation is the first impression of your event
           </h2>
-          <p className="text-xl text-muted-foreground mb-4">Create your wedding invitation with timeless elegance</p>
-          <div className="flex justify-center">
+          <p className="text-lg md:text-xl text-muted-foreground mb-10 italic font-light">
+            Make it elegant, organized, and easy to share.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
-              className="text-lg px-8 py-6 bg-primary hover:bg-primary-hover"
+              className="text-base px-8 py-6 bg-primary text-primary-foreground hover:bg-primary-hover rounded-lg w-full sm:w-auto"
             >
-              Create Your Invitation
+              Create My Invitation
+            </Button>
+            <Button
+              size="lg"
+              variant="outline"
+              onClick={() => window.open("https://wa.me/96179077970", "_blank")}
+              className="text-base px-8 py-6 border-primary/30 text-primary hover:bg-primary/5 rounded-lg w-full sm:w-auto"
+            >
+              Contact Us
             </Button>
           </div>
         </div>
-      </section> */}
+      </section>
 
       <footer className="py-10 px-4 border-t border-border/40 bg-muted/30">
         <div className="max-w-4xl mx-auto flex flex-col items-center gap-4">
