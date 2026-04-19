@@ -258,6 +258,7 @@ export const LumiereTemplate = ({
                         ),
                       ),
                     })}
+                    style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
@@ -277,6 +278,7 @@ export const LumiereTemplate = ({
                         ),
                       ),
                     })}
+                    style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
