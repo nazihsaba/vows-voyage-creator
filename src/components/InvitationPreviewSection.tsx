@@ -147,10 +147,6 @@ const InvitationPreviewSection = () => {
           <p className="text-sm text-muted-foreground/70 italic tracking-wide mb-4">
             Beautifully designed templates, personalized for every guest, and ready to share instantly.
           </p>
-          <p className="text-muted-foreground text-lg leading-relaxed">
-            Create your invitation, manage your guests, track RSVP responses, and send unique links — all in one
-            seamless experience.
-          </p>
         </div>
 
         {/* Mobile carousel */}
