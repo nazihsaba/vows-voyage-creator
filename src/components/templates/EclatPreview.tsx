@@ -16,8 +16,8 @@ import auraPreview6 from "@/assets/aura-preview-11.jpg";
 const staticWedding = {
   groom_name: "Julien",
   bride_name: "Clara",
-  groom_family: "The Aris Family",
-  bride_family: "The Vienne Family",
+  groom_family: "Aris",
+  bride_family: "Vienne",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
   main_picture_url: auraPreview4,

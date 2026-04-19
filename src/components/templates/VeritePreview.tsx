@@ -16,8 +16,8 @@ import previewWedding8 from "@/assets/verite-preview-8.jpg";
 const staticWedding = {
   groom_name: "Ryan",
   bride_name: "Ava",
-  groom_family: "The Johnson Family",
-  bride_family: "The Neril Family",
+  groom_family: "Johnson",
+  bride_family: "Neril",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   main_picture_url: previewWedding1,
