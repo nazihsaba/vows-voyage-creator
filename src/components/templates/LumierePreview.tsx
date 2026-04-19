@@ -58,6 +58,8 @@ const sampleGifts = [
 ];
 
 const LumierePreview = () => {
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
     document.body.classList.add("hide-scrollbar");
@@ -67,10 +69,31 @@ const LumierePreview = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const resumeVideo = () => {
+      const video = videoRef.current;
+      if (video && video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") resumeVideo();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", resumeVideo);
+    window.addEventListener("pageshow", resumeVideo);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("focus", resumeVideo);
+      window.removeEventListener("pageshow", resumeVideo);
+    };
+  }, []);
+
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
       {/* Layer 1: Fixed background video */}
       <video
+        ref={videoRef}
         className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
         src={lumiereVideo}
         autoPlay
