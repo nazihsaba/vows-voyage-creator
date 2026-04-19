@@ -295,7 +295,6 @@ export const EtoileTemplate = ({
                           getLocalizedValue("groom_family", wedding.groom_family || "Groom"),
                         ),
                       })}
-                      style={getFieldStyle("groom-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
@@ -310,7 +309,6 @@ export const EtoileTemplate = ({
                           getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family"),
                         ),
                       })}
-                      style={getFieldStyle("bride-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
