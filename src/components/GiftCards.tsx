@@ -28,7 +28,7 @@ export const GiftCards = ({ giftCards, isOwner = false }: GiftCardsProps) => {
   return (
     <div className="grid gap-4 md:grid-cols-2">
       {giftCards.map((card) => (
-        <div key={card.id} className="bg-white p-6 rounded-lg text-center space-y-2">
+        <div key={card.id} className="bg-[#faf8f5] p-6 rounded-lg text-center space-y-2">
           <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
           <div className="flex items-center justify-center gap-2">
             <p className="text-gray-600">{card.card_number}</p>
