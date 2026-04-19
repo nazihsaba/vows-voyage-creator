@@ -199,6 +199,7 @@ export const AuraTemplate = ({
                         getLocalizedValue("groom_family", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family"),
                       ),
                     })}
+                    style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
@@ -215,6 +216,7 @@ export const AuraTemplate = ({
                         getLocalizedValue("bride_family", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family"),
                       ),
                     })}
+                    style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
