@@ -53,8 +53,29 @@ export const LumiereTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const videoRef = useRef<HTMLVideoElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+
+  useEffect(() => {
+    const resumeVideo = () => {
+      const video = videoRef.current;
+      if (video && video.paused) {
+        video.play().catch(() => {});
+      }
+    };
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") resumeVideo();
+    };
+    document.addEventListener("visibilitychange", handleVisibility);
+    window.addEventListener("focus", resumeVideo);
+    window.addEventListener("pageshow", resumeVideo);
+    return () => {
+      document.removeEventListener("visibilitychange", handleVisibility);
+      window.removeEventListener("focus", resumeVideo);
+      window.removeEventListener("pageshow", resumeVideo);
+    };
+  }, []);
 
   useEffect(() => {
     if (wedding.audio_url && audioRef.current) {
