@@ -260,7 +260,7 @@ export const LumiereTemplate = ({
                     })}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
-                    tag="span"
+                    tag="p"
                     className="text-template-subtitle text-white"
                   />
                 </div>
