@@ -135,9 +135,8 @@ export const EtoileTemplate = ({
             id: "welcome-drink",
             title: t("events.welcomeDrink"),
             time:
-              formatTimeTo12Hour(
-                locations.find((loc) => loc.type === "welcome_drink")?.time || venue.time,
-              ) || "8:00 PM",
+              formatTimeTo12Hour(locations.find((loc) => loc.type === "welcome_drink")?.time || venue.time) ||
+              "8:00 PM",
             location: venue.location_name,
             link: venue.location_link,
             icon: "streamline:champagne-party-alcohol-remix",
@@ -299,7 +298,7 @@ export const EtoileTemplate = ({
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
-                      className="text-template-subtitle text-[#3e2723]"
+                      className="text-template-subtitle"
                     />
                     <p className="text-2xl text-[#3e2723]">&</p>
                     <EditableField

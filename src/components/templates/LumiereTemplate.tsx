@@ -262,7 +262,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-template-subtitle text-white"
+                    className="text-template-subtitle"
                   />
                 </div>
                 <span className="text-template-subtitle font-light text-white/70">&</span>
