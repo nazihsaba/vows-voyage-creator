@@ -35,9 +35,9 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
           <p className="text-lg text-white">For those who desire a wedding list is available</p>
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
+        <div className="flex flex-wrap justify-center gap-6">
           {giftCards.map((card) => (
-            <Card key={card.id} className="shadow-soft bg-gray-50 border border-gray-200">
+            <Card key={card.id} className="shadow-soft bg-gray-50 border border-gray-200 w-full md:w-[calc(50%-0.75rem)]">
               <CardContent className="p-6">
                 <div className="flex-1 flex flex-col justify-center">
                   <div className="text-lg font-semibold text-gray-800">{card.card_name}</div>
