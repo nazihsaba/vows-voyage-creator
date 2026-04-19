@@ -154,9 +154,9 @@ const EtoilePreview = () => {
                     <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
                   </div>
                   <div className="space-y-4">
-                    <h2 className="text-template-subtitle text-[#3e2723]">The Vale Family</h2>
+                    <h2 className="text-template-subtitle text-[#3e2723]">Vale's Family</h2>
                     <p className="text-2xl text-[#3e2723]">&</p>
-                    <h2 className="text-template-subtitle text-[#3e2723]">The Maris Family</h2>
+                    <h2 className="text-template-subtitle text-[#3e2723]">Maris's Family</h2>
                   </div>
                   <p className="text-template-body text-[#3e2723]">
                     Request the honor of your presence at the wedding of their beloved Son and Daughter

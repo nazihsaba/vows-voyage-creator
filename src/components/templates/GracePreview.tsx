@@ -11,8 +11,8 @@ import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 const staticWedding = {
   groom_name: "Noah",
   bride_name: "Mia",
-  groom_family: "The Elin Family",
-  bride_family: "The Soren Family",
+  groom_family: "Elin",
+  bride_family: "Soren",
   wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
   rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
   video_url: graceVideo,
