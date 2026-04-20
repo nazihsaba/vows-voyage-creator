@@ -198,10 +198,8 @@ export const VeritePreview = () => {
           <AnimatedSection animation="fade-up">
             <div>
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
-              <p className="text-template-body max-w-2xl mx-auto whitespace-pre-line">
-                {
-                  "With all humility, we would like\n\nto invite you all to attend our wedding\n\nwhich will be held on:"
-                }
+              <p className="text-template-body max-w-2xl mx-auto">
+                Join us in celebrating this special day
               </p>
             </div>
           </AnimatedSection>
