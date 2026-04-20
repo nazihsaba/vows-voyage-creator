@@ -160,7 +160,7 @@ export const VeritePreview = () => {
               <h2 className="text-template-subtitle">{staticWedding.bride_family} Family</h2>
             </div>
             <p className="text-template-body">
-              Cordially invite you to celebrate the wedding of their Son and Daughter
+              Cordially invite you to celebrate the wedding of their son and daughter
             </p>
           </div>
         </AnimatedSection>
