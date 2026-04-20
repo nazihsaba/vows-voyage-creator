@@ -5,7 +5,8 @@
   },
   "family": {
     "theFamily": "عائلة {{name}}",
-    "defaultInvitation": "يتشرفون بدعوتكم لحضور حفل زفاف نجلهم وكريمتهم"
+    "defaultInvitation": "يتشرفون بدعوتكم لحضور حفل زفاف نجلهم وكريمتهم",
+    "introLine": "يسر ويسعد"
   },
   "countdown": {
     "title": "العد التنازلي ليومنا المميز",
