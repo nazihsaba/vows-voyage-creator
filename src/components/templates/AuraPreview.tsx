@@ -63,11 +63,11 @@ export const AuraPreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
-                  <p className="text-template-subtitle">Vale's Family</p>
+                  <p className="text-template-subtitle">Vale Family</p>
                 </div>
                 <span className="text-3xl font-light">&</span>
                 <div className="text-center space-y-1">
-                  <p className="text-template-subtitle">Maris's Family</p>
+                  <p className="text-template-subtitle">Maris Family</p>
                 </div>
               </div>
             </div>
