@@ -173,7 +173,7 @@ export const EclatPreview = () => {
             </div>
 
             <p className="text-template-body">
-              Request the honor of your presence at the wedding of their Son and Daughter
+              Cordially invite you to celebrate the wedding of their Son and Daughter
             </p>
           </div>
         </AnimatedSection>

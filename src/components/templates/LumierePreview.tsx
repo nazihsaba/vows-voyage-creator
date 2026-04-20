@@ -144,7 +144,7 @@ const LumierePreview = () => {
 
             <div className="opacity-0 animate-[fadeIn_0.7s_ease-out_0.55s_forwards]">
               <p className="text-template-body text-white/70 whitespace-pre-line leading-relaxed">
-                joyfully invite you to the wedding of their{"\n"}beloved son and daughter
+                Cordially invite you to celebrate the wedding of their Son and Daughter
               </p>
             </div>
 
