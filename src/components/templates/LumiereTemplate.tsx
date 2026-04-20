@@ -254,6 +254,10 @@ export const LumiereTemplate = ({
               <div className="w-12 h-px bg-white/40 mx-auto" />
             </div>
 
+            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.3s_forwards]">
+              <p className="text-template-body text-white/70">It is with the greatest pleasure that the</p>
+            </div>
+
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
