@@ -4,7 +4,7 @@
     "tapToStart": "Tap To Start"
   },
   "family": {
-    "theFamily": "{{name}}'s Family",
+    "theFamily": "{{name}} Family",
     "defaultInvitation": "Request the honor of your presence at the wedding of their Son and Daughter"
   },
   "countdown": {

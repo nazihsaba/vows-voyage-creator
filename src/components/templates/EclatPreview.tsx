@@ -167,9 +167,9 @@ export const EclatPreview = () => {
         <AnimatedSection animation="fade-up">
           <div className="max-w-3xl mx-auto space-y-8">
             <div className="space-y-4">
-              <h2 className="text-template-subtitle">{staticWedding.groom_family}'s Family</h2>
+              <h2 className="text-template-subtitle">{staticWedding.groom_family} Family</h2>
               <p className="text-2xl">&</p>
-              <h2 className="text-template-subtitle">{staticWedding.bride_family}'s Family</h2>
+              <h2 className="text-template-subtitle">{staticWedding.bride_family} Family</h2>
             </div>
 
             <p className="text-template-body">
