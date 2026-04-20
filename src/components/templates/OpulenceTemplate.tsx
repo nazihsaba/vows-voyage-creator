@@ -367,7 +367,7 @@ export const OpulenceTemplate = ({
               fieldId="opulence-formal-message"
               text={getFieldValue(
                 "opulence-formal-message",
-                wedding.main_description || "Request the honour of your presence\nat the celebration of their marriage"
+                wedding.main_description || "Cordially invite you to celebrate the wedding of their son and daughter"
               )}
               style={getFieldStyle("opulence-formal-message")}
               onUpdate={onFieldUpdate}
