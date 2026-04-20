@@ -5,7 +5,8 @@
   },
   "family": {
     "theFamily": "{{name}} Family",
-    "defaultInvitation": "Cordially invite you to celebrate the wedding of their son and daughter"
+    "defaultInvitation": "Cordially invite you to celebrate the wedding of their son and daughter",
+    "introLine": "It is with the greatest pleasure that the"
   },
   "countdown": {
     "title": "Counting Down To Our Special Day",
