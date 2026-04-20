@@ -72,7 +72,7 @@ const WeddingForm = () => {
     bride_family: "",
     wedding_date: "",
     rsvp_deadline: "",
-    main_description: "Cordially invite you to celebrate the wedding of their Son and Daughter",
+    main_description: "Cordially invite you to celebrate the wedding of their son and daughter",
     slug: "",
     status: "draft",
     main_picture_url: "",
