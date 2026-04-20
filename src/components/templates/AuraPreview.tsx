@@ -178,7 +178,7 @@ export const AuraPreview = () => {
             <AnimatedSection animation="fade-in">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
               <p className="text-center text-template-body mb-8 text-muted-foreground">
-                For those who desire a wedding list is available
+                Your presence is our biggest gift. For those who desire a wedding list was set up:
               </p>
             </AnimatedSection>
             <div className="grid gap-4 md:grid-cols-2">
