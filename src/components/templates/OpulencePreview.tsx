@@ -199,10 +199,6 @@ const OpulencePreview = () => {
           </div>
 
           <div>
-            <p className="text-sm uppercase tracking-[0.35em] opacity-60">Together with their families</p>
-          </div>
-
-          <div>
             <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontWeight: 300 }}>
               Alexander
               <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
