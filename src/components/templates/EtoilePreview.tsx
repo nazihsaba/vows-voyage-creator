@@ -159,7 +159,7 @@ const EtoilePreview = () => {
                     <h2 className="text-template-subtitle text-[#3e2723]">Maris Family</h2>
                   </div>
                   <p className="text-template-body text-[#3e2723]">
-                    Request the honor of your presence at the wedding of their beloved Son and Daughter
+                    Cordially invite you to celebrate the wedding of their son and daughter
                   </p>
                 </div>
               </AnimatedSection>
