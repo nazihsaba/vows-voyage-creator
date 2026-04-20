@@ -208,7 +208,7 @@ const OpulencePreview = () => {
 
           <div>
             <p className="text-base md:text-lg leading-relaxed opacity-70 italic whitespace-pre-line">
-              {"Request the honour of your presence\nat the celebration of their marriage"}
+              {"Cordially invite you to celebrate the wedding of their son and daughter"}
             </p>
           </div>
 
