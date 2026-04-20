@@ -352,19 +352,6 @@ export const OpulenceTemplate = ({
             <div className="w-16 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
           </div>
 
-          {/* Invitation text */}
-          <div>
-            <EditableField
-              fieldId="opulence-invitation-text"
-              text={getFieldValue("opulence-invitation-text", "Together with their families")}
-              style={getFieldStyle("opulence-invitation-text")}
-              onUpdate={onFieldUpdate}
-              isPreview={isPreview}
-              tag="p"
-              className="text-sm uppercase tracking-[0.35em] opacity-60"
-            />
-          </div>
-
           {/* Couple names */}
           <div>
             <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>

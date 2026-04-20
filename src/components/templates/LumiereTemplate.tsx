@@ -254,18 +254,6 @@ export const LumiereTemplate = ({
               <div className="w-12 h-px bg-white/40 mx-auto" />
             </div>
 
-            <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.25s_forwards]">
-              <EditableField
-                fieldId="together-text"
-                text={getFieldValue("together-text", t("aura.togetherWithFamilies"))}
-                style={getFieldStyle("together-text")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="p"
-                className="text-template-small tracking-[0.3em] text-white/70"
-              />
-            </div>
-
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
               <div className="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-14">
                 <div className="text-center space-y-1">
