@@ -284,7 +284,8 @@ export const EtoileTemplate = ({
                       className="text-sm text-[#3e2723]/60"
                     />
                     <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
-                  </div>
+                   </div>
+                  <p className="text-template-body text-[#3e2723]">{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
                   <div className="space-y-4">
                     <EditableField
                       fieldId="groom-family"

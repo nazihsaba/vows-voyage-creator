@@ -72,6 +72,7 @@ const WeddingForm = () => {
     bride_family: "",
     wedding_date: "",
     rsvp_deadline: "",
+    welcoming_text: "It is with the greatest pleasure that the",
     main_description: "Cordially invite you to celebrate the wedding of their son and daughter",
     slug: "",
     status: "draft",
@@ -101,6 +102,7 @@ const WeddingForm = () => {
     bride_name: "",
     groom_family: "",
     bride_family: "",
+    welcoming_text: "",
     main_description: "",
     aura_quote: "",
     aura_reference: "",
@@ -152,6 +154,7 @@ const WeddingForm = () => {
           bride_name: formData.bride_name,
           groom_family: formData.groom_family || "",
           bride_family: formData.bride_family || "",
+          welcoming_text: formData.welcoming_text || "",
           main_description: formData.main_description || "",
           ceremony_location: locations.ceremony_location,
           venue_location: locations.venue_location,
@@ -970,6 +973,36 @@ const WeddingForm = () => {
                     className="h-11 sm:h-10"
                   />
                 </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <Label htmlFor="welcoming_text" className="text-sm font-medium">
+                  Intro Text
+                </Label>
+                <Textarea
+                  id="welcoming_text"
+                  value={formData.welcoming_text}
+                  onChange={(e) => {
+                    setFormData({ ...formData, welcoming_text: e.target.value });
+                    if (enableArabic) debouncedTranslate("welcoming_text", e.target.value);
+                  }}
+                  rows={2}
+                  className="min-h-[60px] text-base sm:text-sm"
+                />
+                {enableArabic && (
+                  <div className="space-y-1 mt-2">
+                    <Label className="text-xs text-muted-foreground">نص الترحيب (Arabic)</Label>
+                    <Textarea
+                      value={arabicFields.welcoming_text}
+                      onChange={(e) => setArabicFields((prev) => ({ ...prev, welcoming_text: e.target.value }))}
+                      dir="rtl"
+                      rows={2}
+                      className="min-h-[60px] text-right font-arabic"
+                      placeholder={translatingFields.welcoming_text ? "Translating..." : ""}
+                      disabled={translatingFields.welcoming_text}
+                    />
+                  </div>
+                )}
               </div>
 
               <div className="space-y-1.5">

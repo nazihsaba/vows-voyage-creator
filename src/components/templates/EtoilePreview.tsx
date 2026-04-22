@@ -152,7 +152,8 @@ const EtoilePreview = () => {
                     </p>
                     <p className="text-sm text-[#3e2723]/60">— Ecclesiastes 4:9-12</p>
                     <div className="w-12 h-px bg-[#3e2723]/40 mx-auto" />
-                  </div>
+                   </div>
+                  <p className="text-template-body text-[#3e2723]">It is with the greatest pleasure that the</p>
                   <div className="space-y-4">
                     <h2 className="text-template-subtitle text-[#3e2723]">Vale Family</h2>
                     <p className="text-2xl text-[#3e2723]">&</p>

@@ -255,7 +255,7 @@ export const LumiereTemplate = ({
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.3s_forwards]">
-              <p className="text-template-body text-white/70">{t("family.introLine")}</p>
+              <p className="text-template-body text-white/70">{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
