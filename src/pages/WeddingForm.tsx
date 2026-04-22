@@ -1007,7 +1007,7 @@ const WeddingForm = () => {
 
               <div className="space-y-1.5">
                 <Label htmlFor="main_description" className="text-sm font-medium">
-                  Description
+                  Invitation Text
                 </Label>
                 <Textarea
                   id="main_description"
