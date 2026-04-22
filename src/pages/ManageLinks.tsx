@@ -142,7 +142,11 @@ const ManageLinks = () => {
       window.history.replaceState({}, "", window.location.pathname);
       setRefresh((r) => r + 1);
     } else if (venuePayment === "failed") {
-      toast({ title: "Payment Failed", description: "Venue payment was not completed. Please try again.", variant: "destructive" });
+      toast({
+        title: "Payment Failed",
+        description: "Venue payment was not completed. Please try again.",
+        variant: "destructive",
+      });
       window.history.replaceState({}, "", window.location.pathname);
     }
   }, []);
@@ -236,7 +240,7 @@ const ManageLinks = () => {
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
+    const message = `Dear ${link.link_name},\n\nWith love and joy, we — ${link.groom_name} & ${link.bride_name} — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
@@ -458,7 +462,8 @@ const ManageLinks = () => {
           Side: link.side || "—",
           "Guest Name": invitee.name,
           "Table #": invitee.table_number ?? "—",
-          Status: invitee.is_attending === true ? "Attending" : invitee.is_attending === false ? "Not Attending" : "Pending",
+          Status:
+            invitee.is_attending === true ? "Attending" : invitee.is_attending === false ? "Not Attending" : "Pending",
         });
       });
     });
@@ -482,17 +487,19 @@ const ManageLinks = () => {
       }
     });
     const rows: any[] = [];
-    Object.keys(tableMap).sort((a, b) => Number(a) - Number(b)).forEach((tableNum) => {
-      tableMap[Number(tableNum)].forEach((inv) => {
-        const link = links.find((l) => l.id === inv.invitation_link_id);
-        rows.push({
-          "Table #": Number(tableNum),
-          "Guest Name": inv.name,
-          Side: link?.side || "—",
-          Status: inv.is_attending === true ? "Attending" : inv.is_attending === false ? "Not Attending" : "Pending",
+    Object.keys(tableMap)
+      .sort((a, b) => Number(a) - Number(b))
+      .forEach((tableNum) => {
+        tableMap[Number(tableNum)].forEach((inv) => {
+          const link = links.find((l) => l.id === inv.invitation_link_id);
+          rows.push({
+            "Table #": Number(tableNum),
+            "Guest Name": inv.name,
+            Side: link?.side || "—",
+            Status: inv.is_attending === true ? "Attending" : inv.is_attending === false ? "Not Attending" : "Pending",
+          });
         });
       });
-    });
     if (rows.length === 0) {
       toast({ title: "No data", description: "No table assignments to export", variant: "destructive" });
       return;
@@ -514,7 +521,9 @@ const ManageLinks = () => {
     setVenuePayLoading(true);
     setVenuePayError(null);
     try {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) throw new Error("Not authenticated");
 
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
@@ -758,7 +767,7 @@ const ManageLinks = () => {
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
-                    onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
+                    onClick={() => (isVenueUnlocked ? setActiveView("venue") : handleVenuePayment())}
                     className="hidden sm:inline-flex rounded-md text-xs h-8 px-3"
                     disabled={venuePayLoading}
                   >
@@ -770,7 +779,7 @@ const ManageLinks = () => {
                       <MapPin className="w-3.5 h-3.5 mr-1.5" />
                     )}
                     Venue
-{!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
+                    {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                   </Button>
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
@@ -815,7 +824,9 @@ const ManageLinks = () => {
                         <DropdownMenuContent align="end">
                           {activeView !== "venue" && (
                             <>
-                              <DropdownMenuItem onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}>
+                              <DropdownMenuItem
+                                onClick={activeView === "guests" ? exportGuestList : exportTableOccupancy}
+                              >
                                 <Download className="w-4 h-4 mr-2" />
                                 {activeView === "guests" ? "Export Guest List" : "Export Tables"}
                               </DropdownMenuItem>
@@ -823,7 +834,7 @@ const ManageLinks = () => {
                           )}
                           {activeView !== "venue" && (
                             <DropdownMenuItem
-                              onClick={() => isVenueUnlocked ? setActiveView("venue") : handleVenuePayment()}
+                              onClick={() => (isVenueUnlocked ? setActiveView("venue") : handleVenuePayment())}
                               disabled={venuePayLoading}
                             >
                               {venuePayLoading ? (
@@ -860,7 +871,14 @@ const ManageLinks = () => {
               <div className="relative overflow-hidden">
                 <div
                   className="flex transition-transform duration-500 ease-in-out will-change-transform"
-                  style={{ transform: activeView === "tables" ? "translateX(-100%)" : activeView === "venue" ? "translateX(-200%)" : "translateX(0)" }}
+                  style={{
+                    transform:
+                      activeView === "tables"
+                        ? "translateX(-100%)"
+                        : activeView === "venue"
+                          ? "translateX(-200%)"
+                          : "translateX(0)",
+                  }}
                 >
                   {/* Guests Panel */}
                   <div className="w-full flex-shrink-0">
@@ -1523,19 +1541,22 @@ const ManageLinks = () => {
                   {/* Venue Panel */}
                   <div className="w-full flex-shrink-0">
                     {weddingId && isVenueUnlocked ? (
-                      <VenueLayoutPlanner ref={venueRef} weddingId={weddingId} invitees={Object.values(invitees).flat().map(i => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))} />
+                      <VenueLayoutPlanner
+                        ref={venueRef}
+                        weddingId={weddingId}
+                        invitees={Object.values(invitees)
+                          .flat()
+                          .map((i) => ({ name: i.name, table_number: i.table_number, is_attending: i.is_attending }))}
+                      />
                     ) : (
                       <div className="flex flex-col items-center justify-center py-20 text-center">
                         <Lock className="w-12 h-12 text-muted-foreground/40 mb-4" />
                         <h3 className="text-lg font-semibold text-foreground mb-2">Venue Layout Planner</h3>
                         <p className="text-sm text-muted-foreground mb-6 max-w-md">
-                          Unlock the venue layout planner to upload floor plans, detect tables with AI, and manage your seating arrangement visually.
+                          Unlock the venue layout planner to upload floor plans, detect tables with AI, and manage your
+                          seating arrangement visually.
                         </p>
-                        <Button
-                          onClick={handleVenuePayment}
-                          disabled={venuePayLoading}
-                          className="rounded-full px-6"
-                        >
+                        <Button onClick={handleVenuePayment} disabled={venuePayLoading} className="rounded-full px-6">
                           {venuePayLoading ? (
                             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                           ) : (
@@ -1789,7 +1810,10 @@ const ManageLinks = () => {
               {wedding && (
                 <span>
                   Unlock the venue layout planner for{" "}
-                  <strong>{wedding.bride_name} & {wedding.groom_name}</strong>'s event
+                  <strong>
+                    {wedding.bride_name} & {wedding.groom_name}
+                  </strong>
+                  's event
                 </span>
               )}
             </DialogDescription>
