@@ -976,6 +976,36 @@ const WeddingForm = () => {
               </div>
 
               <div className="space-y-1.5">
+                <Label htmlFor="welcoming_text" className="text-sm font-medium">
+                  Intro Text
+                </Label>
+                <Textarea
+                  id="welcoming_text"
+                  value={formData.welcoming_text}
+                  onChange={(e) => {
+                    setFormData({ ...formData, welcoming_text: e.target.value });
+                    if (enableArabic) debouncedTranslate("welcoming_text", e.target.value);
+                  }}
+                  rows={2}
+                  className="min-h-[60px] text-base sm:text-sm"
+                />
+                {enableArabic && (
+                  <div className="space-y-1 mt-2">
+                    <Label className="text-xs text-muted-foreground">نص الترحيب (Arabic)</Label>
+                    <Textarea
+                      value={arabicFields.welcoming_text}
+                      onChange={(e) => setArabicFields((prev) => ({ ...prev, welcoming_text: e.target.value }))}
+                      dir="rtl"
+                      rows={2}
+                      className="min-h-[60px] text-right font-arabic"
+                      placeholder={translatingFields.welcoming_text ? "Translating..." : ""}
+                      disabled={translatingFields.welcoming_text}
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-1.5">
                 <Label htmlFor="main_description" className="text-sm font-medium">
                   Description
                 </Label>
