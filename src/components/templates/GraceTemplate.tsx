@@ -197,6 +197,7 @@ export const GraceTemplate = ({
       <section id="family-section" className="py-16 px-4 text-center bg-white">
         <AnimatedSection animation="fade-up">
           <div className="max-w-3xl mx-auto space-y-8">
+            <p className="text-template-body">{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
             <div className="space-y-4">
               <EditableField
                 fieldId="groom-family"
