@@ -154,6 +154,7 @@ const WeddingForm = () => {
           bride_name: formData.bride_name,
           groom_family: formData.groom_family || "",
           bride_family: formData.bride_family || "",
+          welcoming_text: formData.welcoming_text || "",
           main_description: formData.main_description || "",
           ceremony_location: locations.ceremony_location,
           venue_location: locations.venue_location,
