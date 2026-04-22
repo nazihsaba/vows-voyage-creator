@@ -154,6 +154,7 @@ export const VeritePreview = () => {
       <section id="family-section-modal" className="py-16 px-4 text-center bg-white">
         <AnimatedSection animation="fade-up">
           <div className="max-w-3xl mx-auto space-y-8">
+            <p className="text-template-body">It is with the greatest pleasure that the</p>
             <div className="space-y-4">
               <h2 className="text-template-subtitle">{staticWedding.groom_family} Family</h2>
               <p className="text-2xl">&</p>
