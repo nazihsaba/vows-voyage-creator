@@ -56,16 +56,28 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (error || !wedding) {
+      // Return defaults (with absolute URLs) so the worker still serves a valid card
       return new Response(
-        JSON.stringify({ error: "Invitation not found" }),
+        JSON.stringify({
+          slug: slug,
+          groom_name: "",
+          bride_name: "",
+          title: DEFAULT_TITLE,
+          main_image_url: DEFAULT_IMAGE,
+          preview_description: DEFAULT_DESCRIPTION,
+        }),
         {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=300",
+          },
         }
       );
     }
 
-    // Resolve image: invitation-images bucket → main_picture_url → gallery → default
+    // Resolve image: invitation-images bucket (synced OG) → main_picture_url → gallery → default
     let mainImageUrl = "";
     const ogBase = `invites/${slug}/main`;
     for (const ext of ["jpg", "png", "webp"]) {
@@ -81,8 +93,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (!mainImageUrl) {
-      mainImageUrl = wedding.main_picture_url || "";
+    if (!mainImageUrl && wedding.main_picture_url) {
+      mainImageUrl = wedding.main_picture_url;
     }
 
     if (!mainImageUrl) {
@@ -96,6 +108,9 @@ Deno.serve(async (req) => {
       mainImageUrl = cover?.image_url || "";
     }
 
+    // Always normalize to an absolute, public URL
+    const absoluteImageUrl = toAbsoluteImageUrl(mainImageUrl, supabaseUrl);
+
     const groom = wedding.groom_name || "";
     const bride = wedding.bride_name || "";
     const title =
@@ -108,7 +123,7 @@ Deno.serve(async (req) => {
       groom_name: groom || "Groom",
       bride_name: bride || "Bride",
       title,
-      main_image_url: mainImageUrl || DEFAULT_IMAGE,
+      main_image_url: absoluteImageUrl,
       preview_description: wedding.main_description || DEFAULT_DESCRIPTION,
     };
 
