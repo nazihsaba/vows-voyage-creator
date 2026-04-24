@@ -130,6 +130,7 @@ serve(async (req) => {
       number_of_persons,
       side,
       phone_number: normalizedPhone,
+      country_code: normalizedCountryCode,
     };
 
     const { data: insertedLink, error: insertError } = await supabase
