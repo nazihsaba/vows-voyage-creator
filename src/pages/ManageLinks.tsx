@@ -70,6 +70,7 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
+  country_code: string | null;
   phone_number: string | null;
   created_at: string;
 }
@@ -112,6 +113,8 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
+    country_code: "+961",
+    phone_number: "",
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
