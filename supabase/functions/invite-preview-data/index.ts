@@ -6,9 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const DEFAULT_TITLE = "Wedding Invitation";
-const DEFAULT_DESCRIPTION = "Tap to view your invitation";
-const DEFAULT_IMAGE = "https://aureainvites.com/default-preview.jpg";
+const SITE_ORIGIN = "https://aureainvites.com";
+const DEFAULT_TITLE = "You're Invited 💍 | A Special Wedding Celebration";
+const DEFAULT_DESCRIPTION =
+  "Celebrate love and joy with a beautifully crafted wedding invitation. Discover all the details of this special day and join the celebration.✨";
+const DEFAULT_IMAGE = `${SITE_ORIGIN}/images/og-preview.jpg`;
+
+/** Ensure any image URL we hand back is absolute + public. */
+function toAbsoluteImageUrl(raw: string | null | undefined, supabaseUrl: string): string {
+  if (!raw) return DEFAULT_IMAGE;
+  const trimmed = raw.trim();
+  if (!trimmed) return DEFAULT_IMAGE;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  // Relative app path → site origin
+  if (trimmed.startsWith("/")) return `${SITE_ORIGIN}${trimmed}`;
+  // Bare storage path → public Supabase storage URL
+  return `${supabaseUrl}/storage/v1/object/public/${trimmed.replace(/^\/+/, "")}`;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
