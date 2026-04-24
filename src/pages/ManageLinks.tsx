@@ -1712,6 +1712,37 @@ const ManageLinks = () => {
               </div>
             </div>
 
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-phone" className="text-xs sm:text-sm font-medium">
+                Phone Number
+              </Label>
+              <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                Used for WhatsApp invitations and reminders.
+              </p>
+              <div className="flex gap-1.5">
+                <Input
+                  id="edit-country-code"
+                  placeholder="+961"
+                  value={editForm.country_code}
+                  onChange={(e) =>
+                    setEditForm((prev) => ({ ...prev, country_code: e.target.value }))
+                  }
+                  className="h-11 text-base sm:h-9 sm:text-sm w-20 shrink-0"
+                />
+                <Input
+                  id="edit-phone"
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="e.g., 71123456"
+                  value={editForm.phone_number}
+                  onChange={(e) =>
+                    setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))
+                  }
+                  className="h-11 text-base sm:h-9 sm:text-sm"
+                />
+              </div>
+            </div>
+
             {/* Invitees Section */}
             <div className="space-y-2 pt-3 border-t">
               <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
