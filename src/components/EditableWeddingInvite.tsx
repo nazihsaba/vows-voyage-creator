@@ -77,8 +77,12 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
     });
 
     try {
+      const toTitleCase = (s: string) =>
+        s.trim().replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
       const updateData = {
         ...editData,
+        groom_family: editData.groom_family ? toTitleCase(editData.groom_family) : editData.groom_family,
+        bride_family: editData.bride_family ? toTitleCase(editData.bride_family) : editData.bride_family,
         custom_primary_color: colors.primary,
         custom_accent_color: colors.accent,
         custom_text_color: colors.text,
