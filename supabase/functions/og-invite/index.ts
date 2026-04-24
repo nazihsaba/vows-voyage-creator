@@ -21,6 +21,32 @@ function esc(str: string): string {
     .replace(/>/g, "&gt;");
 }
 
+function getImageMime(imageUrl: string): string {
+  const lower = imageUrl.toLowerCase().split("?")[0];
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".webp")) return "image/webp";
+  if (lower.endsWith(".gif")) return "image/gif";
+  return "image/jpeg";
+}
+
+function isCrawler(userAgent: string): boolean {
+  const ua = userAgent.toLowerCase();
+  return (
+    ua.includes("whatsapp") ||
+    ua.includes("facebookexternalhit") ||
+    ua.includes("facebot") ||
+    ua.includes("twitterbot") ||
+    ua.includes("telegrambot") ||
+    ua.includes("linkedinbot") ||
+    ua.includes("slackbot") ||
+    ua.includes("discordbot") ||
+    ua.includes("skypeuripreview") ||
+    ua.includes("bot") ||
+    ua.includes("crawler") ||
+    ua.includes("spider")
+  );
+}
+
 function buildOgHtml({
   title,
   description,
@@ -28,6 +54,7 @@ function buildOgHtml({
   imageAlt,
   canonicalUrl,
   redirectUrl,
+  forCrawler,
 }: {
   title: string;
   description: string;
@@ -35,6 +62,7 @@ function buildOgHtml({
   imageAlt: string;
   canonicalUrl: string;
   redirectUrl: string;
+  forCrawler: boolean;
 }): string {
   const t = esc(title);
   const d = esc(description);
@@ -42,9 +70,13 @@ function buildOgHtml({
   const alt = esc(imageAlt);
   const url = esc(canonicalUrl);
   const redir = esc(redirectUrl);
+  const mime = getImageMime(imageUrl);
 
+  // For crawlers (WhatsApp, Facebook, etc.) we serve PURE OG metadata
+  // with NO redirect — meta refresh / 3xx confuses Meta's central crawler
+  // and breaks the desktop/web preview. Real users get a JS redirect (crawlers don't run JS).
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -59,7 +91,7 @@ function buildOgHtml({
   <meta property="og:site_name" content="Aurea Invites" />
   <meta property="og:image" content="${img}" />
   <meta property="og:image:secure_url" content="${img}" />
-  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:type" content="${mime}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="${alt}" />
@@ -70,9 +102,12 @@ function buildOgHtml({
   <meta name="twitter:description" content="${d}" />
   <meta name="twitter:image" content="${img}" />
 
-  <!-- Redirect human visitors -->
-  <meta http-equiv="refresh" content="0;url=${redir}" />
   <link rel="canonical" href="${url}" />
+  ${
+    forCrawler
+      ? ""
+      : `<script>window.location.replace(${JSON.stringify(redirectUrl)});</script>`
+  }
 </head>
 <body>
   <p>Redirecting to <a href="${redir}">your invitation</a>&hellip;</p>
@@ -84,6 +119,9 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
+
+  const userAgent = req.headers.get("user-agent") || "";
+  const forCrawler = isCrawler(userAgent);
 
   try {
     const url = new URL(req.url);
@@ -130,6 +168,7 @@ Deno.serve(async (req) => {
         imageAlt: "Wedding Invitation",
         canonicalUrl,
         redirectUrl,
+        forCrawler,
       });
 
       return new Response(html, {
@@ -148,31 +187,18 @@ Deno.serve(async (req) => {
     const title = `You are invited to ${groomName} and ${brideName}'s wedding`;
     const description = `Join us in celebrating the union of ${groomName} & ${brideName}. Tap to view your invitation and RSVP.`;
 
-    // Resolve image: invitation-images bucket → main_picture_url → gallery → default
-    let imageUrl = "";
+    // Resolve image: try the dedicated synced OG image first, then fall back.
+    // We DO NOT probe with HEAD because Supabase Storage doesn't always honor it
+    // and sequential probes can exceed Meta's crawler timeout (~5s),
+    // which is the main reason WhatsApp Desktop/Web shows no preview.
+    let imageUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${slug}/main.jpg`;
 
-    // Try the dedicated OG image from invitation-images bucket first
-    const ogBasePath = `invites/${slug}/main`;
-    for (const ext of ["jpg", "png", "webp"]) {
-      const candidateUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/${ogBasePath}.${ext}`;
-      try {
-        const headResp = await fetch(candidateUrl, { method: "HEAD" });
-        if (headResp.ok) {
-          imageUrl = candidateUrl;
-          break;
-        }
-      } catch {
-        // continue trying
-      }
-    }
-
-    // Fallback to main_picture_url from the wedding record
-    if (!imageUrl) {
-      imageUrl = wedding.main_picture_url || "";
-    }
-
-    // Fallback to first gallery image
-    if (!imageUrl) {
+    // If the synced OG image doesn't exist, we still need a valid fallback.
+    // Use main_picture_url or first gallery image — do this in a single query path.
+    if (wedding.main_picture_url) {
+      // Prefer the curated main picture as a stronger guarantee of existence
+      imageUrl = wedding.main_picture_url;
+    } else {
       const { data: coverImage } = await supabase
         .from("gallery_images")
         .select("image_url")
@@ -181,11 +207,11 @@ Deno.serve(async (req) => {
         .limit(1)
         .maybeSingle();
 
-      imageUrl = coverImage?.image_url || "";
-    }
-
-    if (!imageUrl) {
-      imageUrl = DEFAULT_IMAGE;
+      if (coverImage?.image_url) {
+        imageUrl = coverImage.image_url;
+      } else {
+        imageUrl = DEFAULT_IMAGE;
+      }
     }
 
     const imageAlt = `Wedding invitation for ${groomName} and ${brideName}`;
@@ -197,13 +223,15 @@ Deno.serve(async (req) => {
       imageAlt,
       canonicalUrl,
       redirectUrl,
+      forCrawler,
     });
 
     return new Response(html, {
       headers: {
         ...corsHeaders,
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        // Shorter cache so updates propagate; Meta caches separately on its side.
+        "Cache-Control": "public, max-age=600",
       },
     });
   } catch (err) {
@@ -217,6 +245,7 @@ Deno.serve(async (req) => {
       imageAlt: "Wedding Invitation",
       canonicalUrl: SITE_ORIGIN,
       redirectUrl: SITE_ORIGIN,
+      forCrawler,
     });
 
     return new Response(fallbackHtml, {
