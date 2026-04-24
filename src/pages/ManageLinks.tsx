@@ -226,12 +226,20 @@ const ManageLinks = () => {
     return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
   };
 
+  // Shared invitation message used both for WhatsApp button and clipboard copy,
+  // ensuring a consistent sharing experience whether the user clicks "Send via
+  // WhatsApp" or copies the link and pastes it manually elsewhere.
+  const buildInvitationMessage = (linkName: string, inviteUrl: string) => {
+    return `Dear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
+  };
+
   const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
     const inviteUrl = getInviteUrl(linkName, numberOfPersons);
-    await navigator.clipboard.writeText(inviteUrl);
+    const message = buildInvitationMessage(linkName, inviteUrl);
+    await navigator.clipboard.writeText(message);
     toast({
       title: "Copied!",
-      description: "Invitation link copied",
+      description: "Invitation message copied — paste it anywhere to share",
     });
   };
 
@@ -252,7 +260,7 @@ const ManageLinks = () => {
     const full = getFullPhone(link);
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
-    const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
+    const message = buildInvitationMessage(link.link_name, inviteUrl);
     window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
