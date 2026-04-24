@@ -307,9 +307,13 @@ const RoseGoldTabsForm = () => {
         uploadedAudioUrl = null;
       }
 
-      // Trim name fields before persisting
-      formData.groom_name = formData.groom_name.trim();
-      formData.bride_name = formData.bride_name.trim();
+      // Trim and Title Case name fields before persisting
+      const toTitleCase = (s: string) =>
+        s.trim().replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+      formData.groom_name = toTitleCase(formData.groom_name);
+      formData.bride_name = toTitleCase(formData.bride_name);
+      formData.groom_family = formData.groom_family ? toTitleCase(formData.groom_family) : formData.groom_family;
+      formData.bride_family = formData.bride_family ? toTitleCase(formData.bride_family) : formData.bride_family;
 
       const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
 
