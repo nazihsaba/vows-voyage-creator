@@ -257,14 +257,14 @@ const ManageLinks = () => {
 
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
-    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getShareUrl(link.link_name, link.number_of_persons);
     const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
     if (!link.phone_number) return;
-    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getShareUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
