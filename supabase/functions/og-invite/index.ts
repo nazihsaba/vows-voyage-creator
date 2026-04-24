@@ -226,6 +226,9 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Always normalize to an absolute, public URL
+    imageUrl = toAbsoluteImageUrl(imageUrl, supabaseUrl);
+
     const imageAlt = `Wedding invitation for ${groomName} and ${brideName}`;
 
     const html = buildOgHtml({
