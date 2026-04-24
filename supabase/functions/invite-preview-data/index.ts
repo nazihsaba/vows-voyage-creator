@@ -6,9 +6,23 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-const DEFAULT_TITLE = "Wedding Invitation";
-const DEFAULT_DESCRIPTION = "Tap to view your invitation";
-const DEFAULT_IMAGE = "https://aureainvites.com/default-preview.jpg";
+const SITE_ORIGIN = "https://aureainvites.com";
+const DEFAULT_TITLE = "You're Invited 💍 | A Special Wedding Celebration";
+const DEFAULT_DESCRIPTION =
+  "Celebrate love and joy with a beautifully crafted wedding invitation. Discover all the details of this special day and join the celebration.✨";
+const DEFAULT_IMAGE = `${SITE_ORIGIN}/images/og-preview.jpg`;
+
+/** Ensure any image URL we hand back is absolute + public. */
+function toAbsoluteImageUrl(raw: string | null | undefined, supabaseUrl: string): string {
+  if (!raw) return DEFAULT_IMAGE;
+  const trimmed = raw.trim();
+  if (!trimmed) return DEFAULT_IMAGE;
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  // Relative app path → site origin
+  if (trimmed.startsWith("/")) return `${SITE_ORIGIN}${trimmed}`;
+  // Bare storage path → public Supabase storage URL
+  return `${supabaseUrl}/storage/v1/object/public/${trimmed.replace(/^\/+/, "")}`;
+}
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -42,16 +56,28 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     if (error || !wedding) {
+      // Return defaults (with absolute URLs) so the worker still serves a valid card
       return new Response(
-        JSON.stringify({ error: "Invitation not found" }),
+        JSON.stringify({
+          slug: slug,
+          groom_name: "",
+          bride_name: "",
+          title: DEFAULT_TITLE,
+          main_image_url: DEFAULT_IMAGE,
+          preview_description: DEFAULT_DESCRIPTION,
+        }),
         {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+            "Cache-Control": "public, max-age=300",
+          },
         }
       );
     }
 
-    // Resolve image: invitation-images bucket → main_picture_url → gallery → default
+    // Resolve image: invitation-images bucket (synced OG) → main_picture_url → gallery → default
     let mainImageUrl = "";
     const ogBase = `invites/${slug}/main`;
     for (const ext of ["jpg", "png", "webp"]) {
@@ -67,8 +93,8 @@ Deno.serve(async (req) => {
       }
     }
 
-    if (!mainImageUrl) {
-      mainImageUrl = wedding.main_picture_url || "";
+    if (!mainImageUrl && wedding.main_picture_url) {
+      mainImageUrl = wedding.main_picture_url;
     }
 
     if (!mainImageUrl) {
@@ -82,6 +108,9 @@ Deno.serve(async (req) => {
       mainImageUrl = cover?.image_url || "";
     }
 
+    // Always normalize to an absolute, public URL
+    const absoluteImageUrl = toAbsoluteImageUrl(mainImageUrl, supabaseUrl);
+
     const groom = wedding.groom_name || "";
     const bride = wedding.bride_name || "";
     const title =
@@ -94,7 +123,7 @@ Deno.serve(async (req) => {
       groom_name: groom || "Groom",
       bride_name: bride || "Bride",
       title,
-      main_image_url: mainImageUrl || DEFAULT_IMAGE,
+      main_image_url: absoluteImageUrl,
       preview_description: wedding.main_description || DEFAULT_DESCRIPTION,
     };
 
