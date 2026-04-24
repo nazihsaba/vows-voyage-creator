@@ -8,10 +8,11 @@ const corsHeaders = {
 
 interface WhishCollectRequest {
   weddingId: string;
-  amount: number;
+  amount?: number;
   currency: "USD" | "LBP";
-  invoice: string;
+  invoice?: string;
   type?: "publish" | "venue";
+  promoCode?: string | null;
 }
 
 interface WhishCollectResponse {
@@ -23,6 +24,13 @@ interface WhishCollectResponse {
     collectUrl?: string;
   };
 }
+
+// Server-side promo code table — source of truth for discounts
+const PROMO_CODES: Record<string, number> = {
+  "A-HOST": 40,
+  "NK-20": 20,
+};
+const BASE_PUBLISH_FEE_USD = 100;
 
 serve(async (req: Request) => {
   // Handle CORS preflight
@@ -39,11 +47,11 @@ serve(async (req: Request) => {
       throw new Error("Whish Pay credentials not configured");
     }
 
-    const { weddingId, amount, currency, invoice, type }: WhishCollectRequest = await req.json();
+    const { weddingId, amount, currency, invoice, type, promoCode }: WhishCollectRequest = await req.json();
     const paymentType = type || "publish";
 
-    if (!weddingId || !amount || !currency) {
-      return new Response(JSON.stringify({ error: "Missing required fields: weddingId, amount, currency" }), {
+    if (!weddingId || !currency) {
+      return new Response(JSON.stringify({ error: "Missing required fields: weddingId, currency" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -97,6 +105,43 @@ serve(async (req: Request) => {
       });
     }
 
+    // Compute final amount + invoice based on payment type
+    let finalAmount: number;
+    let finalInvoice: string;
+
+    if (paymentType === "publish") {
+      // Publish flow — server-side enforced pricing with optional promo code
+      let appliedPromoLabel = "";
+      let discountPercent = 0;
+
+      if (promoCode && typeof promoCode === "string") {
+        const normalized = promoCode.trim().toUpperCase();
+        if (normalized.length > 0) {
+          if (!(normalized in PROMO_CODES)) {
+            return new Response(JSON.stringify({ error: "Invalid promo code" }), {
+              status: 400,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            });
+          }
+          discountPercent = PROMO_CODES[normalized];
+          appliedPromoLabel = ` (promo ${normalized} -${discountPercent}%)`;
+        }
+      }
+
+      finalAmount = BASE_PUBLISH_FEE_USD * (1 - discountPercent / 100);
+      finalInvoice = `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}${appliedPromoLabel}`;
+    } else {
+      // Venue flow — keep existing behavior, trust client-supplied amount
+      if (!amount) {
+        return new Response(JSON.stringify({ error: "Missing required field: amount" }), {
+          status: 400,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      finalAmount = amount;
+      finalInvoice = invoice || `Venue payment for ${wedding.bride_name} & ${wedding.groom_name}`;
+    }
+
     // Generate unique external ID using timestamp
     const externalId = Date.now();
 
@@ -104,7 +149,6 @@ serve(async (req: Request) => {
     const baseUrl = `https://${websiteUrl}`;
 
     // Whish API base URL (sandbox for testing, use api.whish.money for production)
-    // const whishApiBase = "https://api.whish.money/itel-service/api";
     const whishApiBase = "https://api.whish.money/itel-service/api";
 
     // Supabase functions URL for server-to-server callbacks
@@ -121,9 +165,9 @@ serve(async (req: Request) => {
         "User-Agent": "Whish/1.0 (https://aureainvites.com; support@aureainvites.com)",
       },
       body: JSON.stringify({
-        amount: amount,
+        amount: finalAmount,
         currency: currency,
-        invoice: invoice || `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}`,
+        invoice: finalInvoice,
         externalId: externalId,
         successCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=success&weddingId=${weddingId}&type=${paymentType}`,
         failureCallbackUrl: `${callbackBaseUrl}/whish-payment-callback?status=failed&weddingId=${weddingId}&type=${paymentType}`,
@@ -165,6 +209,7 @@ serve(async (req: Request) => {
         success: true,
         collectUrl: whishResult.data.collectUrl,
         externalId: externalId,
+        finalAmount,
       }),
       { status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" } },
     );
