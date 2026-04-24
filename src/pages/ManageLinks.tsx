@@ -240,18 +240,28 @@ const ManageLinks = () => {
     return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`;
   };
 
+  // Combine country code + phone number for outbound calls. Backward-compatible:
+  // legacy rows may still have the country code embedded in phone_number (country_code NULL).
+  const getFullPhone = (link: InvitationLink): string | null => {
+    if (!link.phone_number) return null;
+    if (link.country_code) return `${link.country_code}${link.phone_number}`;
+    return link.phone_number;
+  };
+
   const openWhatsApp = (link: InvitationLink) => {
-    if (!link.phone_number) return;
+    const full = getFullPhone(link);
+    if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
-    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
+    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
-    if (!link.phone_number) return;
+    const full = getFullPhone(link);
+    if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
-    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
+    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
