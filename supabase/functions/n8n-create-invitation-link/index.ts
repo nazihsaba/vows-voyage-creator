@@ -13,6 +13,7 @@ interface InvitationLinkRequest {
   unique_slug?: string;
   side?: string | null;
   phone_number?: string | number | null;
+  country_code?: string | null;
 }
 
 serve(async (req) => {
@@ -39,8 +40,27 @@ serve(async (req) => {
 
     // Parse request body
     const body: InvitationLinkRequest = await req.json();
-    const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null, phone_number = null } = body;
-    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 && String(phone_number).trim() !== '0' ? String(phone_number).trim() : null;
+    const { wedding_id, link_name, number_of_persons = 1, unique_slug, side = null, phone_number = null, country_code = null } = body;
+
+    // Normalize phone + country code. Backward compatible:
+    //  - If country_code provided, use it as-is and phone_number stays as digits.
+    //  - If only phone_number provided and it starts with +<digits>, auto-split into country_code.
+    let normalizedPhone: string | null = null;
+    let normalizedCountryCode: string | null = null;
+    const rawPhone = phone_number != null ? String(phone_number).trim() : '';
+    if (rawPhone.length > 0 && rawPhone !== '0') {
+      normalizedPhone = rawPhone;
+      const rawCc = country_code != null ? String(country_code).trim() : '';
+      if (rawCc.length > 0) {
+        normalizedCountryCode = rawCc;
+      } else {
+        const match = rawPhone.match(/^(\+\d{1,4})(.*)$/);
+        if (match) {
+          normalizedCountryCode = match[1];
+          normalizedPhone = match[2] || rawPhone;
+        }
+      }
+    }
 
     // Validate required fields
     if (!wedding_id || !link_name) {
