@@ -101,8 +101,9 @@ export const GenerateLinkDialog = ({
           unique_slug: uniqueSlug,
           number_of_persons: validInvitees.length,
           side: side.trim() || null,
-          phone_number: phoneNumber.trim() ? `${countryCode}${phoneNumber.trim()}` : null,
-        })
+          country_code: phoneNumber.trim() ? countryCode.trim() || null : null,
+          phone_number: phoneNumber.trim() ? phoneNumber.trim() : null,
+        } as any)
         .select()
         .single();
 

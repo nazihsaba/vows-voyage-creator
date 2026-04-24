@@ -70,6 +70,7 @@ interface InvitationLink {
   unique_slug: string;
   number_of_persons: number;
   side: string | null;
+  country_code: string | null;
   phone_number: string | null;
   created_at: string;
 }
@@ -112,6 +113,8 @@ const ManageLinks = () => {
     link_name: "",
     number_of_persons: 1 as number | string,
     side: "",
+    country_code: "+961",
+    phone_number: "",
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -237,26 +240,49 @@ const ManageLinks = () => {
     return `https://api.whatsapp.com/send/?phone=${phone}&text=${encodeURIComponent(message)}`;
   };
 
+  // Combine country code + phone number for outbound calls. Backward-compatible:
+  // legacy rows may still have the country code embedded in phone_number (country_code NULL).
+  const getFullPhone = (link: InvitationLink): string | null => {
+    if (!link.phone_number) return null;
+    if (link.country_code) return `${link.country_code}${link.phone_number}`;
+    return link.phone_number;
+  };
+
   const openWhatsApp = (link: InvitationLink) => {
-    if (!link.phone_number) return;
+    const full = getFullPhone(link);
+    if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
-    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
+    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
-    if (!link.phone_number) return;
+    const full = getFullPhone(link);
+    if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
-    window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
+    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openEditDialog = (link: InvitationLink) => {
     setEditingLink(link);
+    // Backward-compat: legacy rows may still have a combined "+<cc><digits>" stored in phone_number
+    // with country_code = NULL. Split on the fly so the inputs always show separated values.
+    let cc = link.country_code ?? "";
+    let phone = link.phone_number ?? "";
+    if (!cc && phone) {
+      const match = phone.match(/^(\+\d{1,4})(.*)$/);
+      if (match) {
+        cc = match[1];
+        phone = match[2];
+      }
+    }
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      country_code: cc || "+961",
+      phone_number: phone,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -321,12 +347,16 @@ const ManageLinks = () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
       // Save link fields
+      const trimmedPhone = editForm.phone_number.trim();
+      const trimmedCc = editForm.country_code.trim();
       const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
           link_name: editForm.link_name.replace(/\b\w/g, (c) => c.toUpperCase()),
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
+          country_code: trimmedPhone ? trimmedCc || null : null,
+          phone_number: trimmedPhone || null,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -1679,6 +1709,37 @@ const ManageLinks = () => {
                     <SelectItem value="NONE">None</SelectItem>
                   </SelectContent>
                 </Select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="edit-phone" className="text-xs sm:text-sm font-medium">
+                Phone Number
+              </Label>
+              <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                Used for WhatsApp invitations and reminders.
+              </p>
+              <div className="flex gap-1.5">
+                <Input
+                  id="edit-country-code"
+                  placeholder="+961"
+                  value={editForm.country_code}
+                  onChange={(e) =>
+                    setEditForm((prev) => ({ ...prev, country_code: e.target.value }))
+                  }
+                  className="h-11 text-base sm:h-9 sm:text-sm w-20 shrink-0"
+                />
+                <Input
+                  id="edit-phone"
+                  type="tel"
+                  inputMode="tel"
+                  placeholder="e.g., 71123456"
+                  value={editForm.phone_number}
+                  onChange={(e) =>
+                    setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))
+                  }
+                  className="h-11 text-base sm:h-9 sm:text-sm"
+                />
               </div>
             </div>
 

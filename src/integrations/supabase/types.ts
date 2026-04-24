@@ -92,6 +92,7 @@ export type Database = {
       }
       invitation_links: {
         Row: {
+          country_code: string | null
           created_at: string
           id: string
           link_name: string
@@ -102,6 +103,7 @@ export type Database = {
           wedding_id: string
         }
         Insert: {
+          country_code?: string | null
           created_at?: string
           id?: string
           link_name: string
@@ -112,6 +114,7 @@ export type Database = {
           wedding_id: string
         }
         Update: {
+          country_code?: string | null
           created_at?: string
           id?: string
           link_name?: string

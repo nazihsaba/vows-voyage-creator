@@ -12,6 +12,7 @@ interface CreateInvitationRequest {
   number_of_persons: number;
   side?: string | null;
   phone_number?: string | number | null;
+  country_code?: string | null;
 }
 
 Deno.serve(async (req) => {
@@ -42,6 +43,7 @@ Deno.serve(async (req) => {
       number_of_persons,
       side = null,
       phone_number = null,
+      country_code = null,
     } = body;
 
     // Validate required fields
@@ -68,7 +70,27 @@ Deno.serve(async (req) => {
 
     // Validate optional side
     const normalizedSide = typeof side === 'string' && side.trim().length > 0 ? side.trim() : null;
-    const normalizedPhone = phone_number != null && String(phone_number).trim().length > 0 && String(phone_number).trim() !== '0' ? String(phone_number).trim() : null;
+
+    // Normalize phone + country code. Supports two callers:
+    //  1) Split values: country_code = "+961", phone_number = "71123456"
+    //  2) Legacy combined value: phone_number = "+96171123456", country_code missing
+    //     -> auto-split leading "+<1-4 digits>" into country_code, rest stays in phone_number.
+    let normalizedPhone: string | null = null;
+    let normalizedCountryCode: string | null = null;
+    const rawPhone = phone_number != null ? String(phone_number).trim() : '';
+    if (rawPhone.length > 0 && rawPhone !== '0') {
+      normalizedPhone = rawPhone;
+      const rawCc = country_code != null ? String(country_code).trim() : '';
+      if (rawCc.length > 0) {
+        normalizedCountryCode = rawCc;
+      } else {
+        const match = rawPhone.match(/^(\+\d{1,4})(.*)$/);
+        if (match) {
+          normalizedCountryCode = match[1];
+          normalizedPhone = match[2] || rawPhone;
+        }
+      }
+    }
 
     // Initialize Supabase client with service role key
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
@@ -107,6 +129,7 @@ Deno.serve(async (req) => {
         number_of_persons,
         side: normalizedSide,
         phone_number: normalizedPhone,
+        country_code: normalizedCountryCode,
       })
       .select()
       .single();
@@ -137,6 +160,7 @@ Deno.serve(async (req) => {
           number_of_persons: invitationLink.number_of_persons,
           side: invitationLink.side,
           phone_number: invitationLink.phone_number,
+          country_code: invitationLink.country_code,
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
