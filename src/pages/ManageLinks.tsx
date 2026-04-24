@@ -337,12 +337,16 @@ const ManageLinks = () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
       // Save link fields
+      const trimmedPhone = editForm.phone_number.trim();
+      const trimmedCc = editForm.country_code.trim();
       const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
           link_name: editForm.link_name.replace(/\b\w/g, (c) => c.toUpperCase()),
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
+          country_code: trimmedPhone ? trimmedCc || null : null,
+          phone_number: trimmedPhone || null,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
