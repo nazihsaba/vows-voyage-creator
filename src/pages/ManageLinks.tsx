@@ -256,10 +256,23 @@ const ManageLinks = () => {
 
   const openEditDialog = (link: InvitationLink) => {
     setEditingLink(link);
+    // Backward-compat: legacy rows may still have a combined "+<cc><digits>" stored in phone_number
+    // with country_code = NULL. Split on the fly so the inputs always show separated values.
+    let cc = link.country_code ?? "";
+    let phone = link.phone_number ?? "";
+    if (!cc && phone) {
+      const match = phone.match(/^(\+\d{1,4})(.*)$/);
+      if (match) {
+        cc = match[1];
+        phone = match[2];
+      }
+    }
     setEditForm({
       link_name: link.link_name,
       number_of_persons: link.number_of_persons,
       side: link.side || "NONE",
+      country_code: cc || "+961",
+      phone_number: phone,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
