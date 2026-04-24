@@ -161,8 +161,9 @@ Deno.serve(async (req) => {
       .maybeSingle();
 
     // ── Build redirect path ──
-    const siteOrigin =
-      url.searchParams.get("origin") || SITE_ORIGIN;
+    // Real users get bounced to the app origin (React app),
+    // canonical URL points at the public site origin.
+    const siteOrigin = url.searchParams.get("origin") || APP_ORIGIN;
     let redirectPath = `/invite/${slug}`;
     if (linkSlug && numberOfPersons) {
       redirectPath = `/invite/${slug}/${linkSlug}/${numberOfPersons}`;
