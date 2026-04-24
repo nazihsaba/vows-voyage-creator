@@ -21,6 +21,32 @@ function esc(str: string): string {
     .replace(/>/g, "&gt;");
 }
 
+function getImageMime(imageUrl: string): string {
+  const lower = imageUrl.toLowerCase().split("?")[0];
+  if (lower.endsWith(".png")) return "image/png";
+  if (lower.endsWith(".webp")) return "image/webp";
+  if (lower.endsWith(".gif")) return "image/gif";
+  return "image/jpeg";
+}
+
+function isCrawler(userAgent: string): boolean {
+  const ua = userAgent.toLowerCase();
+  return (
+    ua.includes("whatsapp") ||
+    ua.includes("facebookexternalhit") ||
+    ua.includes("facebot") ||
+    ua.includes("twitterbot") ||
+    ua.includes("telegrambot") ||
+    ua.includes("linkedinbot") ||
+    ua.includes("slackbot") ||
+    ua.includes("discordbot") ||
+    ua.includes("skypeuripreview") ||
+    ua.includes("bot") ||
+    ua.includes("crawler") ||
+    ua.includes("spider")
+  );
+}
+
 function buildOgHtml({
   title,
   description,
@@ -28,6 +54,7 @@ function buildOgHtml({
   imageAlt,
   canonicalUrl,
   redirectUrl,
+  forCrawler,
 }: {
   title: string;
   description: string;
@@ -35,6 +62,7 @@ function buildOgHtml({
   imageAlt: string;
   canonicalUrl: string;
   redirectUrl: string;
+  forCrawler: boolean;
 }): string {
   const t = esc(title);
   const d = esc(description);
@@ -42,9 +70,13 @@ function buildOgHtml({
   const alt = esc(imageAlt);
   const url = esc(canonicalUrl);
   const redir = esc(redirectUrl);
+  const mime = getImageMime(imageUrl);
 
+  // For crawlers (WhatsApp, Facebook, etc.) we serve PURE OG metadata
+  // with NO redirect — meta refresh / 3xx confuses Meta's central crawler
+  // and breaks the desktop/web preview. Real users get a JS redirect (crawlers don't run JS).
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -59,7 +91,7 @@ function buildOgHtml({
   <meta property="og:site_name" content="Aurea Invites" />
   <meta property="og:image" content="${img}" />
   <meta property="og:image:secure_url" content="${img}" />
-  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:type" content="${mime}" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
   <meta property="og:image:alt" content="${alt}" />
@@ -70,9 +102,12 @@ function buildOgHtml({
   <meta name="twitter:description" content="${d}" />
   <meta name="twitter:image" content="${img}" />
 
-  <!-- Redirect human visitors -->
-  <meta http-equiv="refresh" content="0;url=${redir}" />
   <link rel="canonical" href="${url}" />
+  ${
+    forCrawler
+      ? ""
+      : `<script>window.location.replace(${JSON.stringify(redirectUrl)});</script>`
+  }
 </head>
 <body>
   <p>Redirecting to <a href="${redir}">your invitation</a>&hellip;</p>
