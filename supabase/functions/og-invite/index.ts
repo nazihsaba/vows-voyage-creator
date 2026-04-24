@@ -120,6 +120,9 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  const userAgent = req.headers.get("user-agent") || "";
+  const forCrawler = isCrawler(userAgent);
+
   try {
     const url = new URL(req.url);
     const pathParts = url.pathname.split("/").filter(Boolean);
@@ -165,6 +168,7 @@ Deno.serve(async (req) => {
         imageAlt: "Wedding Invitation",
         canonicalUrl,
         redirectUrl,
+        forCrawler,
       });
 
       return new Response(html, {
@@ -183,31 +187,18 @@ Deno.serve(async (req) => {
     const title = `You are invited to ${groomName} and ${brideName}'s wedding`;
     const description = `Join us in celebrating the union of ${groomName} & ${brideName}. Tap to view your invitation and RSVP.`;
 
-    // Resolve image: invitation-images bucket → main_picture_url → gallery → default
-    let imageUrl = "";
+    // Resolve image: try the dedicated synced OG image first, then fall back.
+    // We DO NOT probe with HEAD because Supabase Storage doesn't always honor it
+    // and sequential probes can exceed Meta's crawler timeout (~5s),
+    // which is the main reason WhatsApp Desktop/Web shows no preview.
+    let imageUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${slug}/main.jpg`;
 
-    // Try the dedicated OG image from invitation-images bucket first
-    const ogBasePath = `invites/${slug}/main`;
-    for (const ext of ["jpg", "png", "webp"]) {
-      const candidateUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/${ogBasePath}.${ext}`;
-      try {
-        const headResp = await fetch(candidateUrl, { method: "HEAD" });
-        if (headResp.ok) {
-          imageUrl = candidateUrl;
-          break;
-        }
-      } catch {
-        // continue trying
-      }
-    }
-
-    // Fallback to main_picture_url from the wedding record
-    if (!imageUrl) {
-      imageUrl = wedding.main_picture_url || "";
-    }
-
-    // Fallback to first gallery image
-    if (!imageUrl) {
+    // If the synced OG image doesn't exist, we still need a valid fallback.
+    // Use main_picture_url or first gallery image — do this in a single query path.
+    if (wedding.main_picture_url) {
+      // Prefer the curated main picture as a stronger guarantee of existence
+      imageUrl = wedding.main_picture_url;
+    } else {
       const { data: coverImage } = await supabase
         .from("gallery_images")
         .select("image_url")
@@ -216,11 +207,11 @@ Deno.serve(async (req) => {
         .limit(1)
         .maybeSingle();
 
-      imageUrl = coverImage?.image_url || "";
-    }
-
-    if (!imageUrl) {
-      imageUrl = DEFAULT_IMAGE;
+      if (coverImage?.image_url) {
+        imageUrl = coverImage.image_url;
+      } else {
+        imageUrl = DEFAULT_IMAGE;
+      }
     }
 
     const imageAlt = `Wedding invitation for ${groomName} and ${brideName}`;
@@ -232,13 +223,15 @@ Deno.serve(async (req) => {
       imageAlt,
       canonicalUrl,
       redirectUrl,
+      forCrawler,
     });
 
     return new Response(html, {
       headers: {
         ...corsHeaders,
         "Content-Type": "text/html; charset=utf-8",
-        "Cache-Control": "public, max-age=3600",
+        // Shorter cache so updates propagate; Meta caches separately on its side.
+        "Cache-Control": "public, max-age=600",
       },
     });
   } catch (err) {
@@ -252,6 +245,7 @@ Deno.serve(async (req) => {
       imageAlt: "Wedding Invitation",
       canonicalUrl: SITE_ORIGIN,
       redirectUrl: SITE_ORIGIN,
+      forCrawler,
     });
 
     return new Response(fallbackHtml, {
