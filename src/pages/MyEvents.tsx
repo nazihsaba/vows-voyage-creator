@@ -47,6 +47,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 
 interface Wedding {
   id: string;
@@ -64,6 +65,11 @@ interface Wedding {
 }
 
 const PUBLISH_FEE_USD = 100; // Fee for publishing an event
+
+const PROMO_CODES: Record<string, number> = {
+  "A-HOST": 40,
+  "NK-20": 20,
+};
 
 const getEventType = (templateType: string): string => {
   if (templateType?.includes("bachelor")) return "Bachelor Party";
@@ -107,6 +113,10 @@ const MyEvents = () => {
   const [shareDialogOpen, setShareDialogOpen] = useState(false);
   const [shareWeddingId, setShareWeddingId] = useState<string | null>(null);
   const [shareCounts, setShareCounts] = useState<Record<string, number>>({});
+
+  const [promoCodeInput, setPromoCodeInput] = useState("");
+  const [appliedPromo, setAppliedPromo] = useState<{ code: string; discountPercent: number } | null>(null);
+  const [promoError, setPromoError] = useState<string | null>(null);
 
   useEffect(() => {
     checkUserAndFetchWeddings();
@@ -242,6 +252,36 @@ const MyEvents = () => {
     setPaymentDialogOpen(true);
     setPaymentUrl(null);
     setPaymentError(null);
+    setPromoCodeInput("");
+    setAppliedPromo(null);
+    setPromoError(null);
+  };
+
+  const handleApplyPromo = () => {
+    const code = promoCodeInput.trim().toUpperCase();
+    setPromoError(null);
+    if (!code) {
+      setPromoError("Enter a promo code");
+      return;
+    }
+    const discount = PROMO_CODES[code];
+    if (!discount) {
+      setAppliedPromo(null);
+      setPromoError("Invalid promo code");
+      return;
+    }
+    setAppliedPromo({ code, discountPercent: discount });
+  };
+
+  const handleRemovePromo = () => {
+    setAppliedPromo(null);
+    setPromoCodeInput("");
+    setPromoError(null);
+  };
+
+  const getFinalAmount = () => {
+    if (!appliedPromo) return PUBLISH_FEE_USD;
+    return PUBLISH_FEE_USD * (1 - appliedPromo.discountPercent / 100);
   };
 
   const handlePaymentProceed = async () => {
@@ -258,9 +298,8 @@ const MyEvents = () => {
       const { data, error } = await supabase.functions.invoke("whish-pay-collect", {
         body: {
           weddingId: publishingWeddingId,
-          amount: PUBLISH_FEE_USD,
           currency: "USD",
-          invoice: `Event publishing fee - $${PUBLISH_FEE_USD}`,
+          promoCode: appliedPromo?.code ?? null,
         },
       });
 
@@ -285,6 +324,9 @@ const MyEvents = () => {
     setPublishingWeddingId(null);
     setPaymentUrl(null);
     setPaymentError(null);
+    setPromoCodeInput("");
+    setAppliedPromo(null);
+    setPromoError(null);
   };
 
   const getPublishingWedding = () => {
@@ -618,7 +660,68 @@ const MyEvents = () => {
                   <span className="text-muted-foreground">Publishing fee</span>
                   <span className="font-semibold">${PUBLISH_FEE_USD} USD</span>
                 </div>
+                {appliedPromo && (
+                  <>
+                    <div className="flex justify-between text-sm text-green-600">
+                      <span>Discount ({appliedPromo.code} -{appliedPromo.discountPercent}%)</span>
+                      <span className="font-semibold">
+                        -${(PUBLISH_FEE_USD * appliedPromo.discountPercent) / 100} USD
+                      </span>
+                    </div>
+                    <div className="border-t border-border/60 pt-2 flex justify-between text-sm">
+                      <span className="font-semibold">Total</span>
+                      <span className="font-bold">${getFinalAmount()} USD</span>
+                    </div>
+                  </>
+                )}
               </div>
+
+              <div className="space-y-2">
+                <label className="text-xs font-medium text-muted-foreground">Promo code (optional)</label>
+                {appliedPromo ? (
+                  <div className="flex items-center justify-between bg-green-50 border border-green-200 rounded-md px-3 py-2">
+                    <span className="text-sm font-medium text-green-700">
+                      {appliedPromo.code} applied (-{appliedPromo.discountPercent}%)
+                    </span>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={handleRemovePromo}
+                      className="h-7 text-xs text-green-700 hover:text-green-800"
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="flex gap-2">
+                    <Input
+                      placeholder="Enter code"
+                      value={promoCodeInput}
+                      onChange={(e) => {
+                        setPromoCodeInput(e.target.value);
+                        if (promoError) setPromoError(null);
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleApplyPromo();
+                        }
+                      }}
+                      className="h-10"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={handleApplyPromo}
+                      disabled={!promoCodeInput.trim()}
+                    >
+                      Apply
+                    </Button>
+                  </div>
+                )}
+                {promoError && <p className="text-xs text-destructive">{promoError}</p>}
+              </div>
+
               <p className="text-xs text-muted-foreground">
                 Payment is processed securely via Whish Pay. Once confirmed, your event will be live.
               </p>
