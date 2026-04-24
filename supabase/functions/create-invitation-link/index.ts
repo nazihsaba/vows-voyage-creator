@@ -129,6 +129,7 @@ Deno.serve(async (req) => {
         number_of_persons,
         side: normalizedSide,
         phone_number: normalizedPhone,
+        country_code: normalizedCountryCode,
       })
       .select()
       .single();
@@ -159,6 +160,7 @@ Deno.serve(async (req) => {
           number_of_persons: invitationLink.number_of_persons,
           side: invitationLink.side,
           phone_number: invitationLink.phone_number,
+          country_code: invitationLink.country_code,
         }
       }),
       { status: 201, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
