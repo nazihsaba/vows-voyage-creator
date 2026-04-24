@@ -214,31 +214,13 @@ const ManageLinks = () => {
     }
   };
 
-  const sanitizeLinkName = (linkName: string) =>
-    linkName
+  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
+    const sanitizedLinkName = linkName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-
-  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const siteOrigin = "https://aureainvites.com";
-    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizeLinkName(linkName)}/${numberOfPersons}`;
-  };
-
-  /**
-   * Share URL used in WhatsApp/social messages.
-   *
-   * Points at the og-invite edge function so crawlers (WhatsApp, iMessage,
-   * Twitter, Facebook, Telegram, Slack...) receive server-rendered HTML with
-   * proper Open Graph + Twitter meta tags (couple names + cover image).
-   *
-   * Real users hitting this URL are auto-redirected to /invite/:slug/:link/:n
-   * via meta refresh + JS fallback inside the edge function response, so the
-   * end-user experience is identical to the clean invite URL.
-   */
-  const getShareUrl = (linkName: string, numberOfPersons: number) => {
-    const projectRef = "zpwnpxkznlgdgkticiem";
-    return `https://${projectRef}.supabase.co/functions/v1/og-invite/${wedding?.slug}/${sanitizeLinkName(linkName)}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
   };
 
   const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
@@ -257,14 +239,14 @@ const ManageLinks = () => {
 
   const openWhatsApp = (link: InvitationLink) => {
     if (!link.phone_number) return;
-    const inviteUrl = getShareUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Dear ${link.link_name},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
     if (!link.phone_number) return;
-    const inviteUrl = getShareUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
     window.open(buildWhatsAppUrl(link.phone_number, message), "_blank");
   };
