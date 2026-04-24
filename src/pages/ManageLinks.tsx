@@ -214,13 +214,31 @@ const ManageLinks = () => {
     }
   };
 
-  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
-    const sanitizedLinkName = linkName
+  const sanitizeLinkName = (linkName: string) =>
+    linkName
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
+
+  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const siteOrigin = "https://aureainvites.com";
-    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizeLinkName(linkName)}/${numberOfPersons}`;
+  };
+
+  /**
+   * Share URL used in WhatsApp/social messages.
+   *
+   * Points at the og-invite edge function so crawlers (WhatsApp, iMessage,
+   * Twitter, Facebook, Telegram, Slack...) receive server-rendered HTML with
+   * proper Open Graph + Twitter meta tags (couple names + cover image).
+   *
+   * Real users hitting this URL are auto-redirected to /invite/:slug/:link/:n
+   * via meta refresh + JS fallback inside the edge function response, so the
+   * end-user experience is identical to the clean invite URL.
+   */
+  const getShareUrl = (linkName: string, numberOfPersons: number) => {
+    const projectRef = "zpwnpxkznlgdgkticiem";
+    return `https://${projectRef}.supabase.co/functions/v1/og-invite/${wedding?.slug}/${sanitizeLinkName(linkName)}/${numberOfPersons}`;
   };
 
   const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
