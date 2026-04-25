@@ -199,30 +199,40 @@ Deno.serve(async (req) => {
     const title = `You are invited to ${groomName} and ${brideName}'s wedding`;
     const description = `Join us in celebrating the union of ${groomName} & ${brideName}. Tap to view your invitation and RSVP.`;
 
-    // Resolve image: try the dedicated synced OG image first, then fall back.
-    // We DO NOT probe with HEAD because Supabase Storage doesn't always honor it
-    // and sequential probes can exceed Meta's crawler timeout (~5s),
-    // which is the main reason WhatsApp Desktop/Web shows no preview.
-    let imageUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${slug}/main.jpg`;
+    // Resolve image: prefer the dedicated synced OG image (main.jpg) since users
+    // explicitly upload it from the wedding form. Probe with a tight timeout
+    // so we stay well under Meta's crawler timeout (~5s).
+    const syncedOgUrl = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${slug}/main.jpg`;
+    let imageUrl = syncedOgUrl;
 
-    // If the synced OG image doesn't exist, we still need a valid fallback.
-    // Use main_picture_url or first gallery image — do this in a single query path.
-    if (wedding.main_picture_url) {
-      // Prefer the curated main picture as a stronger guarantee of existence
-      imageUrl = wedding.main_picture_url;
-    } else {
-      const { data: coverImage } = await supabase
-        .from("gallery_images")
-        .select("image_url")
-        .eq("wedding_id", wedding.id)
-        .order("image_order", { ascending: true })
-        .limit(1)
-        .maybeSingle();
+    let syncedExists = false;
+    try {
+      const ctrl = new AbortController();
+      const timer = setTimeout(() => ctrl.abort(), 1500);
+      const probe = await fetch(syncedOgUrl, { method: "HEAD", signal: ctrl.signal });
+      clearTimeout(timer);
+      syncedExists = probe.ok;
+    } catch (_) {
+      syncedExists = false;
+    }
 
-      if (coverImage?.image_url) {
-        imageUrl = coverImage.image_url;
+    if (!syncedExists) {
+      if (wedding.main_picture_url) {
+        imageUrl = wedding.main_picture_url;
       } else {
-        imageUrl = DEFAULT_IMAGE;
+        const { data: coverImage } = await supabase
+          .from("gallery_images")
+          .select("image_url")
+          .eq("wedding_id", wedding.id)
+          .order("image_order", { ascending: true })
+          .limit(1)
+          .maybeSingle();
+
+        if (coverImage?.image_url) {
+          imageUrl = coverImage.image_url;
+        } else {
+          imageUrl = DEFAULT_IMAGE;
+        }
       }
     }
 
