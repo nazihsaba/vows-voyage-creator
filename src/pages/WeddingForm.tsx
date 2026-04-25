@@ -227,6 +227,13 @@ const WeddingForm = () => {
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
       }
+      // Try to load existing social preview image (best-effort, may 404 if not uploaded yet)
+      if (data.slug) {
+        const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || "";
+        const candidate = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${data.slug}/main.jpg?t=${Date.now()}`;
+        // We don't HEAD-check; just set it and let the <img onError> hide it
+        setSocialPreviewUrl(candidate);
+      }
       if (data.video_url) {
         setVideoPreview(data.video_url);
       }
