@@ -47,6 +47,8 @@ const WeddingForm = () => {
   const [graceFeaturedPreview, setGraceFeaturedPreview] = useState<string>("");
   const [graceFeaturedPositionY, setGraceFeaturedPositionY] = useState<number>(50);
   const graceFeaturedImgRef = useRef<HTMLImageElement>(null);
+  const [socialPreviewFile, setSocialPreviewFile] = useState<File | null>(null);
+  const [socialPreviewUrl, setSocialPreviewUrl] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
