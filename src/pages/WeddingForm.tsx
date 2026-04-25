@@ -646,12 +646,23 @@ const WeddingForm = () => {
           audio_end_time: audioTrimSettings?.endTime || 0,
         });
       }
-      // Copy main image to invitation-images bucket for OG previews
+      // Upload social preview image to invitation-images bucket for link previews (WhatsApp, Facebook, etc.)
       const finalSlug = slug;
-      const finalImageUrl = imageUrl;
-      if (finalImageUrl) {
-        // Fire and forget — don't block the save flow
-        uploadOgImage(finalImageUrl, finalSlug);
+      if (socialPreviewFile) {
+        // User uploaded a dedicated social preview image — always store as main.jpg
+        try {
+          await supabase.storage
+            .from("invitation-images")
+            .upload(`invites/${finalSlug}/main.jpg`, socialPreviewFile, {
+              contentType: "image/jpeg",
+              upsert: true,
+            });
+        } catch (err) {
+          console.warn("Social preview upload failed (non-blocking):", err);
+        }
+      } else if (imageUrl) {
+        // Fall back to copying the main wedding photo
+        uploadOgImage(imageUrl, finalSlug);
       }
 
       // Upload gallery images if template supports gallery
