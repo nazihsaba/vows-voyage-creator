@@ -47,6 +47,8 @@ const WeddingForm = () => {
   const [graceFeaturedPreview, setGraceFeaturedPreview] = useState<string>("");
   const [graceFeaturedPositionY, setGraceFeaturedPositionY] = useState<number>(50);
   const graceFeaturedImgRef = useRef<HTMLImageElement>(null);
+  const [socialPreviewFile, setSocialPreviewFile] = useState<File | null>(null);
+  const [socialPreviewUrl, setSocialPreviewUrl] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -224,6 +226,13 @@ const WeddingForm = () => {
       }
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
+      }
+      // Try to load existing social preview image (best-effort, may 404 if not uploaded yet)
+      if (data.slug) {
+        const supabaseUrl = (import.meta as any).env?.VITE_SUPABASE_URL || "";
+        const candidate = `${supabaseUrl}/storage/v1/object/public/invitation-images/invites/${data.slug}/main.jpg?t=${Date.now()}`;
+        // We don't HEAD-check; just set it and let the <img onError> hide it
+        setSocialPreviewUrl(candidate);
       }
       if (data.video_url) {
         setVideoPreview(data.video_url);
@@ -637,12 +646,23 @@ const WeddingForm = () => {
           audio_end_time: audioTrimSettings?.endTime || 0,
         });
       }
-      // Copy main image to invitation-images bucket for OG previews
+      // Upload social preview image to invitation-images bucket for link previews (WhatsApp, Facebook, etc.)
       const finalSlug = slug;
-      const finalImageUrl = imageUrl;
-      if (finalImageUrl) {
-        // Fire and forget — don't block the save flow
-        uploadOgImage(finalImageUrl, finalSlug);
+      if (socialPreviewFile) {
+        // User uploaded a dedicated social preview image — always store as main.jpg
+        try {
+          await supabase.storage
+            .from("invitation-images")
+            .upload(`invites/${finalSlug}/main.jpg`, socialPreviewFile, {
+              contentType: "image/jpeg",
+              upsert: true,
+            });
+        } catch (err) {
+          console.warn("Social preview upload failed (non-blocking):", err);
+        }
+      } else if (imageUrl) {
+        // Fall back to copying the main wedding photo
+        uploadOgImage(imageUrl, finalSlug);
       }
 
       // Upload gallery images if template supports gallery
@@ -1217,6 +1237,70 @@ const WeddingForm = () => {
                   </div>
                 </div>
               ) : null}
+
+              {/* Social Preview Image (for WhatsApp / Facebook / Instagram link previews) */}
+              <div className="space-y-2">
+                <Label htmlFor="social_preview">Social Preview Image</Label>
+                <p className="text-sm text-muted-foreground">
+                  This image appears when your invitation link is shared on WhatsApp, Facebook, Instagram, etc.
+                  Recommended size: 1200×630px. If you don't upload one, the main wedding photo will be used.
+                </p>
+                <div className="flex flex-col gap-4">
+                  {socialPreviewFile || socialPreviewUrl ? (
+                    <div className="relative w-full max-w-sm mx-auto aspect-[1200/630] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                      <img
+                        src={
+                          socialPreviewFile
+                            ? URL.createObjectURL(socialPreviewFile)
+                            : socialPreviewUrl
+                        }
+                        alt="Social preview"
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Hide if the existing image doesn't exist yet
+                          (e.currentTarget.parentElement as HTMLElement).style.display = "none";
+                          setSocialPreviewUrl("");
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          setSocialPreviewFile(null);
+                          setSocialPreviewUrl("");
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="social_preview"
+                      className="flex flex-col items-center justify-center w-full aspect-[1200/630] max-w-sm mx-auto border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                    >
+                      <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Click to upload preview image</span>
+                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG — 1200×630 recommended</span>
+                    </label>
+                  )}
+                  <Input
+                    id="social_preview"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSocialPreviewFile(file);
+                        setSocialPreviewUrl("");
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+              </div>
 
               {/* Audio Trim Field */}
               <AudioTrimField
