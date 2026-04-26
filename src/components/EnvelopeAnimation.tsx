@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
-import paperTexture from "@/assets/envelope-cream-corner.jpeg";
+import paperTexture from "@/assets/envelope-paper-texture.jpeg";
 
 interface EnvelopeAnimationProps {
   groomName: string;
