@@ -400,8 +400,10 @@ const WeddingInvite = () => {
     );
   }
 
-  // Wrap with envelope animation if enabled (and not in any preview/editing mode)
-  if (wedding.envelope_animation_enabled && !isPreview && !isDraftPreview) {
+  // Wrap with envelope animation if enabled.
+  // Skip only when the owner is in edit mode (canEdit handled above).
+  // Show in read-only previews and draft previews so users can verify it before publishing.
+  if (wedding.envelope_animation_enabled) {
     return (
       <EnvelopeAnimation
         groomName={wedding.groom_name}
