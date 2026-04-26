@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
 import { downloadCardAsImage } from "@/utils/downloadCard";
+import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
