@@ -292,36 +292,13 @@ export const EnvelopeAnimation = ({
                   </clipPath>
                 </defs>
 
-                {/* Body fill (paper) */}
+                {/* Body fill (paper) — kept intentionally clean.
+                    The flap layer above provides the V silhouette; drawing
+                    additional V-creases here causes the "double layer" look. */}
                 <g clipPath="url(#env-body-clip)">
                   <rect width={VB_W} height={VB_H} fill="url(#env-paper)" />
-                  {/* Bottom shadow band — implies the front pocket */}
-                  <rect
-                    x="0"
-                    y={V_Y}
-                    width={VB_W}
-                    height={VB_H - V_Y}
-                    fill="rgba(40,28,10,0.06)"
-                  />
                   {/* Warm vignette */}
                   <rect width={VB_W} height={VB_H} fill="url(#env-vignette)" />
-
-                  {/* V-fold lines (the seam where the front pocket meets the back) */}
-                  {/* shadow first (slightly offset) */}
-                  <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
-                    stroke="url(#env-vshadow)"
-                    strokeWidth="2.5"
-                    fill="none"
-                    transform="translate(0 2)"
-                  />
-                  {/* light catch on the crease */}
-                  <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
-                    stroke="url(#env-vlight)"
-                    strokeWidth="1.2"
-                    fill="none"
-                  />
                 </g>
 
                 {/* Crisp rounded-rect outline (gives a clean edge) */}
