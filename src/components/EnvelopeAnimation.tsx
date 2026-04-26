@@ -161,13 +161,16 @@ export const EnvelopeAnimation = ({
             }
 
             /* === Flap === */
+            /* Rotates around its top hinge. We stop at ~155° (not 180°) so the flap
+               leans back behind the envelope without floating disconnected above it.
+               Slight Z translate keeps it visually attached to the body. */
             @keyframes envFlap {
-              0%   { transform: rotateX(0deg); }
-              8%   { transform: rotateX(-2deg); }     /* tiny lift during anticipation */
-              15%  { transform: rotateX(0deg); }
-              55%  { transform: rotateX(-182deg); }   /* slight overshoot */
-              65%  { transform: rotateX(-178deg); }   /* settle */
-              100% { transform: rotateX(-178deg); }
+              0%   { transform: translateZ(0) rotateX(0deg); }
+              8%   { transform: translateZ(0) rotateX(-3deg); }      /* anticipation lift */
+              18%  { transform: translateZ(0) rotateX(0deg); }
+              55%  { transform: translateZ(-2px) rotateX(-158deg); } /* gentle overshoot */
+              70%  { transform: translateZ(-2px) rotateX(-152deg); } /* settle back */
+              100% { transform: translateZ(-2px) rotateX(-152deg); }
             }
             .is-opening .env-flap {
               animation: envFlap 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
