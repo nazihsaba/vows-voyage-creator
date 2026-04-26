@@ -411,15 +411,12 @@ export const EnvelopeAnimation = ({
                     <filter id="seal-deboss" x="-30%" y="-30%" width="160%" height="160%">
                       <feGaussianBlur stdDeviation="0.6" />
                     </filter>
-                    <filter id="seal-grain">
+                    <filter id="seal-grain" x="0%" y="0%" width="100%" height="100%">
                       <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" stitchTiles="stitch" />
                       <feColorMatrix values="0 0 0 0 0.10
                                              0 0 0 0 0.05
                                              0 0 0 0 0.05
                                              0 0 0 0.18 0" />
-                    </filter>
-                    <filter id="seal-cast" x="-40%" y="-40%" width="180%" height="180%">
-                      <feGaussianBlur stdDeviation="2" />
                     </filter>
 
                     <path
