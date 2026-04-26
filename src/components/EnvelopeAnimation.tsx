@@ -9,15 +9,33 @@ interface EnvelopeAnimationProps {
   children: ReactNode;
 }
 
+/* ---------- color helpers (derive a wax palette from any primary) ---------- */
+function hexToRgb(hex: string): [number, number, number] {
+  const h = hex.replace("#", "");
+  const v =
+    h.length === 3
+      ? h.split("").map((c) => c + c).join("")
+      : h.padEnd(6, "0").slice(0, 6);
+  const n = parseInt(v, 16);
+  return [(n >> 16) & 255, (n >> 8) & 255, n & 255];
+}
+function rgbToHex(r: number, g: number, b: number) {
+  const c = (n: number) =>
+    Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, "0");
+  return `#${c(r)}${c(g)}${c(b)}`;
+}
+function mix(hex: string, with_: string, t: number) {
+  const [r1, g1, b1] = hexToRgb(hex);
+  const [r2, g2, b2] = hexToRgb(with_);
+  return rgbToHex(r1 + (r2 - r1) * t, g1 + (g2 - g1) * t, b1 + (b2 - b1) * t);
+}
+
 /**
- * Photoreal cream envelope inspired by a real photographic reference:
- * - Soft cream paper with subtle grain (from the uploaded photo, used as a
- *   tileable surface).
- * - A clean rectangular body with a softly-rounded triangular flap that
- *   matches the reference (gentle V, slight rounding at the tip).
- * - A burgundy wax seal: oval/egg silhouette, deep deboss with a rounded
- *   "pill" inner ring and a serif monogram, layered shading + grain so the
- *   wax looks pressed, not flat.
+ * Photoreal cream envelope built as a single SVG so the geometry is crisp:
+ *  - Clean rectangular body with rounded corners.
+ *  - True triangular V-flap that points to the horizontal middle of the body.
+ *  - Soft fold-line shading on the front (no overlapping ghost shapes).
+ *  - Wax seal palette derived from the user's primary color.
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -29,17 +47,18 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const accent = accentColor || "#8E2A2A";
+  // Derive a full wax palette from the primary color.
+  const base = primaryColor || "#7A1F22";
+  const accent = accentColor || base;
+  const waxHi = mix(base, "#FFFFFF", 0.55); // bright specular tint
+  const waxBase = base;
+  const waxMid = mix(base, "#000000", 0.18);
+  const waxLo = mix(base, "#000000", 0.45);
+  const waxDeep = mix(base, "#000000", 0.65);
+  const rimGlow = mix(base, "#FFFFFF", 0.4);
 
-  // Burgundy wax palette (matches the reference)
-  const waxBase = primaryColor || "#7A1F22";
-  const waxHi = "#C75A55";
-  const waxMid = "#6A1A1D";
-  const waxLo = "#3E0E10";
-  const waxDeep = "#220607";
-
-  const groomInitial = (groomName?.trim()?.charAt(0) || "F").toUpperCase();
-  const brideInitial = (brideName?.trim()?.charAt(0) || "M").toUpperCase();
+  const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
+  const brideInitial = (brideName?.trim()?.charAt(0) || "E").toUpperCase();
 
   const TOTAL = 1600;
 
@@ -79,6 +98,15 @@ export const EnvelopeAnimation = ({
     []
   );
 
+  /* Envelope geometry (SVG viewBox is 600x420)
+     Body:    rounded rect (0,0)-(600,420)
+     V-fold:  diagonals from top corners to (300,210) — middle of body
+     Flap:    triangle (0,0)-(600,0)-(300,210), hinges from y=0 */
+  const VB_W = 600;
+  const VB_H = 420;
+  const V_X = 300;
+  const V_Y = 210;
+
   return (
     <>
       {children}
@@ -93,8 +121,7 @@ export const EnvelopeAnimation = ({
           <div
             className="env-glow absolute inset-0 pointer-events-none"
             style={{
-              background:
-                "radial-gradient(circle at 50% 50%, rgba(190,90,80,0.10) 0%, transparent 55%)",
+              background: `radial-gradient(circle at 50% 50%, ${rimGlow}22 0%, transparent 55%)`,
             }}
           />
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
@@ -123,88 +150,76 @@ export const EnvelopeAnimation = ({
             .env-overlay.is-opening {
               animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
-            @keyframes envOverlayOut {
-              0%, 60% { opacity: 1; }
-              100% { opacity: 0; pointer-events: none; }
-            }
-
+            @keyframes envOverlayOut { 0%,60%{opacity:1} 100%{opacity:0;pointer-events:none} }
             @keyframes envMote {
-              0%, 100% { transform: translateY(0) translateX(0); opacity: 0.30; }
-              50%      { transform: translateY(-22px) translateX(6px); opacity: 0.85; }
+              0%,100% { transform: translateY(0) translateX(0); opacity:.30 }
+              50%     { transform: translateY(-22px) translateX(6px); opacity:.85 }
             }
             @keyframes envGlowPulse {
-              0%, 100% { opacity: 0.85; transform: scale(1); }
-              50%      { opacity: 1;    transform: scale(1.04); }
+              0%,100% { opacity:.85; transform:scale(1) }
+              50%     { opacity:1;   transform:scale(1.04) }
             }
             .env-glow { animation: envGlowPulse 4s ease-in-out infinite; }
 
             @keyframes envIdle {
-              0%, 100% { transform: translateY(0) rotate(0deg); }
-              50%      { transform: translateY(-5px) rotate(0.12deg); }
+              0%,100% { transform: translateY(0) rotate(0) }
+              50%     { transform: translateY(-5px) rotate(.12deg) }
             }
             .env-idle { animation: envIdle 4.5s ease-in-out infinite; }
 
             .env-zone:hover .env-target {
               transform: scale(1.025);
-              filter: drop-shadow(0 42px 60px rgba(0,0,0,0.6));
+              filter: drop-shadow(0 42px 60px rgba(0,0,0,.6));
             }
 
-            /* Whole envelope sinks + fades */
             @keyframes envBody {
-              0%   { transform: scale(1)     translateY(0);    opacity: 1; }
-              12%  { transform: scale(0.985) translateY(0);    opacity: 1; }
-              50%  { transform: scale(1)     translateY(14px); opacity: 1; }
-              82%  { transform: scale(0.98)  translateY(50px); opacity: 0.5; }
-              100% { transform: scale(0.95)  translateY(86px); opacity: 0; }
+              0%   { transform: scale(1)     translateY(0);    opacity:1 }
+              12%  { transform: scale(.985)  translateY(0);    opacity:1 }
+              50%  { transform: scale(1)     translateY(14px); opacity:1 }
+              82%  { transform: scale(.98)   translateY(50px); opacity:.5 }
+              100% { transform: scale(.95)   translateY(86px); opacity:0 }
             }
             .is-opening .env-target {
               animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* Wax seal cracks then fades */
             @keyframes envSealPop {
-              0%   { transform: translate(-50%, -50%) scale(1)    rotate(-2deg); opacity: 1; }
-              10%  { transform: translate(-50%, -50%) scale(1.07) rotate(-2deg); opacity: 1; }
-              22%  { transform: translate(-50%, -50%) scale(1.10) rotate(-3deg); opacity: 1; }
-              36%  { transform: translate(-50%, -50%) scale(0.94) rotate(-1deg); opacity: 0; }
-              100% { transform: translate(-50%, -50%) scale(0.94) rotate(-1deg); opacity: 0; }
+              0%   { transform: translate(-50%,-50%) scale(1)    rotate(-2deg); opacity:1 }
+              10%  { transform: translate(-50%,-50%) scale(1.07) rotate(-2deg); opacity:1 }
+              22%  { transform: translate(-50%,-50%) scale(1.10) rotate(-3deg); opacity:1 }
+              36%  { transform: translate(-50%,-50%) scale(.94)  rotate(-1deg); opacity:0 }
+              100% { transform: translate(-50%,-50%) scale(.94)  rotate(-1deg); opacity:0 }
             }
             .is-opening .env-seal {
-              animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+              animation: envSealPop ${TOTAL}ms cubic-bezier(.4,0,.2,1) forwards;
             }
 
-            /* Triangular flap lifts open */
             @keyframes envFlapLift {
-              0%, 18% { transform: rotateX(0deg);    opacity: 1; }
-              55%     { transform: rotateX(-158deg); opacity: 1; }
-              82%     { transform: rotateX(-168deg); opacity: 0.55; }
-              100%    { transform: rotateX(-172deg); opacity: 0; }
+              0%,18% { transform: rotateX(0)        }
+              55%    { transform: rotateX(-158deg)  }
+              82%    { transform: rotateX(-168deg); opacity:.55 }
+              100%   { transform: rotateX(-172deg); opacity:0 }
             }
-            .is-opening .env-flap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+            .is-opening .env-flap-wrap {
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(.22,1,.36,1) forwards;
             }
 
-            @keyframes envHint {
-              0% { opacity: 1; }
-              10%, 100% { opacity: 0; }
-            }
+            @keyframes envHint { 0%{opacity:1} 10%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
             @media (prefers-reduced-motion: reduce) {
-              .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
-              .env-idle, .env-mote, .env-glow,
-              .env-target, .env-flap, .env-seal, .env-hint {
-                animation: none !important;
-              }
+              .env-overlay { animation:none!important; opacity:0!important; pointer-events:none!important }
+              .env-idle,.env-mote,.env-glow,
+              .env-target,.env-flap-wrap,.env-seal,.env-hint { animation:none!important }
             }
           `}</style>
 
           <div
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
-              perspective: "1800px",
+              perspective: "2000px",
               width: "min(86vw, 480px)",
-              aspectRatio: "1.45 / 1",
+              aspectRatio: `${VB_W} / ${VB_H}`,
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -219,116 +234,188 @@ export const EnvelopeAnimation = ({
                 height: "100%",
                 position: "relative",
                 filter:
-                  "drop-shadow(0 38px 58px rgba(0,0,0,0.6)) drop-shadow(0 12px 18px rgba(0,0,0,0.35))",
+                  "drop-shadow(0 38px 58px rgba(0,0,0,.6)) drop-shadow(0 12px 18px rgba(0,0,0,.35))",
                 transformStyle: "preserve-3d",
                 transition:
-                  "transform 500ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+                  "transform 500ms cubic-bezier(.22,1,.36,1), filter 500ms cubic-bezier(.4,0,.2,1)",
                 willChange: "transform, opacity",
               }}
             >
-              {/* === 1. Back/body of the envelope (cream paper) === */}
-              <div
-                className="absolute inset-0 rounded-[10px] overflow-hidden"
-                style={{
-                  backgroundImage: `url(${paperTexture})`,
-                  backgroundSize: "180% 180%",
-                  backgroundPosition: "70% 70%",
-                  boxShadow:
-                    "inset 0 0 90px rgba(60,45,25,0.18), inset 0 -3px 10px rgba(0,0,0,0.10)",
-                }}
+              {/* === ENVELOPE BODY (single SVG for crisp geometry) === */}
+              <svg
+                viewBox={`0 0 ${VB_W} ${VB_H}`}
+                className="absolute inset-0 w-full h-full"
+                preserveAspectRatio="none"
+                aria-hidden="true"
               >
-                {/* warm vignette */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at 50% 55%, transparent 50%, rgba(70,55,35,0.16) 100%)",
-                  }}
-                />
-              </div>
+                <defs>
+                  {/* Paper pattern */}
+                  <pattern
+                    id="env-paper"
+                    patternUnits="userSpaceOnUse"
+                    width={VB_W}
+                    height={VB_H}
+                  >
+                    <image
+                      href={paperTexture}
+                      x="0"
+                      y="0"
+                      width={VB_W}
+                      height={VB_H}
+                      preserveAspectRatio="xMidYMid slice"
+                    />
+                  </pattern>
 
-              {/* === 2. Triangular top flap (rounded V like the reference) === */}
+                  {/* Subtle warm vignette over the body */}
+                  <radialGradient id="env-vignette" cx="50%" cy="55%" r="65%">
+                    <stop offset="60%" stopColor="rgba(0,0,0,0)" />
+                    <stop offset="100%" stopColor="rgba(70,55,35,0.22)" />
+                  </radialGradient>
+
+                  {/* Light-catching highlights along the V */}
+                  <linearGradient id="env-vlight" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(255,250,235,0)" />
+                    <stop offset="50%" stopColor="rgba(255,250,235,0.55)" />
+                    <stop offset="100%" stopColor="rgba(255,250,235,0)" />
+                  </linearGradient>
+
+                  {/* Soft shadow under the V (gives the front a fold) */}
+                  <linearGradient id="env-vshadow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(40,28,10,0)" />
+                    <stop offset="50%" stopColor="rgba(40,28,10,0.28)" />
+                    <stop offset="100%" stopColor="rgba(40,28,10,0)" />
+                  </linearGradient>
+
+                  {/* Body rounded-rect clip */}
+                  <clipPath id="env-body-clip">
+                    <rect x="0" y="0" width={VB_W} height={VB_H} rx="14" ry="14" />
+                  </clipPath>
+                </defs>
+
+                {/* Body fill (paper) */}
+                <g clipPath="url(#env-body-clip)">
+                  <rect width={VB_W} height={VB_H} fill="url(#env-paper)" />
+                  {/* Bottom shadow band — implies the front pocket */}
+                  <rect
+                    x="0"
+                    y={V_Y}
+                    width={VB_W}
+                    height={VB_H - V_Y}
+                    fill="rgba(40,28,10,0.06)"
+                  />
+                  {/* Warm vignette */}
+                  <rect width={VB_W} height={VB_H} fill="url(#env-vignette)" />
+
+                  {/* V-fold lines (the seam where the front pocket meets the back) */}
+                  {/* shadow first (slightly offset) */}
+                  <path
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    stroke="url(#env-vshadow)"
+                    strokeWidth="2.5"
+                    fill="none"
+                    transform="translate(0 2)"
+                  />
+                  {/* light catch on the crease */}
+                  <path
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    stroke="url(#env-vlight)"
+                    strokeWidth="1.2"
+                    fill="none"
+                  />
+                </g>
+
+                {/* Crisp rounded-rect outline (gives a clean edge) */}
+                <rect
+                  x="0.5"
+                  y="0.5"
+                  width={VB_W - 1}
+                  height={VB_H - 1}
+                  rx="14"
+                  ry="14"
+                  fill="none"
+                  stroke="rgba(40,28,10,0.18)"
+                  strokeWidth="1"
+                />
+              </svg>
+
+              {/* === TRIANGULAR FLAP (separate layer, hinges in 3D) === */}
               <div
-                className="env-flap absolute top-0 left-0 right-0"
+                className="env-flap-wrap absolute inset-0"
                 style={{
-                  height: "60%",
                   transformOrigin: "top center",
-                  transform: "rotateX(0deg)",
                   transformStyle: "preserve-3d",
                   zIndex: 3,
                   willChange: "transform, opacity",
                   backfaceVisibility: "hidden",
-                  // Softly-rounded triangle: a V with a gently rounded tip
-                  // (uses path-like polygon via clip-path-svg-style polygon)
-                  clipPath:
-                    "polygon(0% 0%, 100% 0%, 56% 96%, 50% 100%, 44% 96%)",
-                  backgroundImage: `url(${paperTexture})`,
-                  backgroundSize: "180% 180%",
-                  backgroundPosition: "30% 20%",
-                  filter: "drop-shadow(0 4px 5px rgba(0,0,0,0.22))",
+                  filter: "drop-shadow(0 6px 6px rgba(0,0,0,0.30))",
                 }}
               >
-                {/* Flap shading: soft gradient, brightest near top, gentle shadow toward V */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,250,240,0.14) 0%, rgba(0,0,0,0) 35%, rgba(60,45,25,0.20) 100%)",
-                  }}
-                />
-                {/* Soft warm sheen near top edge */}
-                <div
-                  className="absolute inset-x-0 top-0 h-[16%] pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(180deg, rgba(255,245,225,0.30), transparent)",
-                  }}
-                />
-                {/* Contact shadow at flap tip */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.22) 0%, transparent 22%)",
-                  }}
-                />
+                <svg
+                  viewBox={`0 0 ${VB_W} ${VB_H}`}
+                  className="w-full h-full"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
+                >
+                  <defs>
+                    <clipPath id="env-flap-clip">
+                      <path d={`M0 0 L ${VB_W} 0 L ${V_X} ${V_Y} Z`} />
+                    </clipPath>
+                    <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,250,240,0.18)" />
+                      <stop offset="35%" stopColor="rgba(0,0,0,0)" />
+                      <stop offset="100%" stopColor="rgba(60,45,25,0.30)" />
+                    </linearGradient>
+                  </defs>
+
+                  <g clipPath="url(#env-flap-clip)">
+                    {/* Paper texture (same source, different offset for natural variance) */}
+                    <image
+                      href={paperTexture}
+                      x={-VB_W * 0.1}
+                      y={-VB_H * 0.1}
+                      width={VB_W * 1.2}
+                      height={VB_H * 1.2}
+                      preserveAspectRatio="xMidYMid slice"
+                    />
+                    {/* shading */}
+                    <rect width={VB_W} height={VB_H} fill="url(#env-flap-shade)" />
+                    {/* contact shadow at the V tip */}
+                    <ellipse
+                      cx={V_X}
+                      cy={V_Y}
+                      rx="120"
+                      ry="14"
+                      fill="rgba(0,0,0,0.22)"
+                      filter="blur(2px)"
+                    />
+                  </g>
+
+                  {/* Crisp flap edge */}
+                  <path
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    fill="none"
+                    stroke="rgba(40,28,10,0.22)"
+                    strokeWidth="1"
+                  />
+                  {/* Light catch on flap edges */}
+                  <path
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    fill="none"
+                    stroke="rgba(255,250,235,0.35)"
+                    strokeWidth="0.6"
+                    transform="translate(0 -0.8)"
+                  />
+                </svg>
               </div>
 
-              {/* === 3. Subtle V-seam highlight on the body where the flap meets === */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 300 200"
-                preserveAspectRatio="none"
-                style={{ zIndex: 2 }}
-              >
-                <defs>
-                  <linearGradient id="env-vlight-l" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="rgba(255,250,235,0)" />
-                    <stop offset="50%" stopColor="rgba(255,250,235,0.45)" />
-                    <stop offset="100%" stopColor="rgba(255,250,235,0)" />
-                  </linearGradient>
-                  <linearGradient id="env-vlight-r" x1="1" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(255,250,235,0)" />
-                    <stop offset="50%" stopColor="rgba(255,250,235,0.45)" />
-                    <stop offset="100%" stopColor="rgba(255,250,235,0)" />
-                  </linearGradient>
-                </defs>
-                {/* Light catch on the V edges */}
-                <line x1="150" y1="118" x2="0" y2="0" stroke="url(#env-vlight-l)" strokeWidth="1" />
-                <line x1="150" y1="118" x2="300" y2="0" stroke="url(#env-vlight-r)" strokeWidth="1" />
-                {/* Soft drop shadow under the V for depth */}
-                <line x1="150" y1="118" x2="0" y2="0" stroke="rgba(40,28,10,0.15)" strokeWidth="0.7" transform="translate(0.6 0.8)" />
-                <line x1="150" y1="118" x2="300" y2="0" stroke="rgba(40,28,10,0.15)" strokeWidth="0.7" transform="translate(-0.6 0.8)" />
-              </svg>
-
-              {/* === 4. BURGUNDY WAX SEAL (matches the reference photo) === */}
+              {/* === WAX SEAL (palette derived from primary color) === */}
               <div
                 className="env-seal absolute pointer-events-none"
                 style={{
                   left: "50%",
-                  top: "60%",
+                  top: `${(V_Y / VB_H) * 100}%`,
                   transform: "translate(-50%, -50%) rotate(-2deg)",
-                  width: "30%",
+                  width: "26%",
                   aspectRatio: "0.86 / 1",
                   zIndex: 4,
                   willChange: "transform, opacity",
@@ -336,13 +423,8 @@ export const EnvelopeAnimation = ({
                     "drop-shadow(0 14px 18px rgba(0,0,0,0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.45))",
                 }}
               >
-                <svg
-                  viewBox="0 0 120 140"
-                  className="w-full h-full"
-                  aria-hidden="true"
-                >
+                <svg viewBox="0 0 120 140" className="w-full h-full" aria-hidden="true">
                   <defs>
-                    {/* Body gradient: deep burgundy with brighter top-left */}
                     <radialGradient id="seal-fill" cx="36%" cy="28%" r="80%">
                       <stop offset="0%" stopColor={waxHi} />
                       <stop offset="22%" stopColor={waxBase} />
@@ -350,42 +432,35 @@ export const EnvelopeAnimation = ({
                       <stop offset="88%" stopColor={waxLo} />
                       <stop offset="100%" stopColor={waxDeep} />
                     </radialGradient>
-                    {/* Sharp specular highlight */}
                     <radialGradient id="seal-spec" cx="34%" cy="22%" r="22%">
-                      <stop offset="0%" stopColor="rgba(255,210,200,0.85)" />
-                      <stop offset="60%" stopColor="rgba(255,210,200,0.20)" />
-                      <stop offset="100%" stopColor="rgba(255,210,200,0)" />
+                      <stop offset="0%" stopColor="rgba(255,255,255,0.85)" />
+                      <stop offset="60%" stopColor="rgba(255,255,255,0.20)" />
+                      <stop offset="100%" stopColor="rgba(255,255,255,0)" />
                     </radialGradient>
-                    {/* Bottom-right deep shadow */}
                     <radialGradient id="seal-shadow" cx="68%" cy="80%" r="55%">
-                      <stop offset="0%" stopColor="rgba(20,4,5,0)" />
-                      <stop offset="65%" stopColor="rgba(20,4,5,0.30)" />
-                      <stop offset="100%" stopColor="rgba(20,4,5,0.65)" />
+                      <stop offset="0%" stopColor="rgba(0,0,0,0)" />
+                      <stop offset="65%" stopColor="rgba(0,0,0,0.30)" />
+                      <stop offset="100%" stopColor="rgba(0,0,0,0.65)" />
                     </radialGradient>
-                    {/* Rim light */}
                     <radialGradient id="seal-rim" cx="50%" cy="50%" r="50%">
                       <stop offset="84%" stopColor="rgba(0,0,0,0)" />
-                      <stop offset="96%" stopColor="rgba(255,180,170,0.45)" />
-                      <stop offset="100%" stopColor="rgba(255,180,170,0)" />
+                      <stop offset="96%" stopColor={`${rimGlow}88`} />
+                      <stop offset="100%" stopColor={`${rimGlow}00`} />
                     </radialGradient>
-                    {/* Inner deboss shadow (for the pill ring + letters) */}
                     <filter id="seal-deboss" x="-30%" y="-30%" width="160%" height="160%">
                       <feGaussianBlur stdDeviation="0.6" />
                     </filter>
-                    {/* Surface grain */}
                     <filter id="seal-grain">
                       <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" stitchTiles="stitch" />
-                      <feColorMatrix values="0 0 0 0 0.12
-                                             0 0 0 0 0.03
-                                             0 0 0 0 0.04
-                                             0 0 0 0.20 0" />
+                      <feColorMatrix values="0 0 0 0 0.10
+                                             0 0 0 0 0.05
+                                             0 0 0 0 0.05
+                                             0 0 0 0.18 0" />
                     </filter>
-                    {/* Cast shadow under seal */}
                     <filter id="seal-cast" x="-40%" y="-40%" width="180%" height="180%">
                       <feGaussianBlur stdDeviation="2" />
                     </filter>
 
-                    {/* Egg/oval irregular silhouette (like the reference) */}
                     <path
                       id="seal-shape"
                       d="M60 6
@@ -396,166 +471,45 @@ export const EnvelopeAnimation = ({
                          C 6 82, 6 58, 16 38
                          C 26 18, 42 7, 60 6 Z"
                     />
-
-                    {/* Inner pill / rounded rectangle (the deboss ring like the reference) */}
-                    <rect
-                      id="seal-pill"
-                      x="26" y="30" width="68" height="80" rx="32" ry="32"
-                    />
+                    <rect id="seal-pill" x="26" y="30" width="68" height="80" rx="32" ry="32" />
                   </defs>
 
-                  {/* Soft cast shadow on the paper */}
-                  <use
-                    href="#seal-shape"
-                    fill="rgba(0,0,0,0.40)"
-                    transform="translate(2 5)"
-                    style={{ filter: "url(#seal-cast)" }}
-                  />
-
-                  {/* Base wax body */}
+                  <use href="#seal-shape" fill="rgba(0,0,0,0.4)" transform="translate(2 5)" style={{ filter: "url(#seal-cast)" }} />
                   <use href="#seal-shape" fill="url(#seal-fill)" />
-
-                  {/* Bottom-right volumetric shadow */}
-                  <use
-                    href="#seal-shape"
-                    fill="url(#seal-shadow)"
-                    style={{ mixBlendMode: "multiply" }}
-                  />
-
-                  {/* Rim light catching the edge */}
-                  <use
-                    href="#seal-shape"
-                    fill="url(#seal-rim)"
-                    style={{ mixBlendMode: "screen" }}
-                  />
-
-                  {/* Specular highlight */}
+                  <use href="#seal-shape" fill="url(#seal-shadow)" style={{ mixBlendMode: "multiply" }} />
+                  <use href="#seal-shape" fill="url(#seal-rim)" style={{ mixBlendMode: "screen" }} />
                   <use href="#seal-shape" fill="url(#seal-spec)" />
+                  <use href="#seal-shape" fill="white" style={{ filter: "url(#seal-grain)", mixBlendMode: "overlay", opacity: 0.5 }} />
 
-                  {/* Surface grain */}
-                  <use
-                    href="#seal-shape"
-                    fill="white"
-                    style={{
-                      filter: "url(#seal-grain)",
-                      mixBlendMode: "overlay",
-                      opacity: 0.5,
-                    }}
-                  />
+                  {/* Pill deboss ring */}
+                  <use href="#seal-pill" fill="none" stroke={waxDeep} strokeWidth="1.4" opacity="0.7" style={{ filter: "url(#seal-deboss)" }} />
+                  <rect x="29" y="33" width="62" height="74" rx="29" ry="29" fill="none" stroke={waxDeep} strokeWidth="0.6" opacity="0.55" />
+                  <use href="#seal-pill" fill="none" stroke={`${rimGlow}aa`} strokeWidth="0.5" transform="translate(0 -0.6)" />
 
-                  {/* === Deboss: pill-shaped ring (the inner outline from the reference) === */}
-                  {/* Dark debossed groove */}
-                  <use
-                    href="#seal-pill"
-                    fill="none"
-                    stroke={waxDeep}
-                    strokeWidth="1.4"
-                    opacity="0.7"
-                    style={{ filter: "url(#seal-deboss)" }}
-                  />
-                  {/* Inner thinner outline (double-line look) */}
-                  <rect
-                    x="29" y="33" width="62" height="74" rx="29" ry="29"
-                    fill="none"
-                    stroke={waxDeep}
-                    strokeWidth="0.6"
-                    opacity="0.55"
-                  />
-                  {/* Light catch on top of the ring (raised edge of the deboss) */}
-                  <use
-                    href="#seal-pill"
-                    fill="none"
-                    stroke="rgba(255,200,190,0.45)"
-                    strokeWidth="0.5"
-                    transform="translate(0 -0.6)"
-                  />
-
-                  {/* === Embossed serif monogram (F over M style, vertically stacked initials) === */}
-                  {/* Deep deboss layer */}
-                  <text
-                    x="60" y="70"
-                    textAnchor="middle"
-                    fill={waxDeep}
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                      filter: "url(#seal-deboss)",
-                    }}
-                  >
-                    {groomInitial}
-                  </text>
-                  <text
-                    x="60" y="98"
-                    textAnchor="middle"
-                    fill={waxDeep}
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                      filter: "url(#seal-deboss)",
-                    }}
-                  >
-                    {brideInitial}
-                  </text>
-                  {/* Mid-tone shadow under letters */}
-                  <text
-                    x="60" y="70.6"
-                    textAnchor="middle"
-                    fill={waxLo}
-                    opacity="0.65"
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    {groomInitial}
-                  </text>
-                  <text
-                    x="60" y="98.6"
-                    textAnchor="middle"
-                    fill={waxLo}
-                    opacity="0.65"
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    {brideInitial}
-                  </text>
-                  {/* Highlight catch on letters (raised glint) */}
-                  <text
-                    x="60" y="69.4"
-                    textAnchor="middle"
-                    fill="rgba(255,200,190,0.5)"
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    {groomInitial}
-                  </text>
-                  <text
-                    x="60" y="97.4"
-                    textAnchor="middle"
-                    fill="rgba(255,200,190,0.5)"
-                    style={{
-                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                      fontWeight: 700,
-                      fontSize: "30px",
-                      letterSpacing: "0.5px",
-                    }}
-                  >
-                    {brideInitial}
-                  </text>
+                  {/* Stacked monogram */}
+                  {[
+                    { y: 70, ch: groomInitial },
+                    { y: 98, ch: brideInitial },
+                  ].map((row, i) => (
+                    <g key={i}>
+                      <text x="60" y={row.y} textAnchor="middle" fill={waxDeep}
+                        style={{
+                          fontFamily: "'Playfair Display','Cormorant Garamond',Georgia,serif",
+                          fontWeight: 700, fontSize: "30px", letterSpacing: "0.5px",
+                          filter: "url(#seal-deboss)",
+                        }}>{row.ch}</text>
+                      <text x="60" y={row.y + 0.6} textAnchor="middle" fill={waxLo} opacity="0.65"
+                        style={{
+                          fontFamily: "'Playfair Display','Cormorant Garamond',Georgia,serif",
+                          fontWeight: 700, fontSize: "30px", letterSpacing: "0.5px",
+                        }}>{row.ch}</text>
+                      <text x="60" y={row.y - 0.6} textAnchor="middle" fill={`${rimGlow}aa`}
+                        style={{
+                          fontFamily: "'Playfair Display','Cormorant Garamond',Georgia,serif",
+                          fontWeight: 700, fontSize: "30px", letterSpacing: "0.5px",
+                        }}>{row.ch}</text>
+                    </g>
+                  ))}
                 </svg>
               </div>
             </div>
