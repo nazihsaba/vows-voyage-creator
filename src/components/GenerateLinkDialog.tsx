@@ -269,7 +269,7 @@ export const GenerateLinkDialog = ({
 
   const previewUrl =
     uniqueSlug && linkName
-      ? `${window.location.origin}/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
+      ? `https://go.aureainvites.com/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
       : "";
 
   return (
