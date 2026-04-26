@@ -28,6 +28,9 @@ export const EnvelopeAnimation = ({
   const accent = accentColor || "#B89968";
   const sealBase = primaryColor || "#7A1F25";
 
+  const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
+  const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
+
   const TOTAL = 2000;
 
   const handleOpen = useCallback(() => {
