@@ -381,7 +381,7 @@ export const EnvelopeAnimation = ({
                   zIndex: 4,
                   willChange: "transform, opacity",
                   filter:
-                    "drop-shadow(0 14px 18px rgba(0,0,0,0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.45))",
+                    "drop-shadow(0 6px 8px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               >
                 <svg viewBox="0 0 120 140" className="w-full h-full" aria-hidden="true">
