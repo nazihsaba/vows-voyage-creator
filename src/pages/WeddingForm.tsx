@@ -10,7 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye, Upload, X, Languages } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Upload, X, Languages, Mail } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
@@ -86,6 +86,7 @@ const WeddingForm = () => {
     audio_start_time: 0,
     audio_end_time: 0,
     main_picture_position_y: 50,
+    envelope_animation_enabled: false,
   });
   const mainImgRef = useRef<HTMLImageElement>(null);
 
@@ -841,6 +842,28 @@ const WeddingForm = () => {
                   </Label>
                 </div>
                 <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
+              </div>
+
+              {/* Enable Envelope Animation Toggle */}
+              <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
+                <div className="flex items-start gap-2">
+                  <Mail className="w-4 h-4 text-muted-foreground mt-0.5" />
+                  <div>
+                    <Label htmlFor="enable-envelope" className="text-sm font-medium cursor-pointer">
+                      Enable Envelope Animation
+                    </Label>
+                    <p className="text-xs text-muted-foreground mt-0.5">
+                      Guests tap an elegant envelope with a wax seal showing your initials before the invitation appears.
+                    </p>
+                  </div>
+                </div>
+                <Switch
+                  id="enable-envelope"
+                  checked={(formData as any).envelope_animation_enabled ?? false}
+                  onCheckedChange={(checked) =>
+                    setFormData({ ...formData, envelope_animation_enabled: checked } as any)
+                  }
+                />
               </div>
 
               {/* Couple Names */}

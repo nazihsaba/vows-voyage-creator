@@ -372,6 +372,7 @@ export type Database = {
           custom_primary_color: string | null
           custom_text_color: string | null
           end_text: string | null
+          envelope_animation_enabled: boolean
           event_title: string | null
           field_customizations: Json | null
           groom_family: string | null
@@ -412,6 +413,7 @@ export type Database = {
           custom_primary_color?: string | null
           custom_text_color?: string | null
           end_text?: string | null
+          envelope_animation_enabled?: boolean
           event_title?: string | null
           field_customizations?: Json | null
           groom_family?: string | null
@@ -452,6 +454,7 @@ export type Database = {
           custom_primary_color?: string | null
           custom_text_color?: string | null
           end_text?: string | null
+          envelope_animation_enabled?: boolean
           event_title?: string | null
           field_customizations?: Json | null
           groom_family?: string | null

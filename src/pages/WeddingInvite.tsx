@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
 import { downloadCardAsImage } from "@/utils/downloadCard";
+import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -396,6 +397,20 @@ const WeddingInvite = () => {
       <EditableWeddingInvite wedding={wedding} onUpdate={setWedding}>
         {content}
       </EditableWeddingInvite>
+    );
+  }
+
+  // Wrap with envelope animation if enabled (and not in any preview/editing mode)
+  if (wedding.envelope_animation_enabled && !isPreview && !isDraftPreview) {
+    return (
+      <EnvelopeAnimation
+        groomName={wedding.groom_name}
+        brideName={wedding.bride_name}
+        primaryColor={wedding.custom_primary_color}
+        accentColor={wedding.custom_accent_color}
+      >
+        {content}
+      </EnvelopeAnimation>
     );
   }
 

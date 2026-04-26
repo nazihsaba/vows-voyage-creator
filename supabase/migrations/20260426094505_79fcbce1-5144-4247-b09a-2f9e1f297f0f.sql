@@ -1,0 +1,1 @@
+ALTER TABLE public.weddings ADD COLUMN IF NOT EXISTS envelope_animation_enabled boolean NOT NULL DEFAULT false;
