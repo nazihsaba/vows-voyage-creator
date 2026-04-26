@@ -1696,7 +1696,21 @@ const WeddingForm = () => {
                         variant="destructive"
                         size="icon"
                         className="absolute top-2 right-2"
-                        onClick={() => {
+                        onClick={async () => {
+                          // If a saved image exists in the bucket, delete it
+                          if (socialPreviewUrl && formData.slug) {
+                            const { error } = await supabase.storage
+                              .from("invitation-images")
+                              .remove([`invites/${formData.slug}/main.jpg`]);
+                            if (error) {
+                              toast({
+                                title: "Couldn't delete image",
+                                description: error.message,
+                                variant: "destructive",
+                              });
+                              return;
+                            }
+                          }
                           setSocialPreviewFile(null);
                           setSocialPreviewUrl("");
                         }}
