@@ -1,4 +1,4 @@
-import { useState, useEffect, ReactNode, useMemo } from "react";
+import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
 
 interface EnvelopeAnimationProps {
   groomName: string;
@@ -11,9 +11,17 @@ interface EnvelopeAnimationProps {
 /**
  * Luxury cinematic envelope opening animation.
  *
- * Driven entirely by CSS keyframes (single continuous timeline) so that
- * every element animates on the GPU compositor — no React re-render jank,
- * no setTimeout chain, no abrupt transition handoffs.
+ * Driven by a single CSS @keyframes master timeline per element so the entire
+ * sequence runs on the GPU compositor — no setTimeout chains, no React
+ * re-renders during playback.
+ *
+ * Sequence (≈2000ms total):
+ *   0–150ms     Breath in (envelope scales 0.98)
+ *   0–300ms     Seal bursts outward and fades; flap shimmer sweep
+ *   300–900ms   Flap unfolds (rotateX 0 → -162deg)
+ *   600–1400ms  Inner card slides up out of pocket with parallax + scale
+ *   1200–1600ms Envelope body sinks & fades
+ *   1500–2000ms Background overlay dissolves to reveal the page
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -28,25 +36,30 @@ export const EnvelopeAnimation = ({
   const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
   const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
 
-  // Refined ivory/cream paper tones with rose-gold accent
-  const paperFront = "#F7F1E3";
-  const paperBack = "#EDE3CC";
-  const paperInner = "#FBF7EC";
-  const paperShadow = "#C9BD9E";
-  const accent = accentColor || "#C9A961";
-  const sealColor = primaryColor || "#7A1F2B";
+  // Luxury palette
+  const paperLight = "#F5EDD8";
+  const paperMid = "#EDE0C4";
+  const paperInnerDark = "#DDD0B0"; // back face of flap (paper thickness)
+  const cardCream = "#FBF6EC";
+  const accent = accentColor || "#C4A35A"; // rose-gold
+  const sealColor = primaryColor || "#6D1A26"; // deep burgundy
 
-  // Total animation length (ms). Must match keyframe percentages below.
-  const TOTAL = 2600;
+  const TOTAL = 2000;
 
-  const handleOpen = () => {
+  const handleOpen = useCallback(() => {
     if (opening) return;
     setOpening(true);
-    // Remove from DOM after animation finishes
-    setTimeout(() => setHidden(true), TOTAL + 50);
+    setTimeout(() => setHidden(true), TOTAL + 100);
+  }, [opening]);
+
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      handleOpen();
+    }
   };
 
-  // Lock body scroll until invitation is revealed
+  // Lock body scroll until the invitation is revealed
   useEffect(() => {
     if (!hidden) {
       const original = document.body.style.overflow;
@@ -57,16 +70,16 @@ export const EnvelopeAnimation = ({
     }
   }, [hidden]);
 
-  // Floating dust particles
-  const particles = useMemo(
+  // Floating gold dust motes
+  const motes = useMemo(
     () =>
-      Array.from({ length: 14 }).map((_, i) => ({
+      Array.from({ length: 16 }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
-        top: 40 + Math.random() * 50,
-        size: 2 + Math.random() * 3,
-        delay: Math.random() * 2,
-        duration: 4 + Math.random() * 4,
+        top: 50 + Math.random() * 45,
+        size: 1.5 + Math.random() * 3,
+        delay: Math.random() * 3,
+        duration: 5 + Math.random() * 5,
       })),
     []
   );
@@ -81,170 +94,203 @@ export const EnvelopeAnimation = ({
             opening ? "is-opening" : ""
           }`}
         >
+          {/* SVG paper-grain noise filter (referenced by paper surfaces) */}
+          <svg className="absolute -z-10 w-0 h-0" aria-hidden="true">
+            <defs>
+              <filter id="env-paper-noise">
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="0.9"
+                  numOctaves="2"
+                  stitchTiles="stitch"
+                />
+                <feColorMatrix
+                  values="0 0 0 0 0.55
+                          0 0 0 0 0.45
+                          0 0 0 0 0.30
+                          0 0 0 0.25 0"
+                />
+              </filter>
+            </defs>
+          </svg>
+
           {/* Ambient warm glow */}
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="env-glow absolute inset-0 pointer-events-none"
             style={{
               background:
-                "radial-gradient(circle at 50% 45%, rgba(201,169,97,0.10) 0%, transparent 55%)",
+                "radial-gradient(circle at 50% 48%, rgba(196,163,90,0.14) 0%, transparent 55%)",
             }}
           />
 
-          {/* Floating dust particles */}
+          {/* Floating gold dust */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {particles.map((p) => (
+            {motes.map((m) => (
               <span
-                key={p.id}
-                className="absolute rounded-full env-particle"
+                key={m.id}
+                className="absolute rounded-full env-mote"
                 style={{
-                  left: `${p.left}%`,
-                  top: `${p.top}%`,
-                  width: `${p.size}px`,
-                  height: `${p.size}px`,
-                  background: `radial-gradient(circle, ${accent}aa 0%, transparent 70%)`,
-                  animation: `envFloat ${p.duration}s ease-in-out ${p.delay}s infinite`,
-                  filter: "blur(0.5px)",
+                  left: `${m.left}%`,
+                  top: `${m.top}%`,
+                  width: `${m.size}px`,
+                  height: `${m.size}px`,
+                  background: `radial-gradient(circle, ${accent}cc 0%, transparent 70%)`,
+                  animation: `envMote ${m.duration}s ease-in-out ${m.delay}s infinite`,
+                  filter: "blur(0.4px)",
                 }}
               />
             ))}
           </div>
 
-          {/* All animation styles */}
+          {/* Master stylesheet — single timeline per element */}
           <style>{`
             .env-overlay {
-              background: radial-gradient(ellipse at center, hsl(35 22% 14%) 0%, hsl(30 18% 6%) 100%);
+              background: radial-gradient(ellipse at center, hsl(30 22% 13%) 0%, hsl(30 20% 7%) 100%);
               opacity: 1;
-              transition: opacity 700ms cubic-bezier(0.4, 0, 0.2, 1);
+              transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
             }
             .env-overlay.is-opening {
-              animation: envOverlayFade 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+              animation: envOverlayOut 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
-            @keyframes envOverlayFade {
-              0%, 65% { opacity: 1; }
-              100% { opacity: 0; pointer-events: none; }
+            @keyframes envOverlayOut {
+              0%, 75%  { opacity: 1; }
+              100%     { opacity: 0; pointer-events: none; }
             }
 
-            @keyframes envFloat {
-              0%, 100% { transform: translateY(0) translateX(0); opacity: 0.4; }
-              50% { transform: translateY(-22px) translateX(6px); opacity: 0.85; }
+            @keyframes envMote {
+              0%, 100% { transform: translateY(0) translateX(0); opacity: 0.35; }
+              50%      { transform: translateY(-26px) translateX(8px); opacity: 0.95; }
             }
+
+            @keyframes envGlowPulse {
+              0%, 100% { opacity: 0.85; transform: scale(1); }
+              50%      { opacity: 1; transform: scale(1.04); }
+            }
+            .env-glow { animation: envGlowPulse 4s ease-in-out infinite; }
 
             @keyframes envIdle {
-              0%, 100% { transform: translateY(0) scale(1); }
-              50% { transform: translateY(-6px) scale(1); }
+              0%, 100% { transform: translateY(0); }
+              50%      { transform: translateY(-6px); }
             }
-            .env-idle { animation: envIdle 4.2s ease-in-out infinite; }
+            .env-idle { animation: envIdle 4s ease-in-out infinite; }
 
-            @keyframes envSheen {
-              0% { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
-              30% { opacity: 0.55; }
-              100% { transform: translateX(220%) skewX(-20deg); opacity: 0; }
-            }
-
-            .env-hover-zone:hover .env-hover-target {
+            .env-zone:hover .env-target {
               transform: scale(1.025);
-              filter: drop-shadow(0 35px 55px rgba(0,0,0,0.55));
+              filter: drop-shadow(0 36px 60px rgba(0,0,0,0.55));
             }
 
-            /* === Master envelope timeline === */
-            /* Total: 2600ms. Easing: cubic-bezier(0.25, 1, 0.5, 1) (luxury) */
-            @keyframes envMaster {
-              0%   { transform: scale(1) translateY(0); opacity: 1; }
-              8%   { transform: scale(0.985) translateY(0); opacity: 1; }   /* breath in */
-              25%  { transform: scale(1) translateY(0); opacity: 1; }       /* settle */
-              60%  { transform: scale(1) translateY(18px); opacity: 1; }    /* drift down as card rises */
-              85%  { transform: scale(0.98) translateY(40px); opacity: 0.4; }
-              100% { transform: scale(0.96) translateY(60px); opacity: 0; }
+            /* === ENVELOPE BODY ===
+               Breath in at start, then sink and fade out as the card rises out. */
+            @keyframes envBody {
+              0%   { transform: scale(1)     translateY(0);  opacity: 1; }
+              7%   { transform: scale(0.98)  translateY(0);  opacity: 1; }   /* breath */
+              18%  { transform: scale(1)     translateY(0);  opacity: 1; }
+              60%  { transform: scale(1)     translateY(14px); opacity: 1; }
+              80%  { transform: scale(0.985) translateY(34px); opacity: 0.5; }
+              100% { transform: scale(0.97)  translateY(56px); opacity: 0; }
             }
             .is-opening .env-body {
-              animation: envMaster 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+              animation: envBody 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* === Flap === */
-            /* Rotates around its top hinge. We stop at ~155° (not 180°) so the flap
-               leans back behind the envelope without floating disconnected above it.
-               Slight Z translate keeps it visually attached to the body. */
+            /* === FLAP ===
+               Holds closed during the breath/seal burst, then unfolds with the
+               cinematic ease curve, settling at -162° (leans back behind body). */
             @keyframes envFlap {
-              0%   { transform: translateZ(0) rotateX(0deg); }
-              8%   { transform: translateZ(0) rotateX(-3deg); }      /* anticipation lift */
-              18%  { transform: translateZ(0) rotateX(0deg); }
-              55%  { transform: translateZ(-2px) rotateX(-158deg); } /* gentle overshoot */
-              70%  { transform: translateZ(-2px) rotateX(-152deg); } /* settle back */
-              100% { transform: translateZ(-2px) rotateX(-152deg); }
+              0%, 14%  { transform: rotateX(0deg); }
+              45%      { transform: rotateX(-168deg); } /* slight overshoot */
+              55%      { transform: rotateX(-162deg); } /* settle */
+              100%     { transform: rotateX(-162deg); }
             }
             .is-opening .env-flap {
-              animation: envFlap 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+              animation: envFlap 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* === Sheen sweep across flap during opening === */
-            @keyframes envSheenTimed {
-              0%, 18% { transform: translateX(-120%) skewX(-20deg); opacity: 0; }
-              28% { opacity: 0.6; }
-              45% { transform: translateX(220%) skewX(-20deg); opacity: 0; }
-              100% { opacity: 0; }
+            /* === SHIMMER sweep across flap (0–300ms window) === */
+            @keyframes envShimmer {
+              0%       { transform: translateX(-130%) skewX(-22deg); opacity: 0; }
+              5%       { opacity: 0.65; }
+              16%      { transform: translateX(230%)  skewX(-22deg); opacity: 0; }
+              100%     { opacity: 0; }
             }
-            .is-opening .env-sheen {
-              animation: envSheenTimed 2600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            .is-opening .env-shimmer {
+              animation: envShimmer 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
-            /* === Wax seal === */
+            /* === SEAL burst (0–300ms) === */
             @keyframes envSeal {
-              0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-              6%   { opacity: 1; transform: translate(-50%, -50%) scale(1.06); }
-              14%  { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
-              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+              0%       { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+              4%       { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+              16%      { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+              100%     { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
             }
             .is-opening .env-seal {
-              animation: envSeal 2600ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+              animation: envSeal 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
-            /* === Inner card: stays hidden until flap is half open, then parallax-rises === */
+            /* === CARD: physically extracted from the envelope pocket === */
             @keyframes envCard {
-              0%, 25%   { transform: translateX(-50%) translateY(8%) scale(0.96); opacity: 0; }
-              35%       { opacity: 1; }
-              60%       { transform: translateX(-50%) translateY(-42%) scale(1.02); opacity: 1; }
-              80%       { transform: translateX(-50%) translateY(-90%) scale(1.25); opacity: 1; }
-              100%      { transform: translateX(-50%) translateY(-130%) scale(1.6); opacity: 0; }
+              0%, 28%  { transform: translateX(-50%) translateY(0)     scale(1);    opacity: 0; }
+              35%      { opacity: 1; }
+              60%      { transform: translateX(-50%) translateY(-55%)  scale(1.08); opacity: 1; }
+              80%      { transform: translateX(-50%) translateY(-95%)  scale(1.15); opacity: 1; }
+              100%     { transform: translateX(-50%) translateY(-110%) scale(1.18); opacity: 0; }
             }
             .is-opening .env-card {
-              animation: envCard 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
+              animation: envCard 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* === Tap hint fades immediately on click === */
-            @keyframes envHintFade {
-              0% { opacity: 1; }
-              10%, 100% { opacity: 0; }
+            /* === Hinge crescent shadow — appears as flap opens === */
+            @keyframes envHinge {
+              0%, 18%  { opacity: 0; }
+              45%      { opacity: 1; }
+              90%      { opacity: 0.8; }
+              100%     { opacity: 0; }
             }
-            .is-opening .env-hint {
-              animation: envHintFade 2600ms ease-out forwards;
+            .is-opening .env-hinge {
+              animation: envHinge 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
+
+            /* === Tap hint fades on click === */
+            @keyframes envHint {
+              0%        { opacity: 1; }
+              8%, 100%  { opacity: 0; }
+            }
+            .is-opening .env-hint { animation: envHint 2000ms ease-out forwards; }
 
             @media (prefers-reduced-motion: reduce) {
-              .env-idle, .env-particle { animation: none !important; }
+              .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
+              .env-idle, .env-mote, .env-glow,
+              .env-body, .env-flap, .env-shimmer, .env-seal, .env-card, .env-hinge, .env-hint {
+                animation: none !important;
+              }
             }
           `}</style>
 
           {/* Hover/scale wrapper */}
           <div
-            className="env-hover-zone relative cursor-pointer select-none"
+            className="env-zone relative cursor-pointer select-none outline-none"
             style={{
-              perspective: "1600px",
+              perspective: "1400px",
               width: "min(88vw, 540px)",
               aspectRatio: "1.55 / 1",
             }}
             onClick={handleOpen}
+            onKeyDown={handleKey}
             role="button"
+            tabIndex={0}
             aria-label="Tap to open invitation"
           >
             <div
-              className={`env-hover-target env-body ${!opening ? "env-idle" : ""}`}
+              className={`env-target env-body ${!opening ? "env-idle" : ""}`}
               style={{
                 width: "100%",
                 height: "100%",
                 position: "relative",
-                filter: "drop-shadow(0 25px 45px rgba(0,0,0,0.45))",
+                filter: "drop-shadow(0 30px 60px rgba(0,0,0,0.5))",
                 transformStyle: "preserve-3d",
-                transition: "transform 600ms cubic-bezier(0.4, 0, 0.2, 1), filter 500ms cubic-bezier(0.4, 0, 0.2, 1)",
+                transition:
+                  "transform 500ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms cubic-bezier(0.4, 0, 0.2, 1)",
                 willChange: "transform, opacity",
               }}
             >
@@ -252,18 +298,15 @@ export const EnvelopeAnimation = ({
               <div
                 className="absolute inset-0 rounded-2xl overflow-hidden"
                 style={{
-                  background: `linear-gradient(160deg, ${paperFront} 0%, ${paperBack} 100%)`,
+                  background: `linear-gradient(160deg, ${paperLight} 0%, ${paperMid} 100%)`,
                   boxShadow:
-                    "inset 0 0 40px rgba(0,0,0,0.06), inset 0 -2px 0 rgba(0,0,0,0.04)",
+                    "inset 0 0 50px rgba(0,0,0,0.07), inset 0 -3px 0 rgba(0,0,0,0.05)",
                 }}
               >
-                {/* Subtle paper texture */}
+                {/* Paper grain (SVG noise) */}
                 <div
-                  className="absolute inset-0 opacity-[0.18] mix-blend-multiply"
-                  style={{
-                    backgroundImage:
-                      "radial-gradient(circle at 20% 30%, rgba(0,0,0,0.06) 0%, transparent 40%), radial-gradient(circle at 80% 70%, rgba(0,0,0,0.05) 0%, transparent 40%)",
-                  }}
+                  className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none"
+                  style={{ filter: "url(#env-paper-noise)" }}
                 />
                 {/* Diagonal V fold lines */}
                 <svg
@@ -271,68 +314,111 @@ export const EnvelopeAnimation = ({
                   viewBox="0 0 155 100"
                   preserveAspectRatio="none"
                 >
-                  <line x1="0" y1="100" x2="77.5" y2="48" stroke={paperShadow} strokeWidth="0.25" opacity="0.6" />
-                  <line x1="155" y1="100" x2="77.5" y2="48" stroke={paperShadow} strokeWidth="0.25" opacity="0.6" />
+                  <line x1="0"   y1="100" x2="77.5" y2="48" stroke="#C9BD9E" strokeWidth="0.25" opacity="0.55" />
+                  <line x1="155" y1="100" x2="77.5" y2="48" stroke="#C9BD9E" strokeWidth="0.25" opacity="0.55" />
                 </svg>
-                {/* Gold accent baseline */}
+                {/* Silk ribbon — horizontal across body, beneath where the seal sits */}
                 <div
-                  className="absolute left-[8%] right-[8%]"
+                  className="absolute left-0 right-0"
                   style={{
-                    bottom: "12%",
-                    height: "1px",
-                    background: `linear-gradient(90deg, transparent 0%, ${accent}88 50%, transparent 100%)`,
+                    top: "50%",
+                    height: "2px",
+                    background: `linear-gradient(90deg, transparent 0%, ${accent}aa 12%, ${accent} 50%, ${accent}aa 88%, transparent 100%)`,
+                    boxShadow: `0 1px 0 ${accent}33`,
                   }}
                 />
               </div>
 
-              {/* === Inner card === */}
+              {/* === Inner card (slides up out of envelope pocket) === */}
               <div
                 className="env-card absolute left-1/2 rounded-xl overflow-hidden"
                 style={{
                   bottom: "8%",
                   width: "82%",
                   height: "78%",
-                  transform: "translateX(-50%) translateY(8%) scale(0.96)",
+                  transform: "translateX(-50%) translateY(0) scale(1)",
                   opacity: 0,
-                  background: `linear-gradient(170deg, ${paperInner} 0%, #F2EAD3 100%)`,
+                  background: `linear-gradient(170deg, ${cardCream} 0%, #F2EAD3 100%)`,
                   boxShadow:
-                    "0 18px 40px -12px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.08), inset 0 0 30px rgba(201,169,97,0.08)",
+                    "0 20px 50px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.1), inset 0 0 30px rgba(196,163,90,0.08)",
                   zIndex: 2,
-                  border: `1px solid ${accent}33`,
+                  border: `1px solid ${accent}40`,
                   willChange: "transform, opacity",
+                  fontFamily: "'Playfair Display', Georgia, serif",
                 }}
               >
+                {/* Double-rule gold border */}
                 <div
-                  className="absolute inset-3 rounded-lg pointer-events-none"
-                  style={{ border: `1px solid ${accent}55` }}
+                  className="absolute inset-2 rounded-lg pointer-events-none"
+                  style={{ border: `1.5px solid ${accent}aa` }}
                 />
+                <div
+                  className="absolute inset-3.5 rounded-md pointer-events-none"
+                  style={{ border: `0.5px solid ${accent}66` }}
+                />
+
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
                   <p
                     className="uppercase tracking-[0.5em] text-[10px] sm:text-xs mb-3"
-                    style={{ color: `${sealColor}cc` }}
+                    style={{ color: `${sealColor}cc`, fontFamily: "Georgia, serif", fontStyle: "italic" }}
                   >
-                    You're invited
+                    You're Invited
                   </p>
                   <p
-                    className="font-serif italic"
+                    className="italic"
                     style={{
                       color: sealColor,
-                      fontSize: "clamp(20px, 4vw, 34px)",
-                      letterSpacing: "0.04em",
+                      fontSize: "clamp(22px, 4.2vw, 36px)",
+                      letterSpacing: "0.03em",
+                      lineHeight: 1.15,
                     }}
                   >
-                    {groomName} <span style={{ color: accent }}>&amp;</span> {brideName}
+                    {groomName}
+                    <span
+                      style={{
+                        color: accent,
+                        fontFamily: "Georgia, serif",
+                        margin: "0 0.4em",
+                        fontWeight: 300,
+                      }}
+                    >
+                      &amp;
+                    </span>
+                    {brideName}
                   </p>
-                  <div
-                    className="mt-3"
-                    style={{
-                      width: "60%",
-                      height: "1px",
-                      background: `linear-gradient(90deg, transparent, ${accent}, transparent)`,
-                    }}
-                  />
+                  {/* Decorative floral divider */}
+                  <svg
+                    className="mt-4"
+                    width="120"
+                    height="14"
+                    viewBox="0 0 120 14"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <line x1="2" y1="7" x2="48" y2="7" stroke={accent} strokeWidth="0.6" />
+                    <line x1="72" y1="7" x2="118" y2="7" stroke={accent} strokeWidth="0.6" />
+                    <path
+                      d="M60 2 C 56 5, 56 9, 60 12 C 64 9, 64 5, 60 2 Z"
+                      fill={accent}
+                      opacity="0.85"
+                    />
+                    <circle cx="50" cy="7" r="1.1" fill={accent} />
+                    <circle cx="70" cy="7" r="1.1" fill={accent} />
+                  </svg>
                 </div>
               </div>
+
+              {/* === Hinge crescent shadow — fold cast on body when flap opens === */}
+              <div
+                className="env-hinge absolute left-0 right-0 top-0 pointer-events-none rounded-t-2xl"
+                style={{
+                  height: "14%",
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.28) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)",
+                  opacity: 0,
+                  zIndex: 2,
+                }}
+              />
 
               {/* === Top flap === */}
               <div
@@ -346,34 +432,42 @@ export const EnvelopeAnimation = ({
                   willChange: "transform",
                 }}
               >
-                {/* Outer face */}
+                {/* Outer face (visible when closed) */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
-                    background: `linear-gradient(170deg, ${paperFront} 0%, ${paperBack} 100%)`,
+                    background: `linear-gradient(170deg, ${paperLight} 0%, ${paperMid} 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 -12px 24px rgba(0,0,0,0.10)",
+                    boxShadow: "inset 0 -14px 26px rgba(0,0,0,0.10)",
                   }}
                 >
-                  {/* Light sheen sweep */}
+                  {/* Paper grain on flap */}
+                  <div
+                    className="absolute inset-0 opacity-40 mix-blend-multiply pointer-events-none"
+                    style={{
+                      filter: "url(#env-paper-noise)",
+                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                    }}
+                  />
+                  {/* Shimmer sweep */}
                   <div
                     className="absolute inset-0 overflow-hidden pointer-events-none"
                     style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
                   >
                     <div
-                      className="env-sheen absolute top-0 bottom-0"
+                      className="env-shimmer absolute top-0 bottom-0"
                       style={{
-                        width: "40%",
+                        width: "42%",
                         background:
-                          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.55) 50%, transparent 100%)",
+                          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 50%, transparent 100%)",
                         mixBlendMode: "overlay",
-                        transform: "translateX(-120%) skewX(-20deg)",
+                        transform: "translateX(-130%) skewX(-22deg)",
                         opacity: 0,
                       }}
                     />
                   </div>
-                  {/* Gold accent line along flap edges */}
+                  {/* Gold accent line tracing flap edges */}
                   <svg
                     className="absolute inset-0 w-full h-full pointer-events-none"
                     viewBox="0 0 100 60"
@@ -383,38 +477,32 @@ export const EnvelopeAnimation = ({
                       points="2,2 50,58 98,2"
                       fill="none"
                       stroke={accent}
-                      strokeWidth="0.25"
-                      opacity="0.5"
+                      strokeWidth="0.3"
+                      opacity="0.55"
                     />
                   </svg>
                 </div>
 
-                {/* Inner face — slightly darker to read as the back of the flap */}
+                {/* Inner face (back of flap — slightly darker for paper thickness) */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(180deg)",
-                    background: `linear-gradient(170deg, ${paperBack} 0%, ${paperShadow} 100%)`,
+                    background: `linear-gradient(170deg, ${paperInnerDark} 0%, #C9BB97 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 18px 30px rgba(0,0,0,0.18)",
+                    boxShadow: "inset 0 18px 32px rgba(0,0,0,0.20)",
                   }}
-                />
+                >
+                  <div
+                    className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
+                    style={{
+                      filter: "url(#env-paper-noise)",
+                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                    }}
+                  />
+                </div>
               </div>
-
-              {/* Hinge shadow that appears across the top of the envelope as the flap folds back,
-                  reinforcing visual connection between the open flap and the body. */}
-              <div
-                className="absolute left-0 right-0 top-0 pointer-events-none rounded-t-2xl"
-                style={{
-                  height: "12%",
-                  background:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.06) 60%, transparent 100%)",
-                  opacity: opening ? 1 : 0,
-                  transition: "opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 350ms",
-                  zIndex: 2,
-                }}
-              />
 
               {/* === Wax seal monogram === */}
               <div
@@ -429,20 +517,30 @@ export const EnvelopeAnimation = ({
                 }}
               >
                 <div
-                  className="w-full h-full rounded-full flex items-center justify-center"
+                  className="w-full h-full rounded-full flex items-center justify-center relative"
                   style={{
-                    background: `radial-gradient(circle at 32% 28%, ${sealColor}f5 0%, ${sealColor} 55%, ${sealColor}bb 100%)`,
+                    background: `radial-gradient(circle at 32% 28%, ${sealColor}f5 0%, ${sealColor} 55%, ${sealColor}b5 100%)`,
                     boxShadow:
-                      "inset -5px -7px 12px rgba(0,0,0,0.40), inset 4px 4px 9px rgba(255,255,255,0.20), 0 6px 14px rgba(0,0,0,0.45)",
-                    border: `1px dashed ${accent}80`,
+                      "inset -6px -8px 14px rgba(0,0,0,0.45), inset 4px 5px 10px rgba(255,255,255,0.22), 0 8px 16px rgba(0,0,0,0.5)",
                   }}
                 >
+                  {/* Beveled dashed border */}
+                  <div
+                    className="absolute inset-[8%] rounded-full pointer-events-none"
+                    style={{
+                      border: `1px dashed ${accent}aa`,
+                      boxShadow: "inset 0 0 6px rgba(0,0,0,0.35)",
+                    }}
+                  />
                   <span
-                    className="font-serif tracking-wider"
+                    className="tracking-wider relative"
                     style={{
                       color: accent,
+                      fontFamily: "'Playfair Display', Georgia, serif",
+                      fontStyle: "italic",
                       fontSize: "clamp(13px, 3.2vw, 26px)",
-                      textShadow: "0 1px 1px rgba(0,0,0,0.35)",
+                      textShadow:
+                        "0 1px 1px rgba(0,0,0,0.45), 0 0 6px rgba(196,163,90,0.25)",
                       letterSpacing: "0.06em",
                     }}
                   >
