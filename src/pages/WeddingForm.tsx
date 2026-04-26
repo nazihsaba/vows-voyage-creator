@@ -661,6 +661,12 @@ const WeddingForm = () => {
             contentType: "image/jpeg",
             upsert: true,
           });
+          // Sync local state to reflect the saved image so a later "remove" knows it exists in storage
+          const { data: pub } = supabase.storage
+            .from("invitation-images")
+            .getPublicUrl(`invites/${finalSlug}/main.jpg`);
+          setSocialPreviewUrl(`${pub.publicUrl}?t=${Date.now()}`);
+          setSocialPreviewFile(null);
         } catch (err) {
           console.warn("Social preview upload failed (non-blocking):", err);
         }
