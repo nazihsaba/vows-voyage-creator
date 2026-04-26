@@ -10,12 +10,14 @@ interface EnvelopeAnimationProps {
 }
 
 /**
- * Hyper-realistic cream envelope:
- * - Real back panel + side/bottom flaps visible at the seam (depth)
- * - Triangular top flap that hinges open in 3D
- * - Soft paper grain, edge bevels, deckled shadows, postal details
- * - High-fidelity wax seal: irregular drip silhouette, layered shading,
- *   rim highlight, micro-cracks, deep deboss monogram + double oval
+ * Modern, photorealistic envelope.
+ *
+ * Composition (back to front):
+ *  1. Back panel (paper)
+ *  2. Front panel: rectangle + bottom inverted-triangle pocket (single shape via clip-path)
+ *  3. Seam shadows where the front panel meets the back (subtle, NOT grey triangles)
+ *  4. Top triangular flap (hinges from top edge, lifts on open)
+ *  5. Wax seal (drippy organic silhouette, layered shading, deep deboss monogram)
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -33,7 +35,7 @@ export const EnvelopeAnimation = ({
   const waxHi = "#FBE6A4";
   const waxMid = "#A8782F";
   const waxLo = "#5C3F11";
-  const waxDeep = "#3A2708";
+  const waxDeep = "#2E1E05";
 
   const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
   const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
@@ -65,7 +67,7 @@ export const EnvelopeAnimation = ({
 
   const motes = useMemo(
     () =>
-      Array.from({ length: 16 }).map((_, i) => ({
+      Array.from({ length: 14 }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         top: 40 + Math.random() * 55,
@@ -158,13 +160,13 @@ export const EnvelopeAnimation = ({
               animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* Wax seal cracks then breaks apart */
+            /* Wax seal cracks then fades */
             @keyframes envSealPop {
-              0%   { transform: translate(-50%, -50%) scale(1)    rotate(-5deg); opacity: 1; }
-              10%  { transform: translate(-50%, -50%) scale(1.08) rotate(-5deg); opacity: 1; }
-              22%  { transform: translate(-50%, -50%) scale(1.12) rotate(-6deg); opacity: 1; }
-              36%  { transform: translate(-50%, -50%) scale(0.94) rotate(-4deg); opacity: 0; }
-              100% { transform: translate(-50%, -50%) scale(0.94) rotate(-4deg); opacity: 0; }
+              0%   { transform: translate(-50%, -50%) scale(1)    rotate(-4deg); opacity: 1; }
+              10%  { transform: translate(-50%, -50%) scale(1.08) rotate(-4deg); opacity: 1; }
+              22%  { transform: translate(-50%, -50%) scale(1.12) rotate(-5deg); opacity: 1; }
+              36%  { transform: translate(-50%, -50%) scale(0.94) rotate(-3deg); opacity: 0; }
+              100% { transform: translate(-50%, -50%) scale(0.94) rotate(-3deg); opacity: 0; }
             }
             .is-opening .env-seal {
               animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -200,8 +202,8 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "1800px",
-              width: "min(84vw, 460px)",
-              aspectRatio: "1.5 / 1",
+              width: "min(86vw, 480px)",
+              aspectRatio: "1.55 / 1",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -215,23 +217,23 @@ export const EnvelopeAnimation = ({
                 width: "100%",
                 height: "100%",
                 position: "relative",
-                filter: "drop-shadow(0 36px 55px rgba(0,0,0,0.6))",
+                filter: "drop-shadow(0 38px 58px rgba(0,0,0,0.6)) drop-shadow(0 12px 18px rgba(0,0,0,0.35))",
                 transformStyle: "preserve-3d",
                 transition:
                   "transform 500ms cubic-bezier(0.22, 1, 0.36, 1), filter 500ms cubic-bezier(0.4, 0, 0.2, 1)",
                 willChange: "transform, opacity",
               }}
             >
-              {/* === Back panel (deeper paper, gives sense of depth behind flaps) === */}
+              {/* === 1. Back panel (deeper, slightly darker paper) === */}
               <div
-                className="absolute inset-0 rounded-[6px] overflow-hidden"
+                className="absolute inset-0 rounded-[8px] overflow-hidden"
                 style={{
                   backgroundImage: `url(${paperTexture})`,
-                  backgroundSize: "200% 200%",
+                  backgroundSize: "220% 220%",
                   backgroundPosition: "70% 30%",
-                  filter: "brightness(0.86) saturate(0.95)",
+                  filter: "brightness(0.82) saturate(0.95)",
                   boxShadow:
-                    "inset 0 0 80px rgba(0,0,0,0.22), inset 0 -3px 8px rgba(0,0,0,0.12)",
+                    "inset 0 0 80px rgba(0,0,0,0.28), inset 0 -3px 8px rgba(0,0,0,0.14)",
                 }}
               >
                 {/* deep interior vignette */}
@@ -239,82 +241,122 @@ export const EnvelopeAnimation = ({
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      "radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 55%)",
+                      "radial-gradient(ellipse at 50% 55%, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0) 60%)",
                   }}
                 />
               </div>
 
-              {/* === Side & bottom flaps (visible at the seams behind the top flap) === */}
-              <svg
-                className="absolute inset-0 w-full h-full pointer-events-none"
-                viewBox="0 0 300 200"
-                preserveAspectRatio="none"
-                aria-hidden="true"
-                style={{ zIndex: 1 }}
-              >
-                <defs>
-                  <linearGradient id="env-side-l" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stopColor="rgba(0,0,0,0.30)" />
-                    <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-                  </linearGradient>
-                  <linearGradient id="env-side-r" x1="1" y1="0" x2="0" y2="0">
-                    <stop offset="0%" stopColor="rgba(0,0,0,0.30)" />
-                    <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-                  </linearGradient>
-                  <linearGradient id="env-bottom" x1="0" y1="1" x2="0" y2="0">
-                    <stop offset="0%" stopColor="rgba(0,0,0,0.32)" />
-                    <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-                  </linearGradient>
-                </defs>
-                {/* Left side flap triangle */}
-                <polygon points="0,0 150,100 0,200" fill="url(#env-side-l)" />
-                {/* Right side flap triangle */}
-                <polygon points="300,0 150,100 300,200" fill="url(#env-side-r)" />
-                {/* Bottom flap (seam line where flaps meet) */}
-                <polygon
-                  points="0,200 150,100 300,200"
-                  fill="url(#env-bottom)"
-                />
-                {/* Crisp seam highlights on the diagonals */}
-                <line x1="0" y1="200" x2="150" y2="100" stroke="rgba(255,250,235,0.18)" strokeWidth="0.4" />
-                <line x1="300" y1="200" x2="150" y2="100" stroke="rgba(255,250,235,0.18)" strokeWidth="0.4" />
-                <line x1="0" y1="200" x2="150" y2="100" stroke="rgba(40,28,10,0.25)" strokeWidth="0.5" transform="translate(0 0.6)" />
-                <line x1="300" y1="200" x2="150" y2="100" stroke="rgba(40,28,10,0.25)" strokeWidth="0.5" transform="translate(0 0.6)" />
-              </svg>
-
-              {/* === Front panel of envelope (lower body where flaps meet, slightly lighter) === */}
+              {/* === 2. Front panel: a single shape (rectangle below 50% + V tip extending to 100% top) === */}
+              {/* Outer shadow halo behind the front panel for separation */}
               <div
-                className="absolute left-0 right-0 bottom-0 rounded-b-[6px] overflow-hidden pointer-events-none"
+                className="absolute pointer-events-none"
                 style={{
-                  top: "50%",
+                  left: "0",
+                  right: "0",
+                  top: "0",
+                  bottom: "0",
+                  zIndex: 1,
+                  background:
+                    "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0) 55%)",
+                }}
+              />
+
+              <div
+                className="absolute inset-0 rounded-b-[8px] overflow-hidden"
+                style={{
                   zIndex: 2,
+                  // Front panel: rectangle from 50%→100% PLUS V triangle reaching up to top center
+                  clipPath:
+                    "polygon(0% 50%, 50% 0%, 100% 50%, 100% 100%, 0% 100%)",
                   backgroundImage: `url(${paperTexture})`,
-                  backgroundSize: "180% 180%",
+                  backgroundSize: "200% 200%",
                   backgroundPosition: "20% 90%",
-                  clipPath: "polygon(0% 0%, 50% -100%, 100% 0%, 100% 100%, 0% 100%)",
                   boxShadow:
-                    "inset 0 6px 14px rgba(0,0,0,0.14), inset 0 -2px 6px rgba(0,0,0,0.10)",
+                    "inset 0 6px 14px rgba(0,0,0,0.10), inset 0 -2px 6px rgba(0,0,0,0.10)",
                 }}
               >
-                {/* warm vignette */}
+                {/* warm vignette on front panel */}
                 <div
-                  className="absolute inset-0"
+                  className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      "radial-gradient(ellipse at 50% 80%, transparent 50%, rgba(70,55,35,0.18) 100%)",
+                      "radial-gradient(ellipse at 50% 80%, transparent 45%, rgba(70,55,35,0.20) 100%)",
                   }}
                 />
-                {/* Top edge highlight along the V */}
+
+                {/* Subtle V-seam highlight (catches light along the diagonals) */}
+                <svg
+                  className="absolute inset-0 w-full h-full pointer-events-none"
+                  viewBox="0 0 300 200"
+                  preserveAspectRatio="none"
+                >
+                  <defs>
+                    <linearGradient id="env-vlight-l" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,250,235,0.0)" />
+                      <stop offset="40%" stopColor="rgba(255,250,235,0.55)" />
+                      <stop offset="100%" stopColor="rgba(255,250,235,0.0)" />
+                    </linearGradient>
+                    <linearGradient id="env-vlight-r" x1="1" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="rgba(255,250,235,0.0)" />
+                      <stop offset="40%" stopColor="rgba(255,250,235,0.55)" />
+                      <stop offset="100%" stopColor="rgba(255,250,235,0.0)" />
+                    </linearGradient>
+                  </defs>
+                  {/* Light catch on the V edges (the diagonals that go from top-center DOWN to mid-sides) */}
+                  <line x1="150" y1="0" x2="0" y2="100" stroke="url(#env-vlight-l)" strokeWidth="1.2" />
+                  <line x1="150" y1="0" x2="300" y2="100" stroke="url(#env-vlight-r)" strokeWidth="1.2" />
+                  {/* Soft shadow just under the V edges (gives the front panel thickness) */}
+                  <line x1="150" y1="0" x2="0" y2="100" stroke="rgba(40,28,10,0.18)" strokeWidth="0.8" transform="translate(0.6 0.6)" />
+                  <line x1="150" y1="0" x2="300" y2="100" stroke="rgba(40,28,10,0.18)" strokeWidth="0.8" transform="translate(-0.6 0.6)" />
+                </svg>
+
+                {/* Tiny stamp in the upper-right corner of the front panel */}
                 <div
-                  className="absolute inset-x-0 top-0 h-[2px]"
+                  className="absolute pointer-events-none"
                   style={{
+                    right: "7%",
+                    top: "16%",
+                    width: "14%",
+                    aspectRatio: "0.78 / 1",
                     background:
-                      "linear-gradient(90deg, transparent, rgba(255,250,235,0.55), transparent)",
+                      "linear-gradient(135deg, rgba(190,150,80,0.6), rgba(120,85,30,0.6))",
+                    border: "1px dashed rgba(255,245,220,0.65)",
+                    borderRadius: "1px",
+                    boxShadow:
+                      "0 1px 2px rgba(0,0,0,0.28), inset 0 0 6px rgba(0,0,0,0.20)",
                   }}
-                />
+                >
+                  <div
+                    className="absolute inset-[14%] rounded-[1px]"
+                    style={{
+                      background:
+                        "radial-gradient(circle at 38% 38%, rgba(255,238,200,0.55), rgba(70,45,15,0.55))",
+                    }}
+                  />
+                </div>
+
+                {/* Faint embossed monogram watermark on the front panel (not the wax seal) */}
+                <div
+                  className="absolute pointer-events-none flex items-center justify-center"
+                  style={{
+                    left: "8%",
+                    bottom: "10%",
+                    width: "18%",
+                    aspectRatio: "1 / 1",
+                    opacity: 0.16,
+                    color: waxLo,
+                    fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
+                    fontSize: "12px",
+                    letterSpacing: "0.2em",
+                    textTransform: "uppercase",
+                    fontWeight: 500,
+                  }}
+                >
+                  est. {new Date().getFullYear()}
+                </div>
               </div>
 
-              {/* === Triangular top flap (hinges from top, points to center) === */}
+              {/* === 3. Top triangular flap === */}
               <div
                 className="env-flap absolute top-0 left-0 right-0"
                 style={{
@@ -327,98 +369,50 @@ export const EnvelopeAnimation = ({
                   backfaceVisibility: "hidden",
                   clipPath: "polygon(0% 0%, 100% 0%, 50% 100%)",
                   backgroundImage: `url(${paperTexture})`,
-                  backgroundSize: "180% 180%",
+                  backgroundSize: "200% 200%",
                   backgroundPosition: "30% 20%",
-                  filter: "drop-shadow(0 3px 4px rgba(0,0,0,0.22))",
+                  filter: "drop-shadow(0 4px 5px rgba(0,0,0,0.25))",
                 }}
               >
-                {/* Flap shading: slightly lit at top, darker shadow toward the V point */}
+                {/* Flap shading: gentle gradient, brightest near top, darker toward V point */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(180deg, rgba(255,250,235,0.22) 0%, rgba(0,0,0,0) 32%, rgba(60,45,25,0.26) 100%)",
+                      "linear-gradient(180deg, rgba(255,250,235,0.20) 0%, rgba(0,0,0,0) 30%, rgba(60,45,25,0.28) 100%)",
                   }}
                 />
-                {/* Subtle bevel along the V edges */}
+                {/* A soft warm sheen just below the top edge */}
+                <div
+                  className="absolute inset-x-0 top-0 h-[14%] pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(180deg, rgba(255,245,220,0.35), transparent)",
+                  }}
+                />
+                {/* Soft contact shadow at the V tip */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.28) 0%, transparent 22%)",
-                  }}
-                />
-                {/* Decorative inner deckle line tracing the V */}
-                <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  viewBox="0 0 300 186"
-                  preserveAspectRatio="none"
-                >
-                  <polyline
-                    points="6,6 150,180 294,6"
-                    fill="none"
-                    stroke="rgba(120,95,55,0.35)"
-                    strokeWidth="0.6"
-                    strokeDasharray="0.8 2.4"
-                  />
-                </svg>
-              </div>
-
-              {/* === Postal details: address lines & a stamp on the front panel === */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  left: "12%",
-                  right: "32%",
-                  top: "70%",
-                  zIndex: 2,
-                  opacity: 0.55,
-                }}
-              >
-                <div style={{ height: "1px", background: "rgba(80,60,30,0.55)", marginBottom: "5px", width: "85%" }} />
-                <div style={{ height: "1px", background: "rgba(80,60,30,0.45)", marginBottom: "5px", width: "70%" }} />
-                <div style={{ height: "1px", background: "rgba(80,60,30,0.40)", width: "55%" }} />
-              </div>
-
-              {/* tiny "stamp" rectangle */}
-              <div
-                className="absolute pointer-events-none"
-                style={{
-                  right: "6%",
-                  top: "68%",
-                  width: "14%",
-                  aspectRatio: "0.78 / 1",
-                  zIndex: 2,
-                  background:
-                    "linear-gradient(135deg, rgba(180,140,70,0.55), rgba(110,80,30,0.55))",
-                  border: "1px dashed rgba(255,245,220,0.55)",
-                  borderRadius: "1px",
-                  boxShadow:
-                    "0 1px 2px rgba(0,0,0,0.25), inset 0 0 6px rgba(0,0,0,0.18)",
-                }}
-              >
-                <div
-                  className="absolute inset-[12%] rounded-[1px]"
-                  style={{
-                    background:
-                      "radial-gradient(circle at 40% 40%, rgba(255,235,200,0.4), rgba(60,40,15,0.55))",
+                      "radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.30) 0%, transparent 24%)",
                   }}
                 />
               </div>
 
-              {/* === HYPER-REAL WAX SEAL (sits over the flap point) === */}
+              {/* === 4. HYPER-REAL WAX SEAL (sits over the flap V point) === */}
               <div
                 className="env-seal absolute pointer-events-none"
                 style={{
                   left: "50%",
                   top: "62%",
-                  transform: "translate(-50%, -50%) rotate(-5deg)",
-                  width: "29%",
+                  transform: "translate(-50%, -50%) rotate(-4deg)",
+                  width: "30%",
                   aspectRatio: "1 / 1",
                   zIndex: 4,
                   willChange: "transform, opacity",
                   filter:
-                    "drop-shadow(0 10px 12px rgba(0,0,0,0.55)) drop-shadow(0 3px 4px rgba(0,0,0,0.4))",
+                    "drop-shadow(0 12px 14px rgba(0,0,0,0.55)) drop-shadow(0 3px 5px rgba(0,0,0,0.45))",
                 }}
               >
                 <svg
@@ -455,7 +449,7 @@ export const EnvelopeAnimation = ({
                     {/* Rim light around edges */}
                     <radialGradient id="env-wax-rim" cx="50%" cy="50%" r="50%">
                       <stop offset="85%" stopColor="rgba(0,0,0,0)" />
-                      <stop offset="96%" stopColor="rgba(255,235,180,0.35)" />
+                      <stop offset="96%" stopColor="rgba(255,235,180,0.4)" />
                       <stop offset="100%" stopColor="rgba(255,235,180,0)" />
                     </radialGradient>
                     <filter id="env-wax-grain">
@@ -468,9 +462,8 @@ export const EnvelopeAnimation = ({
                     <filter id="env-wax-soft" x="-20%" y="-20%" width="140%" height="140%">
                       <feGaussianBlur stdDeviation="0.5" />
                     </filter>
-                    {/* Drop-cast under-shadow on envelope */}
                     <filter id="env-wax-cast" x="-40%" y="-40%" width="180%" height="180%">
-                      <feGaussianBlur stdDeviation="1.6" />
+                      <feGaussianBlur stdDeviation="1.8" />
                     </filter>
 
                     {/* Irregular drippy wax silhouette */}
@@ -496,8 +489,8 @@ export const EnvelopeAnimation = ({
                   {/* Soft cast shadow under the seal on the paper */}
                   <use
                     href="#env-wax-shape"
-                    fill="rgba(0,0,0,0.35)"
-                    transform="translate(2.5 4.5)"
+                    fill="rgba(0,0,0,0.4)"
+                    transform="translate(2.5 5)"
                     style={{ filter: "url(#env-wax-cast)" }}
                   />
 
@@ -511,7 +504,7 @@ export const EnvelopeAnimation = ({
                     style={{ mixBlendMode: "multiply" }}
                   />
 
-                  {/* Rim light (catches highlight at edges) */}
+                  {/* Rim light */}
                   <use
                     href="#env-wax-shape"
                     fill="url(#env-wax-rim)"
@@ -526,14 +519,14 @@ export const EnvelopeAnimation = ({
                   <use
                     href="#env-wax-shape"
                     fill="white"
-                    style={{ filter: "url(#env-wax-grain)", mixBlendMode: "overlay", opacity: 0.6 }}
+                    style={{ filter: "url(#env-wax-grain)", mixBlendMode: "overlay", opacity: 0.55 }}
                   />
 
                   {/* Tiny micro-cracks for realism */}
                   <g
                     stroke={waxDeep}
                     strokeWidth="0.35"
-                    opacity="0.45"
+                    opacity="0.35"
                     fill="none"
                     style={{ mixBlendMode: "multiply" }}
                   >
@@ -545,11 +538,11 @@ export const EnvelopeAnimation = ({
 
                   {/* Embossed double oval ring - dark deboss */}
                   <ellipse cx="70" cy="70" rx="38" ry="44" fill="none" stroke={waxDeep} strokeWidth="1.4" opacity="0.7" />
-                  {/* light catch on top of ring (raised feel) */}
-                  <ellipse cx="70" cy="70" rx="38" ry="44" fill="none" stroke="rgba(255,235,180,0.55)" strokeWidth="0.55" transform="translate(0 -0.7)" />
+                  {/* light catch on top of ring */}
+                  <ellipse cx="70" cy="70" rx="38" ry="44" fill="none" stroke="rgba(255,235,180,0.6)" strokeWidth="0.55" transform="translate(0 -0.7)" />
                   {/* inner ring */}
                   <ellipse cx="70" cy="70" rx="32" ry="37" fill="none" stroke={waxDeep} strokeWidth="0.7" opacity="0.55" />
-                  <ellipse cx="70" cy="70" rx="32" ry="37" fill="none" stroke="rgba(255,235,180,0.4)" strokeWidth="0.35" transform="translate(0 -0.4)" />
+                  <ellipse cx="70" cy="70" rx="32" ry="37" fill="none" stroke="rgba(255,235,180,0.45)" strokeWidth="0.35" transform="translate(0 -0.4)" />
 
                   {/* Decorative tiny dots between the two ovals */}
                   <g fill={waxDeep} opacity="0.55">
@@ -591,12 +584,12 @@ export const EnvelopeAnimation = ({
                   >
                     {groomInitial}{brideInitial}
                   </text>
-                  {/* Highlight catch on top of letters (raised glint) */}
+                  {/* Highlight catch on top of letters */}
                   <text
                     x="70"
                     y="82.1"
                     textAnchor="middle"
-                    fill="rgba(255,240,195,0.55)"
+                    fill="rgba(255,240,195,0.6)"
                     style={{
                       fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
                       fontWeight: 700,
@@ -608,22 +601,6 @@ export const EnvelopeAnimation = ({
                   </text>
                 </svg>
               </div>
-
-              {/* Soft shadow cast by seal onto envelope below */}
-              <div
-                className="env-seal absolute pointer-events-none"
-                style={{
-                  left: "50%",
-                  top: "65%",
-                  transform: "translate(-50%, -50%)",
-                  width: "32%",
-                  aspectRatio: "1 / 0.5",
-                  zIndex: 2,
-                  background:
-                    "radial-gradient(ellipse at center, rgba(0,0,0,0.45) 0%, transparent 70%)",
-                  filter: "blur(5px)",
-                }}
-              />
             </div>
 
             {/* Tap hint */}
