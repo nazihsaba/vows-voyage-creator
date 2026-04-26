@@ -400,6 +400,20 @@ const WeddingInvite = () => {
     );
   }
 
+  // Wrap with envelope animation if enabled (and not in any preview/editing mode)
+  if (wedding.envelope_animation_enabled && !isPreview && !isDraftPreview) {
+    return (
+      <EnvelopeAnimation
+        groomName={wedding.groom_name}
+        brideName={wedding.bride_name}
+        primaryColor={wedding.custom_primary_color}
+        accentColor={wedding.custom_accent_color}
+      >
+        {content}
+      </EnvelopeAnimation>
+    );
+  }
+
   return content;
 };
 
