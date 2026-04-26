@@ -222,7 +222,7 @@ const ManageLinks = () => {
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
-    const siteOrigin = "https://aureainvites.com";
+    const siteOrigin = "https://go.aureainvites.com";
     return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
   };
 
