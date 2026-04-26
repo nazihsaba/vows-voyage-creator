@@ -345,7 +345,7 @@ export const EnvelopeAnimation = ({
                   </defs>
 
                   <g clipPath="url(#env-flap-clip)">
-                    {/* Paper texture (same source, different offset for natural variance) */}
+                    {/* Paper texture (slightly offset for natural variance) */}
                     <image
                       href={paperTexture}
                       x={-VB_W * 0.1}
@@ -356,31 +356,15 @@ export const EnvelopeAnimation = ({
                     />
                     {/* shading */}
                     <rect width={VB_W} height={VB_H} fill="url(#env-flap-shade)" />
-                    {/* contact shadow at the V tip */}
-                    <ellipse
-                      cx={V_X}
-                      cy={V_Y}
-                      rx="120"
-                      ry="14"
-                      fill="rgba(0,0,0,0.22)"
-                      filter="blur(2px)"
-                    />
                   </g>
 
-                  {/* Crisp flap edge */}
+                  {/* Subtle light catch ONLY along the V edges (no second outline) */}
                   <path
                     d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
                     fill="none"
-                    stroke="rgba(40,28,10,0.22)"
-                    strokeWidth="1"
-                  />
-                  {/* Light catch on flap edges */}
-                  <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
-                    fill="none"
-                    stroke="rgba(255,250,235,0.35)"
-                    strokeWidth="0.6"
-                    transform="translate(0 -0.8)"
+                    stroke="rgba(255,250,235,0.30)"
+                    strokeWidth="0.5"
+                    transform="translate(0 -0.5)"
                   />
                 </svg>
               </div>
