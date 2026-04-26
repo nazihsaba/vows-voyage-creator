@@ -389,18 +389,32 @@ export const EnvelopeAnimation = ({
                   </svg>
                 </div>
 
-                {/* Inner face */}
+                {/* Inner face — slightly darker to read as the back of the flap */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(180deg)",
-                    background: `linear-gradient(170deg, ${paperInner} 0%, ${paperFront} 100%)`,
+                    background: `linear-gradient(170deg, ${paperBack} 0%, ${paperShadow} 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 12px 24px rgba(0,0,0,0.08)",
+                    boxShadow: "inset 0 18px 30px rgba(0,0,0,0.18)",
                   }}
                 />
               </div>
+
+              {/* Hinge shadow that appears across the top of the envelope as the flap folds back,
+                  reinforcing visual connection between the open flap and the body. */}
+              <div
+                className="absolute left-0 right-0 top-0 pointer-events-none rounded-t-2xl"
+                style={{
+                  height: "12%",
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.06) 60%, transparent 100%)",
+                  opacity: opening ? 1 : 0,
+                  transition: "opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 350ms",
+                  zIndex: 2,
+                }}
+              />
 
               {/* === Wax seal monogram === */}
               <div
