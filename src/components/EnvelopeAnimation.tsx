@@ -432,13 +432,14 @@ export const EnvelopeAnimation = ({
                     <rect id="seal-pill" x="26" y="30" width="68" height="80" rx="32" ry="32" />
                   </defs>
 
-                  <use href="#seal-shape" fill="rgba(0,0,0,0.4)" transform="translate(2 5)" style={{ filter: "url(#seal-cast)" }} />
                   <use href="#seal-shape" fill="url(#seal-fill)" />
                   <use href="#seal-shape" fill="url(#seal-shadow)" style={{ mixBlendMode: "multiply" }} />
                   <use href="#seal-shape" fill="url(#seal-rim)" style={{ mixBlendMode: "screen" }} />
                   <use href="#seal-shape" fill="url(#seal-spec)" />
-                  <use href="#seal-shape" fill="white" style={{ filter: "url(#seal-grain)", mixBlendMode: "overlay", opacity: 0.5 }} />
-
+                  {/* Surface grain — clipped to shape via clipPath to avoid bleed */}
+                  <g clipPath="url(#seal-clip)">
+                    <use href="#seal-shape" fill="black" style={{ filter: "url(#seal-grain)", mixBlendMode: "soft-light", opacity: 0.6 }} />
+                  </g>
                   {/* Pill deboss ring */}
                   <use href="#seal-pill" fill="none" stroke={waxDeep} strokeWidth="1.4" opacity="0.7" style={{ filter: "url(#seal-deboss)" }} />
                   <rect x="29" y="33" width="62" height="74" rx="29" ry="29" fill="none" stroke={waxDeep} strokeWidth="0.6" opacity="0.55" />
