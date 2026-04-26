@@ -1,4 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
+import envelopeImage from "@/assets/envelope-wax-seal.jpeg";
 
 interface EnvelopeAnimationProps {
   groomName: string;
@@ -9,15 +10,9 @@ interface EnvelopeAnimationProps {
 }
 
 /**
- * Photographic ivory wedding envelope with a prominent oxblood wax seal.
- *
- * Inspired by a real photographed envelope:
- *  - Soft warm ivory cotton paper with felt-like fiber grain
- *  - V-shaped front flap that meets in the center, with both diagonals visible
- *  - Large oval oxblood wax seal with embossed inner oval ring + serif monogram
- *  - Realistic edge highlights along the diagonal folds
- *
- * Animation: single CSS @keyframes timeline per element, GPU-composited.
+ * Photographic envelope using the real envelope+wax-seal image as the base.
+ * On tap: a subtle "open" animation lifts the top portion, the card slides up,
+ * and the overlay fades out.
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -29,20 +24,9 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
-  const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
-
-  // Soft ivory / cream cotton paper palette (matches reference photo)
-  const paperLight = "#F1E8D6";   // top highlight
-  const paperMid = "#E8DCC4";     // body
-  const paperDeep = "#D9C9AB";    // edge / fold shadow
-  const paperFlapInner = "#C9B894"; // back-of-flap (paper thickness)
   const cardCream = "#FBF6EC";
-  const accent = accentColor || "#B89968";    // antique gold accent
-  // Oxblood / burgundy wax (matches reference)
+  const accent = accentColor || "#B89968";
   const sealBase = primaryColor || "#7A1F25";
-  const sealHi = "#9C2A30";
-  const sealLo = "#4A0F14";
 
   const TOTAL = 2000;
 
@@ -92,57 +76,6 @@ export const EnvelopeAnimation = ({
             opening ? "is-opening" : ""
           }`}
         >
-          {/* SVG filters: cotton fiber + fine paper grain + wax bevel */}
-          <svg className="absolute -z-10 w-0 h-0" aria-hidden="true">
-            <defs>
-              {/* Cotton fiber felt texture */}
-              <filter id="env-fiber">
-                <feTurbulence
-                  type="fractalNoise"
-                  baseFrequency="0.9"
-                  numOctaves="2"
-                  stitchTiles="stitch"
-                />
-                <feColorMatrix
-                  values="0 0 0 0 0.55
-                          0 0 0 0 0.46
-                          0 0 0 0 0.32
-                          0 0 0 0.28 0"
-                />
-              </filter>
-              {/* Fine grain overlay */}
-              <filter id="env-grain">
-                <feTurbulence
-                  type="fractalNoise"
-                  baseFrequency="2.2"
-                  numOctaves="2"
-                  stitchTiles="stitch"
-                />
-                <feColorMatrix
-                  values="0 0 0 0 0.50
-                          0 0 0 0 0.42
-                          0 0 0 0 0.28
-                          0 0 0 0.14 0"
-                />
-              </filter>
-              {/* Wax surface micro-texture */}
-              <filter id="wax-grain">
-                <feTurbulence
-                  type="fractalNoise"
-                  baseFrequency="1.6"
-                  numOctaves="2"
-                  stitchTiles="stitch"
-                />
-                <feColorMatrix
-                  values="0 0 0 0 0.10
-                          0 0 0 0 0.02
-                          0 0 0 0 0.04
-                          0 0 0 0.35 0"
-                />
-              </filter>
-            </defs>
-          </svg>
-
           {/* Ambient warm glow */}
           <div
             className="env-glow absolute inset-0 pointer-events-none"
@@ -218,34 +151,15 @@ export const EnvelopeAnimation = ({
               animation: envBody 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            @keyframes envFlap {
-              0%, 14%  { transform: rotateX(0deg); }
-              45%      { transform: rotateX(-168deg); }
-              55%      { transform: rotateX(-162deg); }
-              100%     { transform: rotateX(-162deg); }
+            /* Top portion of the photo (flap+seal) lifts away */
+            @keyframes envFlapLift {
+              0%, 14%  { transform: rotateX(0deg); opacity: 1; }
+              45%      { transform: rotateX(-150deg); opacity: 1; }
+              70%      { transform: rotateX(-160deg); opacity: 0.7; }
+              100%     { transform: rotateX(-160deg); opacity: 0; }
             }
             .is-opening .env-flap {
-              animation: envFlap 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            }
-
-            @keyframes envShimmer {
-              0%   { transform: translateX(-130%) skewX(-22deg); opacity: 0; }
-              5%   { opacity: 0.55; }
-              16%  { transform: translateX(230%)  skewX(-22deg); opacity: 0; }
-              100% { opacity: 0; }
-            }
-            .is-opening .env-shimmer {
-              animation: envShimmer 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            }
-
-            @keyframes envSeal {
-              0%   { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-4deg); }
-              4%   { opacity: 1; transform: translate(-50%, -50%) scale(1.05) rotate(-4deg); }
-              16%  { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(-4deg); }
-              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(-4deg); }
-            }
-            .is-opening .env-seal {
-              animation: envSeal 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+              animation: envFlapLift 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
             @keyframes envCard {
@@ -259,16 +173,6 @@ export const EnvelopeAnimation = ({
               animation: envCard 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            @keyframes envHinge {
-              0%, 18% { opacity: 0; }
-              45%     { opacity: 1; }
-              90%     { opacity: 0.8; }
-              100%    { opacity: 0; }
-            }
-            .is-opening .env-hinge {
-              animation: envHinge 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            }
-
             @keyframes envHint {
               0% { opacity: 1; }
               8%, 100% { opacity: 0; }
@@ -278,7 +182,7 @@ export const EnvelopeAnimation = ({
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
               .env-idle, .env-mote, .env-glow,
-              .env-body, .env-flap, .env-shimmer, .env-seal, .env-card, .env-hinge, .env-hint {
+              .env-body, .env-flap, .env-card, .env-hint {
                 animation: none !important;
               }
             }
@@ -288,8 +192,8 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "1500px",
-              width: "min(88vw, 540px)",
-              aspectRatio: "1.5 / 1",
+              width: "min(82vw, 460px)",
+              aspectRatio: "0.78 / 1",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -310,74 +214,24 @@ export const EnvelopeAnimation = ({
                 willChange: "transform, opacity",
               }}
             >
-              {/* === Envelope body (ivory cotton paper) === */}
+              {/* === Bottom (static) half of the envelope photo === */}
               <div
                 className="absolute inset-0 rounded-[6px] overflow-hidden"
                 style={{
-                  background: `
-                    radial-gradient(ellipse at 50% 30%, rgba(255,253,245,0.55) 0%, transparent 60%),
-                    linear-gradient(165deg, ${paperLight} 0%, ${paperMid} 55%, ${paperDeep} 100%)
-                  `,
-                  boxShadow:
-                    "inset 0 0 80px rgba(120,90,40,0.10), inset 0 -2px 0 rgba(0,0,0,0.05)",
+                  backgroundImage: `url(${envelopeImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                  backgroundRepeat: "no-repeat",
                 }}
-              >
-                {/* Cotton fiber */}
-                <div
-                  className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
-                  style={{ filter: "url(#env-fiber)" }}
-                />
-                {/* Fine grain on top */}
-                <div
-                  className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
-                  style={{ filter: "url(#env-grain)" }}
-                />
-                {/* Soft warm sheen */}
-                <div
-                  className="absolute inset-0 pointer-events-none"
-                  style={{
-                    background:
-                      "linear-gradient(135deg, rgba(255,250,235,0.20) 0%, transparent 40%, transparent 65%, rgba(0,0,0,0.05) 100%)",
-                  }}
-                />
+              />
 
-                {/* === Bottom V — visible diagonals from corners up to center === */}
-                <svg
-                  className="absolute inset-0 w-full h-full pointer-events-none"
-                  viewBox="0 0 150 100"
-                  preserveAspectRatio="none"
-                >
-                  {/* soft shaded triangle below the V (pocket back) */}
-                  <polygon
-                    points="0,100 150,100 75,50"
-                    fill="rgba(120,90,40,0.06)"
-                  />
-                  {/* fold lines: bottom-left -> center, bottom-right -> center */}
-                  <line x1="0"   y1="100" x2="75" y2="50" stroke="#8B7650" strokeWidth="0.35" opacity="0.55" />
-                  <line x1="150" y1="100" x2="75" y2="50" stroke="#8B7650" strokeWidth="0.35" opacity="0.55" />
-                  {/* highlight just above each fold line */}
-                  <line x1="0"   y1="99.4" x2="75" y2="49.4" stroke="#FFF6E2" strokeWidth="0.25" opacity="0.55" />
-                  <line x1="150" y1="99.4" x2="75" y2="49.4" stroke="#FFF6E2" strokeWidth="0.25" opacity="0.55" />
-                </svg>
-
-                {/* Inner pocket shadow at the bottom (where the card sits) */}
-                <div
-                  className="absolute left-0 right-0 bottom-0 pointer-events-none"
-                  style={{
-                    height: "45%",
-                    background:
-                      "linear-gradient(to top, rgba(80,55,20,0.14) 0%, rgba(80,55,20,0.05) 55%, transparent 100%)",
-                  }}
-                />
-              </div>
-
-              {/* === Inner card === */}
+              {/* === Inner card — slides up from the envelope === */}
               <div
                 className="env-card absolute left-1/2 rounded-[6px] overflow-hidden"
                 style={{
                   bottom: "8%",
-                  width: "84%",
-                  height: "78%",
+                  width: "82%",
+                  height: "70%",
                   transform: "translateX(-50%) translateY(0) scale(1)",
                   opacity: 0,
                   background: `linear-gradient(170deg, ${cardCream} 0%, #F2EAD3 100%)`,
@@ -389,11 +243,6 @@ export const EnvelopeAnimation = ({
                   fontFamily: "'Playfair Display', Georgia, serif",
                 }}
               >
-                {/* Subtle card grain */}
-                <div
-                  className="absolute inset-0 opacity-20 mix-blend-multiply pointer-events-none"
-                  style={{ filter: "url(#env-grain)" }}
-                />
                 {/* Double rule */}
                 <div
                   className="absolute inset-2 rounded-md pointer-events-none"
@@ -443,218 +292,25 @@ export const EnvelopeAnimation = ({
                 </div>
               </div>
 
-              {/* === Hinge crescent shadow === */}
+              {/* === Top half of the photo (flap + wax seal) — lifts away on open === */}
               <div
-                className="env-hinge absolute left-0 right-0 top-0 pointer-events-none rounded-t-[6px]"
-                style={{
-                  height: "14%",
-                  background:
-                    "linear-gradient(to bottom, rgba(0,0,0,0.30) 0%, rgba(0,0,0,0.08) 55%, transparent 100%)",
-                  opacity: 0,
-                  zIndex: 2,
-                }}
-              />
-
-              {/* === Top flap === */}
-              <div
-                className="env-flap absolute top-0 left-0 right-0"
+                className="env-flap absolute top-0 left-0 right-0 overflow-hidden rounded-t-[6px]"
                 style={{
                   height: "62%",
                   transformOrigin: "top center",
                   transform: "rotateX(0deg)",
                   transformStyle: "preserve-3d",
                   zIndex: 3,
-                  willChange: "transform",
-                }}
-              >
-                {/* Outer face — V-shaped flap pointing down to center */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backfaceVisibility: "hidden",
-                    background: `linear-gradient(180deg, ${paperLight} 0%, ${paperMid} 100%)`,
-                    clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 -10px 22px rgba(0,0,0,0.10)",
-                  }}
-                >
-                  {/* Cotton fiber on flap */}
-                  <div
-                    className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
-                    style={{
-                      filter: "url(#env-fiber)",
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    }}
-                  />
-                  <div
-                    className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
-                    style={{
-                      filter: "url(#env-grain)",
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    }}
-                  />
-                  {/* Soft directional shading on the V faces */}
-                  <div
-                    className="absolute inset-0 pointer-events-none"
-                    style={{
-                      background:
-                        "linear-gradient(90deg, rgba(255,250,235,0.25) 0%, rgba(0,0,0,0.06) 49%, rgba(0,0,0,0.06) 51%, rgba(255,250,235,0.10) 100%)",
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    }}
-                  />
-                  {/* Shimmer */}
-                  <div
-                    className="absolute inset-0 overflow-hidden pointer-events-none"
-                    style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
-                  >
-                    <div
-                      className="env-shimmer absolute top-0 bottom-0"
-                      style={{
-                        width: "42%",
-                        background:
-                          "linear-gradient(90deg, transparent 0%, rgba(255,250,235,0.55) 50%, transparent 100%)",
-                        mixBlendMode: "overlay",
-                        transform: "translateX(-130%) skewX(-22deg)",
-                        opacity: 0,
-                      }}
-                    />
-                  </div>
-                  {/* Crisp edge highlight along the two diagonals */}
-                  <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none"
-                    viewBox="0 0 100 60"
-                    preserveAspectRatio="none"
-                  >
-                    {/* darker fold line */}
-                    <line x1="0" y1="0" x2="50" y2="60" stroke="#8B7650" strokeWidth="0.35" opacity="0.45" />
-                    <line x1="100" y1="0" x2="50" y2="60" stroke="#8B7650" strokeWidth="0.35" opacity="0.45" />
-                    {/* bright paper edge */}
-                    <line x1="0.4" y1="0" x2="50" y2="59.4" stroke="#FFF8E6" strokeWidth="0.25" opacity="0.7" />
-                    <line x1="99.6" y1="0" x2="50" y2="59.4" stroke="#FFF8E6" strokeWidth="0.25" opacity="0.7" />
-                  </svg>
-                </div>
-
-                {/* Inner face — darker paper for back-of-flap thickness */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    backfaceVisibility: "hidden",
-                    transform: "rotateX(180deg)",
-                    background: `linear-gradient(170deg, ${paperFlapInner} 0%, #B5A07C 100%)`,
-                    clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 18px 32px rgba(0,0,0,0.22)",
-                  }}
-                >
-                  <div
-                    className="absolute inset-0 opacity-60 mix-blend-multiply pointer-events-none"
-                    style={{
-                      filter: "url(#env-fiber)",
-                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    }}
-                  />
-                </div>
-              </div>
-
-              {/* === Oxblood oval wax seal (matches reference photo) === */}
-              <div
-                className="env-seal absolute left-1/2 top-1/2"
-                style={{
-                  width: "26%",
-                  aspectRatio: "0.82 / 1",
-                  zIndex: 4,
-                  transform: "translate(-50%, -50%) scale(1) rotate(-4deg)",
-                  pointerEvents: "none",
                   willChange: "transform, opacity",
-                  filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.4))",
+                  backfaceVisibility: "hidden",
+                  // Use the same image but show only the top portion of the envelope
+                  backgroundImage: `url(${envelopeImage})`,
+                  backgroundSize: "100% auto",
+                  backgroundPosition: "top center",
+                  backgroundRepeat: "no-repeat",
+                  boxShadow: "inset 0 -10px 22px rgba(0,0,0,0.10)",
                 }}
-              >
-                {/* Wax blob — irregular oval */}
-                <div
-                  className="absolute inset-0"
-                  style={{
-                    background: `
-                      radial-gradient(ellipse at 35% 28%, ${sealHi} 0%, ${sealBase} 45%, ${sealLo} 100%)
-                    `,
-                    borderRadius: "48% 52% 47% 53% / 46% 48% 52% 54%",
-                    boxShadow: `
-                      inset -6px -8px 14px rgba(0,0,0,0.55),
-                      inset 5px 6px 10px rgba(255,180,170,0.25),
-                      inset 0 0 30px rgba(0,0,0,0.20)
-                    `,
-                  }}
-                >
-                  {/* Wax surface micro-grain */}
-                  <div
-                    className="absolute inset-0 opacity-70 mix-blend-overlay pointer-events-none"
-                    style={{
-                      filter: "url(#wax-grain)",
-                      borderRadius: "48% 52% 47% 53% / 46% 48% 52% 54%",
-                    }}
-                  />
-                  {/* Specular highlight */}
-                  <div
-                    className="absolute pointer-events-none"
-                    style={{
-                      top: "10%",
-                      left: "20%",
-                      width: "45%",
-                      height: "30%",
-                      background:
-                        "radial-gradient(ellipse, rgba(255,210,200,0.45) 0%, transparent 70%)",
-                      filter: "blur(2px)",
-                    }}
-                  />
-
-                  {/* Embossed inner oval ring (debossed into wax) */}
-                  <div
-                    className="absolute"
-                    style={{
-                      top: "14%",
-                      left: "16%",
-                      right: "16%",
-                      bottom: "14%",
-                      borderRadius: "50%",
-                      border: `1.5px solid ${sealLo}`,
-                      boxShadow: `
-                        inset 0 1px 1.5px rgba(0,0,0,0.45),
-                        0 1px 0 rgba(255,180,170,0.25)
-                      `,
-                    }}
-                  />
-                  {/* Second thinner ring (matching reference) */}
-                  <div
-                    className="absolute"
-                    style={{
-                      top: "18%",
-                      left: "21%",
-                      right: "21%",
-                      bottom: "18%",
-                      borderRadius: "50%",
-                      border: `0.75px solid ${sealLo}`,
-                      opacity: 0.7,
-                    }}
-                  />
-
-                  {/* Embossed serif monogram */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <span
-                      style={{
-                        color: sealLo,
-                        fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
-                        fontWeight: 600,
-                        fontSize: "clamp(20px, 4.8vw, 44px)",
-                        letterSpacing: "-0.02em",
-                        lineHeight: 1,
-                        textShadow: `
-                          0 1px 0 rgba(255,180,170,0.30),
-                          0 -1px 1px rgba(0,0,0,0.55)
-                        `,
-                      }}
-                    >
-                      {groomInitial}{brideInitial}
-                    </span>
-                  </div>
-                </div>
-              </div>
+              />
             </div>
 
             {/* Tap hint */}
