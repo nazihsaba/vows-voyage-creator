@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
-import envelopeImage from "@/assets/envelope-wax-seal.jpeg";
+import envelopeImage from "@/assets/envelope-cream-seal.jpeg";
 
 interface EnvelopeAnimationProps {
   groomName: string;
