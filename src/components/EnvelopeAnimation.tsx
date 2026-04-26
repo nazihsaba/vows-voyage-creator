@@ -313,7 +313,50 @@ export const EnvelopeAnimation = ({
                   backgroundRepeat: "no-repeat",
                   boxShadow: "inset 0 -10px 22px rgba(0,0,0,0.10)",
                 }}
-              />
+              >
+                {/* Dynamic monogram overlay — masks the printed "FM" on the wax seal */}
+                <div
+                  className="absolute pointer-events-none flex items-center justify-center"
+                  style={{
+                    // Position over the wax-seal monogram area in the photo
+                    left: "50%",
+                    top: "78%",
+                    transform: "translate(-50%, -50%)",
+                    width: "26%",
+                    aspectRatio: "1.1 / 1",
+                  }}
+                >
+                  {/* Soft wax-tone wash to hide the original "FM" letters underneath */}
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background:
+                        "radial-gradient(ellipse at 45% 40%, rgba(132,32,38,0.95) 0%, rgba(110,24,30,0.92) 55%, rgba(95,20,26,0.85) 100%)",
+                      borderRadius: "50%",
+                      filter: "blur(0.4px)",
+                      mixBlendMode: "multiply",
+                      opacity: 0.92,
+                    }}
+                  />
+                  {/* Dynamic embossed initials */}
+                  <span
+                    className="relative"
+                    style={{
+                      color: "#5A1218",
+                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
+                      fontWeight: 600,
+                      fontStyle: "italic",
+                      fontSize: "clamp(22px, 5.5vw, 52px)",
+                      letterSpacing: "0.02em",
+                      lineHeight: 1,
+                      textShadow:
+                        "0 1px 0 rgba(255,180,170,0.35), 0 -1px 1px rgba(0,0,0,0.55), 0 0 6px rgba(0,0,0,0.20)",
+                    }}
+                  >
+                    {groomInitial}{brideInitial}
+                  </span>
+                </div>
+              </div>
             </div>
 
             {/* Tap hint */}
