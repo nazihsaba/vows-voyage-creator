@@ -10,9 +10,13 @@ interface EnvelopeAnimationProps {
 }
 
 /**
- * Photographic envelope using the real envelope+wax-seal image as the base.
- * On tap: a subtle "open" animation lifts the top portion, the card slides up,
- * and the overlay fades out.
+ * Photographic envelope with a single dynamic wax seal.
+ *
+ * - The envelope photo is the base visual.
+ * - A fresh SVG wax seal is rendered on top, fully covering the printed "FM"
+ *   in the photo, and shows the groom + bride initials dynamically.
+ * - On tap: flap lifts, envelope sinks/fades, overlay dissolves —
+ *   directly revealing the template behind it (no intermediate card).
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -24,19 +28,21 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const cardCream = "#FBF6EC";
   const accent = accentColor || "#B89968";
+  // Oxblood wax palette (matches the photo)
   const sealBase = primaryColor || "#7A1F25";
+  const sealHi = "#A02A30";
+  const sealLo = "#4A0F14";
 
   const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
   const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
 
-  const TOTAL = 2000;
+  const TOTAL = 1400;
 
   const handleOpen = useCallback(() => {
     if (opening) return;
     setOpening(true);
-    setTimeout(() => setHidden(true), TOTAL + 100);
+    setTimeout(() => setHidden(true), TOTAL + 50);
   }, [opening]);
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -58,7 +64,7 @@ export const EnvelopeAnimation = ({
 
   const motes = useMemo(
     () =>
-      Array.from({ length: 14 }).map((_, i) => ({
+      Array.from({ length: 12 }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         top: 50 + Math.random() * 45,
@@ -79,7 +85,25 @@ export const EnvelopeAnimation = ({
             opening ? "is-opening" : ""
           }`}
         >
-          {/* Ambient warm glow */}
+          {/* SVG defs for the wax seal */}
+          <svg className="absolute -z-10 w-0 h-0" aria-hidden="true">
+            <defs>
+              <radialGradient id="env-wax-grad" cx="38%" cy="32%" r="78%">
+                <stop offset="0%" stopColor={sealHi} />
+                <stop offset="55%" stopColor={sealBase} />
+                <stop offset="100%" stopColor={sealLo} />
+              </radialGradient>
+              <filter id="env-wax-noise">
+                <feTurbulence type="fractalNoise" baseFrequency="1.4" numOctaves="2" stitchTiles="stitch" />
+                <feColorMatrix values="0 0 0 0 0.10
+                                       0 0 0 0 0.02
+                                       0 0 0 0 0.04
+                                       0 0 0 0.30 0" />
+              </filter>
+            </defs>
+          </svg>
+
+          {/* Ambient glow + dust */}
           <div
             className="env-glow absolute inset-0 pointer-events-none"
             style={{
@@ -87,8 +111,6 @@ export const EnvelopeAnimation = ({
                 "radial-gradient(circle at 50% 48%, rgba(184,153,104,0.13) 0%, transparent 55%)",
             }}
           />
-
-          {/* Floating dust */}
           <div className="absolute inset-0 pointer-events-none overflow-hidden">
             {motes.map((m) => (
               <span
@@ -111,13 +133,12 @@ export const EnvelopeAnimation = ({
             .env-overlay {
               background: radial-gradient(ellipse at center, hsl(30 18% 12%) 0%, hsl(28 16% 6%) 100%);
               opacity: 1;
-              transition: opacity 500ms cubic-bezier(0.4, 0, 0.2, 1);
             }
             .env-overlay.is-opening {
-              animation: envOverlayOut 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
             @keyframes envOverlayOut {
-              0%, 75% { opacity: 1; }
+              0%, 55% { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
 
@@ -142,50 +163,50 @@ export const EnvelopeAnimation = ({
               filter: drop-shadow(0 36px 60px rgba(0,0,0,0.55));
             }
 
+            /* Whole envelope sinks + fades */
             @keyframes envBody {
-              0%   { transform: scale(1)     translateY(0);   opacity: 1; }
-              7%   { transform: scale(0.98)  translateY(0);   opacity: 1; }
-              18%  { transform: scale(1)     translateY(0);   opacity: 1; }
-              60%  { transform: scale(1)     translateY(14px); opacity: 1; }
-              80%  { transform: scale(0.985) translateY(34px); opacity: 0.5; }
-              100% { transform: scale(0.97)  translateY(56px); opacity: 0; }
+              0%   { transform: scale(1)     translateY(0);    opacity: 1; }
+              10%  { transform: scale(0.985) translateY(0);    opacity: 1; }
+              45%  { transform: scale(1)     translateY(10px); opacity: 1; }
+              80%  { transform: scale(0.98)  translateY(40px); opacity: 0.55; }
+              100% { transform: scale(0.96)  translateY(70px); opacity: 0; }
             }
             .is-opening .env-body {
-              animation: envBody 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* Top portion of the photo (flap+seal) lifts away */
+            /* Wax seal pops slightly then fades with the flap */
+            @keyframes envSealPop {
+              0%   { transform: translate(-50%, -50%) scale(1)    rotate(-3deg); opacity: 1; }
+              12%  { transform: translate(-50%, -50%) scale(1.08) rotate(-3deg); opacity: 1; }
+              30%  { transform: translate(-50%, -50%) scale(0.92) rotate(-3deg); opacity: 0; }
+              100% { transform: translate(-50%, -50%) scale(0.92) rotate(-3deg); opacity: 0; }
+            }
+            .is-opening .env-seal {
+              animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+
+            /* Top portion (flap + seal area of the photo) lifts and fades */
             @keyframes envFlapLift {
-              0%, 14%  { transform: rotateX(0deg); opacity: 1; }
-              45%      { transform: rotateX(-150deg); opacity: 1; }
-              70%      { transform: rotateX(-160deg); opacity: 0.7; }
-              100%     { transform: rotateX(-160deg); opacity: 0; }
+              0%, 14% { transform: rotateX(0deg); opacity: 1; }
+              50%     { transform: rotateX(-150deg); opacity: 1; }
+              75%     { transform: rotateX(-160deg); opacity: 0.5; }
+              100%    { transform: rotateX(-160deg); opacity: 0; }
             }
             .is-opening .env-flap {
-              animation: envFlapLift 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
-            }
-
-            @keyframes envCard {
-              0%, 28%  { transform: translateX(-50%) translateY(0)     scale(1);    opacity: 0; }
-              35%      { opacity: 1; }
-              60%      { transform: translateX(-50%) translateY(-55%)  scale(1.08); opacity: 1; }
-              80%      { transform: translateX(-50%) translateY(-95%)  scale(1.15); opacity: 1; }
-              100%     { transform: translateX(-50%) translateY(-110%) scale(1.18); opacity: 0; }
-            }
-            .is-opening .env-card {
-              animation: envCard 2000ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
             @keyframes envHint {
               0% { opacity: 1; }
-              8%, 100% { opacity: 0; }
+              10%, 100% { opacity: 0; }
             }
-            .is-opening .env-hint { animation: envHint 2000ms ease-out forwards; }
+            .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
               .env-idle, .env-mote, .env-glow,
-              .env-body, .env-flap, .env-card, .env-hint {
+              .env-body, .env-flap, .env-seal, .env-hint {
                 animation: none !important;
               }
             }
@@ -217,7 +238,7 @@ export const EnvelopeAnimation = ({
                 willChange: "transform, opacity",
               }}
             >
-              {/* === Bottom (static) half of the envelope photo === */}
+              {/* === Bottom (static) photo of the envelope === */}
               <div
                 className="absolute inset-0 rounded-[6px] overflow-hidden"
                 style={{
@@ -228,74 +249,7 @@ export const EnvelopeAnimation = ({
                 }}
               />
 
-              {/* === Inner card — slides up from the envelope === */}
-              <div
-                className="env-card absolute left-1/2 rounded-[6px] overflow-hidden"
-                style={{
-                  bottom: "8%",
-                  width: "82%",
-                  height: "70%",
-                  transform: "translateX(-50%) translateY(0) scale(1)",
-                  opacity: 0,
-                  background: `linear-gradient(170deg, ${cardCream} 0%, #F2EAD3 100%)`,
-                  boxShadow:
-                    "0 20px 50px rgba(0,0,0,0.4), 0 4px 8px rgba(0,0,0,0.1), inset 0 0 30px rgba(184,153,104,0.10)",
-                  zIndex: 2,
-                  border: `1px solid ${accent}40`,
-                  willChange: "transform, opacity",
-                  fontFamily: "'Playfair Display', Georgia, serif",
-                }}
-              >
-                {/* Double rule */}
-                <div
-                  className="absolute inset-2 rounded-md pointer-events-none"
-                  style={{ border: `1.5px solid ${accent}aa` }}
-                />
-                <div
-                  className="absolute inset-3.5 rounded-sm pointer-events-none"
-                  style={{ border: `0.5px solid ${accent}66` }}
-                />
-
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
-                  <p
-                    className="uppercase tracking-[0.5em] text-[10px] sm:text-xs mb-3"
-                    style={{ color: `${sealBase}cc`, fontFamily: "Georgia, serif", fontStyle: "italic" }}
-                  >
-                    You're Invited
-                  </p>
-                  <p
-                    className="italic"
-                    style={{
-                      color: sealBase,
-                      fontSize: "clamp(22px, 4.2vw, 36px)",
-                      letterSpacing: "0.03em",
-                      lineHeight: 1.15,
-                    }}
-                  >
-                    {groomName}
-                    <span
-                      style={{
-                        color: accent,
-                        fontFamily: "Georgia, serif",
-                        margin: "0 0.4em",
-                        fontWeight: 300,
-                      }}
-                    >
-                      &amp;
-                    </span>
-                    {brideName}
-                  </p>
-                  <svg className="mt-4" width="120" height="14" viewBox="0 0 120 14" fill="none" aria-hidden="true">
-                    <line x1="2"  y1="7" x2="48"  y2="7" stroke={accent} strokeWidth="0.6" />
-                    <line x1="72" y1="7" x2="118" y2="7" stroke={accent} strokeWidth="0.6" />
-                    <path d="M60 2 C 56 5, 56 9, 60 12 C 64 9, 64 5, 60 2 Z" fill={accent} opacity="0.85" />
-                    <circle cx="50" cy="7" r="1.1" fill={accent} />
-                    <circle cx="70" cy="7" r="1.1" fill={accent} />
-                  </svg>
-                </div>
-              </div>
-
-              {/* === Top half of the photo (flap + wax seal) — lifts away on open === */}
+              {/* === Top portion of the photo (flap area) — lifts away on open === */}
               <div
                 className="env-flap absolute top-0 left-0 right-0 overflow-hidden rounded-t-[6px]"
                 style={{
@@ -306,56 +260,117 @@ export const EnvelopeAnimation = ({
                   zIndex: 3,
                   willChange: "transform, opacity",
                   backfaceVisibility: "hidden",
-                  // Use the same image but show only the top portion of the envelope
                   backgroundImage: `url(${envelopeImage})`,
                   backgroundSize: "100% auto",
                   backgroundPosition: "top center",
                   backgroundRepeat: "no-repeat",
                   boxShadow: "inset 0 -10px 22px rgba(0,0,0,0.10)",
                 }}
+              />
+
+              {/* === Single dynamic wax seal — fully covers the printed FM === */}
+              <div
+                className="env-seal absolute pointer-events-none"
+                style={{
+                  left: "50%",
+                  top: "48%",
+                  transform: "translate(-50%, -50%) rotate(-3deg)",
+                  width: "32%",
+                  aspectRatio: "0.86 / 1",
+                  zIndex: 4,
+                  willChange: "transform, opacity",
+                  filter:
+                    "drop-shadow(0 6px 10px rgba(0,0,0,0.45)) drop-shadow(0 2px 3px rgba(0,0,0,0.35))",
+                }}
               >
-                {/* Dynamic monogram overlay — masks the printed "FM" on the wax seal */}
-                <div
-                  className="absolute pointer-events-none flex items-center justify-center"
-                  style={{
-                    // Position over the wax-seal monogram area in the photo
-                    left: "50%",
-                    top: "78%",
-                    transform: "translate(-50%, -50%)",
-                    width: "26%",
-                    aspectRatio: "1.1 / 1",
-                  }}
+                <svg
+                  viewBox="0 0 100 116"
+                  className="w-full h-full"
+                  aria-hidden="true"
                 >
-                  {/* Soft wax-tone wash to hide the original "FM" letters underneath */}
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      background:
-                        "radial-gradient(ellipse at 45% 40%, rgba(132,32,38,0.95) 0%, rgba(110,24,30,0.92) 55%, rgba(95,20,26,0.85) 100%)",
-                      borderRadius: "50%",
-                      filter: "blur(0.4px)",
-                      mixBlendMode: "multiply",
-                      opacity: 0.92,
-                    }}
+                  {/* Irregular wax blob shape */}
+                  <path
+                    d="M50 4
+                       C 72 4, 94 18, 95 44
+                       C 96 64, 92 86, 78 102
+                       C 68 112, 56 114, 50 113
+                       C 44 114, 30 112, 20 100
+                       C 6 84, 3 62, 5 42
+                       C 8 18, 28 4, 50 4 Z"
+                    fill="url(#env-wax-grad)"
                   />
-                  {/* Dynamic embossed initials */}
-                  <span
-                    className="relative"
+                  {/* Specular highlight */}
+                  <ellipse
+                    cx="38" cy="28" rx="22" ry="10"
+                    fill="rgba(255,210,200,0.35)"
+                    style={{ filter: "blur(2px)" }}
+                  />
+                  {/* Subtle wax surface noise */}
+                  <path
+                    d="M50 4
+                       C 72 4, 94 18, 95 44
+                       C 96 64, 92 86, 78 102
+                       C 68 112, 56 114, 50 113
+                       C 44 114, 30 112, 20 100
+                       C 6 84, 3 62, 5 42
+                       C 8 18, 28 4, 50 4 Z"
+                    fill="white"
+                    style={{ filter: "url(#env-wax-noise)", mixBlendMode: "overlay", opacity: 0.55 }}
+                  />
+                  {/* Outer debossed oval ring */}
+                  <ellipse
+                    cx="50" cy="58" rx="32" ry="40"
+                    fill="none"
+                    stroke={sealLo}
+                    strokeWidth="1.4"
+                    opacity="0.85"
+                  />
+                  <ellipse
+                    cx="50" cy="58" rx="32" ry="40"
+                    fill="none"
+                    stroke="rgba(255,180,170,0.35)"
+                    strokeWidth="0.5"
+                    transform="translate(0 0.8)"
+                  />
+                  {/* Inner thinner ring */}
+                  <ellipse
+                    cx="50" cy="58" rx="27" ry="34"
+                    fill="none"
+                    stroke={sealLo}
+                    strokeWidth="0.7"
+                    opacity="0.65"
+                  />
+                  {/* Embossed dynamic monogram */}
+                  <text
+                    x="50"
+                    y="68"
+                    textAnchor="middle"
+                    fill={sealLo}
                     style={{
-                      color: "#5A1218",
                       fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
                       fontWeight: 600,
-                      fontStyle: "italic",
-                      fontSize: "clamp(22px, 5.5vw, 52px)",
-                      letterSpacing: "0.02em",
-                      lineHeight: 1,
-                      textShadow:
-                        "0 1px 0 rgba(255,180,170,0.35), 0 -1px 1px rgba(0,0,0,0.55), 0 0 6px rgba(0,0,0,0.20)",
+                      fontSize: "32px",
+                      letterSpacing: "0.5px",
                     }}
                   >
                     {groomInitial}{brideInitial}
-                  </span>
-                </div>
+                  </text>
+                  {/* Highlight on letters for embossed feel */}
+                  <text
+                    x="50"
+                    y="67.4"
+                    textAnchor="middle"
+                    fill="rgba(255,180,170,0.25)"
+                    style={{
+                      fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
+                      fontWeight: 600,
+                      fontSize: "32px",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {groomInitial}{brideInitial}
+                  </text>
+                </svg>
               </div>
             </div>
 
