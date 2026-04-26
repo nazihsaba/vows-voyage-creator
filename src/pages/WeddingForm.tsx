@@ -1729,6 +1729,66 @@ const WeddingForm = () => {
                 </div>
               )}
 
+              {/* Social Preview Image (for WhatsApp / Facebook / Instagram link previews) */}
+              <div className="space-y-2">
+                <Label htmlFor="social_preview">Social Preview Image</Label>
+                <p className="text-sm text-muted-foreground">
+                  This image appears when your invitation link is shared on WhatsApp, Facebook, Instagram, etc. If you
+                  don't upload one, the main wedding photo will be used.
+                </p>
+                <div className="flex flex-col gap-4">
+                  {socialPreviewFile || socialPreviewUrl ? (
+                    <div className="relative w-full max-w-sm mx-auto aspect-[1200/630] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                      <img
+                        src={socialPreviewFile ? URL.createObjectURL(socialPreviewFile) : socialPreviewUrl}
+                        alt="Social preview"
+                        loading="lazy"
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          // Hide if the existing image doesn't exist yet
+                          (e.currentTarget.parentElement as HTMLElement).style.display = "none";
+                          setSocialPreviewUrl("");
+                        }}
+                      />
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        size="icon"
+                        className="absolute top-2 right-2"
+                        onClick={() => {
+                          setSocialPreviewFile(null);
+                          setSocialPreviewUrl("");
+                        }}
+                      >
+                        <X className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  ) : (
+                    <label
+                      htmlFor="social_preview"
+                      className="flex flex-col items-center justify-center w-full aspect-[1200/630] max-w-sm mx-auto border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                    >
+                      <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">Click to upload preview image</span>
+                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG — 1200×630 recommended</span>
+                    </label>
+                  )}
+                  <Input
+                    id="social_preview"
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (file) {
+                        setSocialPreviewFile(file);
+                        setSocialPreviewUrl("");
+                      }
+                    }}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+
               <div className="space-y-1.5">
                 <Label htmlFor="slug" className="text-sm font-medium">
                   Custom URL Slug
