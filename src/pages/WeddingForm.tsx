@@ -570,7 +570,10 @@ const WeddingForm = () => {
 
       // Trim and Title Case name fields before persisting
       const toTitleCase = (s: string) =>
-        s.trim().replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        s
+          .trim()
+          .replace(/\s+/g, " ")
+          .replace(/\b\w/g, (c) => c.toUpperCase());
       formData.groom_name = toTitleCase(formData.groom_name);
       formData.bride_name = toTitleCase(formData.bride_name);
       formData.groom_family = formData.groom_family ? toTitleCase(formData.groom_family) : formData.groom_family;
@@ -654,12 +657,10 @@ const WeddingForm = () => {
         // User uploaded a dedicated social preview image — compress to ≤300KB for WhatsApp, store as main.jpg
         try {
           const compressed = await compressSocialPreview(socialPreviewFile);
-          await supabase.storage
-            .from("invitation-images")
-            .upload(`invites/${finalSlug}/main.jpg`, compressed, {
-              contentType: "image/jpeg",
-              upsert: true,
-            });
+          await supabase.storage.from("invitation-images").upload(`invites/${finalSlug}/main.jpg`, compressed, {
+            contentType: "image/jpeg",
+            upsert: true,
+          });
         } catch (err) {
           console.warn("Social preview upload failed (non-blocking):", err);
         }
@@ -855,7 +856,8 @@ const WeddingForm = () => {
                       Enable Envelope Animation
                     </Label>
                     <p className="text-xs text-muted-foreground mt-0.5">
-                      Guests tap an elegant envelope with a wax seal showing your initials before the invitation appears.
+                      Guests tap an elegant envelope with a wax seal showing your initials before the invitation
+                      appears.
                     </p>
                   </div>
                 </div>
@@ -1267,18 +1269,14 @@ const WeddingForm = () => {
               <div className="space-y-2">
                 <Label htmlFor="social_preview">Social Preview Image</Label>
                 <p className="text-sm text-muted-foreground">
-                  This image appears when your invitation link is shared on WhatsApp, Facebook, Instagram, etc.
-                  Recommended size: 1200×630px. If you don't upload one, the main wedding photo will be used.
+                  This image appears when your invitation link is shared on WhatsApp, Facebook, Instagram, etc. If you
+                  don't upload one, the main wedding photo will be used.
                 </p>
                 <div className="flex flex-col gap-4">
                   {socialPreviewFile || socialPreviewUrl ? (
                     <div className="relative w-full max-w-sm mx-auto aspect-[1200/630] rounded-lg overflow-hidden border-2 border-border bg-muted">
                       <img
-                        src={
-                          socialPreviewFile
-                            ? URL.createObjectURL(socialPreviewFile)
-                            : socialPreviewUrl
-                        }
+                        src={socialPreviewFile ? URL.createObjectURL(socialPreviewFile) : socialPreviewUrl}
                         alt="Social preview"
                         loading="lazy"
                         className="w-full h-full object-cover"
