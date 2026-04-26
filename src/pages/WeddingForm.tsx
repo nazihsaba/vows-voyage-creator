@@ -15,6 +15,7 @@ import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
+import { compressSocialPreview } from "@/lib/compressSocialPreview";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
@@ -650,11 +651,12 @@ const WeddingForm = () => {
       // Upload social preview image to invitation-images bucket for link previews (WhatsApp, Facebook, etc.)
       const finalSlug = slug;
       if (socialPreviewFile) {
-        // User uploaded a dedicated social preview image — always store as main.jpg
+        // User uploaded a dedicated social preview image — compress to ≤300KB for WhatsApp, store as main.jpg
         try {
+          const compressed = await compressSocialPreview(socialPreviewFile);
           await supabase.storage
             .from("invitation-images")
-            .upload(`invites/${finalSlug}/main.jpg`, socialPreviewFile, {
+            .upload(`invites/${finalSlug}/main.jpg`, compressed, {
               contentType: "image/jpeg",
               upsert: true,
             });
