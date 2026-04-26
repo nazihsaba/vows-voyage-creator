@@ -161,13 +161,16 @@ export const EnvelopeAnimation = ({
             }
 
             /* === Flap === */
+            /* Rotates around its top hinge. We stop at ~155° (not 180°) so the flap
+               leans back behind the envelope without floating disconnected above it.
+               Slight Z translate keeps it visually attached to the body. */
             @keyframes envFlap {
-              0%   { transform: rotateX(0deg); }
-              8%   { transform: rotateX(-2deg); }     /* tiny lift during anticipation */
-              15%  { transform: rotateX(0deg); }
-              55%  { transform: rotateX(-182deg); }   /* slight overshoot */
-              65%  { transform: rotateX(-178deg); }   /* settle */
-              100% { transform: rotateX(-178deg); }
+              0%   { transform: translateZ(0) rotateX(0deg); }
+              8%   { transform: translateZ(0) rotateX(-3deg); }      /* anticipation lift */
+              18%  { transform: translateZ(0) rotateX(0deg); }
+              55%  { transform: translateZ(-2px) rotateX(-158deg); } /* gentle overshoot */
+              70%  { transform: translateZ(-2px) rotateX(-152deg); } /* settle back */
+              100% { transform: translateZ(-2px) rotateX(-152deg); }
             }
             .is-opening .env-flap {
               animation: envFlap 2600ms cubic-bezier(0.25, 1, 0.5, 1) forwards;
@@ -386,18 +389,32 @@ export const EnvelopeAnimation = ({
                   </svg>
                 </div>
 
-                {/* Inner face */}
+                {/* Inner face — slightly darker to read as the back of the flap */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(180deg)",
-                    background: `linear-gradient(170deg, ${paperInner} 0%, ${paperFront} 100%)`,
+                    background: `linear-gradient(170deg, ${paperBack} 0%, ${paperShadow} 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 12px 24px rgba(0,0,0,0.08)",
+                    boxShadow: "inset 0 18px 30px rgba(0,0,0,0.18)",
                   }}
                 />
               </div>
+
+              {/* Hinge shadow that appears across the top of the envelope as the flap folds back,
+                  reinforcing visual connection between the open flap and the body. */}
+              <div
+                className="absolute left-0 right-0 top-0 pointer-events-none rounded-t-2xl"
+                style={{
+                  height: "12%",
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.06) 60%, transparent 100%)",
+                  opacity: opening ? 1 : 0,
+                  transition: "opacity 600ms cubic-bezier(0.4, 0, 0.2, 1) 350ms",
+                  zIndex: 2,
+                }}
+              />
 
               {/* === Wax seal monogram === */}
               <div
