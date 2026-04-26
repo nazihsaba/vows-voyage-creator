@@ -9,13 +9,13 @@ interface EnvelopeAnimationProps {
 }
 
 /**
- * Realistic linen/kraft envelope with a modernized wax seal.
+ * Photographic ivory wedding envelope with a prominent oxblood wax seal.
  *
- * Visuals:
- *  - Natural linen-weave paper rendered with layered SVG noise + diagonal fiber lines
- *  - Subtle stitched edge along the envelope perimeter
- *  - Slightly warm cream/sand tones with realistic micro-shadows along folds
- *  - Modern compact wax seal: smaller, flatter, refined serif monogram, thin foil ring
+ * Inspired by a real photographed envelope:
+ *  - Soft warm ivory cotton paper with felt-like fiber grain
+ *  - V-shaped front flap that meets in the center, with both diagonals visible
+ *  - Large oval oxblood wax seal with embossed inner oval ring + serif monogram
+ *  - Realistic edge highlights along the diagonal folds
  *
  * Animation: single CSS @keyframes timeline per element, GPU-composited.
  */
@@ -32,15 +32,17 @@ export const EnvelopeAnimation = ({
   const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
   const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
 
-  // Linen / natural paper palette
-  const linenLight = "#EFE6D2"; // sun-bleached linen
-  const linenMid = "#E2D5B8";   // mid linen
-  const linenDeep = "#C9B894";  // shadowed fold
-  const linenInner = "#BFAD86"; // back-of-flap (paper thickness)
+  // Soft ivory / cream cotton paper palette (matches reference photo)
+  const paperLight = "#F1E8D6";   // top highlight
+  const paperMid = "#E8DCC4";     // body
+  const paperDeep = "#D9C9AB";    // edge / fold shadow
+  const paperFlapInner = "#C9B894"; // back-of-flap (paper thickness)
   const cardCream = "#FBF6EC";
-  const stitch = "#A89572";
-  const accent = accentColor || "#B89968";   // soft antique gold
-  const sealColor = primaryColor || "#5C1A20"; // deep oxblood wax
+  const accent = accentColor || "#B89968";    // antique gold accent
+  // Oxblood / burgundy wax (matches reference)
+  const sealBase = primaryColor || "#7A1F25";
+  const sealHi = "#9C2A30";
+  const sealLo = "#4A0F14";
 
   const TOTAL = 2000;
 
@@ -90,29 +92,29 @@ export const EnvelopeAnimation = ({
             opening ? "is-opening" : ""
           }`}
         >
-          {/* SVG filters: linen weave + fine paper grain */}
+          {/* SVG filters: cotton fiber + fine paper grain + wax bevel */}
           <svg className="absolute -z-10 w-0 h-0" aria-hidden="true">
             <defs>
-              {/* Coarser fiber for linen weave */}
-              <filter id="env-linen-weave">
+              {/* Cotton fiber felt texture */}
+              <filter id="env-fiber">
                 <feTurbulence
                   type="fractalNoise"
-                  baseFrequency="0.65 1.4"
+                  baseFrequency="0.9"
                   numOctaves="2"
                   stitchTiles="stitch"
                 />
                 <feColorMatrix
-                  values="0 0 0 0 0.45
-                          0 0 0 0 0.36
-                          0 0 0 0 0.22
-                          0 0 0 0.32 0"
+                  values="0 0 0 0 0.55
+                          0 0 0 0 0.46
+                          0 0 0 0 0.32
+                          0 0 0 0.28 0"
                 />
               </filter>
               {/* Fine grain overlay */}
               <filter id="env-grain">
                 <feTurbulence
                   type="fractalNoise"
-                  baseFrequency="1.6"
+                  baseFrequency="2.2"
                   numOctaves="2"
                   stitchTiles="stitch"
                 />
@@ -120,7 +122,22 @@ export const EnvelopeAnimation = ({
                   values="0 0 0 0 0.50
                           0 0 0 0 0.42
                           0 0 0 0 0.28
-                          0 0 0 0.18 0"
+                          0 0 0 0.14 0"
+                />
+              </filter>
+              {/* Wax surface micro-texture */}
+              <filter id="wax-grain">
+                <feTurbulence
+                  type="fractalNoise"
+                  baseFrequency="1.6"
+                  numOctaves="2"
+                  stitchTiles="stitch"
+                />
+                <feColorMatrix
+                  values="0 0 0 0 0.10
+                          0 0 0 0 0.02
+                          0 0 0 0 0.04
+                          0 0 0 0.35 0"
                 />
               </filter>
             </defs>
@@ -222,10 +239,10 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envSeal {
-              0%   { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-              4%   { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
-              16%  { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
-              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45); }
+              0%   { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(-4deg); }
+              4%   { opacity: 1; transform: translate(-50%, -50%) scale(1.05) rotate(-4deg); }
+              16%  { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(-4deg); }
+              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.45) rotate(-4deg); }
             }
             .is-opening .env-seal {
               animation: envSeal 2000ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -272,7 +289,7 @@ export const EnvelopeAnimation = ({
             style={{
               perspective: "1500px",
               width: "min(88vw, 540px)",
-              aspectRatio: "1.55 / 1",
+              aspectRatio: "1.5 / 1",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -293,70 +310,73 @@ export const EnvelopeAnimation = ({
                 willChange: "transform, opacity",
               }}
             >
-              {/* === Envelope body (linen paper) === */}
+              {/* === Envelope body (ivory cotton paper) === */}
               <div
-                className="absolute inset-0 rounded-[14px] overflow-hidden"
+                className="absolute inset-0 rounded-[6px] overflow-hidden"
                 style={{
                   background: `
-                    radial-gradient(ellipse at 30% 25%, rgba(255,255,255,0.35) 0%, transparent 55%),
-                    linear-gradient(160deg, ${linenLight} 0%, ${linenMid} 70%, ${linenDeep} 100%)
+                    radial-gradient(ellipse at 50% 30%, rgba(255,253,245,0.55) 0%, transparent 60%),
+                    linear-gradient(165deg, ${paperLight} 0%, ${paperMid} 55%, ${paperDeep} 100%)
                   `,
                   boxShadow:
-                    "inset 0 0 60px rgba(80,55,20,0.10), inset 0 -3px 0 rgba(0,0,0,0.06)",
+                    "inset 0 0 80px rgba(120,90,40,0.10), inset 0 -2px 0 rgba(0,0,0,0.05)",
                 }}
               >
-                {/* Linen weave */}
+                {/* Cotton fiber */}
                 <div
-                  className="absolute inset-0 opacity-55 mix-blend-multiply pointer-events-none"
-                  style={{ filter: "url(#env-linen-weave)" }}
+                  className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
+                  style={{ filter: "url(#env-fiber)" }}
                 />
                 {/* Fine grain on top */}
                 <div
-                  className="absolute inset-0 opacity-30 mix-blend-multiply pointer-events-none"
+                  className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
                   style={{ filter: "url(#env-grain)" }}
                 />
-                {/* Subtle warm sheen along the diagonal */}
+                {/* Soft warm sheen */}
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
                     background:
-                      "linear-gradient(135deg, rgba(255,250,235,0.25) 0%, transparent 35%, transparent 65%, rgba(0,0,0,0.06) 100%)",
+                      "linear-gradient(135deg, rgba(255,250,235,0.20) 0%, transparent 40%, transparent 65%, rgba(0,0,0,0.05) 100%)",
                   }}
                 />
-                {/* Diagonal V fold lines (where flap meets body) */}
+
+                {/* === Bottom V — visible diagonals from corners up to center === */}
                 <svg
                   className="absolute inset-0 w-full h-full pointer-events-none"
-                  viewBox="0 0 155 100"
+                  viewBox="0 0 150 100"
                   preserveAspectRatio="none"
                 >
-                  <line x1="0"   y1="100" x2="77.5" y2="48" stroke="#8E7C58" strokeWidth="0.3" opacity="0.55" />
-                  <line x1="155" y1="100" x2="77.5" y2="48" stroke="#8E7C58" strokeWidth="0.3" opacity="0.55" />
+                  {/* soft shaded triangle below the V (pocket back) */}
+                  <polygon
+                    points="0,100 150,100 75,50"
+                    fill="rgba(120,90,40,0.06)"
+                  />
+                  {/* fold lines: bottom-left -> center, bottom-right -> center */}
+                  <line x1="0"   y1="100" x2="75" y2="50" stroke="#8B7650" strokeWidth="0.35" opacity="0.55" />
+                  <line x1="150" y1="100" x2="75" y2="50" stroke="#8B7650" strokeWidth="0.35" opacity="0.55" />
+                  {/* highlight just above each fold line */}
+                  <line x1="0"   y1="99.4" x2="75" y2="49.4" stroke="#FFF6E2" strokeWidth="0.25" opacity="0.55" />
+                  <line x1="150" y1="99.4" x2="75" y2="49.4" stroke="#FFF6E2" strokeWidth="0.25" opacity="0.55" />
                 </svg>
+
                 {/* Inner pocket shadow at the bottom (where the card sits) */}
                 <div
                   className="absolute left-0 right-0 bottom-0 pointer-events-none"
                   style={{
-                    height: "40%",
+                    height: "45%",
                     background:
-                      "linear-gradient(to top, rgba(60,40,15,0.18) 0%, rgba(60,40,15,0.06) 60%, transparent 100%)",
-                  }}
-                />
-                {/* Stitched edge — dashed border just inside the envelope */}
-                <div
-                  className="absolute inset-[6px] rounded-[10px] pointer-events-none"
-                  style={{
-                    border: `1px dashed ${stitch}`,
-                    opacity: 0.45,
+                      "linear-gradient(to top, rgba(80,55,20,0.14) 0%, rgba(80,55,20,0.05) 55%, transparent 100%)",
                   }}
                 />
               </div>
 
               {/* === Inner card === */}
               <div
-                className="env-card absolute left-1/2 rounded-[10px] overflow-hidden"
+                className="env-card absolute left-1/2 rounded-[6px] overflow-hidden"
                 style={{
                   bottom: "8%",
-                  width: "82%",
+                  width: "84%",
                   height: "78%",
                   transform: "translateX(-50%) translateY(0) scale(1)",
                   opacity: 0,
@@ -387,14 +407,14 @@ export const EnvelopeAnimation = ({
                 <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6">
                   <p
                     className="uppercase tracking-[0.5em] text-[10px] sm:text-xs mb-3"
-                    style={{ color: `${sealColor}cc`, fontFamily: "Georgia, serif", fontStyle: "italic" }}
+                    style={{ color: `${sealBase}cc`, fontFamily: "Georgia, serif", fontStyle: "italic" }}
                   >
                     You're Invited
                   </p>
                   <p
                     className="italic"
                     style={{
-                      color: sealColor,
+                      color: sealBase,
                       fontSize: "clamp(22px, 4.2vw, 36px)",
                       letterSpacing: "0.03em",
                       lineHeight: 1.15,
@@ -425,7 +445,7 @@ export const EnvelopeAnimation = ({
 
               {/* === Hinge crescent shadow === */}
               <div
-                className="env-hinge absolute left-0 right-0 top-0 pointer-events-none rounded-t-[14px]"
+                className="env-hinge absolute left-0 right-0 top-0 pointer-events-none rounded-t-[6px]"
                 style={{
                   height: "14%",
                   background:
@@ -447,28 +467,37 @@ export const EnvelopeAnimation = ({
                   willChange: "transform",
                 }}
               >
-                {/* Outer face */}
+                {/* Outer face — V-shaped flap pointing down to center */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
-                    background: `linear-gradient(170deg, ${linenLight} 0%, ${linenMid} 100%)`,
+                    background: `linear-gradient(180deg, ${paperLight} 0%, ${paperMid} 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
-                    boxShadow: "inset 0 -14px 26px rgba(0,0,0,0.10)",
+                    boxShadow: "inset 0 -10px 22px rgba(0,0,0,0.10)",
                   }}
                 >
-                  {/* Linen weave on flap */}
+                  {/* Cotton fiber on flap */}
                   <div
-                    className="absolute inset-0 opacity-55 mix-blend-multiply pointer-events-none"
+                    className="absolute inset-0 opacity-50 mix-blend-multiply pointer-events-none"
                     style={{
-                      filter: "url(#env-linen-weave)",
+                      filter: "url(#env-fiber)",
                       clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     }}
                   />
                   <div
-                    className="absolute inset-0 opacity-30 mix-blend-multiply pointer-events-none"
+                    className="absolute inset-0 opacity-25 mix-blend-multiply pointer-events-none"
                     style={{
                       filter: "url(#env-grain)",
+                      clipPath: "polygon(0 0, 100% 0, 50% 100%)",
+                    }}
+                  />
+                  {/* Soft directional shading on the V faces */}
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      background:
+                        "linear-gradient(90deg, rgba(255,250,235,0.25) 0%, rgba(0,0,0,0.06) 49%, rgba(0,0,0,0.06) 51%, rgba(255,250,235,0.10) 100%)",
                       clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     }}
                   />
@@ -489,84 +518,141 @@ export const EnvelopeAnimation = ({
                       }}
                     />
                   </div>
-                  {/* Stitched edge tracing flap */}
+                  {/* Crisp edge highlight along the two diagonals */}
                   <svg
                     className="absolute inset-0 w-full h-full pointer-events-none"
                     viewBox="0 0 100 60"
                     preserveAspectRatio="none"
                   >
-                    <polyline
-                      points="3,3 50,57 97,3"
-                      fill="none"
-                      stroke={stitch}
-                      strokeWidth="0.35"
-                      strokeDasharray="1.2 1"
-                      opacity="0.55"
-                    />
+                    {/* darker fold line */}
+                    <line x1="0" y1="0" x2="50" y2="60" stroke="#8B7650" strokeWidth="0.35" opacity="0.45" />
+                    <line x1="100" y1="0" x2="50" y2="60" stroke="#8B7650" strokeWidth="0.35" opacity="0.45" />
+                    {/* bright paper edge */}
+                    <line x1="0.4" y1="0" x2="50" y2="59.4" stroke="#FFF8E6" strokeWidth="0.25" opacity="0.7" />
+                    <line x1="99.6" y1="0" x2="50" y2="59.4" stroke="#FFF8E6" strokeWidth="0.25" opacity="0.7" />
                   </svg>
                 </div>
 
-                {/* Inner face — darker linen for paper thickness */}
+                {/* Inner face — darker paper for back-of-flap thickness */}
                 <div
                   className="absolute inset-0"
                   style={{
                     backfaceVisibility: "hidden",
                     transform: "rotateX(180deg)",
-                    background: `linear-gradient(170deg, ${linenInner} 0%, #A89472 100%)`,
+                    background: `linear-gradient(170deg, ${paperFlapInner} 0%, #B5A07C 100%)`,
                     clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     boxShadow: "inset 0 18px 32px rgba(0,0,0,0.22)",
                   }}
                 >
                   <div
-                    className="absolute inset-0 opacity-65 mix-blend-multiply pointer-events-none"
+                    className="absolute inset-0 opacity-60 mix-blend-multiply pointer-events-none"
                     style={{
-                      filter: "url(#env-linen-weave)",
+                      filter: "url(#env-fiber)",
                       clipPath: "polygon(0 0, 100% 0, 50% 100%)",
                     }}
                   />
                 </div>
               </div>
 
-              {/* === Modern compact wax seal === */}
+              {/* === Oxblood oval wax seal (matches reference photo) === */}
               <div
                 className="env-seal absolute left-1/2 top-1/2"
                 style={{
-                  width: "16%",
-                  aspectRatio: "1 / 1",
+                  width: "26%",
+                  aspectRatio: "0.82 / 1",
                   zIndex: 4,
-                  transform: "translate(-50%, -50%) scale(1)",
+                  transform: "translate(-50%, -50%) scale(1) rotate(-4deg)",
                   pointerEvents: "none",
                   willChange: "transform, opacity",
+                  filter: "drop-shadow(0 8px 14px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.4))",
                 }}
               >
+                {/* Wax blob — irregular oval */}
                 <div
-                  className="w-full h-full rounded-full flex items-center justify-center relative"
+                  className="absolute inset-0"
                   style={{
-                    background: `radial-gradient(circle at 35% 30%, ${sealColor}f0 0%, ${sealColor} 60%, ${sealColor}c0 100%)`,
-                    boxShadow:
-                      "inset -3px -5px 9px rgba(0,0,0,0.40), inset 3px 4px 8px rgba(255,255,255,0.18), 0 5px 12px rgba(0,0,0,0.45)",
+                    background: `
+                      radial-gradient(ellipse at 35% 28%, ${sealHi} 0%, ${sealBase} 45%, ${sealLo} 100%)
+                    `,
+                    borderRadius: "48% 52% 47% 53% / 46% 48% 52% 54%",
+                    boxShadow: `
+                      inset -6px -8px 14px rgba(0,0,0,0.55),
+                      inset 5px 6px 10px rgba(255,180,170,0.25),
+                      inset 0 0 30px rgba(0,0,0,0.20)
+                    `,
                   }}
                 >
-                  {/* Thin foil ring */}
+                  {/* Wax surface micro-grain */}
                   <div
-                    className="absolute inset-[10%] rounded-full pointer-events-none"
+                    className="absolute inset-0 opacity-70 mix-blend-overlay pointer-events-none"
                     style={{
-                      border: `0.75px solid ${accent}`,
-                      opacity: 0.85,
+                      filter: "url(#wax-grain)",
+                      borderRadius: "48% 52% 47% 53% / 46% 48% 52% 54%",
                     }}
                   />
-                  <span
-                    className="relative"
+                  {/* Specular highlight */}
+                  <div
+                    className="absolute pointer-events-none"
                     style={{
-                      color: accent,
-                      fontFamily: "'Playfair Display', Georgia, serif",
-                      fontSize: "clamp(11px, 2.6vw, 22px)",
-                      letterSpacing: "0.04em",
-                      textShadow: "0 1px 1px rgba(0,0,0,0.45)",
+                      top: "10%",
+                      left: "20%",
+                      width: "45%",
+                      height: "30%",
+                      background:
+                        "radial-gradient(ellipse, rgba(255,210,200,0.45) 0%, transparent 70%)",
+                      filter: "blur(2px)",
                     }}
-                  >
-                    {groomInitial}<span style={{ opacity: 0.7, margin: "0 0.15em" }}>·</span>{brideInitial}
-                  </span>
+                  />
+
+                  {/* Embossed inner oval ring (debossed into wax) */}
+                  <div
+                    className="absolute"
+                    style={{
+                      top: "14%",
+                      left: "16%",
+                      right: "16%",
+                      bottom: "14%",
+                      borderRadius: "50%",
+                      border: `1.5px solid ${sealLo}`,
+                      boxShadow: `
+                        inset 0 1px 1.5px rgba(0,0,0,0.45),
+                        0 1px 0 rgba(255,180,170,0.25)
+                      `,
+                    }}
+                  />
+                  {/* Second thinner ring (matching reference) */}
+                  <div
+                    className="absolute"
+                    style={{
+                      top: "18%",
+                      left: "21%",
+                      right: "21%",
+                      bottom: "18%",
+                      borderRadius: "50%",
+                      border: `0.75px solid ${sealLo}`,
+                      opacity: 0.7,
+                    }}
+                  />
+
+                  {/* Embossed serif monogram */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <span
+                      style={{
+                        color: sealLo,
+                        fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif",
+                        fontWeight: 600,
+                        fontSize: "clamp(20px, 4.8vw, 44px)",
+                        letterSpacing: "-0.02em",
+                        lineHeight: 1,
+                        textShadow: `
+                          0 1px 0 rgba(255,180,170,0.30),
+                          0 -1px 1px rgba(0,0,0,0.55)
+                        `,
+                      }}
+                    >
+                      {groomInitial}{brideInitial}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
