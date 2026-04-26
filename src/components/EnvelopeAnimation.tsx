@@ -430,6 +430,9 @@ export const EnvelopeAnimation = ({
                          C 26 18, 42 7, 60 6 Z"
                     />
                     <rect id="seal-pill" x="26" y="30" width="68" height="80" rx="32" ry="32" />
+                    <clipPath id="seal-clip">
+                      <use href="#seal-shape" />
+                    </clipPath>
                   </defs>
 
                   <use href="#seal-shape" fill="url(#seal-fill)" />
