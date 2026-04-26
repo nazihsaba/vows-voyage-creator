@@ -230,7 +230,7 @@ const ManageLinks = () => {
   // ensuring a consistent sharing experience whether the user clicks "Send via
   // WhatsApp" or copies the link and pastes it manually elsewhere.
   const buildInvitationMessage = (linkName: string, inviteUrl: string) => {
-    return `Dear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nCheck your invitation here:\n${inviteUrl}\n\nWe can't wait to see you! 💕`;
+    return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our wedding! ❤️\n\nWe would be honored to have you with us on this beautiful day. ✨\n\nWe can't wait to see you! 💕`;
   };
 
   const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
