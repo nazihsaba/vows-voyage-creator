@@ -381,7 +381,7 @@ export const EnvelopeAnimation = ({
                   zIndex: 4,
                   willChange: "transform, opacity",
                   filter:
-                    "drop-shadow(0 14px 18px rgba(0,0,0,0.55)) drop-shadow(0 4px 6px rgba(0,0,0,0.45))",
+                    "drop-shadow(0 6px 8px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               >
                 <svg viewBox="0 0 120 140" className="w-full h-full" aria-hidden="true">
@@ -411,15 +411,12 @@ export const EnvelopeAnimation = ({
                     <filter id="seal-deboss" x="-30%" y="-30%" width="160%" height="160%">
                       <feGaussianBlur stdDeviation="0.6" />
                     </filter>
-                    <filter id="seal-grain">
+                    <filter id="seal-grain" x="0%" y="0%" width="100%" height="100%">
                       <feTurbulence type="fractalNoise" baseFrequency="2.4" numOctaves="2" stitchTiles="stitch" />
                       <feColorMatrix values="0 0 0 0 0.10
                                              0 0 0 0 0.05
                                              0 0 0 0 0.05
                                              0 0 0 0.18 0" />
-                    </filter>
-                    <filter id="seal-cast" x="-40%" y="-40%" width="180%" height="180%">
-                      <feGaussianBlur stdDeviation="2" />
                     </filter>
 
                     <path
@@ -433,15 +430,19 @@ export const EnvelopeAnimation = ({
                          C 26 18, 42 7, 60 6 Z"
                     />
                     <rect id="seal-pill" x="26" y="30" width="68" height="80" rx="32" ry="32" />
+                    <clipPath id="seal-clip">
+                      <use href="#seal-shape" />
+                    </clipPath>
                   </defs>
 
-                  <use href="#seal-shape" fill="rgba(0,0,0,0.4)" transform="translate(2 5)" style={{ filter: "url(#seal-cast)" }} />
                   <use href="#seal-shape" fill="url(#seal-fill)" />
                   <use href="#seal-shape" fill="url(#seal-shadow)" style={{ mixBlendMode: "multiply" }} />
                   <use href="#seal-shape" fill="url(#seal-rim)" style={{ mixBlendMode: "screen" }} />
                   <use href="#seal-shape" fill="url(#seal-spec)" />
-                  <use href="#seal-shape" fill="white" style={{ filter: "url(#seal-grain)", mixBlendMode: "overlay", opacity: 0.5 }} />
-
+                  {/* Surface grain — clipped to shape via clipPath to avoid bleed */}
+                  <g clipPath="url(#seal-clip)">
+                    <use href="#seal-shape" fill="black" style={{ filter: "url(#seal-grain)", mixBlendMode: "soft-light", opacity: 0.6 }} />
+                  </g>
                   {/* Pill deboss ring */}
                   <use href="#seal-pill" fill="none" stroke={waxDeep} strokeWidth="1.4" opacity="0.7" style={{ filter: "url(#seal-deboss)" }} />
                   <rect x="29" y="33" width="62" height="74" rx="29" ry="29" fill="none" stroke={waxDeep} strokeWidth="0.6" opacity="0.55" />
