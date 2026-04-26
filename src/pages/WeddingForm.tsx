@@ -15,6 +15,7 @@ import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
+import { compressSocialPreview } from "@/lib/compressSocialPreview";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
