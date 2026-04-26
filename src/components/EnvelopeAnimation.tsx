@@ -1,5 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
-import envelopeImage from "@/assets/envelope-wax-seal.jpeg";
+import envelopeImage from "@/assets/envelope-cream-seal.jpeg";
 
 interface EnvelopeAnimationProps {
   groomName: string;
@@ -28,11 +28,11 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const accent = accentColor || "#B89968";
-  // Oxblood wax palette (matches the photo)
-  const sealBase = primaryColor || "#7A1F25";
-  const sealHi = "#A02A30";
-  const sealLo = "#4A0F14";
+    const accent = accentColor || "#B89968";
+    // Champagne/cream wax palette (matches the new photo)
+    const sealBase = primaryColor || "#C9BFA3";
+    const sealHi = "#E6DCC1";
+    const sealLo = "#8C8262";
 
   const groomInitial = (groomName?.trim()?.charAt(0) || "A").toUpperCase();
   const brideInitial = (brideName?.trim()?.charAt(0) || "B").toUpperCase();
