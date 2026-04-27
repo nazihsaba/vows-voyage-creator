@@ -605,7 +605,8 @@ const WeddingForm = () => {
       formData.groom_family = formData.groom_family ? toTitleCase(formData.groom_family) : formData.groom_family;
       formData.bride_family = formData.bride_family ? toTitleCase(formData.bride_family) : formData.bride_family;
 
-      const slug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
+      const baseSlug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
+      const slug = await ensureUniqueSlug(baseSlug, id);
 
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
