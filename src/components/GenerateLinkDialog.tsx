@@ -51,8 +51,8 @@ export const GenerateLinkDialog = ({
     if (!slugManuallyEdited) {
       const autoSlug = value
         .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "");
       setUniqueSlug(autoSlug);
     }
   };
@@ -330,12 +330,7 @@ export const GenerateLinkDialog = ({
                   value={uniqueSlug}
                   onChange={(e) => {
                     setSlugManuallyEdited(true);
-                    setUniqueSlug(
-                      e.target.value
-                        .toLowerCase()
-                        .replace(/[^a-z0-9]+/g, "-")
-                        .replace(/^-+|-+$/g, "")
-                    );
+                    setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
                   }}
                   className="h-9 sm:h-10 text-sm rounded-lg"
                 />
