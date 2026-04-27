@@ -448,6 +448,32 @@ const WeddingForm = () => {
   };
 
   /**
+   * Ensure the slug is unique by appending an extra dash between the names
+   * if a wedding with the same slug already exists. e.g. "chris-janette" -> "chris--janette".
+   */
+  const ensureUniqueSlug = async (baseSlug: string, currentId?: string): Promise<string> => {
+    let candidate = baseSlug;
+    // Safety cap to avoid infinite loops
+    for (let i = 0; i < 20; i++) {
+      const { data, error } = await supabase
+        .from("weddings")
+        .select("id")
+        .eq("slug", candidate)
+        .maybeSingle();
+      if (error) break;
+      if (!data || (currentId && data.id === currentId)) return candidate;
+      // Add an extra dash between the two names (or at the end if no dash)
+      const dashIdx = candidate.indexOf("-");
+      if (dashIdx === -1) {
+        candidate = `${candidate}-`;
+      } else {
+        candidate = `${candidate.slice(0, dashIdx)}-${candidate.slice(dashIdx)}`;
+      }
+    }
+    return candidate;
+  };
+
+  /**
    * Copy the main wedding image into the invitation-images bucket
    * at invites/{slug}/main.{ext} for reliable OG previews.
    */
