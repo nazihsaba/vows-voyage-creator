@@ -1729,20 +1729,7 @@ const WeddingForm = () => {
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <Label htmlFor="slug" className="text-sm font-medium">
-                  Custom URL Slug
-                </Label>
-                <Input
-                  id="slug"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="e.g., john-jane-2024"
-                  disabled={!!id}
-                  className="h-11 sm:h-10"
-                />
-                {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
-              </div>
+              {/* Custom URL Slug field - hidden for now */}
 
               <div className="flex flex-col-reverse sm:flex-row gap-3 sm:gap-4 pt-2">
                 {/* <Button
