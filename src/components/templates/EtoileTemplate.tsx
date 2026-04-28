@@ -216,10 +216,12 @@ export const EtoileTemplate = ({
                   className="text-template-title"
                 />
               </div>
-              <Heart
-                className="w-8 h-8 mx-auto text-transparent fill-white"
+              <span
+                className="block text-4xl md:text-5xl text-white text-center font-serif italic"
                 style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
-              />
+              >
+                &amp;
+              </span>
               <div className="text-right pr-4 md:pr-12" style={{ animation: "slideFromRight 1.5s ease-out 0.3s both" }}>
                 <EditableField
                   fieldId="bride-name"
