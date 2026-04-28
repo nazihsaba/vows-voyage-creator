@@ -25,6 +25,13 @@ type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
+    image: lumiereTemplate,
+    label: "Lumière",
+    tagline: "Cinematic video & torn-edge cards",
+    featured: false,
+    templateKey: "lumiere",
+  },
+  {
     image: graceTemplate,
     label: "Grâce",
     tagline: "Immersive video background",
@@ -51,13 +58,6 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     tagline: "Quote highlight & botanical elegance",
     featured: true,
     templateKey: "aura",
-  },
-  {
-    image: lumiereTemplate,
-    label: "Lumière",
-    tagline: "Cinematic video & torn-edge cards",
-    featured: false,
-    templateKey: "lumiere",
   },
   {
     image: etoileTemplate,
