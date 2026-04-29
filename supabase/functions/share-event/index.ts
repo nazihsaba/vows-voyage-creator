@@ -108,6 +108,21 @@ Deno.serve(async (req) => {
 
     if (existingUser) {
       targetUserId = existingUser.id;
+
+      // Notify existing user that an event was shared with them (no password)
+      const loginUrl = "https://vows-voyage-creator.lovable.app/auth";
+      try {
+        await fetch("https://aurea-invites.app.n8n.cloud/webhook/share-user-notification", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: normalizedEmail,
+            loginUrl,
+          }),
+        });
+      } catch (webhookErr) {
+        console.error("Failed to send existing-user notification to webhook:", webhookErr);
+      }
     } else {
       // Generate random 8-char password
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%";
