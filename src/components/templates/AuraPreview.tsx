@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Calendar, MapPin, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import doree1 from "@/assets/doree1.jpeg";
 import doree2 from "@/assets/doree2.jpeg";
 import doree3 from "@/assets/doree3.jpeg";
@@ -13,6 +15,16 @@ import doree6 from "@/assets/doree6.jpeg";
 const weddingDate = new Date("2026-08-16");
 
 export const AuraPreview = () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const img = new Image();
+    img.src = doree1;
+    const done = () => setLoading(false);
+    img.onload = done;
+    img.onerror = done;
+    const t = window.setTimeout(done, 4000);
+    return () => window.clearTimeout(t);
+  }, []);
   const timelineEvents = [
     {
       id: "ceremony",
@@ -37,8 +49,12 @@ export const AuraPreview = () => {
     },
   ];
 
+  if (loading) {
+    return <TemplateLoader groomName="Adrian" brideName="Elena" />;
+  }
+
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%] animate-fade-in">
       <div>
         {/* ===== INTRO SECTION ===== */}
         <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">

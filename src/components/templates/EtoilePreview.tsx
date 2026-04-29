@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ChevronDown, Heart } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import EtoileTornCard from "./etoile/EtoileTornCard";
 import EtoileCountdown from "./etoile/EtoileCountdown";
 import EtoileEvents from "./etoile/EtoileEvents";
@@ -60,6 +61,7 @@ const sampleGifts = [
 
 const EtoilePreview = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [loading, setLoading] = useState(true);
   const images = sampleGallery.map((g) => g.image_url);
 
   const nextSlide = useCallback(() => {
@@ -80,8 +82,22 @@ const EtoilePreview = () => {
     };
   }, []);
 
+  useEffect(() => {
+    const img = new Image();
+    img.src = images[0];
+    const done = () => setLoading(false);
+    img.onload = done;
+    img.onerror = done;
+    const t = window.setTimeout(done, 4000);
+    return () => window.clearTimeout(t);
+  }, [images]);
+
+  if (loading) {
+    return <TemplateLoader groomName="Adrian" brideName="Elena" />;
+  }
+
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
+    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%] animate-fade-in">
       {/* Layer 1: Fixed background carousel */}
       <div className="fixed inset-0 z-0 lg:left-[25%] lg:w-[50%]">
         {images.map((src, index) => (

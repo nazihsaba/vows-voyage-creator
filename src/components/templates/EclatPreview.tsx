@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import auraPreview7 from "@/assets/aura-preview-10.jpg";
 import auraPreview2 from "@/assets/aura-preview-11.jpg";
 import auraPreview3 from "@/assets/aura-preview-3.jpg";
@@ -106,8 +107,19 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
 export const EclatPreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = staticWedding.main_picture_url;
+    const done = () => setLoading(false);
+    img.onload = done;
+    img.onerror = done;
+    const t = window.setTimeout(done, 4000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const handleStart = () => {
     setHasStarted(true);
@@ -116,8 +128,12 @@ export const EclatPreview = () => {
     }, 100);
   };
 
+  if (loading) {
+    return <TemplateLoader groomName={staticWedding.groom_name} brideName={staticWedding.bride_name} />;
+  }
+
   return (
-    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
+    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] animate-fade-in">
       {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
