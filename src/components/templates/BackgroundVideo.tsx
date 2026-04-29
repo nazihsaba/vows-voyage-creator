@@ -148,7 +148,11 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (!attemptAutoplay) return;
         if (video.paused && ready) {
           const p = video.play();
-          if (p !== undefined) p.then(() => setNeedsTap(false)).catch(() => setNeedsTap(true));
+          if (p !== undefined)
+            p.then(() => setNeedsTap(false)).catch(() => {
+              setNeedsTap(true);
+              onAutoplayBlocked?.();
+            });
         }
       };
       const onVisibility = () => {
