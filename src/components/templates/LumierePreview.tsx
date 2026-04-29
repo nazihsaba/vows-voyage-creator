@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
