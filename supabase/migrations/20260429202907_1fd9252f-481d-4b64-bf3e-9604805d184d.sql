@@ -1,0 +1,1 @@
+ALTER TABLE public.weddings ADD COLUMN IF NOT EXISTS video_poster_url text;
