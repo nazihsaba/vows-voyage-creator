@@ -85,7 +85,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (p !== undefined) {
           p
             .then(() => setNeedsTap(false))
-            .catch(() => setNeedsTap(true));
+            .catch(() => {
+              setNeedsTap(true);
+              onAutoplayBlocked?.();
+            });
         }
       };
 
