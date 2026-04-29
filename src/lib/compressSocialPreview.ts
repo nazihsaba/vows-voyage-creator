@@ -29,8 +29,11 @@ const canvasToBlob = (canvas: HTMLCanvasElement, quality: number): Promise<Blob 
   new Promise((resolve) => canvas.toBlob((b) => resolve(b), "image/jpeg", quality));
 
 export async function compressSocialPreview(file: File): Promise<File> {
-  // Always re-encode (no early-return) so every preview gets the aggressive
-  // compression needed for fast WhatsApp link previews.
+  // Skip work if already a small JPEG
+  if (file.type === "image/jpeg" && file.size <= MAX_BYTES) {
+    return file;
+  }
+
   const img = await loadImage(file);
 
   const canvas = document.createElement("canvas");
@@ -49,9 +52,11 @@ export async function compressSocialPreview(file: File): Promise<File> {
   let sh = img.height;
 
   if (srcRatio > dstRatio) {
+    // Source is wider — crop sides
     sw = img.height * dstRatio;
     sx = (img.width - sw) / 2;
   } else if (srcRatio < dstRatio) {
+    // Source is taller — crop top/bottom
     sh = img.width / dstRatio;
     sy = (img.height - sh) / 2;
   }
@@ -60,10 +65,28 @@ export async function compressSocialPreview(file: File): Promise<File> {
   ctx.fillRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
   ctx.drawImage(img, sx, sy, sw, sh, 0, 0, TARGET_WIDTH, TARGET_HEIGHT);
 
-  // Always encode at JPEG quality 0.1 (≈90% compression) for the fastest
-  // possible WhatsApp link preview. Resolution stays at 1200x630 so OG
-  // crawlers still accept it.
-  const blob = await canvasToBlob(canvas, 0.1);
+  // Iteratively reduce quality until under MAX_BYTES
+  let quality = 0.92;
+  let blob = await canvasToBlob(canvas, quality);
+
+  while (blob && blob.size > MAX_BYTES && quality > 0.4) {
+    quality -= 0.1;
+    blob = await canvasToBlob(canvas, quality);
+  }
+
+  // Last resort: shrink dimensions if still too large
+  if (blob && blob.size > MAX_BYTES) {
+    const smallCanvas = document.createElement("canvas");
+    smallCanvas.width = 900;
+    smallCanvas.height = Math.round(900 / dstRatio);
+    const smallCtx = smallCanvas.getContext("2d");
+    if (smallCtx) {
+      smallCtx.fillStyle = "#ffffff";
+      smallCtx.fillRect(0, 0, smallCanvas.width, smallCanvas.height);
+      smallCtx.drawImage(canvas, 0, 0, smallCanvas.width, smallCanvas.height);
+      blob = await canvasToBlob(smallCanvas, 0.75);
+    }
+  }
 
   if (!blob) return file;
 
@@ -72,4 +95,3 @@ export async function compressSocialPreview(file: File): Promise<File> {
     lastModified: Date.now(),
   });
 }
-
