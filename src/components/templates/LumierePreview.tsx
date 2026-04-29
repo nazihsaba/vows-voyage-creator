@@ -7,6 +7,7 @@ import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import lumiereVideo from "@/assets/lumiere-video.mp4";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import lumiere1 from "@/assets/lumiere-1.jpg";
 import lumiere2 from "@/assets/lumiere-2.jpg";
@@ -92,6 +93,8 @@ const LumierePreview = () => {
   }, []);
 
   return (
+    <>
+      {videoLoading && <TemplateLoader groomName="Adrian" brideName="Elena" />}
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
       {/* Layer 1: Fixed background video */}
       <BackgroundVideo
@@ -204,6 +207,7 @@ const LumierePreview = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
