@@ -176,7 +176,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           ref={innerRef}
           className={className}
           src={src}
-          autoPlay
+          {...(attemptAutoplay ? { autoPlay: true } : {})}
           muted
           loop={loop}
           playsInline
@@ -184,13 +184,39 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
-          style={{ visibility: loading || needsTap ? "hidden" : "visible" }}
+          style={{ visibility: loading || (attemptAutoplay && needsTap) ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
             "controlslist": "nodownload noplaybackrate noremoteplayback nofullscreen",
           } as Record<string, string>)}
         />
+
+        {/* Invisible tap-to-play fallback — only when autoplay was blocked
+            (e.g. iOS Low Power Mode) and parent does NOT have its own entry button. */}
+        {attemptAutoplay && needsTap && !loading && (
+          <div
+            className={overlayClassName ?? className}
+            style={{
+              cursor: "pointer",
+              background: "transparent",
+              zIndex: 51,
+            }}
+            onClick={() => {
+              const v = innerRef.current;
+              if (!v) return;
+              const p = v.play();
+              if (p !== undefined) {
+                p.then(() => setNeedsTap(false)).catch(() => {
+                  /* keep layer visible to allow retry */
+                });
+              } else {
+                setNeedsTap(false);
+              }
+            }}
+            aria-hidden
+          />
+        )}
 
         {/* Poster overlay while buffering */}
         {(loading || needsTap) && poster && (
