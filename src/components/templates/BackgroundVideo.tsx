@@ -42,6 +42,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
     const innerRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLVideoElement);
     const [loading, setLoading] = useState(true);
+    const [needsTap, setNeedsTap] = useState(false);
 
     useEffect(() => {
       onLoadingChange?.(loading);
@@ -66,9 +67,12 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       const tryPlay = () => {
         if (!ready) return;
-        video.play().catch(() => {
-          // Autoplay can fail silently; muted+playsinline should normally allow it.
-        });
+        const p = video.play();
+        if (p !== undefined) {
+          p
+            .then(() => setNeedsTap(false))
+            .catch(() => setNeedsTap(true));
+        }
       };
 
       const reveal = () => {
@@ -123,7 +127,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       // Resume if tab becomes visible again
       const resume = () => {
-        if (video.paused && ready) video.play().catch(() => {});
+        if (video.paused && ready) {
+          const p = video.play();
+          if (p !== undefined) p.then(() => setNeedsTap(false)).catch(() => setNeedsTap(true));
+        }
       };
       const onVisibility = () => {
         if (document.visibilityState === "visible") resume();
@@ -268,6 +275,54 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
               @keyframes aurea-spin { to { transform: rotate(360deg); } }
             `}</style>
           </div>
+        )}
+
+        {/* Tap-to-play overlay (only when autoplay was blocked) */}
+        {!loading && needsTap && (
+          <button
+            type="button"
+            onClick={() => {
+              const v = innerRef.current;
+              if (!v) return;
+              const p = v.play();
+              if (p !== undefined) {
+                p.then(() => setNeedsTap(false)).catch(() => {});
+              } else {
+                setNeedsTap(false);
+              }
+            }}
+            className={overlayClassName ?? className}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              background: poster ? `center/cover no-repeat url(${poster})` : "rgba(0,0,0,0.35)",
+              border: "none",
+              cursor: "pointer",
+              zIndex: 51,
+            }}
+            aria-label="Play video"
+          >
+            <span
+              style={{
+                width: 88,
+                height: 88,
+                borderRadius: "50%",
+                background: "rgba(0,0,0,0.45)",
+                backdropFilter: "blur(4px)",
+                WebkitBackdropFilter: "blur(4px)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                boxShadow: "0 4px 24px rgba(0,0,0,0.35)",
+                border: "1px solid rgba(255,255,255,0.5)",
+              }}
+            >
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="#ffffff" aria-hidden>
+                <path d="M8 5.5v13a1 1 0 0 0 1.55.83l10-6.5a1 1 0 0 0 0-1.66l-10-6.5A1 1 0 0 0 8 5.5z" />
+              </svg>
+            </span>
+          </button>
         )}
       </>
     );
