@@ -107,9 +107,13 @@ export const GracePreview = () => {
           groomInitial={staticWedding.groom_name}
           brideInitial={staticWedding.bride_name}
           loaderTheme="light"
+          onLoadingChange={setVideoLoading}
         />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
+        <div
+          className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in transition-opacity duration-500"
+          style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
+        >
           <p className="text-template-small">The Wedding Of</p>
           <div className="space-y-2">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
