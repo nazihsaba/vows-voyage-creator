@@ -171,6 +171,7 @@ export const GraceTemplate = ({
         <BackgroundVideo
           ref={videoRef}
           src={wedding.video_url || gracePreviewVideo}
+          poster={(wedding as any).video_poster_url || undefined}
           className="absolute inset-0 w-full h-full object-cover"
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
