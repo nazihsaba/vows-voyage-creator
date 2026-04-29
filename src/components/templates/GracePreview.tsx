@@ -86,6 +86,7 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
 export const GracePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
+  const [videoLoading, setVideoLoading] = useState(true);
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
 
