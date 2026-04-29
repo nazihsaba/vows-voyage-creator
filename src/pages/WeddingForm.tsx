@@ -16,8 +16,6 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
-import { compressImage } from "@/lib/compressImage";
-import { compressVideo } from "@/lib/compressVideo";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
@@ -323,45 +321,16 @@ const WeddingForm = () => {
     setFormData({ ...formData, main_picture_url: "", main_picture_position_y: 50 });
   };
 
-  const handleVideoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (!file) return;
-
-    let finalFile = file;
-    const FIFTEEN_MB = 15 * 1024 * 1024;
-    if (file.size > FIFTEEN_MB) {
-      const { id: toastId, update, dismiss } = toast({
-        title: "Compressing video…",
-        description: "This may take a moment. Please keep this tab open.",
-      });
-      try {
-        finalFile = await compressVideo(file, (pct) => {
-          update({
-            id: toastId,
-            title: "Compressing video…",
-            description: `${pct}%`,
-          });
-        });
-        dismiss();
-        if (finalFile.size > FIFTEEN_MB) {
-          toast({
-            title: "Video still large",
-            description: "We compressed it as much as we could without major quality loss.",
-          });
-        } else if (finalFile !== file) {
-          toast({ title: "Video compressed", description: "Optimized for fast loading." });
-        }
-      } catch {
-        dismiss();
-      }
+    if (file) {
+      setVideoFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setVideoPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
     }
-
-    setVideoFile(finalFile);
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setVideoPreview(reader.result as string);
-    };
-    reader.readAsDataURL(finalFile);
   };
 
   const removeVideo = () => {
@@ -459,13 +428,11 @@ const WeddingForm = () => {
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
-    // Compress raster images before upload (no-op for videos/audio/gif/svg)
-    const fileToUpload = await compressImage(file);
-    const fileExt = fileToUpload.name.split(".").pop();
+    const fileExt = file.name.split(".").pop();
     const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ""}`;
     const fileName = `${userId}/${uniqueId}.${fileExt}`;
 
-    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, fileToUpload);
+    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, file);
 
     if (uploadError) throw uploadError;
 
