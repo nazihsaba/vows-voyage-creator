@@ -61,11 +61,8 @@ export const GraceTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
+  // Note: video playback is gated by the "Tap to Start" button (see handleStartClick).
+  // Do NOT attempt autoplay here — BackgroundVideo is mounted with attemptAutoplay={false}.
 
   useEffect(() => {
     if (!hasStarted) {
