@@ -174,13 +174,6 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       };
     }, [src, attemptAutoplay, onAutoplayBlocked]);
 
-    const ringColor = loaderTheme === "dark" ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.25)";
-    const ringActive = loaderTheme === "dark" ? "#865814" : "#ffffff";
-    const textColor = loaderTheme === "dark" ? "#1a1a1a" : "#ffffff";
-    const loaderBg = loaderTheme === "dark" ? "rgba(255,255,255,0.85)" : "rgba(0,0,0,0.55)";
-
-    const g = (groomInitial || "").charAt(0).toUpperCase();
-    const b = (brideInitial || "").charAt(0).toUpperCase();
 
     return (
       <>
