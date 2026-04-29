@@ -296,10 +296,11 @@ const WeddingInvite = () => {
   const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
   if (loading) {
-    const g = (wedding?.groom_name || "").charAt(0).toUpperCase() || "G";
-    const b = (wedding?.bride_name || "").charAt(0).toUpperCase() || "B";
+    const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
+    const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
+    const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-soft">
+      <div className="h-screen w-screen overflow-hidden fixed inset-0 flex flex-col bg-gradient-soft" style={{ touchAction: "none" }}>
         <div className="flex-1 flex items-center justify-center">
           <div
             style={{
