@@ -15,6 +15,16 @@ import doree6 from "@/assets/doree6.jpeg";
 const weddingDate = new Date("2026-08-16");
 
 export const AuraPreview = () => {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    const img = new Image();
+    img.src = doree1;
+    const done = () => setLoading(false);
+    img.onload = done;
+    img.onerror = done;
+    const t = window.setTimeout(done, 4000);
+    return () => window.clearTimeout(t);
+  }, []);
   const timelineEvents = [
     {
       id: "ceremony",
