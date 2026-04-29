@@ -13,6 +13,7 @@ import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
+import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 
 interface GraceTemplateProps {
   wedding: any;
@@ -127,9 +128,14 @@ export const GraceTemplate = ({
 
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
-        <video ref={videoRef} autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={wedding.video_url || gracePreviewVideo} type="video/mp4" />
-        </video>
+        <BackgroundVideo
+          ref={videoRef}
+          src={wedding.video_url || gracePreviewVideo}
+          className="absolute inset-0 w-full h-full object-cover"
+          groomInitial={wedding.groom_name}
+          brideInitial={wedding.bride_name}
+          loaderTheme="light"
+        />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
           <EditableField
@@ -238,9 +244,13 @@ export const GraceTemplate = ({
 
       {/* Countdown with Video Background */}
       <section className="relative py-16 px-4 overflow-hidden">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={wedding.video_url || gracePreviewVideo} type="video/mp4" />
-        </video>
+        <BackgroundVideo
+          src={wedding.video_url || gracePreviewVideo}
+          className="absolute inset-0 w-full h-full object-cover"
+          groomInitial={wedding.groom_name}
+          brideInitial={wedding.bride_name}
+          loaderTheme="light"
+        />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <CountdownTimer targetDate={wedding.wedding_date} variant="dark" />
