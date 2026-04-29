@@ -230,7 +230,7 @@ export const GraceTemplate = ({
         />
         <div className="absolute inset-0 bg-black/40" />
         <div
-          className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in transition-opacity duration-500"
+          className="relative z-10 space-y-6 px-4 max-w-2xl transition-opacity duration-500"
           style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
         >
           <EditableField
