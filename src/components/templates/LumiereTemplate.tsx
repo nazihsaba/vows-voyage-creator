@@ -14,6 +14,7 @@ import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -230,6 +231,10 @@ export const LumiereTemplate = ({
   }, []);
 
   return (
+    <>
+      {videoLoading && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      )}
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
 
@@ -256,10 +261,11 @@ export const LumiereTemplate = ({
       {/* Layer 2: Dark overlay */}
       <div className="fixed inset-0 h-[100lvh] bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
-      {/* Layer 3: Scrollable content — hidden until video reveal so animations start fresh */}
+      {/* Layer 3: Scrollable content — only mounted after video reveal so all
+          entry animations start fresh in sync with the loader disappearing. */}
+      {!videoLoading && (
       <div
-        className="relative z-[2] transition-opacity duration-500"
-        style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
+        className="relative z-[2] animate-[fadeIn_0.4s_ease-out_forwards]"
         dir={isArabic ? "rtl" : "ltr"}
       >
         {/* ===== MONOGRAM SECTION ===== */}
@@ -472,6 +478,8 @@ export const LumiereTemplate = ({
           </LumiereTornCard>
         </div>
       </div>
+      )}
     </div>
+    </>
   );
 };
