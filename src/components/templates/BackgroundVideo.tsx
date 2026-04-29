@@ -208,7 +208,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
         {/* Invisible tap-to-play fallback — only when autoplay was blocked
             (e.g. iOS Low Power Mode) and parent does NOT have its own entry button. */}
-        {attemptAutoplay && needsTap && !loading && (
+        {attemptAutoplay && needsTap && !loading && !onAutoplayBlocked && (
           <div
             className={overlayClassName ?? className}
             style={{
