@@ -61,11 +61,8 @@ export const GraceTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.play().catch(() => {});
-    }
-  }, []);
+  // Note: video playback is gated by the "Tap to Start" button (see handleStartClick).
+  // Do NOT attempt autoplay here — BackgroundVideo is mounted with attemptAutoplay={false}.
 
   useEffect(() => {
     if (!hasStarted) {
@@ -100,7 +97,42 @@ export const GraceTemplate = ({
   };
 
   const handleStartClick = async () => {
+    console.log("[Grace] Tap to Start clicked");
     setHasStarted(true);
+
+    // 1) Play the hero background video (gated by user gesture)
+    const video = videoRef.current;
+    if (video) {
+      console.log("[Grace] Video element found", {
+        src: video.currentSrc || video.src,
+        muted: video.muted,
+        playsInline: video.playsInline,
+        preload: video.preload,
+        readyState: video.readyState,
+        paused: video.paused,
+      });
+      // Ensure attributes required for inline mobile playback
+      video.muted = true;
+      video.playsInline = true;
+      try {
+        // If the source hasn't loaded yet, kick it off
+        if (video.readyState < 2) {
+          try { video.load(); } catch { /* noop */ }
+        }
+        const playPromise = video.play();
+        if (playPromise !== undefined) {
+          playPromise
+            .then(() => console.log("[Grace] video.play() resolved — playback started"))
+            .catch((err) => console.error("[Grace] video.play() rejected:", err));
+        }
+      } catch (err) {
+        console.error("[Grace] Error calling video.play():", err);
+      }
+    } else {
+      console.warn("[Grace] videoRef.current is null on tap");
+    }
+
+    // 2) Play the audio track (if configured)
     if (wedding.audio_url && audioRef.current) {
       const audio = audioRef.current;
       const startTime = wedding.audio_start_time || 0;
@@ -116,6 +148,7 @@ export const GraceTemplate = ({
         console.log("Audio playback failed:", err);
       }
     }
+
     setTimeout(() => {
       document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
     }, 100);
