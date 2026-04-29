@@ -8,6 +8,7 @@ import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter"
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import EtoileTornCard from "./etoile/EtoileTornCard";
 import EtoileCountdown from "./etoile/EtoileCountdown";
 import EtoileEvents from "./etoile/EtoileEvents";
@@ -60,7 +61,33 @@ export const EtoileTemplate = ({
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroLoading, setHeroLoading] = useState(true);
   const carouselImages = gallery && gallery.length > 0 ? gallery.map((img: any) => img.image_url) : [];
+
+  // Preload first carousel image so the loader stays until the first paint is ready.
+  useEffect(() => {
+    const firstImage = carouselImages[0];
+    if (!firstImage) {
+      setHeroLoading(false);
+      return;
+    }
+    let cancelled = false;
+    const img = new Image();
+    img.src = firstImage;
+    const done = () => { if (!cancelled) setHeroLoading(false); };
+    if (img.complete && img.naturalWidth > 0) {
+      done();
+    } else {
+      img.onload = done;
+      img.onerror = done;
+    }
+    const timeout = window.setTimeout(done, 6000);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timeout);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [carouselImages[0]]);
 
   const nextSlide = useCallback(() => {
     if (carouselImages.length > 0) {
@@ -165,6 +192,9 @@ export const EtoileTemplate = ({
 
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
+      {heroLoading && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      )}
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -189,7 +219,8 @@ export const EtoileTemplate = ({
       <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
-      <div className="relative z-[2]" dir={isArabic ? "rtl" : "ltr"}>
+      {!heroLoading && (
+      <div className="relative z-[2] animate-fade-in" dir={isArabic ? "rtl" : "ltr"}>
         {/* ===== HERO SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
@@ -387,6 +418,7 @@ export const EtoileTemplate = ({
           </div>
         </div>
       </div>
+      )}
     </div>
   );
 };
