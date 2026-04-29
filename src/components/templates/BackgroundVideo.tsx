@@ -276,10 +276,6 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
             `}</style>
           </div>
         )}
-      </>
-    );
-  }
-);
 
         {/* Tap-to-play overlay (only when autoplay was blocked) */}
         {!loading && needsTap && (
