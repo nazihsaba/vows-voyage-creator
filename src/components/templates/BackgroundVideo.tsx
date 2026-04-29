@@ -67,9 +67,12 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       const tryPlay = () => {
         if (!ready) return;
-        video.play().catch(() => {
-          // Autoplay can fail silently; muted+playsinline should normally allow it.
-        });
+        const p = video.play();
+        if (p !== undefined) {
+          p
+            .then(() => setNeedsTap(false))
+            .catch(() => setNeedsTap(true));
+        }
       };
 
       const reveal = () => {
