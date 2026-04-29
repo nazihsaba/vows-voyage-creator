@@ -102,13 +102,17 @@ const LumierePreview = () => {
         groomInitial="A"
         brideInitial="L"
         loaderTheme="light"
+        onLoadingChange={setVideoLoading}
       />
 
       {/* Layer 2: Dark overlay */}
       <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:w-[50%]" />
 
-      {/* Layer 3: Scrollable content */}
-      <div className="relative z-[2]">
+      {/* Layer 3: Scrollable content — hidden until video reveal so animations start fresh */}
+      <div
+        className="relative z-[2] transition-opacity duration-500"
+        style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
+      >
         {/* ===== MONOGRAM SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="flex items-center gap-4 md:gap-6">
