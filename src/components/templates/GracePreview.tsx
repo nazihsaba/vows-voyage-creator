@@ -7,6 +7,7 @@ import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
+import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 
 const staticWedding = {
   groom_name: "Noah",
@@ -99,9 +100,13 @@ export const GracePreview = () => {
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={staticWedding.video_url} type="video/mp4" />
-        </video>
+        <BackgroundVideo
+          src={staticWedding.video_url}
+          className="absolute inset-0 w-full h-full object-cover"
+          groomInitial={staticWedding.groom_name}
+          brideInitial={staticWedding.bride_name}
+          loaderTheme="light"
+        />
         <div className="absolute inset-0 bg-black/40" />
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
           <p className="text-template-small">The Wedding Of</p>
@@ -149,9 +154,13 @@ export const GracePreview = () => {
 
       {/* Countdown with Video */}
       <section className="relative py-16 px-4 overflow-hidden">
-        <video autoPlay loop muted playsInline className="absolute inset-0 w-full h-full object-cover">
-          <source src={staticWedding.video_url} type="video/mp4" />
-        </video>
+        <BackgroundVideo
+          src={staticWedding.video_url}
+          className="absolute inset-0 w-full h-full object-cover"
+          groomInitial={staticWedding.groom_name}
+          brideInitial={staticWedding.bride_name}
+          loaderTheme="light"
+        />
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <StaticCountdownTimer targetDate={staticWedding.wedding_date} />
