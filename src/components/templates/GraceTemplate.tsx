@@ -178,7 +178,7 @@ export const GraceTemplate = ({
           brideInitial={wedding.bride_name}
           loaderTheme="light"
           onLoadingChange={setVideoLoading}
-          attemptAutoplay={false}
+          onAutoplayBlocked={() => setAutoplayBlocked(true)}
         />
         <div className="absolute inset-0 bg-black/40" />
         <div
