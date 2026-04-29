@@ -56,6 +56,7 @@ export const GraceTemplate = ({
   const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoLoading, setVideoLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
