@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import previewWedding1 from "@/assets/verite-preview-1.jpg";
 import previewWedding2 from "@/assets/verite-preview-2.jpg";
 import previewWedding3 from "@/assets/verite-preview-3.jpg";
@@ -99,8 +100,19 @@ const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
 
 export const VeritePreview = () => {
   const [hasStarted, setHasStarted] = useState(false);
+  const [loading, setLoading] = useState(true);
   const ceremony = staticLocations.find((loc) => loc.type === "ceremony");
   const venue = staticLocations.find((loc) => loc.type === "venue");
+
+  useEffect(() => {
+    const img = new Image();
+    img.src = staticWedding.main_picture_url;
+    const done = () => setLoading(false);
+    img.onload = done;
+    img.onerror = done;
+    const t = window.setTimeout(done, 4000);
+    return () => window.clearTimeout(t);
+  }, []);
 
   const handleStart = () => {
     setHasStarted(true);
@@ -109,8 +121,12 @@ export const VeritePreview = () => {
     }, 100);
   };
 
+  if (loading) {
+    return <TemplateLoader groomName={staticWedding.groom_name} brideName={staticWedding.bride_name} />;
+  }
+
   return (
-    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
+    <div className="w-full bg-[#faf8f5] text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%] animate-fade-in">
       {/* Hero */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
