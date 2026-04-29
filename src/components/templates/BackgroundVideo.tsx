@@ -73,6 +73,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       const tryPlay = () => {
         if (!ready) return;
+        if (!attemptAutoplay) return; // parent controls playback
         const p = video.play();
         if (p !== undefined) {
           p
