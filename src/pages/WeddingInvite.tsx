@@ -362,7 +362,7 @@ const WeddingInvite = () => {
             <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
-        <div className="pb-8 flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 shrink-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}>
           <span className="text-muted-foreground text-xs tracking-wide">Made for love, by</span>
           <img src={aureaLogoIcon} alt="Auréa Invites" className="w-8 h-8 opacity-80" />
         </div>
