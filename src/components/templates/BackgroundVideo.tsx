@@ -14,6 +14,11 @@ interface BackgroundVideoProps {
   type?: string;
   /** Fired when buffering state changes. true = still loading (<80%), false = ready. */
   onLoadingChange?: (loading: boolean) => void;
+  /**
+   * If false, do NOT attempt autoplay — parent template controls playback
+   * (e.g. via a "Tap to Start" button). Defaults to true.
+   */
+  attemptAutoplay?: boolean;
 }
 
 /**
@@ -36,6 +41,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       overlayClassName,
       type = "video/mp4",
       onLoadingChange,
+      attemptAutoplay = true,
     },
     ref
   ) => {
@@ -67,6 +73,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       const tryPlay = () => {
         if (!ready) return;
+        if (!attemptAutoplay) return; // parent controls playback
         const p = video.play();
         if (p !== undefined) {
           p
@@ -128,6 +135,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       // Resume if tab becomes visible again
       const resume = () => {
+        if (!attemptAutoplay) return;
         if (video.paused && ready) {
           const p = video.play();
           if (p !== undefined) p.then(() => setNeedsTap(false)).catch(() => setNeedsTap(true));
@@ -152,7 +160,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
       };
-    }, [src]);
+    }, [src, attemptAutoplay]);
 
     const ringColor = loaderTheme === "dark" ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.25)";
     const ringActive = loaderTheme === "dark" ? "#865814" : "#ffffff";
@@ -168,7 +176,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           ref={innerRef}
           className={className}
           src={src}
-          autoPlay
+          {...(attemptAutoplay ? { autoPlay: true } : {})}
           muted
           loop={loop}
           playsInline
@@ -176,13 +184,39 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
-          style={{ visibility: loading || needsTap ? "hidden" : "visible" }}
+          style={{ visibility: loading || (attemptAutoplay && needsTap) ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
             "controlslist": "nodownload noplaybackrate noremoteplayback nofullscreen",
           } as Record<string, string>)}
         />
+
+        {/* Invisible tap-to-play fallback — only when autoplay was blocked
+            (e.g. iOS Low Power Mode) and parent does NOT have its own entry button. */}
+        {attemptAutoplay && needsTap && !loading && (
+          <div
+            className={overlayClassName ?? className}
+            style={{
+              cursor: "pointer",
+              background: "transparent",
+              zIndex: 51,
+            }}
+            onClick={() => {
+              const v = innerRef.current;
+              if (!v) return;
+              const p = v.play();
+              if (p !== undefined) {
+                p.then(() => setNeedsTap(false)).catch(() => {
+                  /* keep layer visible to allow retry */
+                });
+              } else {
+                setNeedsTap(false);
+              }
+            }}
+            aria-hidden
+          />
+        )}
 
         {/* Poster overlay while buffering */}
         {(loading || needsTap) && poster && (
