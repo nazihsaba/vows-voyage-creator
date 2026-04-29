@@ -182,6 +182,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
               backgroundSize: "cover",
               backgroundPosition: "center",
               pointerEvents: "none",
+              zIndex: 49,
             }}
             aria-hidden
           />
