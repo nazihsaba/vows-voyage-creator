@@ -19,6 +19,12 @@ interface BackgroundVideoProps {
    * (e.g. via a "Tap to Start" button). Defaults to true.
    */
   attemptAutoplay?: boolean;
+  /**
+   * If provided, called when programmatic autoplay is blocked (e.g. iOS Low
+   * Power Mode). When set, the internal invisible tap layer is suppressed —
+   * the parent is expected to render its own visible "Tap to Start" UI.
+   */
+  onAutoplayBlocked?: () => void;
 }
 
 /**
@@ -42,6 +48,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       type = "video/mp4",
       onLoadingChange,
       attemptAutoplay = true,
+      onAutoplayBlocked,
     },
     ref
   ) => {
@@ -78,7 +85,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (p !== undefined) {
           p
             .then(() => setNeedsTap(false))
-            .catch(() => setNeedsTap(true));
+            .catch(() => {
+              setNeedsTap(true);
+              onAutoplayBlocked?.();
+            });
         }
       };
 
@@ -138,7 +148,11 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (!attemptAutoplay) return;
         if (video.paused && ready) {
           const p = video.play();
-          if (p !== undefined) p.then(() => setNeedsTap(false)).catch(() => setNeedsTap(true));
+          if (p !== undefined)
+            p.then(() => setNeedsTap(false)).catch(() => {
+              setNeedsTap(true);
+              onAutoplayBlocked?.();
+            });
         }
       };
       const onVisibility = () => {
@@ -160,7 +174,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
       };
-    }, [src, attemptAutoplay]);
+    }, [src, attemptAutoplay, onAutoplayBlocked]);
 
     const ringColor = loaderTheme === "dark" ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.25)";
     const ringActive = loaderTheme === "dark" ? "#865814" : "#ffffff";
@@ -194,7 +208,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
         {/* Invisible tap-to-play fallback — only when autoplay was blocked
             (e.g. iOS Low Power Mode) and parent does NOT have its own entry button. */}
-        {attemptAutoplay && needsTap && !loading && (
+        {attemptAutoplay && needsTap && !loading && !onAutoplayBlocked && (
           <div
             className={overlayClassName ?? className}
             style={{
