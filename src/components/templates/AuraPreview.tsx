@@ -49,8 +49,12 @@ export const AuraPreview = () => {
     },
   ];
 
+  if (loading) {
+    return <TemplateLoader groomName="Adrian" brideName="Elena" />;
+  }
+
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]">
+    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%] animate-fade-in">
       <div>
         {/* ===== INTRO SECTION ===== */}
         <section className="relative min-h-screen flex flex-col items-center justify-center text-center overflow-hidden">
