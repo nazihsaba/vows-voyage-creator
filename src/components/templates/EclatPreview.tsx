@@ -132,7 +132,7 @@ export const EclatPreview = () => {
         <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
           <p className="text-template-small">The Wedding Of</p>
 
-          <div className="space-y-2">
+          <div className="space-y-2 py-6 md:py-8">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
             <p className="text-4xl md:text-5xl">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>

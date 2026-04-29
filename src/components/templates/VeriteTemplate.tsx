@@ -144,7 +144,7 @@ export const VeriteTemplate = ({
             tag="p"
             className="text-template-small"
           />
-          <div className="space-y-2">
+          <div className="space-y-2 py-6 md:py-8">
             <EditableField
               fieldId="groom-name"
               text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
