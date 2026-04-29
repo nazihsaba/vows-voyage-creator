@@ -55,17 +55,18 @@ export const GraceTemplate = ({
   const { t, i18n } = useTranslation();
   const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoading, setVideoLoading] = useState(true);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  // Note: video playback is gated by the "Tap to Start" button (see handleStartClick).
-  // Do NOT attempt autoplay here — BackgroundVideo is mounted with attemptAutoplay={false}.
-
+  // Lock scroll only while autoplay is blocked and the user hasn't tapped.
+  // When autoplay succeeds, the page is freely scrollable from the start.
   useEffect(() => {
-    if (!hasStarted) {
+    const locked = autoplayBlocked && !hasStarted;
+    if (locked) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       document.body.style.touchAction = "none";
@@ -79,7 +80,7 @@ export const GraceTemplate = ({
       document.documentElement.style.overflow = "auto";
       document.body.style.touchAction = "auto";
     };
-  }, [hasStarted]);
+  }, [autoplayBlocked, hasStarted]);
 
   // Reset dir when unmounting
   useEffect(() => {
