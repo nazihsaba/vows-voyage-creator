@@ -334,29 +334,31 @@ const WeddingInvite = () => {
                 strokeDasharray="40 300"
               />
             </svg>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                color: "#1a1a1a",
-                fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
-                letterSpacing: "0.05em",
-              }}
-            >
-              <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
-              <span
+            {hasNames && (
+              <div
                 style={{
-                  fontSize: 22,
-                  fontStyle: "italic",
-                  opacity: 0.7,
-                  fontFamily: "'Cormorant Garamond', serif",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  color: "#1a1a1a",
+                  fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
+                  letterSpacing: "0.05em",
                 }}
               >
-                &amp;
-              </span>
-              <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
-            </div>
+                <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
+                <span
+                  style={{
+                    fontSize: 22,
+                    fontStyle: "italic",
+                    opacity: 0.7,
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  &amp;
+                </span>
+                <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
+              </div>
+            )}
             <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
