@@ -248,11 +248,45 @@ export const LumiereTemplate = ({
           brideInitial={wedding.bride_name}
           loaderTheme="light"
           onLoadingChange={setVideoLoading}
+          onAutoplayBlocked={() => setAutoplayBlocked(true)}
         />
       )}
 
       {/* Layer 2: Dark overlay */}
       <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
+
+      {/* Tap-to-Start gate — only shown when autoplay is blocked (e.g. iOS Low Power Mode).
+          Uses the first gallery image as a poster frame, mirroring the Grace template UX. */}
+      {autoplayBlocked && !hasStarted && (
+        <div
+          className="fixed inset-0 z-[60] flex flex-col items-center justify-center text-center text-white lg:left-[25%] lg:right-auto lg:w-[50%]"
+          style={{
+            backgroundImage: gallery?.[0]?.image_url ? `url(${gallery[0].image_url})` : undefined,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundColor: "#0a0a0a",
+          }}
+        >
+          <div className="absolute inset-0 bg-black/50" />
+          <div className="relative z-10 px-6 space-y-6 max-w-md">
+            <div className="flex items-center justify-center gap-3 text-4xl md:text-5xl font-light tracking-wider">
+              <span>{wedding.groom_name?.charAt(0)?.toUpperCase() || "G"}</span>
+              <span className="text-white/60 italic text-2xl md:text-3xl">&</span>
+              <span>{wedding.bride_name?.charAt(0)?.toUpperCase() || "B"}</span>
+            </div>
+            <p className="text-white/80 text-template-body italic">
+              {getLocalizedValue("groom_name", wedding.groom_name)} &{" "}
+              {getLocalizedValue("bride_name", wedding.bride_name)}
+            </p>
+            <Button
+              onClick={handleStartClick}
+              className="bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+            >
+              {t("hero.tapToStart")}
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Layer 3: Scrollable content — hidden until video reveal so animations start fresh */}
       <div
