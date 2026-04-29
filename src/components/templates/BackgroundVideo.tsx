@@ -159,6 +159,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           loop={loop}
           playsInline
           preload="auto"
+          style={{ visibility: loading ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
