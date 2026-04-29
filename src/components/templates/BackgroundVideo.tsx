@@ -14,6 +14,11 @@ interface BackgroundVideoProps {
   type?: string;
   /** Fired when buffering state changes. true = still loading (<80%), false = ready. */
   onLoadingChange?: (loading: boolean) => void;
+  /**
+   * If false, do NOT attempt autoplay — parent template controls playback
+   * (e.g. via a "Tap to Start" button). Defaults to true.
+   */
+  attemptAutoplay?: boolean;
 }
 
 /**
