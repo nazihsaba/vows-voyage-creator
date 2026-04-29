@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, forwardRef, useImperativeHandle } from "react";
+import aureaLogoIcon from "@/assets/aureaLogoIcon.png";
 
 interface BackgroundVideoProps {
   src: string;
