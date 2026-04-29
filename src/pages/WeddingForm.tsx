@@ -429,11 +429,13 @@ const WeddingForm = () => {
   };
 
   const uploadImage = async (file: File, userId: string, index?: number) => {
-    const fileExt = file.name.split(".").pop();
+    // Compress raster images before upload (no-op for videos/audio/gif/svg)
+    const fileToUpload = await compressImage(file);
+    const fileExt = fileToUpload.name.split(".").pop();
     const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(2, 9)}${index !== undefined ? `-${index}` : ""}`;
     const fileName = `${userId}/${uniqueId}.${fileExt}`;
 
-    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, file);
+    const { error: uploadError, data } = await supabase.storage.from("wedding-images").upload(fileName, fileToUpload);
 
     if (uploadError) throw uploadError;
 
