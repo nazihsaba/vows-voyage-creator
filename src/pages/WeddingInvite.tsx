@@ -300,7 +300,7 @@ const WeddingInvite = () => {
     const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
     const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
     return (
-      <div className="h-screen w-screen overflow-hidden fixed inset-0 flex flex-col bg-gradient-soft" style={{ touchAction: "none" }}>
+      <div className="fixed inset-0 w-screen overflow-hidden flex flex-col bg-gradient-soft" style={{ height: "100dvh", touchAction: "none" }}>
         <div className="flex-1 flex items-center justify-center">
           <div
             style={{
