@@ -89,6 +89,49 @@ export const GraceTemplate = ({
     };
   }, []);
 
+  // Auto-play background audio after the template/video is ready.
+  // Falls back to first user interaction if the browser blocks autoplay.
+  useEffect(() => {
+    if (!wedding.audio_url) return;
+    if (videoLoading) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    let cancelled = false;
+
+    const startAudio = async () => {
+      try {
+        const startTime = wedding.audio_start_time || 0;
+        if (startTime > 0 && Math.abs(audio.currentTime - startTime) > 0.05) {
+          audio.currentTime = startTime;
+        }
+        await audio.play();
+      } catch {
+        // Autoplay blocked — wait for first user interaction.
+        const resume = async () => {
+          if (cancelled) return;
+          try {
+            await audio.play();
+          } catch {
+            /* noop */
+          }
+          window.removeEventListener("pointerdown", resume);
+          window.removeEventListener("keydown", resume);
+          window.removeEventListener("touchstart", resume);
+        };
+        window.addEventListener("pointerdown", resume, { once: true });
+        window.addEventListener("keydown", resume, { once: true });
+        window.addEventListener("touchstart", resume, { once: true });
+      }
+    };
+
+    startAudio();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [wedding.audio_url, wedding.audio_start_time, videoLoading]);
+
   const handleTimeUpdate = () => {
     if (audioRef.current && wedding.audio_end_time) {
       if (audioRef.current.currentTime >= wedding.audio_end_time) {
