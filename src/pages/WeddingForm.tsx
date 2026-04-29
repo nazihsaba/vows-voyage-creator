@@ -574,6 +574,7 @@ const WeddingForm = () => {
 
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
+      let videoPosterUrl = (formData as any).video_poster_url || "";
       let audioUrl = formData.audio_url;
 
       // Upload new image if selected
@@ -581,9 +582,21 @@ const WeddingForm = () => {
         imageUrl = await uploadImage(imageFile, user.id);
       }
 
-      // Upload new video if selected
+      // Upload new video if selected — also extract & upload first-frame poster
       if (videoFile) {
         videoUrl = await uploadImage(videoFile, user.id);
+        try {
+          const posterBlob = await extractFirstFrame(videoFile);
+          if (posterBlob) {
+            const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
+            videoPosterUrl = await uploadImage(posterFile, user.id);
+          } else {
+            videoPosterUrl = "";
+          }
+        } catch (err) {
+          console.warn("Video poster extraction failed (non-blocking):", err);
+          videoPosterUrl = "";
+        }
       }
 
       // Upload new audio if selected, or clear if removed
