@@ -199,6 +199,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
               backdropFilter: "blur(2px)",
               WebkitBackdropFilter: "blur(2px)",
               pointerEvents: "none",
+              zIndex: 50,
             }}
             aria-live="polite"
             aria-busy="true"
