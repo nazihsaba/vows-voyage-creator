@@ -286,6 +286,21 @@ export const LumiereTemplate = ({
               {wedding.bride_name?.charAt(0)?.toUpperCase() || "B"}
             </span>
           </div>
+
+          {/* Tap to Start — only when autoplay is blocked (e.g. iOS Low Power Mode). */}
+          {autoplayBlocked && !hasStarted && (
+            <div
+              className="mt-12 opacity-0"
+              style={{ animation: "fadeInUp 0.8s ease-out 1.4s forwards" }}
+            >
+              <Button
+                onClick={handleStartClick}
+                className="bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+              >
+                {t("hero.tapToStart")}
+              </Button>
+            </div>
+          )}
         </section>
 
         {/* ===== HERO SECTION ===== */}
