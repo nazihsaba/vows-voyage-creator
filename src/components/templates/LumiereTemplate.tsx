@@ -242,6 +242,7 @@ export const LumiereTemplate = ({
         <BackgroundVideo
           ref={videoRef}
           src={videoUrl}
+          poster={(wedding as any).video_poster_url || undefined}
           className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
           overlayClassName="fixed inset-0 w-full h-[100dvh] z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
           groomInitial={wedding.groom_name}

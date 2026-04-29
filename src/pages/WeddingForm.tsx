@@ -16,6 +16,7 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
+import { extractFirstFrame } from "@/lib/extractVideoPoster";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
@@ -81,6 +82,7 @@ const WeddingForm = () => {
     status: "draft",
     main_picture_url: "",
     video_url: "",
+    video_poster_url: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
@@ -336,7 +338,7 @@ const WeddingForm = () => {
   const removeVideo = () => {
     setVideoFile(null);
     setVideoPreview("");
-    setFormData({ ...formData, video_url: "" });
+    setFormData({ ...formData, video_url: "", video_poster_url: "" } as any);
   };
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -572,6 +574,7 @@ const WeddingForm = () => {
 
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
+      let videoPosterUrl = (formData as any).video_poster_url || "";
       let audioUrl = formData.audio_url;
 
       // Upload new image if selected
@@ -579,9 +582,21 @@ const WeddingForm = () => {
         imageUrl = await uploadImage(imageFile, user.id);
       }
 
-      // Upload new video if selected
+      // Upload new video if selected — also extract & upload first-frame poster
       if (videoFile) {
         videoUrl = await uploadImage(videoFile, user.id);
+        try {
+          const posterBlob = await extractFirstFrame(videoFile);
+          if (posterBlob) {
+            const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
+            videoPosterUrl = await uploadImage(posterFile, user.id);
+          } else {
+            videoPosterUrl = "";
+          }
+        } catch (err) {
+          console.warn("Video poster extraction failed (non-blocking):", err);
+          videoPosterUrl = "";
+        }
       }
 
       // Upload new audio if selected, or clear if removed
@@ -638,6 +653,7 @@ const WeddingForm = () => {
             slug,
             main_picture_url: imageUrl,
             video_url: videoUrl,
+            video_poster_url: videoPosterUrl || null,
             audio_url: audioUrl,
             audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
             audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
@@ -655,6 +671,7 @@ const WeddingForm = () => {
               slug,
               main_picture_url: imageUrl,
               video_url: videoUrl,
+              video_poster_url: videoPosterUrl || null,
               audio_url: audioUrl,
               audio_start_time: audioTrimSettings?.startTime || 0,
               audio_end_time: audioTrimSettings?.endTime || 0,
@@ -673,6 +690,7 @@ const WeddingForm = () => {
           slug: data.slug,
           main_picture_url: imageUrl,
           video_url: videoUrl,
+          video_poster_url: videoPosterUrl,
           audio_url: audioUrl,
           audio_start_time: audioTrimSettings?.startTime || 0,
           audio_end_time: audioTrimSettings?.endTime || 0,

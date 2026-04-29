@@ -190,6 +190,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           ref={innerRef}
           className={className}
           src={src}
+          poster={poster}
           {...(attemptAutoplay ? { autoPlay: true } : {})}
           muted
           loop={loop}
