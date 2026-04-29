@@ -478,5 +478,6 @@ export const LumiereTemplate = ({
         </div>
       </div>
     </div>
+    </>
   );
 };
