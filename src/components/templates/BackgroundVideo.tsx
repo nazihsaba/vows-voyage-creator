@@ -174,7 +174,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
       };
-    }, [src, attemptAutoplay]);
+    }, [src, attemptAutoplay, onAutoplayBlocked]);
 
     const ringColor = loaderTheme === "dark" ? "rgba(0,0,0,0.18)" : "rgba(255,255,255,0.25)";
     const ringActive = loaderTheme === "dark" ? "#865814" : "#ffffff";
