@@ -41,6 +41,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       overlayClassName,
       type = "video/mp4",
       onLoadingChange,
+      attemptAutoplay = true,
     },
     ref
   ) => {
