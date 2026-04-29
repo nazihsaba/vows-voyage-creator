@@ -50,7 +50,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       attemptAutoplay = true,
       onAutoplayBlocked,
     },
-    ref
+    ref,
   ) => {
     const innerRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLVideoElement);
@@ -83,12 +83,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (!attemptAutoplay) return; // parent controls playback
         const p = video.play();
         if (p !== undefined) {
-          p
-            .then(() => setNeedsTap(false))
-            .catch(() => {
-              setNeedsTap(true);
-              onAutoplayBlocked?.();
-            });
+          p.then(() => setNeedsTap(false)).catch(() => {
+            setNeedsTap(true);
+            onAutoplayBlocked?.();
+          });
         }
       };
 
@@ -195,7 +193,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           muted
           loop={loop}
           playsInline
-          preload="auto"
+          preload="metadata"
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
@@ -203,7 +201,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
-            "controlslist": "nodownload noplaybackrate noremoteplayback nofullscreen",
+            controlslist: "nodownload noplaybackrate noremoteplayback nofullscreen",
           } as Record<string, string>)}
         />
 
@@ -335,7 +333,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
             for invoking videoRef.current.play(). No separate overlay here. */}
       </>
     );
-  }
+  },
 );
 
 BackgroundVideo.displayName = "BackgroundVideo";
