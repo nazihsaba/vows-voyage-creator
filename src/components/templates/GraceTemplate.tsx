@@ -232,7 +232,7 @@ export const GraceTemplate = ({
             tag="p"
             className="text-template-body tracking-wide"
           />
-          {!hasStarted && (
+          {autoplayBlocked && !hasStarted && (
             <Button
               onClick={handleStartClick}
               className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
