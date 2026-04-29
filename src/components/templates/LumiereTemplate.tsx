@@ -478,6 +478,7 @@ export const LumiereTemplate = ({
           </LumiereTornCard>
         </div>
       </div>
+      )}
     </div>
     </>
   );
