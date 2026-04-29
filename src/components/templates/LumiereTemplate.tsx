@@ -55,6 +55,7 @@ export const LumiereTemplate = ({
   const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoLoading, setVideoLoading] = useState(!!wedding?.video_url);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
