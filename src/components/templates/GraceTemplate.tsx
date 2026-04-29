@@ -495,5 +495,6 @@ export const GraceTemplate = ({
 
       <TemplatePreviewFooter />
     </div>
+    </>
   );
 };
