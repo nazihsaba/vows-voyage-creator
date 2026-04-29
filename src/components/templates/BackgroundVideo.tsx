@@ -45,6 +45,17 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       if (!video) return;
 
       let ready = false;
+      const THRESHOLD = 0.8; // require 80% buffered before reveal
+
+      const bufferedFraction = () => {
+        const dur = video.duration;
+        if (!dur || !isFinite(dur) || dur <= 0) return 0;
+        let end = 0;
+        for (let i = 0; i < video.buffered.length; i++) {
+          end = Math.max(end, video.buffered.end(i));
+        }
+        return end / dur;
+      };
 
       const tryPlay = () => {
         if (!ready) return;
@@ -53,21 +64,39 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         });
       };
 
-      const onCanPlayThrough = () => {
+      const reveal = () => {
+        if (ready) return;
         ready = true;
         setLoading(false);
         tryPlay();
       };
-      const onWaiting = () => setLoading(true);
-      const onPlaying = () => setLoading(false);
-      const onStalled = () => setLoading(true);
+
+      const checkProgress = () => {
+        if (ready) return;
+        if (bufferedFraction() >= THRESHOLD) reveal();
+      };
+
+      const onCanPlayThrough = () => {
+        // Fully buffered (or browser confident) — safe to reveal regardless of threshold.
+        reveal();
+      };
+      const onWaiting = () => {
+        if (!ready) setLoading(true);
+      };
+      const onPlaying = () => {
+        if (ready) setLoading(false);
+      };
+      const onStalled = () => {
+        if (!ready) setLoading(true);
+      };
       const onLoadedData = () => {
-        // Fallback: some browsers fire loadeddata before canplaythrough on cached files.
-        if (video.readyState >= 4) {
-          ready = true;
-          setLoading(false);
-          tryPlay();
-        }
+        checkProgress();
+      };
+      const onProgress = () => {
+        checkProgress();
+      };
+      const onLoadedMetadata = () => {
+        checkProgress();
       };
 
       video.addEventListener("canplaythrough", onCanPlayThrough);
@@ -75,6 +104,8 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       video.addEventListener("playing", onPlaying);
       video.addEventListener("stalled", onStalled);
       video.addEventListener("loadeddata", onLoadedData);
+      video.addEventListener("progress", onProgress);
+      video.addEventListener("loadedmetadata", onLoadedMetadata);
 
       // Kick off load (preload="auto" handles it, but be explicit)
       try {
