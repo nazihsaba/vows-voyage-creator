@@ -653,6 +653,7 @@ const WeddingForm = () => {
             slug,
             main_picture_url: imageUrl,
             video_url: videoUrl,
+            video_poster_url: videoPosterUrl || null,
             audio_url: audioUrl,
             audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
             audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
