@@ -57,8 +57,58 @@ export const LumiereTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoLoading, setVideoLoading] = useState(!!wedding?.video_url);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+
+  // While autoplay is blocked and the user hasn't tapped, lock scroll
+  // (same gated-entry behavior as templates with a built-in Tap to Start).
+  useEffect(() => {
+    const locked = autoplayBlocked && !hasStarted;
+    if (locked) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      document.body.style.touchAction = "";
+    };
+  }, [autoplayBlocked, hasStarted]);
+
+  const handleStartClick = async () => {
+    setHasStarted(true);
+    const video = videoRef.current;
+    if (video) {
+      video.muted = true;
+      video.playsInline = true;
+      try {
+        if (video.readyState < 2) {
+          try { video.load(); } catch { /* noop */ }
+        }
+        const p = video.play();
+        if (p !== undefined) {
+          p.then(() => {
+            setAutoplayBlocked(false);
+          }).catch((err) => {
+            console.error("[Lumiere] video.play() rejected on tap:", err);
+          });
+        }
+      } catch (err) {
+        console.error("[Lumiere] Error calling video.play():", err);
+      }
+    }
+    // Also kick the audio (some browsers require a fresh user gesture)
+    if (wedding.audio_url && audioRef.current) {
+      audioRef.current.play().catch(() => {});
+    }
+  };
 
   useEffect(() => {
     const resumeVideo = () => {
