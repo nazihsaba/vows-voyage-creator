@@ -173,10 +173,14 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           loop={loop}
           playsInline
           preload="auto"
+          controls={false}
+          disablePictureInPicture
+          disableRemotePlayback
           style={{ visibility: loading ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
+            "controlslist": "nodownload noplaybackrate noremoteplayback nofullscreen",
           } as Record<string, string>)}
         />
 

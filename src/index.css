@@ -335,3 +335,16 @@ All colors MUST be HSL.
     text-align: left;
   }
 }
+
+/* Hide iOS native video play button overlay (shown when autoplay is blocked in Low Power Mode) */
+video::-webkit-media-controls-start-playback-button {
+  display: none !important;
+  -webkit-appearance: none;
+}
+video::-webkit-media-controls {
+  display: none !important;
+}
+video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
