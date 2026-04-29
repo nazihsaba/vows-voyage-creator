@@ -1,9 +1,11 @@
+import { useEffect, useState } from "react";
 import { Calendar, MapPin, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import doree1 from "@/assets/doree1.jpeg";
 import doree2 from "@/assets/doree2.jpeg";
 import doree3 from "@/assets/doree3.jpeg";
