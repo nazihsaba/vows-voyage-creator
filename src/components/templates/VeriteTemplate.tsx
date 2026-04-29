@@ -150,8 +150,9 @@ export const VeriteTemplate = ({
           <source src={wedding.audio_url} type="audio/mpeg" />
         </audio>
       )}
-
-      {/* Hero Section */}
+      {!heroLoading && (
+        <div className="animate-fade-in">
+          {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
         style={{
@@ -440,6 +441,8 @@ export const VeriteTemplate = ({
       </AnimatedSection>
 
       <TemplatePreviewFooter />
+        </div>
+      )}
     </div>
   );
 };
