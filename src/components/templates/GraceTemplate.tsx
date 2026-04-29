@@ -14,6 +14,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 
 interface GraceTemplateProps {
   wedding: any;
@@ -201,6 +202,10 @@ export const GraceTemplate = ({
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (
+    <>
+      {videoLoading && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      )}
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
       {hasArabic && <LanguageToggle />}
 
