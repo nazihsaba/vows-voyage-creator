@@ -207,6 +207,7 @@ const LumierePreview = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
