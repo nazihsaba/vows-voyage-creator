@@ -187,7 +187,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           />
         )}
 
-        {/* Elegant initials loader */}
+        {/* Elegant initials loader — forced above all overlays */}
         {loading && (
           <div
             className={overlayClassName ?? className}
