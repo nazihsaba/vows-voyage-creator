@@ -7,6 +7,7 @@ import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import lumiereVideo from "@/assets/lumiere-video.mp4";
+import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import lumiere1 from "@/assets/lumiere-1.jpg";
 import lumiere2 from "@/assets/lumiere-2.jpg";
 import lumiere3 from "@/assets/lumiere-3.jpg";
@@ -92,14 +93,14 @@ const LumierePreview = () => {
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]">
       {/* Layer 1: Fixed background video */}
-      <video
+      <BackgroundVideo
         ref={videoRef}
-        className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
         src={lumiereVideo}
-        autoPlay
-        muted
-        loop
-        playsInline
+        className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:w-[50%]"
+        overlayClassName="fixed inset-0 w-full h-[100dvh] z-0 lg:left-[25%] lg:w-[50%]"
+        groomInitial="A"
+        brideInitial="L"
+        loaderTheme="light"
       />
 
       {/* Layer 2: Dark overlay */}
