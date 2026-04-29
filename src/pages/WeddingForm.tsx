@@ -16,6 +16,7 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
+import { extractFirstFrame } from "@/lib/extractVideoPoster";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "bx:home", label: "Home" },
