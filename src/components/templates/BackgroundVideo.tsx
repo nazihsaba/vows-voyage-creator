@@ -126,9 +126,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           loop={loop}
           playsInline
           preload="auto"
-          // @ts-expect-error - non-standard but useful on iOS WebKit
-          webkit-playsinline="true"
-          x5-playsinline="true"
+          {...({
+            "webkit-playsinline": "true",
+            "x5-playsinline": "true",
+          } as Record<string, string>)}
         />
 
         {/* Poster overlay while buffering */}
