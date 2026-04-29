@@ -12,6 +12,8 @@ interface BackgroundVideoProps {
   overlayClassName?: string;
   /** Optional <source> children fallback. If omitted, src is used directly. */
   type?: string;
+  /** Fired when buffering state changes. true = still loading (<80%), false = ready. */
+  onLoadingChange?: (loading: boolean) => void;
 }
 
 /**
