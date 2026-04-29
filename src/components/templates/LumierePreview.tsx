@@ -60,6 +60,7 @@ const sampleGifts = [
 
 const LumierePreview = () => {
   const videoRef = useRef<HTMLVideoElement | null>(null);
+  const [videoLoading, setVideoLoading] = useState(true);
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
