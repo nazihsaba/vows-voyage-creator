@@ -338,7 +338,7 @@ const WeddingForm = () => {
   const removeVideo = () => {
     setVideoFile(null);
     setVideoPreview("");
-    setFormData({ ...formData, video_url: "" });
+    setFormData({ ...formData, video_url: "", video_poster_url: "" } as any);
   };
 
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
