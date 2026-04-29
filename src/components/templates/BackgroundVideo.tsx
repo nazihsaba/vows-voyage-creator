@@ -152,21 +152,41 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         /* noop */
       }
 
-      // Resume if tab becomes visible again
-      const resume = () => {
+      // Resume if tab becomes visible again. Chrome (desktop & Android),
+      // unlike Safari, often pauses muted background videos when the tab
+      // is backgrounded (e.g. user clicks a Google Maps link and returns).
+      // The `playing`/`canplay` events that normally drive autoplay don't
+      // re-fire on return, so we proactively retry play on visibility,
+      // focus, pageshow (incl. bfcache restore), AND any unexpected pause.
+      const tryResume = () => {
         if (!attemptAutoplay) return;
-        if (video.paused && ready) {
-          const p = video.play();
-          if (p !== undefined)
-            p.then(() => setNeedsTap(false)).catch(() => {
-              setNeedsTap(true);
-              onAutoplayBlockedRef.current?.();
-            });
-        }
+        if (document.visibilityState !== "visible") return;
+        if (!ready) return;
+        if (!video.paused) return;
+        const p = video.play();
+        if (p !== undefined)
+          p.then(() => setNeedsTap(false)).catch(() => {
+            setNeedsTap(true);
+            onAutoplayBlockedRef.current?.();
+          });
+      };
+      // Retry a few times — Chrome sometimes rejects the first play() call
+      // immediately after returning to the tab, but accepts a follow-up.
+      const resume = () => {
+        tryResume();
+        setTimeout(tryResume, 150);
+        setTimeout(tryResume, 600);
       };
       const onVisibility = () => {
         if (document.visibilityState === "visible") resume();
       };
+      const onPause = () => {
+        // If the browser paused us while the page is visible (Chrome tab
+        // restore), kick playback back on. Don't fight a user-initiated
+        // pause when they're not even looking at the tab.
+        if (document.visibilityState === "visible") resume();
+      };
+      video.addEventListener("pause", onPause);
       document.addEventListener("visibilitychange", onVisibility);
       window.addEventListener("focus", resume);
       window.addEventListener("pageshow", resume);
@@ -179,6 +199,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         video.removeEventListener("loadeddata", onLoadedData);
         video.removeEventListener("progress", onProgress);
         video.removeEventListener("loadedmetadata", onLoadedMetadata);
+        video.removeEventListener("pause", onPause);
         document.removeEventListener("visibilitychange", onVisibility);
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
