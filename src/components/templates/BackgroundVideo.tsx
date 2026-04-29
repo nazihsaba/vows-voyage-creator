@@ -48,6 +48,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       type = "video/mp4",
       onLoadingChange,
       attemptAutoplay = true,
+      onAutoplayBlocked,
     },
     ref
   ) => {
