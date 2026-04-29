@@ -176,7 +176,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
-          style={{ visibility: loading || needsTap ? "hidden" : "visible" }}
+          style={{ visibility: loading ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
