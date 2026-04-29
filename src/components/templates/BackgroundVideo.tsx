@@ -42,6 +42,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
     const innerRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLVideoElement);
     const [loading, setLoading] = useState(true);
+    const [needsTap, setNeedsTap] = useState(false);
 
     useEffect(() => {
       onLoadingChange?.(loading);
