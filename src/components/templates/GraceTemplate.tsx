@@ -292,6 +292,7 @@ export const GraceTemplate = ({
       <section className="relative py-16 px-4 overflow-hidden">
         <BackgroundVideo
           src={wedding.video_url || gracePreviewVideo}
+          poster={(wedding as any).video_poster_url || undefined}
           className="absolute inset-0 w-full h-full object-cover"
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
