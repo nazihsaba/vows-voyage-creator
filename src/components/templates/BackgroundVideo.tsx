@@ -96,7 +96,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (p !== undefined) {
           p.then(() => setNeedsTap(false)).catch(() => {
             setNeedsTap(true);
-            onAutoplayBlocked?.();
+            onAutoplayBlockedRef.current?.();
           });
         }
       };
@@ -160,7 +160,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           if (p !== undefined)
             p.then(() => setNeedsTap(false)).catch(() => {
               setNeedsTap(true);
-              onAutoplayBlocked?.();
+              onAutoplayBlockedRef.current?.();
             });
         }
       };
@@ -183,7 +183,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
       };
-    }, [src, attemptAutoplay, onAutoplayBlocked]);
+    }, [src, attemptAutoplay]);
 
 
     return (
