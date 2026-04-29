@@ -182,12 +182,13 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
               backgroundSize: "cover",
               backgroundPosition: "center",
               pointerEvents: "none",
+              zIndex: 49,
             }}
             aria-hidden
           />
         )}
 
-        {/* Elegant initials loader */}
+        {/* Elegant initials loader — forced above all overlays */}
         {loading && (
           <div
             className={overlayClassName ?? className}
@@ -199,6 +200,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
               backdropFilter: "blur(2px)",
               WebkitBackdropFilter: "blur(2px)",
               pointerEvents: "none",
+              zIndex: 50,
             }}
             aria-live="polite"
             aria-busy="true"
