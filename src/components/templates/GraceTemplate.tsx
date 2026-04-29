@@ -136,9 +136,13 @@ export const GraceTemplate = ({
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
           loaderTheme="light"
+          onLoadingChange={setVideoLoading}
         />
         <div className="absolute inset-0 bg-black/40" />
-        <div className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in">
+        <div
+          className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in transition-opacity duration-500"
+          style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
+        >
           <EditableField
             fieldId="hero-subtitle"
             text={getFieldValue("hero-subtitle", t("hero.theWeddingOf"))}
