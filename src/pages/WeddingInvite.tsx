@@ -296,9 +296,73 @@ const WeddingInvite = () => {
   const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
   if (loading) {
+    const g = (wedding?.groom_name || "").charAt(0).toUpperCase() || "G";
+    const b = (wedding?.bride_name || "").charAt(0).toUpperCase() || "B";
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-soft">
-        <img src={aureaLogoIcon} alt="Auréa Invites" className="w-16 h-16 animate-pulse" />
+      <div className="min-h-screen flex flex-col bg-gradient-soft">
+        <div className="flex-1 flex items-center justify-center">
+          <div
+            style={{
+              position: "relative",
+              width: 120,
+              height: 120,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <svg
+              width="120"
+              height="120"
+              viewBox="0 0 120 120"
+              style={{
+                position: "absolute",
+                inset: 0,
+                animation: "aurea-spin 1.6s linear infinite",
+              }}
+            >
+              <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5" />
+              <circle
+                cx="60"
+                cy="60"
+                r="54"
+                fill="none"
+                stroke="#865814"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeDasharray="40 300"
+              />
+            </svg>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 10,
+                color: "#1a1a1a",
+                fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
+                letterSpacing: "0.05em",
+              }}
+            >
+              <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
+              <span
+                style={{
+                  fontSize: 22,
+                  fontStyle: "italic",
+                  opacity: 0.7,
+                  fontFamily: "'Cormorant Garamond', serif",
+                }}
+              >
+                &amp;
+              </span>
+              <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
+            </div>
+            <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
+          </div>
+        </div>
+        <div className="pb-8 flex flex-col items-center gap-2">
+          <span className="text-muted-foreground text-xs tracking-wide">Made for love, by</span>
+          <img src={aureaLogoIcon} alt="Auréa Invites" className="w-8 h-8 opacity-80" />
+        </div>
       </div>
     );
   }
