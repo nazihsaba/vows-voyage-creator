@@ -14,6 +14,7 @@ import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -230,6 +231,10 @@ export const LumiereTemplate = ({
   }, []);
 
   return (
+    <>
+      {videoLoading && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      )}
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
 
