@@ -247,85 +247,82 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           />
         )}
 
-        {/* Elegant initials loader — forced above all overlays */}
+        {/* Elegant initials loader — matches the main WeddingInvite loader exactly */}
         {loading && (
           <div
-            className={overlayClassName ?? className}
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              background: loaderBg,
-              backdropFilter: "blur(2px)",
-              WebkitBackdropFilter: "blur(2px)",
-              pointerEvents: "none",
-              zIndex: 50,
-            }}
+            className="fixed inset-0 w-screen overflow-hidden flex flex-col bg-gradient-soft"
+            style={{ height: "100dvh", touchAction: "none", zIndex: 50 }}
             aria-live="polite"
             aria-busy="true"
           >
-            <div
-              style={{
-                position: "relative",
-                width: 120,
-                height: 120,
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              {/* Outer rotating ring */}
-              <svg
-                width="120"
-                height="120"
-                viewBox="0 0 120 120"
-                style={{
-                  position: "absolute",
-                  inset: 0,
-                  animation: "aurea-spin 1.6s linear infinite",
-                }}
-              >
-                <circle cx="60" cy="60" r="54" fill="none" stroke={ringColor} strokeWidth="1.5" />
-                <circle
-                  cx="60"
-                  cy="60"
-                  r="54"
-                  fill="none"
-                  stroke={ringActive}
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeDasharray="40 300"
-                />
-              </svg>
-
-              {/* Initials G & B */}
+            <div className="flex-1 flex items-center justify-center">
               <div
                 style={{
+                  position: "relative",
+                  width: 120,
+                  height: 120,
                   display: "flex",
                   alignItems: "center",
-                  gap: 10,
-                  color: textColor,
-                  fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
-                  letterSpacing: "0.05em",
+                  justifyContent: "center",
                 }}
               >
-                <span style={{ fontSize: 34, fontWeight: 300 }}>{g || "G"}</span>
-                <span
+                <svg
+                  width="120"
+                  height="120"
+                  viewBox="0 0 120 120"
                   style={{
-                    fontSize: 22,
-                    fontStyle: "italic",
-                    opacity: 0.7,
-                    fontFamily: "'Cormorant Garamond', serif",
+                    position: "absolute",
+                    inset: 0,
+                    animation: "aurea-spin 1.6s linear infinite",
                   }}
                 >
-                  &amp;
-                </span>
-                <span style={{ fontSize: 34, fontWeight: 300 }}>{b || "B"}</span>
+                  <circle cx="60" cy="60" r="54" fill="none" stroke="rgba(0,0,0,0.18)" strokeWidth="1.5" />
+                  <circle
+                    cx="60"
+                    cy="60"
+                    r="54"
+                    fill="none"
+                    stroke="#865814"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeDasharray="40 300"
+                  />
+                </svg>
+                {(g || b) && (
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 10,
+                      color: "#1a1a1a",
+                      fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
+                      letterSpacing: "0.05em",
+                    }}
+                  >
+                    <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
+                    <span
+                      style={{
+                        fontSize: 22,
+                        fontStyle: "italic",
+                        opacity: 0.7,
+                        fontFamily: "'Cormorant Garamond', serif",
+                      }}
+                    >
+                      &amp;
+                    </span>
+                    <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
+                  </div>
+                )}
+                <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
               </div>
             </div>
-            <style>{`
-              @keyframes aurea-spin { to { transform: rotate(360deg); } }
-            `}</style>
+            <div
+              className="flex flex-col items-center gap-2 shrink-0"
+              style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}
+            >
+              <span className="text-muted-foreground text-xs tracking-wide">Made for love, by</span>
+              <img src={aureaLogoIcon} alt="Auréa Invites" className="w-8 h-8 opacity-80" />
+            </div>
           </div>
         )}
 
