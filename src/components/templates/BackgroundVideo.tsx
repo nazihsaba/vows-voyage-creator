@@ -19,6 +19,12 @@ interface BackgroundVideoProps {
    * (e.g. via a "Tap to Start" button). Defaults to true.
    */
   attemptAutoplay?: boolean;
+  /**
+   * If provided, called when programmatic autoplay is blocked (e.g. iOS Low
+   * Power Mode). When set, the internal invisible tap layer is suppressed —
+   * the parent is expected to render its own visible "Tap to Start" UI.
+   */
+  onAutoplayBlocked?: () => void;
 }
 
 /**
