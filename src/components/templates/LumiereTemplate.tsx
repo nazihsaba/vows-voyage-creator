@@ -243,8 +243,8 @@ export const LumiereTemplate = ({
           ref={videoRef}
           src={videoUrl}
           poster={(wedding as any).video_poster_url || undefined}
-          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
-          overlayClassName="fixed inset-0 w-full h-[100dvh] z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
+          className="fixed inset-0 w-full h-[100lvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
+          overlayClassName="fixed inset-0 w-full h-[100lvh] z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
           loaderTheme="light"
@@ -254,7 +254,7 @@ export const LumiereTemplate = ({
       )}
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
+      <div className="fixed inset-0 h-[100lvh] bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Tap-to-Start gate — only shown when autoplay is blocked (e.g. iOS Low Power Mode).
           Uses the first gallery image as a poster frame, mirroring the Grace template UX. */}
