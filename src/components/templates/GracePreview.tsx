@@ -8,6 +8,7 @@ import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter"
 import graceVideo from "@/assets/grace-preview-video.mp4";
 import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 
 const staticWedding = {
   groom_name: "Noah",
@@ -98,6 +99,10 @@ export const GracePreview = () => {
   };
 
   return (
+    <>
+      {videoLoading && (
+        <TemplateLoader groomName={staticWedding.groom_name} brideName={staticWedding.bride_name} />
+      )}
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
       {/* Hero */}
       <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
