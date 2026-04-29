@@ -35,12 +35,17 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       loaderTheme = "light",
       overlayClassName,
       type = "video/mp4",
+      onLoadingChange,
     },
     ref
   ) => {
     const innerRef = useRef<HTMLVideoElement>(null);
     useImperativeHandle(ref, () => innerRef.current as HTMLVideoElement);
     const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+      onLoadingChange?.(loading);
+    }, [loading, onLoadingChange]);
 
     useEffect(() => {
       const video = innerRef.current;
