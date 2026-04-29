@@ -254,7 +254,7 @@ export const LumiereTemplate = ({
       )}
 
       {/* Layer 2: Dark overlay */}
-      <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
+      <div className="fixed inset-0 h-[100lvh] bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Tap-to-Start gate — only shown when autoplay is blocked (e.g. iOS Low Power Mode).
           Uses the first gallery image as a poster frame, mirroring the Grace template UX. */}
