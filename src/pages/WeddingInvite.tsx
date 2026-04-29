@@ -296,10 +296,11 @@ const WeddingInvite = () => {
   const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
   if (loading) {
-    const g = (wedding?.groom_name || "").charAt(0).toUpperCase() || "G";
-    const b = (wedding?.bride_name || "").charAt(0).toUpperCase() || "B";
+    const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
+    const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
+    const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
     return (
-      <div className="min-h-screen flex flex-col bg-gradient-soft">
+      <div className="h-screen w-screen overflow-hidden fixed inset-0 flex flex-col bg-gradient-soft" style={{ touchAction: "none" }}>
         <div className="flex-1 flex items-center justify-center">
           <div
             style={{
@@ -333,29 +334,31 @@ const WeddingInvite = () => {
                 strokeDasharray="40 300"
               />
             </svg>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 10,
-                color: "#1a1a1a",
-                fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
-                letterSpacing: "0.05em",
-              }}
-            >
-              <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
-              <span
+            {hasNames && (
+              <div
                 style={{
-                  fontSize: 22,
-                  fontStyle: "italic",
-                  opacity: 0.7,
-                  fontFamily: "'Cormorant Garamond', serif",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 10,
+                  color: "#1a1a1a",
+                  fontFamily: "'Cormorant Garamond', 'Playfair Display', serif",
+                  letterSpacing: "0.05em",
                 }}
               >
-                &amp;
-              </span>
-              <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
-            </div>
+                <span style={{ fontSize: 34, fontWeight: 300 }}>{g}</span>
+                <span
+                  style={{
+                    fontSize: 22,
+                    fontStyle: "italic",
+                    opacity: 0.7,
+                    fontFamily: "'Cormorant Garamond', serif",
+                  }}
+                >
+                  &amp;
+                </span>
+                <span style={{ fontSize: 34, fontWeight: 300 }}>{b}</span>
+              </div>
+            )}
             <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         </div>

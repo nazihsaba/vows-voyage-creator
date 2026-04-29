@@ -82,11 +82,17 @@ export const EclatTemplate = ({
   useEffect(() => {
     if (!hasStarted) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      document.body.style.touchAction = "none";
     } else {
       document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
+      document.body.style.touchAction = "auto";
     }
     return () => {
       document.body.style.overflow = "auto";
+      document.documentElement.style.overflow = "auto";
+      document.body.style.touchAction = "auto";
     };
   }, [hasStarted]);
 
