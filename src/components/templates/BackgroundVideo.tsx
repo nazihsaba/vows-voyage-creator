@@ -57,9 +57,20 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
     const [loading, setLoading] = useState(true);
     const [needsTap, setNeedsTap] = useState(false);
 
+    // Keep latest callback identities in refs so the setup effect below
+    // doesn't re-run (and call video.load(), resetting playback) when a
+    // parent re-renders with new inline arrow handlers — e.g. an RSVP
+    // checkbox toggle in LumiereTemplate.
+    const onLoadingChangeRef = useRef(onLoadingChange);
+    const onAutoplayBlockedRef = useRef(onAutoplayBlocked);
     useEffect(() => {
-      onLoadingChange?.(loading);
-    }, [loading, onLoadingChange]);
+      onLoadingChangeRef.current = onLoadingChange;
+      onAutoplayBlockedRef.current = onAutoplayBlocked;
+    });
+
+    useEffect(() => {
+      onLoadingChangeRef.current?.(loading);
+    }, [loading]);
 
     useEffect(() => {
       const video = innerRef.current;
@@ -85,7 +96,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (p !== undefined) {
           p.then(() => setNeedsTap(false)).catch(() => {
             setNeedsTap(true);
-            onAutoplayBlocked?.();
+            onAutoplayBlockedRef.current?.();
           });
         }
       };
@@ -149,7 +160,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           if (p !== undefined)
             p.then(() => setNeedsTap(false)).catch(() => {
               setNeedsTap(true);
-              onAutoplayBlocked?.();
+              onAutoplayBlockedRef.current?.();
             });
         }
       };
@@ -172,7 +183,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         window.removeEventListener("focus", resume);
         window.removeEventListener("pageshow", resume);
       };
-    }, [src, attemptAutoplay, onAutoplayBlocked]);
+    }, [src, attemptAutoplay]);
 
 
     return (
