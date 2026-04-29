@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
