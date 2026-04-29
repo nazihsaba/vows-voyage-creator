@@ -96,6 +96,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       };
       const onPlaying = () => {
         if (ready) setLoading(false);
+        setNeedsTap(false);
       };
       const onStalled = () => {
         if (!ready) setLoading(true);
@@ -167,7 +168,6 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           ref={innerRef}
           className={className}
           src={src}
-          poster={poster}
           autoPlay
           muted
           loop={loop}
@@ -176,7 +176,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
-          style={{ visibility: loading ? "hidden" : "visible" }}
+          style={{ visibility: loading || needsTap ? "hidden" : "visible" }}
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
@@ -185,7 +185,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         />
 
         {/* Poster overlay while buffering */}
-        {loading && poster && (
+        {(loading || needsTap) && poster && (
           <div
             className={overlayClassName ?? className}
             style={{
