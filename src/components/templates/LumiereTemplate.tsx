@@ -12,6 +12,7 @@ import LumiereGallery from "./lumiere/LumiereGallery";
 import LumiereGifts from "./lumiere/LumiereGifts";
 import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
+import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -186,14 +187,14 @@ export const LumiereTemplate = ({
 
       {/* Layer 1: Fixed background video */}
       {videoUrl && (
-        <video
+        <BackgroundVideo
           ref={videoRef}
-          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
           src={videoUrl}
-          autoPlay
-          muted
-          loop
-          playsInline
+          className="fixed inset-0 w-full h-[100dvh] object-cover z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
+          overlayClassName="fixed inset-0 w-full h-[100dvh] z-0 lg:left-[25%] lg:right-auto lg:w-[50%]"
+          groomInitial={wedding.groom_name}
+          brideInitial={wedding.bride_name}
+          loaderTheme="light"
         />
       )}
 
