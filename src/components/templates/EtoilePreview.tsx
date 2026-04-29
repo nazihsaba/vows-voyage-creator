@@ -2,6 +2,7 @@ import { useEffect, useState, useCallback } from "react";
 import { ChevronDown, Heart } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import TemplateLoader from "@/components/templates/TemplateLoader";
 import EtoileTornCard from "./etoile/EtoileTornCard";
 import EtoileCountdown from "./etoile/EtoileCountdown";
 import EtoileEvents from "./etoile/EtoileEvents";
