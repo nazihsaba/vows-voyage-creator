@@ -127,7 +127,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       // Resume if tab becomes visible again
       const resume = () => {
-        if (video.paused && ready) video.play().catch(() => {});
+        if (video.paused && ready) {
+          const p = video.play();
+          if (p !== undefined) p.then(() => setNeedsTap(false)).catch(() => setNeedsTap(true));
+        }
       };
       const onVisibility = () => {
         if (document.visibilityState === "visible") resume();
