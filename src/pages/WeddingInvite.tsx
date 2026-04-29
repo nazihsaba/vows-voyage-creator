@@ -300,7 +300,7 @@ const WeddingInvite = () => {
     const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
     const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
     return (
-      <div className="h-screen w-screen overflow-hidden fixed inset-0 flex flex-col bg-gradient-soft" style={{ touchAction: "none" }}>
+      <div className="fixed inset-0 w-screen overflow-hidden flex flex-col bg-gradient-soft" style={{ height: "100dvh", touchAction: "none" }}>
         <div className="flex-1 flex items-center justify-center">
           <div
             style={{
@@ -362,7 +362,7 @@ const WeddingInvite = () => {
             <style>{`@keyframes aurea-spin { to { transform: rotate(360deg); } }`}</style>
           </div>
         </div>
-        <div className="pb-8 flex flex-col items-center gap-2">
+        <div className="flex flex-col items-center gap-2 shrink-0" style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 24px)" }}>
           <span className="text-muted-foreground text-xs tracking-wide">Made for love, by</span>
           <img src={aureaLogoIcon} alt="Auréa Invites" className="w-8 h-8 opacity-80" />
         </div>
