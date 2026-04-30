@@ -101,8 +101,11 @@ export async function compressVideo(
     ]);
 
     const data = await ff.readFile(outputName);
-    const buffer = data instanceof Uint8Array ? data : new Uint8Array();
-    const blob = new Blob([buffer], { type: "video/mp4" });
+    const bytes =
+      data instanceof Uint8Array
+        ? new Uint8Array(data.buffer.slice(data.byteOffset, data.byteOffset + data.byteLength))
+        : new Uint8Array();
+    const blob = new Blob([bytes], { type: "video/mp4" });
 
     // Cleanup virtual FS
     try { await ff.deleteFile(inputName); } catch {}
