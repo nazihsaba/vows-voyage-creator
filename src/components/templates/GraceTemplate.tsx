@@ -74,7 +74,7 @@ export const GraceTemplate = ({
       raf2 = requestAnimationFrame(() => {
         settle = window.setTimeout(() => {
           setLoaderFadingOut(true);
-          unmount = window.setTimeout(() => setShowLoader(false), 450);
+          unmount = window.setTimeout(() => setShowLoader(false), 700);
         }, 80);
       });
     });
