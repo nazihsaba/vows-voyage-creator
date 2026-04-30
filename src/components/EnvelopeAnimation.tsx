@@ -455,7 +455,7 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(28px, 6.4vw, 46px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
