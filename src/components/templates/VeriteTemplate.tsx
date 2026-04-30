@@ -128,7 +128,7 @@ export const VeriteTemplate = ({
           <source src={wedding.audio_url} type="audio/mpeg" />
         </audio>
       )}
-      <div className="animate-fade-in">
+      <div>
         {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
