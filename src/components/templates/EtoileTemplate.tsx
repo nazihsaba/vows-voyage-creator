@@ -169,8 +169,8 @@ export const EtoileTemplate = ({
 
   return (
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
-      {heroLoading && (
-        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      {showLoader && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={fadingOut} />
       )}
       {hasArabic && <LanguageToggle />}
 
