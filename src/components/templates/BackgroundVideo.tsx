@@ -204,7 +204,9 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       window.addEventListener("pageshow", resume);
 
       return () => {
+        window.clearTimeout(safety);
         video.removeEventListener("canplaythrough", onCanPlayThrough);
+        video.removeEventListener("canplay", onCanPlay);
         video.removeEventListener("waiting", onWaiting);
         video.removeEventListener("playing", onPlaying);
         video.removeEventListener("stalled", onStalled);
