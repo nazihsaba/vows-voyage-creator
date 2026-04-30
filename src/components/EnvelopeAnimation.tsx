@@ -309,8 +309,8 @@ export const EnvelopeAnimation = ({
                   </radialGradient>
                   {/* Soft shadow cast by the closed flap onto the body face */}
                   <linearGradient id="env-fold-shadow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(0,0,0,0.32)" />
-                    <stop offset="60%" stopColor="rgba(0,0,0,0.06)" />
+                    <stop offset="0%" stopColor="rgba(0,0,0,0.42)" />
+                    <stop offset="55%" stopColor="rgba(0,0,0,0.10)" />
                     <stop offset="100%" stopColor="rgba(0,0,0,0)" />
                   </linearGradient>
                   {/* Highlight along the bottom-fold ridge */}
