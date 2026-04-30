@@ -751,7 +751,12 @@ const WeddingForm = () => {
 
         const startingOrder = (maxOrderData?.image_order || 0) + 1;
 
-        const galleryUrls = await Promise.all(galleryFiles.map((file, index) => uploadImage(file, user.id, index)));
+        const galleryUrls = await Promise.all(
+          galleryFiles.map(async (file, index) => {
+            const compressed = await compressImage(file);
+            return uploadImage(compressed, user.id, index);
+          }),
+        );
 
         const galleryInserts = galleryUrls.map((url, index) => ({
           wedding_id: weddingId,
@@ -772,7 +777,8 @@ const WeddingForm = () => {
           if (id) {
             await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
           }
-          const featuredUrl = await uploadImage(graceFeaturedFile, user.id);
+          const compressedFeatured = await compressImage(graceFeaturedFile);
+          const featuredUrl = await uploadImage(compressedFeatured, user.id);
           const { error: featuredError } = await supabase.from("gallery_images").insert({
             wedding_id: weddingId,
             image_url: featuredUrl,
