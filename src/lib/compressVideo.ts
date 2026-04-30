@@ -84,10 +84,14 @@ export async function compressVideo(
   try {
     await ff.writeFile(inputName, await fetchFile(file));
 
-    // Scale: keep aspect ratio, cap height at maxHeight, ensure even dims for H.264
-    const vfScale = `scale='trunc(iw*min(1\\,${opts.maxHeight}/ih)/2)*2':'trunc(ih*min(1\\,${opts.maxHeight}/ih)/2)*2'`;
+    // Scale: keep aspect ratio, cap height at maxHeight, ensure even dims for H.264.
+    // NOTE: ff.exec receives args as an array (not a shell string), so we must NOT
+    // backslash-escape the commas inside min(1,H/ih). Escaping caused ffmpeg to
+    // reject the filtergraph and the catch block silently returned the original
+    // (uncompressed) file — which is exactly the bug we were seeing.
+    const vfScale = `scale='trunc(iw*min(1,${opts.maxHeight}/ih)/2)*2':'trunc(ih*min(1,${opts.maxHeight}/ih)/2)*2'`;
 
-    await ff.exec([
+    const execCode = await ff.exec([
       "-i", inputName,
       "-vf", vfScale,
       "-c:v", "libx264",
@@ -99,6 +103,9 @@ export async function compressVideo(
       "-pix_fmt", "yuv420p",
       outputName,
     ]);
+    if (execCode !== 0) {
+      throw new Error(`ffmpeg exited with code ${execCode}`);
+    }
 
     const data = await ff.readFile(outputName);
     let blob: Blob;
