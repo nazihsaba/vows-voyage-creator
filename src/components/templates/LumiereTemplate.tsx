@@ -289,13 +289,7 @@ export const LumiereTemplate = ({
           brideInitial={wedding.bride_name}
           loaderTheme="light"
           onLoadingChange={setVideoLoading}
-          onAutoplayBlocked={() => {
-            // Low Power Mode (or any other autoplay block): reveal the
-            // template immediately so the "Tap to Start" button is visible
-            // instead of leaving the loader spinning until its safety timeout.
-            setAutoplayBlocked(true);
-            setVideoLoading(false);
-          }}
+          onAutoplayBlocked={() => setAutoplayBlocked(true)}
         />
       )}
 
