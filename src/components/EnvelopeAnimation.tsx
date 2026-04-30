@@ -5,6 +5,8 @@ import waxSealHeart from "@/assets/wax-seal-heart.png";
 interface EnvelopeAnimationProps {
   groomName?: string;
   brideName?: string;
+  /** ISO date string (YYYY-MM-DD) shown beneath the names. */
+  weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
   children: ReactNode;
@@ -12,18 +14,11 @@ interface EnvelopeAnimationProps {
 
 /**
  * Full-screen photoreal envelope opener.
- *
- * - Fills the entire viewport (100dvh) so it works on any device height.
- * - Body is a single SVG rendered at 100% width/height with a clean V-fold.
- * - Triangular flap hinges in 3D and lifts on tap.
- * - Wax seal is a real heart PNG (no monogram initials needed).
- * - Bride & groom names are rendered in a refined italic calligraphy on the
- *   lower envelope face, framed by hairline rules and a small ampersand.
- * - All animations use a unified cubic-bezier easing for a smooth dissolve.
  */
 export const EnvelopeAnimation = ({
   groomName,
   brideName,
+  weddingDate,
   primaryColor,
   accentColor,
   children,
@@ -31,7 +26,11 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const accent = accentColor || primaryColor || "#865814";
+  // Brand highlight color used for the ampersand and seal accents.
+  const accent = "#865814";
+  // Kept for any future SVG accents but the names always use the brand gold.
+  void accentColor;
+  void primaryColor;
 
   // Title-case helper so names always render with elegant capitalization.
   const toTitle = (s?: string) =>
@@ -43,6 +42,20 @@ export const EnvelopeAnimation = ({
   const groom = toTitle(groomName);
   const bride = toTitle(brideName);
   const hasNames = Boolean(groom || bride);
+
+  // Format wedding date as e.g. "Twenty-Third of June, 2026" → keep simple: "23 · June · 2026".
+  const formattedDate = useMemo(() => {
+    if (!weddingDate) return "";
+    const d = new Date(weddingDate);
+    if (isNaN(d.getTime())) return "";
+    const day = d.getUTCDate();
+    const month = d.toLocaleDateString("en-US", {
+      month: "long",
+      timeZone: "UTC",
+    });
+    const year = d.getUTCFullYear();
+    return `${day} · ${month} · ${year}`;
+  }, [weddingDate]);
 
   const TOTAL = 1800;
 
@@ -445,11 +458,13 @@ export const EnvelopeAnimation = ({
                     style={{
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
-                      fontSize: "clamp(22px, 5.4vw, 44px)",
+                      fontWeight: 400,
+                      fontSize: "clamp(28px, 7vw, 56px)",
                       lineHeight: 1,
-                      margin: "0.18em 0",
-                      color: accent,
-                      opacity: 0.95,
+                      margin: "0.1em 0 0.05em",
+                      color: "#865814",
+                      textShadow:
+                        "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
                     }}
                   >
                     &amp;
@@ -469,30 +484,35 @@ export const EnvelopeAnimation = ({
                     {groom || "\u00A0"}
                   </div>
 
-                  <div
-                    className="mx-auto mt-4"
-                    aria-hidden="true"
-                    style={{
-                      width: "38%",
-                      height: "1px",
-                      background:
-                        "linear-gradient(to right, transparent, rgba(58,42,20,0.4), transparent)",
-                      opacity: 0.7,
-                    }}
-                  />
-                  <div
-                    className="mt-2"
-                    style={{
-                      fontFamily:
-                        "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                      fontSize: "clamp(8px, 1.4vw, 11px)",
-                      letterSpacing: "0.42em",
-                      textTransform: "uppercase",
-                      color: "rgba(58,42,20,0.55)",
-                    }}
-                  >
-                    The Wedding Of
-                  </div>
+                  {formattedDate && (
+                    <>
+                      <div
+                        className="mx-auto mt-5"
+                        aria-hidden="true"
+                        style={{
+                          width: "44%",
+                          height: "1px",
+                          background:
+                            "linear-gradient(to right, transparent, rgba(134,88,20,0.45), transparent)",
+                          opacity: 0.85,
+                        }}
+                      />
+                      <div
+                        className="mt-2"
+                        style={{
+                          fontFamily:
+                            "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
+                          fontSize: "clamp(9px, 1.6vw, 12px)",
+                          letterSpacing: "0.46em",
+                          textTransform: "uppercase",
+                          color: "#865814",
+                          fontWeight: 400,
+                        }}
+                      >
+                        {formattedDate}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 

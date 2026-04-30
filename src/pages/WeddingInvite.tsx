@@ -475,6 +475,7 @@ const WeddingInvite = () => {
       <EnvelopeAnimation
         groomName={wedding.groom_name}
         brideName={wedding.bride_name}
+        weddingDate={wedding.wedding_date}
         primaryColor={wedding.custom_primary_color}
         accentColor={wedding.custom_accent_color}
       >
