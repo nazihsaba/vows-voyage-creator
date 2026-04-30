@@ -61,14 +61,29 @@ export const LumiereTemplate = ({
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(!!wedding?.video_url);
 
-  // Two-phase fade-out: when the video signals ready, fade the loader out
-  // for ~320ms before unmounting it so the transition feels intentional.
+  // Once the video signals ready, wait for the browser to paint the
+  // template underneath (two animation frames + small settle) before
+  // fading the loader out — eliminates any blank-flash glitch.
   useEffect(() => {
-    if (!videoLoading && showLoader) {
-      setLoaderFadingOut(true);
-      const t = window.setTimeout(() => setShowLoader(false), 320);
-      return () => window.clearTimeout(t);
-    }
+    if (videoLoading || !showLoader) return;
+    let raf1 = 0;
+    let raf2 = 0;
+    let settle = 0;
+    let unmount = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        settle = window.setTimeout(() => {
+          setLoaderFadingOut(true);
+          unmount = window.setTimeout(() => setShowLoader(false), 450);
+        }, 80);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.clearTimeout(settle);
+      window.clearTimeout(unmount);
+    };
   }, [videoLoading, showLoader]);
 
   // Hard safety: never block the loader more than 4s (covers cases where
