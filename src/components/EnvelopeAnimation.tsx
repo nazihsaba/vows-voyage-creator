@@ -74,10 +74,11 @@ export const EnvelopeAnimation = ({
   );
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
+  // Portrait orientation so the envelope fills vertical screen space.
   const VB_W = 600;
-  const VB_H = 420;
+  const VB_H = 840;
   const V_X = 300;
-  const V_Y = 210;
+  const V_Y = 300;
 
   return (
     <>
