@@ -413,8 +413,7 @@ export const EclatTemplate = ({
       </AnimatedSection>
 
       <TemplatePreviewFooter />
-        </div>
-      )}
+      </div>
     </div>
   );
 };
