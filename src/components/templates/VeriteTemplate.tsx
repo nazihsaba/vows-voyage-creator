@@ -418,8 +418,7 @@ export const VeriteTemplate = ({
       </AnimatedSection>
 
       <TemplatePreviewFooter />
-        </div>
-      )}
+      </div>
     </div>
   );
 };
