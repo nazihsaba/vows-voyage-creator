@@ -5,6 +5,8 @@ import waxSealHeart from "@/assets/wax-seal-heart.png";
 interface EnvelopeAnimationProps {
   groomName?: string;
   brideName?: string;
+  /** ISO date string (YYYY-MM-DD) shown beneath the names. */
+  weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
   children: ReactNode;
@@ -12,18 +14,11 @@ interface EnvelopeAnimationProps {
 
 /**
  * Full-screen photoreal envelope opener.
- *
- * - Fills the entire viewport (100dvh) so it works on any device height.
- * - Body is a single SVG rendered at 100% width/height with a clean V-fold.
- * - Triangular flap hinges in 3D and lifts on tap.
- * - Wax seal is a real heart PNG (no monogram initials needed).
- * - Bride & groom names are rendered in a refined italic calligraphy on the
- *   lower envelope face, framed by hairline rules and a small ampersand.
- * - All animations use a unified cubic-bezier easing for a smooth dissolve.
  */
 export const EnvelopeAnimation = ({
   groomName,
   brideName,
+  weddingDate,
   primaryColor,
   accentColor,
   children,
@@ -31,7 +26,11 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
-  const accent = accentColor || primaryColor || "#865814";
+  // Brand highlight color used for the ampersand and seal accents.
+  const accent = "#865814";
+  // Kept for any future SVG accents but the names always use the brand gold.
+  void accentColor;
+  void primaryColor;
 
   // Title-case helper so names always render with elegant capitalization.
   const toTitle = (s?: string) =>
