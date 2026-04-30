@@ -458,11 +458,13 @@ export const EnvelopeAnimation = ({
                     style={{
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
-                      fontSize: "clamp(22px, 5.4vw, 44px)",
+                      fontWeight: 400,
+                      fontSize: "clamp(28px, 7vw, 56px)",
                       lineHeight: 1,
-                      margin: "0.18em 0",
-                      color: accent,
-                      opacity: 0.95,
+                      margin: "0.1em 0 0.05em",
+                      color: "#865814",
+                      textShadow:
+                        "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
                     }}
                   >
                     &amp;
@@ -482,30 +484,35 @@ export const EnvelopeAnimation = ({
                     {groom || "\u00A0"}
                   </div>
 
-                  <div
-                    className="mx-auto mt-4"
-                    aria-hidden="true"
-                    style={{
-                      width: "38%",
-                      height: "1px",
-                      background:
-                        "linear-gradient(to right, transparent, rgba(58,42,20,0.4), transparent)",
-                      opacity: 0.7,
-                    }}
-                  />
-                  <div
-                    className="mt-2"
-                    style={{
-                      fontFamily:
-                        "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                      fontSize: "clamp(8px, 1.4vw, 11px)",
-                      letterSpacing: "0.42em",
-                      textTransform: "uppercase",
-                      color: "rgba(58,42,20,0.55)",
-                    }}
-                  >
-                    The Wedding Of
-                  </div>
+                  {formattedDate && (
+                    <>
+                      <div
+                        className="mx-auto mt-5"
+                        aria-hidden="true"
+                        style={{
+                          width: "44%",
+                          height: "1px",
+                          background:
+                            "linear-gradient(to right, transparent, rgba(134,88,20,0.45), transparent)",
+                          opacity: 0.85,
+                        }}
+                      />
+                      <div
+                        className="mt-2"
+                        style={{
+                          fontFamily:
+                            "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
+                          fontSize: "clamp(9px, 1.6vw, 12px)",
+                          letterSpacing: "0.46em",
+                          textTransform: "uppercase",
+                          color: "#865814",
+                          fontWeight: 400,
+                        }}
+                      >
+                        {formattedDate}
+                      </div>
+                    </>
+                  )}
                 </div>
               )}
 
