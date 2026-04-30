@@ -22,21 +22,10 @@ async function getFFmpeg(): Promise<FFmpeg> {
 
   loadPromise = (async () => {
     const ff = new FFmpeg();
-    ff.on("log", ({ message }) => {
-      // Surface ffmpeg's own diagnostics to the console so we can see why a
-      // transcode failed instead of silently falling back to the original.
-      console.log("[ffmpeg]", message);
+    await ff.load({
+      coreURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.js`, "text/javascript"),
+      wasmURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.wasm`, "application/wasm"),
     });
-    try {
-      await ff.load({
-        coreURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.js`, "text/javascript"),
-        wasmURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.wasm`, "application/wasm"),
-      });
-    } catch (err) {
-      // Allow a future retry after a transient network failure.
-      loadPromise = null;
-      throw err;
-    }
     ffmpegInstance = ff;
     return ff;
   })();
@@ -95,14 +84,10 @@ export async function compressVideo(
   try {
     await ff.writeFile(inputName, await fetchFile(file));
 
-    // Scale: keep aspect ratio, cap height at maxHeight, ensure even dims for H.264.
-    // NOTE: ff.exec receives args as an array (not a shell string), so we must NOT
-    // backslash-escape the commas inside min(1,H/ih). Escaping caused ffmpeg to
-    // reject the filtergraph and the catch block silently returned the original
-    // (uncompressed) file — which is exactly the bug we were seeing.
-    const vfScale = `scale='trunc(iw*min(1,${opts.maxHeight}/ih)/2)*2':'trunc(ih*min(1,${opts.maxHeight}/ih)/2)*2'`;
+    // Scale: keep aspect ratio, cap height at maxHeight, ensure even dims for H.264
+    const vfScale = `scale='trunc(iw*min(1\\,${opts.maxHeight}/ih)/2)*2':'trunc(ih*min(1\\,${opts.maxHeight}/ih)/2)*2'`;
 
-    const execCode = await ff.exec([
+    await ff.exec([
       "-i", inputName,
       "-vf", vfScale,
       "-c:v", "libx264",
@@ -114,9 +99,6 @@ export async function compressVideo(
       "-pix_fmt", "yuv420p",
       outputName,
     ]);
-    if (execCode !== 0) {
-      throw new Error(`ffmpeg exited with code ${execCode}`);
-    }
 
     const data = await ff.readFile(outputName);
     let blob: Blob;
