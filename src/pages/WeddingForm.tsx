@@ -16,6 +16,8 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
+import { compressImage } from "@/lib/compressImage";
+import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 
 const LOCATION_ICON_OPTIONS = [
