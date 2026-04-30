@@ -43,6 +43,20 @@ export const EnvelopeAnimation = ({
   const bride = toTitle(brideName);
   const hasNames = Boolean(groom || bride);
 
+  // Format wedding date as e.g. "Twenty-Third of June, 2026" → keep simple: "23 · June · 2026".
+  const formattedDate = useMemo(() => {
+    if (!weddingDate) return "";
+    const d = new Date(weddingDate);
+    if (isNaN(d.getTime())) return "";
+    const day = d.getUTCDate();
+    const month = d.toLocaleDateString("en-US", {
+      month: "long",
+      timeZone: "UTC",
+    });
+    const year = d.getUTCFullYear();
+    return `${day} · ${month} · ${year}`;
+  }, [weddingDate]);
+
   const TOTAL = 1800;
 
   const handleOpen = useCallback(() => {
