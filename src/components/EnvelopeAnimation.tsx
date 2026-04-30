@@ -319,7 +319,7 @@ export const EnvelopeAnimation = ({
                     <stop offset="100%" stopColor="rgba(255,250,235,0.22)" />
                   </linearGradient>
                   <clipPath id="env-body-clip">
-                    <rect x="0" y="0" width={VB_W} height={VB_H} rx="14" ry="14" />
+                    <rect x="0" y="0" width={VB_W} height={VB_H} rx="28" ry="28" />
                   </clipPath>
                 </defs>
 
@@ -363,8 +363,8 @@ export const EnvelopeAnimation = ({
                   y="0.5"
                   width={VB_W - 1}
                   height={VB_H - 1}
-                  rx="14"
-                  ry="14"
+                  rx="28"
+                  ry="28"
                   fill="none"
                   stroke="rgba(40,28,10,0.22)"
                   strokeWidth="1"
@@ -484,7 +484,7 @@ export const EnvelopeAnimation = ({
                         style={{
                           fontFamily:
                             "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(9px, 1.6vw, 12px)",
+                          fontSize: "clamp(13px, 2.4vw, 17px)",
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
