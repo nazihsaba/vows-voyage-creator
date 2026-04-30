@@ -424,7 +424,7 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(28px, 6.4vw, 46px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
@@ -442,7 +442,7 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(28px, 7vw, 56px)",
+                      fontSize: "clamp(38px, 9vw, 68px)",
                       lineHeight: 1,
                       margin: "0.1em 0 0.05em",
                       color: "#865814",
@@ -455,7 +455,7 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(28px, 6.4vw, 46px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
@@ -485,7 +485,7 @@ export const EnvelopeAnimation = ({
                         style={{
                           fontFamily:
                             "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(13px, 2.4vw, 17px)",
+                          fontSize: "clamp(16px, 3.2vw, 22px)",
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
