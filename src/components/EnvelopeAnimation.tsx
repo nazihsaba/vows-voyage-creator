@@ -341,40 +341,22 @@ export const EnvelopeAnimation = ({
                       />
                     ))}
                   </g>
-                  {/* Shadow cast by the closed flap (under the V-fold) */}
+                  {/* Soft shadow cast by the triangular flap onto the body face,
+                      hugging the V-edge so the flap reads as a separate piece of paper. */}
                   <path
-                    d={`M0 ${V_Y - 6} L ${V_X} ${V_Y + 18} L ${VB_W} ${V_Y - 6} L ${VB_W} ${V_Y + 70} L 0 ${V_Y + 70} Z`}
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0 L ${VB_W} ${V_Y + 50} L ${V_X} ${V_Y + 70} L 0 ${V_Y + 50} Z`}
                     fill="url(#env-fold-shadow)"
                     opacity="0.85"
                   />
-                  {/* Bottom inner panel highlight */}
-                  <rect
-                    x="0"
-                    y={VB_H - 90}
-                    width={VB_W}
-                    height="90"
-                    fill="url(#env-bottom-highlight)"
+                  {/* Crisp hairline along the flap's V-edge for a clean separation */}
+                  <path
+                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    fill="none"
+                    stroke="rgba(40,28,10,0.18)"
+                    strokeWidth="0.8"
                   />
                   <rect width={VB_W} height={VB_H} fill="url(#env-vignette)" />
                 </g>
-
-                {/* Faint embossed bottom-fold line */}
-                <line
-                  x1="24"
-                  y1={VB_H - 88}
-                  x2={VB_W - 24}
-                  y2={VB_H - 88}
-                  stroke="rgba(255,250,235,0.18)"
-                  strokeWidth="1"
-                />
-                <line
-                  x1="24"
-                  y1={VB_H - 87}
-                  x2={VB_W - 24}
-                  y2={VB_H - 87}
-                  stroke="rgba(40,28,10,0.10)"
-                  strokeWidth="1"
-                />
 
                 <rect
                   x="0.5"
