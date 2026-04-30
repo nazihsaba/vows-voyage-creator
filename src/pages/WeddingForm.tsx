@@ -16,6 +16,8 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
+import { compressImage } from "@/lib/compressImage";
+import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 
 const LOCATION_ICON_OPTIONS = [
@@ -577,19 +579,23 @@ const WeddingForm = () => {
       let videoPosterUrl = (formData as any).video_poster_url || "";
       let audioUrl = formData.audio_url;
 
-      // Upload new image if selected
+      // Upload new image if selected (compressed for size/quality balance)
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile, user.id);
+        const compressedImage = await compressImage(imageFile);
+        imageUrl = await uploadImage(compressedImage, user.id);
       }
 
-      // Upload new video if selected — also extract & upload first-frame poster
+      // Upload new video if selected — compress, then extract & upload first-frame poster
       if (videoFile) {
-        videoUrl = await uploadImage(videoFile, user.id);
+        toast({ title: "Optimizing video", description: "This may take a moment for large files." });
+        const compressedVideo = await compressVideo(videoFile);
+        videoUrl = await uploadImage(compressedVideo, user.id);
         try {
-          const posterBlob = await extractFirstFrame(videoFile);
+          const posterBlob = await extractFirstFrame(compressedVideo);
           if (posterBlob) {
             const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
-            videoPosterUrl = await uploadImage(posterFile, user.id);
+            const compressedPoster = await compressImage(posterFile);
+            videoPosterUrl = await uploadImage(compressedPoster, user.id);
           } else {
             videoPosterUrl = "";
           }
@@ -745,7 +751,12 @@ const WeddingForm = () => {
 
         const startingOrder = (maxOrderData?.image_order || 0) + 1;
 
-        const galleryUrls = await Promise.all(galleryFiles.map((file, index) => uploadImage(file, user.id, index)));
+        const galleryUrls = await Promise.all(
+          galleryFiles.map(async (file, index) => {
+            const compressed = await compressImage(file);
+            return uploadImage(compressed, user.id, index);
+          }),
+        );
 
         const galleryInserts = galleryUrls.map((url, index) => ({
           wedding_id: weddingId,
@@ -766,7 +777,8 @@ const WeddingForm = () => {
           if (id) {
             await supabase.from("gallery_images").delete().eq("wedding_id", weddingId);
           }
-          const featuredUrl = await uploadImage(graceFeaturedFile, user.id);
+          const compressedFeatured = await compressImage(graceFeaturedFile);
+          const featuredUrl = await uploadImage(compressedFeatured, user.id);
           const { error: featuredError } = await supabase.from("gallery_images").insert({
             wedding_id: weddingId,
             image_url: featuredUrl,
