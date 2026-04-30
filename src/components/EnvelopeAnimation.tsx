@@ -73,6 +73,18 @@ export const EnvelopeAnimation = ({
     }
   }, [hidden]);
 
+  // Load elegant calligraphy font once.
+  useEffect(() => {
+    const id = "env-google-fonts";
+    if (document.getElementById(id)) return;
+    const link = document.createElement("link");
+    link.id = id;
+    link.rel = "stylesheet";
+    link.href =
+      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+    document.head.appendChild(link);
+  }, []);
+
   const motes = useMemo(
     () =>
       Array.from({ length: 14 }).map((_, i) => ({
@@ -85,6 +97,26 @@ export const EnvelopeAnimation = ({
       })),
     []
   );
+
+  // Subtle paper fibers scattered across the envelope face (deterministic).
+  const fibers = useMemo(() => {
+    const rng = (seed: number) => {
+      let s = seed;
+      return () => {
+        s = (s * 9301 + 49297) % 233280;
+        return s / 233280;
+      };
+    };
+    const r = rng(7);
+    return Array.from({ length: 80 }).map((_, i) => ({
+      id: i,
+      x: r() * 600,
+      y: r() * 840,
+      len: 4 + r() * 10,
+      rot: r() * 360,
+      o: 0.05 + r() * 0.08,
+    }));
+  }, []);
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
   // Portrait orientation so the envelope fills vertical screen space.
