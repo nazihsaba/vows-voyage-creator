@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import aureaLogoIcon from "@/assets/aureaLogoIcon.png";
 
 interface TemplateLoaderProps {
@@ -16,13 +15,6 @@ const TemplateLoader = ({ groomName, brideName, fadingOut = false }: TemplateLoa
   const hasNames = !!(groomName && brideName);
   const g = (groomName || "").charAt(0).toUpperCase();
   const b = (brideName || "").charAt(0).toUpperCase();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    // Trigger fade-in on mount
-    const id = requestAnimationFrame(() => setMounted(true));
-    return () => cancelAnimationFrame(id);
-  }, []);
 
   return (
     <div
@@ -30,11 +22,16 @@ const TemplateLoader = ({ groomName, brideName, fadingOut = false }: TemplateLoa
       style={{
         height: "100dvh",
         touchAction: "none",
-        opacity: fadingOut ? 0 : mounted ? 1 : 0,
+        // Loader is visible immediately at full opacity — only the fade-OUT
+        // is animated. Fading IN caused a visible flash when the hero image
+        // loaded faster than the fade-in transition (loader would briefly
+        // appear partially, then fade out again).
+        opacity: fadingOut ? 0 : 1,
         transform: fadingOut ? "scale(1.02)" : "scale(1)",
         transformOrigin: "center center",
-        transition:
-          "opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1)",
+        transition: fadingOut
+          ? "opacity 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1)"
+          : "none",
         willChange: "opacity, transform",
         pointerEvents: fadingOut ? "none" : "auto",
       }}
