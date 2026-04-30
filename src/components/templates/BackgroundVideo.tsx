@@ -120,6 +120,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         // Fully buffered (or browser confident) — safe to reveal regardless of threshold.
         reveal();
       };
+      const onCanPlay = () => {
+        // Browser thinks it can start playing — reveal early for a fast UX.
+        reveal();
+      };
       const onWaiting = () => {
         if (!ready) setLoading(true);
       };
@@ -131,7 +135,8 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (!ready) setLoading(true);
       };
       const onLoadedData = () => {
-        checkProgress();
+        // First frame is decoded — reveal so the poster→video swap is seamless.
+        reveal();
       };
       const onProgress = () => {
         checkProgress();
@@ -140,7 +145,11 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         checkProgress();
       };
 
+      // Hard safety: never block the loader more than 3.5s, even on slow networks.
+      const safety = window.setTimeout(reveal, 3500);
+
       video.addEventListener("canplaythrough", onCanPlayThrough);
+      video.addEventListener("canplay", onCanPlay);
       video.addEventListener("waiting", onWaiting);
       video.addEventListener("playing", onPlaying);
       video.addEventListener("stalled", onStalled);
