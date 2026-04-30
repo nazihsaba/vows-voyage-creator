@@ -61,7 +61,12 @@ export function useHeroLoader({
     (img as HTMLImageElement & { fetchPriority?: string }).fetchPriority = "high";
     img.decoding = "async";
     img.src = imageUrl;
-    if (img.complete && img.naturalWidth > 0) {
+
+    // Prefer img.decode() — it resolves only once the image is decoded and
+    // ready to paint without blocking. Falls back to onload if not supported.
+    if (typeof img.decode === "function") {
+      img.decode().then(finish).catch(finish);
+    } else if (img.complete && img.naturalWidth > 0) {
       finish();
     } else {
       img.onload = finish;
