@@ -442,7 +442,7 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(28px, 7vw, 56px)",
+                      fontSize: "clamp(38px, 9vw, 68px)",
                       lineHeight: 1,
                       margin: "0.1em 0 0.05em",
                       color: "#865814",
