@@ -196,7 +196,6 @@ export const EtoileTemplate = ({
       <div className="fixed inset-0 bg-black/30 z-[1] lg:left-[25%] lg:right-auto lg:w-[50%]" />
 
       {/* Layer 3: Scrollable content */}
-      {!heroLoading && (
       <div className="relative z-[2] animate-fade-in" dir={isArabic ? "rtl" : "ltr"}>
         {/* ===== HERO SECTION ===== */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
