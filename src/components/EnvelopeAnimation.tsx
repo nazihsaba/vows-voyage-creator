@@ -383,8 +383,9 @@ export const EnvelopeAnimation = ({
                   style={{
                     left: "10%",
                     right: "10%",
-                    // Sits between the wax seal and the bottom edge of the envelope.
-                    top: `${((V_Y + VB_H - 90) / 2 / VB_H) * 100 + 18}%`,
+                    // Sits centered between the V-fold (seal) and the bottom edge.
+                    top: `${(((V_Y + 60) + (VB_H - 90)) / 2 / VB_H) * 100}%`,
+                    transform: "translateY(-50%)",
                     color: "#3a2a14",
                     zIndex: 2,
                     fontFamily:
