@@ -29,7 +29,7 @@ interface HeroLoaderState {
 export function useHeroLoader({
   imageUrl,
   safetyMs = 2500,
-  fadeMs = 450,
+  fadeMs = 700,
 }: UseHeroLoaderOptions): HeroLoaderState {
   const [ready, setReady] = useState(false);
   const [fadingOut, setFadingOut] = useState(false);
