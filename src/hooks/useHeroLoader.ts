@@ -80,12 +80,32 @@ export function useHeroLoader({
     };
   }, [imageUrl, safetyMs]);
 
-  // Phase 2: once ready, start the fade-out, then unmount the loader.
+  // Phase 2: once ready, wait for the browser to paint the template
+  // underneath (two animation frames + a small settle), THEN start the
+  // fade-out. This guarantees the template is fully on-screen behind the
+  // loader before the loader's opacity drops, so there's never a blank
+  // flash between the two.
   useEffect(() => {
     if (!ready) return;
-    setFadingOut(true);
-    const t = window.setTimeout(() => setShowLoader(false), fadeMs);
-    return () => window.clearTimeout(t);
+    let raf1 = 0;
+    let raf2 = 0;
+    let settle = 0;
+    let unmount = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        // After two rAFs the next paint has flushed — schedule the fade.
+        settle = window.setTimeout(() => {
+          setFadingOut(true);
+          unmount = window.setTimeout(() => setShowLoader(false), fadeMs);
+        }, 80);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.clearTimeout(settle);
+      window.clearTimeout(unmount);
+    };
   }, [ready, fadeMs]);
 
   return { showLoader, fadingOut };
