@@ -257,9 +257,8 @@ export const EnvelopeAnimation = ({
             style={{
               perspective: "2200px",
               // Portrait envelope: tall and narrow, fills most of screen height.
-              // Larger on mobile (narrow screens), capped on desktop.
-              height: "min(98dvh, 100vw * (840/600))",
-              width: "min(100vw, 98dvh * (600/840), 600px)",
+              height: "min(92dvh, 96vw * (840/600))",
+              width: "min(92vw, 92dvh * (600/840), 600px)",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -424,7 +423,7 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.4vw, 46px)",
+                      fontSize: "clamp(20px, 4.6vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
@@ -442,7 +441,7 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(38px, 9vw, 68px)",
+                      fontSize: "clamp(28px, 7vw, 56px)",
                       lineHeight: 1,
                       margin: "0.1em 0 0.05em",
                       color: "#865814",
@@ -455,7 +454,7 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.4vw, 46px)",
+                      fontSize: "clamp(20px, 4.6vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
@@ -485,7 +484,7 @@ export const EnvelopeAnimation = ({
                         style={{
                           fontFamily:
                             "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(16px, 3.2vw, 22px)",
+                          fontSize: "clamp(13px, 2.4vw, 17px)",
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
@@ -580,7 +579,7 @@ export const EnvelopeAnimation = ({
                   left: "50%",
                   top: `${(V_Y / VB_H) * 100}%`,
                   transform: "translate(-50%, -50%) rotate(-3deg)",
-                  width: "38%",
+                  width: "30%",
                   height: "auto",
                   zIndex: 4,
                   willChange: "transform, opacity",
