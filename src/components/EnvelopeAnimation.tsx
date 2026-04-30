@@ -319,7 +319,7 @@ export const EnvelopeAnimation = ({
                     <stop offset="100%" stopColor="rgba(255,250,235,0.22)" />
                   </linearGradient>
                   <clipPath id="env-body-clip">
-                    <rect x="0" y="0" width={VB_W} height={VB_H} rx="14" ry="14" />
+                    <rect x="0" y="0" width={VB_W} height={VB_H} rx="28" ry="28" />
                   </clipPath>
                 </defs>
 
