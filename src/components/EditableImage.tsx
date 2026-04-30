@@ -4,6 +4,7 @@ import { Upload, Trash2, Edit3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
+import { compressImage } from "@/lib/compressImage";
 
 interface EditableImageProps {
   imageUrl: string;
