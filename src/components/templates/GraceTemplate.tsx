@@ -62,13 +62,28 @@ export const GraceTemplate = ({
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
 
-  // Two-phase fade-out for a smooth transition into the template.
+  // Wait for the template to paint underneath, then fade the loader out
+  // — guarantees no blank flash between loader and template.
   useEffect(() => {
-    if (!videoLoading && showLoader) {
-      setLoaderFadingOut(true);
-      const t = window.setTimeout(() => setShowLoader(false), 320);
-      return () => window.clearTimeout(t);
-    }
+    if (videoLoading || !showLoader) return;
+    let raf1 = 0;
+    let raf2 = 0;
+    let settle = 0;
+    let unmount = 0;
+    raf1 = requestAnimationFrame(() => {
+      raf2 = requestAnimationFrame(() => {
+        settle = window.setTimeout(() => {
+          setLoaderFadingOut(true);
+          unmount = window.setTimeout(() => setShowLoader(false), 450);
+        }, 80);
+      });
+    });
+    return () => {
+      cancelAnimationFrame(raf1);
+      cancelAnimationFrame(raf2);
+      window.clearTimeout(settle);
+      window.clearTimeout(unmount);
+    };
   }, [videoLoading, showLoader]);
 
   // Hard safety: cap loader display at 4s.
