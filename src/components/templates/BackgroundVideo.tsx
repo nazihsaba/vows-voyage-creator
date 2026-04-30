@@ -77,7 +77,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       if (!video) return;
 
       let ready = false;
-      const THRESHOLD = 0.8; // require 80% buffered before reveal
+      // Reveal as soon as we have a usable amount of video buffered.
+      // 25% lets us start playing quickly while keeping enough headroom
+      // to avoid an immediate stall on most networks.
+      const THRESHOLD = 0.25;
 
       const bufferedFraction = () => {
         const dur = video.duration;
@@ -218,7 +221,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           muted
           loop={loop}
           playsInline
-          preload="metadata"
+          preload="auto"
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
