@@ -197,8 +197,8 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "2200px",
-              width: "min(88vw, 520px)",
-              aspectRatio: `${VB_W} / ${VB_H}`,
+              width: "min(92vw, 88dvh * (600/420), 760px)",
+              height: "min(88dvh, 92vw * (420/600), 532px)",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
