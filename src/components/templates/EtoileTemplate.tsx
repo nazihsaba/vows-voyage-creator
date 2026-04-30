@@ -394,7 +394,6 @@ export const EtoileTemplate = ({
           </div>
         </div>
       </div>
-      )}
     </div>
   );
 };
