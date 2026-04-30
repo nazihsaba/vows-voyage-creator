@@ -447,7 +447,7 @@ const RoseGoldTabsForm = () => {
         const galleryInserts = await Promise.all(
           galleryFiles.map(async (file, index) => ({
             wedding_id: weddingId,
-            image_url: await uploadImage(file, user.id, index),
+            image_url: await uploadImage(await compressImage(file), user.id, index),
             image_order: startOrder + index,
             position_y: Math.min(100, Math.max(0, galleryFilePositions[index] ?? 50)),
           })),
