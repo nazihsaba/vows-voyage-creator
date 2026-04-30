@@ -142,8 +142,8 @@ export const EclatTemplate = ({
 
   return (
     <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
-      {heroLoading && (
-        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      {showLoader && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={fadingOut} />
       )}
       {hasArabic && <LanguageToggle />}
 
@@ -153,9 +153,8 @@ export const EclatTemplate = ({
         </audio>
       )}
 
-      {!heroLoading && (
-        <div className="animate-fade-in">
-      {/* Hero Section */}
+      <div className="animate-fade-in">
+        {/* Hero Section */}
       <section
         className="relative h-screen flex flex-col items-center justify-center text-center text-white"
         style={{
