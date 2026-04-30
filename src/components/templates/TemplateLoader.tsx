@@ -31,7 +31,7 @@ const TemplateLoader = ({ groomName, brideName, fadingOut = false }: TemplateLoa
         height: "100dvh",
         touchAction: "none",
         opacity: fadingOut ? 0 : mounted ? 1 : 0,
-        transition: "opacity 320ms ease-out",
+        transition: "opacity 450ms ease-out",
         pointerEvents: fadingOut ? "none" : "auto",
       }}
       aria-hidden={fadingOut}
