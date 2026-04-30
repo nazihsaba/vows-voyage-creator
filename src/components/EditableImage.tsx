@@ -4,7 +4,6 @@ import { Upload, Trash2, Edit3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { compressImage } from "@/lib/compressImage";
 
 interface EditableImageProps {
   imageUrl: string;
@@ -37,10 +36,7 @@ export const EditableImage = ({
         throw new Error("You must be logged in to upload images");
       }
 
-      // Compress before upload to keep templates fast and storage lean
-      const compressed = await compressImage(file);
-
-      const fileExt = compressed.name.split(".").pop();
+      const fileExt = file.name.split(".").pop();
       const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
       const fileName = `${uniqueId}.${fileExt}`;
       // Use user-scoped path for secure storage policy compliance
@@ -48,7 +44,7 @@ export const EditableImage = ({
 
       const { error: uploadError } = await supabase.storage
         .from("wedding-images")
-        .upload(filePath, compressed);
+        .upload(filePath, file);
 
       if (uploadError) throw uploadError;
 
