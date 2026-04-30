@@ -579,19 +579,23 @@ const WeddingForm = () => {
       let videoPosterUrl = (formData as any).video_poster_url || "";
       let audioUrl = formData.audio_url;
 
-      // Upload new image if selected
+      // Upload new image if selected (compressed for size/quality balance)
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile, user.id);
+        const compressedImage = await compressImage(imageFile);
+        imageUrl = await uploadImage(compressedImage, user.id);
       }
 
-      // Upload new video if selected — also extract & upload first-frame poster
+      // Upload new video if selected — compress, then extract & upload first-frame poster
       if (videoFile) {
-        videoUrl = await uploadImage(videoFile, user.id);
+        toast({ title: "Optimizing video", description: "This may take a moment for large files." });
+        const compressedVideo = await compressVideo(videoFile);
+        videoUrl = await uploadImage(compressedVideo, user.id);
         try {
-          const posterBlob = await extractFirstFrame(videoFile);
+          const posterBlob = await extractFirstFrame(compressedVideo);
           if (posterBlob) {
             const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
-            videoPosterUrl = await uploadImage(posterFile, user.id);
+            const compressedPoster = await compressImage(posterFile);
+            videoPosterUrl = await uploadImage(compressedPoster, user.id);
           } else {
             videoPosterUrl = "";
           }
