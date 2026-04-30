@@ -15,6 +15,8 @@ import whishLogo from "@/assets/whish-logo.png";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
+import { compressImage } from "@/lib/compressImage";
+import { compressVideo } from "@/lib/compressVideo";
 
 const RoseGoldTabsForm = () => {
   const { id } = useParams();
