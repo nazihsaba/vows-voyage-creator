@@ -37,7 +37,10 @@ export const EditableImage = ({
         throw new Error("You must be logged in to upload images");
       }
 
-      const fileExt = file.name.split(".").pop();
+      // Compress before upload to keep templates fast and storage lean
+      const compressed = await compressImage(file);
+
+      const fileExt = compressed.name.split(".").pop();
       const uniqueId = `${Date.now()}-${Math.random().toString(36).substring(7)}`;
       const fileName = `${uniqueId}.${fileExt}`;
       // Use user-scoped path for secure storage policy compliance
@@ -45,7 +48,7 @@ export const EditableImage = ({
 
       const { error: uploadError } = await supabase.storage
         .from("wedding-images")
-        .upload(filePath, file);
+        .upload(filePath, compressed);
 
       if (uploadError) throw uploadError;
 
