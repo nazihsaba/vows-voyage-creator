@@ -92,14 +92,28 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         return end / dur;
       };
 
-      const tryPlay = () => {
+      const tryPlay = (attempt = 0) => {
         if (!ready) return;
         if (!attemptAutoplay) return; // parent controls playback
-        const p = video.play();
+        const v = innerRef.current;
+        if (!v) return;
+        // Ensure muted + inline are set right before play() — iOS sometimes
+        // rejects autoplay if these aren't reasserted on the element directly.
+        v.muted = true;
+        v.playsInline = true;
+        const p = v.play();
         if (p !== undefined) {
           p.then(() => setNeedsTap(false)).catch(() => {
-            setNeedsTap(true);
-            onAutoplayBlockedRef.current?.();
+            // Retry up to 2 more times with small delays before giving up —
+            // iOS Safari occasionally rejects the very first play() call even
+            // when autoplay is allowed. Only surface the Tap to Start UI
+            // after retries also fail.
+            if (attempt < 2) {
+              window.setTimeout(() => tryPlay(attempt + 1), 200 * (attempt + 1));
+            } else {
+              setNeedsTap(true);
+              onAutoplayBlockedRef.current?.();
+            }
           });
         }
       };
