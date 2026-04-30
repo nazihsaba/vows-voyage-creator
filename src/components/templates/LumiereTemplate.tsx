@@ -267,27 +267,11 @@ export const LumiereTemplate = ({
 
   return (
     <>
-      {showLoader && !autoplayBlocked && (
+      {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
-
-      {/* Tap to Start overlay — rendered above the loader so it's visible
-          immediately when autoplay is blocked (e.g. iOS Low Power Mode),
-          regardless of whether the main content has mounted yet. */}
-      {autoplayBlocked && !hasStarted && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/40 backdrop-blur-sm lg:left-[25%] lg:right-auto lg:w-[50%] animate-[fadeIn_0.4s_ease-out_forwards]"
-        >
-          <Button
-            onClick={handleStartClick}
-            className="bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
-          >
-            {t("hero.tapToStart")}
-          </Button>
-        </div>
-      )}
 
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
@@ -344,6 +328,20 @@ export const LumiereTemplate = ({
             </span>
           </div>
 
+          {/* Tap to Start — only when autoplay is blocked (e.g. iOS Low Power Mode). */}
+          {autoplayBlocked && !hasStarted && (
+            <div
+              className="mt-12 opacity-0"
+              style={{ animation: "fadeInUp 0.8s ease-out 1.4s forwards" }}
+            >
+              <Button
+                onClick={handleStartClick}
+                className="bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+              >
+                {t("hero.tapToStart")}
+              </Button>
+            </div>
+          )}
         </section>
 
         {/* ===== HERO SECTION ===== */}
