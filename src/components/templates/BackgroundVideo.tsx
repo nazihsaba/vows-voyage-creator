@@ -77,7 +77,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       if (!video) return;
 
       let ready = false;
-      const THRESHOLD = 0.8; // require 80% buffered before reveal
+      // Reveal as soon as we have a usable amount of video buffered.
+      // 25% lets us start playing quickly while keeping enough headroom
+      // to avoid an immediate stall on most networks.
+      const THRESHOLD = 0.25;
 
       const bufferedFraction = () => {
         const dur = video.duration;
@@ -117,6 +120,10 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         // Fully buffered (or browser confident) — safe to reveal regardless of threshold.
         reveal();
       };
+      const onCanPlay = () => {
+        // Browser thinks it can start playing — reveal early for a fast UX.
+        reveal();
+      };
       const onWaiting = () => {
         if (!ready) setLoading(true);
       };
@@ -128,7 +135,8 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         if (!ready) setLoading(true);
       };
       const onLoadedData = () => {
-        checkProgress();
+        // First frame is decoded — reveal so the poster→video swap is seamless.
+        reveal();
       };
       const onProgress = () => {
         checkProgress();
@@ -137,7 +145,11 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         checkProgress();
       };
 
+      // Hard safety: never block the loader more than 3.5s, even on slow networks.
+      const safety = window.setTimeout(reveal, 3500);
+
       video.addEventListener("canplaythrough", onCanPlayThrough);
+      video.addEventListener("canplay", onCanPlay);
       video.addEventListener("waiting", onWaiting);
       video.addEventListener("playing", onPlaying);
       video.addEventListener("stalled", onStalled);
@@ -192,7 +204,9 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       window.addEventListener("pageshow", resume);
 
       return () => {
+        window.clearTimeout(safety);
         video.removeEventListener("canplaythrough", onCanPlayThrough);
+        video.removeEventListener("canplay", onCanPlay);
         video.removeEventListener("waiting", onWaiting);
         video.removeEventListener("playing", onPlaying);
         video.removeEventListener("stalled", onStalled);
@@ -218,7 +232,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           muted
           loop={loop}
           playsInline
-          preload="metadata"
+          preload="auto"
           controls={false}
           disablePictureInPicture
           disableRemotePlayback

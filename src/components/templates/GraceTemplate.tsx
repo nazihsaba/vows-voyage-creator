@@ -59,6 +59,24 @@ export const GraceTemplate = ({
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoLoading, setVideoLoading] = useState(true);
+  const [loaderFadingOut, setLoaderFadingOut] = useState(false);
+  const [showLoader, setShowLoader] = useState(true);
+
+  // Two-phase fade-out for a smooth transition into the template.
+  useEffect(() => {
+    if (!videoLoading && showLoader) {
+      setLoaderFadingOut(true);
+      const t = window.setTimeout(() => setShowLoader(false), 320);
+      return () => window.clearTimeout(t);
+    }
+  }, [videoLoading, showLoader]);
+
+  // Hard safety: cap loader display at 4s.
+  useEffect(() => {
+    if (!showLoader) return;
+    const t = window.setTimeout(() => setVideoLoading(false), 4000);
+    return () => window.clearTimeout(t);
+  }, [showLoader]);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
@@ -203,8 +221,8 @@ export const GraceTemplate = ({
 
   return (
     <>
-      {videoLoading && (
-        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      {showLoader && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
     <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
       {hasArabic && <LanguageToggle />}

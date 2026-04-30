@@ -1,19 +1,40 @@
+import { useEffect, useState } from "react";
 import aureaLogoIcon from "@/assets/aureaLogoIcon.png";
 
 interface TemplateLoaderProps {
   groomName?: string;
   brideName?: string;
+  /**
+   * When true, the loader fades out smoothly. Parents should keep the
+   * component mounted for ~300ms after flipping this to true so the
+   * fade animation can complete.
+   */
+  fadingOut?: boolean;
 }
 
-const TemplateLoader = ({ groomName, brideName }: TemplateLoaderProps) => {
+const TemplateLoader = ({ groomName, brideName, fadingOut = false }: TemplateLoaderProps) => {
   const hasNames = !!(groomName && brideName);
   const g = (groomName || "").charAt(0).toUpperCase();
   const b = (brideName || "").charAt(0).toUpperCase();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    // Trigger fade-in on mount
+    const id = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   return (
     <div
       className="fixed inset-0 w-screen overflow-hidden flex flex-col bg-gradient-soft z-[9999]"
-      style={{ height: "100dvh", touchAction: "none" }}
+      style={{
+        height: "100dvh",
+        touchAction: "none",
+        opacity: fadingOut ? 0 : mounted ? 1 : 0,
+        transition: "opacity 320ms ease-out",
+        pointerEvents: fadingOut ? "none" : "auto",
+      }}
+      aria-hidden={fadingOut}
     >
       <div className="flex-1 flex items-center justify-center">
         <div

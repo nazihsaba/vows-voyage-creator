@@ -58,6 +58,26 @@ export const LumiereTemplate = ({
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const [videoLoading, setVideoLoading] = useState(!!wedding?.video_url);
+  const [loaderFadingOut, setLoaderFadingOut] = useState(false);
+  const [showLoader, setShowLoader] = useState(!!wedding?.video_url);
+
+  // Two-phase fade-out: when the video signals ready, fade the loader out
+  // for ~320ms before unmounting it so the transition feels intentional.
+  useEffect(() => {
+    if (!videoLoading && showLoader) {
+      setLoaderFadingOut(true);
+      const t = window.setTimeout(() => setShowLoader(false), 320);
+      return () => window.clearTimeout(t);
+    }
+  }, [videoLoading, showLoader]);
+
+  // Hard safety: never block the loader more than 4s (covers cases where
+  // BackgroundVideo never fires onLoadingChange(false) on flaky networks).
+  useEffect(() => {
+    if (!showLoader) return;
+    const t = window.setTimeout(() => setVideoLoading(false), 4000);
+    return () => window.clearTimeout(t);
+  }, [showLoader]);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -232,8 +252,8 @@ export const LumiereTemplate = ({
 
   return (
     <>
-      {videoLoading && (
-        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} />
+      {showLoader && (
+        <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
     <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
       {hasArabic && <LanguageToggle />}
