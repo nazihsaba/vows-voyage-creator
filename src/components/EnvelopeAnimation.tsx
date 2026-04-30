@@ -535,22 +535,27 @@ export const EnvelopeAnimation = ({
                       />
                     </clipPath>
                     <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,250,240,0.10)" />
-                      <stop offset="50%" stopColor="rgba(0,0,0,0)" />
-                      <stop offset="100%" stopColor="rgba(60,45,25,0.10)" />
+                      <stop offset="0%" stopColor="rgba(60,45,25,0.10)" />
+                      <stop offset="60%" stopColor="rgba(60,45,25,0.06)" />
+                      <stop offset="100%" stopColor="rgba(60,45,25,0.16)" />
                     </linearGradient>
+                    <radialGradient id="env-flap-vignette" cx="50%" cy="50%" r="70%">
+                      <stop offset="55%" stopColor="rgba(0,0,0,0)" />
+                      <stop offset="100%" stopColor="rgba(70,55,35,0.22)" />
+                    </radialGradient>
                   </defs>
 
                   <g clipPath="url(#env-flap-clip)">
                     <image
                       href={paperTexture}
-                      x={-VB_W * 0.1}
-                      y={-VB_H * 0.1}
-                      width={VB_W * 1.2}
-                      height={VB_H * 1.2}
+                      x="0"
+                      y="0"
+                      width={VB_W}
+                      height={VB_H}
                       preserveAspectRatio="xMidYMid slice"
                     />
                     <rect width={VB_W} height={VB_H} fill="url(#env-flap-shade)" />
+                    <rect width={VB_W} height={VB_H} fill="url(#env-flap-vignette)" />
                   </g>
 
                   <path
