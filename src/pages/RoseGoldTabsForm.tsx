@@ -414,7 +414,8 @@ const RoseGoldTabsForm = () => {
 
             // Upload new icon if file exists
             if (cardIconFiles[originalIndex]) {
-              logoUrl = await uploadImage(cardIconFiles[originalIndex]!, user.id);
+              const compressedIcon = await compressImage(cardIconFiles[originalIndex]!);
+              logoUrl = await uploadImage(compressedIcon, user.id);
             }
 
             return {
