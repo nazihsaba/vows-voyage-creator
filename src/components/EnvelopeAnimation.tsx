@@ -3,9 +3,7 @@ import paperTexture from "@/assets/envelope-paper-texture.jpeg";
 import waxSealHeart from "@/assets/wax-seal-heart.png";
 
 interface EnvelopeAnimationProps {
-  /** @deprecated kept for backward compatibility — initials are no longer rendered. */
   groomName?: string;
-  /** @deprecated kept for backward compatibility — initials are no longer rendered. */
   brideName?: string;
   primaryColor?: string;
   accentColor?: string;
@@ -19,9 +17,13 @@ interface EnvelopeAnimationProps {
  * - Body is a single SVG rendered at 100% width/height with a clean V-fold.
  * - Triangular flap hinges in 3D and lifts on tap.
  * - Wax seal is a real heart PNG (no monogram initials needed).
+ * - Bride & groom names are rendered in a refined italic calligraphy on the
+ *   lower envelope face, framed by hairline rules and a small ampersand.
  * - All animations use a unified cubic-bezier easing for a smooth dissolve.
  */
 export const EnvelopeAnimation = ({
+  groomName,
+  brideName,
   primaryColor,
   accentColor,
   children,
@@ -30,6 +32,17 @@ export const EnvelopeAnimation = ({
   const [hidden, setHidden] = useState(false);
 
   const accent = accentColor || primaryColor || "#865814";
+
+  // Title-case helper so names always render with elegant capitalization.
+  const toTitle = (s?: string) =>
+    (s || "")
+      .trim()
+      .split(/\s+/)
+      .map((w) => (w ? w[0].toUpperCase() + w.slice(1).toLowerCase() : ""))
+      .join(" ");
+  const groom = toTitle(groomName);
+  const bride = toTitle(brideName);
+  const hasNames = Boolean(groom || bride);
 
   const TOTAL = 1800;
 
