@@ -507,7 +507,8 @@ export const EnvelopeAnimation = ({
                   zIndex: 3,
                   willChange: "transform, opacity",
                   backfaceVisibility: "hidden",
-                  filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.18))",
+                  filter:
+                    "drop-shadow(0 6px 8px rgba(0,0,0,0.28)) drop-shadow(0 2px 3px rgba(0,0,0,0.22))",
                 }}
               >
                 <svg
