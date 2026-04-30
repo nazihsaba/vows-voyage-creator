@@ -22,10 +22,21 @@ async function getFFmpeg(): Promise<FFmpeg> {
 
   loadPromise = (async () => {
     const ff = new FFmpeg();
-    await ff.load({
-      coreURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.js`, "text/javascript"),
-      wasmURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.wasm`, "application/wasm"),
+    ff.on("log", ({ message }) => {
+      // Surface ffmpeg's own diagnostics to the console so we can see why a
+      // transcode failed instead of silently falling back to the original.
+      console.log("[ffmpeg]", message);
     });
+    try {
+      await ff.load({
+        coreURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.js`, "text/javascript"),
+        wasmURL: await toBlobURL(`${CORE_BASE_URL}/ffmpeg-core.wasm`, "application/wasm"),
+      });
+    } catch (err) {
+      // Allow a future retry after a transient network failure.
+      loadPromise = null;
+      throw err;
+    }
     ffmpegInstance = ff;
     return ff;
   })();
