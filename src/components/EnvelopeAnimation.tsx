@@ -294,6 +294,17 @@ export const EnvelopeAnimation = ({
                     <stop offset="60%" stopColor="rgba(0,0,0,0)" />
                     <stop offset="100%" stopColor="rgba(70,55,35,0.22)" />
                   </radialGradient>
+                  {/* Soft shadow cast by the closed flap onto the body face */}
+                  <linearGradient id="env-fold-shadow" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(0,0,0,0.32)" />
+                    <stop offset="60%" stopColor="rgba(0,0,0,0.06)" />
+                    <stop offset="100%" stopColor="rgba(0,0,0,0)" />
+                  </linearGradient>
+                  {/* Highlight along the bottom-fold ridge */}
+                  <linearGradient id="env-bottom-highlight" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="rgba(255,250,235,0)" />
+                    <stop offset="100%" stopColor="rgba(255,250,235,0.22)" />
+                  </linearGradient>
                   <clipPath id="env-body-clip">
                     <rect x="0" y="0" width={VB_W} height={VB_H} rx="14" ry="14" />
                   </clipPath>
@@ -301,8 +312,56 @@ export const EnvelopeAnimation = ({
 
                 <g clipPath="url(#env-body-clip)">
                   <rect width={VB_W} height={VB_H} fill="url(#env-paper)" />
+                  {/* Fine paper fibers */}
+                  <g opacity="0.9">
+                    {fibers.map((f) => (
+                      <line
+                        key={f.id}
+                        x1={f.x}
+                        y1={f.y}
+                        x2={f.x + f.len}
+                        y2={f.y}
+                        stroke={`rgba(60,42,18,${f.o})`}
+                        strokeWidth="0.6"
+                        strokeLinecap="round"
+                        transform={`rotate(${f.rot} ${f.x} ${f.y})`}
+                      />
+                    ))}
+                  </g>
+                  {/* Shadow cast by the closed flap (under the V-fold) */}
+                  <path
+                    d={`M0 ${V_Y - 6} L ${V_X} ${V_Y + 18} L ${VB_W} ${V_Y - 6} L ${VB_W} ${V_Y + 70} L 0 ${V_Y + 70} Z`}
+                    fill="url(#env-fold-shadow)"
+                    opacity="0.85"
+                  />
+                  {/* Bottom inner panel highlight */}
+                  <rect
+                    x="0"
+                    y={VB_H - 90}
+                    width={VB_W}
+                    height="90"
+                    fill="url(#env-bottom-highlight)"
+                  />
                   <rect width={VB_W} height={VB_H} fill="url(#env-vignette)" />
                 </g>
+
+                {/* Faint embossed bottom-fold line */}
+                <line
+                  x1="24"
+                  y1={VB_H - 88}
+                  x2={VB_W - 24}
+                  y2={VB_H - 88}
+                  stroke="rgba(255,250,235,0.18)"
+                  strokeWidth="1"
+                />
+                <line
+                  x1="24"
+                  y1={VB_H - 87}
+                  x2={VB_W - 24}
+                  y2={VB_H - 87}
+                  stroke="rgba(40,28,10,0.10)"
+                  strokeWidth="1"
+                />
 
                 <rect
                   x="0.5"
@@ -312,10 +371,129 @@ export const EnvelopeAnimation = ({
                   rx="14"
                   ry="14"
                   fill="none"
-                  stroke="rgba(40,28,10,0.18)"
+                  stroke="rgba(40,28,10,0.22)"
                   strokeWidth="1"
                 />
               </svg>
+
+              {/* === BRIDE & GROOM NAMES === */}
+              {hasNames && (
+                <div
+                  className="env-names absolute pointer-events-none select-none text-center"
+                  style={{
+                    left: "10%",
+                    right: "10%",
+                    // Sits between the wax seal and the bottom edge of the envelope.
+                    top: `${((V_Y + VB_H - 90) / 2 / VB_H) * 100 + 18}%`,
+                    color: "#3a2a14",
+                    zIndex: 2,
+                    fontFamily:
+                      "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
+                  }}
+                >
+                  {/* Top hairline rule with a small flourish dot */}
+                  <div
+                    className="mx-auto mb-3 flex items-center justify-center gap-2"
+                    style={{ opacity: 0.6 }}
+                  >
+                    <span
+                      style={{
+                        display: "block",
+                        width: "28%",
+                        height: "1px",
+                        background:
+                          "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
+                      }}
+                    />
+                    <span
+                      style={{
+                        width: "4px",
+                        height: "4px",
+                        borderRadius: "50%",
+                        background: accent,
+                        boxShadow: `0 0 0 1px rgba(58,42,20,0.25)`,
+                      }}
+                    />
+                    <span
+                      style={{
+                        display: "block",
+                        width: "28%",
+                        height: "1px",
+                        background:
+                          "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
+                      }}
+                    />
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      lineHeight: 1.05,
+                      fontStyle: "italic",
+                      fontWeight: 500,
+                      letterSpacing: "0.01em",
+                      textShadow:
+                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                    }}
+                  >
+                    {bride || "\u00A0"}
+                  </div>
+
+                  <div
+                    aria-hidden="true"
+                    style={{
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                      fontStyle: "italic",
+                      fontSize: "clamp(22px, 5.4vw, 44px)",
+                      lineHeight: 1,
+                      margin: "0.18em 0",
+                      color: accent,
+                      opacity: 0.95,
+                    }}
+                  >
+                    &amp;
+                  </div>
+
+                  <div
+                    style={{
+                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      lineHeight: 1.05,
+                      fontStyle: "italic",
+                      fontWeight: 500,
+                      letterSpacing: "0.01em",
+                      textShadow:
+                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                    }}
+                  >
+                    {groom || "\u00A0"}
+                  </div>
+
+                  <div
+                    className="mx-auto mt-4"
+                    aria-hidden="true"
+                    style={{
+                      width: "38%",
+                      height: "1px",
+                      background:
+                        "linear-gradient(to right, transparent, rgba(58,42,20,0.4), transparent)",
+                      opacity: 0.7,
+                    }}
+                  />
+                  <div
+                    className="mt-2"
+                    style={{
+                      fontFamily:
+                        "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
+                      fontSize: "clamp(8px, 1.4vw, 11px)",
+                      letterSpacing: "0.42em",
+                      textTransform: "uppercase",
+                      color: "rgba(58,42,20,0.55)",
+                    }}
+                  >
+                    The Wedding Of
+                  </div>
+                </div>
+              )}
 
               {/* === TRIANGULAR FLAP === */}
               <div
