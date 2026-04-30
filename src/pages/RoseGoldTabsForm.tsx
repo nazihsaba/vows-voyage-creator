@@ -291,14 +291,17 @@ const RoseGoldTabsForm = () => {
       let videoUrl = formData.video_url;
       let uploadedAudioUrl = audioUrl;
 
-      // Upload new image if selected
+      // Upload new image if selected (compressed)
       if (imageFile) {
-        imageUrl = await uploadImage(imageFile, user.id);
+        const compressedImage = await compressImage(imageFile);
+        imageUrl = await uploadImage(compressedImage, user.id);
       }
 
-      // Upload new video if selected
+      // Upload new video if selected (compressed)
       if (videoFile) {
-        videoUrl = await uploadImage(videoFile, user.id);
+        toast({ title: "Optimizing video", description: "This may take a moment..." });
+        const compressedVideo = await compressVideo(videoFile);
+        videoUrl = await uploadImage(compressedVideo, user.id);
       }
 
       // Upload new audio if selected, or clear if removed
