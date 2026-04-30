@@ -74,10 +74,11 @@ export const EnvelopeAnimation = ({
   );
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
+  // Portrait orientation so the envelope fills vertical screen space.
   const VB_W = 600;
-  const VB_H = 420;
+  const VB_H = 840;
   const V_X = 300;
-  const V_Y = 210;
+  const V_Y = 300;
 
   return (
     <>
@@ -197,8 +198,9 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "2200px",
-              width: "min(92vw, 88dvh * (600/420), 760px)",
-              height: "min(88dvh, 92vw * (420/600), 532px)",
+              // Portrait envelope: tall and narrow, fills most of screen height.
+              height: "min(92dvh, 96vw * (840/600))",
+              width: "min(92vw, 92dvh * (600/840), 600px)",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
