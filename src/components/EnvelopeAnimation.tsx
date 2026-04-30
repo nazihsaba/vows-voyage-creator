@@ -520,7 +520,19 @@ export const EnvelopeAnimation = ({
                 >
                   <defs>
                     <clipPath id="env-flap-clip">
-                      <path d={`M0 0 L ${VB_W} 0 L ${V_X} ${V_Y} Z`} />
+                      {/* Rounded triangular flap: rounded top-left, top-right, and V-point. */}
+                      <path
+                        d={`
+                          M 28 0
+                          L ${VB_W - 28} 0
+                          A 28 28 0 0 1 ${VB_W} 28
+                          L ${V_X + 18} ${V_Y - 6}
+                          Q ${V_X} ${V_Y + 8} ${V_X - 18} ${V_Y - 6}
+                          L 0 28
+                          A 28 28 0 0 1 28 0
+                          Z
+                        `}
+                      />
                     </clipPath>
                     <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="rgba(255,250,240,0.18)" />
