@@ -350,7 +350,7 @@ export const EnvelopeAnimation = ({
                   />
                   {/* Crisp hairline along the flap's V-edge for a clean separation */}
                   <path
-                    d={`M 0 28 L ${V_X - 18} ${V_Y - 6} Q ${V_X} ${V_Y + 8} ${V_X + 18} ${V_Y - 6} L ${VB_W} 28`}
+                    d={`M 0 16 L ${V_X - 14} ${V_Y - 4} Q ${V_X} ${V_Y + 6} ${V_X + 14} ${V_Y - 4} L ${VB_W} 16`}
                     fill="none"
                     stroke="rgba(40,28,10,0.18)"
                     strokeWidth="0.8"
