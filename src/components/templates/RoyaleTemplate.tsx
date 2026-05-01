@@ -319,6 +319,67 @@ export const RoyaleTemplate = ({
         </AnimatedSection>
       </section>
 
+      {/* ===== FAMILY SECTION ===== */}
+      <section className="px-6 py-16">
+        <AnimatedSection animation="fade-up">
+          <RoyaleSectionTitle eyebrow="Together with their families" title="The Families" goldColor={GOLD} />
+        </AnimatedSection>
+        <AnimatedSection animation="fade-up" delay={120}>
+          <div className="max-w-2xl mx-auto">
+            <RoyaleCard goldColor={GOLD}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
+                <div className="flex-1">
+                  <p
+                    className="text-[10px] tracking-[0.4em] uppercase mb-2"
+                    style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {t("family.groomFamily", "Groom's Family")}
+                  </p>
+                  <EditableField
+                    fieldId="groom-family-name"
+                    text={getFieldValue(
+                      "groom-family-name",
+                      wedding.groom_family || (wedding.groom_name?.split(" ").pop() ?? "Family")
+                    )}
+                    style={getFieldStyle("groom-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-2xl sm:text-3xl italic"
+                  />
+                </div>
+                <div
+                  className="text-3xl"
+                  style={{ color: GOLD, fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  &amp;
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-[10px] tracking-[0.4em] uppercase mb-2"
+                    style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {t("family.brideFamily", "Bride's Family")}
+                  </p>
+                  <EditableField
+                    fieldId="bride-family-name"
+                    text={getFieldValue(
+                      "bride-family-name",
+                      wedding.bride_family || (wedding.bride_name?.split(" ").pop() ?? "Family")
+                    )}
+                    style={getFieldStyle("bride-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-2xl sm:text-3xl italic"
+                  />
+                </div>
+              </div>
+            </RoyaleCard>
+          </div>
+        </AnimatedSection>
+      </section>
+
       {/* ===== MAIN PHOTO ===== */}
       {wedding.main_picture_url && (
         <section className="px-6 pb-12">
