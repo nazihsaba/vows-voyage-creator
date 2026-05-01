@@ -234,18 +234,18 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envFlapLift {
-              0%   { transform: rotateX(${FLAP_REST_TILT}deg); }
-              18%  { transform: rotateX(${FLAP_REST_TILT - 4}deg); }
-              35%  { transform: rotateX(-55deg); }
-              60%  { transform: rotateX(-120deg); }
-              82%  { transform: rotateX(-160deg); opacity: .7; }
-              100% { transform: rotateX(-176deg); opacity: 0; }
+              0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
+              25%  { transform: rotateX(-40deg); opacity: 1; }
+              50%  { transform: rotateX(-90deg); opacity: 1; }
+              75%  { transform: rotateX(-135deg); opacity: .9; }
+              90%  { transform: rotateX(-165deg); opacity: .55; }
+              100% { transform: rotateX(-178deg); opacity: 0; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
             }
             .is-opening .env-flap-wrap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.16, 0.84, 0.32, 1) forwards;
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.33, 0, 0.4, 1) forwards;
             }
 
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
