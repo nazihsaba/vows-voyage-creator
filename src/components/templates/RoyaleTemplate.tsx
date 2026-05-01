@@ -9,7 +9,7 @@ import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
-import RoyaleEnvelope from "./royale/RoyaleEnvelope";
+import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 import RoyaleOrnament from "./royale/RoyaleOrnament";
 import RoyaleSectionTitle from "./royale/RoyaleSectionTitle";
 import RoyaleCard from "./royale/RoyaleCard";
@@ -33,8 +33,10 @@ interface RoyaleTemplateProps {
   submittingRsvp?: boolean;
 }
 
-const GOLD = "#b08a3e";
-const GOLD_DEEP = "#7e5e1a";
+// Brand highlight color (matches EnvelopeAnimation accent).
+const GOLD = "#865814";
+const GOLD_LIGHT = "#b8893f";
+const GOLD_DEEP = "#5e3d0e";
 const INK = "#3a2a14";
 const PAPER = "#fbf6ec";
 const PAPER_DEEP = "#f1e6cc";
