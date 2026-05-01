@@ -306,11 +306,19 @@ export const EnvelopeAnimation = ({
               }
             }
 
-            /* Framed photo behind the flap. Hidden by default, fades in only
-               while the envelope is opening so it never peeks before reveal. */
-            /* "Welcome / You're Invited" sits on the closed envelope and is
-               visible before the user taps. It stays through the open. */
-            .env-reveal { opacity: 1; }
+            /* "Welcome / You're Invited" lives behind the flap. It must stay
+               hidden while the envelope is closed and only fade in as the flap
+               rotates open, so the message is revealed — not pre-shown. */
+            .env-reveal { opacity: 0; }
+            @keyframes envRevealIn {
+              0%   { opacity: 0; }
+              18%  { opacity: 0; }
+              38%  { opacity: 1; }
+              100% { opacity: 1; }
+            }
+            .is-opening .env-reveal {
+              animation: envRevealIn ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
 
             /* Bride & groom names are tucked inside the envelope. They stay
                hidden until the user taps, then fade in immediately. */
