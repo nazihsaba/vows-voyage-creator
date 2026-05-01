@@ -32,6 +32,7 @@ const WeddingInvite = () => {
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
   const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
+  const [envelopeAssetsReady, setEnvelopeAssetsReady] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [downloadingCard, setDownloadingCard] = useState(false);
   const { toast } = useToast();
