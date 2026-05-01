@@ -551,6 +551,68 @@ export const EnvelopeAnimation = ({
                 </div>
               )}
 
+              {/* === REVEAL FRAME (photo behind the flap) ===
+                  Sits between the body face and the flap. Anchored to the upper
+                  portion of the envelope so it sits exactly where the flap was
+                  covering, giving the impression that the photo is being
+                  uncovered as the flap lifts. */}
+              {revealImage && (
+                <div
+                  className="env-reveal absolute pointer-events-none"
+                  style={{
+                    left: "8%",
+                    right: "8%",
+                    top: "5%",
+                    height: `${((V_Y - 30) / VB_H) * 100}%`,
+                    zIndex: 2,
+                    transform: "translateZ(1px)",
+                    willChange: "opacity, transform",
+                  }}
+                >
+                  <div
+                    className="relative w-full h-full"
+                    style={{
+                      padding: "10px",
+                      background:
+                        "linear-gradient(145deg, #f6ecd6 0%, #e9d9b3 50%, #c9a368 100%)",
+                      borderRadius: "6px",
+                      boxShadow:
+                        "0 2px 6px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(134,88,20,0.45), inset 0 0 0 3px rgba(255,250,235,0.7), inset 0 0 0 4px rgba(134,88,20,0.55)",
+                    }}
+                  >
+                    <img
+                      src={revealImage}
+                      alt=""
+                      aria-hidden="true"
+                      draggable={false}
+                      className="w-full h-full select-none"
+                      style={{
+                        objectFit: "cover",
+                        borderRadius: "2px",
+                        boxShadow:
+                          "inset 0 0 0 1px rgba(60,42,18,0.35), 0 1px 2px rgba(0,0,0,0.25)",
+                        filter:
+                          "saturate(0.95) contrast(1.02) brightness(0.98)",
+                      }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display =
+                          "none";
+                      }}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-[10px] pointer-events-none"
+                      style={{
+                        borderRadius: "2px",
+                        background:
+                          "radial-gradient(ellipse at center, rgba(255,238,200,0) 55%, rgba(70,50,20,0.18) 100%)",
+                        mixBlendMode: "multiply",
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+
               {/* === TRIANGULAR FLAP === */}
               {/* Absolutely positioned, detached from layout flow; rotates around
                   the top edge in true 3D so it can swing fully past 90° and rest
