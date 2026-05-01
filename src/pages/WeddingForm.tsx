@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye, Upload, X, Languages, Mail, ChevronUp, ChevronDown } from "lucide-react";
+import { ArrowLeft, Loader2, Eye, Upload, X, Languages, Mail, ChevronUp, ChevronDown, Plus, Minus, ArrowUp, ArrowDown } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
@@ -191,30 +191,48 @@ const WeddingForm = () => {
   const TimelineOrderControls = ({ orderKey }: { orderKey: string }) => {
     const pos = timelinePosition(orderKey);
     return (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         {pos !== null && (
-          <span className="text-xs text-muted-foreground mr-1">Timeline #{pos}</span>
+          <span className="text-xs text-muted-foreground whitespace-nowrap">#{pos}</span>
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={!canMoveUp(orderKey)}
-          onClick={() => moveTimelineKey(orderKey, -1)}
-          aria-label="Move up in timeline"
+        <div
+          className="flex items-center rounded-md border border-border bg-background overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+          role="group"
+          aria-label="Reorder section"
         >
-          <ChevronUp className="w-4 h-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={!canMoveDown(orderKey)}
-          onClick={() => moveTimelineKey(orderKey, 1)}
-          aria-label="Move down in timeline"
-        >
-          <ChevronDown className="w-4 h-4" />
-        </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-none"
+            disabled={!canMoveUp(orderKey)}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveTimelineKey(orderKey, -1);
+            }}
+            aria-label="Move up in timeline"
+            title="Move up"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </Button>
+          <div className="w-px h-5 bg-border" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-none"
+            disabled={!canMoveDown(orderKey)}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveTimelineKey(orderKey, 1);
+            }}
+            aria-label="Move down in timeline"
+            title="Move down"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     );
   };
@@ -1593,15 +1611,21 @@ const WeddingForm = () => {
                       <CollapsibleTrigger asChild>
                         <button
                           type="button"
-                          className="flex flex-1 items-center justify-between gap-2 text-left"
+                          className="flex flex-1 items-center justify-between gap-2 text-left group"
                           aria-label="Toggle Ceremony Details"
+                          aria-expanded={!!openLocationCards.ceremony}
                         >
                           <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
-                          <ChevronDown
-                            className={`w-5 h-5 text-muted-foreground transition-transform ${
-                              openLocationCards.ceremony ? "rotate-180" : ""
-                            }`}
-                          />
+                          <span
+                            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground group-hover:bg-muted transition-colors"
+                            aria-hidden="true"
+                          >
+                            {openLocationCards.ceremony ? (
+                              <Minus className="w-4 h-4" />
+                            ) : (
+                              <Plus className="w-4 h-4" />
+                            )}
+                          </span>
                         </button>
                       </CollapsibleTrigger>
                       {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
@@ -1699,15 +1723,21 @@ const WeddingForm = () => {
                       <CollapsibleTrigger asChild>
                         <button
                           type="button"
-                          className="flex flex-1 items-center justify-between gap-2 text-left"
+                          className="flex flex-1 items-center justify-between gap-2 text-left group"
                           aria-label="Toggle Venue Details"
+                          aria-expanded={!!openLocationCards.venue}
                         >
                           <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
-                          <ChevronDown
-                            className={`w-5 h-5 text-muted-foreground transition-transform ${
-                              openLocationCards.venue ? "rotate-180" : ""
-                            }`}
-                          />
+                          <span
+                            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground group-hover:bg-muted transition-colors"
+                            aria-hidden="true"
+                          >
+                            {openLocationCards.venue ? (
+                              <Minus className="w-4 h-4" />
+                            ) : (
+                              <Plus className="w-4 h-4" />
+                            )}
+                          </span>
                         </button>
                       </CollapsibleTrigger>
                       {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
@@ -1849,54 +1879,80 @@ const WeddingForm = () => {
                             <CollapsibleTrigger asChild>
                               <button
                                 type="button"
-                                className="flex flex-1 items-center justify-between gap-2 text-left"
+                                className="flex flex-1 items-center justify-between gap-2 text-left group"
                                 aria-label="Toggle section"
+                                aria-expanded={!!openLocationCards[section.uid]}
                               >
                                 <span className="text-sm font-medium text-foreground">
                                   {section.title?.trim() ? section.title : `Section ${idx + 1}`}
                                   {pos !== null && (
                                     <span className="ml-2 text-xs text-muted-foreground">
-                                      (Timeline #{pos})
+                                      #{pos}
                                     </span>
                                   )}
                                 </span>
-                                <ChevronDown
-                                  className={`w-4 h-4 text-muted-foreground transition-transform ${
-                                    openLocationCards[section.uid] ? "rotate-180" : ""
-                                  }`}
-                                />
+                                <span
+                                  className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground group-hover:bg-muted transition-colors"
+                                  aria-hidden="true"
+                                >
+                                  {openLocationCards[section.uid] ? (
+                                    <Minus className="w-4 h-4" />
+                                  ) : (
+                                    <Plus className="w-4 h-4" />
+                                  )}
+                                </span>
                               </button>
                             </CollapsibleTrigger>
-                            <div className="flex items-center gap-1">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                disabled={!canMoveUp(section.uid)}
-                                onClick={() => moveTimelineKey(section.uid, -1)}
-                                aria-label="Move section up in timeline"
+                            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                              <div
+                                className="flex items-center rounded-md border border-border bg-background overflow-hidden"
+                                role="group"
+                                aria-label="Reorder section"
                               >
-                                <ChevronUp className="w-4 h-4" />
-                              </Button>
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 rounded-none"
+                                  disabled={!canMoveUp(section.uid)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    moveTimelineKey(section.uid, -1);
+                                  }}
+                                  aria-label="Move section up in timeline"
+                                  title="Move up"
+                                >
+                                  <ArrowUp className="w-4 h-4" />
+                                </Button>
+                                <div className="w-px h-5 bg-border" />
+                                <Button
+                                  type="button"
+                                  variant="ghost"
+                                  size="sm"
+                                  className="h-8 w-8 p-0 rounded-none"
+                                  disabled={!canMoveDown(section.uid)}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    moveTimelineKey(section.uid, 1);
+                                  }}
+                                  aria-label="Move section down in timeline"
+                                  title="Move down"
+                                >
+                                  <ArrowDown className="w-4 h-4" />
+                                </Button>
+                              </div>
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                disabled={!canMoveDown(section.uid)}
-                                onClick={() => moveTimelineKey(section.uid, 1)}
-                                aria-label="Move section down in timeline"
-                              >
-                                <ChevronDown className="w-4 h-4" />
-                              </Button>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                onClick={() => {
+                                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                                onClick={(e) => {
+                                  e.stopPropagation();
                                   setCustomSections(customSections.filter((_, i) => i !== idx));
                                   setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
                                 }}
                                 aria-label="Remove section"
+                                title="Remove"
                               >
                                 <X className="w-4 h-4" />
                               </Button>
