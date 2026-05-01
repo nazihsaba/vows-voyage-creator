@@ -224,11 +224,11 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envSealPop {
-              0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              10%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
-              22%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
-              35%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
-              100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              0%   { transform: translate(-50%,-50%) translateZ(20px) scale(1)    rotate(-3deg); opacity: 1; }
+              10%  { transform: translate(-50%,-50%) translateZ(20px) scale(1.12) rotate(-4deg); opacity: 1; }
+              22%  { transform: translate(-50%,-54%) translateZ(20px) scale(1.05) rotate(-2deg); opacity: .55; }
+              35%  { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
+              100% { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
               animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
