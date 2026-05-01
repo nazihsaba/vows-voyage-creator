@@ -1702,8 +1702,11 @@ const WeddingForm = () => {
                       </div>
                     </div>
                     {isAuraTemplate && (
-                      <div className="space-y-1.5">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                      <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                          <TimelineOrderControls orderKey="welcome_drink" />
+                        </div>
                         <Input
                           id="welcome_drink_time"
                           type="time"
