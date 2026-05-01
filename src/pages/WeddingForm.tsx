@@ -65,6 +65,7 @@ const WeddingForm = () => {
     welcome_drink_time: "",
   });
   type CustomSection = {
+    uid: string;
     title: string;
     location_name: string;
     time: string;
@@ -72,7 +73,14 @@ const WeddingForm = () => {
     icon: string;
   };
   const MAX_CUSTOM_SECTIONS = 4;
+  const newCustomUid = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+  // Visual order of timeline cards. Keys: "ceremony", "welcome_drink", "venue", or a custom uid.
+  const [timelineOrder, setTimelineOrder] = useState<string[]>([
+    "ceremony",
+    "welcome_drink",
+    "venue",
+  ]);
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
@@ -149,6 +157,62 @@ const WeddingForm = () => {
       setTranslatingFields((prev) => ({ ...prev, [fieldName]: false }));
     }
   }, []);
+
+  // Reorder a timeline key (ceremony / welcome_drink / venue / custom_N) up or down.
+  const moveTimelineKey = useCallback((key: string, direction: -1 | 1) => {
+    setTimelineOrder((prev) => {
+      const idx = prev.indexOf(key);
+      if (idx === -1) return prev;
+      const target = idx + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
+  }, []);
+
+  const timelineIndex = (key: string) => timelineOrder.indexOf(key);
+  const timelinePosition = (key: string) => {
+    const i = timelineIndex(key);
+    return i === -1 ? null : i + 1;
+  };
+  const canMoveUp = (key: string) => timelineIndex(key) > 0;
+  const canMoveDown = (key: string) => {
+    const i = timelineIndex(key);
+    return i !== -1 && i < timelineOrder.length - 1;
+  };
+
+  // Reusable inline arrows + position label for timeline ordering.
+  const TimelineOrderControls = ({ orderKey }: { orderKey: string }) => {
+    const pos = timelinePosition(orderKey);
+    return (
+      <div className="flex items-center gap-1">
+        {pos !== null && (
+          <span className="text-xs text-muted-foreground mr-1">Timeline #{pos}</span>
+        )}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveUp(orderKey)}
+          onClick={() => moveTimelineKey(orderKey, -1)}
+          aria-label="Move up in timeline"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveDown(orderKey)}
+          onClick={() => moveTimelineKey(orderKey, 1)}
+          aria-label="Move down in timeline"
+        >
+          <ChevronDown className="w-4 h-4" />
+        </Button>
+      </div>
+    );
+  };
 
   const debouncedTranslate = useCallback(
     (fieldName: string, text: string) => {
@@ -300,23 +364,61 @@ const WeddingForm = () => {
           welcome_drink_time: welcomeDrink?.time || "",
         });
 
-        // Load custom sections (type starts with "custom_"), sorted by suffix index
-        const customRows = locationsData
+        // Load custom sections (type starts with "custom_"), sorted by display_order then suffix index
+        const customRowsRaw = locationsData
           .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
-          .sort((a, b) => {
+          .sort((a: any, b: any) => {
+            const ao = typeof a.display_order === "number" ? a.display_order : 999;
+            const bo = typeof b.display_order === "number" ? b.display_order : 999;
+            if (ao !== bo) return ao - bo;
             const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
             const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
             return ai - bi;
           })
-          .slice(0, MAX_CUSTOM_SECTIONS)
-          .map((l: any) => ({
-            title: l.custom_title || "",
-            location_name: l.location_name || "",
-            time: l.time || "",
-            location_link: l.location_link || "",
-            icon: l.icon || "solar:confetti-bold",
-          }));
+          .slice(0, MAX_CUSTOM_SECTIONS);
+
+        // Map raw row -> CustomSection with stable uid; remember original DB type to seed timelineOrder
+        const customRows: CustomSection[] = customRowsRaw.map((l: any) => ({
+          uid: newCustomUid(),
+          title: l.custom_title || "",
+          location_name: l.location_name || "",
+          time: l.time || "",
+          location_link: l.location_link || "",
+          icon: l.icon || "solar:confetti-bold",
+        }));
+        const customDbTypeByUid = new Map<string, string>();
+        customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
+
+        // Build timeline order from display_order on existing rows.
+        // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
+        const fixedKeys = [
+          { key: "ceremony", row: ceremony },
+          { key: "welcome_drink", row: welcomeDrink },
+          { key: "venue", row: venue },
+        ];
+        const entries: Array<{ key: string; order: number }> = [];
+        fixedKeys.forEach(({ key, row }) => {
+          if (row) {
+            entries.push({ key, order: typeof row.display_order === "number" ? row.display_order : 999 });
+          }
+        });
+        customRows.forEach((c) => {
+          const dbType = customDbTypeByUid.get(c.uid);
+          const raw: any = customRowsRaw.find((r: any) => r.type === dbType);
+          entries.push({ key: c.uid, order: typeof raw?.display_order === "number" ? raw.display_order : 999 });
+        });
+
+        const hasOrder = entries.some((e) => e.order > 0);
+        if (hasOrder) {
+          entries.sort((a, b) => a.order - b.order);
+        }
+        const finalKeys = entries.map((e) => e.key);
+        // Ensure ceremony/welcome_drink/venue keys exist in order even if not yet saved
+        ["ceremony", "welcome_drink", "venue"].forEach((k) => {
+          if (!finalKeys.includes(k)) finalKeys.push(k);
+        });
+        setTimelineOrder(finalKeys);
       }
 
       // Fetch gift cards
@@ -860,14 +962,17 @@ const WeddingForm = () => {
         });
       }
 
-      // Custom sections (timeline templates only)
+      // Custom sections (timeline templates only). Track uid -> DB type for ordering.
+      const customUidToType = new Map<string, string>();
       if (isAuraTemplate) {
         customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
           const hasContent = s.title || s.location_name || s.time || s.location_link;
           if (!hasContent) return;
+          const dbType = `custom_${idx + 1}`;
+          customUidToType.set(s.uid, dbType);
           locationInserts.push({
             wedding_id: weddingId,
-            type: `custom_${idx + 1}`,
+            type: dbType,
             location_name: s.location_name,
             time: s.time || null,
             location_link: s.location_link,
@@ -876,6 +981,18 @@ const WeddingForm = () => {
           } as any);
         });
       }
+
+      // Apply user-defined display_order from timelineOrder.
+      // timelineOrder uses "ceremony" / "welcome_drink" / "venue" / <custom uid>.
+      // We translate uid -> DB type to find the corresponding row.
+      const typeToOrder = new Map<string, number>();
+      timelineOrder.forEach((key, i) => {
+        const dbType = customUidToType.get(key) ?? key;
+        typeToOrder.set(dbType, i);
+      });
+      locationInserts.forEach((row: any) => {
+        row.display_order = typeToOrder.get(row.type) ?? 999;
+      });
 
       if (locationInserts.length > 0) {
         const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
@@ -1466,8 +1583,9 @@ const WeddingForm = () => {
 
                 {/* Ceremony Section */}
                 <Card className="border shadow-sm">
-                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
                     <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
+                    {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
                   </CardHeader>
                   <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
@@ -1554,8 +1672,9 @@ const WeddingForm = () => {
 
                 {/* Venue Section */}
                 <Card className="border shadow-sm">
-                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
                     <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
+                    {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
                   </CardHeader>
                   <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
@@ -1583,8 +1702,11 @@ const WeddingForm = () => {
                       </div>
                     </div>
                     {isAuraTemplate && (
-                      <div className="space-y-1.5">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                      <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
+                        <div className="flex items-center justify-between">
+                          <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                          <TimelineOrderControls orderKey="welcome_drink" />
+                        </div>
                         <Input
                           id="welcome_drink_time"
                           type="time"
@@ -1650,18 +1772,21 @@ const WeddingForm = () => {
                         variant="outline"
                         size="sm"
                         disabled={customSections.length >= MAX_CUSTOM_SECTIONS}
-                        onClick={() =>
+                        onClick={() => {
+                          const uid = newCustomUid();
                           setCustomSections([
                             ...customSections,
                             {
+                              uid,
                               title: "",
                               location_name: "",
                               time: "",
                               location_link: "",
                               icon: "solar:confetti-bold",
                             },
-                          ])
-                        }
+                          ]);
+                          setTimelineOrder((prev) => [...prev, uid]);
+                        }}
                       >
                         + Add Section
                       </Button>
@@ -1672,28 +1797,30 @@ const WeddingForm = () => {
                           No additional sections yet. Click "+ Add Section" to add one.
                         </p>
                       )}
-                      {customSections.map((section, idx) => (
+                      {customSections.map((section, idx) => {
+                        const pos = timelinePosition(section.uid);
+                        return (
                         <div
-                          key={idx}
+                          key={section.uid}
                           className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-foreground">
-                              Section {idx + 1}
+                              {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                              {pos !== null && (
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  (Timeline #{pos})
+                                </span>
+                              )}
                             </span>
                             <div className="flex items-center gap-1">
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                disabled={idx === 0}
-                                onClick={() => {
-                                  if (idx === 0) return;
-                                  const next = [...customSections];
-                                  [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
-                                  setCustomSections(next);
-                                }}
-                                aria-label="Move section up"
+                                disabled={!canMoveUp(section.uid)}
+                                onClick={() => moveTimelineKey(section.uid, -1)}
+                                aria-label="Move section up in timeline"
                               >
                                 <ChevronUp className="w-4 h-4" />
                               </Button>
@@ -1701,14 +1828,9 @@ const WeddingForm = () => {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                disabled={idx === customSections.length - 1}
-                                onClick={() => {
-                                  if (idx === customSections.length - 1) return;
-                                  const next = [...customSections];
-                                  [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]];
-                                  setCustomSections(next);
-                                }}
-                                aria-label="Move section down"
+                                disabled={!canMoveDown(section.uid)}
+                                onClick={() => moveTimelineKey(section.uid, 1)}
+                                aria-label="Move section down in timeline"
                               >
                                 <ChevronDown className="w-4 h-4" />
                               </Button>
@@ -1716,9 +1838,10 @@ const WeddingForm = () => {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  setCustomSections(customSections.filter((_, i) => i !== idx))
-                                }
+                                onClick={() => {
+                                  setCustomSections(customSections.filter((_, i) => i !== idx));
+                                  setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
+                                }}
                                 aria-label="Remove section"
                               >
                                 <X className="w-4 h-4" />
@@ -1815,7 +1938,8 @@ const WeddingForm = () => {
                             </Select>
                           </div>
                         </div>
-                      ))}
+                        );
+                      })}
                     </CardContent>
                   </Card>
                 )}

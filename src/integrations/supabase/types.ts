@@ -291,6 +291,7 @@ export type Database = {
         Row: {
           created_at: string | null
           custom_title: string | null
+          display_order: number
           icon: string | null
           id: string
           location_link: string | null
@@ -302,6 +303,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           custom_title?: string | null
+          display_order?: number
           icon?: string | null
           id?: string
           location_link?: string | null
@@ -313,6 +315,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           custom_title?: string | null
+          display_order?: number
           icon?: string | null
           id?: string
           location_link?: string | null

@@ -120,57 +120,70 @@ export const EtoileTemplate = ({
   const weddingDate = new Date(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
 
-  const timelineEvents = [
-    ...(ceremony
-      ? [
-          {
-            id: "ceremony",
-            title: t("events.ceremony"),
-            time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
-            location: getLocalizedValue("ceremony_location", ceremony.location_name),
-            link: ceremony.location_link,
-            icon: ceremony.icon || "material-symbols:church-rounded",
-          },
-        ]
-      : []),
-    ...(venue
-      ? [
-          {
-            id: "welcome-drink",
-            title: t("events.welcomeDrink"),
-            time:
-              formatTimeTo12Hour(locations.find((loc) => loc.type === "welcome_drink")?.time || venue.time) ||
-              "8:00 PM",
-            location: venue.location_name,
-            link: venue.location_link,
-            icon: "streamline:champagne-party-alcohol-remix",
-          },
-          {
-            id: "dinner-party",
-            title: t("events.dinnerParty"),
-            time: formatTimeTo12Hour(venue.time) || "8:30 PM",
-            location: venue.location_name,
-            link: venue.location_link,
-            icon: venue.icon || "solar:confetti-bold",
-          },
-        ]
-      : []),
-    ...locations
-      .filter((loc: any) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
-      .sort((a: any, b: any) => {
-        const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
-        const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
-        return ai - bi;
-      })
-      .map((loc: any) => ({
-        id: loc.type,
-        title: loc.custom_title || "Event",
-        time: formatTimeTo12Hour(loc.time) || "",
-        location: loc.location_name || "",
-        link: loc.location_link,
-        icon: loc.icon || "solar:confetti-bold",
-      })),
-  ];
+  const welcomeDrinkLoc = locations.find((loc) => loc.type === "welcome_drink");
+  const orderOf = (loc: any) =>
+    typeof loc?.display_order === "number" ? loc.display_order : 999;
+
+  const rawTimelineEntries: Array<{ order: number; event: any }> = [];
+  if (ceremony) {
+    rawTimelineEntries.push({
+      order: orderOf(ceremony),
+      event: {
+        id: "ceremony",
+        title: t("events.ceremony"),
+        time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
+        location: getLocalizedValue("ceremony_location", ceremony.location_name),
+        link: ceremony.location_link,
+        icon: ceremony.icon || "material-symbols:church-rounded",
+      },
+    });
+  }
+  if (venue) {
+    if (welcomeDrinkLoc) {
+      rawTimelineEntries.push({
+        order: orderOf(welcomeDrinkLoc),
+        event: {
+          id: "welcome-drink",
+          title: t("events.welcomeDrink"),
+          time: formatTimeTo12Hour(welcomeDrinkLoc.time || venue.time) || "8:00 PM",
+          location: venue.location_name,
+          link: venue.location_link,
+          icon: "streamline:champagne-party-alcohol-remix",
+        },
+      });
+    }
+    rawTimelineEntries.push({
+      order: orderOf(venue),
+      event: {
+        id: "dinner-party",
+        title: t("events.dinnerParty"),
+        time: formatTimeTo12Hour(venue.time) || "8:30 PM",
+        location: venue.location_name,
+        link: venue.location_link,
+        icon: venue.icon || "solar:confetti-bold",
+      },
+    });
+  }
+  locations
+    .filter((loc: any) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+    .forEach((loc: any) => {
+      rawTimelineEntries.push({
+        order: orderOf(loc),
+        event: {
+          id: loc.type,
+          title: loc.custom_title || "Event",
+          time: formatTimeTo12Hour(loc.time) || "",
+          location: loc.location_name || "",
+          link: loc.location_link,
+          icon: loc.icon || "solar:confetti-bold",
+        },
+      });
+    });
+  const hasAnyOrder = rawTimelineEntries.some((e) => e.order > 0);
+  if (hasAnyOrder) {
+    rawTimelineEntries.sort((a, b) => a.order - b.order);
+  }
+  const timelineEvents = rawTimelineEntries.map((e) => e.event);
 
   const hasGiftCards = giftCards && giftCards.length > 0;
   const quoteDefault = '"Two are better than one. For if they fall, one will lift up the other."';
