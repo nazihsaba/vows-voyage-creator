@@ -321,11 +321,24 @@ export const EnvelopeAnimation = ({
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
-            /* GPU promotion + crisp compositing for the animated layers. */
-            .env-target, .env-flap-wrap, .env-seal {
+            /* GPU promotion + crisp compositing for the animated layers.
+               IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap.
+               The flap rotates past 90° during the open animation; hiding the
+               back face makes the entire flap vanish on mobile WebKit, which
+               looks like the top of the envelope is "cut off" mid-animation. */
+            .env-target, .env-seal {
               -webkit-backface-visibility: hidden;
               -webkit-transform-style: preserve-3d;
               -webkit-font-smoothing: antialiased;
+            }
+            .env-flap-wrap {
+              -webkit-backface-visibility: visible;
+              backface-visibility: visible;
+              -webkit-transform-style: preserve-3d;
+            }
+            .env-flap-wrap svg {
+              -webkit-backface-visibility: visible;
+              backface-visibility: visible;
             }
 
             /* Mobile-tuned tweaks: smaller blur radius, no expensive drop-shadow
