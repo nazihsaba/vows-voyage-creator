@@ -295,10 +295,12 @@ export const EnvelopeAnimation = ({
             style={{
               perspective: "2200px",
               // Portrait envelope: tall and narrow, fills most of screen height.
-              // Reserve room at the bottom for the "Tap to open" hint so it
-              // never falls off the screen on short phones.
-              height: "min(82dvh, 92vw * (840/600))",
-              width: "min(92vw, 82dvh * (600/840), 600px)",
+              // Use vh as an old-Safari-safe base, with dvh override below for
+              // modern browsers via @supports. Parent overlay uses
+              // -webkit-fill-available so the envelope is sized against the
+              // visible viewport (URL bar excluded) on iOS Safari.
+              height: "min(82vh, 92vw * (840/600))",
+              width: "min(92vw, 82vh * (600/840), 600px)",
               maxWidth: "min(92vw, 600px)",
             }}
             onClick={handleOpen}
