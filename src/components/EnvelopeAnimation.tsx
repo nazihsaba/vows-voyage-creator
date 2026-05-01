@@ -526,17 +526,21 @@ export const EnvelopeAnimation = ({
               )}
 
               {/* === TRIANGULAR FLAP === */}
+              {/* Absolutely positioned, detached from layout flow; rotates around
+                  the top edge in true 3D so it can swing fully past 90° and rest
+                  behind/above the envelope without being clipped. */}
               <div
                 className="env-flap-wrap absolute inset-0"
                 style={{
                   transformOrigin: "top center",
                   transformStyle: "preserve-3d",
-                  zIndex: 3,
+                  zIndex: 5,
                   willChange: "transform, opacity",
-                  backfaceVisibility: "hidden",
-                  // Subtle shadow only — main flap shadow is rendered inside
-                  // the body's clipped SVG so it never spills past the rounded corners.
-                  filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.18))",
+                  // Keep the back of the paper visible after passing 90°.
+                  backfaceVisibility: "visible",
+                  WebkitBackfaceVisibility: "visible",
+                  // No CSS filter here — would flatten the 3D layer and re-clip it.
+                  pointerEvents: "none",
                 }}
               >
                 <svg
