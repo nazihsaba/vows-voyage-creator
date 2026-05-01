@@ -557,100 +557,35 @@ export const EnvelopeAnimation = ({
                   covering, giving the impression that the photo is being
                   uncovered as the flap lifts. */}
               {revealImage && (
-                <div
-                  className="env-reveal absolute pointer-events-none"
+                <svg
+                  viewBox={`0 0 ${VB_W} ${VB_H}`}
+                  className="env-reveal absolute inset-0 w-full h-full pointer-events-none"
+                  preserveAspectRatio="none"
+                  aria-hidden="true"
                   style={{
-                    left: "12%",
-                    right: "12%",
-                    // Anchor so the card's TOP edge sits just below the V-fold,
-                    // making it look like a stationery card tucked inside the
-                    // envelope with only its upper portion peeking out.
-                    top: `${((V_Y - 18) / VB_H) * 100}%`,
-                    // Only the top portion of the card is visible — the rest
-                    // remains hidden inside the envelope body.
-                    height: `${(((VB_H - V_Y) * 0.55) / VB_H) * 100}%`,
                     zIndex: 2,
                     transform: "translateZ(-1px)",
                     willChange: "opacity, transform",
-                    overflow: "hidden",
-                    // Only round the visible (top) corners — bottom is hidden
-                    // inside the envelope, so it shouldn't curve.
-                    borderTopLeftRadius: "6px",
-                    borderTopRightRadius: "6px",
                   }}
                 >
-                  {/* Card body — cream paper with the same warm tonality as
-                      the envelope, framed by a delicate gold hairline rule. */}
-                  <div
-                    className="relative w-full"
-                    style={{
-                      // Card extends below the visible window so the bottom
-                      // edge is naturally clipped by the parent (looks like it
-                      // continues down inside the envelope).
-                      height: "180%",
-                      padding: "10px",
-                      background:
-                        "linear-gradient(180deg, #fdf6e6 0%, #f5ead0 100%)",
-                      backgroundBlendMode: "multiply",
-                      borderTopLeftRadius: "6px",
-                      borderTopRightRadius: "6px",
-                      boxShadow: [
-                        // Soft contact shadow at the lip of the envelope
-                        "0 -1px 0 rgba(70,50,20,0.18)",
-                        // Hairline gold rule (outer)
-                        "inset 0 0 0 1px rgba(134,88,20,0.55)",
-                        // Inner cream rule for the double-frame feel
-                        "inset 0 0 0 3px rgba(255,250,235,0.75)",
-                        // Inner gold accent rule
-                        "inset 0 0 0 4px rgba(134,88,20,0.35)",
-                        // Subtle outer drop so the card feels lifted inside
-                        "0 6px 14px rgba(40,28,10,0.28)",
-                      ].join(", "),
-                    }}
-                  >
-                    <img
-                      src={revealImage}
-                      alt=""
-                      aria-hidden="true"
-                      draggable={false}
-                      className="w-full h-full select-none"
-                      style={{
-                        objectFit: "cover",
-                        borderRadius: "2px",
-                        boxShadow:
-                          "inset 0 0 0 1px rgba(60,42,18,0.4), 0 1px 2px rgba(0,0,0,0.22)",
-                        filter:
-                          "sepia(0.06) saturate(0.92) contrast(1.02) brightness(0.97)",
-                      }}
-                      onError={(e) => {
-                        (e.currentTarget as HTMLImageElement).style.display =
-                          "none";
-                      }}
+                  <defs>
+                    <clipPath id="env-reveal-clip">
+                      {/* Same shape as the flap so the photo only shows
+                          inside the top section that opens. */}
+                      <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
+                    </clipPath>
+                  </defs>
+                  <g clipPath="url(#env-reveal-clip)">
+                    <image
+                      href={revealImage}
+                      x="0"
+                      y="0"
+                      width={VB_W}
+                      height={V_Y}
+                      preserveAspectRatio="xMidYMid slice"
                     />
-                    {/* Warm corner vignette to harmonize with envelope paper */}
-                    <div
-                      aria-hidden="true"
-                      className="absolute inset-[10px] pointer-events-none"
-                      style={{
-                        borderRadius: "2px",
-                        background:
-                          "radial-gradient(ellipse at center, rgba(255,238,200,0) 55%, rgba(70,50,20,0.20) 100%)",
-                        mixBlendMode: "multiply",
-                      }}
-                    />
-                  </div>
-                  {/* Top lip shadow — paper-on-paper contact line where the
-                      card emerges from inside the envelope. */}
-                  <div
-                    aria-hidden="true"
-                    className="absolute left-0 right-0 top-0 pointer-events-none"
-                    style={{
-                      height: "10px",
-                      background:
-                        "linear-gradient(to bottom, rgba(40,28,10,0.28), rgba(40,28,10,0) 100%)",
-                    }}
-                  />
-                </div>
+                  </g>
+                </svg>
               )}
 
               {/* === TRIANGULAR FLAP === */}
