@@ -57,8 +57,9 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 2800;
+  const TOTAL = 4200;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
+  const FLAP_CORNER_R = 14; // matches body rounded corners
 
   const handleOpen = useCallback(() => {
     if (opening) return;
@@ -186,7 +187,8 @@ export const EnvelopeAnimation = ({
               animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
             @keyframes envOverlayOut {
-              0%, 55% { opacity: 1; }
+              0%   { opacity: 1; }
+              70%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
@@ -211,40 +213,39 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envBody {
-              0%   { transform: scale(1)    translateY(0);    opacity: 1; }
-              15%  { transform: scale(.985) translateY(0);    opacity: 1; }
-              55%  { transform: scale(1)    translateY(20px); opacity: 1; }
-              85%  { transform: scale(.97)  translateY(60px); opacity: .35; }
-              100% { transform: scale(.94)  translateY(110px);opacity: 0; }
+              0%   { transform: scale(1)    translateY(0);     opacity: 1; }
+              50%  { transform: scale(1)    translateY(10px);  opacity: 1; }
+              75%  { transform: scale(.99)  translateY(40px);  opacity: .85; }
+              100% { transform: scale(.94)  translateY(110px); opacity: 0; }
             }
             .is-opening .env-target {
-              animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envBody ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
             @keyframes envSealPop {
               0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              12%  { transform: translate(-50%,-50%) scale(1.10) rotate(-3deg); opacity: 1; }
-              26%  { transform: translate(-50%,-50%) scale(1.18) rotate(-4deg); opacity: 1; }
-              42%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              15%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
+              30%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
+              45%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
               100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
-              animation: envSealPop ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
             @keyframes envFlapLift {
-              0%   { transform: rotateX(${FLAP_REST_TILT}deg); }
-              18%  { transform: rotateX(${FLAP_REST_TILT - 4}deg); }
-              35%  { transform: rotateX(-55deg); }
-              60%  { transform: rotateX(-120deg); }
-              82%  { transform: rotateX(-160deg); opacity: .7; }
-              100% { transform: rotateX(-176deg); opacity: 0; }
+              0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
+              25%  { transform: rotateX(-40deg); opacity: 1; }
+              50%  { transform: rotateX(-90deg); opacity: 1; }
+              75%  { transform: rotateX(-135deg); opacity: .9; }
+              90%  { transform: rotateX(-165deg); opacity: .55; }
+              100% { transform: rotateX(-178deg); opacity: 0; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
             }
             .is-opening .env-flap-wrap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.16, 0.84, 0.32, 1) forwards;
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.33, 0, 0.4, 1) forwards;
             }
 
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
@@ -526,7 +527,7 @@ export const EnvelopeAnimation = ({
                 >
                   <defs>
                     <clipPath id="env-flap-clip">
-                      <path d={`M0 0 L ${VB_W} 0 L ${V_X} ${V_Y} Z`} />
+                      <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
                     </clipPath>
                     <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="rgba(255,250,240,0.18)" />
@@ -548,7 +549,7 @@ export const EnvelopeAnimation = ({
                   </g>
 
                   <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    d={`M${FLAP_CORNER_R} 0 L ${V_X} ${V_Y} L ${VB_W - FLAP_CORNER_R} 0`}
                     fill="none"
                     stroke="rgba(255,250,235,0.30)"
                     strokeWidth="0.5"
