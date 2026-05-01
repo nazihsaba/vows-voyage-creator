@@ -1992,7 +1992,8 @@ const WeddingForm = () => {
                               </SelectContent>
                             </Select>
                           </div>
-                        </div>
+                          </CollapsibleContent>
+                        </Collapsible>
                         );
                       })}
                     </CardContent>
