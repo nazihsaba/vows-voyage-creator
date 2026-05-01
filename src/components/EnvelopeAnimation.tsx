@@ -490,13 +490,15 @@ export const EnvelopeAnimation = ({
               {/* === BRIDE & GROOM NAMES === */}
               {hasNames && (
                 <div
-                  className="env-names absolute pointer-events-none select-none text-center"
+                  className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-center"
                   style={{
-                    left: "10%",
-                    right: "10%",
-                    // Sits centered between the V-fold (seal) and the bottom edge.
-                    top: `${(((V_Y + 60) + (VB_H - 90)) / 2 / VB_H) * 100}%`,
-                    transform: "translateY(-50%)",
+                    left: "8%",
+                    right: "8%",
+                    // Anchored to the lower half of the envelope using top/bottom
+                    // bounds so the block always fits — even on short mobile
+                    // viewports — without overlapping the seal at the V-fold.
+                    top: `${((V_Y + 60) / VB_H) * 100}%`,
+                    bottom: "8%",
                     color: "#3a2a14",
                     zIndex: 2,
                     fontFamily:
