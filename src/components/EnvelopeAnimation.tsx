@@ -321,11 +321,24 @@ export const EnvelopeAnimation = ({
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
-            /* GPU promotion + crisp compositing for the animated layers. */
-            .env-target, .env-flap-wrap, .env-seal {
+            /* GPU promotion + crisp compositing for the animated layers.
+               IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap.
+               The flap rotates past 90° during the open animation; hiding the
+               back face makes the entire flap vanish on mobile WebKit, which
+               looks like the top of the envelope is "cut off" mid-animation. */
+            .env-target, .env-seal {
               -webkit-backface-visibility: hidden;
               -webkit-transform-style: preserve-3d;
               -webkit-font-smoothing: antialiased;
+            }
+            .env-flap-wrap {
+              -webkit-backface-visibility: visible;
+              backface-visibility: visible;
+              -webkit-transform-style: preserve-3d;
+            }
+            .env-flap-wrap svg {
+              -webkit-backface-visibility: visible;
+              backface-visibility: visible;
             }
 
             /* Mobile-tuned tweaks: smaller blur radius, no expensive drop-shadow
@@ -636,14 +649,18 @@ export const EnvelopeAnimation = ({
                 className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
-                  zIndex: 2,
-                  transform: "translateZ(-1px)",
-                  willChange: "opacity, transform",
+                  // Sits above the body face but below the closed flap (z-index 5).
+                  // No translateZ — on mobile WebKit, negative Z combined with
+                  // preserve-3d ancestors can render this element behind the
+                  // black overlay, making the welcome message vanish during the
+                  // flap rotation.
+                  zIndex: 3,
+                  willChange: "opacity",
                   // Clip to the exact triangular flap shape using percentages so
                   // it scales fluidly with the envelope on every screen size.
                   clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
                   WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
-                  background: "rgba(253, 246, 230, 0.55)",
+                  background: "rgb(248, 240, 222)",
                 }}
               >
                 <div
@@ -745,6 +762,10 @@ export const EnvelopeAnimation = ({
                   </defs>
 
                   <g clipPath="url(#env-flap-clip)">
+                    {/* Solid paper-color backing — guarantees the flap shape is
+                        opaque even on mobile WebKit where the textured <image>
+                        can fail to paint on the rotated back face. */}
+                    <rect width={VB_W} height={VB_H} fill="rgb(232, 222, 200)" />
                     <image
                       href={paperTexture}
                       x={-VB_W * 0.1}
