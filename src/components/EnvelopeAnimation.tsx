@@ -85,7 +85,7 @@ export const EnvelopeAnimation = ({
   const completedRef = useRef(false);
 
   // Resolve colors with fallbacks.
-  const envColor = envelopeColor || primaryColor || "#f5e6d3";
+  const envColor = envelopeColor || primaryColor || "#d8cfc2";
   const accent = accentColor;
   const bgColor = backgroundColor; // when undefined → keep cinematic radial dark bg
 
