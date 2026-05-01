@@ -512,13 +512,13 @@ export const RoyaleTemplate = ({
   }
 
   return (
-    <RoyaleEnvelope
+    <EnvelopeAnimation
       groomName={wedding.groom_name}
       brideName={wedding.bride_name}
       weddingDate={wedding.wedding_date}
     >
       {Page}
-    </RoyaleEnvelope>
+    </EnvelopeAnimation>
   );
 };
 
