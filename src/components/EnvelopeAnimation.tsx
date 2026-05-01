@@ -650,12 +650,13 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(22px, 5vw, 42px)",
-                      lineHeight: 1.05,
+                      fontSize: "clamp(56px, 13vw, 112px)",
+                      lineHeight: 1.15,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
                       color: "#2a1f10",
+                      marginTop: "0.15em",
                     }}
                   >
                     {bride || "\u00A0"}
@@ -666,9 +667,9 @@ export const EnvelopeAnimation = ({
                     style={{
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(28px, 7vw, 56px)",
-                      lineHeight: 1,
-                      margin: "0.1em 0 0.05em",
+                      fontSize: "clamp(64px, 15vw, 128px)",
+                      lineHeight: 1.1,
+                      margin: "0.1em 0",
                       color: accent,
                     }}
                   >
@@ -677,12 +678,13 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(22px, 5vw, 42px)",
-                      lineHeight: 1.05,
+                      fontSize: "clamp(56px, 13vw, 112px)",
+                      lineHeight: 1.15,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
                       color: "#2a1f10",
+                      marginBottom: "0.15em",
                     }}
                   >
                     {groom || "\u00A0"}
@@ -691,7 +693,7 @@ export const EnvelopeAnimation = ({
                   {formattedDate && (
                     <>
                       <div
-                        className="mx-auto mt-6"
+                        className="mx-auto mt-10"
                         aria-hidden="true"
                         style={{
                           width: "52%",
@@ -700,14 +702,15 @@ export const EnvelopeAnimation = ({
                         }}
                       />
                       <div
-                        className="mt-3"
+                        className="mt-6"
                         style={{
                           fontFamily: "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(13px, 2.4vw, 17px)",
-                          letterSpacing: "0.46em",
+                          fontSize: "clamp(18px, 3.4vw, 26px)",
+                          letterSpacing: "0.62em",
                           textTransform: "uppercase",
                           color: accent,
                           fontWeight: 400,
+                          paddingLeft: "0.62em",
                         }}
                       >
                         {formattedDate}
