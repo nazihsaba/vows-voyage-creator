@@ -531,39 +531,18 @@ export const EnvelopeAnimation = ({
                       "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
                   }}
                 >
-                  {/* Top hairline rule with a small flourish dot */}
+                  {/* Top hairline rule — matches the one between names and date */}
                   <div
-                    className="mx-auto mb-3 flex items-center justify-center gap-2"
-                    style={{ opacity: 0.6 }}
-                  >
-                    <span
-                      style={{
-                        display: "block",
-                        width: "28%",
-                        height: "1px",
-                        background:
-                          "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
-                      }}
-                    />
-                    <span
-                      style={{
-                        width: "4px",
-                        height: "4px",
-                        borderRadius: "50%",
-                        background: accent,
-                        boxShadow: `0 0 0 1px rgba(58,42,20,0.25)`,
-                      }}
-                    />
-                    <span
-                      style={{
-                        display: "block",
-                        width: "28%",
-                        height: "1px",
-                        background:
-                          "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
-                      }}
-                    />
-                  </div>
+                    className="mx-auto mb-4"
+                    aria-hidden="true"
+                    style={{
+                      width: "44%",
+                      height: "1px",
+                      background:
+                        "linear-gradient(to right, transparent, rgba(134,88,20,0.45), transparent)",
+                      opacity: 0.85,
+                    }}
+                  />
 
                   <div
                     style={{
