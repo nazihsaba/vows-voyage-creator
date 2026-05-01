@@ -26,6 +26,28 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
+  // Detect low-power mobile devices once on mount so we can scale down decorative
+  // layers (fibers, motes, drop-shadow filters) that murder the compositor on
+  // phones. Also respects prefers-reduced-motion.
+  const [isMobile, setIsMobile] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px), (pointer: coarse)");
+    const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => {
+      setIsMobile(mq.matches);
+      setReduceMotion(rm.matches);
+    };
+    update();
+    mq.addEventListener?.("change", update);
+    rm.addEventListener?.("change", update);
+    return () => {
+      mq.removeEventListener?.("change", update);
+      rm.removeEventListener?.("change", update);
+    };
+  }, []);
+
   // Brand highlight color used for the ampersand and seal accents.
   const accent = "#865814";
   // Kept for any future SVG accents but the names always use the brand gold.
@@ -102,9 +124,12 @@ export const EnvelopeAnimation = ({
     document.head.appendChild(link);
   }, []);
 
+  // Decorative dust motes — drastically reduced on mobile (and removed when the
+  // user prefers reduced motion) because each one is its own animated layer.
+  const moteCount = reduceMotion ? 0 : isMobile ? 5 : 14;
   const motes = useMemo(
     () =>
-      Array.from({ length: 14 }).map((_, i) => ({
+      Array.from({ length: moteCount }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         top: 30 + Math.random() * 65,
@@ -112,10 +137,13 @@ export const EnvelopeAnimation = ({
         delay: Math.random() * 3,
         duration: 5 + Math.random() * 5,
       })),
-    []
+    [moteCount]
   );
 
   // Subtle paper fibers scattered across the envelope face (deterministic).
+  // 80 strokes is fine on desktop but doubles SVG paint cost on phones; keep
+  // a much smaller deterministic set there.
+  const fiberCount = isMobile ? 24 : 80;
   const fibers = useMemo(() => {
     const rng = (seed: number) => {
       let s = seed;
@@ -125,7 +153,7 @@ export const EnvelopeAnimation = ({
       };
     };
     const r = rng(7);
-    return Array.from({ length: 80 }).map((_, i) => ({
+    return Array.from({ length: fiberCount }).map((_, i) => ({
       id: i,
       x: r() * 600,
       y: r() * 840,
@@ -133,7 +161,7 @@ export const EnvelopeAnimation = ({
       rot: r() * 360,
       o: 0.05 + r() * 0.08,
     }));
-  }, []);
+  }, [fiberCount]);
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
   // Portrait orientation so the envelope fills vertical screen space.
@@ -164,7 +192,7 @@ export const EnvelopeAnimation = ({
             {motes.map((m) => (
               <span
                 key={m.id}
-                className="absolute rounded-full"
+                className="env-mote absolute rounded-full"
                 style={{
                   left: `${m.left}%`,
                   top: `${m.top}%`,
@@ -172,7 +200,8 @@ export const EnvelopeAnimation = ({
                   height: `${m.size}px`,
                   background: `radial-gradient(circle, ${accent}aa 0%, transparent 70%)`,
                   animation: `envMote ${m.duration}s ease-in-out ${m.delay}s infinite`,
-                  filter: "blur(0.4px)",
+                  filter: isMobile ? "none" : "blur(0.4px)",
+                  willChange: "transform, opacity",
                 }}
               />
             ))}
@@ -288,6 +317,28 @@ export const EnvelopeAnimation = ({
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
+            /* GPU promotion + crisp compositing for the animated layers. */
+            .env-target, .env-flap-wrap, .env-seal {
+              -webkit-backface-visibility: hidden;
+              -webkit-transform-style: preserve-3d;
+              -webkit-font-smoothing: antialiased;
+            }
+
+            /* Mobile-tuned tweaks: smaller blur radius, no expensive drop-shadow
+               filter on the seal (it forces a full raster every frame on mobile
+               GPUs), and slimmer animations on the dust motes. */
+            @media (max-width: 767px), (pointer: coarse) {
+              .env-glow { animation-duration: 6s; }
+              .env-idle { animation: none; }
+              .env-seal {
+                filter: none !important;
+                /* Replace drop-shadow filter with a cheap radial gradient backdrop
+                   applied via the surrounding wrapper instead. */
+              }
+              /* Disable per-mote blur which costs an extra raster pass. */
+              .env-mote { filter: none !important; }
+            }
+
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
               .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal, .env-names {
@@ -339,8 +390,9 @@ export const EnvelopeAnimation = ({
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   borderRadius: 14,
-                  boxShadow:
-                    "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
+                  boxShadow: isMobile
+                    ? "0 18px 28px rgba(0,0,0,.45)"
+                    : "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
                   transform: "translateZ(-1px)",
                   zIndex: 0,
                 }}
@@ -439,13 +491,15 @@ export const EnvelopeAnimation = ({
               {/* === BRIDE & GROOM NAMES === */}
               {hasNames && (
                 <div
-                  className="env-names absolute pointer-events-none select-none text-center"
+                  className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-center"
                   style={{
-                    left: "10%",
-                    right: "10%",
-                    // Sits centered between the V-fold (seal) and the bottom edge.
-                    top: `${(((V_Y + 60) + (VB_H - 90)) / 2 / VB_H) * 100}%`,
-                    transform: "translateY(-50%)",
+                    left: "8%",
+                    right: "8%",
+                    // Anchored to the lower half of the envelope using top/bottom
+                    // bounds so the block always fits — even on short mobile
+                    // viewports — without overlapping the seal at the V-fold.
+                    top: `${((V_Y + 60) / VB_H) * 100}%`,
+                    bottom: "8%",
                     color: "#3a2a14",
                     zIndex: 2,
                     fontFamily:
@@ -488,13 +542,14 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(18px, 4.4vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
                     }}
                   >
                     {bride || "\u00A0"}
@@ -506,12 +561,13 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(28px, 7vw, 56px)",
+                      fontSize: "clamp(26px, 6.6vw, 56px)",
                       lineHeight: 1,
-                      margin: "0.1em 0 0.05em",
+                      margin: "0.05em 0",
                       color: "#865814",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
                     }}
                   >
                     &amp;
@@ -519,13 +575,14 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(18px, 4.4vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
                     }}
                   >
                     {groom || "\u00A0"}
@@ -728,8 +785,9 @@ export const EnvelopeAnimation = ({
                   height: "auto",
                   zIndex: 10,
                   willChange: "transform, opacity",
-                  filter:
-                    "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                  filter: isMobile
+                    ? "drop-shadow(0 4px 6px rgba(0,0,0,0.45))"
+                    : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               />
             </div>
