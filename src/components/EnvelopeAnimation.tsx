@@ -779,8 +779,9 @@ export const EnvelopeAnimation = ({
                   height: "auto",
                   zIndex: 10,
                   willChange: "transform, opacity",
-                  filter:
-                    "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                  filter: isMobile
+                    ? "drop-shadow(0 4px 6px rgba(0,0,0,0.45))"
+                    : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               />
             </div>
