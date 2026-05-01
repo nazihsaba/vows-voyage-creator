@@ -332,46 +332,61 @@ const WeddingForm = () => {
           welcome_drink_time: welcomeDrink?.time || "",
         });
 
-        // Load custom sections (type starts with "custom_"), sorted by suffix index
-        const customRows = locationsData
+        // Load custom sections (type starts with "custom_"), sorted by display_order then suffix index
+        const customRowsRaw = locationsData
           .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
-          .sort((a, b) => {
+          .sort((a: any, b: any) => {
+            const ao = typeof a.display_order === "number" ? a.display_order : 999;
+            const bo = typeof b.display_order === "number" ? b.display_order : 999;
+            if (ao !== bo) return ao - bo;
             const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
             const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
             return ai - bi;
           })
-          .slice(0, MAX_CUSTOM_SECTIONS)
-          .map((l: any) => ({
-            title: l.custom_title || "",
-            location_name: l.location_name || "",
-            time: l.time || "",
-            location_link: l.location_link || "",
-            icon: l.icon || "solar:confetti-bold",
-          }));
+          .slice(0, MAX_CUSTOM_SECTIONS);
+
+        // Map raw row -> CustomSection with stable uid; remember original DB type to seed timelineOrder
+        const customRows: CustomSection[] = customRowsRaw.map((l: any) => ({
+          uid: newCustomUid(),
+          title: l.custom_title || "",
+          location_name: l.location_name || "",
+          time: l.time || "",
+          location_link: l.location_link || "",
+          icon: l.icon || "solar:confetti-bold",
+        }));
+        const customDbTypeByUid = new Map<string, string>();
+        customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
 
-        // Build timeline order from display_order on existing rows
-        const presentKeys: string[] = [];
-        if (ceremony) presentKeys.push("ceremony");
-        if (welcomeDrink) presentKeys.push("welcome_drink");
-        if (venue) presentKeys.push("venue");
-        locationsData
-          .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
-          .forEach((l) => presentKeys.push(l.type));
-
-        const orderMap = new Map<string, number>();
-        locationsData.forEach((l: any) => {
-          if (typeof l.display_order === "number") orderMap.set(l.type, l.display_order);
+        // Build timeline order from display_order on existing rows.
+        // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
+        const fixedKeys = [
+          { key: "ceremony", row: ceremony },
+          { key: "welcome_drink", row: welcomeDrink },
+          { key: "venue", row: venue },
+        ];
+        const entries: Array<{ key: string; order: number }> = [];
+        fixedKeys.forEach(({ key, row }) => {
+          if (row) {
+            entries.push({ key, order: typeof row.display_order === "number" ? row.display_order : 999 });
+          }
         });
-        const hasOrder = Array.from(orderMap.values()).some((v) => v > 0);
+        customRows.forEach((c) => {
+          const dbType = customDbTypeByUid.get(c.uid);
+          const raw: any = customRowsRaw.find((r: any) => r.type === dbType);
+          entries.push({ key: c.uid, order: typeof raw?.display_order === "number" ? raw.display_order : 999 });
+        });
+
+        const hasOrder = entries.some((e) => e.order > 0);
         if (hasOrder) {
-          presentKeys.sort((a, b) => (orderMap.get(a) ?? 0) - (orderMap.get(b) ?? 0));
+          entries.sort((a, b) => a.order - b.order);
         }
+        const finalKeys = entries.map((e) => e.key);
         // Ensure ceremony/welcome_drink/venue keys exist in order even if not yet saved
         ["ceremony", "welcome_drink", "venue"].forEach((k) => {
-          if (!presentKeys.includes(k)) presentKeys.push(k);
+          if (!finalKeys.includes(k)) finalKeys.push(k);
         });
-        setTimelineOrder(presentKeys);
+        setTimelineOrder(finalKeys);
       }
 
       // Fetch gift cards
