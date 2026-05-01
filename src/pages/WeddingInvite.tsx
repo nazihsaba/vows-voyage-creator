@@ -471,6 +471,9 @@ const WeddingInvite = () => {
   // Skip only when the owner is in edit mode (canEdit handled above).
   // Show in read-only previews and draft previews so users can verify it before publishing.
   if (wedding.envelope_animation_enabled) {
+    const envelopeImages = (gallery || [])
+      .map((g: any) => g?.image_url)
+      .filter((u: any): u is string => typeof u === "string" && u.length > 0);
     return (
       <EnvelopeAnimation
         groomName={wedding.groom_name}
@@ -478,6 +481,7 @@ const WeddingInvite = () => {
         weddingDate={wedding.wedding_date}
         primaryColor={wedding.custom_primary_color}
         accentColor={wedding.custom_accent_color}
+        galleryImages={envelopeImages}
       >
         {content}
       </EnvelopeAnimation>
