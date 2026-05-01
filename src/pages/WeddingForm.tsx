@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
@@ -81,6 +82,10 @@ const WeddingForm = () => {
     "welcome_drink",
     "venue",
   ]);
+  // Collapsed state per location card (collapsed by default for compact UX)
+  const [openLocationCards, setOpenLocationCards] = useState<Record<string, boolean>>({});
+  const toggleLocationCard = (key: string) =>
+    setOpenLocationCards((prev) => ({ ...prev, [key]: !prev[key] }));
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
@@ -1582,12 +1587,27 @@ const WeddingForm = () => {
                 <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
 
                 {/* Ceremony Section */}
-                <Card className="border shadow-sm">
-                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
-                    <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
-                    {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
-                  </CardHeader>
-                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                <Collapsible open={!!openLocationCards.ceremony} onOpenChange={() => toggleLocationCard("ceremony")}>
+                  <Card className="border shadow-sm">
+                    <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
+                      <CollapsibleTrigger asChild>
+                        <button
+                          type="button"
+                          className="flex flex-1 items-center justify-between gap-2 text-left"
+                          aria-label="Toggle Ceremony Details"
+                        >
+                          <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
+                          <ChevronDown
+                            className={`w-5 h-5 text-muted-foreground transition-transform ${
+                              openLocationCards.ceremony ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      </CollapsibleTrigger>
+                      {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
+                    </CardHeader>
+                    <CollapsibleContent>
+                      <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor="ceremony_location">Location Name *</Label>
@@ -1667,16 +1687,33 @@ const WeddingForm = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
 
                 {/* Venue Section */}
-                <Card className="border shadow-sm">
-                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
-                    <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
-                    {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
-                  </CardHeader>
-                  <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                <Collapsible open={!!openLocationCards.venue} onOpenChange={() => toggleLocationCard("venue")}>
+                  <Card className="border shadow-sm">
+                    <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
+                      <CollapsibleTrigger asChild>
+                        <button
+                          type="button"
+                          className="flex flex-1 items-center justify-between gap-2 text-left"
+                          aria-label="Toggle Venue Details"
+                        >
+                          <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
+                          <ChevronDown
+                            className={`w-5 h-5 text-muted-foreground transition-transform ${
+                              openLocationCards.venue ? "rotate-180" : ""
+                            }`}
+                          />
+                        </button>
+                      </CollapsibleTrigger>
+                      {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
+                    </CardHeader>
+                    <CollapsibleContent>
+                      <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor="venue_location">Location Name *</Label>
@@ -1754,8 +1791,10 @@ const WeddingForm = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
 
                 {/* Custom Timeline Sections (timeline templates only) */}
                 {isAuraTemplate && (
@@ -1800,19 +1839,34 @@ const WeddingForm = () => {
                       {customSections.map((section, idx) => {
                         const pos = timelinePosition(section.uid);
                         return (
-                        <div
+                        <Collapsible
                           key={section.uid}
+                          open={!!openLocationCards[section.uid]}
+                          onOpenChange={() => toggleLocationCard(section.uid)}
                           className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-foreground">
-                              {section.title?.trim() ? section.title : `Section ${idx + 1}`}
-                              {pos !== null && (
-                                <span className="ml-2 text-xs text-muted-foreground">
-                                  (Timeline #{pos})
+                          <div className="flex items-center justify-between gap-2">
+                            <CollapsibleTrigger asChild>
+                              <button
+                                type="button"
+                                className="flex flex-1 items-center justify-between gap-2 text-left"
+                                aria-label="Toggle section"
+                              >
+                                <span className="text-sm font-medium text-foreground">
+                                  {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                                  {pos !== null && (
+                                    <span className="ml-2 text-xs text-muted-foreground">
+                                      (Timeline #{pos})
+                                    </span>
+                                  )}
                                 </span>
-                              )}
-                            </span>
+                                <ChevronDown
+                                  className={`w-4 h-4 text-muted-foreground transition-transform ${
+                                    openLocationCards[section.uid] ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </button>
+                            </CollapsibleTrigger>
                             <div className="flex items-center gap-1">
                               <Button
                                 type="button"
@@ -1848,6 +1902,7 @@ const WeddingForm = () => {
                               </Button>
                             </div>
                           </div>
+                          <CollapsibleContent className="space-y-3">
                           <div className="space-y-1.5">
                             <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
                             <Input
@@ -1937,7 +1992,8 @@ const WeddingForm = () => {
                               </SelectContent>
                             </Select>
                           </div>
-                        </div>
+                          </CollapsibleContent>
+                        </Collapsible>
                         );
                       })}
                     </CardContent>
