@@ -64,6 +64,15 @@ const WeddingForm = () => {
     venue_icon: "solar:confetti-bold",
     welcome_drink_time: "",
   });
+  type CustomSection = {
+    title: string;
+    location_name: string;
+    time: string;
+    location_link: string;
+    icon: string;
+  };
+  const MAX_CUSTOM_SECTIONS = 4;
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
