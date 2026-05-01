@@ -390,8 +390,9 @@ export const EnvelopeAnimation = ({
                 className="absolute inset-0 pointer-events-none"
                 style={{
                   borderRadius: 14,
-                  boxShadow:
-                    "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
+                  boxShadow: isMobile
+                    ? "0 18px 28px rgba(0,0,0,.45)"
+                    : "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
                   transform: "translateZ(-1px)",
                   zIndex: 0,
                 }}
