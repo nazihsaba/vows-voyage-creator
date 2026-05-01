@@ -191,30 +191,48 @@ const WeddingForm = () => {
   const TimelineOrderControls = ({ orderKey }: { orderKey: string }) => {
     const pos = timelinePosition(orderKey);
     return (
-      <div className="flex items-center gap-1">
+      <div className="flex items-center gap-2">
         {pos !== null && (
-          <span className="text-xs text-muted-foreground mr-1">Timeline #{pos}</span>
+          <span className="text-xs text-muted-foreground whitespace-nowrap">#{pos}</span>
         )}
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={!canMoveUp(orderKey)}
-          onClick={() => moveTimelineKey(orderKey, -1)}
-          aria-label="Move up in timeline"
+        <div
+          className="flex items-center rounded-md border border-border bg-background overflow-hidden"
+          onClick={(e) => e.stopPropagation()}
+          role="group"
+          aria-label="Reorder section"
         >
-          <ChevronUp className="w-4 h-4" />
-        </Button>
-        <Button
-          type="button"
-          variant="ghost"
-          size="sm"
-          disabled={!canMoveDown(orderKey)}
-          onClick={() => moveTimelineKey(orderKey, 1)}
-          aria-label="Move down in timeline"
-        >
-          <ChevronDown className="w-4 h-4" />
-        </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-none"
+            disabled={!canMoveUp(orderKey)}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveTimelineKey(orderKey, -1);
+            }}
+            aria-label="Move up in timeline"
+            title="Move up"
+          >
+            <ArrowUp className="w-4 h-4" />
+          </Button>
+          <div className="w-px h-5 bg-border" />
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 rounded-none"
+            disabled={!canMoveDown(orderKey)}
+            onClick={(e) => {
+              e.stopPropagation();
+              moveTimelineKey(orderKey, 1);
+            }}
+            aria-label="Move down in timeline"
+            title="Move down"
+          >
+            <ArrowDown className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     );
   };
