@@ -538,42 +538,6 @@ export const templates: Template[] = [
       animations: true,
     },
   },
-  {
-    id: 'royale-luxe',
-    name: 'Royale',
-    category: 'elegant',
-    description: 'Premium luxury invitation with built-in envelope reveal, warm gold & cream palette, and editorial serif typography.',
-    thumbnail: '/placeholder.svg',
-    isPremium: true,
-    isPopular: true,
-    component: 'RoyaleTemplate',
-    sections: [
-      { id: 'hero', enabled: true, order: 1, customizable: true },
-      { id: 'story', enabled: true, order: 2, customizable: true },
-      { id: 'countdown', enabled: true, order: 3, customizable: true },
-      { id: 'location', enabled: true, order: 4, customizable: true },
-      { id: 'gallery', enabled: true, order: 5, customizable: true },
-      { id: 'gifts', enabled: true, order: 6, customizable: true },
-      { id: 'rsvp', enabled: true, order: 7, customizable: true },
-    ],
-    style: {
-      layout: 'single-page',
-      spacing: 'spacious',
-      fontPrimary: 'Cormorant Garamond',
-      fontSecondary: 'Inter',
-      headingSize: 'xl',
-      colorScheme: {
-        primary: '#3a2a14',
-        secondary: '#b08a3e',
-        accent: '#fbf6ec',
-        background: '#fbf6ec',
-        text: '#3a2a14',
-      },
-      borderRadius: 'sm',
-      shadows: 'soft',
-      animations: true,
-    },
-  },
 ];
 
 export const templateConfig: TemplateConfig = {

@@ -11,7 +11,6 @@ import { AuraTemplate } from './AuraTemplate';
 import { OpulenceTemplate } from './OpulenceTemplate';
 import { LumiereTemplate } from './LumiereTemplate';
 import { EtoileTemplate } from './EtoileTemplate';
-import { RoyaleTemplate } from './RoyaleTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -197,29 +196,6 @@ export const TemplateRenderer = ({
   if (template.component === 'EtoileTemplate') {
     return (
       <EtoileTemplate
-        wedding={wedding}
-        locations={locations}
-        gallery={gallery}
-        giftCards={giftCards}
-        isOwner={isOwner}
-        isPreview={isPreview}
-        onFieldUpdate={onFieldUpdate}
-        getFieldValue={getFieldValue}
-        getFieldStyle={getFieldStyle}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-      />
-    );
-  }
-
-  if (template.component === 'RoyaleTemplate') {
-    return (
-      <RoyaleTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}
