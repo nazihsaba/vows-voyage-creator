@@ -88,6 +88,62 @@ const WeddingInvite = () => {
     }
   }, [wedding]);
 
+  // Preload envelope assets (fonts + images) so the spinner stays visible
+  // until names, date, and envelope artwork are fully ready to render.
+  useEffect(() => {
+    if (!wedding) return;
+    if (!wedding.envelope_animation_enabled) {
+      setEnvelopeAssetsReady(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadImage = (src: string) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = src;
+      });
+
+    // Inject font link if not already present, then wait for it to load.
+    const fontId = "env-google-fonts";
+    if (!document.getElementById(fontId)) {
+      const link = document.createElement("link");
+      link.id = fontId;
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+      document.head.appendChild(link);
+    }
+
+    const loadFonts = async () => {
+      const fontApi: any = (document as any).fonts;
+      if (!fontApi?.load) return;
+      try {
+        await Promise.all([
+          fontApi.load("italic 500 38px 'Cormorant Garamond'"),
+          fontApi.load("400 12px 'Cormorant Upright'"),
+        ]);
+      } catch {
+        // ignore — fall back to system serif
+      }
+    };
+
+    Promise.all([
+      loadImage(waxSealHeart),
+      loadImage(paperTexture),
+      loadFonts(),
+    ]).then(() => {
+      if (!cancelled) setEnvelopeAssetsReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [wedding]);
+
   useEffect(() => {
     const fetchWedding = async () => {
       try {
