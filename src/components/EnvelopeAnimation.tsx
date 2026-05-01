@@ -797,15 +797,23 @@ export const EnvelopeAnimation = ({
                     transform: "translate(-50%, -50%) rotate(-3deg)",
                     width: "22%",
                     aspectRatio: "1 / 1",
-                    borderRadius: "50%",
-                    background: `radial-gradient(circle at 35% 30%, ${accent} 0%, ${accent} 45%, rgba(0,0,0,0.35) 100%)`,
-                    boxShadow:
-                      "inset 0 4px 8px rgba(255,255,255,0.18), inset 0 -6px 10px rgba(0,0,0,0.35), 0 8px 12px rgba(0,0,0,0.45), 0 2px 4px rgba(0,0,0,0.4)",
                     zIndex: 4,
                     willChange: "transform, opacity",
+                    filter: "drop-shadow(0 8px 12px rgba(0,0,0,0.45)) drop-shadow(0 2px 4px rgba(0,0,0,0.4))",
                   }}
                 >
-                  {renderSeal()}
+                  <img
+                    src={waxSealHeart}
+                    alt=""
+                    draggable={false}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                      userSelect: "none",
+                      pointerEvents: "none",
+                    }}
+                  />
 
                   {/* Particle dust on break */}
                   {sealParticles.map((p) => (
