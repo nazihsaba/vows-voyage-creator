@@ -860,6 +860,23 @@ const WeddingForm = () => {
         });
       }
 
+      // Custom sections (timeline templates only)
+      if (isAuraTemplate) {
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+          const hasContent = s.title || s.location_name || s.time || s.location_link;
+          if (!hasContent) return;
+          locationInserts.push({
+            wedding_id: weddingId,
+            type: `custom_${idx + 1}`,
+            location_name: s.location_name,
+            time: s.time || null,
+            location_link: s.location_link,
+            icon: s.icon || "solar:confetti-bold",
+            custom_title: s.title || null,
+          } as any);
+        });
+      }
+
       if (locationInserts.length > 0) {
         const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
         if (locError) throw locError;
