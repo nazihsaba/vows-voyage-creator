@@ -1681,17 +1681,49 @@ const WeddingForm = () => {
                             <span className="text-sm font-medium text-foreground">
                               Section {idx + 1}
                             </span>
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() =>
-                                setCustomSections(customSections.filter((_, i) => i !== idx))
-                              }
-                              aria-label="Remove section"
-                            >
-                              <X className="w-4 h-4" />
-                            </Button>
+                            <div className="flex items-center gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                disabled={idx === 0}
+                                onClick={() => {
+                                  if (idx === 0) return;
+                                  const next = [...customSections];
+                                  [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
+                                  setCustomSections(next);
+                                }}
+                                aria-label="Move section up"
+                              >
+                                <ChevronUp className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                disabled={idx === customSections.length - 1}
+                                onClick={() => {
+                                  if (idx === customSections.length - 1) return;
+                                  const next = [...customSections];
+                                  [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]];
+                                  setCustomSections(next);
+                                }}
+                                aria-label="Move section down"
+                              >
+                                <ChevronDown className="w-4 h-4" />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={() =>
+                                  setCustomSections(customSections.filter((_, i) => i !== idx))
+                                }
+                                aria-label="Remove section"
+                              >
+                                <X className="w-4 h-4" />
+                              </Button>
+                            </div>
                           </div>
                           <div className="space-y-1.5">
                             <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
