@@ -67,7 +67,8 @@ const RoyaleCard = ({
             />
             <circle cx="6" cy="6" r="1.4" fill="currentColor" />
           </svg>
-        ))}
+          );
+        })}
 
         <div className="relative z-10">{children}</div>
       </div>
