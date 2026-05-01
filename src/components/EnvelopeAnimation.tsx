@@ -9,6 +9,8 @@ interface EnvelopeAnimationProps {
   weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
+  /** Optional pool of gallery image URLs; one is chosen at random for the reveal frame. */
+  galleryImages?: string[];
   children: ReactNode;
 }
 
@@ -21,6 +23,7 @@ export const EnvelopeAnimation = ({
   weddingDate,
   primaryColor,
   accentColor,
+  galleryImages,
   children,
 }: EnvelopeAnimationProps) => {
   const [opening, setOpening] = useState(false);
