@@ -82,6 +82,10 @@ const WeddingForm = () => {
     "welcome_drink",
     "venue",
   ]);
+  // Collapsed state per location card (collapsed by default for compact UX)
+  const [openLocationCards, setOpenLocationCards] = useState<Record<string, boolean>>({});
+  const toggleLocationCard = (key: string) =>
+    setOpenLocationCards((prev) => ({ ...prev, [key]: !prev[key] }));
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
