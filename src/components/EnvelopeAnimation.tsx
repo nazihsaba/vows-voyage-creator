@@ -64,6 +64,14 @@ export const EnvelopeAnimation = ({
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
+  // Pick one random gallery image to reveal behind the flap.
+  // Memoized so it stays stable across re-renders during the animation.
+  const revealImage = useMemo(() => {
+    const list = (galleryImages || []).filter(Boolean);
+    if (list.length === 0) return null;
+    return list[Math.floor(Math.random() * list.length)];
+  }, [galleryImages]);
+
   const handleOpen = useCallback(() => {
     if (opening) return;
     setOpening(true);
