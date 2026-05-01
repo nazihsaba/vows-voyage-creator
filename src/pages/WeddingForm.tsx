@@ -299,6 +299,24 @@ const WeddingForm = () => {
           venue_icon: venue?.icon || "solar:confetti-bold",
           welcome_drink_time: welcomeDrink?.time || "",
         });
+
+        // Load custom sections (type starts with "custom_"), sorted by suffix index
+        const customRows = locationsData
+          .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+          .sort((a, b) => {
+            const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
+            const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
+            return ai - bi;
+          })
+          .slice(0, MAX_CUSTOM_SECTIONS)
+          .map((l: any) => ({
+            title: l.custom_title || "",
+            location_name: l.location_name || "",
+            time: l.time || "",
+            location_link: l.location_link || "",
+            icon: l.icon || "solar:confetti-bold",
+          }));
+        setCustomSections(customRows);
       }
 
       // Fetch gift cards
