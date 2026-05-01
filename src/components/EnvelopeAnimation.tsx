@@ -57,7 +57,8 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 1800;
+  const TOTAL = 2800;
+  const FLAP_DURATION = 2000;
 
   const handleOpen = useCallback(() => {
     if (opening) return;
