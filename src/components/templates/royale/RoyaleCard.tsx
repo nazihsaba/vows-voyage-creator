@@ -35,12 +35,16 @@ const RoyaleCard = ({
         />
 
         {/* Corner brackets */}
-        {[
-          { top: 0, left: 0, rotate: 0 },
-          { top: 0, right: 0, rotate: 90 },
-          { bottom: 0, right: 0, rotate: 180 },
-          { bottom: 0, left: 0, rotate: 270 },
-        ].map((pos, i) => (
+        {(
+          [
+            { top: 0, left: 0, rot: 0 },
+            { top: 0, right: 0, rot: 90 },
+            { bottom: 0, right: 0, rot: 180 },
+            { bottom: 0, left: 0, rot: 270 },
+          ] as const
+        ).map((pos, i) => {
+          const { rot, ...placement } = pos;
+          return (
           <svg
             key={i}
             viewBox="0 0 40 40"
@@ -48,10 +52,10 @@ const RoyaleCard = ({
             width="28"
             height="28"
             style={{
-              ...pos,
-              transform: `rotate(${pos.rotate}deg)`,
+              ...placement,
+              transform: `rotate(${rot}deg)`,
               color: goldColor,
-            }}
+            } as React.CSSProperties}
             aria-hidden="true"
           >
             <path
