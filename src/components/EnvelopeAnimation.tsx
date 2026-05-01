@@ -789,8 +789,12 @@ export const EnvelopeAnimation = ({
                   height: "auto",
                   zIndex: 10,
                   willChange: "transform, opacity",
+                  // Drop-shadow filters are extremely expensive on mobile GPUs
+                  // and force a per-frame raster of the seal — which is the
+                  // visible stutter at the top of the envelope during the
+                  // flap arc. Skip the filter on mobile entirely.
                   filter: isMobile
-                    ? "drop-shadow(0 4px 6px rgba(0,0,0,0.45))"
+                    ? "none"
                     : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               />
