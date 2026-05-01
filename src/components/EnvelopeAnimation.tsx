@@ -316,6 +316,28 @@ export const EnvelopeAnimation = ({
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
+            /* GPU promotion + crisp compositing for the animated layers. */
+            .env-target, .env-flap-wrap, .env-seal {
+              -webkit-backface-visibility: hidden;
+              -webkit-transform-style: preserve-3d;
+              -webkit-font-smoothing: antialiased;
+            }
+
+            /* Mobile-tuned tweaks: smaller blur radius, no expensive drop-shadow
+               filter on the seal (it forces a full raster every frame on mobile
+               GPUs), and slimmer animations on the dust motes. */
+            @media (max-width: 767px), (pointer: coarse) {
+              .env-glow { animation-duration: 6s; }
+              .env-idle { animation: none; }
+              .env-seal {
+                filter: none !important;
+                /* Replace drop-shadow filter with a cheap radial gradient backdrop
+                   applied via the surrounding wrapper instead. */
+              }
+              /* Disable per-mote blur which costs an extra raster pass. */
+              .env-mote { filter: none !important; }
+            }
+
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
               .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal, .env-names {
