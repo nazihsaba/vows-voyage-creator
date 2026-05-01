@@ -1723,15 +1723,21 @@ const WeddingForm = () => {
                       <CollapsibleTrigger asChild>
                         <button
                           type="button"
-                          className="flex flex-1 items-center justify-between gap-2 text-left"
+                          className="flex flex-1 items-center justify-between gap-2 text-left group"
                           aria-label="Toggle Venue Details"
+                          aria-expanded={!!openLocationCards.venue}
                         >
                           <CardTitle className="text-lg sm:text-xl">Venue Details</CardTitle>
-                          <ChevronDown
-                            className={`w-5 h-5 text-muted-foreground transition-transform ${
-                              openLocationCards.venue ? "rotate-180" : ""
-                            }`}
-                          />
+                          <span
+                            className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground group-hover:bg-muted transition-colors"
+                            aria-hidden="true"
+                          >
+                            {openLocationCards.venue ? (
+                              <Minus className="w-4 h-4" />
+                            ) : (
+                              <Plus className="w-4 h-4" />
+                            )}
+                          </span>
                         </button>
                       </CollapsibleTrigger>
                       {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
