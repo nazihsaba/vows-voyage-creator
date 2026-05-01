@@ -281,14 +281,9 @@ export const EnvelopeAnimation = ({
 
             /* Bride & groom names are tucked inside the envelope. They stay
                hidden until the user taps, then fade in immediately. */
-            .env-names { opacity: 0; }
-            @keyframes envNamesIn {
-              0%   { opacity: 0; transform: translateY(-50%); }
-              100% { opacity: 1; transform: translateY(-50%); }
-            }
-            .is-opening .env-names {
-              animation: envNamesIn 200ms ease-out forwards;
-            }
+            /* Bride & groom names + date are part of the envelope face and
+               stay visible at all times (before and during opening). */
+            .env-names { opacity: 1; }
 
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
