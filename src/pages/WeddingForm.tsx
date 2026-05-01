@@ -73,6 +73,12 @@ const WeddingForm = () => {
   };
   const MAX_CUSTOM_SECTIONS = 4;
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
+  // Visual order of timeline cards. Keys: "ceremony", "welcome_drink", "venue", "custom_1".."custom_4"
+  const [timelineOrder, setTimelineOrder] = useState<string[]>([
+    "ceremony",
+    "welcome_drink",
+    "venue",
+  ]);
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
