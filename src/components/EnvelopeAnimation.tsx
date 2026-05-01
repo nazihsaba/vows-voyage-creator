@@ -187,7 +187,8 @@ export const EnvelopeAnimation = ({
               animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
             @keyframes envOverlayOut {
-              0%, 55% { opacity: 1; }
+              0%   { opacity: 1; }
+              70%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
@@ -212,25 +213,24 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envBody {
-              0%   { transform: scale(1)    translateY(0);    opacity: 1; }
-              15%  { transform: scale(.985) translateY(0);    opacity: 1; }
-              55%  { transform: scale(1)    translateY(20px); opacity: 1; }
-              85%  { transform: scale(.97)  translateY(60px); opacity: .35; }
-              100% { transform: scale(.94)  translateY(110px);opacity: 0; }
+              0%   { transform: scale(1)    translateY(0);     opacity: 1; }
+              50%  { transform: scale(1)    translateY(10px);  opacity: 1; }
+              75%  { transform: scale(.99)  translateY(40px);  opacity: .85; }
+              100% { transform: scale(.94)  translateY(110px); opacity: 0; }
             }
             .is-opening .env-target {
-              animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envBody ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
             @keyframes envSealPop {
               0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              12%  { transform: translate(-50%,-50%) scale(1.10) rotate(-3deg); opacity: 1; }
-              26%  { transform: translate(-50%,-50%) scale(1.18) rotate(-4deg); opacity: 1; }
-              42%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              15%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
+              30%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
+              45%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
               100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
-              animation: envSealPop ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
             @keyframes envFlapLift {
