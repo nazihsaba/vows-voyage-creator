@@ -156,6 +156,30 @@ const WeddingForm = () => {
     }
   }, []);
 
+  // Reorder a timeline key (ceremony / welcome_drink / venue / custom_N) up or down.
+  const moveTimelineKey = useCallback((key: string, direction: -1 | 1) => {
+    setTimelineOrder((prev) => {
+      const idx = prev.indexOf(key);
+      if (idx === -1) return prev;
+      const target = idx + direction;
+      if (target < 0 || target >= prev.length) return prev;
+      const next = [...prev];
+      [next[idx], next[target]] = [next[target], next[idx]];
+      return next;
+    });
+  }, []);
+
+  const timelineIndex = (key: string) => timelineOrder.indexOf(key);
+  const timelinePosition = (key: string) => {
+    const i = timelineIndex(key);
+    return i === -1 ? null : i + 1;
+  };
+  const canMoveUp = (key: string) => timelineIndex(key) > 0;
+  const canMoveDown = (key: string) => {
+    const i = timelineIndex(key);
+    return i !== -1 && i < timelineOrder.length - 1;
+  };
+
   const debouncedTranslate = useCallback(
     (fieldName: string, text: string) => {
       if (translationTimers.current[fieldName]) {
