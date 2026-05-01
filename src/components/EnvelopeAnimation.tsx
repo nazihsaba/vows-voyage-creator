@@ -151,7 +151,6 @@ export const EnvelopeAnimation = ({
           className={`env-overlay fixed inset-0 z-[9999] flex items-center justify-center ${
             opening ? "is-opening" : ""
           }`}
-          style={{ height: "100dvh", minHeight: "100vh" }}
         >
           {/* Ambient glow */}
           <div
@@ -184,6 +183,17 @@ export const EnvelopeAnimation = ({
               background: radial-gradient(ellipse at center, hsl(20 14% 10%) 0%, hsl(20 14% 4%) 100%);
               opacity: 1;
               will-change: opacity;
+              /* Cascading height: each line overrides the previous if supported.
+                 Old Safari ignores dvh and falls back to -webkit-fill-available,
+                 which respects the visible viewport (excludes the URL bar) so
+                 the envelope's bottom and "Tap to open" hint stay on screen. */
+              height: 100vh;
+              height: -webkit-fill-available;
+              height: 100dvh;
+            }
+            @supports (-webkit-touch-callout: none) {
+              /* iOS Safari specifically: prefer fill-available to avoid URL bar crop. */
+              .env-overlay { height: -webkit-fill-available; }
             }
             .env-overlay.is-opening {
               animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -212,6 +222,13 @@ export const EnvelopeAnimation = ({
             .env-zone:hover .env-target {
               transform: scale(1.025);
               filter: drop-shadow(0 42px 60px rgba(0,0,0,.6));
+            }
+            /* Modern browsers: prefer dvh which excludes the dynamic browser UI. */
+            @supports (height: 100dvh) {
+              .env-zone {
+                height: min(82dvh, 92vw * (840/600)) !important;
+                width: min(92vw, 82dvh * (600/840), 600px) !important;
+              }
             }
 
             @keyframes envBody {
@@ -285,10 +302,12 @@ export const EnvelopeAnimation = ({
             style={{
               perspective: "2200px",
               // Portrait envelope: tall and narrow, fills most of screen height.
-              // Reserve room at the bottom for the "Tap to open" hint so it
-              // never falls off the screen on short phones.
-              height: "min(82dvh, 92vw * (840/600))",
-              width: "min(92vw, 82dvh * (600/840), 600px)",
+              // Use vh as an old-Safari-safe base, with dvh override below for
+              // modern browsers via @supports. Parent overlay uses
+              // -webkit-fill-available so the envelope is sized against the
+              // visible viewport (URL bar excluded) on iOS Safari.
+              height: "min(82vh, 92vw * (840/600))",
+              width: "min(92vw, 82vh * (600/840), 600px)",
               maxWidth: "min(92vw, 600px)",
             }}
             onClick={handleOpen}
