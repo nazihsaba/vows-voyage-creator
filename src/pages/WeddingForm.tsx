@@ -930,14 +930,17 @@ const WeddingForm = () => {
         });
       }
 
-      // Custom sections (timeline templates only)
+      // Custom sections (timeline templates only). Track uid -> DB type for ordering.
+      const customUidToType = new Map<string, string>();
       if (isAuraTemplate) {
         customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
           const hasContent = s.title || s.location_name || s.time || s.location_link;
           if (!hasContent) return;
+          const dbType = `custom_${idx + 1}`;
+          customUidToType.set(s.uid, dbType);
           locationInserts.push({
             wedding_id: weddingId,
-            type: `custom_${idx + 1}`,
+            type: dbType,
             location_name: s.location_name,
             time: s.time || null,
             location_link: s.location_link,
@@ -947,13 +950,16 @@ const WeddingForm = () => {
         });
       }
 
-      // Apply user-defined display_order from timelineOrder
-      const orderIndex = (type: string) => {
-        const i = timelineOrder.indexOf(type);
-        return i === -1 ? 999 : i;
-      };
+      // Apply user-defined display_order from timelineOrder.
+      // timelineOrder uses "ceremony" / "welcome_drink" / "venue" / <custom uid>.
+      // We translate uid -> DB type to find the corresponding row.
+      const typeToOrder = new Map<string, number>();
+      timelineOrder.forEach((key, i) => {
+        const dbType = customUidToType.get(key) ?? key;
+        typeToOrder.set(dbType, i);
+      });
       locationInserts.forEach((row: any) => {
-        row.display_order = orderIndex(row.type);
+        row.display_order = typeToOrder.get(row.type) ?? 999;
       });
 
       if (locationInserts.length > 0) {
