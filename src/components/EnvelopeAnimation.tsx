@@ -9,6 +9,8 @@ interface EnvelopeAnimationProps {
   weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
+  /** Optional pool of gallery image URLs; one is chosen at random for the reveal frame. */
+  galleryImages?: string[];
   children: ReactNode;
 }
 
@@ -21,6 +23,7 @@ export const EnvelopeAnimation = ({
   weddingDate,
   primaryColor,
   accentColor,
+  galleryImages,
   children,
 }: EnvelopeAnimationProps) => {
   const [opening, setOpening] = useState(false);
@@ -60,6 +63,14 @@ export const EnvelopeAnimation = ({
   const TOTAL = 5200;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
+
+  // Pick one random gallery image to reveal behind the flap.
+  // Memoized so it stays stable across re-renders during the animation.
+  const revealImage = useMemo(() => {
+    const list = (galleryImages || []).filter(Boolean);
+    if (list.length === 0) return null;
+    return list[Math.floor(Math.random() * list.length)];
+  }, [galleryImages]);
 
   const handleOpen = useCallback(() => {
     if (opening) return;
@@ -254,12 +265,25 @@ export const EnvelopeAnimation = ({
               animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
             }
 
+            /* Framed photo behind the flap. Hidden by default, fades in only
+               while the envelope is opening so it never peeks before reveal. */
+            .env-reveal { opacity: 0; }
+            @keyframes envRevealIn {
+              0%   { opacity: 0; transform: translateZ(-1px) scale(.985); }
+              25%  { opacity: 0; transform: translateZ(-1px) scale(.985); }
+              55%  { opacity: 1; transform: translateZ(-1px) scale(1); }
+              100% { opacity: 1; transform: translateZ(-1px) scale(1); }
+            }
+            .is-opening .env-reveal {
+              animation: envRevealIn ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+            }
+
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
-              .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint {
+              .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal {
                 animation: none !important;
               }
             }
@@ -524,6 +548,68 @@ export const EnvelopeAnimation = ({
                       </div>
                     </>
                   )}
+                </div>
+              )}
+
+              {/* === REVEAL FRAME (photo behind the flap) ===
+                  Sits between the body face and the flap. Anchored to the upper
+                  portion of the envelope so it sits exactly where the flap was
+                  covering, giving the impression that the photo is being
+                  uncovered as the flap lifts. */}
+              {revealImage && (
+                <div
+                  className="env-reveal absolute pointer-events-none"
+                  style={{
+                    left: "8%",
+                    right: "8%",
+                    top: "5%",
+                    height: `${((V_Y - 30) / VB_H) * 100}%`,
+                    zIndex: 2,
+                    transform: "translateZ(-1px)",
+                    willChange: "opacity, transform",
+                  }}
+                >
+                  <div
+                    className="relative w-full h-full"
+                    style={{
+                      padding: "10px",
+                      background:
+                        "linear-gradient(145deg, #f6ecd6 0%, #e9d9b3 50%, #c9a368 100%)",
+                      borderRadius: "6px",
+                      boxShadow:
+                        "0 2px 6px rgba(0,0,0,0.18), inset 0 0 0 1px rgba(134,88,20,0.45), inset 0 0 0 3px rgba(255,250,235,0.7), inset 0 0 0 4px rgba(134,88,20,0.55)",
+                    }}
+                  >
+                    <img
+                      src={revealImage}
+                      alt=""
+                      aria-hidden="true"
+                      draggable={false}
+                      className="w-full h-full select-none"
+                      style={{
+                        objectFit: "cover",
+                        borderRadius: "2px",
+                        boxShadow:
+                          "inset 0 0 0 1px rgba(60,42,18,0.35), 0 1px 2px rgba(0,0,0,0.25)",
+                        filter:
+                          "saturate(0.95) contrast(1.02) brightness(0.98)",
+                      }}
+                      onError={(e) => {
+                        (e.currentTarget as HTMLImageElement).style.display =
+                          "none";
+                      }}
+                    />
+                    <div
+                      aria-hidden="true"
+                      className="absolute inset-[10px] pointer-events-none"
+                      style={{
+                        borderRadius: "2px",
+                        background:
+                          "radial-gradient(ellipse at center, rgba(255,238,200,0) 55%, rgba(70,50,20,0.18) 100%)",
+                        mixBlendMode: "multiply",
+                      }}
+                    />
+                  </div>
                 </div>
               )}
 
