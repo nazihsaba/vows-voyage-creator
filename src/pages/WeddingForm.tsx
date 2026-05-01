@@ -1687,8 +1687,10 @@ const WeddingForm = () => {
                         </SelectContent>
                       </Select>
                     </div>
-                  </CardContent>
-                </Card>
+                      </CardContent>
+                    </CollapsibleContent>
+                  </Card>
+                </Collapsible>
 
                 {/* Venue Section */}
                 <Card className="border shadow-sm">
