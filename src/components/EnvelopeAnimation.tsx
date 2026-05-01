@@ -1,5 +1,6 @@
 import { useState, useEffect, useMemo, useCallback, useRef, ReactNode } from "react";
 import paperTexture from "@/assets/envelope-paper-texture.jpeg";
+import waxSealHeart from "@/assets/wax-seal-heart.png";
 
 /**
  * Reusable, fully prop-driven envelope opening animation.
