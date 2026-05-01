@@ -85,7 +85,7 @@ export const EnvelopeAnimation = ({
   const completedRef = useRef(false);
 
   // Resolve colors with fallbacks.
-  const envColor = envelopeColor || primaryColor || "#f5e6d3";
+  const envColor = envelopeColor || primaryColor || "#d8cfc2";
   const accent = accentColor;
   const bgColor = backgroundColor; // when undefined → keep cinematic radial dark bg
 
@@ -620,13 +620,13 @@ export const EnvelopeAnimation = ({
                     fontFamily: "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
                   }}
                 >
-                  <div className="mx-auto mb-3 flex items-center justify-center gap-2" style={{ opacity: 0.6 }}>
+                  <div className="mx-auto mb-5 flex items-center justify-center" style={{ opacity: 0.85 }}>
                     <span
                       style={{
                         display: "block",
-                        width: "28%",
+                        width: "32%",
                         height: "1px",
-                        background: "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
+                        background: `linear-gradient(to right, transparent, ${accent}99, transparent)`,
                       }}
                     />
                     <span
@@ -635,27 +635,27 @@ export const EnvelopeAnimation = ({
                         height: "4px",
                         borderRadius: "50%",
                         background: accent,
-                        boxShadow: "0 0 0 1px rgba(58,42,20,0.25)",
+                        margin: "0 8px",
                       }}
                     />
                     <span
                       style={{
                         display: "block",
-                        width: "28%",
+                        width: "32%",
                         height: "1px",
-                        background: "linear-gradient(to right, transparent, rgba(58,42,20,0.55), transparent)",
+                        background: `linear-gradient(to right, transparent, ${accent}99, transparent)`,
                       }}
                     />
                   </div>
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(22px, 5vw, 42px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow: "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      color: "#2a1f10",
                     }}
                   >
                     {bride || "\u00A0"}
@@ -670,7 +670,6 @@ export const EnvelopeAnimation = ({
                       lineHeight: 1,
                       margin: "0.1em 0 0.05em",
                       color: accent,
-                      textShadow: "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
                     }}
                   >
                     &amp;
@@ -678,12 +677,12 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(22px, 5vw, 42px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow: "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      color: "#2a1f10",
                     }}
                   >
                     {groom || "\u00A0"}
@@ -692,17 +691,16 @@ export const EnvelopeAnimation = ({
                   {formattedDate && (
                     <>
                       <div
-                        className="mx-auto mt-5"
+                        className="mx-auto mt-6"
                         aria-hidden="true"
                         style={{
-                          width: "44%",
+                          width: "52%",
                           height: "1px",
-                          background: `linear-gradient(to right, transparent, ${accent}73, transparent)`,
-                          opacity: 0.85,
+                          background: `linear-gradient(to right, transparent, ${accent}80, transparent)`,
                         }}
                       />
                       <div
-                        className="mt-2"
+                        className="mt-3"
                         style={{
                           fontFamily: "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
                           fontSize: "clamp(13px, 2.4vw, 17px)",
