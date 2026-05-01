@@ -1899,7 +1899,18 @@ const WeddingForm = () => {
                               </CollapsibleTrigger>
                               <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                                 {pos !== null && (
-                                  <span className="text-xs text-muted-foreground whitespace-nowrap">#{pos}</span>
+                                  <span
+                                    className="inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-full text-xs font-semibold tabular-nums whitespace-nowrap shadow-sm border"
+                                    style={{
+                                      backgroundColor: "#865814",
+                                      color: "#ffffff",
+                                      borderColor: "#6b4410",
+                                    }}
+                                    aria-label={`Timeline position ${pos}`}
+                                    title={`Timeline position ${pos}`}
+                                  >
+                                    #{pos}
+                                  </span>
                                 )}
                                 <div
                                   className="flex items-center rounded-md border border-border bg-background overflow-hidden"
