@@ -269,10 +269,10 @@ export const EnvelopeAnimation = ({
                while the envelope is opening so it never peeks before reveal. */
             .env-reveal { opacity: 0; }
             @keyframes envRevealIn {
-              0%   { opacity: 0; transform: translateZ(1px) scale(.985); }
-              25%  { opacity: 0; transform: translateZ(1px) scale(.985); }
-              55%  { opacity: 1; transform: translateZ(1px) scale(1); }
-              100% { opacity: 1; transform: translateZ(1px) scale(1); }
+              0%   { opacity: 0; transform: translateZ(-1px) scale(.985); }
+              25%  { opacity: 0; transform: translateZ(-1px) scale(.985); }
+              55%  { opacity: 1; transform: translateZ(-1px) scale(1); }
+              100% { opacity: 1; transform: translateZ(-1px) scale(1); }
             }
             .is-opening .env-reveal {
               animation: envRevealIn ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
