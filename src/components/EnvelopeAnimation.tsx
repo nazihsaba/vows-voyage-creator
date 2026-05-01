@@ -565,7 +565,7 @@ export const EnvelopeAnimation = ({
                     top: "5%",
                     height: `${((V_Y - 30) / VB_H) * 100}%`,
                     zIndex: 2,
-                    transform: "translateZ(1px)",
+                    transform: "translateZ(-1px)",
                     willChange: "opacity, transform",
                   }}
                 >
