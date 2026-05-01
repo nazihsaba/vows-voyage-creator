@@ -2035,7 +2035,9 @@ const WeddingForm = () => {
                               </SelectContent>
                             </Select>
                           </div>
-                          </CollapsibleContent>
+                              </CardContent>
+                            </CollapsibleContent>
+                          </Card>
                         </Collapsible>
                         );
                       })}
