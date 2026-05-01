@@ -65,6 +65,7 @@ const WeddingForm = () => {
     welcome_drink_time: "",
   });
   type CustomSection = {
+    uid: string;
     title: string;
     location_name: string;
     time: string;
@@ -72,8 +73,9 @@ const WeddingForm = () => {
     icon: string;
   };
   const MAX_CUSTOM_SECTIONS = 4;
+  const newCustomUid = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
-  // Visual order of timeline cards. Keys: "ceremony", "welcome_drink", "venue", "custom_1".."custom_4"
+  // Visual order of timeline cards. Keys: "ceremony", "welcome_drink", "venue", or a custom uid.
   const [timelineOrder, setTimelineOrder] = useState<string[]>([
     "ceremony",
     "welcome_drink",
