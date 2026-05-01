@@ -1735,18 +1735,21 @@ const WeddingForm = () => {
                         variant="outline"
                         size="sm"
                         disabled={customSections.length >= MAX_CUSTOM_SECTIONS}
-                        onClick={() =>
+                        onClick={() => {
+                          const uid = newCustomUid();
                           setCustomSections([
                             ...customSections,
                             {
+                              uid,
                               title: "",
                               location_name: "",
                               time: "",
                               location_link: "",
                               icon: "solar:confetti-bold",
                             },
-                          ])
-                        }
+                          ]);
+                          setTimelineOrder((prev) => [...prev, uid]);
+                        }}
                       >
                         + Add Section
                       </Button>
@@ -1757,28 +1760,30 @@ const WeddingForm = () => {
                           No additional sections yet. Click "+ Add Section" to add one.
                         </p>
                       )}
-                      {customSections.map((section, idx) => (
+                      {customSections.map((section, idx) => {
+                        const pos = timelinePosition(section.uid);
+                        return (
                         <div
-                          key={idx}
+                          key={section.uid}
                           className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
                         >
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-foreground">
-                              Section {idx + 1}
+                              {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                              {pos !== null && (
+                                <span className="ml-2 text-xs text-muted-foreground">
+                                  (Timeline #{pos})
+                                </span>
+                              )}
                             </span>
                             <div className="flex items-center gap-1">
                               <Button
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                disabled={idx === 0}
-                                onClick={() => {
-                                  if (idx === 0) return;
-                                  const next = [...customSections];
-                                  [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
-                                  setCustomSections(next);
-                                }}
-                                aria-label="Move section up"
+                                disabled={!canMoveUp(section.uid)}
+                                onClick={() => moveTimelineKey(section.uid, -1)}
+                                aria-label="Move section up in timeline"
                               >
                                 <ChevronUp className="w-4 h-4" />
                               </Button>
@@ -1786,14 +1791,9 @@ const WeddingForm = () => {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                disabled={idx === customSections.length - 1}
-                                onClick={() => {
-                                  if (idx === customSections.length - 1) return;
-                                  const next = [...customSections];
-                                  [next[idx + 1], next[idx]] = [next[idx], next[idx + 1]];
-                                  setCustomSections(next);
-                                }}
-                                aria-label="Move section down"
+                                disabled={!canMoveDown(section.uid)}
+                                onClick={() => moveTimelineKey(section.uid, 1)}
+                                aria-label="Move section down in timeline"
                               >
                                 <ChevronDown className="w-4 h-4" />
                               </Button>
@@ -1801,9 +1801,10 @@ const WeddingForm = () => {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  setCustomSections(customSections.filter((_, i) => i !== idx))
-                                }
+                                onClick={() => {
+                                  setCustomSections(customSections.filter((_, i) => i !== idx));
+                                  setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
+                                }}
                                 aria-label="Remove section"
                               >
                                 <X className="w-4 h-4" />
