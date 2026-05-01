@@ -549,7 +549,7 @@ export const EnvelopeAnimation = ({
                   </g>
 
                   <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
+                    d={`M${FLAP_CORNER_R} 0 L ${V_X} ${V_Y} L ${VB_W - FLAP_CORNER_R} 0`}
                     fill="none"
                     stroke="rgba(255,250,235,0.30)"
                     strokeWidth="0.5"
