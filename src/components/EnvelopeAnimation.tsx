@@ -26,6 +26,28 @@ export const EnvelopeAnimation = ({
   const [opening, setOpening] = useState(false);
   const [hidden, setHidden] = useState(false);
 
+  // Detect low-power mobile devices once on mount so we can scale down decorative
+  // layers (fibers, motes, drop-shadow filters) that murder the compositor on
+  // phones. Also respects prefers-reduced-motion.
+  const [isMobile, setIsMobile] = useState(false);
+  const [reduceMotion, setReduceMotion] = useState(false);
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const mq = window.matchMedia("(max-width: 767px), (pointer: coarse)");
+    const rm = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => {
+      setIsMobile(mq.matches);
+      setReduceMotion(rm.matches);
+    };
+    update();
+    mq.addEventListener?.("change", update);
+    rm.addEventListener?.("change", update);
+    return () => {
+      mq.removeEventListener?.("change", update);
+      rm.removeEventListener?.("change", update);
+    };
+  }, []);
+
   // Brand highlight color used for the ampersand and seal accents.
   const accent = "#865814";
   // Kept for any future SVG accents but the names always use the brand gold.
