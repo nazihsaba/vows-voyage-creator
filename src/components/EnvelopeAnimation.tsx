@@ -553,88 +553,81 @@ export const EnvelopeAnimation = ({
               {/* Welcome message tucked behind the flap. The triangular SVG
                   clip matches the flap shape exactly so the message only shows
                   inside the top section that opens. */}
-              <svg
-                viewBox={`0 0 ${VB_W} ${VB_H}`}
-                className="env-reveal absolute inset-0 w-full h-full pointer-events-none"
-                preserveAspectRatio="none"
+              <div
+                className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
                   zIndex: 2,
                   transform: "translateZ(-1px)",
                   willChange: "opacity, transform",
+                  // Clip to the exact triangular flap shape using percentages so
+                  // it scales fluidly with the envelope on every screen size.
+                  clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
+                  WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
+                  background: "rgba(253, 246, 230, 0.55)",
                 }}
               >
-                <defs>
-                  <clipPath id="env-reveal-clip">
-                    <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
-                  </clipPath>
-                </defs>
-                <g clipPath="url(#env-reveal-clip)">
-                  {/* Soft warm tint behind the message so it reads against
-                      the cream envelope paper. */}
-                  <rect
-                    x="0"
-                    y="0"
-                    width={VB_W}
-                    height={V_Y}
-                    fill="rgba(253, 246, 230, 0.55)"
-                  />
+                <div
+                  className="absolute left-0 right-0 text-center px-4"
+                  style={{
+                    top: `${(V_Y * 0.36 / VB_H) * 100}%`,
+                    fontFamily:
+                      "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
+                  }}
+                >
                   {/* Decorative top hairline */}
-                  <line
-                    x1={VB_W * 0.32}
-                    y1={V_Y * 0.42}
-                    x2={VB_W * 0.68}
-                    y2={V_Y * 0.42}
-                    stroke="#865814"
-                    strokeOpacity="0.55"
-                    strokeWidth="0.8"
-                  />
-                  {/* "You're Invited" — eyebrow */}
-                  <text
-                    x={VB_W / 2}
-                    y={V_Y * 0.52}
-                    textAnchor="middle"
-                    fill="#865814"
+                  <div
+                    className="mx-auto"
                     style={{
+                      width: "32%",
+                      height: "1px",
+                      background:
+                        "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
+                      marginBottom: "0.6em",
+                    }}
+                  />
+                  {/* Eyebrow */}
+                  <div
+                    style={{
+                      color: "#865814",
                       fontFamily:
                         "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                      fontSize: "16px",
+                      fontSize: "clamp(8px, 2.2vw, 14px)",
                       letterSpacing: "0.42em",
                       textTransform: "uppercase",
                       fontWeight: 400,
                     }}
                   >
                     You&apos;re Invited
-                  </text>
-                  {/* Main calligraphic word */}
-                  <text
-                    x={VB_W / 2}
-                    y={V_Y * 0.72}
-                    textAnchor="middle"
-                    fill="#3a2a14"
+                  </div>
+                  {/* Calligraphic word */}
+                  <div
                     style={{
-                      fontFamily:
-                        "'Cormorant Garamond', Georgia, serif",
-                      fontSize: "44px",
+                      color: "#3a2a14",
+                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                      fontSize: "clamp(22px, 7vw, 44px)",
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
+                      lineHeight: 1.05,
+                      marginTop: "0.15em",
                     }}
                   >
                     Welcome
-                  </text>
+                  </div>
                   {/* Decorative bottom hairline */}
-                  <line
-                    x1={VB_W * 0.32}
-                    y1={V_Y * 0.82}
-                    x2={VB_W * 0.68}
-                    y2={V_Y * 0.82}
-                    stroke="#865814"
-                    strokeOpacity="0.55"
-                    strokeWidth="0.8"
+                  <div
+                    className="mx-auto"
+                    style={{
+                      width: "32%",
+                      height: "1px",
+                      background:
+                        "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
+                      marginTop: "0.5em",
+                    }}
                   />
-                </g>
-              </svg>
+                </div>
+              </div>
 
 
               {/* === TRIANGULAR FLAP === */}
