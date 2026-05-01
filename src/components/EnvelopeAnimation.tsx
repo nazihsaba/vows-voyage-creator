@@ -9,8 +9,6 @@ interface EnvelopeAnimationProps {
   weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
-  /** Optional pool of gallery image URLs; one is chosen at random for the reveal frame. */
-  galleryImages?: string[];
   children: ReactNode;
 }
 
@@ -23,7 +21,6 @@ export const EnvelopeAnimation = ({
   weddingDate,
   primaryColor,
   accentColor,
-  galleryImages,
   children,
 }: EnvelopeAnimationProps) => {
   const [opening, setOpening] = useState(false);
@@ -64,13 +61,7 @@ export const EnvelopeAnimation = ({
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
-  // Pick one random gallery image to reveal behind the flap.
-  // Memoized so it stays stable across re-renders during the animation.
-  const revealImage = useMemo(() => {
-    const list = (galleryImages || []).filter(Boolean);
-    if (list.length === 0) return null;
-    return list[Math.floor(Math.random() * list.length)];
-  }, [galleryImages]);
+  // (Reveal image logic removed — replaced with a static welcome message.)
 
   const handleOpen = useCallback(() => {
     if (opening) return;
@@ -556,37 +547,92 @@ export const EnvelopeAnimation = ({
                   portion of the envelope so it sits exactly where the flap was
                   covering, giving the impression that the photo is being
                   uncovered as the flap lifts. */}
-              {revealImage && (
-                <svg
-                  viewBox={`0 0 ${VB_W} ${VB_H}`}
-                  className="env-reveal absolute inset-0 w-full h-full pointer-events-none"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                  style={{
-                    zIndex: 2,
-                    transform: "translateZ(-1px)",
-                    willChange: "opacity, transform",
-                  }}
-                >
-                  <defs>
-                    <clipPath id="env-reveal-clip">
-                      {/* Same shape as the flap so the photo only shows
-                          inside the top section that opens. */}
-                      <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
-                    </clipPath>
-                  </defs>
-                  <g clipPath="url(#env-reveal-clip)">
-                    <image
-                      href={revealImage}
-                      x="0"
-                      y="0"
-                      width={VB_W}
-                      height={V_Y}
-                      preserveAspectRatio="xMidYMid slice"
-                    />
-                  </g>
-                </svg>
-              )}
+              {/* Welcome message tucked behind the flap. The triangular SVG
+                  clip matches the flap shape exactly so the message only shows
+                  inside the top section that opens. */}
+              <svg
+                viewBox={`0 0 ${VB_W} ${VB_H}`}
+                className="env-reveal absolute inset-0 w-full h-full pointer-events-none"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+                style={{
+                  zIndex: 2,
+                  transform: "translateZ(-1px)",
+                  willChange: "opacity, transform",
+                }}
+              >
+                <defs>
+                  <clipPath id="env-reveal-clip">
+                    <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
+                  </clipPath>
+                </defs>
+                <g clipPath="url(#env-reveal-clip)">
+                  {/* Soft warm tint behind the message so it reads against
+                      the cream envelope paper. */}
+                  <rect
+                    x="0"
+                    y="0"
+                    width={VB_W}
+                    height={V_Y}
+                    fill="rgba(253, 246, 230, 0.55)"
+                  />
+                  {/* Decorative top hairline */}
+                  <line
+                    x1={VB_W * 0.32}
+                    y1={V_Y * 0.42}
+                    x2={VB_W * 0.68}
+                    y2={V_Y * 0.42}
+                    stroke="#865814"
+                    strokeOpacity="0.55"
+                    strokeWidth="0.8"
+                  />
+                  {/* "You're Invited" — eyebrow */}
+                  <text
+                    x={VB_W / 2}
+                    y={V_Y * 0.52}
+                    textAnchor="middle"
+                    fill="#865814"
+                    style={{
+                      fontFamily:
+                        "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
+                      fontSize: "16px",
+                      letterSpacing: "0.42em",
+                      textTransform: "uppercase",
+                      fontWeight: 400,
+                    }}
+                  >
+                    You&apos;re Invited
+                  </text>
+                  {/* Main calligraphic word */}
+                  <text
+                    x={VB_W / 2}
+                    y={V_Y * 0.72}
+                    textAnchor="middle"
+                    fill="#3a2a14"
+                    style={{
+                      fontFamily:
+                        "'Cormorant Garamond', Georgia, serif",
+                      fontSize: "44px",
+                      fontStyle: "italic",
+                      fontWeight: 500,
+                      letterSpacing: "0.01em",
+                    }}
+                  >
+                    Welcome
+                  </text>
+                  {/* Decorative bottom hairline */}
+                  <line
+                    x1={VB_W * 0.32}
+                    y1={V_Y * 0.82}
+                    x2={VB_W * 0.68}
+                    y2={V_Y * 0.82}
+                    stroke="#865814"
+                    strokeOpacity="0.55"
+                    strokeWidth="0.8"
+                  />
+                </g>
+              </svg>
+
 
               {/* === TRIANGULAR FLAP === */}
               {/* Absolutely positioned, detached from layout flow; rotates around
