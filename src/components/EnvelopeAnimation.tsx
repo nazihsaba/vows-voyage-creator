@@ -57,7 +57,7 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 4200;
+  const TOTAL = 5200;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
@@ -188,7 +188,7 @@ export const EnvelopeAnimation = ({
             }
             @keyframes envOverlayOut {
               0%   { opacity: 1; }
-              70%  { opacity: 1; }
+              80%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
@@ -214,9 +214,10 @@ export const EnvelopeAnimation = ({
 
             @keyframes envBody {
               0%   { transform: scale(1)    translateY(0);     opacity: 1; }
-              50%  { transform: scale(1)    translateY(10px);  opacity: 1; }
-              75%  { transform: scale(.99)  translateY(40px);  opacity: .85; }
-              100% { transform: scale(.94)  translateY(110px); opacity: 0; }
+              55%  { transform: scale(1)    translateY(0);     opacity: 1; }
+              70%  { transform: scale(.995) translateY(20px);  opacity: 1; }
+              85%  { transform: scale(.98)  translateY(60px);  opacity: .7; }
+              100% { transform: scale(.94)  translateY(140px); opacity: 0; }
             }
             .is-opening .env-target {
               animation: envBody ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -224,28 +225,31 @@ export const EnvelopeAnimation = ({
 
             @keyframes envSealPop {
               0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              15%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
-              30%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
-              45%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              10%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
+              22%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
+              35%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
               100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
               animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
+            /* Full unfold: flap rotates all the way back (-180deg = laid flat behind),
+               staying fully visible the entire arc — no premature fade. */
             @keyframes envFlapLift {
               0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              25%  { transform: rotateX(-40deg); opacity: 1; }
-              50%  { transform: rotateX(-90deg); opacity: 1; }
-              75%  { transform: rotateX(-135deg); opacity: .9; }
-              90%  { transform: rotateX(-165deg); opacity: .55; }
-              100% { transform: rotateX(-178deg); opacity: 0; }
+              15%  { transform: rotateX(-30deg);  opacity: 1; }
+              35%  { transform: rotateX(-75deg);  opacity: 1; }
+              55%  { transform: rotateX(-120deg); opacity: 1; }
+              75%  { transform: rotateX(-160deg); opacity: 1; }
+              90%  { transform: rotateX(-180deg); opacity: 1; }
+              100% { transform: rotateX(-180deg); opacity: 1; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
             }
             .is-opening .env-flap-wrap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.33, 0, 0.4, 1) forwards;
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
             }
 
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
