@@ -649,14 +649,18 @@ export const EnvelopeAnimation = ({
                 className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
-                  zIndex: 2,
-                  transform: "translateZ(-1px)",
-                  willChange: "opacity, transform",
+                  // Sits above the body face but below the closed flap (z-index 5).
+                  // No translateZ — on mobile WebKit, negative Z combined with
+                  // preserve-3d ancestors can render this element behind the
+                  // black overlay, making the welcome message vanish during the
+                  // flap rotation.
+                  zIndex: 3,
+                  willChange: "opacity",
                   // Clip to the exact triangular flap shape using percentages so
                   // it scales fluidly with the envelope on every screen size.
                   clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
                   WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
-                  background: "rgba(253, 246, 230, 0.55)",
+                  background: "rgb(248, 240, 222)",
                 }}
               >
                 <div
