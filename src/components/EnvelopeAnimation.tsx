@@ -9,13 +9,13 @@ import paperTexture from "@/assets/envelope-paper-texture.jpeg";
  * opening sequence and reveals the children.
  *
  * Phases:
- *   1. Seal breaks         (0–400ms)
- *   2. Flap opens in 3D    (300–1100ms)
+ *   1. Seal breaks         (0–550ms)   — sticks, then pops with overshoot
+ *   2. Flap opens in 3D    (0–1900ms)  — multi-stage with weighted physics
  *   3. Invitation emerges  (900–1900ms)
  *   4. Envelope fades out  (1700–2200ms) → onAnimationComplete + scroll unlocks
  *
  * Layering (back → front):
- *   Envelope back · Content · Envelope front body · Flap (with seal)
+ *   Envelope body · Interior shadow · Names · Flap (with seal)
  */
 
 export interface EnvelopeAnimationProps {
@@ -379,7 +379,7 @@ export const EnvelopeAnimation = ({
               filter: drop-shadow(0 42px 60px rgba(0,0,0,.55));
             }
 
-            /* Phase 4: envelope back/front/flap fade out & scale slightly down */
+            /* Phase 4: envelope body fades out & scales slightly down */
             @keyframes envBody {
               0%, ${Math.round((FADE_AT / PHASE_TOTAL) * 100)}% { transform: scale(1) translateY(0); opacity: 1; }
               100%                                                { transform: scale(.95) translateY(40px); opacity: 0; }
@@ -388,15 +388,16 @@ export const EnvelopeAnimation = ({
               animation: envBody ${PHASE_TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
-            /* Phase 1: seal pops then fades, easing 0,22,1,0.36,1 */
-@keyframes envSealPop {
-  0%, 25%  { transform: translate(-50%,-50%) scale(1) rotate(-3deg); opacity: 1; }
-  60%      { transform: translate(-50%,-50%) scale(1.12) rotate(-3deg); opacity: 1; }
-  100%     { transform: translate(-50%,-58%) scale(.85) rotate(-1deg); opacity: 0; }
-}
-.is-opening .env-seal {
-  animation: envSealPop 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
+            /* Phase 1: seal pops with overshoot, then fades — feels like wax cracking under tension */
+            @keyframes envSealPop {
+              0%, 25%  { transform: translate(-50%,-50%) scale(1) rotate(-3deg); opacity: 1; }
+              60%      { transform: translate(-50%,-50%) scale(1.12) rotate(-3deg); opacity: 1; }
+              100%     { transform: translate(-50%,-58%) scale(.85) rotate(-1deg); opacity: 0; }
+            }
+            .is-opening .env-seal {
+              animation: envSealPop 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            }
+
             @keyframes envSealParticle {
               0%   { transform: translate(-50%,-50%) translate(0,0) scale(1); opacity: 0; }
               20%  { opacity: 1; }
@@ -406,40 +407,48 @@ export const EnvelopeAnimation = ({
               animation: envSealParticle 600ms cubic-bezier(0.22, 1, 0.36, 1) 50ms forwards;
             }
 
-            /* Phase 2: flap opens 3D from bottom edge (transform-origin top because flap is mirrored) */
-@keyframes envFlapLift {
-  /* Phase A: seal resists — flap barely lifts (0–250ms) */
-  0%   { transform: rotateX(0deg) translateZ(0) rotateY(0deg); }
-  10%  { transform: rotateX(-2deg) translateZ(1px) rotateY(0deg); }
-  
-  /* Phase B: seal releases — small pop (250–400ms) */
-  16%  { transform: rotateX(-8deg) translateZ(3px) rotateY(0.3deg); }
-  
-  /* Phase C: gravity takes over — main swing (400–900ms) */
-  25%  { transform: rotateX(-25deg) translateZ(4px) rotateY(0.2deg); }
-  40%  { transform: rotateX(-70deg) translateZ(3px) rotateY(-0.3deg); }
-  55%  { transform: rotateX(-120deg) translateZ(2px) rotateY(0.2deg); }
-  
-  /* Phase D: deceleration approaching open (900–1300ms) */
-  68%  { transform: rotateX(-160deg) translateZ(1px) rotateY(-0.2deg); }
-  
-  /* Phase E: slight overshoot — paper settling (1300–1600ms) */
-  78%  { transform: rotateX(-182deg) translateZ(0) rotateY(0.1deg); }
-  
-  /* Phase F: micro-bounce back (1600–1900ms) */
-  86%  { transform: rotateX(-176deg) translateZ(0) rotateY(0deg); }
-  92%  { transform: rotateX(-179deg) translateZ(0) rotateY(0deg); }
-  
-  /* Phase G: settle + fade (1900–2200ms) */
-  100% { transform: rotateX(-178deg) translateZ(0) rotateY(0deg); opacity: 0; }
-}
+            /* Phase 2: realistic envelope flap motion.
+               Easing is BAKED INTO THE KEYFRAME SPACING (not the timing function).
+               That's why we use linear timing — the physics live in the percentages.
+               
+               Stages:
+                 A. Seal resists       (0–250ms)  — flap barely lifts
+                 B. Seal releases      (250–400ms) — small pop free
+                 C. Gravity swing      (400–1200ms) — main fall, accelerates then decelerates
+                 D. Approach open      (1200–1500ms) — slowing as it nears 180°
+                 E. Slight overshoot   (1500–1700ms) — paper goes slightly past
+                 F. Micro-bounce       (1700–2050ms) — settles back like real paper
+                 G. Final fade         (2050–2200ms)
+            */
+            @keyframes envFlapLift {
+              0%   { transform: rotateX(0deg) translateZ(0) rotateY(0deg); }
+              10%  { transform: rotateX(-2deg) translateZ(1px) rotateY(0deg); }
+              16%  { transform: rotateX(-8deg) translateZ(3px) rotateY(0.3deg); }
+              25%  { transform: rotateX(-25deg) translateZ(4px) rotateY(0.2deg); }
+              40%  { transform: rotateX(-70deg) translateZ(3px) rotateY(-0.3deg); }
+              55%  { transform: rotateX(-120deg) translateZ(2px) rotateY(0.2deg); }
+              68%  { transform: rotateX(-160deg) translateZ(1px) rotateY(-0.2deg); }
+              78%  { transform: rotateX(-182deg) translateZ(0) rotateY(0.1deg); }
+              86%  { transform: rotateX(-176deg) translateZ(0) rotateY(0deg); }
+              92%  { transform: rotateX(-179deg) translateZ(0) rotateY(0deg); }
+              100% { transform: rotateX(-178deg) translateZ(0) rotateY(0deg); opacity: 0; }
+            }
+            .is-opening .env-flap-wrap {
+              animation: envFlapLift ${PHASE_TOTAL}ms linear forwards;
+            }
 
-.is-opening .env-flap-wrap {
-  /* IMPORTANT: linear timing — easing is baked into the keyframe spacing above */
-  animation: envFlapLift ${PHASE_TOTAL}ms linear forwards;
-}
-            /* Phase 3: invitation hint emerges (we render the actual content via children
-               under the envelope; here we only show a soft growing shadow). */
+            /* Interior shadow — appears as the flap lifts, sells the "depth inside" effect */
+            @keyframes envInteriorShadow {
+              0%, 8%   { opacity: 0; }
+              20%      { opacity: 0.35; }
+              60%      { opacity: 0.55; }
+              100%     { opacity: 0.55; }
+            }
+            .is-opening .env-interior-shadow {
+              animation: envInteriorShadow ${PHASE_TOTAL}ms linear forwards;
+            }
+
+            /* Phase 3: invitation hint emerges */
             @keyframes envContentRise {
               0%, ${Math.round((900 / PHASE_TOTAL) * 100)}%  { transform: translateY(20%); opacity: 0; }
               ${Math.round((1900 / PHASE_TOTAL) * 100)}%     { transform: translateY(0);   opacity: 1; }
@@ -466,20 +475,12 @@ export const EnvelopeAnimation = ({
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay, .env-idle, .env-glow, .env-target, .env-flap-wrap,
-              .env-seal, .env-seal-particle, .env-hint, .env-hint-text, .env-content-shadow {
+              .env-seal, .env-seal-particle, .env-hint, .env-hint-text,
+              .env-content-shadow, .env-interior-shadow {
                 animation: none !important;
               }
               .env-overlay { opacity: 0 !important; pointer-events: none !important; }
             }
-            @keyframes envInteriorShadow {
-  0%, 8%   { opacity: 0; }
-  20%      { opacity: 0.35; }
-  60%      { opacity: 0.55; }
-  100%     { opacity: 0.55; }
-}
-.is-opening .env-interior-shadow {
-  animation: envInteriorShadow ${PHASE_TOTAL}ms linear forwards;
-}
           `}</style>
 
           <div
@@ -510,7 +511,7 @@ export const EnvelopeAnimation = ({
               }}
             />
 
-            {/* <div
+            <div
               className={`env-target ${!opening ? "env-idle" : ""}`}
               style={{
                 width: "100%",
@@ -521,21 +522,7 @@ export const EnvelopeAnimation = ({
                 transition: "transform 500ms cubic-bezier(.22,1,.36,1), filter 500ms cubic-bezier(.4,0,.2,1)",
                 willChange: "transform, opacity",
               }}
-            > */}
-              <div
-  className="env-interior-shadow absolute pointer-events-none"
-  style={{
-    left: "0",
-    right: "0",
-    top: "0",
-    height: `${(V_Y / VB_H) * 100}%`,
-    clipPath: `polygon(0 5%, 100% 5%, ${((V_X + 14) / VB_W) * 100}% 95%, 50% 100%, ${((V_X - 14) / VB_W) * 100}% 95%)`,
-    background:
-      "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(20,12,4,0.45) 60%, rgba(0,0,0,0.15) 100%)",
-    opacity: 0,
-    zIndex: 2,
-  }}
-/>
+            >
               {/* === ENVELOPE BODY (back + front merged into one paper face) === */}
               <svg
                 viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -626,6 +613,22 @@ export const EnvelopeAnimation = ({
                   strokeWidth="1"
                 />
               </svg>
+
+              {/* === INTERIOR SHADOW — visible as flap lifts, sells the "depth inside" effect === */}
+              <div
+                className="env-interior-shadow absolute pointer-events-none"
+                style={{
+                  left: "0",
+                  right: "0",
+                  top: "0",
+                  height: `${(V_Y / VB_H) * 100}%`,
+                  clipPath: `polygon(0 5%, 100% 5%, ${((V_X + 14) / VB_W) * 100}% 95%, 50% 100%, ${((V_X - 14) / VB_W) * 100}% 95%)`,
+                  background:
+                    "linear-gradient(to bottom, rgba(0,0,0,0.65) 0%, rgba(20,12,4,0.45) 60%, rgba(0,0,0,0.15) 100%)",
+                  opacity: 0,
+                  zIndex: 1,
+                }}
+              />
 
               {/* === BRIDE & GROOM NAMES (legacy face content) === */}
               {hasNames && (
@@ -748,7 +751,6 @@ export const EnvelopeAnimation = ({
                   transformStyle: "preserve-3d",
                   zIndex: 3,
                   willChange: "transform, opacity",
-                 // backfaceVisibility: "hidden",
                   filter: "drop-shadow(0 1px 1px rgba(0,0,0,0.18))",
                 }}
               >
