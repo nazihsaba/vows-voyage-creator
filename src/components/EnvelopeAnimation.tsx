@@ -285,8 +285,11 @@ export const EnvelopeAnimation = ({
             style={{
               perspective: "2200px",
               // Portrait envelope: tall and narrow, fills most of screen height.
-              height: "min(92dvh, 96vw * (840/600))",
-              width: "min(92vw, 92dvh * (600/840), 600px)",
+              // Reserve room at the bottom for the "Tap to open" hint so it
+              // never falls off the screen on short phones.
+              height: "min(82dvh, 92vw * (840/600))",
+              width: "min(92vw, 82dvh * (600/840), 600px)",
+              maxWidth: "min(92vw, 600px)",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
