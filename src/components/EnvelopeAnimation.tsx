@@ -223,6 +223,13 @@ export const EnvelopeAnimation = ({
               transform: scale(1.025);
               filter: drop-shadow(0 42px 60px rgba(0,0,0,.6));
             }
+            /* Modern browsers: prefer dvh which excludes the dynamic browser UI. */
+            @supports (height: 100dvh) {
+              .env-zone {
+                height: min(82dvh, 92vw * (840/600)) !important;
+                width: min(92vw, 82dvh * (600/840), 600px) !important;
+              }
+            }
 
             @keyframes envBody {
               0%   { transform: scale(1)    translateY(0);     opacity: 1; }
