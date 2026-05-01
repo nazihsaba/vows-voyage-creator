@@ -234,16 +234,18 @@ export const EnvelopeAnimation = ({
               animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
-            /* Full unfold: flap rotates all the way back (-180deg = laid flat behind),
-               staying fully visible the entire arc — no premature fade. */
+            /* Full unfold: flap rotates around its top edge from a slight rest
+               tilt all the way back to -180° (laid flat on the back side of the
+               envelope). A small translateZ during the arc lifts it off the
+               body so layers don't z-fight while crossing 90°. */
             @keyframes envFlapLift {
-              0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              15%  { transform: rotateX(-30deg);  opacity: 1; }
-              35%  { transform: rotateX(-75deg);  opacity: 1; }
-              55%  { transform: rotateX(-120deg); opacity: 1; }
-              75%  { transform: rotateX(-160deg); opacity: 1; }
-              90%  { transform: rotateX(-180deg); opacity: 1; }
-              100% { transform: rotateX(-180deg); opacity: 1; }
+              0%   { transform: translateZ(0)   rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
+              15%  { transform: translateZ(2px) rotateX(-30deg);  opacity: 1; }
+              35%  { transform: translateZ(4px) rotateX(-75deg);  opacity: 1; }
+              55%  { transform: translateZ(6px) rotateX(-120deg); opacity: 1; }
+              75%  { transform: translateZ(4px) rotateX(-160deg); opacity: 1; }
+              90%  { transform: translateZ(2px) rotateX(-182deg); opacity: 1; }
+              100% { transform: translateZ(2px) rotateX(-182deg); opacity: 1; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
