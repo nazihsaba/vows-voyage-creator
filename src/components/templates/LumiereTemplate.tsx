@@ -244,6 +244,21 @@ export const LumiereTemplate = ({
           },
         ]
       : []),
+    ...locations
+      .filter((loc: any) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+      .sort((a: any, b: any) => {
+        const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
+        const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
+        return ai - bi;
+      })
+      .map((loc: any) => ({
+        id: loc.type,
+        title: loc.custom_title || "Event",
+        time: formatTimeTo12Hour(loc.time) || "",
+        location: loc.location_name || "",
+        link: loc.location_link,
+        icon: loc.icon || "solar:confetti-bold",
+      })),
   ];
 
   const hasGiftCards = giftCards && giftCards.length > 0;

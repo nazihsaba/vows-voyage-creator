@@ -64,6 +64,15 @@ const WeddingForm = () => {
     venue_icon: "solar:confetti-bold",
     welcome_drink_time: "",
   });
+  type CustomSection = {
+    title: string;
+    location_name: string;
+    time: string;
+    location_link: string;
+    icon: string;
+  };
+  const MAX_CUSTOM_SECTIONS = 4;
+  const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
@@ -290,6 +299,24 @@ const WeddingForm = () => {
           venue_icon: venue?.icon || "solar:confetti-bold",
           welcome_drink_time: welcomeDrink?.time || "",
         });
+
+        // Load custom sections (type starts with "custom_"), sorted by suffix index
+        const customRows = locationsData
+          .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+          .sort((a, b) => {
+            const ai = parseInt(a.type.slice("custom_".length), 10) || 0;
+            const bi = parseInt(b.type.slice("custom_".length), 10) || 0;
+            return ai - bi;
+          })
+          .slice(0, MAX_CUSTOM_SECTIONS)
+          .map((l: any) => ({
+            title: l.custom_title || "",
+            location_name: l.location_name || "",
+            time: l.time || "",
+            location_link: l.location_link || "",
+            icon: l.icon || "solar:confetti-bold",
+          }));
+        setCustomSections(customRows);
       }
 
       // Fetch gift cards
@@ -830,6 +857,23 @@ const WeddingForm = () => {
           time: locations.welcome_drink_time,
           location_link: locations.venue_location_link,
           icon: "streamline:champagne-party-alcohol-remix",
+        });
+      }
+
+      // Custom sections (timeline templates only)
+      if (isAuraTemplate) {
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+          const hasContent = s.title || s.location_name || s.time || s.location_link;
+          if (!hasContent) return;
+          locationInserts.push({
+            wedding_id: weddingId,
+            type: `custom_${idx + 1}`,
+            location_name: s.location_name,
+            time: s.time || null,
+            location_link: s.location_link,
+            icon: s.icon || "solar:confetti-bold",
+            custom_title: s.title || null,
+          } as any);
         });
       }
 
@@ -1590,6 +1634,159 @@ const WeddingForm = () => {
                     </div>
                   </CardContent>
                 </Card>
+
+                {/* Custom Timeline Sections (timeline templates only) */}
+                {isAuraTemplate && (
+                  <Card className="border shadow-sm sm:col-span-2">
+                    <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
+                      <div>
+                        <CardTitle className="text-lg sm:text-xl">Additional Sections</CardTitle>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          Add up to {MAX_CUSTOM_SECTIONS} more events to your timeline (e.g. Cocktail Hour, After Party).
+                        </p>
+                      </div>
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        disabled={customSections.length >= MAX_CUSTOM_SECTIONS}
+                        onClick={() =>
+                          setCustomSections([
+                            ...customSections,
+                            {
+                              title: "",
+                              location_name: "",
+                              time: "",
+                              location_link: "",
+                              icon: "solar:confetti-bold",
+                            },
+                          ])
+                        }
+                      >
+                        + Add Section
+                      </Button>
+                    </CardHeader>
+                    <CardContent className="space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                      {customSections.length === 0 && (
+                        <p className="text-sm text-muted-foreground italic">
+                          No additional sections yet. Click "+ Add Section" to add one.
+                        </p>
+                      )}
+                      {customSections.map((section, idx) => (
+                        <div
+                          key={idx}
+                          className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span className="text-sm font-medium text-foreground">
+                              Section {idx + 1}
+                            </span>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={() =>
+                                setCustomSections(customSections.filter((_, i) => i !== idx))
+                              }
+                              aria-label="Remove section"
+                            >
+                              <X className="w-4 h-4" />
+                            </Button>
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
+                            <Input
+                              id={`custom_title_${idx}`}
+                              value={section.title}
+                              onChange={(e) => {
+                                const next = [...customSections];
+                                next[idx] = { ...next[idx], title: e.target.value };
+                                setCustomSections(next);
+                              }}
+                              placeholder="Cocktail Hour"
+                              className="h-11 sm:h-10"
+                            />
+                          </div>
+                          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                            <div className="space-y-1.5">
+                              <Label htmlFor={`custom_location_${idx}`}>Location Name</Label>
+                              <Input
+                                id={`custom_location_${idx}`}
+                                value={section.location_name}
+                                onChange={(e) => {
+                                  const next = [...customSections];
+                                  next[idx] = { ...next[idx], location_name: e.target.value };
+                                  setCustomSections(next);
+                                }}
+                                placeholder="Venue or place"
+                                className="h-11 sm:h-10"
+                              />
+                            </div>
+                            <div className="space-y-1.5">
+                              <Label htmlFor={`custom_time_${idx}`}>Time</Label>
+                              <Input
+                                id={`custom_time_${idx}`}
+                                type="time"
+                                value={section.time}
+                                onChange={(e) => {
+                                  const next = [...customSections];
+                                  next[idx] = { ...next[idx], time: e.target.value };
+                                  setCustomSections(next);
+                                }}
+                                className="h-11 sm:h-10"
+                              />
+                            </div>
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label htmlFor={`custom_link_${idx}`}>Map link</Label>
+                            <Input
+                              id={`custom_link_${idx}`}
+                              value={section.location_link}
+                              onChange={(e) => {
+                                const next = [...customSections];
+                                next[idx] = { ...next[idx], location_link: e.target.value };
+                                setCustomSections(next);
+                              }}
+                              placeholder="https://maps.google.com/..."
+                              type="url"
+                              className="h-11 sm:h-10 text-sm"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label>Icon</Label>
+                            <Select
+                              value={section.icon}
+                              onValueChange={(value) => {
+                                const next = [...customSections];
+                                next[idx] = { ...next[idx], icon: value };
+                                setCustomSections(next);
+                              }}
+                            >
+                              <SelectTrigger className="h-11 sm:h-10">
+                                <SelectValue>
+                                  <span className="flex items-center gap-2">
+                                    <Icon icon={section.icon} className="w-5 h-5" />
+                                    {LOCATION_ICON_OPTIONS.find((o) => o.value === section.icon)?.label}
+                                  </span>
+                                </SelectValue>
+                              </SelectTrigger>
+                              <SelectContent>
+                                {LOCATION_ICON_OPTIONS.map((opt) => (
+                                  <SelectItem key={opt.value} value={opt.value}>
+                                    <span className="flex items-center gap-2">
+                                      <Icon icon={opt.value} className="w-5 h-5" />
+                                      {opt.label}
+                                    </span>
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      ))}
+                    </CardContent>
+                  </Card>
+                )}
               </div>
 
               {/* Card List Section */}
