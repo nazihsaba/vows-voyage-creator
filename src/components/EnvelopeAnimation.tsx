@@ -283,23 +283,27 @@ export const EnvelopeAnimation = ({
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
-               tilt all the way back to -180° (laid flat on the back side of the
-               envelope). A small translateZ during the arc lifts it off the
-               body so layers don't z-fight while crossing 90°. */
+               tilt all the way back to -180°. Two-keyframe form lets the easing
+               curve drive the entire arc continuously instead of stepping
+               between 6 angular waypoints — which on mobile manifests as
+               visible "cuts" near the top of the envelope. */
             @keyframes envFlapLift {
-              0%   { transform: translateZ(0)   rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              15%  { transform: translateZ(2px) rotateX(-30deg);  opacity: 1; }
-              35%  { transform: translateZ(4px) rotateX(-75deg);  opacity: 1; }
-              55%  { transform: translateZ(6px) rotateX(-120deg); opacity: 1; }
-              75%  { transform: translateZ(4px) rotateX(-160deg); opacity: 1; }
-              90%  { transform: translateZ(2px) rotateX(-182deg); opacity: 1; }
-              100% { transform: translateZ(2px) rotateX(-182deg); opacity: 1; }
+              0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
+              90%  { transform: rotateX(-182deg);              opacity: 1; }
+              100% { transform: rotateX(-182deg);              opacity: 1; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
             }
             .is-opening .env-flap-wrap {
               animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+            }
+            /* On mobile, prefer a slightly snappier easing so the flap arc
+               feels continuous and finishes before the body slides away. */
+            @media (max-width: 767px), (pointer: coarse) {
+              .is-opening .env-flap-wrap {
+                animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
+              }
             }
 
             /* Framed photo behind the flap. Hidden by default, fades in only
@@ -785,8 +789,12 @@ export const EnvelopeAnimation = ({
                   height: "auto",
                   zIndex: 10,
                   willChange: "transform, opacity",
+                  // Drop-shadow filters are extremely expensive on mobile GPUs
+                  // and force a per-frame raster of the seal — which is the
+                  // visible stutter at the top of the envelope during the
+                  // flap arc. Skip the filter on mobile entirely.
                   filter: isMobile
-                    ? "drop-shadow(0 4px 6px rgba(0,0,0,0.45))"
+                    ? "none"
                     : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
                 }}
               />
