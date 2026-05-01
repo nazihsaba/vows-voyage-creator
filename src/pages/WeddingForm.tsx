@@ -1839,19 +1839,34 @@ const WeddingForm = () => {
                       {customSections.map((section, idx) => {
                         const pos = timelinePosition(section.uid);
                         return (
-                        <div
+                        <Collapsible
                           key={section.uid}
+                          open={!!openLocationCards[section.uid]}
+                          onOpenChange={() => toggleLocationCard(section.uid)}
                           className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
                         >
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-medium text-foreground">
-                              {section.title?.trim() ? section.title : `Section ${idx + 1}`}
-                              {pos !== null && (
-                                <span className="ml-2 text-xs text-muted-foreground">
-                                  (Timeline #{pos})
+                          <div className="flex items-center justify-between gap-2">
+                            <CollapsibleTrigger asChild>
+                              <button
+                                type="button"
+                                className="flex flex-1 items-center justify-between gap-2 text-left"
+                                aria-label="Toggle section"
+                              >
+                                <span className="text-sm font-medium text-foreground">
+                                  {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                                  {pos !== null && (
+                                    <span className="ml-2 text-xs text-muted-foreground">
+                                      (Timeline #{pos})
+                                    </span>
+                                  )}
                                 </span>
-                              )}
-                            </span>
+                                <ChevronDown
+                                  className={`w-4 h-4 text-muted-foreground transition-transform ${
+                                    openLocationCards[section.uid] ? "rotate-180" : ""
+                                  }`}
+                                />
+                              </button>
+                            </CollapsibleTrigger>
                             <div className="flex items-center gap-1">
                               <Button
                                 type="button"
@@ -1887,6 +1902,7 @@ const WeddingForm = () => {
                               </Button>
                             </div>
                           </div>
+                          <CollapsibleContent className="space-y-3">
                           <div className="space-y-1.5">
                             <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
                             <Input
