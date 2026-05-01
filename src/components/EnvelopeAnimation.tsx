@@ -57,7 +57,7 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 4200;
+  const TOTAL = 5200;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
