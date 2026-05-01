@@ -1,6 +1,6 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
 import paperTexture from "@/assets/envelope-paper-texture.jpeg";
-import waxSealHeart from "@/assets/wax-seal-heart.png";
+import waxSealHeart from "@/assets/wax-seal-heart.webp";
 
 interface EnvelopeAnimationProps {
   groomName?: string;
@@ -701,6 +701,9 @@ export const EnvelopeAnimation = ({
                 src={waxSealHeart}
                 alt=""
                 aria-hidden="true"
+                loading="eager"
+                decoding="sync"
+                fetchPriority="high"
                 className="env-seal absolute pointer-events-none select-none"
                 draggable={false}
                 style={{
