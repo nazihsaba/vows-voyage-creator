@@ -183,6 +183,17 @@ export const EnvelopeAnimation = ({
               background: radial-gradient(ellipse at center, hsl(20 14% 10%) 0%, hsl(20 14% 4%) 100%);
               opacity: 1;
               will-change: opacity;
+              /* Cascading height: each line overrides the previous if supported.
+                 Old Safari ignores dvh and falls back to -webkit-fill-available,
+                 which respects the visible viewport (excludes the URL bar) so
+                 the envelope's bottom and "Tap to open" hint stay on screen. */
+              height: 100vh;
+              height: -webkit-fill-available;
+              height: 100dvh;
+            }
+            @supports (-webkit-touch-callout: none) {
+              /* iOS Safari specifically: prefer fill-available to avoid URL bar crop. */
+              .env-overlay { height: -webkit-fill-available; }
             }
             .env-overlay.is-opening {
               animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
