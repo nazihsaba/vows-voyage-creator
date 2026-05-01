@@ -541,13 +541,14 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(18px, 4.4vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
                     }}
                   >
                     {bride || "\u00A0"}
@@ -559,12 +560,13 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Cormorant Garamond', Georgia, serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(28px, 7vw, 56px)",
+                      fontSize: "clamp(26px, 6.6vw, 56px)",
                       lineHeight: 1,
-                      margin: "0.1em 0 0.05em",
+                      margin: "0.05em 0",
                       color: "#865814",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
                     }}
                   >
                     &amp;
@@ -572,13 +574,14 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(20px, 4.6vw, 38px)",
+                      fontSize: "clamp(18px, 4.4vw, 38px)",
                       lineHeight: 1.05,
                       fontStyle: "italic",
                       fontWeight: 500,
                       letterSpacing: "0.01em",
-                      textShadow:
-                        "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      textShadow: isMobile
+                        ? "none"
+                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
                     }}
                   >
                     {groom || "\u00A0"}
