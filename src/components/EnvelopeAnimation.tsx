@@ -283,7 +283,7 @@ export const EnvelopeAnimation = ({
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
-              .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint {
+              .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal {
                 animation: none !important;
               }
             }
