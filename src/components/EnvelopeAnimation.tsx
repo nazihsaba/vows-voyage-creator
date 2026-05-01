@@ -124,9 +124,12 @@ export const EnvelopeAnimation = ({
     document.head.appendChild(link);
   }, []);
 
+  // Decorative dust motes — drastically reduced on mobile (and removed when the
+  // user prefers reduced motion) because each one is its own animated layer.
+  const moteCount = reduceMotion ? 0 : isMobile ? 5 : 14;
   const motes = useMemo(
     () =>
-      Array.from({ length: 14 }).map((_, i) => ({
+      Array.from({ length: moteCount }).map((_, i) => ({
         id: i,
         left: Math.random() * 100,
         top: 30 + Math.random() * 65,
@@ -134,10 +137,13 @@ export const EnvelopeAnimation = ({
         delay: Math.random() * 3,
         duration: 5 + Math.random() * 5,
       })),
-    []
+    [moteCount]
   );
 
   // Subtle paper fibers scattered across the envelope face (deterministic).
+  // 80 strokes is fine on desktop but doubles SVG paint cost on phones; keep
+  // a much smaller deterministic set there.
+  const fiberCount = isMobile ? 24 : 80;
   const fibers = useMemo(() => {
     const rng = (seed: number) => {
       let s = seed;
@@ -147,7 +153,7 @@ export const EnvelopeAnimation = ({
       };
     };
     const r = rng(7);
-    return Array.from({ length: 80 }).map((_, i) => ({
+    return Array.from({ length: fiberCount }).map((_, i) => ({
       id: i,
       x: r() * 600,
       y: r() * 840,
@@ -155,7 +161,7 @@ export const EnvelopeAnimation = ({
       rot: r() * 360,
       o: 0.05 + r() * 0.08,
     }));
-  }, []);
+  }, [fiberCount]);
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
   // Portrait orientation so the envelope fills vertical screen space.
