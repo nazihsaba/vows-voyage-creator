@@ -1865,92 +1865,87 @@ const WeddingForm = () => {
                           key={section.uid}
                           open={!!openLocationCards[section.uid]}
                           onOpenChange={() => toggleLocationCard(section.uid)}
-                          className="rounded-lg border bg-card/40 p-3 sm:p-4 space-y-3"
                         >
-                          <div className="flex items-center justify-between gap-2">
-                            <CollapsibleTrigger asChild>
-                              <button
-                                type="button"
-                                className="flex flex-1 items-center justify-between gap-2 text-left group"
-                                aria-label="Toggle section"
-                                aria-expanded={!!openLocationCards[section.uid]}
-                              >
-                                <span className="text-sm font-medium text-foreground">
-                                  {section.title?.trim() ? section.title : `Section ${idx + 1}`}
-                                  {pos !== null && (
-                                    <span className="ml-2 text-xs text-muted-foreground">
-                                      #{pos}
-                                    </span>
-                                  )}
-                                </span>
-                                <span
-                                  className="flex h-7 w-7 items-center justify-center rounded-full border border-border bg-muted/40 text-muted-foreground group-hover:bg-muted transition-colors"
-                                  aria-hidden="true"
+                          <Card className="border shadow-sm">
+                            <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between gap-2 space-y-0">
+                              <CollapsibleTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="flex flex-1 items-center gap-2 text-left group min-w-0"
+                                  aria-label="Toggle section"
+                                  aria-expanded={!!openLocationCards[section.uid]}
                                 >
-                                  {openLocationCards[section.uid] ? (
-                                    <Minus className="w-4 h-4" />
-                                  ) : (
-                                    <Plus className="w-4 h-4" />
-                                  )}
-                                </span>
-                              </button>
-                            </CollapsibleTrigger>
-                            <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                              <div
-                                className="flex items-center rounded-md border border-border bg-background overflow-hidden"
-                                role="group"
-                                aria-label="Reorder section"
-                              >
+                                  <ChevronDown
+                                    className={`w-5 h-5 text-muted-foreground transition-transform shrink-0 ${
+                                      openLocationCards[section.uid] ? "" : "-rotate-90"
+                                    }`}
+                                    aria-hidden="true"
+                                  />
+                                  <CardTitle className="text-lg sm:text-xl truncate">
+                                    {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                                  </CardTitle>
+                                </button>
+                              </CollapsibleTrigger>
+                              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                {pos !== null && (
+                                  <span className="text-xs text-muted-foreground whitespace-nowrap">#{pos}</span>
+                                )}
+                                <div
+                                  className="flex items-center rounded-md border border-border bg-background overflow-hidden"
+                                  role="group"
+                                  aria-label="Reorder section"
+                                >
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 rounded-none"
+                                    disabled={!canMoveUp(section.uid)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      moveTimelineKey(section.uid, -1);
+                                    }}
+                                    aria-label="Move section up in timeline"
+                                    title="Move up"
+                                  >
+                                    <ArrowUp className="w-4 h-4" />
+                                  </Button>
+                                  <div className="w-px h-5 bg-border" />
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 rounded-none"
+                                    disabled={!canMoveDown(section.uid)}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      moveTimelineKey(section.uid, 1);
+                                    }}
+                                    aria-label="Move section down in timeline"
+                                    title="Move down"
+                                  >
+                                    <ArrowDown className="w-4 h-4" />
+                                  </Button>
+                                </div>
                                 <Button
                                   type="button"
                                   variant="ghost"
                                   size="sm"
-                                  className="h-8 w-8 p-0 rounded-none"
-                                  disabled={!canMoveUp(section.uid)}
+                                  className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    moveTimelineKey(section.uid, -1);
+                                    setCustomSections(customSections.filter((_, i) => i !== idx));
+                                    setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
                                   }}
-                                  aria-label="Move section up in timeline"
-                                  title="Move up"
+                                  aria-label="Remove section"
+                                  title="Remove"
                                 >
-                                  <ArrowUp className="w-4 h-4" />
-                                </Button>
-                                <div className="w-px h-5 bg-border" />
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 rounded-none"
-                                  disabled={!canMoveDown(section.uid)}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    moveTimelineKey(section.uid, 1);
-                                  }}
-                                  aria-label="Move section down in timeline"
-                                  title="Move down"
-                                >
-                                  <ArrowDown className="w-4 h-4" />
+                                  <X className="w-4 h-4" />
                                 </Button>
                               </div>
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="sm"
-                                className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setCustomSections(customSections.filter((_, i) => i !== idx));
-                                  setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
-                                }}
-                                aria-label="Remove section"
-                                title="Remove"
-                              >
-                                <X className="w-4 h-4" />
-                              </Button>
-                            </div>
-                          </div>
-                          <CollapsibleContent className="space-y-3">
+                            </CardHeader>
+                            <CollapsibleContent>
+                              <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                           <div className="space-y-1.5">
                             <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
                             <Input
