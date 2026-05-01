@@ -283,11 +283,11 @@ export const EnvelopeAnimation = ({
                hidden until the user taps, then fade in immediately. */
             .env-names { opacity: 0; }
             @keyframes envNamesIn {
-              0%   { opacity: 1; transform: translateY(-50%); }
+              0%   { opacity: 0; transform: translateY(-50%); }
               100% { opacity: 1; transform: translateY(-50%); }
             }
             .is-opening .env-names {
-              animation: envNamesIn ${TOTAL}ms linear forwards;
+              animation: envNamesIn 200ms ease-out forwards;
             }
 
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
