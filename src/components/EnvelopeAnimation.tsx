@@ -283,14 +283,30 @@ export const EnvelopeAnimation = ({
                 width: "100%",
                 height: "100%",
                 position: "relative",
-                filter:
-                  "drop-shadow(0 38px 58px rgba(0,0,0,.6)) drop-shadow(0 12px 18px rgba(0,0,0,.35))",
+                // No drop-shadow filter here — filters create a 2D rasterization
+                // boundary that flattens the 3D scene and clips the flap when it
+                // rotates past 90°. Shadow is delegated to the body SVG instead.
                 transformStyle: "preserve-3d",
                 transition:
-                  "transform 500ms cubic-bezier(.22,1,.36,1), filter 500ms cubic-bezier(.4,0,.2,1)",
+                  "transform 500ms cubic-bezier(.22,1,.36,1)",
                 willChange: "transform, opacity",
+                // Allow the flap to extend beyond the envelope bounds when folded back.
+                overflow: "visible",
               }}
             >
+              {/* Cast shadow under the whole envelope (separate layer so it doesn't
+                  flatten the 3D scene like a filter on the parent would). */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 pointer-events-none"
+                style={{
+                  borderRadius: 14,
+                  boxShadow:
+                    "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
+                  transform: "translateZ(-1px)",
+                  zIndex: 0,
+                }}
+              />
               {/* === ENVELOPE BODY === */}
               <svg
                 viewBox={`0 0 ${VB_W} ${VB_H}`}
