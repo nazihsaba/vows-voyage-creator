@@ -1583,8 +1583,9 @@ const WeddingForm = () => {
 
                 {/* Ceremony Section */}
                 <Card className="border shadow-sm">
-                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4">
+                  <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
                     <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
+                    {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
                   </CardHeader>
                   <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
