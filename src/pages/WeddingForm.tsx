@@ -906,6 +906,15 @@ const WeddingForm = () => {
         });
       }
 
+      // Apply user-defined display_order from timelineOrder
+      const orderIndex = (type: string) => {
+        const i = timelineOrder.indexOf(type);
+        return i === -1 ? 999 : i;
+      };
+      locationInserts.forEach((row: any) => {
+        row.display_order = orderIndex(row.type);
+      });
+
       if (locationInserts.length > 0) {
         const { error: locError } = await supabase.from("wedding_locations").insert(locationInserts);
         if (locError) throw locError;
