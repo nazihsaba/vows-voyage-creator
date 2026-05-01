@@ -595,7 +595,7 @@ export const EnvelopeAnimation = ({
                   {formattedDate && (
                     <>
                       <div
-                        className="mx-auto mt-5"
+                        className="mx-auto mt-9"
                         aria-hidden="true"
                         style={{
                           width: "44%",
@@ -606,11 +606,11 @@ export const EnvelopeAnimation = ({
                         }}
                       />
                       <div
-                        className="mt-2"
+                        className="mt-3"
                         style={{
                           fontFamily:
                             "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(11px, 2.6vw, 13px)",
+                          fontSize: "clamp(14px, 3.2vw, 16px)",
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
