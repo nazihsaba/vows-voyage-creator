@@ -151,7 +151,16 @@ export const EnvelopeAnimation = ({
           className={`env-overlay fixed inset-0 z-[9999] flex items-center justify-center ${
             opening ? "is-opening" : ""
           }`}
-          style={{ height: "100dvh", minHeight: "100vh" }}
+          style={{
+            // Old Safari (<15.4) doesn't support dvh — fall back gracefully.
+            // Use -webkit-fill-available which respects the visible viewport,
+            // then 100vh, then dvh for modern browsers. Avoid minHeight:100vh
+            // because on iOS Safari it includes the URL bar area and crops the
+            // bottom of the envelope (and the "Tap to open" hint).
+            height: "100vh",
+            // @ts-ignore - vendor fallback intentionally listed first
+            ...({ height: "-webkit-fill-available" } as any),
+          }}
         >
           {/* Ambient glow */}
           <div
