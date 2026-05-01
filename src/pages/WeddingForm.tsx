@@ -1120,22 +1120,7 @@ const WeddingForm = () => {
                 <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
               </div>
 
-              {/* Enable Envelope Animation Toggle */}
-              <div className="flex items-center justify-between p-3 rounded-lg border bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-muted-foreground" />
-                  <Label htmlFor="enable-envelope" className="text-sm font-medium cursor-pointer">
-                    Enable Envelope Animation
-                  </Label>
-                </div>
-                <Switch
-                  id="enable-envelope"
-                  checked={!!formData.envelope_animation_enabled}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, envelope_animation_enabled: checked })
-                  }
-                />
-              </div>
+              {/* Envelope Animation Toggle hidden */}
 
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
