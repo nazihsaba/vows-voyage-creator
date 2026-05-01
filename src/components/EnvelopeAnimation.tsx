@@ -636,17 +636,26 @@ export const EnvelopeAnimation = ({
                 className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
-                  // Sit ABOVE the body face (zIndex 3) but BELOW the flap
-                  // (zIndex 5). Previously this used translateZ(-1px) which on
-                  // mobile pushed it behind the body's paper texture in the
-                  // preserve-3d context, hiding the Welcome message entirely.
+                  // Sit ABOVE the body face but BELOW the flap (zIndex 5).
                   zIndex: 3,
                   willChange: "opacity",
                   // Clip to the exact triangular flap shape using percentages so
                   // it scales fluidly with the envelope on every screen size.
                   clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
                   WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
-                  background: "rgba(253, 246, 230, 0.85)",
+                  // Fully opaque cream so the body's paper texture never bleeds
+                  // through during the flap arc on mobile (which produced a
+                  // grey/dark flicker as the flap crossed 90° and the back of
+                  // the flap composited against the translucent reveal).
+                  background: "#fdf6e6",
+                  // Force this layer onto its own compositor surface so its
+                  // paint is stable while the flap above it animates. Without
+                  // this, mobile browsers occasionally drop the layer for a
+                  // frame, causing the welcome text to "blink in" at the end.
+                  transform: "translateZ(0)",
+                  WebkitTransform: "translateZ(0)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
                 }}
               >
                 <div
@@ -655,6 +664,9 @@ export const EnvelopeAnimation = ({
                     top: `${(V_Y * 0.36 / VB_H) * 100}%`,
                     fontFamily:
                       "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
+                    // Keep text painted on top of the reveal background even
+                    // if the compositor reorders sibling layers on mobile.
+                    zIndex: 1,
                   }}
                 >
                   {/* Decorative top hairline */}
