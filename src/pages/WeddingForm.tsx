@@ -2083,7 +2083,28 @@ const WeddingForm = () => {
                 </div>
 
                 {giftCards.map((card, index) => (
-                  <div key={index} className="space-y-3 p-3 sm:p-4 border rounded-lg relative">
+                  <div key={index} className="space-y-3 p-3 sm:p-4 border rounded-lg">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-sm font-medium text-foreground">
+                        {card.card_name?.trim() ? card.card_name : `Card ${index + 1}`}
+                      </span>
+                      {giftCards.length > 1 && (
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          onClick={() => {
+                            const newCards = giftCards.filter((_, i) => i !== index);
+                            setGiftCards(newCards);
+                          }}
+                          aria-label="Remove card"
+                          title="Remove"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      )}
+                    </div>
                     <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_name_${index}`}>Card Name</Label>
@@ -2114,21 +2135,6 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-
-                    {giftCards.length > 1 && (
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="icon"
-                        className="absolute top-2 right-2 h-7 w-7 sm:h-8 sm:w-8"
-                        onClick={() => {
-                          const newCards = giftCards.filter((_, i) => i !== index);
-                          setGiftCards(newCards);
-                        }}
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </Button>
-                    )}
                   </div>
                 ))}
               </div>
