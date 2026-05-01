@@ -323,6 +323,29 @@ const WeddingForm = () => {
             icon: l.icon || "solar:confetti-bold",
           }));
         setCustomSections(customRows);
+
+        // Build timeline order from display_order on existing rows
+        const presentKeys: string[] = [];
+        if (ceremony) presentKeys.push("ceremony");
+        if (welcomeDrink) presentKeys.push("welcome_drink");
+        if (venue) presentKeys.push("venue");
+        locationsData
+          .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+          .forEach((l) => presentKeys.push(l.type));
+
+        const orderMap = new Map<string, number>();
+        locationsData.forEach((l: any) => {
+          if (typeof l.display_order === "number") orderMap.set(l.type, l.display_order);
+        });
+        const hasOrder = Array.from(orderMap.values()).some((v) => v > 0);
+        if (hasOrder) {
+          presentKeys.sort((a, b) => (orderMap.get(a) ?? 0) - (orderMap.get(b) ?? 0));
+        }
+        // Ensure ceremony/welcome_drink/venue keys exist in order even if not yet saved
+        ["ceremony", "welcome_drink", "venue"].forEach((k) => {
+          if (!presentKeys.includes(k)) presentKeys.push(k);
+        });
+        setTimelineOrder(presentKeys);
       }
 
       // Fetch gift cards
