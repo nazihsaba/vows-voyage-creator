@@ -783,7 +783,7 @@ const MyEvents = () => {
             <Button
               variant="default"
               size="icon"
-              className="h-8 w-8 rounded-full shadow-md"
+              className="h-8 w-8 rounded-full shadow-md bg-black/50 hover:bg-black/60 text-white"
               onClick={() => setPreviewSlug(null)}
             >
               ✕
