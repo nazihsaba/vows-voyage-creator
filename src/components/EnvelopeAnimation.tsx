@@ -762,6 +762,10 @@ export const EnvelopeAnimation = ({
                   </defs>
 
                   <g clipPath="url(#env-flap-clip)">
+                    {/* Solid paper-color backing — guarantees the flap shape is
+                        opaque even on mobile WebKit where the textured <image>
+                        can fail to paint on the rotated back face. */}
+                    <rect width={VB_W} height={VB_H} fill="rgb(232, 222, 200)" />
                     <image
                       href={paperTexture}
                       x={-VB_W * 0.1}
