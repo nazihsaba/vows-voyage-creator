@@ -718,6 +718,21 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate Additional Sections: Title, Location Name and Time are required for each
+    if (isAuraTemplate && customSections.length > 0) {
+      const incomplete = customSections.findIndex(
+        (s) => !s.title?.trim() || !s.location_name?.trim() || !s.time?.trim(),
+      );
+      if (incomplete !== -1) {
+        toast({
+          title: "Additional section incomplete",
+          description: `Please fill in title, location name and time for section ${incomplete + 1}.`,
+          variant: "destructive",
+        });
+        return;
+      }
+    }
+
     // Validate video is required for video templates
     if (isVideoTemplate && !videoFile && !formData.video_url) {
       toast({
