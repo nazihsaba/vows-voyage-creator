@@ -211,11 +211,11 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envBody {
-              0%   { transform: scale(1)    translateY(0);    opacity: 1; }
-              15%  { transform: scale(.985) translateY(0);    opacity: 1; }
-              55%  { transform: scale(1)    translateY(20px); opacity: 1; }
-              85%  { transform: scale(.97)  translateY(60px); opacity: .35; }
-              100% { transform: scale(.94)  translateY(110px);opacity: 0; }
+              0%, 60%  { transform: scale(1)    translateY(0);    opacity: 1; }
+              72%      { transform: scale(.99)  translateY(8px);  opacity: 1; }
+              85%      { transform: scale(.985) translateY(34px); opacity: .85; }
+              94%      { transform: scale(.96)  translateY(80px); opacity: .35; }
+              100%     { transform: scale(.93)  translateY(130px);opacity: 0; }
             }
             .is-opening .env-target {
               animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -223,26 +223,32 @@ export const EnvelopeAnimation = ({
 
             @keyframes envSealPop {
               0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              12%  { transform: translate(-50%,-50%) scale(1.10) rotate(-3deg); opacity: 1; }
-              26%  { transform: translate(-50%,-50%) scale(1.18) rotate(-4deg); opacity: 1; }
-              42%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              5%   { transform: translate(-50%,-50%) scale(1.06) rotate(-3deg); opacity: 1; }
+              12%  { transform: translate(-50%,-50%) scale(1.16) rotate(-4deg); opacity: 1; }
+              22%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
               100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
-              animation: envSealPop ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envSealPop ${FLAP_DURATION}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
+            /* Realistic flap lift: small initial crack, slow gravity-defying arc,
+               slight overshoot past vertical, then settle with a tiny bounce. */
             @keyframes envFlapLift {
-              0%, 22% { transform: rotateX(0); }
-              60%     { transform: rotateX(-160deg); }
-              85%     { transform: rotateX(-170deg); opacity: .55; }
-              100%    { transform: rotateX(-175deg); opacity: 0; }
+              0%   { transform: rotateX(0deg);    opacity: 1; }
+              8%   { transform: rotateX(-4deg);   opacity: 1; }
+              22%  { transform: rotateX(-22deg);  opacity: 1; }
+              45%  { transform: rotateX(-78deg);  opacity: 1; }
+              65%  { transform: rotateX(-128deg); opacity: 1; }
+              82%  { transform: rotateX(-168deg); opacity: .9; }
+              92%  { transform: rotateX(-178deg); opacity: .55; }
+              100% { transform: rotateX(-176deg); opacity: 0; }
             }
             .is-opening .env-flap-wrap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envFlapLift ${FLAP_DURATION}ms cubic-bezier(0.34, 0.02, 0.22, 1) forwards;
             }
 
-            @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
+            @keyframes envHint { 0%{opacity:1} 8%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
             @media (prefers-reduced-motion: reduce) {
