@@ -12,6 +12,8 @@ import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
 import { downloadCardAsImage } from "@/utils/downloadCard";
 import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
+import waxSealHeart from "@/assets/wax-seal-heart.webp";
+import paperTexture from "@/assets/envelope-paper-texture.jpeg";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -30,6 +32,7 @@ const WeddingInvite = () => {
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
   const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
+  const [envelopeAssetsReady, setEnvelopeAssetsReady] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
   const [downloadingCard, setDownloadingCard] = useState(false);
   const { toast } = useToast();
@@ -83,6 +86,62 @@ const WeddingInvite = () => {
         root.style.setProperty("--foreground", hexToHSL(wedding.custom_text_color));
       }
     }
+  }, [wedding]);
+
+  // Preload envelope assets (fonts + images) so the spinner stays visible
+  // until names, date, and envelope artwork are fully ready to render.
+  useEffect(() => {
+    if (!wedding) return;
+    if (!wedding.envelope_animation_enabled) {
+      setEnvelopeAssetsReady(true);
+      return;
+    }
+
+    let cancelled = false;
+
+    const loadImage = (src: string) =>
+      new Promise<void>((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve();
+        img.onerror = () => resolve();
+        img.src = src;
+      });
+
+    // Inject font link if not already present, then wait for it to load.
+    const fontId = "env-google-fonts";
+    if (!document.getElementById(fontId)) {
+      const link = document.createElement("link");
+      link.id = fontId;
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+      document.head.appendChild(link);
+    }
+
+    const loadFonts = async () => {
+      const fontApi: any = (document as any).fonts;
+      if (!fontApi?.load) return;
+      try {
+        await Promise.all([
+          fontApi.load("italic 500 38px 'Cormorant Garamond'"),
+          fontApi.load("400 12px 'Cormorant Upright'"),
+        ]);
+      } catch {
+        // ignore — fall back to system serif
+      }
+    };
+
+    Promise.all([
+      loadImage(waxSealHeart),
+      loadImage(paperTexture),
+      loadFonts(),
+    ]).then(() => {
+      if (!cancelled) setEnvelopeAssetsReady(true);
+    });
+
+    return () => {
+      cancelled = true;
+    };
   }, [wedding]);
 
   useEffect(() => {
@@ -295,7 +354,7 @@ const WeddingInvite = () => {
 
   const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
-  if (loading) {
+  if (loading || (wedding && !envelopeAssetsReady)) {
     const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
     const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
     const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
