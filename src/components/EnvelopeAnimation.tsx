@@ -631,7 +631,7 @@ export const EnvelopeAnimation = ({
                         style={{
                           fontFamily:
                             "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(9px, 1.6vw, 12px)",
+                          fontSize: "clamp(11px, 2.6vw, 13px)",
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
