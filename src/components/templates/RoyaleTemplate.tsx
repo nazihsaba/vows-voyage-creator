@@ -9,7 +9,7 @@ import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
-import RoyaleEnvelope from "./royale/RoyaleEnvelope";
+import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 import RoyaleOrnament from "./royale/RoyaleOrnament";
 import RoyaleSectionTitle from "./royale/RoyaleSectionTitle";
 import RoyaleCard from "./royale/RoyaleCard";
@@ -33,8 +33,10 @@ interface RoyaleTemplateProps {
   submittingRsvp?: boolean;
 }
 
-const GOLD = "#b08a3e";
-const GOLD_DEEP = "#7e5e1a";
+// Brand highlight color (matches EnvelopeAnimation accent).
+const GOLD = "#865814";
+const GOLD_LIGHT = "#b8893f";
+const GOLD_DEEP = "#5e3d0e";
 const INK = "#3a2a14";
 const PAPER = "#fbf6ec";
 const PAPER_DEEP = "#f1e6cc";
@@ -317,6 +319,67 @@ export const RoyaleTemplate = ({
         </AnimatedSection>
       </section>
 
+      {/* ===== FAMILY SECTION ===== */}
+      <section className="px-6 py-16">
+        <AnimatedSection animation="fade-up">
+          <RoyaleSectionTitle eyebrow="Together with their families" title="The Families" goldColor={GOLD} />
+        </AnimatedSection>
+        <AnimatedSection animation="fade-up" delay={120}>
+          <div className="max-w-2xl mx-auto">
+            <RoyaleCard goldColor={GOLD}>
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-12 text-center">
+                <div className="flex-1">
+                  <p
+                    className="text-[10px] tracking-[0.4em] uppercase mb-2"
+                    style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {t("family.groomFamily", "Groom's Family")}
+                  </p>
+                  <EditableField
+                    fieldId="groom-family-name"
+                    text={getFieldValue(
+                      "groom-family-name",
+                      wedding.groom_family || (wedding.groom_name?.split(" ").pop() ?? "Family")
+                    )}
+                    style={getFieldStyle("groom-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-2xl sm:text-3xl italic"
+                  />
+                </div>
+                <div
+                  className="text-3xl"
+                  style={{ color: GOLD, fontFamily: "'Cormorant Garamond', serif" }}
+                >
+                  &amp;
+                </div>
+                <div className="flex-1">
+                  <p
+                    className="text-[10px] tracking-[0.4em] uppercase mb-2"
+                    style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                  >
+                    {t("family.brideFamily", "Bride's Family")}
+                  </p>
+                  <EditableField
+                    fieldId="bride-family-name"
+                    text={getFieldValue(
+                      "bride-family-name",
+                      wedding.bride_family || (wedding.bride_name?.split(" ").pop() ?? "Family")
+                    )}
+                    style={getFieldStyle("bride-family-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="p"
+                    className="text-2xl sm:text-3xl italic"
+                  />
+                </div>
+              </div>
+            </RoyaleCard>
+          </div>
+        </AnimatedSection>
+      </section>
+
       {/* ===== MAIN PHOTO ===== */}
       {wedding.main_picture_url && (
         <section className="px-6 pb-12">
@@ -367,53 +430,79 @@ export const RoyaleTemplate = ({
             <RoyaleSectionTitle eyebrow="The day" title="Order of Events" goldColor={GOLD} />
           </AnimatedSection>
 
-          <div className="max-w-2xl mx-auto space-y-6">
+          <div className="max-w-2xl mx-auto space-y-7">
             {timelineEvents.map((event, idx) => (
               <AnimatedSection key={event.id} animation="fade-up" delay={idx * 120}>
-                <RoyaleCard goldColor={GOLD}>
-                  <div className="flex items-start gap-5">
-                    <div
-                      className="shrink-0 w-12 h-12 rounded-full flex items-center justify-center"
-                      style={{
-                        background: `radial-gradient(circle at 35% 30%, #d8b461, ${GOLD} 70%, ${GOLD_DEEP})`,
-                        boxShadow: "inset 0 1px 2px rgba(255,255,255,.4), 0 4px 10px rgba(80,55,15,.25)",
-                      }}
-                    >
-                      <Icon icon={event.icon} width={22} height={22} style={{ color: "#fbe9b8" }} />
-                    </div>
-                    <div className="flex-1">
-                      <p
-                        className="text-[11px] tracking-[0.35em] uppercase"
-                        style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                <div className="relative">
+                  {/* Top accent bar in brand gold */}
+                  <div
+                    className="absolute left-6 right-6 -top-px h-[3px] rounded-full"
+                    style={{
+                      background: `linear-gradient(90deg, transparent 0%, ${GOLD} 20%, ${GOLD_LIGHT} 50%, ${GOLD} 80%, transparent 100%)`,
+                    }}
+                  />
+                  <RoyaleCard goldColor={GOLD}>
+                    <div className="flex flex-col items-center text-center gap-4">
+                      {/* Medallion */}
+                      <div
+                        className="relative shrink-0 w-16 h-16 rounded-full flex items-center justify-center"
+                        style={{
+                          background: `radial-gradient(circle at 35% 30%, ${GOLD_LIGHT}, ${GOLD} 65%, ${GOLD_DEEP})`,
+                          boxShadow: `inset 0 1px 2px rgba(255,255,255,.45), 0 6px 14px ${GOLD}55`,
+                        }}
                       >
-                        {event.time}
-                      </p>
-                      <h3
-                        className="text-2xl sm:text-3xl italic mt-1"
-                        style={{ color: INK }}
-                      >
-                        {event.title}
-                      </h3>
-                      {event.location && (
-                        <p className="mt-1 text-sm sm:text-base opacity-80" style={{ color: INK }}>
-                          {event.location}
-                        </p>
-                      )}
-                      {event.link && (
-                        <a
-                          href={event.link}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-1 mt-2 text-xs underline hover:opacity-80"
-                          style={{ color: GOLD_DEEP, fontFamily: "Inter, sans-serif" }}
+                        <div
+                          className="absolute inset-1 rounded-full"
+                          style={{ border: "1px solid rgba(251,233,184,0.55)" }}
+                        />
+                        <Icon icon={event.icon} width={28} height={28} style={{ color: "#fbe9b8" }} />
+                      </div>
+
+                      <div className="flex-1">
+                        <h3
+                          className="text-2xl sm:text-3xl italic"
+                          style={{ color: INK }}
                         >
-                          <MapPin className="w-3.5 h-3.5" />
-                          {t("events.location")}
-                        </a>
-                      )}
+                          {event.title}
+                        </h3>
+
+                        <div className="flex items-center justify-center gap-3 my-3">
+                          <span className="h-px w-8" style={{ background: `${GOLD}66` }} />
+                          <p
+                            className="text-[11px] tracking-[0.4em] uppercase"
+                            style={{ color: GOLD, fontFamily: "Inter, sans-serif" }}
+                          >
+                            {event.time}
+                          </p>
+                          <span className="h-px w-8" style={{ background: `${GOLD}66` }} />
+                        </div>
+
+                        {event.location && (
+                          <p className="text-sm sm:text-base opacity-85" style={{ color: INK }}>
+                            {event.location}
+                          </p>
+                        )}
+                        {event.link && (
+                          <a
+                            href={event.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 mt-4 px-4 py-1.5 text-[11px] tracking-[0.25em] uppercase rounded-full transition-all hover:scale-105"
+                            style={{
+                              color: GOLD,
+                              fontFamily: "Inter, sans-serif",
+                              border: `1px solid ${GOLD}88`,
+                              background: `${GOLD}11`,
+                            }}
+                          >
+                            <MapPin className="w-3.5 h-3.5" />
+                            {t("events.location")}
+                          </a>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </RoyaleCard>
+                  </RoyaleCard>
+                </div>
               </AnimatedSection>
             ))}
           </div>
@@ -510,13 +599,13 @@ export const RoyaleTemplate = ({
   }
 
   return (
-    <RoyaleEnvelope
+    <EnvelopeAnimation
       groomName={wedding.groom_name}
       brideName={wedding.bride_name}
       weddingDate={wedding.wedding_date}
     >
       {Page}
-    </RoyaleEnvelope>
+    </EnvelopeAnimation>
   );
 };
 
