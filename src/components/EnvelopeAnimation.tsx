@@ -527,7 +527,7 @@ export const EnvelopeAnimation = ({
                 >
                   <defs>
                     <clipPath id="env-flap-clip">
-                      <path d={`M0 0 L ${VB_W} 0 L ${V_X} ${V_Y} Z`} />
+                      <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
                     </clipPath>
                     <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
                       <stop offset="0%" stopColor="rgba(255,250,240,0.18)" />
