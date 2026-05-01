@@ -636,17 +636,14 @@ export const EnvelopeAnimation = ({
                 className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
-                  // Sit ABOVE the body face (zIndex 3) but BELOW the flap
-                  // (zIndex 5). Previously this used translateZ(-1px) which on
-                  // mobile pushed it behind the body's paper texture in the
-                  // preserve-3d context, hiding the Welcome message entirely.
-                  zIndex: 3,
-                  willChange: "opacity",
+                  zIndex: 2,
+                  transform: "translateZ(-1px)",
+                  willChange: "opacity, transform",
                   // Clip to the exact triangular flap shape using percentages so
                   // it scales fluidly with the envelope on every screen size.
                   clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
                   WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
-                  background: "rgba(253, 246, 230, 0.85)",
+                  background: "rgba(253, 246, 230, 0.55)",
                 }}
               >
                 <div
