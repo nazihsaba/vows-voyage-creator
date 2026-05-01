@@ -1901,7 +1901,9 @@ const WeddingForm = () => {
                             </Select>
                           </div>
                         </div>
-                      ))}
+                        </div>
+                        );
+                      })}
                     </CardContent>
                   </Card>
                 )}
