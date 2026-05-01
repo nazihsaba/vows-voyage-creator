@@ -533,7 +533,7 @@ export const EnvelopeAnimation = ({
                 >
                   {/* Top hairline rule — matches the one between names and date */}
                   <div
-                    className="mx-auto mb-4"
+                    className="mx-auto mb-9"
                     aria-hidden="true"
                     style={{
                       width: "44%",
