@@ -354,7 +354,7 @@ const WeddingInvite = () => {
 
   const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
 
-  if (loading) {
+  if (loading || (wedding && !envelopeAssetsReady)) {
     const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
     const g = (wedding?.groom_name || "").charAt(0).toUpperCase();
     const b = (wedding?.bride_name || "").charAt(0).toUpperCase();
