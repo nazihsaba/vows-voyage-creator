@@ -224,11 +224,11 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envSealPop {
-              0%   { transform: translate(-50%,-50%) scale(1)    rotate(-3deg); opacity: 1; }
-              10%  { transform: translate(-50%,-50%) scale(1.12) rotate(-4deg); opacity: 1; }
-              22%  { transform: translate(-50%,-54%) scale(1.05) rotate(-2deg); opacity: .55; }
-              35%  { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
-              100% { transform: translate(-50%,-58%) scale(.92)  rotate(-1deg); opacity: 0; }
+              0%   { transform: translate(-50%,-50%) translateZ(20px) scale(1)    rotate(-3deg); opacity: 1; }
+              10%  { transform: translate(-50%,-50%) translateZ(20px) scale(1.12) rotate(-4deg); opacity: 1; }
+              22%  { transform: translate(-50%,-54%) translateZ(20px) scale(1.05) rotate(-2deg); opacity: .55; }
+              35%  { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
+              100% { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
             }
             .is-opening .env-seal {
               animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
@@ -585,6 +585,11 @@ export const EnvelopeAnimation = ({
               </div>
 
               {/* === WAX SEAL (heart PNG) === */}
+              {/* Sits straddling the V-fold so its top half rests on the flap
+                  and its bottom half on the body — like a real wax seal holding
+                  the envelope closed. translateZ pushes it forward in 3D space
+                  so it stays above the flap surface regardless of stacking
+                  quirks inside the preserve-3d context. */}
               <img
                 src={waxSealHeart}
                 alt=""
@@ -594,10 +599,10 @@ export const EnvelopeAnimation = ({
                 style={{
                   left: "50%",
                   top: `${(V_Y / VB_H) * 100}%`,
-                  transform: "translate(-50%, -50%) rotate(-3deg)",
+                  transform: "translate(-50%, -50%) translateZ(20px) rotate(-3deg)",
                   width: "30%",
                   height: "auto",
-                  zIndex: 4,
+                  zIndex: 10,
                   willChange: "transform, opacity",
                   filter:
                     "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
