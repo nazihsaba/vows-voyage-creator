@@ -192,7 +192,7 @@ export const EnvelopeAnimation = ({
             {motes.map((m) => (
               <span
                 key={m.id}
-                className="absolute rounded-full"
+                className="env-mote absolute rounded-full"
                 style={{
                   left: `${m.left}%`,
                   top: `${m.top}%`,
@@ -200,7 +200,8 @@ export const EnvelopeAnimation = ({
                   height: `${m.size}px`,
                   background: `radial-gradient(circle, ${accent}aa 0%, transparent 70%)`,
                   animation: `envMote ${m.duration}s ease-in-out ${m.delay}s infinite`,
-                  filter: "blur(0.4px)",
+                  filter: isMobile ? "none" : "blur(0.4px)",
+                  willChange: "transform, opacity",
                 }}
               />
             ))}
