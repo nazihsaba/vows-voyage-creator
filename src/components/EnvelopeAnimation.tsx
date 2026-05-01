@@ -614,7 +614,7 @@ export const EnvelopeAnimation = ({
                           letterSpacing: "0.46em",
                           textTransform: "uppercase",
                           color: "#865814",
-                          fontWeight: 400,
+                          fontWeight: 600,
                         }}
                       >
                         {formattedDate}
