@@ -182,6 +182,38 @@ const WeddingForm = () => {
     return i !== -1 && i < timelineOrder.length - 1;
   };
 
+  // Reusable inline arrows + position label for timeline ordering.
+  const TimelineOrderControls = ({ orderKey }: { orderKey: string }) => {
+    const pos = timelinePosition(orderKey);
+    return (
+      <div className="flex items-center gap-1">
+        {pos !== null && (
+          <span className="text-xs text-muted-foreground mr-1">Timeline #{pos}</span>
+        )}
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveUp(orderKey)}
+          onClick={() => moveTimelineKey(orderKey, -1)}
+          aria-label="Move up in timeline"
+        >
+          <ChevronUp className="w-4 h-4" />
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          disabled={!canMoveDown(orderKey)}
+          onClick={() => moveTimelineKey(orderKey, 1)}
+          aria-label="Move down in timeline"
+        >
+          <ChevronDown className="w-4 h-4" />
+        </Button>
+      </div>
+    );
+  };
+
   const debouncedTranslate = useCallback(
     (fieldName: string, text: string) => {
       if (translationTimers.current[fieldName]) {
