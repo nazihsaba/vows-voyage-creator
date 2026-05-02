@@ -7,6 +7,7 @@ interface EprisData {
   coupleName2: string;
   subtitle: string;
   coverImage: string;
+  gallery: string[];
   groomFamily: string;
   brideFamily: string;
   ceremonyLocation: string;
@@ -32,6 +33,12 @@ const defaultData: EprisData = {
   subtitle: "Two Souls, One Love",
   coverImage:
     "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+  gallery: [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1525258946800-98cfd641d0de?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
+  ],
   groomFamily: "Mr. & Mrs. Obeid",
   brideFamily: "Mr. & Mrs. Khoury",
   ceremonyLocation: "St Joseph Church",
