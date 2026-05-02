@@ -83,7 +83,7 @@ const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
 ];
 
 const FontCustomizer = ({ value, onChange, defaults }: FontCustomizerProps) => {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const effectiveDefaults: TemplateFonts = { ...DEFAULT_TEMPLATE_FONTS, ...(defaults || {}) };
 
   // Live-apply to CSS variables whenever value changes
