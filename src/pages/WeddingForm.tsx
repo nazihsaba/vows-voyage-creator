@@ -25,8 +25,8 @@ const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
   { value: "material-symbols:church-rounded", label: "Church" },
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
-  { value: "solar:confetti-bold", label: "Confetti" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
+  { value: "solar:confetti-bold", label: "Confetti" },
 ];
 
 const WeddingForm = () => {
