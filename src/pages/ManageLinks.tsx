@@ -672,9 +672,9 @@ const ManageLinks = () => {
             <CardHeader className="pb-4">
               <div className="flex flex-col md:flex-row justify-between md:items-center gap-4">
                 <div>
-                  <h2 className="text-xl font-['great-vibes'] font-semibold text-foreground">
+                  <span className="text-xl font-['great-vibes'] font-semibold text-foreground">
                     Invitation Links & Guests
-                  </h2>
+                  </span>
                   <p className="text-sm text-muted-foreground mt-1">
                     {filteredLinks.length} {filteredLinks.length === 1 ? "link" : "links"} •{" "}
                     {Object.values(invitees).flat().length} total guests
@@ -1732,9 +1732,7 @@ const ManageLinks = () => {
                   id="edit-country-code"
                   placeholder="+961"
                   value={editForm.country_code}
-                  onChange={(e) =>
-                    setEditForm((prev) => ({ ...prev, country_code: e.target.value }))
-                  }
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, country_code: e.target.value }))}
                   className="h-11 text-base sm:h-9 sm:text-sm w-20 shrink-0"
                 />
                 <Input
@@ -1743,9 +1741,7 @@ const ManageLinks = () => {
                   inputMode="tel"
                   placeholder="e.g., 71123456"
                   value={editForm.phone_number}
-                  onChange={(e) =>
-                    setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))
-                  }
+                  onChange={(e) => setEditForm((prev) => ({ ...prev, phone_number: e.target.value }))}
                   className="h-11 text-base sm:h-9 sm:text-sm"
                 />
               </div>
