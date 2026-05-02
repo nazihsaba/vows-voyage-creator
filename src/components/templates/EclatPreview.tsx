@@ -150,7 +150,7 @@ export const EclatPreview = () => {
 
           <div className="space-y-2 py-6 md:py-8">
             <h1 className="text-template-title">{staticWedding.groom_name}</h1>
-            <p className="text-4xl md:text-5xl">&</p>
+            <p className="text-4xl md:text-5xl text-template-title">&</p>
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
 

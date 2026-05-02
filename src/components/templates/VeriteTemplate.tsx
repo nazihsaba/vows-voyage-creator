@@ -167,7 +167,7 @@ export const VeriteTemplate = ({
               tag="h1"
               className="text-template-title"
             />
-            <p className="text-4xl md:text-5xl">&</p>
+            <p className="text-4xl md:text-5xl text-template-title">&</p>
             <EditableField
               fieldId="bride-name"
               text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
