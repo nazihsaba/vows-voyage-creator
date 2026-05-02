@@ -69,7 +69,7 @@ interface FontCustomizerProps {
 const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
   { key: "title", label: "Couple Name Font", hint: "The big names (e.g. Adrian & Elena)" },
   { key: "subtitle", label: "Subtitle Font", hint: "Family names and the “&” separator" },
-  { key: "heading", label: "Section Heading Font" },
+  { key: "heading", label: "Section Heading Font", hint: "Titles for sections like Countdown, Gallery, Events, and Gifts" },
   { key: "body", label: "Body Text Font", hint: "Used for paragraphs and small caption text" },
   { key: "monogram", label: "Monogram Font", hint: "The single initials at the top" },
 ];
