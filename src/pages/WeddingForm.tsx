@@ -1024,7 +1024,7 @@ const WeddingForm = () => {
           icon: locations.venue_icon,
         });
       }
-      if (isAuraTemplate && locations.welcome_drink_time) {
+      if (showsWelcomeDrinkField && locations.welcome_drink_time) {
         locationInserts.push({
           wedding_id: weddingId,
           type: "welcome_drink",
