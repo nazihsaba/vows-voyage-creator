@@ -538,6 +538,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'verona-envelope',
+    name: 'Verona',
+    category: 'elegant',
+    description: 'Vintage Italianate envelope opener with Cormorant typography on warm cream paper',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'VeronaTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+      { id: 'countdown', enabled: true, order: 4, customizable: true },
+      { id: 'gallery', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Cormorant Garamond',
+      fontSecondary: 'Cormorant Upright',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#865814',
+        secondary: '#3a2a14',
+        accent: 'rgb(248, 240, 222)',
+        background: 'rgb(248, 240, 222)',
+        text: '#3a2a14',
+      },
+      borderRadius: 'none',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
