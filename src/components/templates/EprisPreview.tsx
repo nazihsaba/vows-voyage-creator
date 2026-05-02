@@ -489,16 +489,15 @@ function SwipeInvite({
 }
 
 function Page({
-  sectionBg,
   children,
 }: {
-  sectionBg: { backgroundImage: string };
+  sectionBg?: { backgroundImage: string };
   children: React.ReactNode;
 }) {
   return (
     <section
-      className="relative w-full bg-cover bg-center flex items-center justify-center text-white"
-      style={{ height: "25%", ...sectionBg }}
+      className="relative w-full flex items-center justify-center text-white"
+      style={{ height: "25%" }}
     >
       {children}
     </section>
