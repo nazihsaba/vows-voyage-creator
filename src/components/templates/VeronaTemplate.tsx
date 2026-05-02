@@ -296,7 +296,14 @@ export const VeronaTemplate = ({
           <section className="px-6 py-16 md:py-20 text-center">
             <AnimatedSection animation="fade-in">
               <div className="max-w-2xl mx-auto">
-                <EditableField
+                <div style={{
+                    fontFamily: "var(--font-template-body)",
+                    fontStyle: "italic",
+                    fontWeight: 400,
+                    color: TEXT,
+                    fontSize: "clamp(18px, 4.2vw, 24px)",
+                    lineHeight: 1.7,
+                  }}><EditableField
                   fieldId="verona-opening"
                   text={getFieldValue("verona-opening", wedding.opening_message)}
                   style={getFieldStyle("verona-opening")}
@@ -305,15 +312,8 @@ export const VeronaTemplate = ({
                   multiline
                   tag="p"
                   className="whitespace-pre-line"
-                  customStyle={{
-                    fontFamily: "var(--font-template-body)",
-                    fontStyle: "italic",
-                    fontWeight: 400,
-                    color: TEXT,
-                    fontSize: "clamp(18px, 4.2vw, 24px)",
-                    lineHeight: 1.7,
-                  }}
-                />
+                 
+                /></div>
                 <div className="mt-6 flex justify-center">
                   <Heart size={14} />
                 </div>
@@ -353,7 +353,13 @@ export const VeronaTemplate = ({
                   </div>
                 )}
 
-                <EditableField
+                <div style={{
+                    fontFamily: "var(--font-template-body)",
+                    fontWeight: 400,
+                    color: TEXT,
+                    fontSize: "clamp(15px, 3.6vw, 18px)",
+                    lineHeight: 1.75,
+                  }}><EditableField
                   fieldId="verona-story"
                   text={getFieldValue("verona-story", wedding.main_description)}
                   style={getFieldStyle("verona-story")}
@@ -362,14 +368,8 @@ export const VeronaTemplate = ({
                   multiline
                   tag="p"
                   className="whitespace-pre-line"
-                  customStyle={{
-                    fontFamily: "var(--font-template-body)",
-                    fontWeight: 400,
-                    color: TEXT,
-                    fontSize: "clamp(15px, 3.6vw, 18px)",
-                    lineHeight: 1.75,
-                  }}
-                />
+                 
+                /></div>
               </div>
             </AnimatedSection>
           </section>
@@ -719,7 +719,13 @@ export const VeronaTemplate = ({
                 <div className="flex justify-center">
                   <Heart size={12} />
                 </div>
-                <EditableField
+                <div style={{
+                    fontFamily: "var(--font-template-body)",
+                    fontStyle: "italic",
+                    color: TEXT,
+                    fontSize: "clamp(16px, 3.8vw, 19px)",
+                    lineHeight: 1.7,
+                  }}><EditableField
                   fieldId="verona-dress-code"
                   text={getFieldValue("verona-dress-code", wedding.dress_code)}
                   style={getFieldStyle("verona-dress-code")}
@@ -728,14 +734,8 @@ export const VeronaTemplate = ({
                   multiline
                   tag="p"
                   className="whitespace-pre-line"
-                  customStyle={{
-                    fontFamily: "var(--font-template-body)",
-                    fontStyle: "italic",
-                    color: TEXT,
-                    fontSize: "clamp(16px, 3.8vw, 19px)",
-                    lineHeight: 1.7,
-                  }}
-                />
+                 
+                /></div>
               </div>
             </AnimatedSection>
           </section>
@@ -815,7 +815,12 @@ export const VeronaTemplate = ({
                 <div className="flex justify-center">
                   <Heart size={12} />
                 </div>
-                <EditableField
+                <div style={{
+                    fontFamily: "var(--font-template-body)",
+                    color: TEXT,
+                    fontSize: "clamp(15px, 3.6vw, 18px)",
+                    lineHeight: 1.75,
+                  }}><EditableField
                   fieldId="verona-travel"
                   text={getFieldValue("verona-travel", wedding.travel_info)}
                   style={getFieldStyle("verona-travel")}
@@ -824,13 +829,8 @@ export const VeronaTemplate = ({
                   multiline
                   tag="p"
                   className="whitespace-pre-line"
-                  customStyle={{
-                    fontFamily: "var(--font-template-body)",
-                    color: TEXT,
-                    fontSize: "clamp(15px, 3.6vw, 18px)",
-                    lineHeight: 1.75,
-                  }}
-                />
+                 
+                /></div>
               </div>
             </AnimatedSection>
           </section>
@@ -850,7 +850,14 @@ export const VeronaTemplate = ({
                   <Heart size={12} />
                 </div>
                 {hasGiftMessage ? (
-                  <EditableField
+                  <div style={{
+                      fontFamily: "var(--font-template-body)",
+                      fontStyle: "italic",
+                      color: TEXT,
+                      fontSize: "clamp(15px, 3.6vw, 18px)",
+                      lineHeight: 1.7,
+                      opacity: 0.85,
+                    }}><EditableField
                     fieldId="verona-gift-message"
                     text={getFieldValue("verona-gift-message", wedding.gift_message)}
                     style={getFieldStyle("verona-gift-message")}
@@ -859,15 +866,8 @@ export const VeronaTemplate = ({
                     multiline
                     tag="p"
                     className="whitespace-pre-line"
-                    customStyle={{
-                      fontFamily: "var(--font-template-body)",
-                      fontStyle: "italic",
-                      color: TEXT,
-                      fontSize: "clamp(15px, 3.6vw, 18px)",
-                      lineHeight: 1.7,
-                      opacity: 0.85,
-                    }}
-                  />
+                   
+                  /></div>
                 ) : (
                   <p
                     style={{
