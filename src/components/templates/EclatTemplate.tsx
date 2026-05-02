@@ -330,7 +330,7 @@ export const EclatTemplate = ({
                       href={ceremony.location_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
                     >
                       {t("events.viewOnMap")}
                     </a>
@@ -361,7 +361,7 @@ export const EclatTemplate = ({
                       href={venue.location_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
                     >
                       {t("events.viewOnMap")}
                     </a>
