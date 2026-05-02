@@ -143,9 +143,9 @@ export const AuraTemplate = ({
         order: orderOf(loc),
         event: {
           id: loc.type,
-          title: loc.custom_title || "Event",
+          title: getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title || "Event"),
           time: formatTimeTo12Hour(loc.time) || "",
-          location: loc.location_name || "",
+          location: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name || ""),
           link: loc.location_link,
           icon: loc.icon || "solar:confetti-bold",
         },
