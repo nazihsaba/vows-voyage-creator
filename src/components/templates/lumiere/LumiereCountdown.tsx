@@ -48,7 +48,12 @@ const LumiereCountdown = ({ targetDate }: LumiereCountdownProps) => {
           {units.map((item, i) => (
             <AnimatedSection key={i} delay={i * 100} animation="fade-in">
               <div className="text-center">
-                <div className="text-3xl md:text-5xl font-light text-black">{item.value}</div>
+                <div
+                  className="text-3xl md:text-5xl font-light text-black"
+                  style={{ fontFamily: '"Playfair Display", serif' }}
+                >
+                  {item.value}
+                </div>
                 <div className="text-template-small mt-2">{item.label}</div>
               </div>
             </AnimatedSection>

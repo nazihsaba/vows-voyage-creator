@@ -57,7 +57,10 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
         ].map((item, index) => (
           <AnimatedSection key={index} delay={index * 100} animation="scale-in">
             <div className="text-center">
-              <div className={`text-3xl md:text-5xl font-bold ${isDark ? "text-white" : "text-primary"}`}>
+              <div
+                className={`text-3xl md:text-5xl font-bold ${isDark ? "text-white" : "text-primary"}`}
+                style={{ fontFamily: '"Playfair Display", serif' }}
+              >
                 {item.value}
               </div>
               <div className={`text-sm md:text-base mt-2 ${isDark ? "text-white/70" : "text-muted-foreground"}`}>
