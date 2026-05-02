@@ -307,7 +307,21 @@ export const LumiereTemplate = ({
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
+    <div
+      className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]"
+      dir="ltr"
+      style={(() => {
+        const f: TemplateFonts = (wedding?.template_fonts as TemplateFonts) || {};
+        return {
+          ["--font-template-title" as any]: f.title || DEFAULT_TEMPLATE_FONTS.title,
+          ["--font-template-subtitle" as any]: f.subtitle || DEFAULT_TEMPLATE_FONTS.subtitle,
+          ["--font-template-heading" as any]: f.heading || DEFAULT_TEMPLATE_FONTS.heading,
+          ["--font-template-body" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
+          ["--font-template-small" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
+          ["--font-template-monogram" as any]: f.monogram || DEFAULT_TEMPLATE_FONTS.monogram,
+        };
+      })()}
+    >
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
