@@ -178,3 +178,257 @@ export default function EprisPreview({ data: dataProp }: Props = {}) {
     </div>
   );
 }
+
+interface SwipeInviteProps {
+  data: EprisData;
+  countdown: { days: string; hours: string; minutes: string; seconds: string };
+  cursive: string;
+  attendance: "accept" | "decline" | "";
+  setAttendance: (a: "accept" | "decline" | "") => void;
+  name: string;
+  setName: (n: string) => void;
+}
+
+function SwipeInvite({
+  data,
+  countdown,
+  cursive,
+  attendance,
+  setAttendance,
+  name,
+  setName,
+}: SwipeInviteProps) {
+  const [page, setPage] = useState(0);
+  const total = 4;
+  const go = (n: number) => setPage(Math.max(0, Math.min(total - 1, n)));
+
+  const sectionBg = {
+    backgroundImage: `url(${data.coverImage})`,
+  } as const;
+
+  return (
+    <motion.div
+      key="invite"
+      className="absolute inset-0 overflow-hidden touch-pan-y"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.6 }}
+    >
+      <motion.div
+        className="flex h-full"
+        style={{ width: `${total * 100}%` }}
+        animate={{ x: `-${page * (100 / total)}%` }}
+        transition={{ type: "spring", stiffness: 260, damping: 32 }}
+        drag="x"
+        dragConstraints={{ left: 0, right: 0 }}
+        dragElastic={0.18}
+        onDragEnd={(_, info) => {
+          const threshold = 60;
+          if (info.offset.x < -threshold || info.velocity.x < -400) go(page + 1);
+          else if (info.offset.x > threshold || info.velocity.x > 400) go(page - 1);
+        }}
+      >
+        {/* HERO */}
+        <section
+          className="relative h-full bg-cover bg-center flex flex-col items-center justify-center text-white px-8"
+          style={{ width: `${100 / total}%`, ...sectionBg }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-b from-black/65 via-black/15 to-black/70" />
+          <button
+            type="button"
+            className="absolute top-6 right-6 z-10 w-10 h-10 rounded-full border border-white/70 text-white text-xs backdrop-blur-sm hover:bg-white/15 transition"
+          >
+            EN
+          </button>
+          <div className="relative z-10 text-center">
+            <h1
+              className="leading-[0.95] drop-shadow-[0_4px_24px_rgba(0,0,0,0.5)]"
+              style={{ fontFamily: cursive, fontSize: 72 }}
+            >
+              {data.coupleName1}
+              <br />
+              <span className="text-5xl opacity-90">&amp;</span>
+              <br />
+              {data.coupleName2}
+            </h1>
+            <p className="mt-4 text-sm tracking-[0.3em] uppercase opacity-90">
+              {data.subtitle}
+            </p>
+            <div className="mt-10 grid grid-cols-4 gap-2 text-center">
+              {[
+                [countdown.days, "Days"],
+                [countdown.hours, "Hours"],
+                [countdown.minutes, "Minutes"],
+                [countdown.seconds, "Seconds"],
+              ].map(([num, label]) => (
+                <div key={label as string}>
+                  <div className="text-2xl font-light tabular-nums">{num}</div>
+                  <div className="text-[10px] uppercase tracking-widest opacity-80 mt-1">
+                    {label}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <motion.div
+              className="mt-12 flex flex-col items-center text-xs opacity-90"
+              animate={{ x: [0, 8, 0] }}
+              transition={{ duration: 1.6, repeat: Infinity }}
+            >
+              <ChevronDown size={22} className="-rotate-90" />
+              <span className="mt-1 tracking-widest uppercase">Swipe to continue</span>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* QUOTE */}
+        <section
+          className="relative h-full bg-cover bg-center flex items-center justify-center text-white px-8"
+          style={{ width: `${100 / total}%`, ...sectionBg }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 text-center space-y-6 max-w-sm">
+            <Heart className="mx-auto opacity-80" size={20} />
+            <p className="text-2xl leading-relaxed italic" style={{ fontFamily: cursive }}>
+              “{data.quote}”
+            </p>
+            <div className="w-12 h-px bg-white/50 mx-auto" />
+            <p className="text-sm leading-7 opacity-90">{data.invitationText}</p>
+          </div>
+        </section>
+
+        {/* EVENTS */}
+        <section
+          className="relative h-full bg-cover bg-center flex flex-col items-center justify-center text-white px-8 py-12"
+          style={{ width: `${100 / total}%`, ...sectionBg }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 w-full text-center space-y-10 max-w-sm">
+            <div>
+              <h2 className="mb-4" style={{ fontFamily: cursive, fontSize: 44 }}>
+                Wedding Ceremony
+              </h2>
+              <MapPin className="mx-auto mb-3 opacity-90" size={20} />
+              <p className="text-sm">
+                {data.ceremonyLocation} — {data.ceremonyTime}
+              </p>
+              <p className="text-sm opacity-80">{data.ceremonyCity}</p>
+              <a
+                href={data.ceremonyMapUrl || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="mt-5 inline-block w-full border border-white/70 py-2.5 backdrop-blur-sm hover:bg-white/15 transition text-sm tracking-widest uppercase rounded-sm"
+              >
+                Map
+              </a>
+            </div>
+            <div className="w-12 h-px bg-white/40 mx-auto" />
+            <div>
+              <h2 className="mb-4" style={{ fontFamily: cursive, fontSize: 44 }}>
+                The Celebration
+              </h2>
+              <MapPin className="mx-auto mb-3 opacity-90" size={20} />
+              <p className="text-sm">
+                {data.celebrationLocation} — {data.celebrationTime}
+              </p>
+              <p className="text-sm opacity-80">{data.celebrationCity}</p>
+              <a
+                href={data.celebrationMapUrl || "#"}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="mt-5 inline-block w-full border border-white/70 py-2.5 backdrop-blur-sm hover:bg-white/15 transition text-sm tracking-widest uppercase rounded-sm"
+              >
+                Map
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* RSVP */}
+        <section
+          className="relative h-full bg-cover bg-center flex items-center justify-center text-white px-7 py-10"
+          style={{ width: `${100 / total}%`, ...sectionBg }}
+        >
+          <div className="absolute inset-0 bg-black/60" />
+          <div className="relative z-10 w-full text-center max-w-sm">
+            <h2 className="mb-3" style={{ fontFamily: cursive, fontSize: 56 }}>
+              Be Our Guest
+            </h2>
+            <p className="text-xs tracking-widest uppercase opacity-90">
+              Please reply before
+            </p>
+            <p className="text-sm mt-1 mb-6">{data.rsvpDeadline}</p>
+            <div className="rounded-md border border-white/30 bg-white/10 backdrop-blur-md p-5 space-y-5">
+              <p className="text-sm">
+                Number of persons:{" "}
+                <span className="font-medium">{data.numberOfPersons}</span>
+              </p>
+              <div>
+                <p className="mb-3 text-sm">Are you attending?</p>
+                <div className="grid grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAttendance("accept");
+                    }}
+                    className={`flex items-center justify-center gap-1 border border-white/70 py-2.5 text-[11px] tracking-wider uppercase backdrop-blur-sm transition ${
+                      attendance === "accept" ? "bg-white/30" : "hover:bg-white/15"
+                    }`}
+                  >
+                    <Heart size={12} /> Joyfully Accept
+                  </button>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setAttendance("decline");
+                    }}
+                    className={`flex items-center justify-center gap-1 border border-white/70 py-2.5 text-[11px] tracking-wider uppercase backdrop-blur-sm transition ${
+                      attendance === "decline" ? "bg-white/30" : "hover:bg-white/15"
+                    }`}
+                  >
+                    <Heart size={12} /> Regretfully Decline
+                  </button>
+                </div>
+              </div>
+              <div className="text-left">
+                <label className="block text-xs tracking-widest uppercase mb-2 opacity-90">
+                  Name of the person attending
+                </label>
+                <input
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  onPointerDownCapture={(e) => e.stopPropagation()}
+                  className="w-full bg-white/10 border border-white/70 px-4 py-3 text-white placeholder-white/60 outline-none backdrop-blur-sm text-sm"
+                  placeholder="Your name"
+                />
+              </div>
+              <button
+                type="button"
+                onClick={(e) => e.stopPropagation()}
+                className="w-full bg-white/25 border border-white/70 py-3 backdrop-blur-sm hover:bg-white/35 transition text-sm tracking-widest uppercase"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </section>
+      </motion.div>
+
+      {/* Page indicators */}
+      <div className="absolute bottom-5 left-0 right-0 flex justify-center gap-2 z-20 pointer-events-none">
+        {Array.from({ length: total }).map((_, i) => (
+          <span
+            key={i}
+            className={`h-1.5 rounded-full transition-all ${
+              i === page ? "w-6 bg-white" : "w-1.5 bg-white/50"
+            }`}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
