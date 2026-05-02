@@ -48,7 +48,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "hugeicons:suit-01", label: "Groom" },
-  { value: "fluent-emoji-high-contrast:dress", label: "Groom" },
+  { value: "fluent-emoji-high-contrast:dress", label: "Bride" },
 ];
 
 const WeddingForm = () => {
@@ -463,26 +463,6 @@ const WeddingForm = () => {
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
 
-        // Remap arabic keys: DB type (custom_title_custom_1) → session uid (custom_title_<uid>)
-        if (data.field_customizations) {
-          const fc =
-            typeof data.field_customizations === "string"
-              ? JSON.parse(data.field_customizations)
-              : data.field_customizations;
-          if (fc["arabic"]) {
-            const remapped: Record<string, string> = {};
-            customDbTypeByUid.forEach((dbType, uid) => {
-              const tKey = `custom_title_${dbType}`;
-              const lKey = `custom_location_${dbType}`;
-              if (fc.arabic[tKey]) remapped[`custom_title_${uid}`] = fc.arabic[tKey];
-              if (fc.arabic[lKey]) remapped[`custom_location_${uid}`] = fc.arabic[lKey];
-            });
-            if (Object.keys(remapped).length > 0) {
-              setArabicFields((prev) => ({ ...prev, ...remapped }));
-            }
-          }
-        }
-
         // Build timeline order from display_order on existing rows.
         // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
         const fixedKeys = [
@@ -867,25 +847,7 @@ const WeddingForm = () => {
 
       // Save Arabic translations if enabled
       if (enableArabic) {
-        // Remap session uid keys → stable DB type keys for custom sections
-        const uidToDbType = new Map<string, string>();
-        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
-          uidToDbType.set(s.uid, `custom_${idx + 1}`);
-        });
-        const persistedArabic: Record<string, string> = {};
-        Object.entries(arabicFields).forEach(([key, val]) => {
-          if (!val) return;
-          const titleMatch = key.match(/^custom_title_(.+)$/);
-          const locMatch = key.match(/^custom_location_(.+)$/);
-          if (titleMatch && uidToDbType.has(titleMatch[1])) {
-            persistedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = val;
-          } else if (locMatch && uidToDbType.has(locMatch[1])) {
-            persistedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = val;
-          } else if (!titleMatch && !locMatch) {
-            persistedArabic[key] = val;
-          }
-        });
-        fieldCustomizations = { ...fieldCustomizations, arabic: persistedArabic };
+        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
       } else {
         // Remove arabic key if disabled
         const { arabic, ...rest } = fieldCustomizations;
@@ -1824,29 +1786,11 @@ const WeddingForm = () => {
                             <Input
                               id="venue_location"
                               value={locations.venue_location}
-                              onChange={(e) => {
-                                setLocations({ ...locations, venue_location: e.target.value });
-                                if (enableArabic) debouncedTranslate("venue_location", e.target.value);
-                              }}
+                              onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
                               placeholder="Reception venue name"
                               required
                               className="h-11 sm:h-10"
                             />
-                            {enableArabic && (
-                              <div className="space-y-1 mt-2">
-                                <Label className="text-xs text-muted-foreground">اسم القاعة (Arabic)</Label>
-                                <Input
-                                  value={arabicFields.venue_location || ""}
-                                  onChange={(e) =>
-                                    setArabicFields((prev) => ({ ...prev, venue_location: e.target.value }))
-                                  }
-                                  dir="rtl"
-                                  className="h-10 text-right font-arabic"
-                                  placeholder={translatingFields.venue_location ? "Translating..." : ""}
-                                  disabled={translatingFields.venue_location}
-                                />
-                              </div>
-                            )}
                           </div>
                           <div className="space-y-1.5">
                             <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
@@ -2075,32 +2019,10 @@ const WeddingForm = () => {
                                         const next = [...customSections];
                                         next[idx] = { ...next[idx], title: e.target.value };
                                         setCustomSections(next);
-                                        if (enableArabic)
-                                          debouncedTranslate(`custom_title_${section.uid}`, e.target.value);
                                       }}
                                       placeholder="Cocktail Hour"
                                       className="h-11 sm:h-10"
                                     />
-                                    {enableArabic && (
-                                      <div className="space-y-1 mt-2">
-                                        <Label className="text-xs text-muted-foreground">العنوان (Arabic)</Label>
-                                        <Input
-                                          value={arabicFields[`custom_title_${section.uid}`] || ""}
-                                          onChange={(e) =>
-                                            setArabicFields((prev) => ({
-                                              ...prev,
-                                              [`custom_title_${section.uid}`]: e.target.value,
-                                            }))
-                                          }
-                                          dir="rtl"
-                                          className="h-10 text-right font-arabic"
-                                          placeholder={
-                                            translatingFields[`custom_title_${section.uid}`] ? "Translating..." : ""
-                                          }
-                                          disabled={translatingFields[`custom_title_${section.uid}`]}
-                                        />
-                                      </div>
-                                    )}
                                   </div>
                                   <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                                     <div className="space-y-1.5">
@@ -2112,37 +2034,11 @@ const WeddingForm = () => {
                                           const next = [...customSections];
                                           next[idx] = { ...next[idx], location_name: e.target.value };
                                           setCustomSections(next);
-                                          if (enableArabic)
-                                            debouncedTranslate(`custom_location_${section.uid}`, e.target.value);
                                         }}
                                         placeholder="Venue or place"
                                         required
                                         className="h-11 sm:h-10"
                                       />
-                                      {enableArabic && (
-                                        <div className="space-y-1 mt-2">
-                                          <Label className="text-xs text-muted-foreground">
-                                            اسم الموقع (Arabic)
-                                          </Label>
-                                          <Input
-                                            value={arabicFields[`custom_location_${section.uid}`] || ""}
-                                            onChange={(e) =>
-                                              setArabicFields((prev) => ({
-                                                ...prev,
-                                                [`custom_location_${section.uid}`]: e.target.value,
-                                              }))
-                                            }
-                                            dir="rtl"
-                                            className="h-10 text-right font-arabic"
-                                            placeholder={
-                                              translatingFields[`custom_location_${section.uid}`]
-                                                ? "Translating..."
-                                                : ""
-                                            }
-                                            disabled={translatingFields[`custom_location_${section.uid}`]}
-                                          />
-                                        </div>
-                                      )}
                                     </div>
                                     <div className="space-y-1.5">
                                       <Label htmlFor={`custom_time_${idx}`}>Time *</Label>
