@@ -26,6 +26,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "material-symbols:church-rounded", label: "Church" },
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "solar:confetti-bold", label: "Confetti" },
+  { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
 ];
 
 const WeddingForm = () => {
