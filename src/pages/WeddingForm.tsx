@@ -129,6 +129,11 @@ const WeddingForm = () => {
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const isLumiereTemplate = template === "lumiere-editorial";
+  const isEclatTemplate = template === "classic-romance";
+  const isVeriteTemplate = template === "minimalist-elegant";
+  // Templates that show an optional Welcome Drink Time inside Venue Details
+  // (in addition to the Aura family which already shows it as required).
+  const showsWelcomeDrinkField = isAuraTemplate || isEclatTemplate || isGraceTemplate || isVeriteTemplate;
 
   // Live-apply typography choices to CSS variables so the in-form preview
   // (and any modal preview opened from this page) reflects the picker instantly.
