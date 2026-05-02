@@ -336,6 +336,12 @@ export const VeriteTemplate = ({
                     <Icon icon={venue.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.venue")}</h3>
+                  {welcomeDrink?.time && (
+                    <p className="text-template-small text-[#3e2723]">
+                      <span className="text-gray-600">{t("events.welcomeDrink")}:</span>{" "}
+                      <span className="font-semibold">{formatTimeTo12Hour(welcomeDrink.time)}</span>
+                    </p>
+                  )}
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
