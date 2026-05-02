@@ -15,6 +15,7 @@ import { useArabicContent } from "@/hooks/useArabicContent";
 import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 
 interface GraceTemplateProps {
   wedding: any;
@@ -239,7 +240,11 @@ export const GraceTemplate = ({
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
-    <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div
+      className="w-full text-[#3e2723] overflow-x-hidden lg:px-[25%]"
+      style={buildTemplateFontStyle("video-cinematic", wedding.template_fonts)}
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
