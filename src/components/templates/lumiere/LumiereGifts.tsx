@@ -28,7 +28,7 @@ const LumiereGifts = ({ giftCards }: LumiereGiftsProps) => {
     <LumiereTornCard>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-heading text-center text-black mb-3">{t("gifts.title")}</h2>
+          <h2 className="text-template-body text-center text-black mb-3">{t("gifts.title")}</h2>
           <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
         </AnimatedSection>
         <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
