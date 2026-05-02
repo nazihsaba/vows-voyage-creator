@@ -15,6 +15,7 @@ import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
+import { DEFAULT_TEMPLATE_FONTS, type TemplateFonts } from "@/components/FontCustomizer";
 
 interface LumiereTemplateProps {
   wedding: any;
