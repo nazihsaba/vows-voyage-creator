@@ -1,7 +1,9 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Type } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Type, ChevronDown, RotateCcw } from "lucide-react";
 
 export type TemplateFontKey = "title" | "subtitle" | "heading" | "body" | "monogram";
 
@@ -73,6 +75,8 @@ const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
 ];
 
 const FontCustomizer = ({ value, onChange }: FontCustomizerProps) => {
+  const [open, setOpen] = useState(true);
+
   // Live-apply to CSS variables whenever value changes
   useEffect(() => {
     applyTemplateFonts(value);
@@ -87,40 +91,70 @@ const FontCustomizer = ({ value, onChange }: FontCustomizerProps) => {
     onChange({ ...value, [key]: stack });
   };
 
-  return (
-    <div className="rounded-lg border bg-muted/30 p-4 space-y-4">
-      <div className="flex items-center gap-2">
-        <Type className="w-4 h-4 text-muted-foreground" />
-        <h3 className="text-sm font-semibold">Typography</h3>
-      </div>
-      <p className="text-xs text-muted-foreground">
-        Pick fonts for your invitation. Changes apply live in the preview and are saved with your event.
-      </p>
+  const handleReset = () => {
+    onChange({});
+  };
 
-      <div className="space-y-3">
-        {FIELDS.map(({ key, label, hint }) => {
-          const current = (value?.[key] as string) || (DEFAULT_TEMPLATE_FONTS as any)[key];
-          return (
-            <div key={key} className="space-y-1.5">
-              <Label className="text-sm font-medium">{label}</Label>
-              <Select value={current} onValueChange={(v) => handleChange(key, v)}>
-                <SelectTrigger className="h-11 sm:h-10">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {FONT_OPTIONS.map((opt) => (
-                    <SelectItem key={opt.label} value={opt.stack}>
-                      <span style={{ fontFamily: opt.stack }}>{opt.label}</span>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
-            </div>
-          );
-        })}
+  return (
+    <Collapsible open={open} onOpenChange={setOpen} className="rounded-lg border bg-muted/30">
+      <div className="flex items-center justify-between gap-2 p-4">
+        <CollapsibleTrigger asChild>
+          <button
+            type="button"
+            className="flex items-center gap-2 flex-1 text-left"
+            aria-label={open ? "Collapse typography" : "Expand typography"}
+          >
+            <Type className="w-4 h-4 text-muted-foreground" />
+            <h3 className="text-sm font-semibold">Typography</h3>
+            <ChevronDown
+              className={`w-4 h-4 text-muted-foreground transition-transform ${open ? "rotate-180" : ""}`}
+            />
+          </button>
+        </CollapsibleTrigger>
+        <Button
+          type="button"
+          variant="ghost"
+          size="sm"
+          onClick={handleReset}
+          className="h-8 px-2 text-xs gap-1.5"
+        >
+          <RotateCcw className="w-3.5 h-3.5" />
+          Reset
+        </Button>
       </div>
-    </div>
+
+      <CollapsibleContent>
+        <div className="px-4 pb-4 space-y-4">
+          <p className="text-xs text-muted-foreground">
+            Pick fonts for your invitation. Changes apply live in the preview and are saved with your event.
+          </p>
+
+          <div className="space-y-3">
+            {FIELDS.map(({ key, label, hint }) => {
+              const current = (value?.[key] as string) || (DEFAULT_TEMPLATE_FONTS as any)[key];
+              return (
+                <div key={key} className="space-y-1.5">
+                  <Label className="text-sm font-medium">{label}</Label>
+                  <Select value={current} onValueChange={(v) => handleChange(key, v)}>
+                    <SelectTrigger className="h-11 sm:h-10">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {FONT_OPTIONS.map((opt) => (
+                        <SelectItem key={opt.label} value={opt.stack}>
+                          <span style={{ fontFamily: opt.stack }}>{opt.label}</span>
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {hint && <p className="text-xs text-muted-foreground">{hint}</p>}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </CollapsibleContent>
+    </Collapsible>
   );
 };
 

@@ -42,7 +42,7 @@ const LumiereCountdown = ({ targetDate }: LumiereCountdownProps) => {
     <LumiereTornCard>
       <div className="py-14 px-6 text-center">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-subtitle text-black mb-8">{t("countdown.title")}</h2>
+          <h2 className="text-template-heading text-black mb-8">{t("countdown.title")}</h2>
         </AnimatedSection>
         <div className="flex justify-center gap-6 md:gap-10">
           {units.map((item, i) => (
