@@ -21,7 +21,7 @@ const LumiereGallery = ({ images }: LumiereGalleryProps) => {
     <LumiereTornCard>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-subtitle text-center text-black mb-8">{t("gallery.title")}</h2>
+          <h2 className="text-template-heading text-center text-black mb-8">{t("gallery.title")}</h2>
         </AnimatedSection>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
           {images.map((image, index) => (

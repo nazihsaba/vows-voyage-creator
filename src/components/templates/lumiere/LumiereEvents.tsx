@@ -30,7 +30,7 @@ const LumiereEvents = ({ events, dateFormatted }: LumiereEventsProps) => {
         <AnimatedSection animation="fade-in">
           <div className="flex items-center justify-center gap-3 mb-10">
             <Calendar className="w-6 h-6 text-black" />
-            <h2 className="text-template-subtitle text-black">{dateFormatted}</h2>
+            <h2 className="text-template-heading text-black">{dateFormatted}</h2>
           </div>
         </AnimatedSection>
 
