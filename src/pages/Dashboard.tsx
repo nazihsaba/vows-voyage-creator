@@ -22,7 +22,6 @@ import {
   Eye,
   X,
   Users,
-  Mail,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
@@ -36,7 +35,6 @@ import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
-import { VeronaPreview } from "@/components/templates/VeronaPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -140,19 +138,6 @@ const Dashboard = () => {
         { icon: Images, text: "Photo Gallery" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
-        { icon: Calendar, text: "RSVP" },
-      ],
-    },
-    {
-      id: "verona-envelope",
-      name: "Verona",
-      description: "Vintage Italianate envelope opener with cream paper & warm gold typography",
-      image: auraTemplate,
-      features: [
-        { icon: Mail, text: "Envelope Opener" },
-        { icon: Sparkles, text: "Wax Seal Reveal" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Calendar, text: "RSVP" },
       ],
     },
@@ -365,7 +350,6 @@ const Dashboard = () => {
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
-            {showPreview === "verona-envelope" && <VeronaPreview />}
           </div>
         </DialogContent>
       </Dialog>

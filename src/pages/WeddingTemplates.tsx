@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles, Theater, Clapperboard, Mail } from "lucide-react";
+import { Heart, ArrowLeft, Video, Images, MapPin, Gift, Clock, Sparkles, Theater, Clapperboard } from "lucide-react";
 import modernRomance from "@/assets/preview-wedding-10.jpg";
 import cinematicVideo from "@/assets/template-cinematic-video.jpg";
 import roseGoldTabs from "@/assets/preview-wedding-10.jpg";
@@ -79,18 +79,6 @@ const WeddingTemplates = () => {
       features: [
         { icon: Theater, text: "Curtain Reveal" },
         { icon: Sparkles, text: "Confetti Animation" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Gift, text: "Gift Registry" }
-      ]
-    },
-    {
-      id: "verona-envelope",
-      name: "Verona",
-      description: "Vintage Italianate envelope opener with cream paper and warm gold typography",
-      image: modernRomance,
-      features: [
-        { icon: Mail, text: "Envelope Opener" },
-        { icon: Sparkles, text: "Wax Seal Reveal" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Gift, text: "Gift Registry" }
       ]
