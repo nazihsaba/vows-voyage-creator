@@ -752,7 +752,7 @@ export const EnvelopeAnimation = ({
                     {/* Solid paper-color backing — guarantees the flap shape is
                         opaque even on mobile WebKit where the textured <image>
                         can fail to paint on the rotated back face. */}
-                    <rect width={VB_W} height={VB_H} fill="rgb(232, 222, 200)" />
+                    <rect width={VB_W} height={VB_H} fill="rgb(248, 240, 222)" />
                     <image
                       href={paperTexture}
                       x={-VB_W * 0.1}
