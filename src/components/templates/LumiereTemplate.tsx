@@ -388,6 +388,7 @@ export const LumiereTemplate = ({
               <Button
                 onClick={handleStartClick}
                 className="bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+                style={{ fontFamily: "var(--font-template-body)" }}
               >
                 {t("hero.tapToStart")}
               </Button>
