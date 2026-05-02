@@ -14,6 +14,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { useHeroLoader } from "@/hooks/useHeroLoader";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 
 interface VeriteTemplateProps {
   wedding: any;
