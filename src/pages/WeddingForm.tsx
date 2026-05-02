@@ -163,20 +163,25 @@ const WeddingForm = () => {
     }
   }, []);
 
-  // Reorder a timeline key (ceremony / welcome_drink / venue / custom_N) up or down.
+  // Reorder a timeline key (ceremony / venue / custom_N) up or down.
+  // welcome_drink is excluded — it is auto-positioned right before venue.
   const moveTimelineKey = useCallback((key: string, direction: -1 | 1) => {
     setTimelineOrder((prev) => {
-      const idx = prev.indexOf(key);
-      if (idx === -1) return prev;
-      const target = idx + direction;
-      if (target < 0 || target >= prev.length) return prev;
-      const next = [...prev];
-      [next[idx], next[target]] = [next[target], next[idx]];
+      const visible = prev.filter((k) => k !== "welcome_drink");
+      const visIdx = visible.indexOf(key);
+      if (visIdx === -1) return prev;
+      const target = visIdx + direction;
+      if (target < 0 || target >= visible.length) return prev;
+      [visible[visIdx], visible[target]] = [visible[target], visible[visIdx]];
+      // Re-insert welcome_drink in its original relative slot (kept at end of array if present).
+      const next = [...visible];
+      if (prev.includes("welcome_drink")) next.push("welcome_drink");
       return next;
     });
   }, []);
 
-  const timelineIndex = (key: string) => timelineOrder.indexOf(key);
+  const visibleTimelineOrder = () => timelineOrder.filter((k) => k !== "welcome_drink");
+  const timelineIndex = (key: string) => visibleTimelineOrder().indexOf(key);
   const timelinePosition = (key: string) => {
     const i = timelineIndex(key);
     return i === -1 ? null : i + 1;
@@ -184,7 +189,7 @@ const WeddingForm = () => {
   const canMoveUp = (key: string) => timelineIndex(key) > 0;
   const canMoveDown = (key: string) => {
     const i = timelineIndex(key);
-    return i !== -1 && i < timelineOrder.length - 1;
+    return i !== -1 && i < visibleTimelineOrder().length - 1;
   };
 
   // Reusable inline arrows + position label for timeline ordering.
