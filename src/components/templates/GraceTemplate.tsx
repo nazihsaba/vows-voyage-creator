@@ -96,6 +96,7 @@ export const GraceTemplate = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+  const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
 
   // Lock scroll only while autoplay is blocked and the user hasn't tapped.
   // When autoplay succeeds, the page is freely scrollable from the start.
