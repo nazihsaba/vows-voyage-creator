@@ -12,7 +12,6 @@ import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
-import veronaTemplate from "@/assets/etoile-6.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
@@ -21,9 +20,8 @@ const EclatPreview = lazy(() => import("@/components/templates/EclatPreview"));
 const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then((m) => ({ default: m.AuraPreview })));
 const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"));
 const EtoilePreview = lazy(() => import("@/components/templates/EtoilePreview"));
-const VeronaPreview = lazy(() => import("@/components/templates/VeronaPreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile" | "verona";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
@@ -68,13 +66,6 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     featured: false,
     templateKey: "etoile",
   },
-  {
-    image: veronaTemplate,
-    label: "Verona",
-    tagline: "Vintage hand-stationery on cream paper",
-    featured: false,
-    templateKey: "verona",
-  },
 ];
 
 const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.ComponentType>> = {
@@ -84,7 +75,6 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   aura: AuraPreview,
   lumiere: LumierePreview,
   etoile: EtoilePreview,
-  verona: VeronaPreview,
 };
 
 const PreviewLoadingFallback = () => (
