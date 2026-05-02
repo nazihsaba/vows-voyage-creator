@@ -7,6 +7,7 @@ interface EprisData {
   coupleName2: string;
   subtitle: string;
   coverImage: string;
+  gallery: string[];
   groomFamily: string;
   brideFamily: string;
   ceremonyLocation: string;
@@ -32,6 +33,12 @@ const defaultData: EprisData = {
   subtitle: "Two Souls, One Love",
   coverImage:
     "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+  gallery: [
+    "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1525258946800-98cfd641d0de?auto=format&fit=crop&w=1200&q=80",
+    "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
+  ],
   groomFamily: "Mr. & Mrs. Obeid",
   brideFamily: "Mr. & Mrs. Khoury",
   ceremonyLocation: "St Joseph Church",
@@ -206,7 +213,16 @@ function SwipeInvite({
   const [page, setPage] = useState(0);
   const go = (n: number) => setPage(Math.max(0, Math.min(total - 1, n)));
 
-  const sectionBg = { backgroundImage: `url(${data.coverImage})` } as const;
+  const images = data.gallery && data.gallery.length > 0 ? data.gallery : [data.coverImage];
+  const [bgIndex, setBgIndex] = useState(0);
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const i = setInterval(() => setBgIndex((p) => (p + 1) % images.length), 4500);
+    return () => clearInterval(i);
+  }, [images.length]);
+
+  // Empty placeholder so children that expect this prop still type-check
+  const sectionBg = { backgroundImage: "none" } as const;
 
   return (
     <motion.div
@@ -215,6 +231,21 @@ function SwipeInvite({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
+      {/* Shared background carousel */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence>
+          <motion.div
+            key={images[bgIndex]}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${images[bgIndex]})` }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.4, ease: "easeInOut" }}
+          />
+        </AnimatePresence>
+      </div>
+
       <motion.div
         className="absolute top-0 left-0 right-0"
         style={{ height: `${total * 100}%` }}
@@ -458,16 +489,15 @@ function SwipeInvite({
 }
 
 function Page({
-  sectionBg,
   children,
 }: {
-  sectionBg: { backgroundImage: string };
+  sectionBg?: { backgroundImage: string };
   children: React.ReactNode;
 }) {
   return (
     <section
-      className="relative w-full bg-cover bg-center flex items-center justify-center text-white"
-      style={{ height: "25%", ...sectionBg }}
+      className="relative w-full flex items-center justify-center text-white"
+      style={{ height: "25%" }}
     >
       {children}
     </section>
