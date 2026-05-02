@@ -11,6 +11,7 @@ import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter"
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -168,7 +169,11 @@ export const AuraTemplate = ({
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   return (
-    <div className="relative w-full min-h-screen bg-background font-serif text-foreground lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div
+      className="relative w-full min-h-screen bg-background text-foreground lg:px-[25%]"
+      style={buildTemplateFontStyle("bible-verse-tabs", wedding.template_fonts)}
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
