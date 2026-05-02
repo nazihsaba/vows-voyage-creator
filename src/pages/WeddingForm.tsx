@@ -862,7 +862,29 @@ const WeddingForm = () => {
 
       // Save Arabic translations if enabled
       if (enableArabic) {
-        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
+        // Remap custom section Arabic keys from uid -> stable DB type (custom_1, custom_2, ...)
+        const uidToDbType = new Map<string, string>();
+        let dbIdx = 0;
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s) => {
+          const hasContent = s.title || s.location_name || s.time || s.location_link;
+          if (!hasContent) return;
+          dbIdx += 1;
+          uidToDbType.set(s.uid, `custom_${dbIdx}`);
+        });
+        const remappedArabic: Record<string, string> = {};
+        Object.entries(arabicFields).forEach(([k, v]) => {
+          if (!v) return;
+          const titleMatch = k.match(/^custom_title_(.+)$/);
+          const locMatch = k.match(/^custom_location_(.+)$/);
+          if (titleMatch && uidToDbType.has(titleMatch[1])) {
+            remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = v;
+          } else if (locMatch && uidToDbType.has(locMatch[1])) {
+            remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = v;
+          } else if (!titleMatch && !locMatch) {
+            remappedArabic[k] = v;
+          }
+        });
+        fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
       } else {
         // Remove arabic key if disabled
         const { arabic, ...rest } = fieldCustomizations;
