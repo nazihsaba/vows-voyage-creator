@@ -48,6 +48,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "hugeicons:suit-01", label: "Groom" },
+  { value: "fluent-emoji-high-contrast:dress", label: "Groom" },
 ];
 
 const WeddingForm = () => {
