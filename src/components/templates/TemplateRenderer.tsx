@@ -11,6 +11,7 @@ import { AuraTemplate } from './AuraTemplate';
 import { OpulenceTemplate } from './OpulenceTemplate';
 import { LumiereTemplate } from './LumiereTemplate';
 import { EtoileTemplate } from './EtoileTemplate';
+import { VeronaTemplate } from './VeronaTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
