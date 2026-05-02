@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ import { compressImage } from "@/lib/compressImage";
 import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 import FontCustomizer, { type TemplateFonts, applyTemplateFonts, resetTemplateFonts } from "@/components/FontCustomizer";
+import { getTemplateFontDefaults } from "@/components/templateFontDefaults";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
@@ -129,13 +130,14 @@ const WeddingForm = () => {
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const isLumiereTemplate = template === "lumiere-editorial";
 
-  // Live-apply Lumière typography choices to CSS variables so the in-form preview
+  // Live-apply typography choices to CSS variables so the in-form preview
   // (and any modal preview opened from this page) reflects the picker instantly.
+  // Each template falls back to its own default font set.
+  const templateFontDefaults = useMemo(() => getTemplateFontDefaults(template), [template]);
   useEffect(() => {
-    if (!isLumiereTemplate) return;
-    applyTemplateFonts((formData.template_fonts as TemplateFonts) || {});
+    applyTemplateFonts((formData.template_fonts as TemplateFonts) || {}, templateFontDefaults);
     return () => resetTemplateFonts();
-  }, [isLumiereTemplate, formData.template_fonts]);
+  }, [formData.template_fonts, templateFontDefaults]);
 
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
@@ -1139,13 +1141,12 @@ const WeddingForm = () => {
 
               {/* Envelope Animation Toggle hidden */}
 
-              {/* Lumière typography customizer */}
-              {isLumiereTemplate && (
-                <FontCustomizer
-                  value={(formData.template_fonts as TemplateFonts) || {}}
-                  onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
-                />
-              )}
+              {/* Typography customizer (works on every template, with per-template defaults) */}
+              <FontCustomizer
+                value={(formData.template_fonts as TemplateFonts) || {}}
+                onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
+                defaults={templateFontDefaults}
+              />
 
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">

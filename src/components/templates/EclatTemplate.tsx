@@ -14,6 +14,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { useHeroLoader } from "@/hooks/useHeroLoader";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 
 interface EclatTemplateProps {
   wedding: any;
@@ -141,7 +142,11 @@ export const EclatTemplate = ({
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (
-    <div className="w-full bg-white text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]" dir={isArabic ? 'rtl' : 'ltr'}>
+    <div
+      className="w-full bg-white text-[#3e2723] overflow-x-hidden lg:px-[25%]"
+      style={buildTemplateFontStyle("classic-romance", wedding.template_fonts)}
+      dir={isArabic ? "rtl" : "ltr"}
+    >
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={fadingOut} />
       )}

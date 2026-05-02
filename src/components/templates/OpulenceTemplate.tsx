@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -317,7 +318,8 @@ export const OpulenceTemplate = ({
     <div
       className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)]"
       style={{
-        fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+        ...buildTemplateFontStyle("opulence-curtain", wedding.template_fonts),
+        fontFamily: "var(--font-template-body)",
         overflowX: "hidden",
         overflowY: started ? "auto" : "hidden",
         maxHeight: started ? "none" : "100vh",
@@ -362,7 +364,7 @@ export const OpulenceTemplate = ({
 
           {/* Couple names */}
           <div>
-            <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontFamily: "'Cormorant Garamond', serif", fontWeight: 300 }}>
+            <h1 className="text-5xl md:text-7xl leading-tight" style={{ fontFamily: 'var(--font-template-title)', fontWeight: 300 }}>
               {wedding.groom_name}
               <span className="block text-3xl md:text-4xl my-2 italic opacity-50">&</span>
               {wedding.bride_name}
@@ -420,7 +422,7 @@ export const OpulenceTemplate = ({
         <AnimatedSection animation="fade-in">
           <div className="max-w-sm mx-auto text-center space-y-8">
             <div className="space-y-2">
-              <p className="text-6xl md:text-8xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <p className="text-6xl md:text-8xl font-light" style={{ fontFamily: 'var(--font-template-heading)' }}>
                 {weddingDate.getDate()}
               </p>
               <p className="text-xl md:text-2xl uppercase tracking-[0.3em] font-light">
@@ -460,7 +462,7 @@ export const OpulenceTemplate = ({
         <ConfettiCanvas />
         <AnimatedSection animation="fade-in">
           <div className="relative z-20 max-w-md mx-auto text-center space-y-10">
-            <h2 className="text-3xl md:text-4xl font-light" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-4xl font-light" style={{ fontFamily: 'var(--font-template-heading)' }}>
               The Venue
             </h2>
 
@@ -534,7 +536,7 @@ export const OpulenceTemplate = ({
       {gallery && gallery.length > 0 && (
         <section className="py-16 px-4" style={{ background: "hsl(45, 29%, 96%)" }}>
           <AnimatedSection animation="fade-in">
-            <h2 className="text-3xl md:text-4xl font-light text-center mb-10" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+            <h2 className="text-3xl md:text-4xl font-light text-center mb-10" style={{ fontFamily: 'var(--font-template-heading)' }}>
               Our Moments
             </h2>
           </AnimatedSection>
@@ -561,7 +563,7 @@ export const OpulenceTemplate = ({
         <section id="opulence-gifts" className="py-16 px-4">
           <div className="max-w-4xl mx-auto">
             <AnimatedSection animation="fade-in">
-              <h2 className="text-3xl md:text-4xl font-light text-center mb-4" style={{ fontFamily: "'Cormorant Garamond', serif" }}>
+              <h2 className="text-3xl md:text-4xl font-light text-center mb-4" style={{ fontFamily: 'var(--font-template-heading)' }}>
                 Wedding Gift
               </h2>
               <p className="text-center text-sm opacity-60 mb-10 tracking-wide">

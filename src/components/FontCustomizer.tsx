@@ -41,11 +41,17 @@ const VAR_MAP: Record<TemplateFontKey, string[]> = {
   monogram: ["--font-template-monogram"],
 };
 
-/** Apply a TemplateFonts object to document.documentElement (or reset to defaults). */
-export function applyTemplateFonts(fonts: TemplateFonts | null | undefined) {
-  const merged = { ...DEFAULT_TEMPLATE_FONTS, ...(fonts || {}) };
+/** Apply a TemplateFonts object to document.documentElement (or reset to defaults).
+ *  Optionally pass per-template defaults so each template falls back to its own
+ *  typography when a slot is unset. */
+export function applyTemplateFonts(
+  fonts: TemplateFonts | null | undefined,
+  defaults: TemplateFonts = DEFAULT_TEMPLATE_FONTS,
+) {
+  const base = { ...DEFAULT_TEMPLATE_FONTS, ...defaults };
+  const merged = { ...base, ...(fonts || {}) };
   (Object.keys(VAR_MAP) as TemplateFontKey[]).forEach((key) => {
-    const value = (merged as any)[key] || (DEFAULT_TEMPLATE_FONTS as any)[key];
+    const value = (merged as any)[key] || (base as any)[key];
     VAR_MAP[key].forEach((cssVar) => {
       document.documentElement.style.setProperty(cssVar, value);
     });
@@ -64,6 +70,8 @@ export function resetTemplateFonts() {
 interface FontCustomizerProps {
   value: TemplateFonts;
   onChange: (next: TemplateFonts) => void;
+  /** Per-template default font stacks. When omitted, falls back to DEFAULT_TEMPLATE_FONTS. */
+  defaults?: TemplateFonts;
 }
 
 const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
@@ -74,13 +82,15 @@ const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
   { key: "monogram", label: "Monogram Font", hint: 'The initials at the top (e.g. "A & E")' },
 ];
 
-const FontCustomizer = ({ value, onChange }: FontCustomizerProps) => {
+const FontCustomizer = ({ value, onChange, defaults }: FontCustomizerProps) => {
   const [open, setOpen] = useState(true);
+  const effectiveDefaults: TemplateFonts = { ...DEFAULT_TEMPLATE_FONTS, ...(defaults || {}) };
 
   // Live-apply to CSS variables whenever value changes
   useEffect(() => {
-    applyTemplateFonts(value);
-  }, [value]);
+    applyTemplateFonts(value, effectiveDefaults);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [value, defaults]);
 
   // On unmount, reset so other pages aren't affected
   useEffect(() => {
@@ -131,7 +141,7 @@ const FontCustomizer = ({ value, onChange }: FontCustomizerProps) => {
 
           <div className="space-y-3">
             {FIELDS.map(({ key, label, hint }) => {
-              const current = (value?.[key] as string) || (DEFAULT_TEMPLATE_FONTS as any)[key];
+              const current = (value?.[key] as string) || (effectiveDefaults as any)[key];
               return (
                 <div key={key} className="space-y-1.5">
                   <Label className="text-sm font-medium">{label}</Label>
