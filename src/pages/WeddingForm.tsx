@@ -732,15 +732,7 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate Welcome Drink Time is required for Aura/Lumière/Étoile templates
-    if (isAuraTemplate && !locations.welcome_drink_time) {
-      toast({
-        title: "Welcome drink time required",
-        description: "Please set the welcome drink time.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Welcome Drink Time is optional for all templates.
 
     // Validate Additional Sections: Title, Location Name and Time are required for each
     if (isAuraTemplate && customSections.length > 0) {
@@ -1804,13 +1796,10 @@ const WeddingForm = () => {
                     </div>
                     {showsWelcomeDrinkField && (
                       <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
-                        <Label htmlFor="welcome_drink_time">
-                          Welcome Drink Time{isAuraTemplate ? " *" : ""}
-                        </Label>
+                        <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
                         <Input
                           id="welcome_drink_time"
                           type="time"
-                          required={isAuraTemplate}
                           value={locations.welcome_drink_time}
                           onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
                           className="h-11 sm:h-10"
