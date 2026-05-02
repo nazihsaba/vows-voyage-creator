@@ -1139,6 +1139,14 @@ const WeddingForm = () => {
 
               {/* Envelope Animation Toggle hidden */}
 
+              {/* Lumière typography customizer */}
+              {isLumiereTemplate && (
+                <FontCustomizer
+                  value={(formData.template_fonts as TemplateFonts) || {}}
+                  onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
+                />
+              )}
+
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
