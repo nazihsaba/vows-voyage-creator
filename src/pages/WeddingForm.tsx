@@ -452,6 +452,28 @@ const WeddingForm = () => {
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
 
+        // Remap any persisted Arabic keys from dbType -> uid for the editor
+        if (data.field_customizations) {
+          const fc =
+            typeof data.field_customizations === "string"
+              ? JSON.parse(data.field_customizations)
+              : data.field_customizations;
+          const arabic = fc?.arabic;
+          if (arabic) {
+            const remapped: Record<string, string> = {};
+            customRows.forEach((row, i) => {
+              const dbType = customRowsRaw[i].type;
+              const tKey = `custom_title_${dbType}`;
+              const lKey = `custom_location_${dbType}`;
+              if (arabic[tKey]) remapped[`custom_title_${row.uid}`] = arabic[tKey];
+              if (arabic[lKey]) remapped[`custom_location_${row.uid}`] = arabic[lKey];
+            });
+            if (Object.keys(remapped).length > 0) {
+              setArabicFields((prev) => ({ ...prev, ...remapped }));
+            }
+          }
+        }
+
         // Build timeline order from display_order on existing rows.
         // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
         const fixedKeys = [
