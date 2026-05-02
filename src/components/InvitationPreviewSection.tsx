@@ -68,13 +68,6 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     featured: false,
     templateKey: "etoile",
   },
-  {
-    image: eprisTemplate,
-    label: "Épris",
-    tagline: "Envelope reveal & cinematic romance",
-    featured: false,
-    templateKey: "epris",
-  },
 ];
 
 const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.ComponentType>> = {
