@@ -16,6 +16,7 @@ import EtoileEvents from "./etoile/EtoileEvents";
 import EtoileGallery from "./etoile/EtoileGallery";
 import EtoileGifts from "./etoile/EtoileGifts";
 import EtoileRsvp from "./etoile/EtoileRsvp";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 
 interface EtoileTemplateProps {
   wedding: any;
@@ -204,7 +205,11 @@ export const EtoileTemplate = ({
     : getFieldValue("bible-verse-reference", referenceDefault);
 
   return (
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
+    <div
+      className="w-full min-h-screen overflow-x-hidden lg:px-[25%]"
+      style={buildTemplateFontStyle("etoile-carousel", wedding.template_fonts)}
+      dir="ltr"
+    >
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={fadingOut} />
       )}
@@ -260,8 +265,8 @@ export const EtoileTemplate = ({
                 />
               </div>
               <span
-                className="block text-4xl md:text-5xl text-white text-center font-serif italic"
-                style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both" }}
+                className="block text-4xl md:text-5xl text-white text-center italic"
+                style={{ animation: "heartPulseIn 1.2s ease-out 0.8s both", fontFamily: "var(--font-template-subtitle)" }}
               >
                 &amp;
               </span>
