@@ -346,7 +346,7 @@ export const VeriteTemplate = ({
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
                   <div className="space-y-2">
                     <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
-                    <p className="text-template-body font-medium text-[#3e2723]">{venue.location_name}</p>
+                    <p className="text-template-body font-medium text-[#3e2723]">{getLocalizedValue("venue_location", venue.location_name)}</p>
                   </div>
                   {venue.location_link && (
                     <a
