@@ -1786,11 +1786,29 @@ const WeddingForm = () => {
                             <Input
                               id="venue_location"
                               value={locations.venue_location}
-                              onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
+                              onChange={(e) => {
+                                setLocations({ ...locations, venue_location: e.target.value });
+                                if (enableArabic) debouncedTranslate("venue_location", e.target.value);
+                              }}
                               placeholder="Reception venue name"
                               required
                               className="h-11 sm:h-10"
                             />
+                            {enableArabic && (
+                              <div className="space-y-1 mt-2">
+                                <Label className="text-xs text-muted-foreground">اسم القاعة (Arabic)</Label>
+                                <Input
+                                  value={arabicFields.venue_location || ""}
+                                  onChange={(e) =>
+                                    setArabicFields((prev) => ({ ...prev, venue_location: e.target.value }))
+                                  }
+                                  dir="rtl"
+                                  className="h-10 text-right font-arabic"
+                                  placeholder={translatingFields.venue_location ? "Translating..." : ""}
+                                  disabled={translatingFields.venue_location}
+                                />
+                              </div>
+                            )}
                           </div>
                           <div className="space-y-1.5">
                             <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
