@@ -452,6 +452,28 @@ const WeddingForm = () => {
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
 
+        // Remap any persisted Arabic keys from dbType -> uid for the editor
+        if (data.field_customizations) {
+          const fc =
+            typeof data.field_customizations === "string"
+              ? JSON.parse(data.field_customizations)
+              : data.field_customizations;
+          const arabic = fc?.arabic;
+          if (arabic) {
+            const remapped: Record<string, string> = {};
+            customRows.forEach((row, i) => {
+              const dbType = customRowsRaw[i].type;
+              const tKey = `custom_title_${dbType}`;
+              const lKey = `custom_location_${dbType}`;
+              if (arabic[tKey]) remapped[`custom_title_${row.uid}`] = arabic[tKey];
+              if (arabic[lKey]) remapped[`custom_location_${row.uid}`] = arabic[lKey];
+            });
+            if (Object.keys(remapped).length > 0) {
+              setArabicFields((prev) => ({ ...prev, ...remapped }));
+            }
+          }
+        }
+
         // Build timeline order from display_order on existing rows.
         // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
         const fixedKeys = [
@@ -840,7 +862,29 @@ const WeddingForm = () => {
 
       // Save Arabic translations if enabled
       if (enableArabic) {
-        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
+        // Remap custom section Arabic keys from uid -> stable DB type (custom_1, custom_2, ...)
+        const uidToDbType = new Map<string, string>();
+        let dbIdx = 0;
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s) => {
+          const hasContent = s.title || s.location_name || s.time || s.location_link;
+          if (!hasContent) return;
+          dbIdx += 1;
+          uidToDbType.set(s.uid, `custom_${dbIdx}`);
+        });
+        const remappedArabic: Record<string, string> = {};
+        Object.entries(arabicFields).forEach(([k, v]) => {
+          if (!v) return;
+          const titleMatch = k.match(/^custom_title_(.+)$/);
+          const locMatch = k.match(/^custom_location_(.+)$/);
+          if (titleMatch && uidToDbType.has(titleMatch[1])) {
+            remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = v;
+          } else if (locMatch && uidToDbType.has(locMatch[1])) {
+            remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = v;
+          } else if (!titleMatch && !locMatch) {
+            remappedArabic[k] = v;
+          }
+        });
+        fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
       } else {
         // Remove arabic key if disabled
         const { arabic, ...rest } = fieldCustomizations;
