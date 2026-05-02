@@ -523,8 +523,8 @@ export const EnvelopeAnimation = ({
                     // Anchored to the lower half of the envelope using top/bottom
                     // bounds so the block always fits — even on short mobile
                     // viewports — without overlapping the seal at the V-fold.
-                    top: `${((V_Y + 60) / VB_H) * 100}%`,
-                    bottom: "8%",
+                    top: `${((V_Y + 140) / VB_H) * 100}%`,
+                    bottom: "10%",
                     color: "#3a2a14",
                     zIndex: 2,
                     fontFamily:
