@@ -1802,13 +1802,15 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-                    {isAuraTemplate && (
+                    {showsWelcomeDrinkField && (
                       <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                        <Label htmlFor="welcome_drink_time">
+                          Welcome Drink Time{isAuraTemplate ? " *" : ""}
+                        </Label>
                         <Input
                           id="welcome_drink_time"
                           type="time"
-                          required
+                          required={isAuraTemplate}
                           value={locations.welcome_drink_time}
                           onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
                           className="h-11 sm:h-10"
