@@ -239,7 +239,7 @@ export const AuraTemplate = ({
                     className="text-template-subtitle"
                   />
                 </div>
-                <span className="text-3xl font-light">&</span>
+                <span className="text-3xl font-light text-template-subtitle">&</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-family-name"
