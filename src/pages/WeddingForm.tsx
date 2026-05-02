@@ -22,7 +22,7 @@ import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 
 const LOCATION_ICON_OPTIONS = [
-  { value: "bx:home", label: "Home" },
+  { value: "heroicons:home-20-solid", label: "Home" },
   { value: "material-symbols:church-rounded", label: "Church" },
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "solar:confetti-bold", label: "Confetti" },
