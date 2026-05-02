@@ -302,6 +302,10 @@ const WeddingForm = () => {
           fieldsToTranslate.aura_quote = auraQuote;
           fieldsToTranslate.aura_reference = auraReference;
         }
+        customSections.forEach((s) => {
+          if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
+          if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+        });
         Object.entries(fieldsToTranslate).forEach(([key, value]) => {
           if (value && value.trim().length > 0 && !arabicFields[key]) {
             translateToArabic(key, value);
@@ -309,7 +313,7 @@ const WeddingForm = () => {
         });
       }
     },
-    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic],
+    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic, customSections],
   );
 
   const getMaxGalleryImages = () => {
@@ -2008,10 +2012,26 @@ const WeddingForm = () => {
                                 const next = [...customSections];
                                 next[idx] = { ...next[idx], title: e.target.value };
                                 setCustomSections(next);
+                                if (enableArabic) debouncedTranslate(`custom_title_${section.uid}`, e.target.value);
                               }}
                               placeholder="Cocktail Hour"
                               className="h-11 sm:h-10"
                             />
+                            {enableArabic && (
+                              <div className="space-y-1 mt-2">
+                                <Label className="text-xs text-muted-foreground">العنوان (Arabic)</Label>
+                                <Input
+                                  value={arabicFields[`custom_title_${section.uid}`] || ""}
+                                  onChange={(e) =>
+                                    setArabicFields((prev) => ({ ...prev, [`custom_title_${section.uid}`]: e.target.value }))
+                                  }
+                                  dir="rtl"
+                                  className="h-10 text-right font-arabic"
+                                  placeholder={translatingFields[`custom_title_${section.uid}`] ? "Translating..." : ""}
+                                  disabled={translatingFields[`custom_title_${section.uid}`]}
+                                />
+                              </div>
+                            )}
                           </div>
                           <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                             <div className="space-y-1.5">
@@ -2023,11 +2043,27 @@ const WeddingForm = () => {
                                   const next = [...customSections];
                                   next[idx] = { ...next[idx], location_name: e.target.value };
                                   setCustomSections(next);
+                                  if (enableArabic) debouncedTranslate(`custom_location_${section.uid}`, e.target.value);
                                 }}
                                 placeholder="Venue or place"
                                 required
                                 className="h-11 sm:h-10"
                               />
+                              {enableArabic && (
+                                <div className="space-y-1 mt-2">
+                                  <Label className="text-xs text-muted-foreground">اسم الموقع (Arabic)</Label>
+                                  <Input
+                                    value={arabicFields[`custom_location_${section.uid}`] || ""}
+                                    onChange={(e) =>
+                                      setArabicFields((prev) => ({ ...prev, [`custom_location_${section.uid}`]: e.target.value }))
+                                    }
+                                    dir="rtl"
+                                    className="h-10 text-right font-arabic"
+                                    placeholder={translatingFields[`custom_location_${section.uid}`] ? "Translating..." : ""}
+                                    disabled={translatingFields[`custom_location_${section.uid}`]}
+                                  />
+                                </div>
+                              )}
                             </div>
                             <div className="space-y-1.5">
                               <Label htmlFor={`custom_time_${idx}`}>Time *</Label>
