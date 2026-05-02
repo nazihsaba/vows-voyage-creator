@@ -234,40 +234,36 @@ export const VeronaTemplate = ({
           {/* ===== HERO ===== */}
           <section className="px-6 pt-20 pb-14 md:pt-28 md:pb-20 text-center">
             <AnimatedSection animation="fade-in">
-              <EditableField
+              <div style={{
+                  fontFamily: SERIF_LABEL,
+                  letterSpacing: "0.46em",
+                  textTransform: "uppercase",
+                  fontSize: "clamp(11px, 2.6vw, 13px)",
+                  color: GOLD,
+                }}><EditableField
                 fieldId="hero-eyebrow"
                 text={getFieldValue("hero-eyebrow", t("hero.theWeddingOf"))}
                 style={getFieldStyle("hero-eyebrow")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className="text-center"
-                wrapperStyle={{
-                  fontFamily: SERIF_LABEL,
-                  letterSpacing: "0.46em",
-                  textTransform: "uppercase",
-                  fontSize: "clamp(11px, 2.6vw, 13px)",
-                  color: GOLD,
-                }}
-              />
+                className="text-center"/></div>
               <Hairline />
               <div className="space-y-3">
-                <EditableField
-                  fieldId="groom-name"
-                  text={getFieldValue("groom-name", groomName)}
-                  style={getFieldStyle("groom-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h1"
-                  wrapperStyle={{
+                <div style={{
                     fontFamily: SERIF_DISPLAY,
                     fontStyle: "italic",
                     fontWeight: 500,
                     color: INK,
                     fontSize: "clamp(36px, 9vw, 64px)",
                     lineHeight: 1.05,
-                  }}
-                />
+                  }}><EditableField
+                  fieldId="groom-name"
+                  text={getFieldValue("groom-name", groomName)}
+                  style={getFieldStyle("groom-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h1"/></div>
                 <p
                   aria-hidden
                   style={{
@@ -280,22 +276,20 @@ export const VeronaTemplate = ({
                 >
                   &amp;
                 </p>
-                <EditableField
-                  fieldId="bride-name"
-                  text={getFieldValue("bride-name", brideName)}
-                  style={getFieldStyle("bride-name")}
-                  onUpdate={onFieldUpdate}
-                  isPreview={isPreview}
-                  tag="h1"
-                  wrapperStyle={{
+                <div style={{
                     fontFamily: SERIF_DISPLAY,
                     fontStyle: "italic",
                     fontWeight: 500,
                     color: INK,
                     fontSize: "clamp(36px, 9vw, 64px)",
                     lineHeight: 1.05,
-                  }}
-                />
+                  }}><EditableField
+                  fieldId="bride-name"
+                  text={getFieldValue("bride-name", brideName)}
+                  style={getFieldStyle("bride-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="h1"/></div>
               </div>
               <Hairline />
               <p
@@ -336,7 +330,15 @@ export const VeronaTemplate = ({
           <section className="px-6 py-14 text-center">
             <AnimatedSection animation="fade-up">
               <HeartGlyph className="block mb-6" />
-              <EditableField
+              <div style={{
+                  fontFamily: SERIF_DISPLAY,
+                  fontStyle: "italic",
+                  color: INK,
+                  fontSize: "clamp(18px, 4.4vw, 24px)",
+                  lineHeight: 1.7,
+                  maxWidth: "38rem",
+                  margin: "0 auto",
+                }}><EditableField
                 fieldId="opening-line"
                 text={getFieldValue(
                   "opening-line",
@@ -349,17 +351,7 @@ export const VeronaTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 multiline
-                tag="p"
-                wrapperStyle={{
-                  fontFamily: SERIF_DISPLAY,
-                  fontStyle: "italic",
-                  color: INK,
-                  fontSize: "clamp(18px, 4.4vw, 24px)",
-                  lineHeight: 1.7,
-                  maxWidth: "38rem",
-                  margin: "0 auto",
-                }}
-              />
+                tag="p"/></div>
             </AnimatedSection>
           </section>
 
@@ -376,7 +368,14 @@ export const VeronaTemplate = ({
                     {brideName}
                   </SectionTitle>
                   <div className="h-6" />
-                  <EditableField
+                  <div style={{
+                      fontFamily: SERIF_DISPLAY,
+                      color: INK,
+                      fontSize: "clamp(15px, 3.8vw, 18px)",
+                      lineHeight: 1.7,
+                      maxWidth: "38rem",
+                      margin: "0 auto",
+                    }}><EditableField
                     fieldId="our-story"
                     text={getFieldValue(
                       "our-story",
@@ -386,16 +385,7 @@ export const VeronaTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     multiline
-                    tag="p"
-                    wrapperStyle={{
-                      fontFamily: SERIF_DISPLAY,
-                      color: INK,
-                      fontSize: "clamp(15px, 3.8vw, 18px)",
-                      lineHeight: 1.7,
-                      maxWidth: "38rem",
-                      margin: "0 auto",
-                    }}
-                  />
+                    tag="p"/></div>
                   {gallery[0] && (
                     <div className="mt-10 max-w-md mx-auto">
                       <img
@@ -603,20 +593,18 @@ export const VeronaTemplate = ({
                 <AnimatedSection animation="fade-up">
                   <Eyebrow>{t("dressCode.title", { defaultValue: "Dress Code" })}</Eyebrow>
                   <div className="h-6" />
-                  <EditableField
+                  <div style={{
+                      fontFamily: SERIF_DISPLAY,
+                      fontStyle: "italic",
+                      color: INK,
+                      fontSize: "clamp(18px, 4.2vw, 22px)",
+                    }}><EditableField
                     fieldId="dress-code"
                     text={getFieldValue("dress-code", wedding.dress_code)}
                     style={getFieldStyle("dress-code")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
-                    tag="p"
-                    wrapperStyle={{
-                      fontFamily: SERIF_DISPLAY,
-                      fontStyle: "italic",
-                      color: INK,
-                      fontSize: "clamp(18px, 4.2vw, 22px)",
-                    }}
-                  />
+                    tag="p"/></div>
                 </AnimatedSection>
               </section>
             </>
@@ -740,15 +728,7 @@ export const VeronaTemplate = ({
           <section className="px-6 py-16 text-center">
             <AnimatedSection animation="fade-in">
               <HeartGlyph className="block mb-4" />
-              <EditableField
-                fieldId="closing-message"
-                text={getFieldValue("closing-message", t("closing.defaultMessage"))}
-                style={getFieldStyle("closing-message")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                multiline
-                tag="p"
-                wrapperStyle={{
+              <div style={{
                   fontFamily: SERIF_DISPLAY,
                   fontStyle: "italic",
                   color: INK,
@@ -756,8 +736,14 @@ export const VeronaTemplate = ({
                   lineHeight: 1.7,
                   maxWidth: "36rem",
                   margin: "0 auto",
-                }}
-              />
+                }}><EditableField
+                fieldId="closing-message"
+                text={getFieldValue("closing-message", t("closing.defaultMessage"))}
+                style={getFieldStyle("closing-message")}
+                onUpdate={onFieldUpdate}
+                isPreview={isPreview}
+                multiline
+                tag="p"/></div>
               <div className="h-6" />
               <p
                 style={{
