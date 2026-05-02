@@ -403,7 +403,7 @@ export const LumiereTemplate = ({
               <EditableField
                 fieldId="bible-verse"
                 text={quoteText}
-                style={getFieldStyle("bible-verse")}
+                style={{ ...getFieldStyle("bible-verse"), fontFamily: "var(--font-template-body)" }}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
@@ -422,7 +422,7 @@ export const LumiereTemplate = ({
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.3s_forwards]">
-              <p className="text-template-body text-white/70">{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
+              <p className="text-template-body text-white/70" style={{ fontFamily: "var(--font-template-body)" }}>{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
@@ -476,7 +476,7 @@ export const LumiereTemplate = ({
                   "invitation-line",
                   getLocalizedValue("main_description", wedding.main_description || t("family.defaultInvitation")),
                 )}
-                style={getFieldStyle("invitation-line")}
+                style={{ ...getFieldStyle("invitation-line"), fontFamily: "var(--font-template-body)" }}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 multiline={true}
@@ -506,7 +506,7 @@ export const LumiereTemplate = ({
                       year: "numeric",
                     }),
                   )}
-                  style={getFieldStyle("wedding-date-formatted")}
+                  style={{ ...getFieldStyle("wedding-date-formatted"), fontFamily: "var(--font-template-body)" }}
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
