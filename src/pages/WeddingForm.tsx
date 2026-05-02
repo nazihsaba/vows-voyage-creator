@@ -11,7 +11,21 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
-import { ArrowLeft, Loader2, Eye, Upload, X, Languages, Mail, ChevronUp, ChevronDown, Plus, Minus, ArrowUp, ArrowDown } from "lucide-react";
+import {
+  ArrowLeft,
+  Loader2,
+  Eye,
+  Upload,
+  X,
+  Languages,
+  Mail,
+  ChevronUp,
+  ChevronDown,
+  Plus,
+  Minus,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
@@ -20,7 +34,11 @@ import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
 import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
-import FontCustomizer, { type TemplateFonts, applyTemplateFonts, resetTemplateFonts } from "@/components/FontCustomizer";
+import FontCustomizer, {
+  type TemplateFonts,
+  applyTemplateFonts,
+  resetTemplateFonts,
+} from "@/components/FontCustomizer";
 import { getTemplateFontDefaults } from "@/components/templateFontDefaults";
 
 const LOCATION_ICON_OPTIONS = [
@@ -29,6 +47,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
+  { value: "hugeicons:suit-01:bold", label: "Groom" },
 ];
 
 const WeddingForm = () => {
@@ -80,15 +99,10 @@ const WeddingForm = () => {
   const newCustomUid = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
   const [customSections, setCustomSections] = useState<CustomSection[]>([]);
   // Visual order of timeline cards. Keys: "ceremony", "welcome_drink", "venue", or a custom uid.
-  const [timelineOrder, setTimelineOrder] = useState<string[]>([
-    "ceremony",
-    "welcome_drink",
-    "venue",
-  ]);
+  const [timelineOrder, setTimelineOrder] = useState<string[]>(["ceremony", "welcome_drink", "venue"]);
   // Collapsed state per location card (collapsed by default for compact UX)
   const [openLocationCards, setOpenLocationCards] = useState<Record<string, boolean>>({});
-  const toggleLocationCard = (key: string) =>
-    setOpenLocationCards((prev) => ({ ...prev, [key]: !prev[key] }));
+  const toggleLocationCard = (key: string) => setOpenLocationCards((prev) => ({ ...prev, [key]: !prev[key] }));
   const [giftCards, setGiftCards] = useState<Array<{ card_name: string; card_number: string; logo_url?: string }>>([
     { card_name: "", card_number: "" },
   ]);
@@ -302,10 +316,6 @@ const WeddingForm = () => {
           fieldsToTranslate.aura_quote = auraQuote;
           fieldsToTranslate.aura_reference = auraReference;
         }
-        customSections.forEach((s) => {
-          if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
-          if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
-        });
         Object.entries(fieldsToTranslate).forEach(([key, value]) => {
           if (value && value.trim().length > 0 && !arabicFields[key]) {
             translateToArabic(key, value);
@@ -313,7 +323,7 @@ const WeddingForm = () => {
         });
       }
     },
-    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic, customSections],
+    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic],
   );
 
   const getMaxGalleryImages = () => {
@@ -451,28 +461,6 @@ const WeddingForm = () => {
         const customDbTypeByUid = new Map<string, string>();
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
-
-        // Remap any persisted Arabic keys from dbType -> uid for the editor
-        if (data.field_customizations) {
-          const fc =
-            typeof data.field_customizations === "string"
-              ? JSON.parse(data.field_customizations)
-              : data.field_customizations;
-          const arabic = fc?.arabic;
-          if (arabic) {
-            const remapped: Record<string, string> = {};
-            customRows.forEach((row, i) => {
-              const dbType = customRowsRaw[i].type;
-              const tKey = `custom_title_${dbType}`;
-              const lKey = `custom_location_${dbType}`;
-              if (arabic[tKey]) remapped[`custom_title_${row.uid}`] = arabic[tKey];
-              if (arabic[lKey]) remapped[`custom_location_${row.uid}`] = arabic[lKey];
-            });
-            if (Object.keys(remapped).length > 0) {
-              setArabicFields((prev) => ({ ...prev, ...remapped }));
-            }
-          }
-        }
 
         // Build timeline order from display_order on existing rows.
         // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
@@ -672,11 +660,7 @@ const WeddingForm = () => {
     let candidate = baseSlug;
     // Safety cap to avoid infinite loops
     for (let i = 0; i < 20; i++) {
-      const { data, error } = await supabase
-        .from("weddings")
-        .select("id")
-        .eq("slug", candidate)
-        .maybeSingle();
+      const { data, error } = await supabase.from("weddings").select("id").eq("slug", candidate).maybeSingle();
       if (error) break;
       if (!data || (currentId && data.id === currentId)) return candidate;
       // Add an extra dash between the two names (or at the end if no dash)
@@ -862,29 +846,7 @@ const WeddingForm = () => {
 
       // Save Arabic translations if enabled
       if (enableArabic) {
-        // Remap custom section Arabic keys from uid -> stable DB type (custom_1, custom_2, ...)
-        const uidToDbType = new Map<string, string>();
-        let dbIdx = 0;
-        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s) => {
-          const hasContent = s.title || s.location_name || s.time || s.location_link;
-          if (!hasContent) return;
-          dbIdx += 1;
-          uidToDbType.set(s.uid, `custom_${dbIdx}`);
-        });
-        const remappedArabic: Record<string, string> = {};
-        Object.entries(arabicFields).forEach(([k, v]) => {
-          if (!v) return;
-          const titleMatch = k.match(/^custom_title_(.+)$/);
-          const locMatch = k.match(/^custom_location_(.+)$/);
-          if (titleMatch && uidToDbType.has(titleMatch[1])) {
-            remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = v;
-          } else if (locMatch && uidToDbType.has(locMatch[1])) {
-            remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = v;
-          } else if (!titleMatch && !locMatch) {
-            remappedArabic[k] = v;
-          }
-        });
-        fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
+        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
       } else {
         // Remove arabic key if disabled
         const { arabic, ...rest } = fieldCustomizations;
@@ -1588,7 +1550,6 @@ const WeddingForm = () => {
                 </div>
               ) : null}
 
-
               {/* Audio Trim Field */}
               <AudioTrimField
                 key={`audio-${id}-${formData.audio_url}`}
@@ -1710,85 +1671,85 @@ const WeddingForm = () => {
                     </CardHeader>
                     <CollapsibleContent>
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
-                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="ceremony_location">Location Name *</Label>
-                        <Input
-                          id="ceremony_location"
-                          value={locations.ceremony_location}
-                          onChange={(e) => {
-                            setLocations({ ...locations, ceremony_location: e.target.value });
-                            if (enableArabic) debouncedTranslate("ceremony_location", e.target.value);
-                          }}
-                          placeholder="Church or venue name"
-                          required
-                          className="h-11 sm:h-10"
-                        />
-                        {enableArabic && (
-                          <div className="space-y-1 mt-2">
-                            <Label className="text-xs text-muted-foreground">اسم موقع الحفل (Arabic)</Label>
+                        <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                          <div className="space-y-1.5">
+                            <Label htmlFor="ceremony_location">Location Name *</Label>
                             <Input
-                              value={arabicFields.ceremony_location}
-                              onChange={(e) =>
-                                setArabicFields((prev) => ({ ...prev, ceremony_location: e.target.value }))
-                              }
-                              dir="rtl"
-                              className="h-10 text-right font-arabic"
-                              placeholder={translatingFields.ceremony_location ? "Translating..." : ""}
-                              disabled={translatingFields.ceremony_location}
+                              id="ceremony_location"
+                              value={locations.ceremony_location}
+                              onChange={(e) => {
+                                setLocations({ ...locations, ceremony_location: e.target.value });
+                                if (enableArabic) debouncedTranslate("ceremony_location", e.target.value);
+                              }}
+                              placeholder="Church or venue name"
+                              required
+                              className="h-11 sm:h-10"
+                            />
+                            {enableArabic && (
+                              <div className="space-y-1 mt-2">
+                                <Label className="text-xs text-muted-foreground">اسم موقع الحفل (Arabic)</Label>
+                                <Input
+                                  value={arabicFields.ceremony_location}
+                                  onChange={(e) =>
+                                    setArabicFields((prev) => ({ ...prev, ceremony_location: e.target.value }))
+                                  }
+                                  dir="rtl"
+                                  className="h-10 text-right font-arabic"
+                                  placeholder={translatingFields.ceremony_location ? "Translating..." : ""}
+                                  disabled={translatingFields.ceremony_location}
+                                />
+                              </div>
+                            )}
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label htmlFor="ceremony_time">Time *</Label>
+                            <Input
+                              id="ceremony_time"
+                              type="time"
+                              value={locations.ceremony_time}
+                              onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                              required
+                              className="h-11 sm:h-10"
                             />
                           </div>
-                        )}
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="ceremony_time">Time *</Label>
-                        <Input
-                          id="ceremony_time"
-                          type="time"
-                          value={locations.ceremony_time}
-                          onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
-                          required
-                          className="h-11 sm:h-10"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
-                      <Input
-                        id="ceremony_location_link"
-                        value={locations.ceremony_location_link}
-                        onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
-                        placeholder="https://maps.google.com/..."
-                        type="url"
-                        className="h-11 sm:h-10 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Icon</Label>
-                      <Select
-                        value={locations.ceremony_icon}
-                        onValueChange={(value) => setLocations({ ...locations, ceremony_icon: value })}
-                      >
-                        <SelectTrigger className="h-11 sm:h-10">
-                          <SelectValue>
-                            <span className="flex items-center gap-2">
-                              <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.ceremony_icon)?.label}
-                            </span>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {LOCATION_ICON_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <span className="flex items-center gap-2">
-                                <Icon icon={opt.value} className="w-5 h-5" />
-                                {opt.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
+                          <Input
+                            id="ceremony_location_link"
+                            value={locations.ceremony_location_link}
+                            onChange={(e) => setLocations({ ...locations, ceremony_location_link: e.target.value })}
+                            placeholder="https://maps.google.com/..."
+                            type="url"
+                            className="h-11 sm:h-10 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label>Icon</Label>
+                          <Select
+                            value={locations.ceremony_icon}
+                            onValueChange={(value) => setLocations({ ...locations, ceremony_icon: value })}
+                          >
+                            <SelectTrigger className="h-11 sm:h-10">
+                              <SelectValue>
+                                <span className="flex items-center gap-2">
+                                  <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
+                                  {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.ceremony_icon)?.label}
+                                </span>
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {LOCATION_ICON_OPTIONS.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  <span className="flex items-center gap-2">
+                                    <Icon icon={opt.value} className="w-5 h-5" />
+                                    {opt.label}
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </CardContent>
                     </CollapsibleContent>
                   </Card>
@@ -1818,91 +1779,91 @@ const WeddingForm = () => {
                     </CardHeader>
                     <CollapsibleContent>
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
-                    <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
-                      <div className="space-y-1.5">
-                        <Label htmlFor="venue_location">Location Name *</Label>
-                        <Input
-                          id="venue_location"
-                          value={locations.venue_location}
-                          onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
-                          placeholder="Reception venue name"
-                          required
-                          className="h-11 sm:h-10"
-                        />
-                      </div>
-                      <div className="space-y-1.5">
-                        <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
-                        <Input
-                          id="venue_time"
-                          type="time"
-                          value={locations.venue_time}
-                          onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
-                          required
-                          className="h-11 sm:h-10"
-                        />
-                      </div>
-                    </div>
-                    {showsWelcomeDrinkField && (
-                      <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
-                        <div className="relative">
-                          <Input
-                            id="welcome_drink_time"
-                            type="time"
-                            value={locations.welcome_drink_time}
-                            onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
-                            className="h-11 sm:h-10 pr-10"
-                          />
-                          {locations.welcome_drink_time && (
-                            <button
-                              type="button"
-                              onClick={() => setLocations({ ...locations, welcome_drink_time: "" })}
-                              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                              aria-label="Clear welcome drink time"
-                            >
-                              <X className="w-4 h-4" />
-                            </button>
-                          )}
+                        <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                          <div className="space-y-1.5">
+                            <Label htmlFor="venue_location">Location Name *</Label>
+                            <Input
+                              id="venue_location"
+                              value={locations.venue_location}
+                              onChange={(e) => setLocations({ ...locations, venue_location: e.target.value })}
+                              placeholder="Reception venue name"
+                              required
+                              className="h-11 sm:h-10"
+                            />
+                          </div>
+                          <div className="space-y-1.5">
+                            <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
+                            <Input
+                              id="venue_time"
+                              type="time"
+                              value={locations.venue_time}
+                              onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
+                              required
+                              className="h-11 sm:h-10"
+                            />
+                          </div>
                         </div>
-                      </div>
-                    )}
-                    <div className="space-y-1.5">
-                      <Label htmlFor="venue_location_link">Venue map link</Label>
-                      <Input
-                        id="venue_location_link"
-                        value={locations.venue_location_link}
-                        onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
-                        placeholder="https://maps.google.com/..."
-                        type="url"
-                        className="h-11 sm:h-10 text-sm"
-                      />
-                    </div>
-                    <div className="space-y-1.5">
-                      <Label>Icon</Label>
-                      <Select
-                        value={locations.venue_icon}
-                        onValueChange={(value) => setLocations({ ...locations, venue_icon: value })}
-                      >
-                        <SelectTrigger className="h-11 sm:h-10">
-                          <SelectValue>
-                            <span className="flex items-center gap-2">
-                              <Icon icon={locations.venue_icon} className="w-5 h-5" />
-                              {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.venue_icon)?.label}
-                            </span>
-                          </SelectValue>
-                        </SelectTrigger>
-                        <SelectContent>
-                          {LOCATION_ICON_OPTIONS.map((opt) => (
-                            <SelectItem key={opt.value} value={opt.value}>
-                              <span className="flex items-center gap-2">
-                                <Icon icon={opt.value} className="w-5 h-5" />
-                                {opt.label}
-                              </span>
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
+                        {showsWelcomeDrinkField && (
+                          <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
+                            <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
+                            <div className="relative">
+                              <Input
+                                id="welcome_drink_time"
+                                type="time"
+                                value={locations.welcome_drink_time}
+                                onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
+                                className="h-11 sm:h-10 pr-10"
+                              />
+                              {locations.welcome_drink_time && (
+                                <button
+                                  type="button"
+                                  onClick={() => setLocations({ ...locations, welcome_drink_time: "" })}
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                                  aria-label="Clear welcome drink time"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )}
+                        <div className="space-y-1.5">
+                          <Label htmlFor="venue_location_link">Venue map link</Label>
+                          <Input
+                            id="venue_location_link"
+                            value={locations.venue_location_link}
+                            onChange={(e) => setLocations({ ...locations, venue_location_link: e.target.value })}
+                            placeholder="https://maps.google.com/..."
+                            type="url"
+                            className="h-11 sm:h-10 text-sm"
+                          />
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label>Icon</Label>
+                          <Select
+                            value={locations.venue_icon}
+                            onValueChange={(value) => setLocations({ ...locations, venue_icon: value })}
+                          >
+                            <SelectTrigger className="h-11 sm:h-10">
+                              <SelectValue>
+                                <span className="flex items-center gap-2">
+                                  <Icon icon={locations.venue_icon} className="w-5 h-5" />
+                                  {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.venue_icon)?.label}
+                                </span>
+                              </SelectValue>
+                            </SelectTrigger>
+                            <SelectContent>
+                              {LOCATION_ICON_OPTIONS.map((opt) => (
+                                <SelectItem key={opt.value} value={opt.value}>
+                                  <span className="flex items-center gap-2">
+                                    <Icon icon={opt.value} className="w-5 h-5" />
+                                    {opt.label}
+                                  </span>
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
                       </CardContent>
                     </CollapsibleContent>
                   </Card>
@@ -1915,7 +1876,8 @@ const WeddingForm = () => {
                       <div>
                         <CardTitle className="text-lg sm:text-xl">Additional Sections</CardTitle>
                         <p className="text-xs text-muted-foreground mt-1">
-                          Add up to {MAX_CUSTOM_SECTIONS} more events to your timeline (e.g. Cocktail Hour, After Party).
+                          Add up to {MAX_CUSTOM_SECTIONS} more events to your timeline (e.g. Cocktail Hour, After
+                          Party).
                         </p>
                       </div>
                       <Button
@@ -1951,229 +1913,197 @@ const WeddingForm = () => {
                       {customSections.map((section, idx) => {
                         const pos = timelinePosition(section.uid);
                         return (
-                        <Collapsible
-                          key={section.uid}
-                          open={!!openLocationCards[section.uid]}
-                          onOpenChange={() => toggleLocationCard(section.uid)}
-                        >
-                          <Card className="border shadow-sm">
-                            <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between gap-2 space-y-0">
-                              <CollapsibleTrigger asChild>
-                                <button
-                                  type="button"
-                                  className="flex flex-1 items-center gap-2 text-left group min-w-0"
-                                  aria-label="Toggle section"
-                                  aria-expanded={!!openLocationCards[section.uid]}
-                                >
-                                  <ChevronDown
-                                    className={`w-5 h-5 text-muted-foreground transition-transform shrink-0 ${
-                                      openLocationCards[section.uid] ? "" : "-rotate-90"
-                                    }`}
-                                    aria-hidden="true"
-                                  />
-                                  <CardTitle className="text-lg sm:text-xl truncate">
-                                    {section.title?.trim() ? section.title : `Section ${idx + 1}`}
-                                  </CardTitle>
-                                </button>
-                              </CollapsibleTrigger>
-                              <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
-                                {pos !== null && (
-                                  <span
-                                    className="inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-full text-xs font-semibold tabular-nums whitespace-nowrap shadow-sm border"
-                                    style={{
-                                      backgroundColor: "#865814",
-                                      color: "#ffffff",
-                                      borderColor: "#6b4410",
-                                    }}
-                                    aria-label={`Timeline position ${pos}`}
-                                    title={`Timeline position ${pos}`}
-                                  >
-                                    #{pos}
-                                  </span>
-                                )}
-                                <div
-                                  className="flex items-center rounded-md border border-border bg-background overflow-hidden"
-                                  role="group"
-                                  aria-label="Reorder section"
-                                >
-                                  <Button
+                          <Collapsible
+                            key={section.uid}
+                            open={!!openLocationCards[section.uid]}
+                            onOpenChange={() => toggleLocationCard(section.uid)}
+                          >
+                            <Card className="border shadow-sm">
+                              <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between gap-2 space-y-0">
+                                <CollapsibleTrigger asChild>
+                                  <button
                                     type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 rounded-none"
-                                    disabled={!canMoveUp(section.uid)}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      moveTimelineKey(section.uid, -1);
-                                    }}
-                                    aria-label="Move section up in timeline"
-                                    title="Move up"
+                                    className="flex flex-1 items-center gap-2 text-left group min-w-0"
+                                    aria-label="Toggle section"
+                                    aria-expanded={!!openLocationCards[section.uid]}
                                   >
-                                    <ArrowUp className="w-4 h-4" />
-                                  </Button>
-                                  <div className="w-px h-5 bg-border" />
-                                  <Button
-                                    type="button"
-                                    variant="ghost"
-                                    size="sm"
-                                    className="h-8 w-8 p-0 rounded-none"
-                                    disabled={!canMoveDown(section.uid)}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      moveTimelineKey(section.uid, 1);
-                                    }}
-                                    aria-label="Move section down in timeline"
-                                    title="Move down"
-                                  >
-                                    <ArrowDown className="w-4 h-4" />
-                                  </Button>
-                                </div>
-                                <Button
-                                  type="button"
-                                  variant="ghost"
-                                  size="sm"
-                                  className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    setCustomSections(customSections.filter((_, i) => i !== idx));
-                                    setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
-                                  }}
-                                  aria-label="Remove section"
-                                  title="Remove"
-                                >
-                                  <X className="w-4 h-4" />
-                                </Button>
-                              </div>
-                            </CardHeader>
-                            <CollapsibleContent>
-                              <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
-                          <div className="space-y-1.5">
-                            <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
-                            <Input
-                              id={`custom_title_${idx}`}
-                              value={section.title}
-                              onChange={(e) => {
-                                const next = [...customSections];
-                                next[idx] = { ...next[idx], title: e.target.value };
-                                setCustomSections(next);
-                                if (enableArabic) debouncedTranslate(`custom_title_${section.uid}`, e.target.value);
-                              }}
-                              placeholder="Cocktail Hour"
-                              className="h-11 sm:h-10"
-                            />
-                            {enableArabic && (
-                              <div className="space-y-1 mt-2">
-                                <Label className="text-xs text-muted-foreground">العنوان (Arabic)</Label>
-                                <Input
-                                  value={arabicFields[`custom_title_${section.uid}`] || ""}
-                                  onChange={(e) =>
-                                    setArabicFields((prev) => ({ ...prev, [`custom_title_${section.uid}`]: e.target.value }))
-                                  }
-                                  dir="rtl"
-                                  className="h-10 text-right font-arabic"
-                                  placeholder={translatingFields[`custom_title_${section.uid}`] ? "Translating..." : ""}
-                                  disabled={translatingFields[`custom_title_${section.uid}`]}
-                                />
-                              </div>
-                            )}
-                          </div>
-                          <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
-                            <div className="space-y-1.5">
-                              <Label htmlFor={`custom_location_${idx}`}>Location Name *</Label>
-                              <Input
-                                id={`custom_location_${idx}`}
-                                value={section.location_name}
-                                onChange={(e) => {
-                                  const next = [...customSections];
-                                  next[idx] = { ...next[idx], location_name: e.target.value };
-                                  setCustomSections(next);
-                                  if (enableArabic) debouncedTranslate(`custom_location_${section.uid}`, e.target.value);
-                                }}
-                                placeholder="Venue or place"
-                                required
-                                className="h-11 sm:h-10"
-                              />
-                              {enableArabic && (
-                                <div className="space-y-1 mt-2">
-                                  <Label className="text-xs text-muted-foreground">اسم الموقع (Arabic)</Label>
-                                  <Input
-                                    value={arabicFields[`custom_location_${section.uid}`] || ""}
-                                    onChange={(e) =>
-                                      setArabicFields((prev) => ({ ...prev, [`custom_location_${section.uid}`]: e.target.value }))
-                                    }
-                                    dir="rtl"
-                                    className="h-10 text-right font-arabic"
-                                    placeholder={translatingFields[`custom_location_${section.uid}`] ? "Translating..." : ""}
-                                    disabled={translatingFields[`custom_location_${section.uid}`]}
-                                  />
-                                </div>
-                              )}
-                            </div>
-                            <div className="space-y-1.5">
-                              <Label htmlFor={`custom_time_${idx}`}>Time *</Label>
-                              <Input
-                                id={`custom_time_${idx}`}
-                                type="time"
-                                value={section.time}
-                                onChange={(e) => {
-                                  const next = [...customSections];
-                                  next[idx] = { ...next[idx], time: e.target.value };
-                                  setCustomSections(next);
-                                }}
-                                required
-                                className="h-11 sm:h-10"
-                              />
-                            </div>
-                          </div>
-                          <div className="space-y-1.5">
-                            <Label htmlFor={`custom_link_${idx}`}>Map link</Label>
-                            <Input
-                              id={`custom_link_${idx}`}
-                              value={section.location_link}
-                              onChange={(e) => {
-                                const next = [...customSections];
-                                next[idx] = { ...next[idx], location_link: e.target.value };
-                                setCustomSections(next);
-                              }}
-                              placeholder="https://maps.google.com/..."
-                              type="url"
-                              className="h-11 sm:h-10 text-sm"
-                            />
-                          </div>
-                          <div className="space-y-1.5">
-                            <Label>Icon</Label>
-                            <Select
-                              value={section.icon}
-                              onValueChange={(value) => {
-                                const next = [...customSections];
-                                next[idx] = { ...next[idx], icon: value };
-                                setCustomSections(next);
-                              }}
-                            >
-                              <SelectTrigger className="h-11 sm:h-10">
-                                <SelectValue>
-                                  <span className="flex items-center gap-2">
-                                    <Icon icon={section.icon} className="w-5 h-5" />
-                                    {LOCATION_ICON_OPTIONS.find((o) => o.value === section.icon)?.label}
-                                  </span>
-                                </SelectValue>
-                              </SelectTrigger>
-                              <SelectContent>
-                                {LOCATION_ICON_OPTIONS.map((opt) => (
-                                  <SelectItem key={opt.value} value={opt.value}>
-                                    <span className="flex items-center gap-2">
-                                      <Icon icon={opt.value} className="w-5 h-5" />
-                                      {opt.label}
+                                    <ChevronDown
+                                      className={`w-5 h-5 text-muted-foreground transition-transform shrink-0 ${
+                                        openLocationCards[section.uid] ? "" : "-rotate-90"
+                                      }`}
+                                      aria-hidden="true"
+                                    />
+                                    <CardTitle className="text-lg sm:text-xl truncate">
+                                      {section.title?.trim() ? section.title : `Section ${idx + 1}`}
+                                    </CardTitle>
+                                  </button>
+                                </CollapsibleTrigger>
+                                <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                  {pos !== null && (
+                                    <span
+                                      className="inline-flex items-center justify-center min-w-[1.75rem] h-7 px-2 rounded-full text-xs font-semibold tabular-nums whitespace-nowrap shadow-sm border"
+                                      style={{
+                                        backgroundColor: "#865814",
+                                        color: "#ffffff",
+                                        borderColor: "#6b4410",
+                                      }}
+                                      aria-label={`Timeline position ${pos}`}
+                                      title={`Timeline position ${pos}`}
+                                    >
+                                      #{pos}
                                     </span>
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                              </CardContent>
-                            </CollapsibleContent>
-                          </Card>
-                        </Collapsible>
+                                  )}
+                                  <div
+                                    className="flex items-center rounded-md border border-border bg-background overflow-hidden"
+                                    role="group"
+                                    aria-label="Reorder section"
+                                  >
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 rounded-none"
+                                      disabled={!canMoveUp(section.uid)}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveTimelineKey(section.uid, -1);
+                                      }}
+                                      aria-label="Move section up in timeline"
+                                      title="Move up"
+                                    >
+                                      <ArrowUp className="w-4 h-4" />
+                                    </Button>
+                                    <div className="w-px h-5 bg-border" />
+                                    <Button
+                                      type="button"
+                                      variant="ghost"
+                                      size="sm"
+                                      className="h-8 w-8 p-0 rounded-none"
+                                      disabled={!canMoveDown(section.uid)}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        moveTimelineKey(section.uid, 1);
+                                      }}
+                                      aria-label="Move section down in timeline"
+                                      title="Move down"
+                                    >
+                                      <ArrowDown className="w-4 h-4" />
+                                    </Button>
+                                  </div>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="sm"
+                                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      setCustomSections(customSections.filter((_, i) => i !== idx));
+                                      setTimelineOrder((prev) => prev.filter((k) => k !== section.uid));
+                                    }}
+                                    aria-label="Remove section"
+                                    title="Remove"
+                                  >
+                                    <X className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </CardHeader>
+                              <CollapsibleContent>
+                                <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
+                                  <div className="space-y-1.5">
+                                    <Label htmlFor={`custom_title_${idx}`}>Title *</Label>
+                                    <Input
+                                      id={`custom_title_${idx}`}
+                                      value={section.title}
+                                      onChange={(e) => {
+                                        const next = [...customSections];
+                                        next[idx] = { ...next[idx], title: e.target.value };
+                                        setCustomSections(next);
+                                      }}
+                                      placeholder="Cocktail Hour"
+                                      className="h-11 sm:h-10"
+                                    />
+                                  </div>
+                                  <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
+                                    <div className="space-y-1.5">
+                                      <Label htmlFor={`custom_location_${idx}`}>Location Name *</Label>
+                                      <Input
+                                        id={`custom_location_${idx}`}
+                                        value={section.location_name}
+                                        onChange={(e) => {
+                                          const next = [...customSections];
+                                          next[idx] = { ...next[idx], location_name: e.target.value };
+                                          setCustomSections(next);
+                                        }}
+                                        placeholder="Venue or place"
+                                        required
+                                        className="h-11 sm:h-10"
+                                      />
+                                    </div>
+                                    <div className="space-y-1.5">
+                                      <Label htmlFor={`custom_time_${idx}`}>Time *</Label>
+                                      <Input
+                                        id={`custom_time_${idx}`}
+                                        type="time"
+                                        value={section.time}
+                                        onChange={(e) => {
+                                          const next = [...customSections];
+                                          next[idx] = { ...next[idx], time: e.target.value };
+                                          setCustomSections(next);
+                                        }}
+                                        required
+                                        className="h-11 sm:h-10"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <Label htmlFor={`custom_link_${idx}`}>Map link</Label>
+                                    <Input
+                                      id={`custom_link_${idx}`}
+                                      value={section.location_link}
+                                      onChange={(e) => {
+                                        const next = [...customSections];
+                                        next[idx] = { ...next[idx], location_link: e.target.value };
+                                        setCustomSections(next);
+                                      }}
+                                      placeholder="https://maps.google.com/..."
+                                      type="url"
+                                      className="h-11 sm:h-10 text-sm"
+                                    />
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <Label>Icon</Label>
+                                    <Select
+                                      value={section.icon}
+                                      onValueChange={(value) => {
+                                        const next = [...customSections];
+                                        next[idx] = { ...next[idx], icon: value };
+                                        setCustomSections(next);
+                                      }}
+                                    >
+                                      <SelectTrigger className="h-11 sm:h-10">
+                                        <SelectValue>
+                                          <span className="flex items-center gap-2">
+                                            <Icon icon={section.icon} className="w-5 h-5" />
+                                            {LOCATION_ICON_OPTIONS.find((o) => o.value === section.icon)?.label}
+                                          </span>
+                                        </SelectValue>
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        {LOCATION_ICON_OPTIONS.map((opt) => (
+                                          <SelectItem key={opt.value} value={opt.value}>
+                                            <span className="flex items-center gap-2">
+                                              <Icon icon={opt.value} className="w-5 h-5" />
+                                              {opt.label}
+                                            </span>
+                                          </SelectItem>
+                                        ))}
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </CardContent>
+                              </CollapsibleContent>
+                            </Card>
+                          </Collapsible>
                         );
                       })}
                     </CardContent>
