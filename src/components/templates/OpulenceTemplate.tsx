@@ -1,4 +1,5 @@
 import { useRef, useState, useEffect } from "react";
+import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -317,7 +318,8 @@ export const OpulenceTemplate = ({
     <div
       className="relative w-full min-h-screen bg-white text-[hsl(0,0%,17%)]"
       style={{
-        fontFamily: "'Cormorant Garamond', 'Times New Roman', serif",
+        ...buildTemplateFontStyle("opulence-curtain", wedding.template_fonts),
+        fontFamily: "var(--font-template-body)",
         overflowX: "hidden",
         overflowY: started ? "auto" : "hidden",
         maxHeight: started ? "none" : "100vh",
