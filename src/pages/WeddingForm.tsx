@@ -1797,13 +1797,25 @@ const WeddingForm = () => {
                     {showsWelcomeDrinkField && (
                       <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
                         <Label htmlFor="welcome_drink_time">Welcome Drink Time</Label>
-                        <Input
-                          id="welcome_drink_time"
-                          type="time"
-                          value={locations.welcome_drink_time}
-                          onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
-                          className="h-11 sm:h-10"
-                        />
+                        <div className="relative">
+                          <Input
+                            id="welcome_drink_time"
+                            type="time"
+                            value={locations.welcome_drink_time}
+                            onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
+                            className="h-11 sm:h-10 pr-10"
+                          />
+                          {locations.welcome_drink_time && (
+                            <button
+                              type="button"
+                              onClick={() => setLocations({ ...locations, welcome_drink_time: "" })}
+                              className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                              aria-label="Clear welcome drink time"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          )}
+                        </div>
                       </div>
                     )}
                     <div className="space-y-1.5">
