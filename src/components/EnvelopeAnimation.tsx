@@ -255,8 +255,8 @@ export const EnvelopeAnimation = ({
             /* Modern browsers: prefer dvh which excludes the dynamic browser UI. */
             @supports (height: 100dvh) {
               .env-zone {
-                height: min(82dvh, 92vw * (840/600)) !important;
-                width: min(92vw, 82dvh * (600/840), 600px) !important;
+                height: min(73.8dvh, 92vw * (840/600)) !important;
+                width: min(92vw, 73.8dvh * (600/840), 600px) !important;
               }
             }
 
@@ -381,8 +381,8 @@ export const EnvelopeAnimation = ({
               // modern browsers via @supports. Parent overlay uses
               // -webkit-fill-available so the envelope is sized against the
               // visible viewport (URL bar excluded) on iOS Safari.
-              height: "min(82vh, 92vw * (840/600))",
-              width: "min(92vw, 82vh * (600/840), 600px)",
+              height: "min(73.8vh, 92vw * (840/600))",
+              width: "min(92vw, 73.8vh * (600/840), 600px)",
               maxWidth: "min(92vw, 600px)",
             }}
             onClick={handleOpen}
