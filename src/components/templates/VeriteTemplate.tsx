@@ -59,6 +59,7 @@ export const VeriteTemplate = ({
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+  const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
 
   const { showLoader, fadingOut } = useHeroLoader({ imageUrl: wedding.main_picture_url });
 
