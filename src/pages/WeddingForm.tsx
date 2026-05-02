@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback, useRef } from "react";
+import { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { useNavigate, useParams, useSearchParams, useLocation } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -1141,13 +1141,12 @@ const WeddingForm = () => {
 
               {/* Envelope Animation Toggle hidden */}
 
-              {/* Lumière typography customizer */}
-              {isLumiereTemplate && (
-                <FontCustomizer
-                  value={(formData.template_fonts as TemplateFonts) || {}}
-                  onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
-                />
-              )}
+              {/* Typography customizer (works on every template, with per-template defaults) */}
+              <FontCustomizer
+                value={(formData.template_fonts as TemplateFonts) || {}}
+                onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
+                defaults={templateFontDefaults}
+              />
 
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
