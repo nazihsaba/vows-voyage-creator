@@ -54,7 +54,7 @@ const App = () => (
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
           <Route path="/preview/modern-romance" element={<VeritePreview />} />
-          <Route path="/preview/epris" element={<EprisPreview />} />
+          
           
           <Route path="*" element={<NotFound />} />
         </Routes>
