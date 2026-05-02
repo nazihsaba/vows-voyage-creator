@@ -216,7 +216,7 @@ function SwipeInvite({
       transition={{ duration: 0.6 }}
     >
       <motion.div
-        className="absolute inset-0"
+        className="absolute top-0 left-0 right-0"
         style={{ height: `${total * 100}%` }}
         animate={{ y: `-${page * (100 / total)}%` }}
         transition={{ type: "spring", stiffness: 240, damping: 32 }}
