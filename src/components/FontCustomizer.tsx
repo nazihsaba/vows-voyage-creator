@@ -36,9 +36,7 @@ export const DEFAULT_TEMPLATE_FONTS: Required<TemplateFonts> = {
 const VAR_MAP: Record<TemplateFontKey, string[]> = {
   title: ["--font-template-title"],
   subtitle: ["--font-template-subtitle"],
-  // "heading" drives both the dedicated heading var AND the subtitle var,
-  // because most section titles in Lumière are styled with .text-template-subtitle.
-  heading: ["--font-template-heading", "--font-template-subtitle"],
+  heading: ["--font-template-heading"],
   body: ["--font-template-body", "--font-template-small"],
   monogram: ["--font-template-monogram"],
 };
