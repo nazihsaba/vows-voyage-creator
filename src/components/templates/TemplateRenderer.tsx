@@ -222,6 +222,7 @@ export const TemplateRenderer = ({
   // Extract ceremony and venue from locations
   const ceremony = locations.find(loc => loc.type === 'ceremony');
   const venue = locations.find(loc => loc.type === 'venue');
+  const welcomeDrink = locations.find(loc => loc.type === 'welcome_drink');
 
   const renderSection = (section: TemplateSectionConfig) => {
     if (!section.enabled) return null;
@@ -338,6 +339,7 @@ export const TemplateRenderer = ({
                     locationName={venue.location_name}
                     locationLink={venue.location_link}
                     time={venue.time}
+                    welcomeDrinkTime={welcomeDrink?.time}
                   />
                 )}
               </div>

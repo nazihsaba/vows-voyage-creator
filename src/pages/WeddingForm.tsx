@@ -129,6 +129,11 @@ const WeddingForm = () => {
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const isLumiereTemplate = template === "lumiere-editorial";
+  const isEclatTemplate = template === "classic-romance";
+  const isVeriteTemplate = template === "modern-wedding";
+  // Templates that show an optional Welcome Drink Time inside Venue Details
+  // (in addition to the Aura family which already shows it as required).
+  const showsWelcomeDrinkField = isAuraTemplate || isEclatTemplate || isGraceTemplate || isVeriteTemplate;
 
   // Live-apply typography choices to CSS variables so the in-form preview
   // (and any modal preview opened from this page) reflects the picker instantly.
@@ -1019,7 +1024,7 @@ const WeddingForm = () => {
           icon: locations.venue_icon,
         });
       }
-      if (isAuraTemplate && locations.welcome_drink_time) {
+      if (showsWelcomeDrinkField && locations.welcome_drink_time) {
         locationInserts.push({
           wedding_id: weddingId,
           type: "welcome_drink",
@@ -1797,13 +1802,15 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-                    {isAuraTemplate && (
+                    {showsWelcomeDrinkField && (
                       <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
-                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                        <Label htmlFor="welcome_drink_time">
+                          Welcome Drink Time{isAuraTemplate ? " *" : ""}
+                        </Label>
                         <Input
                           id="welcome_drink_time"
                           type="time"
-                          required
+                          required={isAuraTemplate}
                           value={locations.welcome_drink_time}
                           onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
                           className="h-11 sm:h-10"
