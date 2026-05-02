@@ -20,7 +20,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   // Aura / Dorée (bible-verse-tabs) — soft serif romance
   "bible-verse-tabs": {
     title: '"Dancing Script", cursive',
-    subtitle: '"Playfair Display", serif',
+    subtitle: '"Dancing Script", cursive',
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
@@ -28,7 +28,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   // Étoile (carousel)
   "etoile-carousel": {
     title: '"Dancing Script", cursive',
-    subtitle: '"Playfair Display", serif',
+    subtitle: '"Dancing Script", cursive',
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
@@ -36,7 +36,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   // Éclat (classic-romance)
   "classic-romance": {
     title: '"Dancing Script", cursive',
-    subtitle: '"Playfair Display", serif',
+    subtitle: '"Dancing Script", cursive',
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
@@ -44,7 +44,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   // Grâce (video-cinematic)
   "video-cinematic": {
     title: '"Dancing Script", cursive',
-    subtitle: '"Playfair Display", serif',
+    subtitle: '"Dancing Script", cursive',
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
@@ -52,7 +52,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   // Vérité (modern-wedding) — clean serif
   "modern-wedding": {
     title: '"Dancing Script", cursive',
-    subtitle: '"Playfair Display", serif',
+    subtitle: '"Dancing Script", cursive',
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
