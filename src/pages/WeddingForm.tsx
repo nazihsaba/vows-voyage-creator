@@ -20,6 +20,7 @@ import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
 import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
+import FontCustomizer, { type TemplateFonts, applyTemplateFonts, resetTemplateFonts } from "@/components/FontCustomizer";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
