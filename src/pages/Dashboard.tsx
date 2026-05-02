@@ -22,6 +22,7 @@ import {
   Eye,
   X,
   Users,
+  Mail,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
@@ -35,6 +36,7 @@ import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
+import { VeronaPreview } from "@/components/templates/VeronaPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
