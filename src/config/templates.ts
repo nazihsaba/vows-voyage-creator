@@ -538,6 +538,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'verona-stationery',
+    name: 'Verona',
+    category: 'elegant',
+    description: 'Vintage hand-stationery on warm cream paper with restrained gold accents',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: false,
+    component: 'VeronaTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'location', enabled: true, order: 3, customizable: true },
+      { id: 'countdown', enabled: true, order: 4, customizable: true },
+      { id: 'gallery', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Cormorant Garamond',
+      fontSecondary: 'Cormorant Garamond',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#3a2a14',
+        secondary: '#865814',
+        accent: 'rgb(248, 240, 222)',
+        background: 'rgb(248, 240, 222)',
+        text: '#3a2a14',
+      },
+      borderRadius: 'none',
+      shadows: 'none',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
