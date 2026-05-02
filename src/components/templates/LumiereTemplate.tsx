@@ -15,6 +15,7 @@ import LumiereRsvp from "./lumiere/LumiereRsvp";
 import LumiereTornCard from "./lumiere/LumiereTornCard";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
+import { DEFAULT_TEMPLATE_FONTS, type TemplateFonts } from "@/components/FontCustomizer";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -306,7 +307,21 @@ export const LumiereTemplate = ({
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={loaderFadingOut} />
       )}
-    <div className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]" dir="ltr">
+    <div
+      className="w-full min-h-screen font-serif overflow-x-hidden lg:px-[25%]"
+      dir="ltr"
+      style={(() => {
+        const f: TemplateFonts = (wedding?.template_fonts as TemplateFonts) || {};
+        return {
+          ["--font-template-title" as any]: f.title || DEFAULT_TEMPLATE_FONTS.title,
+          ["--font-template-subtitle" as any]: f.subtitle || DEFAULT_TEMPLATE_FONTS.subtitle,
+          ["--font-template-heading" as any]: f.heading || DEFAULT_TEMPLATE_FONTS.heading,
+          ["--font-template-body" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
+          ["--font-template-small" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
+          ["--font-template-monogram" as any]: f.monogram || DEFAULT_TEMPLATE_FONTS.monogram,
+        };
+      })()}
+    >
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
@@ -343,7 +358,7 @@ export const LumiereTemplate = ({
         <section className="min-h-screen flex flex-col items-center justify-center text-center">
           <div className="flex items-center gap-4 md:gap-6">
             <span
-              className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0"
+              className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0"
               style={{ animation: "slideFromLeft 1.5s ease-out 0.3s forwards" }}
             >
               {wedding.groom_name?.charAt(0)?.toUpperCase() || "G"}
@@ -357,7 +372,7 @@ export const LumiereTemplate = ({
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
             <span
-              className="text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0"
+              className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0"
               style={{ animation: "slideFromRight 1.5s ease-out 0.3s forwards" }}
             >
               {wedding.bride_name?.charAt(0)?.toUpperCase() || "B"}

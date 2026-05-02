@@ -129,7 +129,16 @@ All colors MUST be HSL.
   }
 }
 
-@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Great+Vibes&family=Cinzel:wght@400;600&family=Montserrat:wght@300;400;600&family=Playfair+Display:wght@400;600;700&family=Inter:wght@300;400;500&display=swap");
+
+:root {
+  --font-template-title: "Dancing Script", cursive;
+  --font-template-subtitle: "Dancing Script", cursive;
+  --font-template-heading: "Dancing Script", cursive;
+  --font-template-body: "Playfair Display", serif;
+  --font-template-small: "Playfair Display", serif;
+  --font-template-monogram: "Playfair Display", serif;
+}
 
 @layer base {
   * {
@@ -143,38 +152,48 @@ All colors MUST be HSL.
       "calt" 1;
   }
 
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
+  h1:not([class*="text-template"]),
+  h2:not([class*="text-template"]),
+  h3:not([class*="text-template"]),
+  h4:not([class*="text-template"]),
+  h5:not([class*="text-template"]),
+  h6:not([class*="text-template"]) {
     @apply font-serif;
   }
 
   /* Unified Template Typography */
   .text-template-title {
-    @apply text-5xl md:text-7xl font-script;
+    @apply text-5xl md:text-7xl;
+    font-family: var(--font-template-title);
   }
 
   .text-template-subtitle {
-    @apply text-3xl md:text-4xl font-script;
+    @apply text-3xl md:text-4xl;
+    font-family: var(--font-template-subtitle);
   }
 
   .text-template-subtitle-white {
-    @apply text-3xl md:text-4xl font-script text-white;
+    @apply text-3xl md:text-4xl text-white;
+    font-family: var(--font-template-subtitle);
   }
 
   .text-template-heading {
-    @apply text-2xl md:text-3xl font-script;
+    @apply text-2xl md:text-3xl;
+    font-family: var(--font-template-heading);
   }
 
   .text-template-body {
     @apply text-base md:text-lg leading-relaxed;
+    font-family: var(--font-template-body);
   }
 
   .text-template-small {
     @apply text-sm uppercase tracking-widest opacity-70;
+    font-family: var(--font-template-small);
+  }
+
+  .text-template-monogram {
+    font-family: var(--font-template-monogram);
   }
 
   /* Smooth scrolling */

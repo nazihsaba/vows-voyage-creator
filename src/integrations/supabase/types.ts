@@ -397,6 +397,7 @@ export type Database = {
           rsvp_deadline: string | null
           slug: string
           status: string | null
+          template_fonts: Json
           template_type: string | null
           updated_at: string | null
           user_id: string
@@ -439,6 +440,7 @@ export type Database = {
           rsvp_deadline?: string | null
           slug: string
           status?: string | null
+          template_fonts?: Json
           template_type?: string | null
           updated_at?: string | null
           user_id: string
@@ -481,6 +483,7 @@ export type Database = {
           rsvp_deadline?: string | null
           slug?: string
           status?: string | null
+          template_fonts?: Json
           template_type?: string | null
           updated_at?: string | null
           user_id?: string

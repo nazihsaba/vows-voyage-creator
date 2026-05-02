@@ -20,6 +20,7 @@ import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
 import { compressVideo } from "@/lib/compressVideo";
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
+import FontCustomizer, { type TemplateFonts, applyTemplateFonts, resetTemplateFonts } from "@/components/FontCustomizer";
 
 const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
@@ -115,6 +116,7 @@ const WeddingForm = () => {
     audio_end_time: 0,
     main_picture_position_y: 50,
     envelope_animation_enabled: false,
+    template_fonts: {} as Record<string, string>,
   });
   const mainImgRef = useRef<HTMLImageElement>(null);
 
@@ -125,6 +127,15 @@ const WeddingForm = () => {
     template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
+  const isLumiereTemplate = template === "lumiere-editorial";
+
+  // Live-apply Lumière typography choices to CSS variables so the in-form preview
+  // (and any modal preview opened from this page) reflects the picker instantly.
+  useEffect(() => {
+    if (!isLumiereTemplate) return;
+    applyTemplateFonts((formData.template_fonts as TemplateFonts) || {});
+    return () => resetTemplateFonts();
+  }, [isLumiereTemplate, formData.template_fonts]);
 
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
@@ -1127,6 +1138,14 @@ const WeddingForm = () => {
               </div>
 
               {/* Envelope Animation Toggle hidden */}
+
+              {/* Lumière typography customizer */}
+              {isLumiereTemplate && (
+                <FontCustomizer
+                  value={(formData.template_fonts as TemplateFonts) || {}}
+                  onChange={(next) => setFormData({ ...formData, template_fonts: next as Record<string, string> })}
+                />
+              )}
 
               {/* Couple Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
