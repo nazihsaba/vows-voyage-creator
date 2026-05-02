@@ -302,6 +302,10 @@ const WeddingForm = () => {
           fieldsToTranslate.aura_quote = auraQuote;
           fieldsToTranslate.aura_reference = auraReference;
         }
+        customSections.forEach((s) => {
+          if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
+          if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+        });
         Object.entries(fieldsToTranslate).forEach(([key, value]) => {
           if (value && value.trim().length > 0 && !arabicFields[key]) {
             translateToArabic(key, value);
@@ -309,7 +313,7 @@ const WeddingForm = () => {
         });
       }
     },
-    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic],
+    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, translateToArabic, customSections],
   );
 
   const getMaxGalleryImages = () => {
