@@ -102,6 +102,11 @@ const FontCustomizer = ({ value, onChange, defaults }: FontCustomizerProps) => {
   };
 
   const handleReset = () => {
+    // Force-apply per-template defaults synchronously so the change is
+    // immediately visible (and overrides any stale inline CSS vars), then
+    // notify the parent to clear the saved overrides.
+    resetTemplateFonts();
+    applyTemplateFonts({}, effectiveDefaults);
     onChange({});
   };
 
