@@ -365,6 +365,7 @@ const Dashboard = () => {
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
+            {showPreview === "verona-stationery" && <VeronaPreview />}
           </div>
         </DialogContent>
       </Dialog>
