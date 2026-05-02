@@ -17,7 +17,7 @@ import WeddingTemplates from "./pages/WeddingTemplates";
 import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 import VeritePreview from "./components/templates/VeritePreview";
-import EprisPreview from "./components/templates/EprisPreview";
+
 import ScrollToTop from "./components/ScrollToTop";
 
 
@@ -54,7 +54,7 @@ const App = () => (
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
           <Route path="/preview/modern-romance" element={<VeritePreview />} />
-          <Route path="/preview/epris" element={<EprisPreview />} />
+          
           
           <Route path="*" element={<NotFound />} />
         </Routes>
