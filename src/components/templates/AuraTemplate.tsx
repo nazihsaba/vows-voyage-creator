@@ -412,7 +412,7 @@ export const AuraTemplate = ({
           <section className="py-16 px-4 bg-card">
             <div className="max-w-4xl mx-auto">
               <AnimatedSection animation="fade-in">
-                <h2 className="text-template-body text-center mb-12 text-primary">{t("gifts.title")}</h2>
+                <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
                 <p className="text-center text-template-body mb-8 text-muted-foreground">{t("gifts.subtitle")}</p>
               </AnimatedSection>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />

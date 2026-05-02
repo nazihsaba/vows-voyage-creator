@@ -389,7 +389,7 @@ export const VeriteTemplate = ({
         <AnimatedSection animation="fade-up">
           <section className="py-16 px-4 bg-card">
             <div className="max-w-4xl mx-auto">
-              <h2 className="text-template-body text-center mb-12 text-primary">{t("gifts.title")}</h2>
+              <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
               <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
