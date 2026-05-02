@@ -255,8 +255,8 @@ export const EnvelopeAnimation = ({
             /* Modern browsers: prefer dvh which excludes the dynamic browser UI. */
             @supports (height: 100dvh) {
               .env-zone {
-                height: min(66.42dvh, 92vw * (840/600)) !important;
-                width: min(92vw, 66.42dvh * (600/840), 600px) !important;
+                height: min(62dvh, 92vw * (840/600)) !important;
+                width: min(92vw, 62dvh * (600/840), 600px) !important;
               }
             }
 
@@ -381,8 +381,8 @@ export const EnvelopeAnimation = ({
               // modern browsers via @supports. Parent overlay uses
               // -webkit-fill-available so the envelope is sized against the
               // visible viewport (URL bar excluded) on iOS Safari.
-              height: "min(66.42vh, 92vw * (840/600))",
-              width: "min(92vw, 66.42vh * (600/840), 600px)",
+              height: "min(62vh, 92vw * (840/600))",
+              width: "min(92vw, 62vh * (600/840), 600px)",
               maxWidth: "min(92vw, 600px)",
             }}
             onClick={handleOpen}
@@ -696,7 +696,7 @@ export const EnvelopeAnimation = ({
                       marginTop: "0.15em",
                     }}
                   >
-                    Welcome
+                    You're Invited
                   </div>
                   {/* Decorative bottom hairline */}
                   <div
