@@ -213,7 +213,16 @@ function SwipeInvite({
   const [page, setPage] = useState(0);
   const go = (n: number) => setPage(Math.max(0, Math.min(total - 1, n)));
 
-  const sectionBg = { backgroundImage: `url(${data.coverImage})` } as const;
+  const images = data.gallery && data.gallery.length > 0 ? data.gallery : [data.coverImage];
+  const [bgIndex, setBgIndex] = useState(0);
+  useEffect(() => {
+    if (images.length <= 1) return;
+    const i = setInterval(() => setBgIndex((p) => (p + 1) % images.length), 4500);
+    return () => clearInterval(i);
+  }, [images.length]);
+
+  // Empty placeholder so children that expect this prop still type-check
+  const sectionBg = { backgroundImage: "none" } as const;
 
   return (
     <motion.div
@@ -222,6 +231,21 @@ function SwipeInvite({
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
     >
+      {/* Shared background carousel */}
+      <div className="absolute inset-0 z-0">
+        <AnimatePresence>
+          <motion.div
+            key={images[bgIndex]}
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${images[bgIndex]})` }}
+            initial={{ opacity: 0, scale: 1.05 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 1.4, ease: "easeInOut" }}
+          />
+        </AnimatePresence>
+      </div>
+
       <motion.div
         className="absolute top-0 left-0 right-0"
         style={{ height: `${total * 100}%` }}
