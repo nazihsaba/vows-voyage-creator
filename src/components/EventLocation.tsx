@@ -1,17 +1,19 @@
 import { MapPin, Clock } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { formatTimeTo12Hour } from "@/lib/formatTime";
 
 interface EventLocationProps {
   type: "ceremony" | "venue";
   locationName?: string;
   locationLink?: string;
   time?: string;
+  welcomeDrinkTime?: string;
 }
 
-export const EventLocation = ({ type, locationName, locationLink, time }: EventLocationProps) => {
+export const EventLocation = ({ type, locationName, locationLink, time, welcomeDrinkTime }: EventLocationProps) => {
   const title = type === "ceremony" ? "Ceremony" : "Venue";
-  
+
   if (!locationName && !time) return null;
 
   return (
@@ -20,11 +22,18 @@ export const EventLocation = ({ type, locationName, locationLink, time }: EventL
         <h3 className="text-2xl md:text-3xl font-serif font-semibold text-primary mb-6 text-center">
           {title}
         </h3>
-        
+
+        {type === "venue" && welcomeDrinkTime && (
+          <div className="flex items-center justify-center gap-2 mb-3 text-sm text-muted-foreground">
+            <span>Welcome Drink:</span>
+            <span className="font-semibold text-foreground">{formatTimeTo12Hour(welcomeDrinkTime)}</span>
+          </div>
+        )}
+
         {time && (
           <div className="flex items-center justify-center gap-2 mb-4">
             <Clock className="w-5 h-5 text-primary" />
-            <span className="text-lg">{time}</span>
+            <span className="text-lg">{formatTimeTo12Hour(time)}</span>
           </div>
         )}
 
