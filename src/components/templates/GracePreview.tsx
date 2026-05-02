@@ -146,7 +146,7 @@ export const GracePreview = () => {
             <p className="text-template-body">It is with the greatest pleasure that the</p>
             <div className="space-y-4">
               <h2 className="text-template-subtitle">{staticWedding.groom_family} Family</h2>
-              <p className="text-2xl">&</p>
+              <p className="text-2xl text-template-subtitle">&</p>
               <h2 className="text-template-subtitle">{staticWedding.bride_family} Family</h2>
             </div>
             <p className="text-template-body">Cordially invite you to celebrate the wedding of their son and daughter</p>

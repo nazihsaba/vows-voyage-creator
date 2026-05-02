@@ -348,7 +348,7 @@ export const GraceTemplate = ({
                 tag="h2"
                 className="text-template-subtitle"
               />
-              <p className="text-2xl">&</p>
+              <p className="text-2xl text-template-subtitle">&</p>
               <EditableField
                 fieldId="bride-family"
                 text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}

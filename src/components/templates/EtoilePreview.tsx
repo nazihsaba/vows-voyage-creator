@@ -174,7 +174,7 @@ const EtoilePreview = () => {
                   <p className="text-template-body text-[#3e2723]">It is with the greatest pleasure that the</p>
                   <div className="space-y-4">
                     <h2 className="text-template-subtitle text-[#3e2723]">Vale Family</h2>
-                    <p className="text-2xl text-[#3e2723]">&</p>
+                    <p className="text-2xl text-[#3e2723] text-template-subtitle">&</p>
                     <h2 className="text-template-subtitle text-[#3e2723]">Maris Family</h2>
                   </div>
                   <p className="text-template-body text-[#3e2723]">

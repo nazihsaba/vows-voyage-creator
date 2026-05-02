@@ -351,7 +351,7 @@ export const EtoileTemplate = ({
                       tag="h2"
                       className="text-template-subtitle"
                     />
-                    <p className="text-2xl text-[#3e2723]">&</p>
+                    <p className="text-2xl text-[#3e2723] text-template-subtitle">&</p>
                     <EditableField
                       fieldId="bride-family"
                       text={t("family.theFamily", {
