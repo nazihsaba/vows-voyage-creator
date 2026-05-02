@@ -1797,17 +1797,19 @@ const WeddingForm = () => {
                         />
                       </div>
                     </div>
-                    <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
-                      <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
-                      <Input
-                        id="welcome_drink_time"
-                        type="time"
-                        required
-                        value={locations.welcome_drink_time}
-                        onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
-                        className="h-11 sm:h-10"
-                      />
-                    </div>
+                    {isAuraTemplate && (
+                      <div className="space-y-1.5 rounded-md border border-dashed border-border/60 p-3">
+                        <Label htmlFor="welcome_drink_time">Welcome Drink Time *</Label>
+                        <Input
+                          id="welcome_drink_time"
+                          type="time"
+                          required
+                          value={locations.welcome_drink_time}
+                          onChange={(e) => setLocations({ ...locations, welcome_drink_time: e.target.value })}
+                          className="h-11 sm:h-10"
+                        />
+                      </div>
+                    )}
                     <div className="space-y-1.5">
                       <Label htmlFor="venue_location_link">Venue map link</Label>
                       <Input
