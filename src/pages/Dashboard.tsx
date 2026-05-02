@@ -143,6 +143,19 @@ const Dashboard = () => {
         { icon: Calendar, text: "RSVP" },
       ],
     },
+    {
+      id: "verona-envelope",
+      name: "Verona",
+      description: "Vintage Italianate envelope opener with cream paper & warm gold typography",
+      image: auraTemplate,
+      features: [
+        { icon: Mail, text: "Envelope Opener" },
+        { icon: Sparkles, text: "Wax Seal Reveal" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Calendar, text: "RSVP" },
+      ],
+    },
     // Opulence template hidden
   ];
 
