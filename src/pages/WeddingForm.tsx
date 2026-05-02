@@ -127,6 +127,15 @@ const WeddingForm = () => {
     template === "template6" || template === "video-cinematic" || template === "lumiere-editorial";
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
+  const isLumiereTemplate = template === "lumiere-editorial";
+
+  // Live-apply Lumière typography choices to CSS variables so the in-form preview
+  // (and any modal preview opened from this page) reflects the picker instantly.
+  useEffect(() => {
+    if (!isLumiereTemplate) return;
+    applyTemplateFonts((formData.template_fonts as TemplateFonts) || {});
+    return () => resetTemplateFonts();
+  }, [isLumiereTemplate, formData.template_fonts]);
 
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
