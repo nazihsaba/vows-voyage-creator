@@ -183,6 +183,14 @@ export const EtoileTemplate = ({
   if (hasAnyOrder) {
     rawTimelineEntries.sort((a, b) => a.order - b.order);
   }
+  // Always place welcome drink directly before the venue dinner party.
+  const wdIdx = rawTimelineEntries.findIndex((e) => e.event.id === "welcome-drink");
+  const dpIdx = rawTimelineEntries.findIndex((e) => e.event.id === "dinner-party");
+  if (wdIdx !== -1 && dpIdx !== -1 && wdIdx !== dpIdx - 1) {
+    const [wd] = rawTimelineEntries.splice(wdIdx, 1);
+    const newDpIdx = rawTimelineEntries.findIndex((e) => e.event.id === "dinner-party");
+    rawTimelineEntries.splice(newDpIdx, 0, wd);
+  }
   const timelineEvents = rawTimelineEntries.map((e) => e.event);
 
   const hasGiftCards = giftCards && giftCards.length > 0;
