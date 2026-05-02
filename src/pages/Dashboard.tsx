@@ -35,6 +35,7 @@ import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
+import VeronaPreview from "@/components/templates/VeronaPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -136,6 +137,19 @@ const Dashboard = () => {
       features: [
         { icon: Images, text: "Photo Carousel" },
         { icon: Images, text: "Photo Gallery" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+      ],
+    },
+    {
+      id: "verona-stationery",
+      name: "Verona",
+      description: "Vintage hand-stationery on cream paper with gold accents",
+      image: etoileTemplate,
+      features: [
+        { icon: Images, text: "Photo Gallery" },
+        { icon: MapPin, text: "Event Locations" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
@@ -275,6 +289,7 @@ const Dashboard = () => {
                           template6: "/dashboard/grace-form",
                           "lumiere-editorial": "/dashboard/lumiere-form",
                           "etoile-carousel": "/dashboard/etoile-form",
+                          "verona-stationery": "/dashboard/lumiere-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -350,6 +365,7 @@ const Dashboard = () => {
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
+            {showPreview === "verona-stationery" && <VeronaPreview />}
           </div>
         </DialogContent>
       </Dialog>

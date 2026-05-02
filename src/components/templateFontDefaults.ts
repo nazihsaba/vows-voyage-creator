@@ -65,6 +65,14 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     body: '"Cormorant Garamond", serif',
     monogram: '"Cormorant Garamond", serif',
   },
+  // Verona (vintage stationery) — Cormorant Garamond throughout
+  "verona-stationery": {
+    title: '"Cormorant Garamond", Georgia, serif',
+    subtitle: '"Cormorant Upright", "Cormorant Garamond", Georgia, serif',
+    heading: '"Cormorant Garamond", Georgia, serif',
+    body: '"Cormorant Garamond", Georgia, serif',
+    monogram: '"Cormorant Garamond", Georgia, serif',
+  },
 };
 
 const FALLBACK: Required<TemplateFonts> = {
