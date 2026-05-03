@@ -238,7 +238,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-subtitle"
+                    className="text-template-subtitle whitespace-pre-line"
                   />
                 </div>
                 <span className="text-3xl font-light text-template-subtitle">&</span>
@@ -256,7 +256,7 @@ export const AuraTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="p"
-                    className="text-template-subtitle"
+                    className="text-template-subtitle whitespace-pre-line"
                   />
                 </div>
               </div>

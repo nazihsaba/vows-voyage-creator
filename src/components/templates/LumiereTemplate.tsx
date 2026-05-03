@@ -442,7 +442,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-template-subtitle-white"
+                    className="text-template-subtitle-white whitespace-pre-line"
                   />
                 </div>
                 <span className="text-template-subtitle font-light text-white/70">&</span>
@@ -460,7 +460,7 @@ export const LumiereTemplate = ({
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
                     tag="h2"
-                    className="text-template-subtitle-white"
+                    className="text-template-subtitle-white whitespace-pre-line"
                   />
                 </div>
               </div>
