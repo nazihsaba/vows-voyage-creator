@@ -1,5 +1,6 @@
 import { Calendar, MapPin } from "lucide-react";
 import { Icon } from "@iconify/react";
+import { EventIcon } from "@/components/templates/EventIcon";
 import { useTranslation } from "react-i18next";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import LumiereTornCard from "./LumiereTornCard";

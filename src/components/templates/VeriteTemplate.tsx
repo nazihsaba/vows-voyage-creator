@@ -5,6 +5,7 @@ import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
+import { EventIcon } from "@/components/templates/EventIcon";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";

@@ -5,6 +5,7 @@ import { GiftCards } from "@/components/GiftCards";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { Calendar, MapPin } from "lucide-react";
 import { Icon } from "@iconify/react";
+import { EventIcon } from "@/components/templates/EventIcon";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
