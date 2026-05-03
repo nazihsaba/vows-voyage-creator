@@ -111,6 +111,7 @@ const WeddingForm = () => {
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
+  const [familyNameFormat, setFamilyNameFormat] = useState<"family" | "mr_mrs" | "none">("family");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -374,6 +375,7 @@ const WeddingForm = () => {
             : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
+        if (fc.family_name_format) setFamilyNameFormat(fc.family_name_format);
         // Load Arabic fields
         if (fc["arabic"]) {
           setEnableArabic(true);
@@ -853,13 +855,14 @@ const WeddingForm = () => {
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
       const existingCustomizations = typeof rawFc === "string" ? JSON.parse(rawFc || "{}") : rawFc || {};
-      let fieldCustomizations = isAuraTemplate
+      let fieldCustomizations: any = isAuraTemplate
         ? {
             ...existingCustomizations,
             "bible-verse": { text: auraQuote },
             "bible-verse-reference": { text: auraReference },
           }
-        : existingCustomizations;
+        : { ...existingCustomizations };
+      fieldCustomizations.family_name_format = familyNameFormat;
 
       // Save Arabic translations if enabled
       if (enableArabic) {
@@ -1256,6 +1259,29 @@ const WeddingForm = () => {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Family Name Display Format */}
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Family Name Display Format</Label>
+                <Select value={familyNameFormat} onValueChange={(v) => setFamilyNameFormat(v as any)}>
+                  <SelectTrigger className="h-11 sm:h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="family">Family Name</SelectItem>
+                    <SelectItem value="mr_mrs">Mr. &amp; Mrs.</SelectItem>
+                    <SelectItem value="none">None (custom)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {familyNameFormat === "family" &&
+                    "Shows \"[Groom's Family] Family\" and \"[Bride's Family] Family\" in the template."}
+                  {familyNameFormat === "mr_mrs" &&
+                    "Shows \"Mr. & Mrs. [Groom's Family]\" and \"Mr. & Mrs. [Bride's Family]\" in the template."}
+                  {familyNameFormat === "none" &&
+                    "Shows exactly what you write in the fields below — no extra text added."}
+                </p>
               </div>
 
               {/* Family Names */}

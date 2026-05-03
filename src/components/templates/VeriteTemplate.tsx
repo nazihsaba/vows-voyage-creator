@@ -54,7 +54,7 @@ export const VeriteTemplate = ({
   submittingRsvp = false,
 }: VeriteTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -218,7 +218,7 @@ export const VeriteTemplate = ({
             <div className="space-y-4">
               <EditableField
                 fieldId="groom-family"
-                text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom")) })}
+                text={formatFamily("groom_family", getFieldValue("groom-family", wedding.groom_family || "Groom"))}
                 style={getFieldStyle("groom-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -228,7 +228,7 @@ export const VeriteTemplate = ({
               <p className="text-2xl text-template-subtitle">&</p>
               <EditableField
                 fieldId="bride-family"
-                text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
+                text={formatFamily("bride_family", getFieldValue("bride-family", wedding.bride_family || "Bride's Family"))}
                 style={getFieldStyle("bride-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}

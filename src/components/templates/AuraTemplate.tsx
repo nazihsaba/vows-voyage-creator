@@ -51,7 +51,7 @@ export const AuraTemplate = ({
   submittingRsvp = false,
 }: AuraTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
@@ -226,12 +226,13 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="groom-family-name"
-                    text={t("family.theFamily", {
-                      name: getFieldValue(
+                    text={formatFamily(
+                      "groom_family",
+                      getFieldValue(
                         "groom-family-name",
-                        getLocalizedValue("groom_family", wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family"),
+                        wedding.groom_family || wedding.groom_name.split(" ").pop() || "Family",
                       ),
-                    })}
+                    )}
                     style={getFieldStyle("groom-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}
@@ -243,12 +244,13 @@ export const AuraTemplate = ({
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-family-name"
-                    text={t("family.theFamily", {
-                      name: getFieldValue(
+                    text={formatFamily(
+                      "bride_family",
+                      getFieldValue(
                         "bride-family-name",
-                        getLocalizedValue("bride_family", wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family"),
+                        wedding.bride_family || wedding.bride_name.split(" ").pop() || "Family",
                       ),
-                    })}
+                    )}
                     style={getFieldStyle("bride-family-name")}
                     onUpdate={onFieldUpdate}
                     isPreview={isPreview}

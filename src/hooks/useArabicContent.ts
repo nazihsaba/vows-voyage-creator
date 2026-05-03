@@ -26,5 +26,31 @@ export const useArabicContent = (wedding: any) => {
     [isArabic, arabicData]
   );
 
-  return { isArabic, hasArabic, getLocalizedValue };
+  /**
+   * Format a family name according to wedding.field_customizations.family_name_format.
+   * - "family" (default): "{name} Family" / "عائلة {name}"
+   * - "mr_mrs": "Mr. & Mrs. {name}" / "السيد والسيدة {name}"
+   * - "none": just "{name}" (uses what user typed)
+   */
+  const formatFamily = useCallback(
+    (arabicKey: string, fallbackName: string): string => {
+      const name = isArabic && arabicData[arabicKey] ? arabicData[arabicKey] : fallbackName;
+      const format = wedding?.field_customizations?.family_name_format || "family";
+      const t = (key: string, opts: any) => {
+        if (key === "family.theFamily") {
+          return isArabic ? `عائلة ${opts.name}` : `${opts.name} Family`;
+        }
+        if (key === "family.mrAndMrs") {
+          return isArabic ? `السيد والسيدة ${opts.name}` : `Mr. & Mrs. ${opts.name}`;
+        }
+        return opts.name;
+      };
+      if (format === "mr_mrs") return t("family.mrAndMrs", { name });
+      if (format === "none") return name;
+      return t("family.theFamily", { name });
+    },
+    [isArabic, arabicData, wedding?.field_customizations?.family_name_format],
+  );
+
+  return { isArabic, hasArabic, getLocalizedValue, formatFamily };
 };

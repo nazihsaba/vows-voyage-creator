@@ -55,7 +55,7 @@ export const GraceTemplate = ({
   submittingRsvp = false,
 }: GraceTemplateProps) => {
   const { t, i18n } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -342,7 +342,7 @@ export const GraceTemplate = ({
             <div className="space-y-4">
               <EditableField
                 fieldId="groom-family"
-                text={t("family.theFamily", { name: getFieldValue("groom-family", getLocalizedValue("groom_family", wedding.groom_family || "Groom's Family")) })}
+                text={formatFamily("groom_family", getFieldValue("groom-family", wedding.groom_family || "Groom's Family"))}
                 style={getFieldStyle("groom-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
@@ -352,7 +352,7 @@ export const GraceTemplate = ({
               <p className="text-2xl text-template-subtitle">&</p>
               <EditableField
                 fieldId="bride-family"
-                text={t("family.theFamily", { name: getFieldValue("bride-family", getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family")) })}
+                text={formatFamily("bride_family", getFieldValue("bride-family", wedding.bride_family || "Bride's Family"))}
                 style={getFieldStyle("bride-family")}
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
