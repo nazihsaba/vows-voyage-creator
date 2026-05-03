@@ -50,7 +50,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
-  { value: "fluent-emoji-high-contrast:bride-with-veil", label: "Bride" },
+  { value: "emojione-monotone:bride-with-veil", label: "Bride" },
 ];
 
 const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
