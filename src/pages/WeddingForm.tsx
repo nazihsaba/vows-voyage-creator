@@ -871,10 +871,19 @@ const WeddingForm = () => {
           .trim()
           .replace(/\s+/g, " ")
           .replace(/\b\w/g, (c) => c.toUpperCase());
+      // Preserve newlines (e.g. multi-line custom family text) by title-casing per line
+      const toTitleCaseMultiline = (s: string) =>
+        s
+          .replace(/[ \t]+/g, " ")
+          .split("\n")
+          .map((line) => line.trim().replace(/\b\w/g, (c) => c.toUpperCase()))
+          .join("\n")
+          .replace(/^\n+|\n+$/g, "");
       formData.groom_name = toTitleCase(formData.groom_name);
       formData.bride_name = toTitleCase(formData.bride_name);
-      formData.groom_family = formData.groom_family ? toTitleCase(formData.groom_family) : formData.groom_family;
-      formData.bride_family = formData.bride_family ? toTitleCase(formData.bride_family) : formData.bride_family;
+      const familyCaser = familyNameFormat === "none" ? toTitleCaseMultiline : toTitleCase;
+      formData.groom_family = formData.groom_family ? familyCaser(formData.groom_family) : formData.groom_family;
+      formData.bride_family = formData.bride_family ? familyCaser(formData.bride_family) : formData.bride_family;
 
       const baseSlug = formData.slug || generateSlug(formData.groom_name, formData.bride_name);
       const slug = await ensureUniqueSlug(baseSlug, id);
