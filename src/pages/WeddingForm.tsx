@@ -50,7 +50,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
-  { value: "emojione-monotone:bride-with-veil", label: "Bride" },
+  { value: "noto-v1:bride-with-veil-light-skin-tone", label: "Bride" },
   { value: "emojione-monotone:dress", label: "Dress" },
   { value: "mdi:bow-tie", label: "Suit" },
 ];
