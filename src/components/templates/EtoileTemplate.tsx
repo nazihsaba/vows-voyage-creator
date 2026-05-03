@@ -339,12 +339,13 @@ export const EtoileTemplate = ({
                   <div className="space-y-4">
                     <EditableField
                       fieldId="groom-family"
-                      text={t("family.theFamily", {
-                        name: getFieldValue(
+                      text={formatFamily(
+                        "groom_family",
+                        getFieldValue(
                           "groom-family",
-                          getLocalizedValue("groom_family", wedding.groom_family || "Groom"),
+                          wedding.groom_family || "Groom",
                         ),
-                      })}
+                      )}
                       style={getFieldStyle("groom-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
@@ -354,12 +355,13 @@ export const EtoileTemplate = ({
                     <p className="text-2xl text-[#3e2723] text-template-subtitle">&</p>
                     <EditableField
                       fieldId="bride-family"
-                      text={t("family.theFamily", {
-                        name: getFieldValue(
+                      text={formatFamily(
+                        "bride_family",
+                        getFieldValue(
                           "bride-family",
-                          getLocalizedValue("bride_family", wedding.bride_family || "Bride's Family"),
+                          wedding.bride_family || "Bride's Family",
                         ),
-                      })}
+                      )}
                       style={getFieldStyle("bride-family")}
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
