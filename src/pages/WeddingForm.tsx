@@ -42,6 +42,15 @@ import FontCustomizer, {
   resetTemplateFonts,
 } from "@/components/FontCustomizer";
 import { getTemplateFontDefaults } from "@/components/templateFontDefaults";
+import iconBride from "@/assets/icon-bride.png";
+import iconBrideFlowers from "@/assets/icon-bride-flowers.png";
+import iconSuit from "@/assets/icon-suit.png";
+
+const ASSET_ICON_MAP: Record<string, string> = {
+  "asset:bride": iconBride,
+  "asset:bride-flowers": iconBrideFlowers,
+  "asset:suit": iconSuit,
+};
 
 const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
@@ -50,9 +59,10 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
-  { value: "emojione-monotone:bride-with-veil", label: "Bride" },
+  { value: "asset:bride", label: "Bride" },
+  { value: "asset:bride-flowers", label: "Bride with Flowers" },
   { value: "emojione-monotone:dress", label: "Dress" },
-  { value: "mdi:bow-tie", label: "Suit" },
+  { value: "asset:suit", label: "Suit" },
 ];
 
 const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -61,6 +71,8 @@ const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }
 };
 
 const RenderIcon = ({ icon, className }: { icon: string; className?: string }) => {
+  const assetSrc = ASSET_ICON_MAP[icon];
+  if (assetSrc) return <img src={assetSrc} alt="" className={className} />;
   const Lucide = LUCIDE_ICON_MAP[icon];
   if (Lucide) return <Lucide className={className} />;
   return <Icon icon={icon} className={className} />;
