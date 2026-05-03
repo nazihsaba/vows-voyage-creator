@@ -22,7 +22,25 @@ export const EventIcon = ({ icon, className, fallback }: EventIconProps) => {
   const resolved = icon || fallback || "";
   const assetSrc = ASSET_ICON_MAP[resolved];
   if (assetSrc) {
-    return <img src={assetSrc} alt="" className={className} style={{ objectFit: "contain" }} />;
+    // Render as a CSS mask so the icon inherits currentColor (e.g. text-primary).
+    return (
+      <span
+        aria-hidden="true"
+        className={className}
+        style={{
+          display: "inline-block",
+          backgroundColor: "currentColor",
+          WebkitMaskImage: `url(${assetSrc})`,
+          maskImage: `url(${assetSrc})`,
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
+      />
+    );
   }
   return <Icon icon={resolved} className={className} />;
 };
