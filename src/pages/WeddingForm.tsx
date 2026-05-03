@@ -50,7 +50,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
-  { value: "emojione-monotone:bride-with-veil", label: "Bride" },
+  { value: "noto-v1:bride-with-veil-light-skin-tone", label: "Bride" },
   { value: "emojione-monotone:dress", label: "Dress" },
   { value: "mdi:bow-tie", label: "Suit" },
 ];
@@ -60,9 +60,26 @@ const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }
   "lucide:user-round": UserRound,
 };
 
+const MONOCHROME_ICONS = new Set<string>([
+  "noto-v1:bride-with-veil-light-skin-tone",
+]);
+
 const RenderIcon = ({ icon, className }: { icon: string; className?: string }) => {
   const Lucide = LUCIDE_ICON_MAP[icon];
   if (Lucide) return <Lucide className={className} />;
+  if (MONOCHROME_ICONS.has(icon)) {
+    return (
+      <span
+        className={className}
+        style={{
+          display: "inline-block",
+          backgroundColor: "currentColor",
+          WebkitMask: `url(https://api.iconify.design/${icon.replace(":", "/")}.svg) no-repeat center / contain`,
+          mask: `url(https://api.iconify.design/${icon.replace(":", "/")}.svg) no-repeat center / contain`,
+        }}
+      />
+    );
+  }
   return <Icon icon={icon} className={className} />;
 };
 
