@@ -855,13 +855,14 @@ const WeddingForm = () => {
       // Build field_customizations with Aura quote/reference if applicable
       const rawFc = (formData as any).field_customizations;
       const existingCustomizations = typeof rawFc === "string" ? JSON.parse(rawFc || "{}") : rawFc || {};
-      let fieldCustomizations = isAuraTemplate
+      let fieldCustomizations: any = isAuraTemplate
         ? {
             ...existingCustomizations,
             "bible-verse": { text: auraQuote },
             "bible-verse-reference": { text: auraReference },
           }
-        : existingCustomizations;
+        : { ...existingCustomizations };
+      fieldCustomizations.family_name_format = familyNameFormat;
 
       // Save Arabic translations if enabled
       if (enableArabic) {
