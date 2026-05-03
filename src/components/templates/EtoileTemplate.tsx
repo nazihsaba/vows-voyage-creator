@@ -350,7 +350,7 @@ export const EtoileTemplate = ({
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
-                      className="text-template-subtitle"
+                      className="text-template-subtitle whitespace-pre-line"
                     />
                     <p className="text-2xl text-[#3e2723] text-template-subtitle">&</p>
                     <EditableField
@@ -366,7 +366,7 @@ export const EtoileTemplate = ({
                       onUpdate={onFieldUpdate}
                       isPreview={isPreview}
                       tag="h2"
-                      className="text-template-subtitle"
+                      className="text-template-subtitle whitespace-pre-line"
                     />
                   </div>
                   <EditableField
