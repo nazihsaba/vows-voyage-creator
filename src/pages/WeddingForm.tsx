@@ -111,6 +111,7 @@ const WeddingForm = () => {
   const [audioTrimSettings, setAudioTrimSettings] = useState<{ startTime: number; endTime: number } | null>(null);
   const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
+  const [familyNameFormat, setFamilyNameFormat] = useState<"family" | "mr_mrs" | "none">("family");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -374,6 +375,7 @@ const WeddingForm = () => {
             : data.field_customizations;
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
+        if (fc.family_name_format) setFamilyNameFormat(fc.family_name_format);
         // Load Arabic fields
         if (fc["arabic"]) {
           setEnableArabic(true);
