@@ -463,6 +463,18 @@ const WeddingForm = () => {
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
         setCustomSections(customRows);
 
+        // Remap stored Arabic keys (custom_title_custom_1) to current session uids
+        setArabicFields((prev) => {
+          const remapped: Record<string, string> = { ...prev };
+          customDbTypeByUid.forEach((dbType, uid) => {
+            const tKey = `custom_title_${dbType}`;
+            const lKey = `custom_location_${dbType}`;
+            if (prev[tKey]) remapped[`custom_title_${uid}`] = prev[tKey];
+            if (prev[lKey]) remapped[`custom_location_${uid}`] = prev[lKey];
+          });
+          return remapped;
+        });
+
         // Build timeline order from display_order on existing rows.
         // Keys: "ceremony" | "welcome_drink" | "venue" | <custom uid>
         const fixedKeys = [
