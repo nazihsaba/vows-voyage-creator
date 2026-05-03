@@ -5,6 +5,7 @@ import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
+import { EventIcon } from "@/components/templates/EventIcon";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
@@ -315,7 +316,7 @@ export const EclatTemplate = ({
               <AnimatedSection delay={0} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
-                    <Icon icon={ceremony.icon || "material-symbols:church-rounded"} className="w-8 h-8 text-primary" />
+                    <EventIcon icon={ceremony.icon || "material-symbols:church-rounded"} className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.ceremony")}</h3>
                   <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
@@ -342,7 +343,7 @@ export const EclatTemplate = ({
               <AnimatedSection delay={200} animation="fade-in">
                 <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
                   <div className="flex items-center justify-center w-full">
-                    <Icon icon={venue.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
+                    <EventIcon icon={venue.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
                   </div>
                   <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.venue")}</h3>
                   {welcomeDrink?.time && (
