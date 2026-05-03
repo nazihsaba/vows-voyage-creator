@@ -48,7 +48,7 @@ const EtoileEvents = ({ events, dateFormatted, align = "right" }: EtoileEventsPr
                   </div>
                   <div className="absolute left-1/2 -translate-x-1/2 w-3 h-3 bg-black rounded-full z-10" />
                   <div className={`flex-1 ${isArabic ? "pr-8 text-right" : "pl-8 text-left"}`}>
-                    <Icon icon={event.icon} className={`w-6 h-6 mb-1 text-black ${isArabic ? "ml-auto" : ""}`} />
+                    <EventIcon icon={event.icon} className={`w-6 h-6 mb-1 text-black ${isArabic ? "ml-auto" : ""}`} />
                     <p className="text-template-small text-muted-foreground leading-snug">{event.location}</p>
                     {event.link && (
                       <a
