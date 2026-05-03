@@ -375,6 +375,8 @@ const WeddingForm = () => {
           setEnableArabic(true);
           setArabicFields((prev) => ({ ...prev, ...fc["arabic"] }));
         }
+        // Stash for later remap once custom sections are loaded
+        (window as any).__pendingArabicFc = fc["arabic"] || null;
       }
       if (data.main_picture_url) {
         setImagePreview(data.main_picture_url);
