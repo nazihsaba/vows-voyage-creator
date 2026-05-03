@@ -49,8 +49,8 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
-  { value: "lucide:user", label: "Groom" },
-  { value: "lucide:user-round", label: "Bride" },
+  { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
+  { value: "emojione-monotone:bride-with-veil", label: "Bride" },
 ];
 
 const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
