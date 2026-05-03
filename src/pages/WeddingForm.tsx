@@ -1317,27 +1317,53 @@ const WeddingForm = () => {
                   <Label htmlFor="groom_family" className="text-sm font-medium">
                     Groom's Family *
                   </Label>
-                  <Input
-                    id="groom_family"
-                    required
-                    value={formData.groom_family}
-                    onChange={(e) => {
-                      setFormData({ ...formData, groom_family: e.target.value });
-                      if (enableArabic) debouncedTranslate("groom_family", e.target.value);
-                    }}
-                    className="h-11 sm:h-10"
-                  />
+                  {familyNameFormat === "none" ? (
+                    <Textarea
+                      id="groom_family"
+                      required
+                      value={formData.groom_family}
+                      onChange={(e) => {
+                        setFormData({ ...formData, groom_family: e.target.value });
+                        if (enableArabic) debouncedTranslate("groom_family", e.target.value);
+                      }}
+                      rows={3}
+                      className="min-h-[88px]"
+                    />
+                  ) : (
+                    <Input
+                      id="groom_family"
+                      required
+                      value={formData.groom_family}
+                      onChange={(e) => {
+                        setFormData({ ...formData, groom_family: e.target.value });
+                        if (enableArabic) debouncedTranslate("groom_family", e.target.value);
+                      }}
+                      className="h-11 sm:h-10"
+                    />
+                  )}
                   {enableArabic && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">عائلة العريس (Arabic)</Label>
-                      <Input
-                        value={arabicFields.groom_family}
-                        onChange={(e) => setArabicFields((prev) => ({ ...prev, groom_family: e.target.value }))}
-                        dir="rtl"
-                        className="h-10 text-right font-arabic"
-                        placeholder={translatingFields.groom_family ? "Translating..." : ""}
-                        disabled={translatingFields.groom_family}
-                      />
+                      {familyNameFormat === "none" ? (
+                        <Textarea
+                          value={arabicFields.groom_family}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, groom_family: e.target.value }))}
+                          dir="rtl"
+                          rows={3}
+                          className="min-h-[88px] text-right font-arabic"
+                          placeholder={translatingFields.groom_family ? "Translating..." : ""}
+                          disabled={translatingFields.groom_family}
+                        />
+                      ) : (
+                        <Input
+                          value={arabicFields.groom_family}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, groom_family: e.target.value }))}
+                          dir="rtl"
+                          className="h-10 text-right font-arabic"
+                          placeholder={translatingFields.groom_family ? "Translating..." : ""}
+                          disabled={translatingFields.groom_family}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
@@ -1345,27 +1371,53 @@ const WeddingForm = () => {
                   <Label htmlFor="bride_family" className="text-sm font-medium">
                     Bride's Family *
                   </Label>
-                  <Input
-                    id="bride_family"
-                    required
-                    value={formData.bride_family}
-                    onChange={(e) => {
-                      setFormData({ ...formData, bride_family: e.target.value });
-                      if (enableArabic) debouncedTranslate("bride_family", e.target.value);
-                    }}
-                    className="h-11 sm:h-10"
-                  />
+                  {familyNameFormat === "none" ? (
+                    <Textarea
+                      id="bride_family"
+                      required
+                      value={formData.bride_family}
+                      onChange={(e) => {
+                        setFormData({ ...formData, bride_family: e.target.value });
+                        if (enableArabic) debouncedTranslate("bride_family", e.target.value);
+                      }}
+                      rows={3}
+                      className="min-h-[88px]"
+                    />
+                  ) : (
+                    <Input
+                      id="bride_family"
+                      required
+                      value={formData.bride_family}
+                      onChange={(e) => {
+                        setFormData({ ...formData, bride_family: e.target.value });
+                        if (enableArabic) debouncedTranslate("bride_family", e.target.value);
+                      }}
+                      className="h-11 sm:h-10"
+                    />
+                  )}
                   {enableArabic && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">عائلة العروس (Arabic)</Label>
-                      <Input
-                        value={arabicFields.bride_family}
-                        onChange={(e) => setArabicFields((prev) => ({ ...prev, bride_family: e.target.value }))}
-                        dir="rtl"
-                        className="h-10 text-right font-arabic"
-                        placeholder={translatingFields.bride_family ? "Translating..." : ""}
-                        disabled={translatingFields.bride_family}
-                      />
+                      {familyNameFormat === "none" ? (
+                        <Textarea
+                          value={arabicFields.bride_family}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, bride_family: e.target.value }))}
+                          dir="rtl"
+                          rows={3}
+                          className="min-h-[88px] text-right font-arabic"
+                          placeholder={translatingFields.bride_family ? "Translating..." : ""}
+                          disabled={translatingFields.bride_family}
+                        />
+                      ) : (
+                        <Input
+                          value={arabicFields.bride_family}
+                          onChange={(e) => setArabicFields((prev) => ({ ...prev, bride_family: e.target.value }))}
+                          dir="rtl"
+                          className="h-10 text-right font-arabic"
+                          placeholder={translatingFields.bride_family ? "Translating..." : ""}
+                          disabled={translatingFields.bride_family}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
