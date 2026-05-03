@@ -47,8 +47,8 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
-  { value: "mdi:human-male", label: "Groom" },
-  { value: "mdi:human-female", label: "Bride" },
+  { value: "game-icons:groom", label: "Groom" },
+  { value: "game-icons:bride", label: "Bride" },
 ];
 
 const WeddingForm = () => {
