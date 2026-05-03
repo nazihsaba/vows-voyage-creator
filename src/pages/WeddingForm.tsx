@@ -25,6 +25,8 @@ import {
   Minus,
   ArrowUp,
   ArrowDown,
+  User,
+  UserRound,
 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
@@ -47,9 +49,20 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
-  { value: "game-icons:groom", label: "Groom" },
-  { value: "game-icons:bride", label: "Bride" },
+  { value: "lucide:user", label: "Groom" },
+  { value: "lucide:user-round", label: "Bride" },
 ];
+
+const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  "lucide:user": User,
+  "lucide:user-round": UserRound,
+};
+
+const RenderIcon = ({ icon, className }: { icon: string; className?: string }) => {
+  const Lucide = LUCIDE_ICON_MAP[icon];
+  if (Lucide) return <Lucide className={className} />;
+  return <Icon icon={icon} className={className} />;
+};
 
 const WeddingForm = () => {
   const { id } = useParams();
@@ -1796,7 +1809,7 @@ const WeddingForm = () => {
                             <SelectTrigger className="h-11 sm:h-10">
                               <SelectValue>
                                 <span className="flex items-center gap-2">
-                                  <Icon icon={locations.ceremony_icon} className="w-5 h-5" />
+                                  <RenderIcon icon={locations.ceremony_icon} className="w-5 h-5" />
                                   {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.ceremony_icon)?.label}
                                 </span>
                               </SelectValue>
@@ -1805,7 +1818,7 @@ const WeddingForm = () => {
                               {LOCATION_ICON_OPTIONS.map((opt) => (
                                 <SelectItem key={opt.value} value={opt.value}>
                                   <span className="flex items-center gap-2">
-                                    <Icon icon={opt.value} className="w-5 h-5" />
+                                    <RenderIcon icon={opt.value} className="w-5 h-5" />
                                     {opt.label}
                                   </span>
                                 </SelectItem>
@@ -1928,7 +1941,7 @@ const WeddingForm = () => {
                             <SelectTrigger className="h-11 sm:h-10">
                               <SelectValue>
                                 <span className="flex items-center gap-2">
-                                  <Icon icon={locations.venue_icon} className="w-5 h-5" />
+                                  <RenderIcon icon={locations.venue_icon} className="w-5 h-5" />
                                   {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.venue_icon)?.label}
                                 </span>
                               </SelectValue>
@@ -1937,7 +1950,7 @@ const WeddingForm = () => {
                               {LOCATION_ICON_OPTIONS.map((opt) => (
                                 <SelectItem key={opt.value} value={opt.value}>
                                   <span className="flex items-center gap-2">
-                                    <Icon icon={opt.value} className="w-5 h-5" />
+                                    <RenderIcon icon={opt.value} className="w-5 h-5" />
                                     {opt.label}
                                   </span>
                                 </SelectItem>
@@ -2196,7 +2209,7 @@ const WeddingForm = () => {
                                       <SelectTrigger className="h-11 sm:h-10">
                                         <SelectValue>
                                           <span className="flex items-center gap-2">
-                                            <Icon icon={section.icon} className="w-5 h-5" />
+                                            <RenderIcon icon={section.icon} className="w-5 h-5" />
                                             {LOCATION_ICON_OPTIONS.find((o) => o.value === section.icon)?.label}
                                           </span>
                                         </SelectValue>
@@ -2205,7 +2218,7 @@ const WeddingForm = () => {
                                         {LOCATION_ICON_OPTIONS.map((opt) => (
                                           <SelectItem key={opt.value} value={opt.value}>
                                             <span className="flex items-center gap-2">
-                                              <Icon icon={opt.value} className="w-5 h-5" />
+                                              <RenderIcon icon={opt.value} className="w-5 h-5" />
                                               {opt.label}
                                             </span>
                                           </SelectItem>
