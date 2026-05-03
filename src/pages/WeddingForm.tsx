@@ -52,7 +52,7 @@ const LOCATION_ICON_OPTIONS = [
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
   { value: "emojione-monotone:bride-with-veil", label: "Bride" },
   { value: "emojione-monotone:dress", label: "Dress" },
-  { value: "emojione-monotone:necktie", label: "Suit" },
+  { value: "mdi:bow-tie", label: "Suit" },
 ];
 
 const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
