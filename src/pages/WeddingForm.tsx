@@ -859,7 +859,27 @@ const WeddingForm = () => {
 
       // Save Arabic translations if enabled
       if (enableArabic) {
-        fieldCustomizations = { ...fieldCustomizations, arabic: arabicFields };
+        // Remap custom section uid keys to stable DB keys (custom_1, custom_2, ...)
+        const remappedArabic: Record<string, string> = {};
+        const uidToDbType = new Map<string, string>();
+        if (isAuraTemplate) {
+          customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+            uidToDbType.set(s.uid, `custom_${idx + 1}`);
+          });
+        }
+        Object.entries(arabicFields).forEach(([key, value]) => {
+          if (!value) return;
+          const titleMatch = key.match(/^custom_title_(.+)$/);
+          const locMatch = key.match(/^custom_location_(.+)$/);
+          if (titleMatch && uidToDbType.has(titleMatch[1])) {
+            remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = value;
+          } else if (locMatch && uidToDbType.has(locMatch[1])) {
+            remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = value;
+          } else if (!titleMatch && !locMatch) {
+            remappedArabic[key] = value;
+          }
+        });
+        fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
       } else {
         // Remove arabic key if disabled
         const { arabic, ...rest } = fieldCustomizations;
