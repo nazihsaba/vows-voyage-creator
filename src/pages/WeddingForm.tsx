@@ -58,11 +58,11 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
-  { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
   { value: "asset:bride", label: "Bride" },
   { value: "asset:bride-flowers", label: "Bride with Flowers" },
   { value: "emojione-monotone:dress", label: "Dress" },
   { value: "asset:suit", label: "Suit" },
+  { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
 ];
 
 const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
