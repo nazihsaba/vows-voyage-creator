@@ -25,6 +25,8 @@ import {
   Minus,
   ArrowUp,
   ArrowDown,
+  User,
+  UserRound,
 } from "lucide-react";
 import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
