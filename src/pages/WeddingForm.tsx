@@ -1261,6 +1261,29 @@ const WeddingForm = () => {
                 </div>
               </div>
 
+              {/* Family Name Display Format */}
+              <div className="space-y-1.5">
+                <Label className="text-sm font-medium">Family Name Display Format</Label>
+                <Select value={familyNameFormat} onValueChange={(v) => setFamilyNameFormat(v as any)}>
+                  <SelectTrigger className="h-11 sm:h-10">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="family">Family Name</SelectItem>
+                    <SelectItem value="mr_mrs">Mr. &amp; Mrs.</SelectItem>
+                    <SelectItem value="none">None (custom)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-xs text-muted-foreground">
+                  {familyNameFormat === "family" &&
+                    "Shows \"[Groom's Family] Family\" and \"[Bride's Family] Family\" in the template."}
+                  {familyNameFormat === "mr_mrs" &&
+                    "Shows \"Mr. & Mrs. [Groom's Family]\" and \"Mr. & Mrs. [Bride's Family]\" in the template."}
+                  {familyNameFormat === "none" &&
+                    "Shows exactly what you write in the fields below — no extra text added."}
+                </p>
+              </div>
+
               {/* Family Names */}
               <div className="space-y-4 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                 <div className="space-y-1.5">
