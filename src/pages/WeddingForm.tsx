@@ -49,9 +49,20 @@ const LOCATION_ICON_OPTIONS = [
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
   { value: "solar:confetti-bold", label: "Confetti" },
-  { value: "game-icons:groom", label: "Groom" },
-  { value: "game-icons:bride", label: "Bride" },
+  { value: "lucide:user", label: "Groom" },
+  { value: "lucide:user-round", label: "Bride" },
 ];
+
+const LUCIDE_ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
+  "lucide:user": User,
+  "lucide:user-round": UserRound,
+};
+
+const RenderIcon = ({ icon, className }: { icon: string; className?: string }) => {
+  const Lucide = LUCIDE_ICON_MAP[icon];
+  if (Lucide) return <Lucide className={className} />;
+  return <Icon icon={icon} className={className} />;
+};
 
 const WeddingForm = () => {
   const { id } = useParams();
