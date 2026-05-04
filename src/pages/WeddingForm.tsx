@@ -849,6 +849,7 @@ const WeddingForm = () => {
       let imageUrl = formData.main_picture_url;
       let videoUrl = formData.video_url;
       let videoPosterUrl = (formData as any).video_poster_url || "";
+      let lumiereEndingUrl = (formData as any).lumiere_ending_image_url || "";
       let audioUrl = formData.audio_url;
 
       // Upload new image if selected (compressed for size/quality balance)
