@@ -387,6 +387,7 @@ export type Database = {
           id: string
           invitation_text: string | null
           locked_name_style: Json | null
+          lumiere_ending_image_url: string | null
           main_description: string | null
           main_picture_position_y: number | null
           main_picture_url: string | null
@@ -430,6 +431,7 @@ export type Database = {
           id?: string
           invitation_text?: string | null
           locked_name_style?: Json | null
+          lumiere_ending_image_url?: string | null
           main_description?: string | null
           main_picture_position_y?: number | null
           main_picture_url?: string | null
@@ -473,6 +475,7 @@ export type Database = {
           id?: string
           invitation_text?: string | null
           locked_name_style?: Json | null
+          lumiere_ending_image_url?: string | null
           main_description?: string | null
           main_picture_position_y?: number | null
           main_picture_url?: string | null
