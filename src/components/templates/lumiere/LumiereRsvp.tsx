@@ -27,7 +27,7 @@ const LumiereRsvp = ({
   staticDeadline,
 }: LumiereRsvpProps) => {
   return (
-    <LumiereTornCard>
+    <LumiereTornCard hideBottom>
       <RsvpSection
         wedding={wedding}
         isPreview={isPreview}
