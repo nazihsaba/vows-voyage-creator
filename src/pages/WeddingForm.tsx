@@ -837,6 +837,16 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate Lumière ending image is required
+    if (isLumiereTemplate && !lumiereEndingFile && !lumiereEndingPreview) {
+      toast({
+        title: "Ending image required",
+        description: "Please upload an ending image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
