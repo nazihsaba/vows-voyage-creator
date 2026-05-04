@@ -1738,7 +1738,7 @@ const WeddingForm = () => {
                 <div className="space-y-2">
                   <Label htmlFor="lumiere_ending_image">Ending Image</Label>
                   <p className="text-sm text-muted-foreground mb-2">
-                    A closing portrait shown just before the footer, beautifully framed by the signature torn-paper effect to leave guests with one final, memorable moment.
+                    Shown right before the footer, as a final closing image for your guests.
                   </p>
                   <div className="flex flex-col gap-4">
                     {lumiereEndingPreview ? (
