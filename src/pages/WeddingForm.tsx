@@ -878,6 +878,12 @@ const WeddingForm = () => {
         }
       }
 
+      // Upload Lumiere ending image if selected
+      if (lumiereEndingFile) {
+        const compressed = await compressImage(lumiereEndingFile);
+        lumiereEndingUrl = await uploadImage(compressed, user.id);
+      }
+
       // Upload new audio if selected, or clear if removed
       if (audioFile) {
         // Convert Blob to File with a proper name
