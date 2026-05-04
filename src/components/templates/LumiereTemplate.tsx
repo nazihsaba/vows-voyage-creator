@@ -556,7 +556,7 @@ export const LumiereTemplate = ({
         )}
 
         <div>
-          <LumiereTornCard>
+          <LumiereTornCard hideTop>
             {wedding.lumiere_ending_image_url && (
               <img
                 src={wedding.lumiere_ending_image_url}

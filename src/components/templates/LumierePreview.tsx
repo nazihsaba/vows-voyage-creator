@@ -201,7 +201,7 @@ const LumierePreview = () => {
           />
         </div>
         <div>
-          <LumiereTornCard>
+          <LumiereTornCard hideTop>
             <img src={lumiere2} alt="Ending" className="w-full h-auto block" loading="lazy" />
             <TemplatePreviewFooter />
           </LumiereTornCard>
