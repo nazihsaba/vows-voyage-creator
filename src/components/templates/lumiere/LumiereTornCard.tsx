@@ -3,9 +3,11 @@ import { ReactNode, useId } from "react";
 interface LumiereTornCardProps {
   children: ReactNode;
   className?: string;
+  hideTop?: boolean;
+  hideBottom?: boolean;
 }
 
-const LumiereTornCard = ({ children, className = "" }: LumiereTornCardProps) => {
+const LumiereTornCard = ({ children, className = "", hideTop = false, hideBottom = false }: LumiereTornCardProps) => {
   const id = useId().replace(/:/g, "");
 
   return (
