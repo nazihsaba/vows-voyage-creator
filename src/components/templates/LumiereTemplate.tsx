@@ -555,7 +555,7 @@ export const LumiereTemplate = ({
           </div>
         )}
 
-        <div className="mt-64">
+        <div>
           <LumiereTornCard>
             {wedding.lumiere_ending_image_url && (
               <img
