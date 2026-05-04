@@ -33,7 +33,7 @@ const sampleEvents = [
     time: "8:00 PM",
     location: "Carma - Jeita Country Club",
     link: "https://maps.google.com/?q=Carma+Jeita+Country+Club",
-    icon: "material-symbols:martini-glass-outline",
+    icon: "asset:martini-glass",
   },
   {
     id: "dinner",

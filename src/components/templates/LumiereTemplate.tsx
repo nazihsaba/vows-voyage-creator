@@ -238,7 +238,7 @@ export const LumiereTemplate = ({
           time: formatTimeTo12Hour(welcomeDrinkLoc.time || venue.time) || "8:00 PM",
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
-          icon: "material-symbols:martini-glass-outline",
+          icon: "asset:martini-glass",
         },
       });
     }
