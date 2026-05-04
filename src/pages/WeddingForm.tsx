@@ -104,6 +104,8 @@ const WeddingForm = () => {
   const graceFeaturedImgRef = useRef<HTMLImageElement>(null);
   const [socialPreviewFile, setSocialPreviewFile] = useState<File | null>(null);
   const [socialPreviewUrl, setSocialPreviewUrl] = useState<string>("");
+  const [lumiereEndingFile, setLumiereEndingFile] = useState<File | null>(null);
+  const [lumiereEndingPreview, setLumiereEndingPreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
