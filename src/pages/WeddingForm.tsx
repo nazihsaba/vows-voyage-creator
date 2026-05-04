@@ -1746,7 +1746,7 @@ const WeddingForm = () => {
               {/* Lumière Ending Image (shown between RSVP and footer in template) */}
               {isLumiereTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="lumiere_ending_image">Ending Image</Label>
+                  <Label htmlFor="lumiere_ending_image">Ending Image *</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown right before the footer, as a final closing image for your guests.
                   </p>
