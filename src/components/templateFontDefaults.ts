@@ -16,6 +16,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Dancing Script", cursive',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Aura / Dorée (bible-verse-tabs) — soft serif romance
   "bible-verse-tabs": {
@@ -24,6 +25,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Étoile (carousel)
   "etoile-carousel": {
@@ -32,6 +34,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Éclat (classic-romance)
   "classic-romance": {
@@ -40,6 +43,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Grâce (video-cinematic)
   "video-cinematic": {
@@ -48,6 +52,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Vérité (modern-wedding) — clean serif
   "modern-wedding": {
@@ -56,6 +61,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Playfair Display", serif',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
+    countdown: '"Playfair Display", serif',
   },
   // Opulence (curtain) — luxe Cormorant
   "opulence-curtain": {
@@ -64,6 +70,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     heading: '"Cormorant Garamond", serif',
     body: '"Cormorant Garamond", serif',
     monogram: '"Cormorant Garamond", serif',
+    countdown: '"Cormorant Garamond", serif',
   },
 };
 
@@ -73,6 +80,7 @@ const FALLBACK: Required<TemplateFonts> = {
   heading: '"Dancing Script", cursive',
   body: '"Playfair Display", serif',
   monogram: '"Playfair Display", serif',
+  countdown: '"Playfair Display", serif',
 };
 
 /** Resolve the default font set for a given template_type (with legacy aliases). */
@@ -109,5 +117,6 @@ export function buildTemplateFontStyle(
     "--font-template-body": merged.body,
     "--font-template-small": merged.body,
     "--font-template-monogram": merged.monogram,
+    "--font-template-countdown": merged.countdown,
   } as React.CSSProperties;
 }

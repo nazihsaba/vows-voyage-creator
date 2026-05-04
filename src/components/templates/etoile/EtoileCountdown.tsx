@@ -51,7 +51,7 @@ const EtoileCountdown = ({ targetDate, align = "left" }: EtoileCountdownProps) =
               <div className="text-center">
                 <div
                   className="text-2xl sm:text-3xl md:text-5xl font-light text-black"
-                  style={{ fontFamily: 'var(--font-template-body, "Playfair Display", serif)' }}
+                  style={{ fontFamily: 'var(--font-template-countdown, "Playfair Display", serif)' }}
                 >
                   {item.value}
                 </div>

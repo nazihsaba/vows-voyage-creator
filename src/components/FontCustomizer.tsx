@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Type, ChevronDown, RotateCcw } from "lucide-react";
 
-export type TemplateFontKey = "title" | "subtitle" | "heading" | "body" | "monogram";
+export type TemplateFontKey = "title" | "subtitle" | "heading" | "body" | "monogram" | "countdown";
 
 export interface TemplateFonts {
   title?: string;
@@ -13,6 +13,7 @@ export interface TemplateFonts {
   heading?: string;
   body?: string;
   monogram?: string;
+  countdown?: string;
 }
 
 const FONT_OPTIONS: { label: string; stack: string }[] = [
@@ -31,6 +32,7 @@ export const DEFAULT_TEMPLATE_FONTS: Required<TemplateFonts> = {
   heading: '"Dancing Script", cursive',
   body: '"Playfair Display", serif',
   monogram: '"Playfair Display", serif',
+  countdown: '"Playfair Display", serif',
 };
 
 const VAR_MAP: Record<TemplateFontKey, string[]> = {
@@ -39,6 +41,7 @@ const VAR_MAP: Record<TemplateFontKey, string[]> = {
   heading: ["--font-template-heading"],
   body: ["--font-template-body", "--font-template-small"],
   monogram: ["--font-template-monogram"],
+  countdown: ["--font-template-countdown"],
 };
 
 /** Apply a TemplateFonts object to document.documentElement (or reset to defaults).
@@ -80,6 +83,7 @@ const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
   { key: "heading", label: "Section Heading Font", hint: 'Section titles (e.g. "Our Gallery", "Save The Date")' },
   { key: "body", label: "Body Text Font", hint: 'Paragraphs (e.g. "Cordially invite you...")' },
   { key: "monogram", label: "Monogram Font", hint: 'The initials at the top (e.g. "A & E")' },
+  { key: "countdown", label: "Countdown Numbers Font", hint: "The numbers in the countdown timer" },
 ];
 
 const FontCustomizer = ({ value, onChange, defaults }: FontCustomizerProps) => {

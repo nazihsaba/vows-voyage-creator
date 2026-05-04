@@ -59,7 +59,7 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
             <div className="text-center">
               <div
                 className={`text-3xl md:text-5xl font-bold ${isDark ? "text-white" : "text-primary"}`}
-                style={{ fontFamily: 'var(--font-template-body, "Playfair Display", serif)' }}
+                style={{ fontFamily: 'var(--font-template-countdown, "Playfair Display", serif)' }}
               >
                 {item.value}
               </div>

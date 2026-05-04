@@ -48,7 +48,7 @@ export const CountdownTimerNoBackground = ({ targetDate }: CountdownTimerNoBackg
     <div className="flex flex-col items-center justify-center min-w-[60px] md:min-w-[100px] px-2">
       <span
         className="text-2xl md:text-6xl font-bold text-white drop-shadow-lg mb-1 md:mb-2"
-        style={{ fontFamily: '"Playfair Display", serif' }}
+        style={{ fontFamily: 'var(--font-template-countdown, "Playfair Display", serif)' }}
       >
         {formatNum(value)}
       </span>
