@@ -45,23 +45,46 @@ import { getTemplateFontDefaults } from "@/components/templateFontDefaults";
 import iconBride from "@/assets/icon-bride.png";
 import iconBrideFlowers from "@/assets/icon-bride-flowers.png";
 import iconSuit from "@/assets/icon-suit.png";
+import iconCheers from "@/assets/icon-cheers.png";
+import iconChurch from "@/assets/icon-church.png";
+import iconHome from "@/assets/icon-home.png";
+import iconMartiniGlass from "@/assets/icon-martini-glass.png";
+import iconPartyPopper from "@/assets/icon-party-popper.png";
+import iconPartyDress from "@/assets/icon-party-dress.png";
+import iconSuitVest from "@/assets/icon-suit-vest.png";
+import iconWeddingDress from "@/assets/icon-wedding-dress.png";
 
 const ASSET_ICON_MAP: Record<string, string> = {
   "asset:bride": iconBride,
   "asset:bride-flowers": iconBrideFlowers,
   "asset:suit": iconSuit,
+  "asset:cheers": iconCheers,
+  "asset:church": iconChurch,
+  "asset:home": iconHome,
+  "asset:martini-glass": iconMartiniGlass,
+  "asset:party-popper": iconPartyPopper,
+  "asset:party-dress": iconPartyDress,
+  "asset:suit-vest": iconSuitVest,
+  "asset:wedding-dress": iconWeddingDress,
 };
 
 const LOCATION_ICON_OPTIONS = [
   { value: "heroicons:home-20-solid", label: "Home" },
+  { value: "asset:home", label: "Home (Outline)" },
   { value: "material-symbols:church-rounded", label: "Church" },
+  { value: "asset:church", label: "Church (Outline)" },
   { value: "streamline:champagne-party-alcohol-remix", label: "Champagne" },
+  { value: "asset:cheers", label: "Cheers" },
   { value: "flowbite:martini-glass-solid", label: "Martini Glass" },
+  { value: "asset:martini-glass", label: "Martini Glass (Outline)" },
   { value: "solar:confetti-bold", label: "Confetti" },
+  { value: "asset:party-popper", label: "Party Popper" },
   { value: "asset:bride", label: "Bride" },
-  
+  { value: "asset:wedding-dress", label: "Wedding Dress" },
   { value: "emojione-monotone:dress", label: "Dress" },
+  { value: "asset:party-dress", label: "Party Dress" },
   { value: "asset:suit", label: "Suit" },
+  { value: "asset:suit-vest", label: "Suit (Vest)" },
   { value: "emojione-monotone:man-in-tuxedo", label: "Groom" },
 ];
 
