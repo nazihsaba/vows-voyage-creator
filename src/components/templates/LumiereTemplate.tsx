@@ -557,6 +557,14 @@ export const LumiereTemplate = ({
 
         <div className="mt-64">
           <LumiereTornCard>
+            {wedding.lumiere_ending_image_url ? (
+              <img
+                src={wedding.lumiere_ending_image_url}
+                alt="Ending"
+                className="w-full h-auto block"
+                loading="lazy"
+              />
+            ) : null}
             <TemplatePreviewFooter />
           </LumiereTornCard>
         </div>
