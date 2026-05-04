@@ -83,6 +83,7 @@ const FIELDS: { key: TemplateFontKey; label: string; hint?: string }[] = [
   { key: "heading", label: "Section Heading Font", hint: 'Section titles (e.g. "Our Gallery", "Save The Date")' },
   { key: "body", label: "Body Text Font", hint: 'Paragraphs (e.g. "Cordially invite you...")' },
   { key: "monogram", label: "Monogram Font", hint: 'The initials at the top (e.g. "A & E")' },
+  { key: "countdown", label: "Countdown Numbers Font", hint: "The numbers in the countdown timer" },
 ];
 
 const FontCustomizer = ({ value, onChange, defaults }: FontCustomizerProps) => {
