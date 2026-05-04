@@ -117,5 +117,6 @@ export function buildTemplateFontStyle(
     "--font-template-body": merged.body,
     "--font-template-small": merged.body,
     "--font-template-monogram": merged.monogram,
+    "--font-template-countdown": merged.countdown,
   } as React.CSSProperties;
 }
