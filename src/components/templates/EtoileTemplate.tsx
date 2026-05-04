@@ -149,7 +149,7 @@ export const EtoileTemplate = ({
           time: formatTimeTo12Hour(welcomeDrinkLoc.time || venue.time) || "8:00 PM",
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
-          icon: "streamline:champagne-party-alcohol-remix",
+          icon: "material-symbols:martini-glass-outline",
         },
       });
     }
