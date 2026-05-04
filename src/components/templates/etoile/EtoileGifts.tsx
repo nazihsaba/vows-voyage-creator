@@ -32,7 +32,7 @@ const EtoileGifts = ({ giftCards, align = "right" }: EtoileGiftsProps) => {
           <h2 className="text-template-subtitle text-center text-black mb-3">{t("gifts.title")}</h2>
           <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
         </AnimatedSection>
-        <div className="grid gap-4 md:grid-cols-2 max-w-xl mx-auto">
+        <div className={`grid gap-4 max-w-xl mx-auto ${giftCards.length === 1 ? "md:grid-cols-1" : "md:grid-cols-2"}`}>
           {giftCards.map((card, index) => (
             <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
               <div
