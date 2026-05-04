@@ -80,7 +80,7 @@ const FALLBACK: Required<TemplateFonts> = {
   heading: '"Dancing Script", cursive',
   body: '"Playfair Display", serif',
   monogram: '"Playfair Display", serif',
-    countdown: '"Playfair Display", serif',
+  countdown: '"Playfair Display", serif',
 };
 
 /** Resolve the default font set for a given template_type (with legacy aliases). */
