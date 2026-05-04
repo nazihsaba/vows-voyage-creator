@@ -139,6 +139,7 @@ const WeddingForm = () => {
     venue_location_link: "",
     venue_icon: "solar:confetti-bold",
     welcome_drink_time: "",
+    welcome_drink_icon: "asset:cheers",
   });
   type CustomSection = {
     uid: string;
@@ -497,6 +498,7 @@ const WeddingForm = () => {
           venue_location_link: venue?.location_link || "",
           venue_icon: venue?.icon || "solar:confetti-bold",
           welcome_drink_time: welcomeDrink?.time || "",
+          welcome_drink_icon: welcomeDrink?.icon || "asset:cheers",
         });
 
         // Load custom sections (type starts with "custom_"), sorted by display_order then suffix index
@@ -1174,7 +1176,7 @@ const WeddingForm = () => {
           location_name: locations.venue_location,
           time: locations.welcome_drink_time,
           location_link: locations.venue_location_link,
-          icon: "streamline:champagne-party-alcohol-remix",
+          icon: locations.welcome_drink_icon || "asset:cheers",
         });
       }
 
@@ -2105,6 +2107,32 @@ const WeddingForm = () => {
                                   <X className="w-4 h-4" />
                                 </button>
                               )}
+                            </div>
+                            <div className="space-y-1.5 pt-2">
+                              <Label>Welcome Drink Icon</Label>
+                              <Select
+                                value={locations.welcome_drink_icon}
+                                onValueChange={(value) => setLocations({ ...locations, welcome_drink_icon: value })}
+                              >
+                                <SelectTrigger className="h-11 sm:h-10">
+                                  <SelectValue>
+                                    <span className="flex items-center gap-2">
+                                      <RenderIcon icon={locations.welcome_drink_icon} className="w-5 h-5" />
+                                      {LOCATION_ICON_OPTIONS.find((o) => o.value === locations.welcome_drink_icon)?.label}
+                                    </span>
+                                  </SelectValue>
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {LOCATION_ICON_OPTIONS.map((opt) => (
+                                    <SelectItem key={opt.value} value={opt.value}>
+                                      <span className="flex items-center gap-2">
+                                        <RenderIcon icon={opt.value} className="w-5 h-5" />
+                                        {opt.label}
+                                      </span>
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
                             </div>
                           </div>
                         )}
