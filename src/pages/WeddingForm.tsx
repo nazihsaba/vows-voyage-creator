@@ -596,6 +596,22 @@ const WeddingForm = () => {
     setFormData({ ...formData, video_url: "", video_poster_url: "" } as any);
   };
 
+  const handleLumiereEndingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setLumiereEndingFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setLumiereEndingPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeLumiereEnding = () => {
+    setLumiereEndingFile(null);
+    setLumiereEndingPreview("");
+    setFormData({ ...formData, lumiere_ending_image_url: "" } as any);
+  };
+
   const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
