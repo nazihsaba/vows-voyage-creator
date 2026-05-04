@@ -27,12 +27,14 @@ const LumiereTornCard = ({ children, className = "", hideTop = false, hideBottom
       </svg>
 
       {/* Top ripped edge */}
-      <div className="relative overflow-hidden">
-        <div
-          className="h-[36px] bg-white -mb-[16px]"
-          style={{ filter: `url(#rip-top-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
-        />
-      </div>
+      {!hideTop && (
+        <div className="relative overflow-hidden">
+          <div
+            className="h-[36px] bg-white -mb-[16px]"
+            style={{ filter: `url(#rip-top-${id})`, marginLeft: "-24px", marginRight: "-24px" }}
+          />
+        </div>
+      )}
 
       {/* Clean content area */}
       <div className="relative bg-white w-full" style={{ margin: 0, padding: 0 }}>
@@ -40,17 +42,19 @@ const LumiereTornCard = ({ children, className = "", hideTop = false, hideBottom
       </div>
 
       {/* Bottom ripped edge — different seed + rotated for a distinct rip */}
-      <div className="relative overflow-hidden">
-        <div
-          className="h-[36px] bg-white -mt-[16px]"
-          style={{
-            filter: `url(#rip-bottom-${id})`,
-            marginLeft: "-24px",
-            marginRight: "-24px",
-            transform: "rotate(180deg)",
-          }}
-        />
-      </div>
+      {!hideBottom && (
+        <div className="relative overflow-hidden">
+          <div
+            className="h-[36px] bg-white -mt-[16px]"
+            style={{
+              filter: `url(#rip-bottom-${id})`,
+              marginLeft: "-24px",
+              marginRight: "-24px",
+              transform: "rotate(180deg)",
+            }}
+          />
+        </div>
+      )}
     </div>
   );
 };
