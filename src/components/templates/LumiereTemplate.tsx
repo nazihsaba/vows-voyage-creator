@@ -319,6 +319,7 @@ export const LumiereTemplate = ({
           ["--font-template-body" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
           ["--font-template-small" as any]: f.body || DEFAULT_TEMPLATE_FONTS.body,
           ["--font-template-monogram" as any]: f.monogram || DEFAULT_TEMPLATE_FONTS.monogram,
+          ["--font-template-countdown" as any]: f.countdown || DEFAULT_TEMPLATE_FONTS.countdown,
         };
       })()}
     >
