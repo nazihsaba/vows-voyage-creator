@@ -1,5 +1,5 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
@@ -36,6 +36,38 @@ interface LumiereTemplateProps {
   isRsvpDeadlinePassed?: boolean;
   submittingRsvp?: boolean;
 }
+
+const VIDEO_BUFFER_TARGET = 0.85;
+
+const getBufferedFraction = (media: HTMLMediaElement) => {
+  const duration = media.duration;
+  if (!duration || !Number.isFinite(duration) || duration <= 0) return 0;
+  let bufferedEnd = 0;
+  for (let i = 0; i < media.buffered.length; i += 1) {
+    bufferedEnd = Math.max(bufferedEnd, media.buffered.end(i));
+  }
+  return bufferedEnd / duration;
+};
+
+const isMediaReadyForReveal = (media: HTMLMediaElement, bufferTarget = 0.5) => {
+  if (media.readyState >= 4) return true;
+  if (media.readyState < 3) return false;
+  const duration = media.duration;
+  if (!duration || !Number.isFinite(duration) || duration <= 0) return true;
+  return getBufferedFraction(media) >= bufferTarget;
+};
+
+const preloadImage = (url: string) =>
+  new Promise<void>((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.loading = "eager";
+    img.onload = () => {
+      img.decode?.().catch(() => {}).finally(resolve);
+    };
+    img.onerror = () => resolve();
+    img.src = url;
+  });
 
 export const LumiereTemplate = ({
   wedding,
