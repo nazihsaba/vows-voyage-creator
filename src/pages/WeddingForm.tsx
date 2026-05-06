@@ -34,7 +34,7 @@ import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
-import { compressVideo } from "@/lib/compressVideo";
+
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 import FontCustomizer, {
   type TemplateFonts,
@@ -605,34 +605,35 @@ const WeddingForm = () => {
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const SIZE_LIMIT = 25 * 1024 * 1024;
-      if (file.size > SIZE_LIMIT) {
-        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-        toast({
-          title: `Large video detected (${sizeMb} MB)`,
-          description:
-            "We'll automatically optimize it for smoother playback. For best quality, you can also pre-compress it at videocompress.ai before uploading.",
-          duration: 9000,
-          action: (
-            <a
-              href="https://videocompress.ai/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
-            >
-              Compress
-            </a>
-          ),
-        });
-      }
-      setVideoFile(file);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setVideoPreview(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    const SIZE_LIMIT = 25 * 1024 * 1024;
+    if (file.size > SIZE_LIMIT) {
+      const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+      toast({
+        title: `Video too large (${sizeMb} MB)`,
+        description:
+          "Please upload a video under 25 MB. You can easily compress it at videocompress.ai before uploading.",
+        duration: 9000,
+        action: (
+          <a
+            href="https://videocompress.ai/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+          >
+            Compress
+          </a>
+        ),
+      });
+      e.target.value = "";
+      return;
     }
+    setVideoFile(file);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setVideoPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
   };
 
   const removeVideo = () => {
@@ -913,13 +914,11 @@ const WeddingForm = () => {
         imageUrl = await uploadImage(compressedImage, user.id);
       }
 
-      // Upload new video if selected — compress, then extract & upload first-frame poster
+      // Upload new video if selected — extract & upload first-frame poster
       if (videoFile) {
-        toast({ title: "Optimizing video", description: "This may take a moment for large files." });
-        const compressedVideo = await compressVideo(videoFile);
-        videoUrl = await uploadImage(compressedVideo, user.id);
+        videoUrl = await uploadImage(videoFile, user.id);
         try {
-          const posterBlob = await extractFirstFrame(compressedVideo);
+          const posterBlob = await extractFirstFrame(videoFile);
           if (posterBlob) {
             const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
             const compressedPoster = await compressImage(posterFile);
@@ -1718,7 +1717,7 @@ const WeddingForm = () => {
                       >
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground">Click to upload video</span>
-                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV — auto-optimized to 25MB</span>
+                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV — up to 25 MB</span>
                       </label>
                     )}
                     <Input
