@@ -169,24 +169,55 @@ export const LumiereTemplate = ({
   }, []);
 
   useEffect(() => {
-    if (wedding.audio_url && audioRef.current) {
-      const audio = audioRef.current;
-      audio.currentTime = wedding.audio_start_time || 0;
-      audio.loop = true;
-      audio.volume = 0.5;
-      const playPromise = audio.play();
-      if (playPromise) {
-        playPromise.catch(() => {
-          const playOnInteraction = () => {
-            audio.play().catch(() => {});
-            document.removeEventListener("click", playOnInteraction);
-            document.removeEventListener("touchstart", playOnInteraction);
-          };
-          document.addEventListener("click", playOnInteraction);
-          document.addEventListener("touchstart", playOnInteraction);
-        });
-      }
-    }
+    if (!wedding.audio_url || !audioRef.current) return;
+    const audio = audioRef.current;
+    audio.currentTime = wedding.audio_start_time || 0;
+    audio.loop = true;
+    audio.volume = 0.5;
+
+    let cancelled = false;
+    const tryPlay = () => {
+      if (cancelled) return;
+      const p = audio.play();
+      if (p) p.catch(() => {});
+    };
+
+    // Attempt immediately, then retry after video likely starts and after small delays.
+    tryPlay();
+    const t1 = window.setTimeout(tryPlay, 300);
+    const t2 = window.setTimeout(tryPlay, 1200);
+    const t3 = window.setTimeout(tryPlay, 2500);
+
+    // Last-resort fallback: any user interaction (including scroll) starts it.
+    const playOnInteraction = () => {
+      tryPlay();
+      document.removeEventListener("click", playOnInteraction);
+      document.removeEventListener("touchstart", playOnInteraction);
+      document.removeEventListener("scroll", playOnInteraction);
+      document.removeEventListener("keydown", playOnInteraction);
+    };
+    document.addEventListener("click", playOnInteraction, { passive: true });
+    document.addEventListener("touchstart", playOnInteraction, { passive: true });
+    document.addEventListener("scroll", playOnInteraction, { passive: true });
+    document.addEventListener("keydown", playOnInteraction);
+
+    // Also retry once the background video begins playing (some browsers
+    // permit audio playback right after another media element starts).
+    const video = videoRef.current;
+    const onVideoPlaying = () => tryPlay();
+    if (video) video.addEventListener("playing", onVideoPlaying);
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(t1);
+      window.clearTimeout(t2);
+      window.clearTimeout(t3);
+      document.removeEventListener("click", playOnInteraction);
+      document.removeEventListener("touchstart", playOnInteraction);
+      document.removeEventListener("scroll", playOnInteraction);
+      document.removeEventListener("keydown", playOnInteraction);
+      if (video) video.removeEventListener("playing", onVideoPlaying);
+    };
   }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
