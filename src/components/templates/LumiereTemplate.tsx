@@ -139,13 +139,16 @@ export const LumiereTemplate = ({
       window.clearTimeout(settle);
       window.clearTimeout(unmount);
     };
-  }, [videoLoading, showLoader]);
+  }, [assetsReady, showLoader]);
 
-  // Hard safety: never block the loader more than 4s (covers cases where
-  // BackgroundVideo never fires onLoadingChange(false) on flaky networks).
+  // Hard safety: never block the loader more than 6s on flaky networks.
   useEffect(() => {
     if (!showLoader) return;
-    const t = window.setTimeout(() => setVideoLoading(false), 4000);
+    const t = window.setTimeout(() => {
+      setVideoLoading(false);
+      setAudioLoading(false);
+      setGalleryLoading(false);
+    }, 6000);
     return () => window.clearTimeout(t);
   }, [showLoader]);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
