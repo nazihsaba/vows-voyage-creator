@@ -152,6 +152,7 @@ export const LumiereTemplate = ({
       if (!video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
         setAutoplayBlocked(false);
         setVideoLoading(false);
+        if (!hasAudio) setMediaPlaybackReady(true);
       }
     };
 
@@ -162,6 +163,7 @@ export const LumiereTemplate = ({
         playPromise.then(markReady).catch(() => {
           if (cancelled) return;
           setAutoplayBlocked(true);
+          if (isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) setVideoLoading(false);
           retry = window.setTimeout(attemptPlay, 450);
         });
       } else {
@@ -530,7 +532,6 @@ export const LumiereTemplate = ({
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
           loaderTheme="light"
-          onLoadingChange={setVideoLoading}
           onAutoplayBlocked={() => setAutoplayBlocked(true)}
         />
       )}
