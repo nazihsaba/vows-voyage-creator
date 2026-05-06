@@ -303,6 +303,8 @@ export const LumiereTemplate = ({
     }
     // Also kick the audio (some browsers require a fresh user gesture)
     if (wedding.audio_url && audioRef.current) {
+      audioRef.current.muted = false;
+      audioRef.current.volume = AUDIO_VOLUME;
       audioRef.current.play().catch(() => {});
     }
   };
@@ -313,34 +315,46 @@ export const LumiereTemplate = ({
     if (audio) {
       audio.currentTime = wedding.audio_start_time || 0;
       audio.loop = true;
-      audio.muted = true;
-      audio.volume = 0.5;
+      audio.muted = false;
+      audio.volume = AUDIO_VOLUME;
     }
 
     let cancelled = false;
     const video = videoRef.current;
-    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
+    let audioPlaying = !hasAudio || (!!audio && !audio.paused && !audio.muted);
     let videoPlaying = !hasVideo || (!!video && !video.paused);
     let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
+    let retryTimer = 0;
     const releaseWhenPlaying = () => {
       if (!cancelled && audioPlaying && videoPlaying && videoStable) {
-        if (audio) audio.muted = false;
         setMediaPlaybackReady(true);
       }
     };
-    const tryPlay = () => {
+    const tryPlay = (force = false) => {
       if (cancelled) return;
       if (!audio) {
         audioPlaying = true;
         releaseWhenPlaying();
         return;
       }
+      if (!force && !isMediaReadyForReveal(audio, AUDIO_BUFFER_TARGET)) return;
+      audio.muted = false;
+      audio.volume = AUDIO_VOLUME;
+      const startTime = wedding.audio_start_time || 0;
+      if (startTime > 0 && Math.abs(audio.currentTime - startTime) > 0.25) {
+        try { audio.currentTime = startTime; } catch { /* noop */ }
+      }
       const p = audio.play();
       if (p) {
         p.then(() => {
           audioPlaying = true;
+          setAutoplayBlocked(false);
           releaseWhenPlaying();
-        }).catch(() => {});
+        }).catch(() => {
+          if (cancelled) return;
+          setAutoplayBlocked(true);
+          retryTimer = window.setTimeout(() => tryPlay(true), 500);
+        });
       } else {
         audioPlaying = true;
         releaseWhenPlaying();
