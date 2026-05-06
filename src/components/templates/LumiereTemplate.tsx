@@ -91,16 +91,28 @@ export const LumiereTemplate = ({
   const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hasVideo = !!wedding?.video_url;
+  const videoUrl = wedding.video_url || wedding.hero_media;
+  const hasVideo = !!videoUrl;
   const hasAudio = !!wedding?.audio_url;
   const hasGallery = !!(gallery && gallery.length > 0);
   const [videoLoading, setVideoLoading] = useState(hasVideo);
   const [audioLoading, setAudioLoading] = useState(hasAudio);
   const [galleryLoading, setGalleryLoading] = useState(hasGallery);
+  const [mediaPlaybackReady, setMediaPlaybackReady] = useState(!hasVideo && !hasAudio);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(hasVideo || hasAudio || hasGallery);
 
-  const assetsReady = !videoLoading && !audioLoading && !galleryLoading;
+  const preloadImageUrls = useMemo(
+    () =>
+      [
+        ...(gallery || []).map((g: any) => g?.image_url).filter(Boolean),
+        wedding?.lumiere_ending_image_url,
+        (wedding as any)?.video_poster_url,
+      ].filter(Boolean) as string[],
+    [gallery, wedding?.lumiere_ending_image_url, (wedding as any)?.video_poster_url],
+  );
+
+  const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
 
   // Preload gallery images — only mark ready once all are loaded (or errored).
   useEffect(() => {
