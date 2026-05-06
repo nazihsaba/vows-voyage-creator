@@ -1,3 +1,4 @@
+import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -170,11 +171,8 @@ export const GraceTemplate = ({
   }, [wedding.audio_url, wedding.audio_start_time, videoLoading]);
 
   const handleTimeUpdate = () => {
-    if (audioRef.current && wedding.audio_end_time) {
-      if (audioRef.current.currentTime >= wedding.audio_end_time) {
-        audioRef.current.currentTime = wedding.audio_start_time || 0;
-      }
-    }
+    if (!audioRef.current) return;
+    applyFadeLoop(audioRef.current, wedding.audio_start_time || 0, wedding.audio_end_time, 1);
   };
 
   const handleStartClick = async () => {
