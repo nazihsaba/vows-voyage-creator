@@ -116,6 +116,10 @@ export const LumiereTemplate = ({
 
   const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
 
+  useEffect(() => {
+    setMediaPlaybackReady(!hasVideo && !hasAudio);
+  }, [hasVideo, hasAudio, videoUrl, wedding?.audio_url]);
+
   // Preload gallery/poster/ending images — only mark ready once decoded or errored.
   useEffect(() => {
     setGalleryLoading(preloadImageUrls.length > 0);
@@ -295,21 +299,33 @@ export const LumiereTemplate = ({
   };
 
   useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
+    if (!hasVideo && !hasAudio) return;
     const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
+    if (audio) {
+      audio.currentTime = wedding.audio_start_time || 0;
+      audio.loop = true;
+      audio.muted = true;
+      audio.volume = 0.5;
+    }
 
     let cancelled = false;
-    let audioPlaying = !hasAudio;
-    let videoPlaying = !hasVideo;
-    let videoStable = !hasVideo;
+    const video = videoRef.current;
+    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
+    let videoPlaying = !hasVideo || (!!video && !video.paused);
+    let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
     const releaseWhenPlaying = () => {
-      if (!cancelled && audioPlaying && videoPlaying && videoStable) setMediaPlaybackReady(true);
+      if (!cancelled && audioPlaying && videoPlaying && videoStable) {
+        if (audio) audio.muted = false;
+        setMediaPlaybackReady(true);
+      }
     };
     const tryPlay = () => {
       if (cancelled) return;
+      if (!audio) {
+        audioPlaying = true;
+        releaseWhenPlaying();
+        return;
+      }
       const p = audio.play();
       if (p) {
         p.then(() => {
@@ -322,7 +338,6 @@ export const LumiereTemplate = ({
       }
     };
 
-    const video = videoRef.current;
     const onVideoPlaying = () => {
       videoPlaying = true;
       window.setTimeout(() => {
