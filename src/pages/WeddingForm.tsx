@@ -606,13 +606,13 @@ const WeddingForm = () => {
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    const SIZE_LIMIT = 25 * 1024 * 1024;
+    const SIZE_LIMIT = 15 * 1024 * 1024;
     if (file.size > SIZE_LIMIT) {
       const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
       toast({
         title: `Video too large (${sizeMb} MB)`,
         description:
-          "Please upload a video under 25 MB. You can easily compress it at videocompress.ai before uploading.",
+          "Please upload a video under 15 MB. You can easily compress it at videocompress.ai before uploading.",
         duration: 9000,
         action: (
           <a
