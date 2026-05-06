@@ -437,7 +437,7 @@ export const LumiereTemplate = ({
 
       {/* Layer 3: Scrollable content — only mounted after video reveal so all
           entry animations start fresh in sync with the loader disappearing. */}
-      {!videoLoading && (
+      {assetsReady && (
       <div
         className="relative z-[2] animate-[fadeIn_0.4s_ease-out_forwards]"
         dir={isArabic ? "rtl" : "ltr"}
