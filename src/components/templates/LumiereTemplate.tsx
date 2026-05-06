@@ -315,18 +315,25 @@ export const LumiereTemplate = ({
     if (audio) {
       audio.currentTime = wedding.audio_start_time || 0;
       audio.loop = true;
-      audio.muted = false;
+      audio.muted = true;
       audio.volume = AUDIO_VOLUME;
     }
 
     let cancelled = false;
     const video = videoRef.current;
-    let audioPlaying = !hasAudio || (!!audio && !audio.paused && !audio.muted);
+    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
     let videoPlaying = !hasVideo || (!!video && !video.paused);
     let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
     let retryTimer = 0;
+    const unmuteAudio = () => {
+      if (!audio || audio.paused) return;
+      audio.volume = AUDIO_VOLUME;
+      audio.muted = false;
+      setAutoplayBlocked(false);
+    };
     const releaseWhenPlaying = () => {
       if (!cancelled && audioPlaying && videoPlaying && videoStable) {
+        unmuteAudio();
         setMediaPlaybackReady(true);
       }
     };
@@ -338,8 +345,8 @@ export const LumiereTemplate = ({
         return;
       }
       if (!force && !isMediaReadyForReveal(audio, AUDIO_BUFFER_TARGET)) return;
-      audio.muted = false;
       audio.volume = AUDIO_VOLUME;
+      audio.muted = true;
       const startTime = wedding.audio_start_time || 0;
       if (startTime > 0 && Math.abs(audio.currentTime - startTime) > 0.25) {
         try { audio.currentTime = startTime; } catch { /* noop */ }
@@ -348,11 +355,14 @@ export const LumiereTemplate = ({
       if (p) {
         p.then(() => {
           audioPlaying = true;
-          setAutoplayBlocked(false);
+          unmuteAudio();
+          window.setTimeout(unmuteAudio, 80);
           releaseWhenPlaying();
         }).catch(() => {
           if (cancelled) return;
           setAutoplayBlocked(true);
+          audioPlaying = true;
+          releaseWhenPlaying();
           retryTimer = window.setTimeout(() => tryPlay(true), 500);
         });
       } else {
@@ -382,7 +392,7 @@ export const LumiereTemplate = ({
     const onAudioReady = () => tryPlay();
     const onAudioPlaying = () => {
       audioPlaying = true;
-      setAutoplayBlocked(false);
+      unmuteAudio();
       releaseWhenPlaying();
     };
     const resumeAudio = () => {
