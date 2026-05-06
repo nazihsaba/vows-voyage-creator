@@ -1,3 +1,4 @@
+import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";

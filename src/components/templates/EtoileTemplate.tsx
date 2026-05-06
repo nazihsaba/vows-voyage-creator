@@ -1,3 +1,4 @@
+import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Heart } from "lucide-react";

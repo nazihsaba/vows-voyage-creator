@@ -1,3 +1,4 @@
+import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { useRef, useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";

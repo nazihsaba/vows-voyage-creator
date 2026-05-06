@@ -1,3 +1,4 @@
+import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { useRef, useState, useEffect } from "react";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 import { EditableField } from "@/components/EditableField";
