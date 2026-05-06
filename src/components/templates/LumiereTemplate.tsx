@@ -379,19 +379,37 @@ export const LumiereTemplate = ({
         releaseWhenPlaying();
       }
     };
+    const onAudioReady = () => tryPlay();
+    const onAudioPlaying = () => {
+      audioPlaying = true;
+      setAutoplayBlocked(false);
+      releaseWhenPlaying();
+    };
+    const resumeAudio = () => {
+      if (document.visibilityState === "visible") tryPlay(true);
+    };
     if (video) video.addEventListener("playing", onVideoPlaying);
     if (video) video.addEventListener("progress", checkVideoStable);
     if (video) video.addEventListener("canplaythrough", checkVideoStable);
     if (video) video.addEventListener("timeupdate", checkVideoStable);
+    if (audio) audio.addEventListener("canplay", onAudioReady);
+    if (audio) audio.addEventListener("canplaythrough", onAudioReady);
+    if (audio) audio.addEventListener("loadeddata", onAudioReady);
+    if (audio) audio.addEventListener("progress", onAudioReady);
+    if (audio) audio.addEventListener("playing", onAudioPlaying);
+    document.addEventListener("visibilitychange", resumeAudio);
+    window.addEventListener("focus", resumeAudio);
+    window.addEventListener("pageshow", resumeAudio);
 
-    const t1 = window.setTimeout(tryPlay, 120);
-    const t2 = window.setTimeout(tryPlay, 600);
-    const t3 = window.setTimeout(tryPlay, 1400);
-    const t4 = window.setTimeout(tryPlay, 2600);
+    const t1 = window.setTimeout(() => tryPlay(true), 120);
+    const t2 = window.setTimeout(() => tryPlay(true), 600);
+    const t3 = window.setTimeout(() => tryPlay(true), 1400);
+    const t4 = window.setTimeout(() => tryPlay(true), 2600);
     releaseWhenPlaying();
 
     return () => {
       cancelled = true;
+      window.clearTimeout(retryTimer);
       window.clearTimeout(t1);
       window.clearTimeout(t2);
       window.clearTimeout(t3);
@@ -400,6 +418,14 @@ export const LumiereTemplate = ({
       if (video) video.removeEventListener("progress", checkVideoStable);
       if (video) video.removeEventListener("canplaythrough", checkVideoStable);
       if (video) video.removeEventListener("timeupdate", checkVideoStable);
+      if (audio) audio.removeEventListener("canplay", onAudioReady);
+      if (audio) audio.removeEventListener("canplaythrough", onAudioReady);
+      if (audio) audio.removeEventListener("loadeddata", onAudioReady);
+      if (audio) audio.removeEventListener("progress", onAudioReady);
+      if (audio) audio.removeEventListener("playing", onAudioPlaying);
+      document.removeEventListener("visibilitychange", resumeAudio);
+      window.removeEventListener("focus", resumeAudio);
+      window.removeEventListener("pageshow", resumeAudio);
     };
   }, [hasAudio, hasVideo, wedding.audio_url, wedding.audio_start_time]);
 
@@ -416,7 +442,7 @@ export const LumiereTemplate = ({
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
+    applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, AUDIO_VOLUME);
   };
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
