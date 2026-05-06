@@ -128,21 +128,92 @@ export const LumiereTemplate = ({
     };
   }, [preloadImageUrls]);
 
+  // Video preload/playback gate — release only after it has buffered and is actually playing.
+  useEffect(() => {
+    setVideoLoading(hasVideo);
+    if (!hasVideo) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+    let retry = 0;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    const markReady = () => {
+      if (cancelled) return;
+      if (!video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
+        setAutoplayBlocked(false);
+        setVideoLoading(false);
+      }
+    };
+
+    const attemptPlay = () => {
+      if (cancelled) return;
+      const playPromise = video.play();
+      if (playPromise) {
+        playPromise.then(markReady).catch(() => {
+          if (cancelled) return;
+          setAutoplayBlocked(true);
+          retry = window.setTimeout(attemptPlay, 450);
+        });
+      } else {
+        markReady();
+      }
+    };
+
+    const checkReady = () => {
+      if (isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) attemptPlay();
+    };
+
+    video.addEventListener("loadedmetadata", checkReady);
+    video.addEventListener("loadeddata", checkReady);
+    video.addEventListener("canplay", checkReady);
+    video.addEventListener("canplaythrough", checkReady);
+    video.addEventListener("progress", checkReady);
+    video.addEventListener("playing", markReady);
+    video.addEventListener("timeupdate", markReady);
+    try { video.load(); } catch { /* noop */ }
+    checkReady();
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(retry);
+      video.removeEventListener("loadedmetadata", checkReady);
+      video.removeEventListener("loadeddata", checkReady);
+      video.removeEventListener("canplay", checkReady);
+      video.removeEventListener("canplaythrough", checkReady);
+      video.removeEventListener("progress", checkReady);
+      video.removeEventListener("playing", markReady);
+      video.removeEventListener("timeupdate", markReady);
+    };
+  }, [hasVideo, videoUrl]);
+
   // Audio preload — wait for canplaythrough before considering ready.
   useEffect(() => {
+    setAudioLoading(hasAudio);
     if (!hasAudio) return;
     const audio = audioRef.current;
     if (!audio) return;
-    const onReady = () => setAudioLoading(false);
+    audio.preload = "auto";
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.currentTime = wedding.audio_start_time || 0;
+    const onReady = () => {
+      if (isMediaReadyForReveal(audio, 0.5)) setAudioLoading(false);
+    };
     audio.addEventListener("canplaythrough", onReady);
+    audio.addEventListener("canplay", onReady);
     audio.addEventListener("loadeddata", onReady);
+    audio.addEventListener("progress", onReady);
     try { audio.load(); } catch { /* noop */ }
-    // Safety: don't block on audio more than 5s
-    const safety = window.setTimeout(() => setAudioLoading(false), 5000);
+    onReady();
     return () => {
       audio.removeEventListener("canplaythrough", onReady);
+      audio.removeEventListener("canplay", onReady);
       audio.removeEventListener("loadeddata", onReady);
-      window.clearTimeout(safety);
+      audio.removeEventListener("progress", onReady);
     };
   }, [hasAudio, wedding?.audio_url]);
 
