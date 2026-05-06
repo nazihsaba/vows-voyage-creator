@@ -149,16 +149,19 @@ export async function compressVideo(
 
       if (candidate.size <= targetMaxBytes) {
         try { await ff.deleteFile(inputName); } catch {}
-        // Only return compressed result if it actually saves space.
-        return candidate.size < file.size ? candidate : file;
+        // Always prefer the optimized H.264/+faststart encode so templates
+        // render the device-friendly version, even if the original was a
+        // touch smaller in raw bytes.
+        return candidate;
       }
     }
 
     try { await ff.deleteFile(inputName); } catch {}
 
-    // No pass got under the cap; return whichever encode is smallest,
-    // but only if it beats the original.
-    if (bestFile && bestFile.size < file.size) return bestFile;
+    // No pass got under the cap; still return the smallest optimized
+    // encode we produced — it's H.264 + faststart and will play more
+    // smoothly than the original across devices.
+    if (bestFile) return bestFile;
     return file;
   } catch (err) {
     console.warn("Video compression failed; uploading original:", err);
