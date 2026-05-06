@@ -108,11 +108,8 @@ export const EclatTemplate = ({
   }, []);
 
   const handleTimeUpdate = () => {
-    if (audioRef.current && wedding.audio_end_time) {
-      if (audioRef.current.currentTime >= wedding.audio_end_time) {
-        audioRef.current.currentTime = wedding.audio_start_time || 0;
-      }
-    }
+    if (!audioRef.current) return;
+    applyFadeLoop(audioRef.current, wedding.audio_start_time || 0, wedding.audio_end_time, 1);
   };
 
   const renderGalleryImage = (imageUrl: string, altText: string, positionY?: number) => (

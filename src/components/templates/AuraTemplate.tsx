@@ -84,9 +84,8 @@ export const AuraTemplate = ({
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
-    if (audio && wedding.audio_end_time && audio.currentTime >= wedding.audio_end_time) {
-      audio.currentTime = wedding.audio_start_time || 0;
-    }
+    if (!audio) return;
+    applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 1);
   };
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
