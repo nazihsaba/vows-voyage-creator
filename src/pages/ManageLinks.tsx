@@ -644,6 +644,19 @@ const ManageLinks = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {deletingAll && (
+        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-card border border-border rounded-2xl shadow-2xl px-8 py-10 max-w-sm w-full flex flex-col items-center text-center gap-4">
+            <Loader2 className="w-12 h-12 text-destructive animate-spin" />
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">Deleting all links</h3>
+              <p className="text-sm text-muted-foreground mt-2">
+                Removing all invitation links and guests. Please wait...
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       {isGenerating && (
         <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-card border border-border rounded-2xl shadow-2xl px-8 py-10 max-w-sm w-full flex flex-col items-center text-center gap-4">
