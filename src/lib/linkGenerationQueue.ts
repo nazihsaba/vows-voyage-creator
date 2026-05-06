@@ -36,6 +36,20 @@ async function getLinksCount(weddingId: string): Promise<number> {
   return count ?? 0;
 }
 
+async function getInviteesCount(weddingId: string): Promise<number> {
+  const { data: linkRows } = await (supabase as any)
+    .from("invitation_links")
+    .select("id")
+    .eq("wedding_id", weddingId);
+  const ids = (linkRows ?? []).map((r: any) => r.id);
+  if (ids.length === 0) return 0;
+  const { count } = await (supabase as any)
+    .from("invitees")
+    .select("*", { count: "exact", head: true })
+    .in("invitation_link_id", ids);
+  return count ?? 0;
+}
+
 export async function startLinkGeneration(params: {
   file: File;
   weddingId: string;
