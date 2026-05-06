@@ -1,5 +1,5 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
@@ -37,6 +37,38 @@ interface LumiereTemplateProps {
   submittingRsvp?: boolean;
 }
 
+const VIDEO_BUFFER_TARGET = 0.85;
+
+const getBufferedFraction = (media: HTMLMediaElement) => {
+  const duration = media.duration;
+  if (!duration || !Number.isFinite(duration) || duration <= 0) return 0;
+  let bufferedEnd = 0;
+  for (let i = 0; i < media.buffered.length; i += 1) {
+    bufferedEnd = Math.max(bufferedEnd, media.buffered.end(i));
+  }
+  return bufferedEnd / duration;
+};
+
+const isMediaReadyForReveal = (media: HTMLMediaElement, bufferTarget = 0.5) => {
+  if (media.readyState >= 4) return true;
+  if (media.readyState < 3) return false;
+  const duration = media.duration;
+  if (!duration || !Number.isFinite(duration) || duration <= 0) return true;
+  return getBufferedFraction(media) >= bufferTarget;
+};
+
+const preloadImage = (url: string) =>
+  new Promise<void>((resolve) => {
+    const img = new Image();
+    img.decoding = "async";
+    img.loading = "eager";
+    img.onload = () => {
+      img.decode?.().catch(() => {}).finally(resolve);
+    };
+    img.onerror = () => resolve();
+    img.src = url;
+  });
+
 export const LumiereTemplate = ({
   wedding,
   locations,
@@ -59,61 +91,137 @@ export const LumiereTemplate = ({
   const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const hasVideo = !!wedding?.video_url;
+  const videoUrl = wedding.video_url || wedding.hero_media;
+  const hasVideo = !!videoUrl;
   const hasAudio = !!wedding?.audio_url;
   const hasGallery = !!(gallery && gallery.length > 0);
   const [videoLoading, setVideoLoading] = useState(hasVideo);
   const [audioLoading, setAudioLoading] = useState(hasAudio);
   const [galleryLoading, setGalleryLoading] = useState(hasGallery);
+  const [mediaPlaybackReady, setMediaPlaybackReady] = useState(!hasVideo && !hasAudio);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(hasVideo || hasAudio || hasGallery);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
-  const assetsReady = !videoLoading && !audioLoading && !galleryLoading;
+  const preloadImageUrls = useMemo(
+    () =>
+      [
+        ...(gallery || []).map((g: any) => g?.image_url).filter(Boolean),
+        wedding?.lumiere_ending_image_url,
+        (wedding as any)?.video_poster_url,
+      ].filter(Boolean) as string[],
+    [gallery, wedding?.lumiere_ending_image_url, (wedding as any)?.video_poster_url],
+  );
 
-  // Preload gallery images — only mark ready once all are loaded (or errored).
+  const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
+
   useEffect(() => {
-    if (!hasGallery) return;
+    setMediaPlaybackReady(!hasVideo && !hasAudio);
+  }, [hasVideo, hasAudio, videoUrl, wedding?.audio_url]);
+
+  // Preload gallery/poster/ending images — only mark ready once decoded or errored.
+  useEffect(() => {
+    setGalleryLoading(preloadImageUrls.length > 0);
+    if (preloadImageUrls.length === 0) return;
     let cancelled = false;
-    let remaining = gallery.length;
-    const done = () => {
-      if (cancelled) return;
-      remaining -= 1;
-      if (remaining <= 0) setGalleryLoading(false);
-    };
-    const imgs: HTMLImageElement[] = [];
-    gallery.forEach((g: any) => {
-      const url = g?.image_url;
-      if (!url) { done(); return; }
-      const img = new Image();
-      img.onload = done;
-      img.onerror = done;
-      img.src = url;
-      imgs.push(img);
+    const urls = Array.from(new Set(preloadImageUrls));
+    Promise.all(urls.map(preloadImage)).then(() => {
+      if (!cancelled) setGalleryLoading(false);
     });
-    // Safety: don't block on gallery more than 6s
-    const safety = window.setTimeout(() => { if (!cancelled) setGalleryLoading(false); }, 6000);
     return () => {
       cancelled = true;
-      window.clearTimeout(safety);
-      imgs.forEach((i) => { i.onload = null; i.onerror = null; });
     };
-  }, [hasGallery, gallery]);
+  }, [preloadImageUrls]);
+
+  // Video preload/playback gate — release only after it has buffered and is actually playing.
+  useEffect(() => {
+    setVideoLoading(hasVideo);
+    if (!hasVideo) return;
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+    let retry = 0;
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    const markReady = () => {
+      if (cancelled) return;
+      if (!video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
+        setAutoplayBlocked(false);
+        setVideoLoading(false);
+        if (!hasAudio) setMediaPlaybackReady(true);
+      }
+    };
+
+    const attemptPlay = () => {
+      if (cancelled) return;
+      const playPromise = video.play();
+      if (playPromise) {
+        playPromise.then(markReady).catch(() => {
+          if (cancelled) return;
+          setAutoplayBlocked(true);
+          if (isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) setVideoLoading(false);
+          retry = window.setTimeout(attemptPlay, 450);
+        });
+      } else {
+        markReady();
+      }
+    };
+
+    const checkReady = () => {
+      if (isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) attemptPlay();
+    };
+
+    video.addEventListener("loadedmetadata", checkReady);
+    video.addEventListener("loadeddata", checkReady);
+    video.addEventListener("canplay", checkReady);
+    video.addEventListener("canplaythrough", checkReady);
+    video.addEventListener("progress", checkReady);
+    video.addEventListener("playing", markReady);
+    video.addEventListener("timeupdate", markReady);
+    try { video.load(); } catch { /* noop */ }
+    checkReady();
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(retry);
+      video.removeEventListener("loadedmetadata", checkReady);
+      video.removeEventListener("loadeddata", checkReady);
+      video.removeEventListener("canplay", checkReady);
+      video.removeEventListener("canplaythrough", checkReady);
+      video.removeEventListener("progress", checkReady);
+      video.removeEventListener("playing", markReady);
+      video.removeEventListener("timeupdate", markReady);
+    };
+  }, [hasVideo, videoUrl]);
 
   // Audio preload — wait for canplaythrough before considering ready.
   useEffect(() => {
+    setAudioLoading(hasAudio);
     if (!hasAudio) return;
     const audio = audioRef.current;
     if (!audio) return;
-    const onReady = () => setAudioLoading(false);
+    audio.preload = "auto";
+    audio.loop = true;
+    audio.volume = 0.5;
+    audio.currentTime = wedding.audio_start_time || 0;
+    const onReady = () => {
+      if (isMediaReadyForReveal(audio, 0.5)) setAudioLoading(false);
+    };
     audio.addEventListener("canplaythrough", onReady);
+    audio.addEventListener("canplay", onReady);
     audio.addEventListener("loadeddata", onReady);
+    audio.addEventListener("progress", onReady);
     try { audio.load(); } catch { /* noop */ }
-    // Safety: don't block on audio more than 5s
-    const safety = window.setTimeout(() => setAudioLoading(false), 5000);
+    onReady();
     return () => {
       audio.removeEventListener("canplaythrough", onReady);
+      audio.removeEventListener("canplay", onReady);
       audio.removeEventListener("loadeddata", onReady);
-      window.clearTimeout(safety);
+      audio.removeEventListener("progress", onReady);
     };
   }, [hasAudio, wedding?.audio_url]);
 
@@ -141,18 +249,6 @@ export const LumiereTemplate = ({
     };
   }, [assetsReady, showLoader]);
 
-  // Hard safety: never block the loader more than 6s on flaky networks.
-  useEffect(() => {
-    if (!showLoader) return;
-    const t = window.setTimeout(() => {
-      setVideoLoading(false);
-      setAudioLoading(false);
-      setGalleryLoading(false);
-    }, 6000);
-    return () => window.clearTimeout(t);
-  }, [showLoader]);
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
@@ -205,76 +301,86 @@ export const LumiereTemplate = ({
   };
 
   useEffect(() => {
-    const resumeVideo = () => {
-      const video = videoRef.current;
-      if (video && video.paused) {
-        video.play().catch(() => {});
-      }
-    };
-    const handleVisibility = () => {
-      if (document.visibilityState === "visible") resumeVideo();
-    };
-    document.addEventListener("visibilitychange", handleVisibility);
-    window.addEventListener("focus", resumeVideo);
-    window.addEventListener("pageshow", resumeVideo);
-    return () => {
-      document.removeEventListener("visibilitychange", handleVisibility);
-      window.removeEventListener("focus", resumeVideo);
-      window.removeEventListener("pageshow", resumeVideo);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
+    if (!hasVideo && !hasAudio) return;
     const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
+    if (audio) {
+      audio.currentTime = wedding.audio_start_time || 0;
+      audio.loop = true;
+      audio.muted = true;
+      audio.volume = 0.5;
+    }
 
     let cancelled = false;
+    const video = videoRef.current;
+    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
+    let videoPlaying = !hasVideo || (!!video && !video.paused);
+    let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
+    const releaseWhenPlaying = () => {
+      if (!cancelled && audioPlaying && videoPlaying && videoStable) {
+        if (audio) audio.muted = false;
+        setMediaPlaybackReady(true);
+      }
+    };
     const tryPlay = () => {
       if (cancelled) return;
+      if (!audio) {
+        audioPlaying = true;
+        releaseWhenPlaying();
+        return;
+      }
       const p = audio.play();
-      if (p) p.catch(() => {});
+      if (p) {
+        p.then(() => {
+          audioPlaying = true;
+          releaseWhenPlaying();
+        }).catch(() => {});
+      } else {
+        audioPlaying = true;
+        releaseWhenPlaying();
+      }
     };
 
-    // Attempt immediately, then retry after video likely starts and after small delays.
-    tryPlay();
-    const t1 = window.setTimeout(tryPlay, 300);
-    const t2 = window.setTimeout(tryPlay, 1200);
-    const t3 = window.setTimeout(tryPlay, 2500);
-
-    // Last-resort fallback: any user interaction (including scroll) starts it.
-    const playOnInteraction = () => {
-      tryPlay();
-      document.removeEventListener("click", playOnInteraction);
-      document.removeEventListener("touchstart", playOnInteraction);
-      document.removeEventListener("scroll", playOnInteraction);
-      document.removeEventListener("keydown", playOnInteraction);
+    const onVideoPlaying = () => {
+      videoPlaying = true;
+      window.setTimeout(() => {
+        if (!cancelled && video && !video.paused && !video.ended && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
+          videoStable = true;
+          tryPlay();
+          releaseWhenPlaying();
+        }
+      }, 260);
     };
-    document.addEventListener("click", playOnInteraction, { passive: true });
-    document.addEventListener("touchstart", playOnInteraction, { passive: true });
-    document.addEventListener("scroll", playOnInteraction, { passive: true });
-    document.addEventListener("keydown", playOnInteraction);
-
-    // Also retry once the background video begins playing (some browsers
-    // permit audio playback right after another media element starts).
-    const video = videoRef.current;
-    const onVideoPlaying = () => tryPlay();
+    const checkVideoStable = () => {
+      if (video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
+        videoPlaying = true;
+        videoStable = true;
+        tryPlay();
+        releaseWhenPlaying();
+      }
+    };
     if (video) video.addEventListener("playing", onVideoPlaying);
+    if (video) video.addEventListener("progress", checkVideoStable);
+    if (video) video.addEventListener("canplaythrough", checkVideoStable);
+    if (video) video.addEventListener("timeupdate", checkVideoStable);
+
+    const t1 = window.setTimeout(tryPlay, 120);
+    const t2 = window.setTimeout(tryPlay, 600);
+    const t3 = window.setTimeout(tryPlay, 1400);
+    const t4 = window.setTimeout(tryPlay, 2600);
+    releaseWhenPlaying();
 
     return () => {
       cancelled = true;
       window.clearTimeout(t1);
       window.clearTimeout(t2);
       window.clearTimeout(t3);
-      document.removeEventListener("click", playOnInteraction);
-      document.removeEventListener("touchstart", playOnInteraction);
-      document.removeEventListener("scroll", playOnInteraction);
-      document.removeEventListener("keydown", playOnInteraction);
+      window.clearTimeout(t4);
       if (video) video.removeEventListener("playing", onVideoPlaying);
+      if (video) video.removeEventListener("progress", checkVideoStable);
+      if (video) video.removeEventListener("canplaythrough", checkVideoStable);
+      if (video) video.removeEventListener("timeupdate", checkVideoStable);
     };
-  }, [wedding.audio_url, wedding.audio_start_time]);
+  }, [hasAudio, hasVideo, wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
@@ -292,7 +398,6 @@ export const LumiereTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
-  const videoUrl = wedding.video_url || wedding.hero_media;
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = new Date(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
@@ -413,7 +518,7 @@ export const LumiereTemplate = ({
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+        <audio ref={audioRef} src={wedding.audio_url} preload="auto" autoPlay muted onTimeUpdate={handleTimeUpdate} />
       )}
 
       {/* Layer 1: Fixed background video */}
@@ -427,7 +532,6 @@ export const LumiereTemplate = ({
           groomInitial={wedding.groom_name}
           brideInitial={wedding.bride_name}
           loaderTheme="light"
-          onLoadingChange={setVideoLoading}
           onAutoplayBlocked={() => setAutoplayBlocked(true)}
         />
       )}
