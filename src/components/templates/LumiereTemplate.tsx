@@ -38,6 +38,8 @@ interface LumiereTemplateProps {
 }
 
 const VIDEO_BUFFER_TARGET = 0.85;
+const AUDIO_BUFFER_TARGET = 0.5;
+const AUDIO_VOLUME = 0.5;
 
 const getBufferedFraction = (media: HTMLMediaElement) => {
   const duration = media.duration;
@@ -198,7 +200,7 @@ export const LumiereTemplate = ({
     };
   }, [hasVideo, videoUrl]);
 
-  // Audio preload — wait for canplaythrough before considering ready.
+  // Audio preload — wait for a usable buffer before considering ready.
   useEffect(() => {
     setAudioLoading(hasAudio);
     if (!hasAudio) return;
@@ -206,22 +208,27 @@ export const LumiereTemplate = ({
     if (!audio) return;
     audio.preload = "auto";
     audio.loop = true;
-    audio.volume = 0.5;
+    audio.volume = AUDIO_VOLUME;
     audio.currentTime = wedding.audio_start_time || 0;
     const onReady = () => {
-      if (isMediaReadyForReveal(audio, 0.5)) setAudioLoading(false);
+      if (isMediaReadyForReveal(audio, AUDIO_BUFFER_TARGET)) setAudioLoading(false);
     };
+    const onError = () => setAudioLoading(false);
     audio.addEventListener("canplaythrough", onReady);
     audio.addEventListener("canplay", onReady);
     audio.addEventListener("loadeddata", onReady);
+    audio.addEventListener("loadedmetadata", onReady);
     audio.addEventListener("progress", onReady);
+    audio.addEventListener("error", onError);
     try { audio.load(); } catch { /* noop */ }
     onReady();
     return () => {
       audio.removeEventListener("canplaythrough", onReady);
       audio.removeEventListener("canplay", onReady);
       audio.removeEventListener("loadeddata", onReady);
+      audio.removeEventListener("loadedmetadata", onReady);
       audio.removeEventListener("progress", onReady);
+      audio.removeEventListener("error", onError);
     };
   }, [hasAudio, wedding?.audio_url]);
 
