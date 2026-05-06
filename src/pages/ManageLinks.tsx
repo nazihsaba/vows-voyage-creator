@@ -448,10 +448,15 @@ const ManageLinks = () => {
     setDeleteId(null);
   };
 
+  const [deletingAll, setDeletingAll] = useState(false);
+
   const deleteAllLinks = async () => {
+    setDeletingAll(true);
+    setDeleteAllOpen(false);
     try {
-      for (const link of links) {
-        const { error } = await supabase.from("invitation_links").delete().eq("id", link.id);
+      const ids = links.map((l) => l.id);
+      if (ids.length > 0) {
+        const { error } = await supabase.from("invitation_links").delete().in("id", ids);
         if (error) throw error;
       }
       toast({ title: "Success", description: "All links deleted successfully" });
@@ -459,8 +464,9 @@ const ManageLinks = () => {
     } catch (error) {
       console.error("Error deleting all links:", error);
       toast({ title: "Error", description: "Failed to delete all links", variant: "destructive" });
+    } finally {
+      setDeletingAll(false);
     }
-    setDeleteAllOpen(false);
   };
 
   const getRSVPStats = (linkId: string) => {
