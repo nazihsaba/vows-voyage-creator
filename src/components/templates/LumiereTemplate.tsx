@@ -315,31 +315,40 @@ export const LumiereTemplate = ({
     if (audio) {
       audio.currentTime = wedding.audio_start_time || 0;
       audio.loop = true;
-      audio.muted = true;
+      audio.muted = false;
       audio.volume = AUDIO_VOLUME;
     }
 
     let cancelled = false;
     const video = videoRef.current;
-    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
+    let audioPlaybackStarted = !hasAudio || (!!audio && !audio.paused);
+    let audiblePlaybackStarted = !hasAudio || (!!audio && !audio.paused && !audio.muted);
+    let fallbackReady = !hasAudio;
     let videoPlaying = !hasVideo || (!!video && !video.paused);
     let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
     let retryTimer = 0;
     const releaseWhenPlaying = () => {
-      if (!cancelled && audioPlaying && videoPlaying && videoStable) {
+      const audioReadyForReveal = audiblePlaybackStarted || (fallbackReady && audioPlaybackStarted);
+      if (!cancelled && audioReadyForReveal && videoPlaying && videoStable) {
         setMediaPlaybackReady(true);
       }
+    };
+    const scheduleAudibleRetry = () => {
+      window.clearTimeout(retryTimer);
+      retryTimer = window.setTimeout(() => tryPlay(true), 500);
     };
     const tryPlay = (force = false) => {
       if (cancelled) return;
       if (!audio) {
-        audioPlaying = true;
+        audioPlaybackStarted = true;
+        audiblePlaybackStarted = true;
+        fallbackReady = true;
         releaseWhenPlaying();
         return;
       }
       if (!force && !isMediaReadyForReveal(audio, AUDIO_BUFFER_TARGET)) return;
       audio.volume = AUDIO_VOLUME;
-      audio.muted = true;
+      audio.muted = false;
       const startTime = wedding.audio_start_time || 0;
       if (startTime > 0 && Math.abs(audio.currentTime - startTime) > 0.25) {
         try { audio.currentTime = startTime; } catch { /* noop */ }
@@ -347,17 +356,22 @@ export const LumiereTemplate = ({
       const p = audio.play();
       if (p) {
         p.then(() => {
-          audioPlaying = true;
+          audioPlaybackStarted = true;
+          audiblePlaybackStarted = !audio.muted;
           releaseWhenPlaying();
         }).catch(() => {
           if (cancelled) return;
           setAutoplayBlocked(true);
-          audioPlaying = true;
-          releaseWhenPlaying();
-          retryTimer = window.setTimeout(() => tryPlay(true), 500);
+          audio.muted = true;
+          audio.play().then(() => {
+            audioPlaybackStarted = true;
+            releaseWhenPlaying();
+            scheduleAudibleRetry();
+          }).catch(scheduleAudibleRetry);
         });
       } else {
-        audioPlaying = true;
+        audioPlaybackStarted = true;
+        audiblePlaybackStarted = !audio.muted;
         releaseWhenPlaying();
       }
     };
