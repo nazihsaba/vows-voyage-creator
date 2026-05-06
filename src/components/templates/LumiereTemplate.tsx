@@ -396,7 +396,8 @@ export const LumiereTemplate = ({
     };
     const onAudioReady = () => tryPlay();
     const onAudioPlaying = () => {
-      audioPlaying = true;
+      audioPlaybackStarted = true;
+      audiblePlaybackStarted = !audio?.muted;
       releaseWhenPlaying();
     };
     const resumeAudio = () => {
