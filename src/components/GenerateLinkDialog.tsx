@@ -17,6 +17,7 @@ import { Plus, X, Upload, Download, Loader2 } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import * as XLSX from "xlsx";
+import { startLinkGeneration, getGenerationState } from "@/lib/linkGenerationQueue";
 
 interface GenerateLinkDialogProps {
   open: boolean;
@@ -191,75 +192,39 @@ export const GenerateLinkDialog = ({
       return;
     }
 
-    setLoading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", selectedFile);
-      formData.append("weddingSlug", weddingSlug);
-      formData.append("weddingId", weddingId);
+    const file = selectedFile;
+    setSelectedFile(null);
+    onOpenChange(false);
 
-      const webhookUrl = "https://aurea-invites.app.n8n.cloud/webhook/read-invitees-csv";
-      console.log("Sending file to n8n workflow:", webhookUrl);
+    // Navigate to the management page immediately so the user sees the spinner there
+    navigate(`/dashboard/manage-links/${weddingId}`);
 
-      const response = await fetch(webhookUrl, {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to process file: ${response.statusText}`);
-      }
-
-      // Wait for the response data (handle both JSON and text responses)
-      const contentType = response.headers.get("content-type");
-      let result;
-      if (contentType && contentType.includes("application/json")) {
-        result = await response.json();
-      } else {
-        result = await response.text();
-      }
-      console.log("n8n workflow response:", result);
-
-      // Extract message from the webhook response
-      const responseMessage =
-        typeof result === "string"
-          ? result
-          : result?.message || result?.description || "Your invitation links have been generated successfully.";
-
-      toast({
-        title: "Success!",
-        description: responseMessage,
-      });
-
-      setSelectedFile(null);
-      // Poll for new data to appear in the database before closing
-      const initialCount = await getLinksCount();
-      let attempts = 0;
-      const maxAttempts = 10;
-      const pollInterval = 1500;
-      
-      const poll = async () => {
-        attempts++;
-        const currentCount = await getLinksCount();
-        if (currentCount > initialCount || attempts >= maxAttempts) {
-          setLoading(false);
-          onSuccess();
-          onOpenChange(false);
+    // Kick off background generation; ManageLinks subscribes to the queue
+    startLinkGeneration({ file, weddingId, weddingSlug })
+      .then(() => {
+        const finalState = getGenerationState();
+        if (finalState.status === "error" || (finalState.status === "idle" && finalState.error)) {
+          toast({
+            title: "Error",
+            description: finalState.error || "Failed to generate invitation links.",
+            variant: "destructive",
+          });
         } else {
-          setTimeout(poll, pollInterval);
+          toast({
+            title: "Success!",
+            description: "Your invitation links have been generated.",
+          });
+          onSuccess();
         }
-      };
-      
-      setTimeout(poll, pollInterval);
-    } catch (error) {
-      console.error("Error sending file to n8n:", error);
-      toast({
-        title: "Error",
-        description: "Failed to generate invitation links. Please try again.",
-        variant: "destructive",
+      })
+      .catch((error) => {
+        console.error("Link generation error:", error);
+        toast({
+          title: "Error",
+          description: "Failed to generate invitation links. Please try again.",
+          variant: "destructive",
+        });
       });
-      setLoading(false);
-    }
   };
 
   const sanitizedLinkName = linkName

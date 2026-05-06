@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { getGenerationState, subscribeGeneration } from "@/lib/linkGenerationQueue";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -131,6 +132,23 @@ const ManageLinks = () => {
   const [venuePayDialogOpen, setVenuePayDialogOpen] = useState(false);
   const [venuePayUrl, setVenuePayUrl] = useState<string | null>(null);
   const [venuePayError, setVenuePayError] = useState<string | null>(null);
+  const [genState, setGenState] = useState(getGenerationState());
+
+  useEffect(() => {
+    const unsub = subscribeGeneration((s) => {
+      setGenState(s);
+      if (s.status === "done" && s.weddingId === weddingId) {
+        setRefresh((r) => r + 1);
+      }
+    });
+    return () => {
+      unsub();
+    };
+  }, [weddingId]);
+
+  const isGenerating =
+    genState.weddingId === weddingId &&
+    (genState.status === "uploading" || genState.status === "polling");
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
@@ -620,6 +638,24 @@ const ManageLinks = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-primary/5">
+      {isGenerating && (
+        <div className="fixed inset-0 z-[100] bg-background/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-card border border-border rounded-2xl shadow-2xl px-8 py-10 max-w-sm w-full flex flex-col items-center text-center gap-4">
+            <Loader2 className="w-12 h-12 text-primary animate-spin" />
+            <div>
+              <h3 className="text-lg font-semibold text-foreground">
+                Generating your links
+              </h3>
+              <p className="text-sm text-muted-foreground mt-2">
+                {genState.message || "Please wait while we create your invitation links and guests..."}
+              </p>
+              <p className="text-xs text-muted-foreground mt-3">
+                This may take a minute. Please don't close this page.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
       <header className="bg-white/80 backdrop-blur-lg border-b border-border/50 sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between">
           <div className="flex items-center gap-3">
