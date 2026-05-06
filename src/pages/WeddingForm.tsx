@@ -914,13 +914,11 @@ const WeddingForm = () => {
         imageUrl = await uploadImage(compressedImage, user.id);
       }
 
-      // Upload new video if selected — compress, then extract & upload first-frame poster
+      // Upload new video if selected — extract & upload first-frame poster
       if (videoFile) {
-        toast({ title: "Optimizing video", description: "This may take a moment for large files." });
-        const compressedVideo = await compressVideo(videoFile);
-        videoUrl = await uploadImage(compressedVideo, user.id);
+        videoUrl = await uploadImage(videoFile, user.id);
         try {
-          const posterBlob = await extractFirstFrame(compressedVideo);
+          const posterBlob = await extractFirstFrame(videoFile);
           if (posterBlob) {
             const posterFile = new File([posterBlob], "poster.jpg", { type: "image/jpeg" });
             const compressedPoster = await compressImage(posterFile);
