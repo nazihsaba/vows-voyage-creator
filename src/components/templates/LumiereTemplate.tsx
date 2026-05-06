@@ -341,14 +341,25 @@ export const LumiereTemplate = ({
     const onVideoPlaying = () => {
       videoPlaying = true;
       window.setTimeout(() => {
-        if (!cancelled && video && !video.paused && !video.ended) {
+        if (!cancelled && video && !video.paused && !video.ended && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
           videoStable = true;
           tryPlay();
           releaseWhenPlaying();
         }
       }, 260);
     };
+    const checkVideoStable = () => {
+      if (video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
+        videoPlaying = true;
+        videoStable = true;
+        tryPlay();
+        releaseWhenPlaying();
+      }
+    };
     if (video) video.addEventListener("playing", onVideoPlaying);
+    if (video) video.addEventListener("progress", checkVideoStable);
+    if (video) video.addEventListener("canplaythrough", checkVideoStable);
+    if (video) video.addEventListener("timeupdate", checkVideoStable);
 
     const t1 = window.setTimeout(tryPlay, 120);
     const t2 = window.setTimeout(tryPlay, 600);
@@ -363,6 +374,9 @@ export const LumiereTemplate = ({
       window.clearTimeout(t3);
       window.clearTimeout(t4);
       if (video) video.removeEventListener("playing", onVideoPlaying);
+      if (video) video.removeEventListener("progress", checkVideoStable);
+      if (video) video.removeEventListener("canplaythrough", checkVideoStable);
+      if (video) video.removeEventListener("timeupdate", checkVideoStable);
     };
   }, [hasAudio, hasVideo, wedding.audio_url, wedding.audio_start_time]);
 
