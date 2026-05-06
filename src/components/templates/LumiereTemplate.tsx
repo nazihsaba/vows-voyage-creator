@@ -575,7 +575,7 @@ export const LumiereTemplate = ({
       {hasArabic && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" autoPlay onTimeUpdate={handleTimeUpdate} />
+        <audio ref={audioRef} src={wedding.audio_url} preload="auto" autoPlay muted onTimeUpdate={handleTimeUpdate} />
       )}
 
       {/* Layer 1: Fixed background video */}
