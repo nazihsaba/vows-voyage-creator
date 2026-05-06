@@ -132,6 +132,23 @@ const ManageLinks = () => {
   const [venuePayDialogOpen, setVenuePayDialogOpen] = useState(false);
   const [venuePayUrl, setVenuePayUrl] = useState<string | null>(null);
   const [venuePayError, setVenuePayError] = useState<string | null>(null);
+  const [genState, setGenState] = useState(getGenerationState());
+
+  useEffect(() => {
+    const unsub = subscribeGeneration((s) => {
+      setGenState(s);
+      if (s.status === "done" && s.weddingId === weddingId) {
+        setRefresh((r) => r + 1);
+      }
+    });
+    return () => {
+      unsub();
+    };
+  }, [weddingId]);
+
+  const isGenerating =
+    genState.weddingId === weddingId &&
+    (genState.status === "uploading" || genState.status === "polling");
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
