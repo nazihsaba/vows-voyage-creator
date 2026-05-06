@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { getGenerationState, subscribeGeneration } from "@/lib/linkGenerationQueue";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
