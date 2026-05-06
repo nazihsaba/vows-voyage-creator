@@ -365,9 +365,14 @@ export const LumiereTemplate = ({
           audio.muted = true;
           audio.play().then(() => {
             audioPlaybackStarted = true;
+            fallbackReady = true;
             releaseWhenPlaying();
             scheduleAudibleRetry();
-          }).catch(scheduleAudibleRetry);
+          }).catch(() => {
+            fallbackReady = true;
+            releaseWhenPlaying();
+            scheduleAudibleRetry();
+          });
         });
       } else {
         audioPlaybackStarted = true;
