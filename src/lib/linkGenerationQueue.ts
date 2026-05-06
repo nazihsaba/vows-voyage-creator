@@ -36,6 +36,20 @@ async function getLinksCount(weddingId: string): Promise<number> {
   return count ?? 0;
 }
 
+async function getInviteesCount(weddingId: string): Promise<number> {
+  const { data: linkRows } = await (supabase as any)
+    .from("invitation_links")
+    .select("id")
+    .eq("wedding_id", weddingId);
+  const ids = (linkRows ?? []).map((r: any) => r.id);
+  if (ids.length === 0) return 0;
+  const { count } = await (supabase as any)
+    .from("invitees")
+    .select("*", { count: "exact", head: true })
+    .in("invitation_link_id", ids);
+  return count ?? 0;
+}
+
 export async function startLinkGeneration(params: {
   file: File;
   weddingId: string;
@@ -79,27 +93,38 @@ export async function startLinkGeneration(params: {
 
   setState({ status: "polling", message: "Generating your invitation links..." });
 
-  // Poll DB until rows show up OR webhook finishes + grace period
+  const initialInvitees = await getInviteesCount(weddingId);
+
+  // Poll DB until rows show up OR webhook finishes + grace period.
+  // Stabilize on BOTH links and invitees so the management table renders the full guest list.
   const start = Date.now();
   const maxMs = 5 * 60 * 1000; // 5 min hard cap
   let lastCount = initialCount;
+  let lastInvitees = initialInvitees;
   let stableTicks = 0;
 
   while (Date.now() - start < maxMs) {
     await new Promise((r) => setTimeout(r, 2000));
     const currentCount = await getLinksCount(weddingId);
+    const currentInvitees = await getInviteesCount(weddingId);
+
+    const linksChanged = currentCount !== lastCount;
+    const inviteesChanged = currentInvitees !== lastInvitees;
+    lastCount = currentCount;
+    lastInvitees = currentInvitees;
 
     if (currentCount > initialCount) {
-      // Wait for count to stabilize (no new rows for ~6s) so all links are in
-      if (currentCount === lastCount) {
+      setState({
+        status: "polling",
+        message: `Loading guests... (${currentInvitees} so far)`,
+      });
+      if (!linksChanged && !inviteesChanged) {
         stableTicks++;
       } else {
         stableTicks = 0;
-        lastCount = currentCount;
       }
       if (stableTicks >= 3 && webhookDone) break;
     } else if (webhookDone) {
-      // Give webhook a few extra polls after it returned
       stableTicks++;
       if (stableTicks >= 5) break;
     }
