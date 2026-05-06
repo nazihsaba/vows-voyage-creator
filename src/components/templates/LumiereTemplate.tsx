@@ -101,6 +101,8 @@ export const LumiereTemplate = ({
   const [mediaPlaybackReady, setMediaPlaybackReady] = useState(!hasVideo && !hasAudio);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(hasVideo || hasAudio || hasGallery);
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
 
   const preloadImageUrls = useMemo(
     () =>
@@ -241,8 +243,6 @@ export const LumiereTemplate = ({
     };
   }, [assetsReady, showLoader]);
 
-  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
-  const [hasStarted, setHasStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
