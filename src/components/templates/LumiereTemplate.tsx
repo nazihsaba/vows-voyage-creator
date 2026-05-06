@@ -59,15 +59,68 @@ export const LumiereTemplate = ({
   const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
-  const [videoLoading, setVideoLoading] = useState(!!wedding?.video_url);
+  const hasVideo = !!wedding?.video_url;
+  const hasAudio = !!wedding?.audio_url;
+  const hasGallery = !!(gallery && gallery.length > 0);
+  const [videoLoading, setVideoLoading] = useState(hasVideo);
+  const [audioLoading, setAudioLoading] = useState(hasAudio);
+  const [galleryLoading, setGalleryLoading] = useState(hasGallery);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
-  const [showLoader, setShowLoader] = useState(!!wedding?.video_url);
+  const [showLoader, setShowLoader] = useState(hasVideo || hasAudio || hasGallery);
 
-  // Once the video signals ready, wait for the browser to paint the
-  // template underneath (two animation frames + small settle) before
-  // fading the loader out — eliminates any blank-flash glitch.
+  const assetsReady = !videoLoading && !audioLoading && !galleryLoading;
+
+  // Preload gallery images — only mark ready once all are loaded (or errored).
   useEffect(() => {
-    if (videoLoading || !showLoader) return;
+    if (!hasGallery) return;
+    let cancelled = false;
+    let remaining = gallery.length;
+    const done = () => {
+      if (cancelled) return;
+      remaining -= 1;
+      if (remaining <= 0) setGalleryLoading(false);
+    };
+    const imgs: HTMLImageElement[] = [];
+    gallery.forEach((g: any) => {
+      const url = g?.image_url;
+      if (!url) { done(); return; }
+      const img = new Image();
+      img.onload = done;
+      img.onerror = done;
+      img.src = url;
+      imgs.push(img);
+    });
+    // Safety: don't block on gallery more than 6s
+    const safety = window.setTimeout(() => { if (!cancelled) setGalleryLoading(false); }, 6000);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(safety);
+      imgs.forEach((i) => { i.onload = null; i.onerror = null; });
+    };
+  }, [hasGallery, gallery]);
+
+  // Audio preload — wait for canplaythrough before considering ready.
+  useEffect(() => {
+    if (!hasAudio) return;
+    const audio = audioRef.current;
+    if (!audio) return;
+    const onReady = () => setAudioLoading(false);
+    audio.addEventListener("canplaythrough", onReady);
+    audio.addEventListener("loadeddata", onReady);
+    try { audio.load(); } catch { /* noop */ }
+    // Safety: don't block on audio more than 5s
+    const safety = window.setTimeout(() => setAudioLoading(false), 5000);
+    return () => {
+      audio.removeEventListener("canplaythrough", onReady);
+      audio.removeEventListener("loadeddata", onReady);
+      window.clearTimeout(safety);
+    };
+  }, [hasAudio, wedding?.audio_url]);
+
+  // Once all assets ready, wait for the browser to paint the
+  // template underneath before fading the loader out.
+  useEffect(() => {
+    if (!assetsReady || !showLoader) return;
     let raf1 = 0;
     let raf2 = 0;
     let settle = 0;
