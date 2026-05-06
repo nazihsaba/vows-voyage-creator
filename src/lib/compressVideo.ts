@@ -1,12 +1,11 @@
 /**
  * Client-side video compression using ffmpeg.wasm.
- * Lazy-loads ffmpeg core (~25MB) only when first invoked, so it doesn't
- * affect the initial bundle.
+ * Lazy-loads ffmpeg core (~25MB) only when first invoked.
  *
- * Strategy: re-encode to H.264 MP4, scale to max 720p height, CRF 28 (good
- * visual quality at meaningful size savings), AAC 128k audio, +faststart for
- * fast playback. Falls back to the original file if compression fails or
- * doesn't actually reduce size.
+ * Strategy: re-encode to H.264 MP4 with progressive passes until output
+ * fits under a target size cap (default 25MB). Each pass tightens CRF and,
+ * if needed, lowers max height. Preserves the best quality that still fits
+ * within the cap. AAC 128k audio, +faststart for fast start playback.
  */
 import { FFmpeg } from "@ffmpeg/ffmpeg";
 import { fetchFile, toBlobURL } from "@ffmpeg/util";
@@ -34,19 +33,28 @@ async function getFFmpeg(): Promise<FFmpeg> {
 }
 
 export interface CompressVideoOptions {
-  maxHeight?: number; // scaled down if source is taller; aspect preserved
-  crf?: number; // 18-28 typical; higher = smaller/lower quality
-  audioBitrate?: string; // e.g. "128k"
-  skipIfSmallerThan?: number; // bytes — skip transcoding if already small
+  /** Hard cap on output size in bytes. Default 25MB. */
+  targetMaxBytes?: number;
+  /** Skip transcoding entirely if input already ≤ this size. Default 8MB. */
+  skipIfSmallerThan?: number;
   onProgress?: (ratio: number) => void;
 }
 
-const DEFAULTS: Required<Omit<CompressVideoOptions, "onProgress">> = {
-  maxHeight: 720,
-  crf: 28,
-  audioBitrate: "128k",
-  skipIfSmallerThan: 5 * 1024 * 1024, // 5 MB
-};
+const DEFAULT_TARGET = 25 * 1024 * 1024; // 25 MB
+const DEFAULT_SKIP = 8 * 1024 * 1024; // 8 MB — already small enough
+
+// Quality ladder: each pass tightens until output fits under the cap.
+// Higher CRF = smaller file, slightly lower fidelity. 23 is visually
+// near-lossless for web; 32 is the floor before quality drops noticeably.
+const PASSES: Array<{ height: number; crf: number; audioBitrate: string }> = [
+  { height: 1080, crf: 24, audioBitrate: "128k" },
+  { height: 1080, crf: 27, audioBitrate: "128k" },
+  { height: 720,  crf: 26, audioBitrate: "128k" },
+  { height: 720,  crf: 29, audioBitrate: "128k" },
+  { height: 720,  crf: 32, audioBitrate: "96k"  },
+  { height: 540,  crf: 30, audioBitrate: "96k"  },
+  { height: 480,  crf: 32, audioBitrate: "96k"  },
+];
 
 export async function compressVideo(
   file: File,
@@ -54,9 +62,11 @@ export async function compressVideo(
 ): Promise<File> {
   if (!file.type.startsWith("video/")) return file;
 
-  const opts = { ...DEFAULTS, ...options };
+  const targetMaxBytes = options.targetMaxBytes ?? DEFAULT_TARGET;
+  const skipIfSmallerThan = options.skipIfSmallerThan ?? DEFAULT_SKIP;
 
-  if (file.size <= opts.skipIfSmallerThan) {
+  // Already comfortably small — no need to transcode.
+  if (file.size <= skipIfSmallerThan && file.size <= targetMaxBytes) {
     return file;
   }
 
@@ -84,45 +94,72 @@ export async function compressVideo(
   try {
     await ff.writeFile(inputName, await fetchFile(file));
 
-    // Scale: keep aspect ratio, cap height at maxHeight, ensure even dims for H.264
-    const vfScale = `scale='trunc(iw*min(1\\,${opts.maxHeight}/ih)/2)*2':'trunc(ih*min(1\\,${opts.maxHeight}/ih)/2)*2'`;
+    let bestFile: File | null = null;
 
-    await ff.exec([
-      "-i", inputName,
-      "-vf", vfScale,
-      "-c:v", "libx264",
-      "-preset", "veryfast",
-      "-crf", String(opts.crf),
-      "-c:a", "aac",
-      "-b:a", opts.audioBitrate,
-      "-movflags", "+faststart",
-      "-pix_fmt", "yuv420p",
-      outputName,
-    ]);
+    for (let i = 0; i < PASSES.length; i++) {
+      const { height, crf, audioBitrate } = PASSES[i];
 
-    const data = await ff.readFile(outputName);
-    let blob: Blob;
-    if (data instanceof Uint8Array) {
-      const ab = new ArrayBuffer(data.byteLength);
-      new Uint8Array(ab).set(data);
-      blob = new Blob([ab], { type: "video/mp4" });
-    } else {
-      blob = new Blob([], { type: "video/mp4" });
+      // Scale: keep aspect ratio, cap height, ensure even dims for H.264.
+      // Never upscales — only scales down if source is taller than `height`.
+      const vfScale = `scale='trunc(iw*min(1\\,${height}/ih)/2)*2':'trunc(ih*min(1\\,${height}/ih)/2)*2'`;
+
+      try {
+        await ff.exec([
+          "-i", inputName,
+          "-vf", vfScale,
+          "-c:v", "libx264",
+          "-preset", "veryfast",
+          "-crf", String(crf),
+          "-c:a", "aac",
+          "-b:a", audioBitrate,
+          "-movflags", "+faststart",
+          "-pix_fmt", "yuv420p",
+          "-y",
+          outputName,
+        ]);
+      } catch (err) {
+        console.warn(`Compression pass ${i + 1} failed:`, err);
+        continue;
+      }
+
+      const data = await ff.readFile(outputName);
+      let blob: Blob;
+      if (data instanceof Uint8Array) {
+        const ab = new ArrayBuffer(data.byteLength);
+        new Uint8Array(ab).set(data);
+        blob = new Blob([ab], { type: "video/mp4" });
+      } else {
+        continue;
+      }
+
+      try { await ff.deleteFile(outputName); } catch {}
+
+      if (blob.size === 0) continue;
+
+      const baseName = file.name.replace(/\.[^.]+$/, "") || "video";
+      const candidate = new File([blob], `${baseName}.mp4`, {
+        type: "video/mp4",
+        lastModified: Date.now(),
+      });
+
+      // Track the smallest successful encode as a fallback.
+      if (!bestFile || candidate.size < bestFile.size) {
+        bestFile = candidate;
+      }
+
+      if (candidate.size <= targetMaxBytes) {
+        try { await ff.deleteFile(inputName); } catch {}
+        // Only return compressed result if it actually saves space.
+        return candidate.size < file.size ? candidate : file;
+      }
     }
 
-    // Cleanup virtual FS
     try { await ff.deleteFile(inputName); } catch {}
-    try { await ff.deleteFile(outputName); } catch {}
 
-    if (blob.size === 0 || blob.size >= file.size) {
-      return file;
-    }
-
-    const baseName = file.name.replace(/\.[^.]+$/, "") || "video";
-    return new File([blob], `${baseName}.mp4`, {
-      type: "video/mp4",
-      lastModified: Date.now(),
-    });
+    // No pass got under the cap; return whichever encode is smallest,
+    // but only if it beats the original.
+    if (bestFile && bestFile.size < file.size) return bestFile;
+    return file;
   } catch (err) {
     console.warn("Video compression failed; uploading original:", err);
     return file;
