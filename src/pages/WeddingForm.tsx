@@ -606,6 +606,26 @@ const WeddingForm = () => {
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      const SIZE_LIMIT = 25 * 1024 * 1024;
+      if (file.size > SIZE_LIMIT) {
+        const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        toast({
+          title: `Large video detected (${sizeMb} MB)`,
+          description:
+            "We'll automatically optimize it for smoother playback. For best quality, you can also pre-compress it at videocompress.ai before uploading.",
+          duration: 9000,
+          action: (
+            <a
+              href="https://videocompress.ai/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center justify-center rounded-md border border-border bg-background px-3 py-1.5 text-xs font-medium hover:bg-muted transition-colors"
+            >
+              Compress
+            </a>
+          ),
+        });
+      }
       setVideoFile(file);
       const reader = new FileReader();
       reader.onloadend = () => {
