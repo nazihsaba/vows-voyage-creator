@@ -241,16 +241,6 @@ export const LumiereTemplate = ({
     };
   }, [assetsReady, showLoader]);
 
-  // Hard safety: never block the loader more than 6s on flaky networks.
-  useEffect(() => {
-    if (!showLoader) return;
-    const t = window.setTimeout(() => {
-      setVideoLoading(false);
-      setAudioLoading(false);
-      setGalleryLoading(false);
-    }, 6000);
-    return () => window.clearTimeout(t);
-  }, [showLoader]);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -392,7 +382,6 @@ export const LumiereTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
-  const videoUrl = wedding.video_url || wedding.hero_media;
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = new Date(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
