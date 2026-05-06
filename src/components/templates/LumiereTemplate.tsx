@@ -325,15 +325,8 @@ export const LumiereTemplate = ({
     let videoPlaying = !hasVideo || (!!video && !video.paused);
     let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
     let retryTimer = 0;
-    const unmuteAudio = () => {
-      if (!audio || audio.paused) return;
-      audio.volume = AUDIO_VOLUME;
-      audio.muted = false;
-      setAutoplayBlocked(false);
-    };
     const releaseWhenPlaying = () => {
       if (!cancelled && audioPlaying && videoPlaying && videoStable) {
-        unmuteAudio();
         setMediaPlaybackReady(true);
       }
     };
@@ -355,8 +348,6 @@ export const LumiereTemplate = ({
       if (p) {
         p.then(() => {
           audioPlaying = true;
-          unmuteAudio();
-          window.setTimeout(unmuteAudio, 80);
           releaseWhenPlaying();
         }).catch(() => {
           if (cancelled) return;
@@ -392,7 +383,6 @@ export const LumiereTemplate = ({
     const onAudioReady = () => tryPlay();
     const onAudioPlaying = () => {
       audioPlaying = true;
-      unmuteAudio();
       releaseWhenPlaying();
     };
     const resumeAudio = () => {
