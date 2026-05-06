@@ -1698,7 +1698,7 @@ const WeddingForm = () => {
                       >
                         <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
                         <span className="text-sm text-muted-foreground">Click to upload video</span>
-                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV up to 50MB</span>
+                        <span className="text-xs text-muted-foreground mt-1">MP4, MOV — auto-optimized to 25MB</span>
                       </label>
                     )}
                     <Input
