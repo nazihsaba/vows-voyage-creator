@@ -114,34 +114,19 @@ export const LumiereTemplate = ({
 
   const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
 
-  // Preload gallery images — only mark ready once all are loaded (or errored).
+  // Preload gallery/poster/ending images — only mark ready once decoded or errored.
   useEffect(() => {
-    if (!hasGallery) return;
+    setGalleryLoading(preloadImageUrls.length > 0);
+    if (preloadImageUrls.length === 0) return;
     let cancelled = false;
-    let remaining = gallery.length;
-    const done = () => {
-      if (cancelled) return;
-      remaining -= 1;
-      if (remaining <= 0) setGalleryLoading(false);
-    };
-    const imgs: HTMLImageElement[] = [];
-    gallery.forEach((g: any) => {
-      const url = g?.image_url;
-      if (!url) { done(); return; }
-      const img = new Image();
-      img.onload = done;
-      img.onerror = done;
-      img.src = url;
-      imgs.push(img);
+    const urls = Array.from(new Set(preloadImageUrls));
+    Promise.all(urls.map(preloadImage)).then(() => {
+      if (!cancelled) setGalleryLoading(false);
     });
-    // Safety: don't block on gallery more than 6s
-    const safety = window.setTimeout(() => { if (!cancelled) setGalleryLoading(false); }, 6000);
     return () => {
       cancelled = true;
-      window.clearTimeout(safety);
-      imgs.forEach((i) => { i.onload = null; i.onerror = null; });
     };
-  }, [hasGallery, gallery]);
+  }, [preloadImageUrls]);
 
   // Audio preload — wait for canplaythrough before considering ready.
   useEffect(() => {
