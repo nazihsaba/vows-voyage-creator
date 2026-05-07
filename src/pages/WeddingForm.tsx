@@ -658,10 +658,20 @@ const WeddingForm = () => {
     setFormData({ ...formData, lumiere_ending_image_url: "" } as any);
   };
 
-  const handleGalleryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
-    const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
+  // Aggressive but high-quality gallery compression: smaller files = faster template render.
+  const GALLERY_COMPRESS_OPTS = {
+    maxDimension: 1600,
+    quality: 0.78,
+    skipIfSmallerThan: 150 * 1024,
+    mimeType: "image/jpeg" as const,
+  };
 
+  const handleGalleryChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    // Reset the input value early to allow re-uploading the same file
+    e.target.value = "";
+
+    const totalImages = existingGalleryImages.length + galleryFiles.length + files.length;
     if (totalImages > maxGalleryImages) {
       toast({
         title: `Maximum ${maxGalleryImages} images allowed`,
@@ -671,27 +681,38 @@ const WeddingForm = () => {
       return;
     }
 
-    // Immediately update files state to avoid duplication
-    setGalleryFiles((prev) => [...prev, ...files]);
-    setGalleryFilePositions((prev) => [...prev, ...files.map(() => 50)]);
+    if (files.length === 0) return;
 
-    // Use Promise.all to handle all FileReaders properly
-    Promise.all(
-      files.map((file) => {
-        return new Promise<string>((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result as string);
-          };
-          reader.readAsDataURL(file);
-        });
-      }),
-    ).then((newPreviews) => {
-      setGalleryPreviews((prev) => [...prev, ...newPreviews]);
-    });
+    try {
+      // Compress immediately on selection so stored & previewed assets are already optimized.
+      const compressedFiles = await Promise.all(
+        files.map((file) =>
+          compressImage(file, GALLERY_COMPRESS_OPTS).catch(() => file),
+        ),
+      );
 
-    // Reset the input value to allow re-uploading the same file
-    e.target.value = "";
+      const previews = await Promise.all(
+        compressedFiles.map(
+          (file) =>
+            new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(file);
+            }),
+        ),
+      );
+
+      setGalleryFiles((prev) => [...prev, ...compressedFiles]);
+      setGalleryFilePositions((prev) => [...prev, ...compressedFiles.map(() => 50)]);
+      setGalleryPreviews((prev) => [...prev, ...previews]);
+    } catch (err) {
+      console.error("Gallery image compression failed:", err);
+      toast({
+        title: "Could not process images",
+        description: "Please try a different file or smaller images.",
+        variant: "destructive",
+      });
+    }
   };
 
   const removeGalleryImage = (index: number) => {
