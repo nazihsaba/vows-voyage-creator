@@ -24,7 +24,7 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
       <div className="relative flex items-center bg-white rounded-full overflow-hidden">
         {/* Sliding active indicator */}
         <div
-          className={`absolute top-0 bottom-0 w-1/2 rounded-full bg-[#666666] transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
+          className={`absolute top-0 bottom-0 w-1/2 rounded-full bg-gray-400 transition-all duration-400 ease-[cubic-bezier(0.34,1.56,0.64,1)] ${
             isArabic ? 'left-1/2' : 'left-0'
           }`}
         />
