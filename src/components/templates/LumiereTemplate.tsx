@@ -311,7 +311,7 @@ export const LumiereTemplate = ({
     if (audio) {
       audio.currentTime = wedding.audio_start_time || 0;
       audio.loop = true;
-      audio.muted = true;
+      audio.muted = false;
       audio.volume = 0.5;
     }
 
@@ -322,7 +322,6 @@ export const LumiereTemplate = ({
     let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
     const releaseWhenPlaying = () => {
       if (!cancelled && audioPlaying && videoPlaying && videoStable) {
-        if (audio) audio.muted = false;
         setMediaPlaybackReady(true);
       }
     };
