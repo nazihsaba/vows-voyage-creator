@@ -37,7 +37,10 @@ interface LumiereTemplateProps {
   submittingRsvp?: boolean;
 }
 
-const VIDEO_BUFFER_TARGET = 0.85;
+// Progressive reveal: as soon as the video has buffered ~50% (or browser
+// reports it can play through smoothly), we hide the loader and continue
+// downloading the rest in the background.
+const VIDEO_BUFFER_TARGET = 0.5;
 
 const getBufferedFraction = (media: HTMLMediaElement) => {
   const duration = media.duration;
@@ -114,7 +117,9 @@ export const LumiereTemplate = ({
     [gallery, wedding?.lumiere_ending_image_url, (wedding as any)?.video_poster_url],
   );
 
-  const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
+  // Progressive reveal: only the video must be playable to hide the loader.
+  // Audio + gallery continue loading in the background after reveal.
+  const assetsReady = !videoLoading;
 
   useEffect(() => {
     setMediaPlaybackReady(!hasVideo && !hasAudio);
