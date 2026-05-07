@@ -1140,7 +1140,8 @@ const WeddingForm = () => {
 
         const galleryUrls = await Promise.all(
           galleryFiles.map(async (file, index) => {
-            const compressed = await compressImage(file);
+            // Files are already compressed at selection; re-run is a no-op for small files.
+            const compressed = await compressImage(file, GALLERY_COMPRESS_OPTS).catch(() => file);
             return uploadImage(compressed, user.id, index);
           }),
         );
