@@ -30,14 +30,14 @@ const LanguageToggle = ({ className = '' }: LanguageToggleProps) => {
         />
         <span
           className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 tracking-wide transition-all duration-300 ${
-            !isArabic ? 'text-gray-700' : 'text-gray-400'
+            !isArabic ? 'text-white' : 'text-gray-400'
           }`}
         >
           English
         </span>
         <span
           className={`relative z-10 w-[60px] text-center text-[11px] font-medium py-2 transition-all duration-300 ${
-            isArabic ? 'text-gray-700' : 'text-gray-400'
+            isArabic ? 'text-white' : 'text-gray-400'
           }`}
           style={{ fontFamily: isArabic ? 'inherit' : undefined }}
         >
