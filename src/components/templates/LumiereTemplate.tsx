@@ -117,7 +117,9 @@ export const LumiereTemplate = ({
     [gallery, wedding?.lumiere_ending_image_url, (wedding as any)?.video_poster_url],
   );
 
-  const assetsReady = !videoLoading && !audioLoading && !galleryLoading && mediaPlaybackReady;
+  // Progressive reveal: only the video must be playable to hide the loader.
+  // Audio + gallery continue loading in the background after reveal.
+  const assetsReady = !videoLoading;
 
   useEffect(() => {
     setMediaPlaybackReady(!hasVideo && !hasAudio);
