@@ -991,7 +991,9 @@ const ManageLinks = () => {
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Table #
                               </TableHead>
-
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Phone
+                              </TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Guests
                               </TableHead>
@@ -1006,7 +1008,7 @@ const ManageLinks = () => {
                           <TableBody>
                             {filteredLinks.length === 0 ? (
                               <TableRow>
-                                <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                                <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
                                   {searchQuery
                                     ? "No invitation links or guests match your search"
                                     : "No invitation links created yet"}
@@ -1046,7 +1048,9 @@ const ManageLinks = () => {
                                         )}
                                       </TableCell>
                                       <TableCell></TableCell>
-
+                                      <TableCell className="text-sm text-muted-foreground">
+                                        {getFullPhone(link) ?? "—"}
+                                      </TableCell>
                                       <TableCell>
                                         <div className="flex items-center gap-1.5">
                                           <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
@@ -1217,7 +1221,7 @@ const ManageLinks = () => {
                                       <TableRow className="bg-muted/20">
                                         <TableCell></TableCell>
                                         <TableCell
-                                          colSpan={6}
+                                          colSpan={7}
                                           className="text-center py-4 text-sm text-muted-foreground italic"
                                         >
                                           No guests added to this invitation yet
