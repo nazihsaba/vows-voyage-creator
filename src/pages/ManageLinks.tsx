@@ -1221,7 +1221,7 @@ const ManageLinks = () => {
                                       <TableRow className="bg-muted/20">
                                         <TableCell></TableCell>
                                         <TableCell
-                                          colSpan={6}
+                                          colSpan={7}
                                           className="text-center py-4 text-sm text-muted-foreground italic"
                                         >
                                           No guests added to this invitation yet
