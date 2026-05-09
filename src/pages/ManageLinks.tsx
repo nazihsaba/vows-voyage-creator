@@ -1048,7 +1048,9 @@ const ManageLinks = () => {
                                         )}
                                       </TableCell>
                                       <TableCell></TableCell>
-
+                                      <TableCell className="text-sm text-muted-foreground">
+                                        {getFullPhone(link) ?? "—"}
+                                      </TableCell>
                                       <TableCell>
                                         <div className="flex items-center gap-1.5">
                                           <span className="inline-flex items-center gap-1 text-[11px] text-muted-foreground">
