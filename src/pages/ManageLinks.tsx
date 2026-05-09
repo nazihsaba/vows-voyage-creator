@@ -991,7 +991,9 @@ const ManageLinks = () => {
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Table #
                               </TableHead>
-
+                              <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
+                                Phone
+                              </TableHead>
                               <TableHead className="font-semibold text-xs uppercase tracking-wider text-muted-foreground">
                                 Guests
                               </TableHead>
