@@ -270,7 +270,7 @@ const ManageLinks = () => {
   // legacy rows may still have the country code embedded in phone_number (country_code NULL).
   const getFullPhone = (link: InvitationLink): string | null => {
     if (!link.phone_number) return null;
-    if (link.country_code) return `${link.country_code}${link.phone_number}`;
+    if (link.country_code) return `${link.country_code} ${link.phone_number}`;
     return link.phone_number;
   };
 
