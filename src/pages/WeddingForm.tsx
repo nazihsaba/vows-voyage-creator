@@ -2637,12 +2637,12 @@ const WeddingForm = () => {
                 </p>
                 <div className="flex flex-col gap-4">
                   {socialPreviewFile || socialPreviewUrl ? (
-                    <div className="relative w-full max-w-sm mx-auto aspect-[1200/630] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                    <div className="relative w-full max-w-sm mx-auto rounded-lg overflow-hidden border-2 border-border bg-muted">
                       <img
                         src={socialPreviewFile ? URL.createObjectURL(socialPreviewFile) : socialPreviewUrl}
                         alt="Social preview"
                         loading="lazy"
-                        className="w-full h-full object-cover"
+                        className="w-full h-auto object-contain"
                         onError={(e) => {
                           // Hide if the existing image doesn't exist yet
                           (e.currentTarget.parentElement as HTMLElement).style.display = "none";
