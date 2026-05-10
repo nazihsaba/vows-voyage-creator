@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { prewarmOGCache } from "@/lib/prewarmOG";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -118,6 +119,13 @@ export const GenerateLinkDialog = ({
       const { error: inviteeError } = await (supabase as any).from("invitees").insert(inviteeRecords);
 
       if (inviteeError) throw inviteeError;
+
+      const sanitizedLinkNameForUrl = linkName
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+      const generatedLink = `https://go.aureainvites.com/invite/${uniqueSlug}/${sanitizedLinkNameForUrl}/${validInvitees.length}`;
+      prewarmOGCache(generatedLink);
 
       toast({
         title: "Success",
