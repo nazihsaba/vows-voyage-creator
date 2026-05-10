@@ -266,7 +266,7 @@ export const GenerateLinkDialog = ({
           <div className="mt-3 flex items-start gap-2 rounded-lg border border-amber-400/60 bg-amber-50 px-3 py-2 text-amber-900 shadow-sm dark:border-amber-500/40 dark:bg-amber-500/10 dark:text-amber-200">
             <AlertTriangle className="w-4 h-4 mt-0.5 shrink-0" />
             <p className="text-xs sm:text-sm font-medium leading-snug">
-              Important: Send links from the WhatsApp <span className="font-bold underline">mobile app</span> — not WhatsApp Web — for the link preview to display correctly.
+              Important: Send links from the WhatsApp <span className="font-bold underline">application (Phone or PC)</span> — not WhatsApp Web — for the link preview to display correctly.
             </p>
           </div>
         </div>
