@@ -2683,7 +2683,7 @@ const WeddingForm = () => {
                     >
                       <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">Click to upload preview image</span>
-                      <span className="text-xs text-muted-foreground mt-1 whitespace-pre-line">PNG, JPG\n</span>
+                      <span className="text-xs text-muted-foreground mt-1">PNG, JPG</span>
                     </label>
                   )}
                   <Input
