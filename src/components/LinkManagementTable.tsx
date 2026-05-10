@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { prewarmOGCache } from "@/lib/prewarmOG";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Eye, Copy, Trash2, Users, ChevronDown, ChevronRight } from "lucide-react";
@@ -129,6 +130,7 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
       .replace(/[^a-z0-9]+/g, "-")
       .replace(/^-+|-+$/g, "");
     const url = `https://go.aureainvites.com/invite/${weddingSlug}/${sanitizedLinkName}/${link.number_of_persons}`;
+    prewarmOGCache(url);
     navigator.clipboard.writeText(url);
     toast({
       title: "Success",
