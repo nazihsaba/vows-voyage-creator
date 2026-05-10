@@ -263,6 +263,9 @@ export const GenerateLinkDialog = ({
               Create invitation links manually or automatically from a file
             </DialogDescription>
           </DialogHeader>
+          <p className="text-[11px] sm:text-xs text-muted-foreground/90 mt-2 pl-0 sm:pl-9 italic">
+            Tip: Send links via the WhatsApp mobile app (not WhatsApp Web) for the best link preview.
+          </p>
         </div>
 
         {/* Body */}
