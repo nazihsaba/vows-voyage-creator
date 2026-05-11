@@ -141,6 +141,8 @@ const WeddingForm = () => {
     welcome_drink_time: "",
     welcome_drink_icon: "asset:cheers",
   });
+  const [showCeremony, setShowCeremony] = useState(true);
+  const [showVenue, setShowVenue] = useState(true);
   type CustomSection = {
     uid: string;
     title: string;
@@ -500,6 +502,8 @@ const WeddingForm = () => {
           welcome_drink_time: welcomeDrink?.time || "",
           welcome_drink_icon: welcomeDrink?.icon || "asset:cheers",
         });
+        setShowCeremony(!!(ceremony?.location_name || ceremony?.time || ceremony?.location_link));
+        setShowVenue(!!(venue?.location_name || venue?.time || venue?.location_link));
 
         // Load custom sections (type starts with "custom_"), sorted by display_order then suffix index
         const customRowsRaw = locationsData
@@ -1954,6 +1958,7 @@ const WeddingForm = () => {
                 <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
 
                 {/* Ceremony Section */}
+                {showCeremony && (
                 <Collapsible open={!!openLocationCards.ceremony} onOpenChange={() => toggleLocationCard("ceremony")}>
                   <Card className="border shadow-sm">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
@@ -1982,6 +1987,7 @@ const WeddingForm = () => {
                           className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                           onClick={(e) => {
                             e.stopPropagation();
+                            setShowCeremony(false);
                             setLocations({
                               ...locations,
                               ceremony_location: "",
@@ -2086,8 +2092,10 @@ const WeddingForm = () => {
                     </CollapsibleContent>
                   </Card>
                 </Collapsible>
+                )}
 
                 {/* Venue Section */}
+                {showVenue && (
                 <Collapsible open={!!openLocationCards.venue} onOpenChange={() => toggleLocationCard("venue")}>
                   <Card className="border shadow-sm">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
@@ -2116,6 +2124,7 @@ const WeddingForm = () => {
                           className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                           onClick={(e) => {
                             e.stopPropagation();
+                            setShowVenue(false);
                             setLocations({
                               ...locations,
                               venue_location: "",
@@ -2271,6 +2280,39 @@ const WeddingForm = () => {
                     </CollapsibleContent>
                   </Card>
                 </Collapsible>
+                )}
+
+                {/* Add-back buttons for removed sections */}
+                {(!showCeremony || !showVenue) && (
+                  <div className="flex flex-wrap gap-3">
+                    {!showCeremony && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setShowCeremony(true);
+                          setOpenLocationCards((prev) => ({ ...prev, ceremony: true }));
+                        }}
+                      >
+                        + Add Ceremony Details
+                      </Button>
+                    )}
+                    {!showVenue && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setShowVenue(true);
+                          setOpenLocationCards((prev) => ({ ...prev, venue: true }));
+                        }}
+                      >
+                        + Add Venue Details
+                      </Button>
+                    )}
+                  </div>
+                )}
 
                 {/* Custom Timeline Sections (timeline templates only) */}
                 {isAuraTemplate && (
