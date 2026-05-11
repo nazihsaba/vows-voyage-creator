@@ -143,6 +143,7 @@ const WeddingForm = () => {
   });
   const [showCeremony, setShowCeremony] = useState(true);
   const [showVenue, setShowVenue] = useState(true);
+  type CustomSection = {
     uid: string;
     title: string;
     location_name: string;
