@@ -2282,6 +2282,38 @@ const WeddingForm = () => {
                 </Collapsible>
                 )}
 
+                {/* Add-back buttons for removed sections */}
+                {(!showCeremony || !showVenue) && (
+                  <div className="flex flex-wrap gap-3">
+                    {!showCeremony && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setShowCeremony(true);
+                          setOpenLocationCards((prev) => ({ ...prev, ceremony: true }));
+                        }}
+                      >
+                        + Add Ceremony Details
+                      </Button>
+                    )}
+                    {!showVenue && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          setShowVenue(true);
+                          setOpenLocationCards((prev) => ({ ...prev, venue: true }));
+                        }}
+                      >
+                        + Add Venue Details
+                      </Button>
+                    )}
+                  </div>
+                )}
+
                 {/* Custom Timeline Sections (timeline templates only) */}
                 {isAuraTemplate && (
                   <Card className="border shadow-sm sm:col-span-2">
