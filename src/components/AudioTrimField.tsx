@@ -92,13 +92,28 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
   };
 
 
-  // Encode AudioBuffer to compressed MP3 (~128 kbps) for fast loading.
-  // A 30s stereo clip drops from ~5 MB (WAV) to ~480 KB with no perceptible quality loss.
-  const audioBufferToMp3Blob = async (audioBuffer: AudioBuffer): Promise<Blob> => {
-    const numChannels = Math.min(2, audioBuffer.numberOfChannels);
-    const sampleRate = audioBuffer.sampleRate;
-    const kbps = 128;
-    const encoder = new Mp3Encoder(numChannels, sampleRate, kbps);
+  // Encode AudioBuffer to compressed MP3. Forces mono + 44.1 kHz + 96 kbps
+  // for tiny file sizes (~720 KB for 60s) with no audible loss on background music.
+  const audioBufferToMp3Blob = async (
+    audioBuffer: AudioBuffer,
+    audioContext: AudioContext
+  ): Promise<Blob> => {
+    // Downmix to mono and resample to 44.1 kHz via OfflineAudioContext.
+    const targetSampleRate = 44100;
+    const targetChannels = 1;
+    const offline = new OfflineAudioContext(
+      targetChannels,
+      Math.ceil(audioBuffer.duration * targetSampleRate),
+      targetSampleRate
+    );
+    const src = offline.createBufferSource();
+    src.buffer = audioBuffer;
+    src.connect(offline.destination);
+    src.start(0);
+    const rendered = await offline.startRendering();
+
+    const kbps = 96;
+    const encoder = new Mp3Encoder(targetChannels, targetSampleRate, kbps);
 
     const floatToInt16 = (input: Float32Array): Int16Array => {
       const out = new Int16Array(input.length);
@@ -109,19 +124,14 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       return out;
     };
 
-    const left = floatToInt16(audioBuffer.getChannelData(0));
-    const right =
-      numChannels > 1 ? floatToInt16(audioBuffer.getChannelData(1)) : null;
+    const mono = floatToInt16(rendered.getChannelData(0));
 
     const blockSize = 1152;
     const mp3Chunks: Uint8Array[] = [];
 
-    for (let i = 0; i < left.length; i += blockSize) {
-      const leftChunk = left.subarray(i, i + blockSize);
-      const rightChunk = right ? right.subarray(i, i + blockSize) : null;
-      const mp3buf = rightChunk
-        ? encoder.encodeBuffer(leftChunk, rightChunk)
-        : encoder.encodeBuffer(leftChunk);
+    for (let i = 0; i < mono.length; i += blockSize) {
+      const chunk = mono.subarray(i, i + blockSize);
+      const mp3buf = encoder.encodeBuffer(chunk);
       if (mp3buf.length > 0) mp3Chunks.push(mp3buf);
     }
     const end = encoder.flush();
