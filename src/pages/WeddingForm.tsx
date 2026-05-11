@@ -2108,6 +2108,33 @@ const WeddingForm = () => {
                         </button>
                       </CollapsibleTrigger>
                       {isAuraTemplate && <TimelineOrderControls orderKey="venue" />}
+                      <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setLocations({
+                              ...locations,
+                              venue_location: "",
+                              venue_time: "",
+                              venue_location_link: "",
+                              venue_icon: "solar:confetti-bold",
+                              welcome_drink_time: "",
+                            });
+                            if (enableArabic) {
+                              setArabicFields((prev) => ({ ...prev, venue_location: "" }));
+                            }
+                            setOpenLocationCards((prev) => ({ ...prev, venue: false }));
+                          }}
+                          aria-label="Remove venue details"
+                          title="Remove"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
                     </CardHeader>
                     <CollapsibleContent>
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
