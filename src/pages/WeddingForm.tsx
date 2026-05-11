@@ -2094,6 +2094,7 @@ const WeddingForm = () => {
                 )}
 
                 {/* Venue Section */}
+                {showVenue && (
                 <Collapsible open={!!openLocationCards.venue} onOpenChange={() => toggleLocationCard("venue")}>
                   <Card className="border shadow-sm">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
