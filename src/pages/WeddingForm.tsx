@@ -2278,6 +2278,7 @@ const WeddingForm = () => {
                     </CollapsibleContent>
                   </Card>
                 </Collapsible>
+                )}
 
                 {/* Custom Timeline Sections (timeline templates only) */}
                 {isAuraTemplate && (
