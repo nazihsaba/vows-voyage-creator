@@ -1958,6 +1958,7 @@ const WeddingForm = () => {
                 <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
 
                 {/* Ceremony Section */}
+                {showCeremony && (
                 <Collapsible open={!!openLocationCards.ceremony} onOpenChange={() => toggleLocationCard("ceremony")}>
                   <Card className="border shadow-sm">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
