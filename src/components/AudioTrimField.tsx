@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Loader2, X } from "lucide-react";
+import { Mp3Encoder } from "@breezystack/lamejs";
 
 interface AudioTrimFieldProps {
   onAudioTrimmed: (blob: Blob, startTime: number, endTime: number) => void;
@@ -78,7 +79,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
         trimmedData.set(channelData.subarray(startSample, endSample));
       }
 
-      const trimmedBlob = await audioBufferToWavBlob(trimmedBuffer);
+      const trimmedBlob = await audioBufferToMp3Blob(trimmedBuffer);
       const trimmedObjectUrl = URL.createObjectURL(trimmedBlob);
       setTrimmedUrl(trimmedObjectUrl);
       onAudioTrimmed(trimmedBlob, start, end);
@@ -91,6 +92,46 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
   };
 
 
+  // Encode AudioBuffer to compressed MP3 (~128 kbps) for fast loading.
+  // A 30s stereo clip drops from ~5 MB (WAV) to ~480 KB with no perceptible quality loss.
+  const audioBufferToMp3Blob = async (audioBuffer: AudioBuffer): Promise<Blob> => {
+    const numChannels = Math.min(2, audioBuffer.numberOfChannels);
+    const sampleRate = audioBuffer.sampleRate;
+    const kbps = 128;
+    const encoder = new Mp3Encoder(numChannels, sampleRate, kbps);
+
+    const floatToInt16 = (input: Float32Array): Int16Array => {
+      const out = new Int16Array(input.length);
+      for (let i = 0; i < input.length; i++) {
+        const s = Math.max(-1, Math.min(1, input[i]));
+        out[i] = s < 0 ? s * 0x8000 : s * 0x7fff;
+      }
+      return out;
+    };
+
+    const left = floatToInt16(audioBuffer.getChannelData(0));
+    const right =
+      numChannels > 1 ? floatToInt16(audioBuffer.getChannelData(1)) : null;
+
+    const blockSize = 1152;
+    const mp3Chunks: Uint8Array[] = [];
+
+    for (let i = 0; i < left.length; i += blockSize) {
+      const leftChunk = left.subarray(i, i + blockSize);
+      const rightChunk = right ? right.subarray(i, i + blockSize) : null;
+      const mp3buf = rightChunk
+        ? encoder.encodeBuffer(leftChunk, rightChunk)
+        : encoder.encodeBuffer(leftChunk);
+      if (mp3buf.length > 0) mp3Chunks.push(mp3buf);
+    }
+    const end = encoder.flush();
+    if (end.length > 0) mp3Chunks.push(end);
+
+    return new Blob(mp3Chunks as BlobPart[], { type: "audio/mpeg" });
+  };
+
+  // Kept for reference — no longer used.
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const audioBufferToWavBlob = (audioBuffer: AudioBuffer): Promise<Blob> => {
     return new Promise((resolve) => {
       const numOfChan = audioBuffer.numberOfChannels;
