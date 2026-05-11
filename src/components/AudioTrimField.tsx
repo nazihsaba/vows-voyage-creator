@@ -127,7 +127,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
     const end = encoder.flush();
     if (end.length > 0) mp3Chunks.push(end);
 
-    return new Blob(mp3Chunks, { type: "audio/mpeg" });
+    return new Blob(mp3Chunks as BlobPart[], { type: "audio/mpeg" });
   };
 
   // Kept for reference — no longer used.
