@@ -502,6 +502,8 @@ const WeddingForm = () => {
           welcome_drink_time: welcomeDrink?.time || "",
           welcome_drink_icon: welcomeDrink?.icon || "asset:cheers",
         });
+        setShowCeremony(!!(ceremony?.location_name || ceremony?.time || ceremony?.location_link));
+        setShowVenue(!!(venue?.location_name || venue?.time || venue?.location_link));
 
         // Load custom sections (type starts with "custom_"), sorted by display_order then suffix index
         const customRowsRaw = locationsData
