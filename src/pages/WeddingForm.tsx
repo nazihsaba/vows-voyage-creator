@@ -141,7 +141,8 @@ const WeddingForm = () => {
     welcome_drink_time: "",
     welcome_drink_icon: "asset:cheers",
   });
-  type CustomSection = {
+  const [showCeremony, setShowCeremony] = useState(true);
+  const [showVenue, setShowVenue] = useState(true);
     uid: string;
     title: string;
     location_name: string;
