@@ -79,7 +79,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
         trimmedData.set(channelData.subarray(startSample, endSample));
       }
 
-      const trimmedBlob = await audioBufferToMp3Blob(trimmedBuffer);
+      const trimmedBlob = await audioBufferToMp3Blob(trimmedBuffer, audioContext);
       const trimmedObjectUrl = URL.createObjectURL(trimmedBlob);
       setTrimmedUrl(trimmedObjectUrl);
       onAudioTrimmed(trimmedBlob, start, end);
