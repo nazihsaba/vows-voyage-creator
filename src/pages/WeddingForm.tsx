@@ -2091,6 +2091,7 @@ const WeddingForm = () => {
                     </CollapsibleContent>
                   </Card>
                 </Collapsible>
+                )}
 
                 {/* Venue Section */}
                 <Collapsible open={!!openLocationCards.venue} onOpenChange={() => toggleLocationCard("venue")}>
