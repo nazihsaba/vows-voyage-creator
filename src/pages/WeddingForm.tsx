@@ -1987,6 +1987,7 @@ const WeddingForm = () => {
                           className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
                           onClick={(e) => {
                             e.stopPropagation();
+                            setShowCeremony(false);
                             setLocations({
                               ...locations,
                               ceremony_location: "",
