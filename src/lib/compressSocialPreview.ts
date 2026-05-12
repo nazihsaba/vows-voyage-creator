@@ -42,31 +42,64 @@ export async function compressSocialPreview(file: File): Promise<File> {
   const ctx = canvas.getContext("2d");
   if (!ctx) return file;
 
-  // Cover-fit (crop to fill 1200x630)
+  // Letterbox-fit (contain entire image, pad with sampled background)
   const srcRatio = img.width / img.height;
   const dstRatio = TARGET_WIDTH / TARGET_HEIGHT;
 
-  let sx = 0;
-  let sy = 0;
-  let sw = img.width;
-  let sh = img.height;
+  let dw = TARGET_WIDTH;
+  let dh = TARGET_HEIGHT;
 
   if (srcRatio > dstRatio) {
-    // Source is wider — crop sides
-    sw = img.height * dstRatio;
-    sx = (img.width - sw) / 2;
+    // Source is wider — fit width, pad top/bottom
+    dh = Math.round(TARGET_WIDTH / srcRatio);
   } else if (srcRatio < dstRatio) {
-    // Source is taller — crop top/bottom
-    sh = img.width / dstRatio;
-    sy = (img.height - sh) / 2;
+    // Source is taller — fit height, pad left/right
+    dw = Math.round(TARGET_HEIGHT * srcRatio);
   }
 
-  ctx.fillStyle = "#ffffff";
+  const dx = Math.round((TARGET_WIDTH - dw) / 2);
+  const dy = Math.round((TARGET_HEIGHT - dh) / 2);
+
+  // Sample background color from edge pixels of the source image
+  let bgColor = "#1a0a0e"; // default dark wine
+  try {
+    const sampleCanvas = document.createElement("canvas");
+    sampleCanvas.width = img.width;
+    sampleCanvas.height = img.height;
+    const sampleCtx = sampleCanvas.getContext("2d");
+    if (sampleCtx) {
+      sampleCtx.drawImage(img, 0, 0);
+      // Sample corners + edge midpoints
+      const points: Array<[number, number]> = [
+        [0, 0],
+        [img.width - 1, 0],
+        [0, img.height - 1],
+        [img.width - 1, img.height - 1],
+        [Math.floor(img.width / 2), 0],
+        [Math.floor(img.width / 2), img.height - 1],
+        [0, Math.floor(img.height / 2)],
+        [img.width - 1, Math.floor(img.height / 2)],
+      ];
+      let r = 0, g = 0, b = 0;
+      for (const [x, y] of points) {
+        const d = sampleCtx.getImageData(x, y, 1, 1).data;
+        r += d[0]; g += d[1]; b += d[2];
+      }
+      r = Math.round(r / points.length);
+      g = Math.round(g / points.length);
+      b = Math.round(b / points.length);
+      bgColor = `rgb(${r}, ${g}, ${b})`;
+    }
+  } catch {
+    // tainted canvas or other error — fall back to default
+  }
+
+  ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, TARGET_WIDTH, TARGET_HEIGHT);
-  ctx.drawImage(img, sx, sy, sw, sh, 0, 0, TARGET_WIDTH, TARGET_HEIGHT);
+  ctx.drawImage(img, 0, 0, img.width, img.height, dx, dy, dw, dh);
 
   // Iteratively reduce quality until under MAX_BYTES
-  let quality = 0.92;
+  let quality = 0.85;
   let blob = await canvasToBlob(canvas, quality);
 
   while (blob && blob.size > MAX_BYTES && quality > 0.4) {
