@@ -33,6 +33,7 @@ import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
+import { resizeImageForOG } from "@/lib/resizeImage";
 import { compressImage } from "@/lib/compressImage";
 
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
@@ -1098,8 +1099,8 @@ const WeddingForm = () => {
       if (socialPreviewFile) {
         // User uploaded a dedicated social preview image — compress to ≤300KB for WhatsApp, store as main.jpg
         try {
-          const compressed = await compressSocialPreview(socialPreviewFile);
-          await supabase.storage.from("invitation-images").upload(`invites/${finalSlug}/main.jpg`, compressed, {
+          const resized = await resizeImageForOG(socialPreviewFile);
+          await supabase.storage.from("invitation-images").upload(`invites/${finalSlug}/main.jpg`, resized, {
             contentType: "image/jpeg",
             upsert: true,
           });
