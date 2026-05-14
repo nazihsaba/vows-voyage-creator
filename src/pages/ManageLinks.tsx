@@ -494,7 +494,7 @@ const ManageLinks = () => {
     const matchesSearch = matchesLinkName || matchesGuestName;
 
     // Side filter
-    if (sideFilter && link.side !== sideFilter) return false;
+    if (sideFilter && (link.side || "").toUpperCase() !== sideFilter) return false;
 
     if (!statusFilter) return matchesSearch;
 
