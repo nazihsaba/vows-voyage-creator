@@ -62,6 +62,9 @@ export const EclatTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
   const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
+  const customLocations = locations
+    .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
 
   const { showLoader, fadingOut } = useHeroLoader({ imageUrl: wedding.main_picture_url });
 
