@@ -1974,7 +1974,7 @@ const WeddingForm = () => {
                           <CardTitle className="text-lg sm:text-xl">Ceremony Details</CardTitle>
                         </button>
                       </CollapsibleTrigger>
-                      {isAuraTemplate && <TimelineOrderControls orderKey="ceremony" />}
+                      <TimelineOrderControls orderKey="ceremony" />
                       <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <Button
                           type="button"
