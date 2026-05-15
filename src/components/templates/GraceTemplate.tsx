@@ -436,8 +436,8 @@ export const GraceTemplate = ({
               const defaultIcon =
                 kind === "ceremony" ? "material-symbols:church-rounded" : "solar:confetti-bold";
               return (
-                <AnimatedSection key={loc.id || loc.type} delay={idx * 100} animation="fade-in">
-                  <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
+                <AnimatedSection key={loc.id || loc.type} delay={idx * 100} animation="fade-in" className="h-full">
+                  <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6 h-full flex flex-col">
                     <div className="flex items-center justify-center w-full">
                       <EventIcon icon={loc.icon || defaultIcon} className="w-8 h-8 text-primary" />
                     </div>
