@@ -1013,11 +1013,9 @@ const WeddingForm = () => {
         // Remap custom section uid keys to stable DB keys (custom_1, custom_2, ...)
         const remappedArabic: Record<string, string> = {};
         const uidToDbType = new Map<string, string>();
-        if (isAuraTemplate) {
-          customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
-            uidToDbType.set(s.uid, `custom_${idx + 1}`);
-          });
-        }
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+          uidToDbType.set(s.uid, `custom_${idx + 1}`);
+        });
         Object.entries(arabicFields).forEach(([key, value]) => {
           if (!value) return;
           const titleMatch = key.match(/^custom_title_(.+)$/);
