@@ -531,6 +531,32 @@ export const OpulenceTemplate = ({
                 )}
               </div>
             )}
+
+            {customLocations.map((loc) => (
+              <div key={loc.id || loc.type} className="space-y-3">
+                <div className="w-8 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
+                <p className="text-xs uppercase tracking-[0.3em] opacity-50">{loc.custom_title || "Event"}</p>
+                {loc.time && (
+                  <p className="text-sm font-light opacity-70">{formatTimeTo12Hour(loc.time)}</p>
+                )}
+                {loc.location_name && (
+                  <p className="text-xl font-light">{loc.location_name}</p>
+                )}
+                {loc.location_link && (
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="rounded-full border-[hsl(36,57%,74%)] text-[hsl(0,0%,17%)] hover:bg-[hsl(36,57%,74%)] hover:text-white"
+                  >
+                    <a href={loc.location_link} target="_blank" rel="noopener noreferrer">
+                      <MapPin className="w-3.5 h-3.5 mr-1.5" />
+                      View on Map
+                    </a>
+                  </Button>
+                )}
+              </div>
+            ))}
           </div>
         </AnimatedSection>
       </section>
