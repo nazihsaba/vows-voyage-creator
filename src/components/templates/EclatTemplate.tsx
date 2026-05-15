@@ -318,95 +318,55 @@ export const EclatTemplate = ({
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 mt-12">
-            {ceremony && (
-              <AnimatedSection delay={0} animation="fade-in">
-                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full">
-                    <EventIcon icon={ceremony.icon || "material-symbols:church-rounded"} className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.ceremony")}</h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(ceremony.time)}</p>
-                  <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
-                    <p className="text-template-body font-medium text-[#3e2723]">
-                      {getLocalizedValue("ceremony_location", ceremony.location_name)}
-                    </p>
-                  </div>
-                  {ceremony.location_link && (
-                    <a
-                      href={ceremony.location_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
-                    >
-                      {t("events.viewOnMap")}
-                    </a>
-                  )}
-                </div>
-              </AnimatedSection>
-            )}
-            {venue && (
-              <AnimatedSection delay={200} animation="fade-in">
-                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full">
-                    <EventIcon icon={venue.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">{t("events.venue")}</h3>
-                  {welcomeDrink?.time && (
-                    <p className="text-template-small text-[#3e2723]">
-                      <span className="text-gray-600">{t("events.welcomeDrink")}:</span>{" "}
-                      <span className="font-semibold">{formatTimeTo12Hour(welcomeDrink.time)}</span>
-                    </p>
-                  )}
-                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(venue.time)}</p>
-                  <div className="space-y-2">
-                    <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
-                    <p className="text-template-body font-medium text-[#3e2723]">{getLocalizedValue("venue_location", venue.location_name)}</p>
-                  </div>
-                  {venue.location_link && (
-                    <a
-                      href={venue.location_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
-                    >
-                      {t("events.viewOnMap")}
-                    </a>
-                  )}
-                </div>
-              </AnimatedSection>
-            )}
-            {customLocations.map((loc, idx) => (
-              <AnimatedSection key={loc.id || loc.type} delay={(idx + 2) * 100} animation="fade-in">
-                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
-                  <div className="flex items-center justify-center w-full">
-                    <EventIcon icon={loc.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
-                  </div>
-                  <h3 className="text-template-heading mb-2 text-[#3e2723]">
-                    {getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title || "Event")}
-                  </h3>
-                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(loc.time)}</p>
-                  {loc.location_name && (
-                    <div className="space-y-2">
-                      <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
-                      <p className="text-template-body font-medium text-[#3e2723]">
-                        {getLocalizedValue(`custom_location_${loc.type}`, loc.location_name)}
-                      </p>
+            {orderedEvents.map(({ kind, loc }, idx) => {
+              const title =
+                kind === "ceremony"
+                  ? t("events.ceremony")
+                  : kind === "venue"
+                  ? t("events.venue")
+                  : getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title || "Event");
+              const locationText =
+                kind === "ceremony"
+                  ? getLocalizedValue("ceremony_location", loc.location_name)
+                  : kind === "venue"
+                  ? getLocalizedValue("venue_location", loc.location_name)
+                  : getLocalizedValue(`custom_location_${loc.type}`, loc.location_name);
+              const defaultIcon =
+                kind === "ceremony" ? "material-symbols:church-rounded" : "solar:confetti-bold";
+              return (
+                <AnimatedSection key={loc.id || loc.type} delay={idx * 100} animation="fade-in">
+                  <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
+                    <div className="flex items-center justify-center w-full">
+                      <EventIcon icon={loc.icon || defaultIcon} className="w-8 h-8 text-primary" />
                     </div>
-                  )}
-                  {loc.location_link && (
-                    <a
-                      href={loc.location_link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
-                    >
-                      {t("events.viewOnMap")}
-                    </a>
-                  )}
-                </div>
-              </AnimatedSection>
-            ))}
+                    <h3 className="text-template-heading mb-2 text-[#3e2723]">{title}</h3>
+                    {kind === "venue" && welcomeDrink?.time && (
+                      <p className="text-template-small text-[#3e2723]">
+                        <span className="text-gray-600">{t("events.welcomeDrink")}:</span>{" "}
+                        <span className="font-semibold">{formatTimeTo12Hour(welcomeDrink.time)}</span>
+                      </p>
+                    )}
+                    <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(loc.time)}</p>
+                    {locationText && (
+                      <div className="space-y-2">
+                        <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
+                        <p className="text-template-body font-medium text-[#3e2723]">{locationText}</p>
+                      </div>
+                    )}
+                    {loc.location_link && (
+                      <a
+                        href={loc.location_link}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
+                      >
+                        {t("events.viewOnMap")}
+                      </a>
+                    )}
+                  </div>
+                </AnimatedSection>
+              );
+            })}
           </div>
         </div>
       </section>
