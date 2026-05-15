@@ -884,7 +884,7 @@ const WeddingForm = () => {
     // Welcome Drink Time is optional for all templates.
 
     // Validate Additional Sections: Title, Location Name and Time are required for each
-    if (isAuraTemplate && customSections.length > 0) {
+    if (customSections.length > 0) {
       const incomplete = customSections.findIndex(
         (s) => !s.title?.trim() || !s.location_name?.trim() || !s.time?.trim(),
       );
@@ -1013,11 +1013,9 @@ const WeddingForm = () => {
         // Remap custom section uid keys to stable DB keys (custom_1, custom_2, ...)
         const remappedArabic: Record<string, string> = {};
         const uidToDbType = new Map<string, string>();
-        if (isAuraTemplate) {
-          customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
-            uidToDbType.set(s.uid, `custom_${idx + 1}`);
-          });
-        }
+        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+          uidToDbType.set(s.uid, `custom_${idx + 1}`);
+        });
         Object.entries(arabicFields).forEach(([key, value]) => {
           if (!value) return;
           const titleMatch = key.match(/^custom_title_(.+)$/);
@@ -1225,25 +1223,23 @@ const WeddingForm = () => {
         });
       }
 
-      // Custom sections (timeline templates only). Track uid -> DB type for ordering.
+      // Custom sections (available on all templates). Track uid -> DB type for ordering.
       const customUidToType = new Map<string, string>();
-      if (isAuraTemplate) {
-        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
-          const hasContent = s.title || s.location_name || s.time || s.location_link;
-          if (!hasContent) return;
-          const dbType = `custom_${idx + 1}`;
-          customUidToType.set(s.uid, dbType);
-          locationInserts.push({
-            wedding_id: weddingId,
-            type: dbType,
-            location_name: s.location_name,
-            time: s.time || null,
-            location_link: s.location_link,
-            icon: s.icon || "solar:confetti-bold",
-            custom_title: s.title || null,
-          } as any);
-        });
-      }
+      customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+        const hasContent = s.title || s.location_name || s.time || s.location_link;
+        if (!hasContent) return;
+        const dbType = `custom_${idx + 1}`;
+        customUidToType.set(s.uid, dbType);
+        locationInserts.push({
+          wedding_id: weddingId,
+          type: dbType,
+          location_name: s.location_name,
+          time: s.time || null,
+          location_link: s.location_link,
+          icon: s.icon || "solar:confetti-bold",
+          custom_title: s.title || null,
+        } as any);
+      });
 
       // Apply user-defined display_order from timelineOrder.
       // timelineOrder uses "ceremony" / "welcome_drink" / "venue" / <custom uid>.
@@ -2314,8 +2310,8 @@ const WeddingForm = () => {
                   </div>
                 )}
 
-                {/* Custom Timeline Sections (timeline templates only) */}
-                {isAuraTemplate && (
+                {/* Additional Sections (available on all templates) */}
+                {(
                   <Card className="border shadow-sm sm:col-span-2">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
                       <div>

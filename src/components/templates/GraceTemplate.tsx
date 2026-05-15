@@ -99,6 +99,9 @@ export const GraceTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
   const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
+  const customLocations = locations
+    .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
 
   // Lock scroll only while autoplay is blocked and the user hasn't tapped.
   // When autoplay succeeds, the page is freely scrollable from the start.
@@ -470,6 +473,37 @@ export const GraceTemplate = ({
                 </div>
               </AnimatedSection>
             )}
+            {customLocations.map((loc, idx) => (
+              <AnimatedSection key={loc.id || loc.type} delay={(idx + 2) * 100} animation="fade-in">
+                <div className="bg-[#faf8f5] p-8 rounded-lg shadow-soft space-y-6">
+                  <div className="flex items-center justify-center w-full">
+                    <EventIcon icon={loc.icon || "solar:confetti-bold"} className="w-8 h-8 text-primary" />
+                  </div>
+                  <h3 className="text-template-heading mb-2 text-[#3e2723]">
+                    {getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title || "Event")}
+                  </h3>
+                  <p className="text-template-body font-bold text-[#3e2723]">{formatTimeTo12Hour(loc.time)}</p>
+                  {loc.location_name && (
+                    <div className="space-y-2">
+                      <p className="text-template-small text-gray-600">{t("events.eventLocation")}</p>
+                      <p className="text-template-body font-medium text-[#3e2723]">
+                        {getLocalizedValue(`custom_location_${loc.type}`, loc.location_name)}
+                      </p>
+                    </div>
+                  )}
+                  {loc.location_link && (
+                    <a
+                      href={loc.location_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
+                    >
+                      {t("events.viewOnMap")}
+                    </a>
+                  )}
+                </div>
+              </AnimatedSection>
+            ))}
           </div>
         </div>
       </section>
