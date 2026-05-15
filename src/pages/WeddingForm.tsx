@@ -1223,25 +1223,23 @@ const WeddingForm = () => {
         });
       }
 
-      // Custom sections (timeline templates only). Track uid -> DB type for ordering.
+      // Custom sections (available on all templates). Track uid -> DB type for ordering.
       const customUidToType = new Map<string, string>();
-      if (isAuraTemplate) {
-        customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
-          const hasContent = s.title || s.location_name || s.time || s.location_link;
-          if (!hasContent) return;
-          const dbType = `custom_${idx + 1}`;
-          customUidToType.set(s.uid, dbType);
-          locationInserts.push({
-            wedding_id: weddingId,
-            type: dbType,
-            location_name: s.location_name,
-            time: s.time || null,
-            location_link: s.location_link,
-            icon: s.icon || "solar:confetti-bold",
-            custom_title: s.title || null,
-          } as any);
-        });
-      }
+      customSections.slice(0, MAX_CUSTOM_SECTIONS).forEach((s, idx) => {
+        const hasContent = s.title || s.location_name || s.time || s.location_link;
+        if (!hasContent) return;
+        const dbType = `custom_${idx + 1}`;
+        customUidToType.set(s.uid, dbType);
+        locationInserts.push({
+          wedding_id: weddingId,
+          type: dbType,
+          location_name: s.location_name,
+          time: s.time || null,
+          location_link: s.location_link,
+          icon: s.icon || "solar:confetti-bold",
+          custom_title: s.title || null,
+        } as any);
+      });
 
       // Apply user-defined display_order from timelineOrder.
       // timelineOrder uses "ceremony" / "welcome_drink" / "venue" / <custom uid>.
