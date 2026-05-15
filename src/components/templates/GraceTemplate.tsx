@@ -99,6 +99,9 @@ export const GraceTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
   const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
+  const customLocations = locations
+    .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
 
   // Lock scroll only while autoplay is blocked and the user hasn't tapped.
   // When autoplay succeeds, the page is freely scrollable from the start.
