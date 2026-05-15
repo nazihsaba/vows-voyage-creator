@@ -2311,7 +2311,7 @@ const WeddingForm = () => {
                 )}
 
                 {/* Custom Timeline Sections (timeline templates only) */}
-                {isAuraTemplate && (
+                {(
                   <Card className="border shadow-sm sm:col-span-2">
                     <CardHeader className="px-3 sm:px-6 py-3 sm:py-4 flex-row items-center justify-between space-y-0">
                       <div>
