@@ -1,61 +1,41 @@
-## Add Promo Code to Publish Event Payment
+# Allow custom timeline sections on all templates
 
-### Promo codes (case-insensitive)
-- `A-HOST` → 40% off → final price **$60 USD**
-- `NK-20` → 20% off → final price **$80 USD**
-- No code → **$100 USD** (current behavior unchanged)
+Today the **Additional Sections** card (with `+ Add Section`) in the wedding form is only shown for the Aura family (Dorée, Lumière, Étoile). The other active templates — **Éclat**, **Vérité**, **Grâce**, **Opulence** — neither expose the form option nor render the extra events. The goal is to make the option universal and have each template display the custom events alongside Ceremony / Venue.
 
-### 1. Update payment dialog UI (`src/pages/MyEvents.tsx`)
+No DB changes are needed: custom sections are already stored as `wedding_locations` rows with `type = 'custom_N'` and `display_order`, with Arabic copies under `custom_title_custom_N` / `custom_location_custom_N`.
 
-In the dialog (around line 614-625), add a promo code input section with:
-- An input field labeled "Promo code (optional)" + an "Apply" button next to it
-- On apply: validate against the two known codes locally (for instant UX feedback) and show the discounted price in the breakdown
-- Show updated price breakdown:
-  - `Publishing fee` → `$100 USD`
-  - `Discount (A-HOST -40%)` → `-$40 USD` (only if applied, in green)
-  - `Total` → final price (bold)
-- "Remove" button next to an applied code to clear it
-- Inline error message if code is invalid ("Invalid promo code")
+## 1. Wedding form (`src/pages/WeddingForm.tsx`)
 
-State to add:
-- `promoCode` (string — input value)
-- `appliedPromo` ({ code: string; discountPercent: number } | null)
-- `promoError` (string | null)
+- Remove the `isAuraTemplate` gate around the **Additional Sections** card (≈ line 2318) so it renders for every template.
+- Apply the same change to the validation block at line 887 (require complete custom sections) and the save/persist blocks at lines 1017 and 1231 (Arabic remap + insert into `wedding_locations`) so they run regardless of template.
+- Keep the Aura-only `TimelineOrderControls` (up/down reordering) gated as it is — Éclat/Vérité/Grâce/Opulence don't have a reorderable timeline; their custom sections will simply append after Venue in `display_order`.
+- No copy or layout changes; the card text "Add up to 4 more events…" already reads generically.
 
-### 2. Update `handlePaymentProceed`
+## 2. Template rendering
 
-Send `promoCode` in the request body to the edge function. The amount/invoice are computed server-side based on the validated code (do not trust client-computed amounts).
+Each non-Aura template currently picks specific rows: `locations.find(l => l.type === 'ceremony' | 'venue' | 'welcome_drink')`. Add a derived list of custom events and render one extra card/block per entry, sorted by `display_order`, using the template's existing event-card styling. Each entry uses:
 
-```ts
-body: {
-  weddingId: publishingWeddingId,
-  currency: "USD",
-  promoCode: appliedPromo?.code ?? null,
-}
-```
+- title → `getLocalizedValue('custom_title_' + loc.type, loc.custom_title)`
+- time → `formatTimeTo12Hour(loc.time)`
+- location → `getLocalizedValue('custom_location_' + loc.type, loc.location_name)`
+- map link → `loc.location_link`
+- icon → `loc.icon` (fallback `solar:confetti-bold`), rendered via `<EventIcon>`
 
-### 3. Update `whish-pay-collect` edge function (`supabase/functions/whish-pay-collect/index.ts`)
+Files to update (template + matching live-preview file, per the live-preview parity rule):
 
-This is the security-critical part — the discount must be enforced server-side so users can't tamper with the price client-side.
+- `src/components/templates/EclatTemplate.tsx` + `EclatPreview.tsx` — append custom cards after the Venue card in the Events section, reusing the cream card styling.
+- `src/components/templates/VeriteTemplate.tsx` + `VeritePreview.tsx` — append after Venue using the same fade-in animation block.
+- `src/components/templates/GraceTemplate.tsx` + `GracePreview.tsx` — append after Venue using the white card style.
+- `src/components/templates/OpulenceTemplate.tsx` + `OpulencePreview.tsx` — append after Venue using its existing event panel style.
 
-- Define a server-side promo table:
-  ```ts
-  const PROMO_CODES: Record<string, number> = {
-    "A-HOST": 40,
-    "NK-20": 20,
-  };
-  const BASE_PUBLISH_FEE = 100;
-  ```
-- Replace the client-supplied `amount` for `type === "publish"` with a computed value:
-  - Read `promoCode` from request body (uppercased, trimmed)
-  - If present and valid → `amount = BASE_PUBLISH_FEE * (1 - discount/100)`
-  - If present and invalid → return 400 "Invalid promo code"
-  - If absent → `amount = BASE_PUBLISH_FEE`
-- Update the invoice string to mention the promo (e.g. `Event publishing fee for X & Y (promo A-HOST -40%)`)
-- Keep the `venue` payment type behavior unchanged — it still uses the client-supplied amount
+Aura / Lumière / Étoile are already wired and need no changes.
 
-### Technical notes
-- Promo validation happens in two places: client-side for UX feedback, server-side for security. The server is the source of truth.
-- Codes are matched case-insensitively (uppercased before comparison) so users can type `a-host` or `A-Host`.
-- No new database table — promo codes are hardcoded since there are only two.
-- No tracking of promo usage is added (not requested). Can be added later via a `promo_code` column on `weddings` if needed.
+## 3. Verification
+
+- Open `/dashboard/eclat-form` (Éclat), confirm the Additional Sections card appears, add one section, save, and check it renders in the Eclat live preview and full template.
+- Repeat for Vérité, Grâce, Opulence.
+- Sanity-check Aura/Lumière/Étoile still behave the same (validation, ordering, Arabic translation).
+
+## 4. Memory update
+
+After implementation, update `mem://features/custom-timeline-sections` so it states the feature is available on **all active templates**, not just Dorée/Étoile/Lumière.
