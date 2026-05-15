@@ -102,6 +102,11 @@ export const GraceTemplate = ({
   const customLocations = locations
     .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
     .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
+  const orderedEvents: Array<{ kind: "ceremony" | "venue" | "custom"; loc: any }> = [
+    ...(ceremony ? [{ kind: "ceremony" as const, loc: ceremony }] : []),
+    ...(venue ? [{ kind: "venue" as const, loc: venue }] : []),
+    ...customLocations.map((loc) => ({ kind: "custom" as const, loc })),
+  ].sort((a, b) => (a.loc.display_order ?? 999) - (b.loc.display_order ?? 999));
 
   // Lock scroll only while autoplay is blocked and the user hasn't tapped.
   // When autoplay succeeds, the page is freely scrollable from the start.
