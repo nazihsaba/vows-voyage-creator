@@ -292,6 +292,9 @@ export const OpulenceTemplate = ({
   }, [started]);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
+  const customLocations = locations
+    .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
