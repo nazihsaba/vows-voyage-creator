@@ -884,7 +884,7 @@ const WeddingForm = () => {
     // Welcome Drink Time is optional for all templates.
 
     // Validate Additional Sections: Title, Location Name and Time are required for each
-    if (isAuraTemplate && customSections.length > 0) {
+    if (customSections.length > 0) {
       const incomplete = customSections.findIndex(
         (s) => !s.title?.trim() || !s.location_name?.trim() || !s.time?.trim(),
       );
