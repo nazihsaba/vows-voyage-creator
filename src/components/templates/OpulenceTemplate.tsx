@@ -295,6 +295,12 @@ export const OpulenceTemplate = ({
   const customLocations = locations
     .filter((loc) => typeof loc.type === "string" && loc.type.startsWith("custom_"))
     .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
+  const orderedEvents: Array<{ kind: "ceremony" | "venue" | "custom"; loc: any }> = [
+    ...(ceremony ? [{ kind: "ceremony" as const, loc: ceremony }] : []),
+    ...(venue ? [{ kind: "venue" as const, loc: venue }] : []),
+    ...customLocations.map((loc) => ({ kind: "custom" as const, loc })),
+  ].sort((a, b) => (a.loc.display_order ?? 999) - (b.loc.display_order ?? 999));
+  const orderedEventsWithTime = orderedEvents.filter((e) => e.loc.time);
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
