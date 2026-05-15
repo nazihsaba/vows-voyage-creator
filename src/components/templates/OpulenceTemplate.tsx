@@ -444,19 +444,20 @@ export const OpulenceTemplate = ({
 
             <div className="w-12 h-px mx-auto" style={{ background: "hsl(36, 57%, 74%)" }} />
 
-            {ceremony && ceremony.time && (
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-[0.3em] opacity-50">Ceremony</p>
-                <p className="text-xl font-light">{formatTimeTo12Hour(ceremony.time)}</p>
-              </div>
-            )}
-
-            {venue && venue.time && (
-              <div className="space-y-1">
-                <p className="text-xs uppercase tracking-[0.3em] opacity-50">Reception</p>
-                <p className="text-xl font-light">{formatTimeTo12Hour(venue.time)}</p>
-              </div>
-            )}
+            {orderedEventsWithTime.map(({ kind, loc }) => {
+              const label =
+                kind === "ceremony"
+                  ? "Ceremony"
+                  : kind === "venue"
+                  ? "Reception"
+                  : loc.custom_title || "Event";
+              return (
+                <div key={loc.id || loc.type} className="space-y-1">
+                  <p className="text-xs uppercase tracking-[0.3em] opacity-50">{label}</p>
+                  <p className="text-xl font-light">{formatTimeTo12Hour(loc.time)}</p>
+                </div>
+              );
+            })}
           </div>
         </AnimatedSection>
       </section>
