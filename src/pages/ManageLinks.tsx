@@ -2298,7 +2298,7 @@ const ManageLinks = () => {
           }
         }}
       >
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{editingTable ? "Edit Table" : "Create Table"}</DialogTitle>
             <DialogDescription>
@@ -2306,7 +2306,7 @@ const ManageLinks = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="t-num">Table Number *</Label>
                 <Input
