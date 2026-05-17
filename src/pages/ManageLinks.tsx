@@ -242,6 +242,14 @@ const ManageLinks = () => {
         });
         setInvitees(groupedInvitees);
       }
+
+      // Fetch wedding tables
+      const { data: tablesData } = await (supabase as any)
+        .from("wedding_tables")
+        .select("*")
+        .eq("wedding_id", weddingId)
+        .order("table_number", { ascending: true });
+      setWeddingTables((tablesData || []) as WeddingTable[]);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
