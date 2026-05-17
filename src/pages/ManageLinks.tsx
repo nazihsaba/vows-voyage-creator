@@ -2284,11 +2284,19 @@ const ManageLinks = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Create Table Dialog */}
-      <Dialog open={createTableOpen} onOpenChange={setCreateTableOpen}>
+      {/* Create / Edit Table Dialog */}
+      <Dialog
+        open={createTableOpen || !!editingTable}
+        onOpenChange={(o) => {
+          if (!o) {
+            setCreateTableOpen(false);
+            setEditingTable(null);
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create Table</DialogTitle>
+            <DialogTitle>{editingTable ? "Edit Table" : "Create Table"}</DialogTitle>
             <DialogDescription>
               Set the table number and optionally a name, then choose who sits at this table.
             </DialogDescription>
@@ -2348,6 +2356,8 @@ const ManageLinks = () => {
                   return filtered.map((inv) => {
                     const checked = tableForm.selectedInviteeIds.includes(inv.id);
                     const currentTable = inv.table_number;
+                    const isOnThisTable =
+                      editingTable && currentTable === editingTable.originalNumber;
                     return (
                       <label
                         key={inv.id}
@@ -2365,7 +2375,7 @@ const ManageLinks = () => {
                           }}
                         />
                         <span className="flex-1 truncate">{inv.name}</span>
-                        {currentTable != null && (
+                        {currentTable != null && !isOnThisTable && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                             Table {currentTable}
                           </Badge>
@@ -2384,12 +2394,19 @@ const ManageLinks = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateTableOpen(false)} disabled={savingTable}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateTableOpen(false);
+                setEditingTable(null);
+              }}
+              disabled={savingTable}
+            >
               Cancel
             </Button>
-            <Button onClick={handleCreateTable} disabled={savingTable}>
+            <Button onClick={editingTable ? handleSaveTableEdit : handleCreateTable} disabled={savingTable}>
               {savingTable ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              Create
+              {editingTable ? "Save" : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
