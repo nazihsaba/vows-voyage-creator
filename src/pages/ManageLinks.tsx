@@ -142,6 +142,15 @@ const ManageLinks = () => {
   const [venuePayUrl, setVenuePayUrl] = useState<string | null>(null);
   const [venuePayError, setVenuePayError] = useState<string | null>(null);
   const [genState, setGenState] = useState(getGenerationState());
+  const [weddingTables, setWeddingTables] = useState<WeddingTable[]>([]);
+  const [createTableOpen, setCreateTableOpen] = useState(false);
+  const [tableForm, setTableForm] = useState<{
+    table_number: string;
+    name: string;
+    selectedInviteeIds: string[];
+  }>({ table_number: "", name: "", selectedInviteeIds: [] });
+  const [savingTable, setSavingTable] = useState(false);
+  const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
