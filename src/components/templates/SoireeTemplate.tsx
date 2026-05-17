@@ -314,7 +314,7 @@ export const SoireeTemplate = ({
         <LanguageToggle />
       </div>
 
-      {isPreview && (
+      {isPreview && selected === totalSlides - 1 && (
         <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
           <div className="pointer-events-auto">
             <TemplatePreviewFooter />
