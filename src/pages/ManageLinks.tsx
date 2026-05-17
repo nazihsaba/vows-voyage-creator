@@ -2345,7 +2345,7 @@ const ManageLinks = () => {
                 </TabsList>
                 {(["without", "with"] as const).map((tab) => (
                   <TabsContent key={tab} value={tab} className="mt-2">
-                    <div className="border rounded-lg max-h-64 sm:max-h-80 overflow-y-auto sm:grid sm:grid-cols-2 sm:divide-x divide-y sm:[&>*:nth-child(2n)]:border-l">
+                    <div className="border rounded-lg max-h-64 sm:max-h-80 overflow-y-auto divide-y">
                       {(() => {
                         const all = Object.values(invitees).flat();
                         if (all.length === 0) {
