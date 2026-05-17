@@ -538,6 +538,41 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'soiree-swipe',
+    name: 'Soirée',
+    category: 'minimalist',
+    description: 'Horizontal swipe storytelling — each screen a new chapter. Neutral ivory & black palette with cinematic transitions.',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'SoireeTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'details', enabled: true, order: 3, customizable: true },
+      { id: 'countdown', enabled: true, order: 4, customizable: true },
+      { id: 'gallery', enabled: true, order: 5, customizable: true },
+      { id: 'rsvp', enabled: true, order: 6, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Cormorant Garamond',
+      fontSecondary: 'Inter',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#1a1a1a',
+        secondary: '#8a7e6d',
+        accent: '#efe7dc',
+        background: '#f6f1ea',
+        text: '#1a1a1a',
+      },
+      borderRadius: 'none',
+      shadows: 'none',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {
