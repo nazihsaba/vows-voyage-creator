@@ -80,7 +80,8 @@ export const SoireeTemplate = ({
     loop: false,
     dragFree: false,
     containScroll: "trimSnaps",
-    duration: 28,
+    duration: 55,
+    skipSnaps: false,
   });
   const [selected, setSelected] = useState(0);
   const [totalSlides, setTotalSlides] = useState(0);
@@ -234,31 +235,68 @@ export const SoireeTemplate = ({
         />
       )}
 
-      {/* Embla viewport */}
-      <div className="w-full h-full overflow-hidden" ref={emblaRef}>
-        <div className="flex h-full">
-          {slides.map((s, i) => (
-            <div
-              key={s.id}
-              className="relative flex-[0_0_100%] h-full"
-              aria-hidden={i !== selected}
-            >
-              <AnimatePresence mode="wait">
-                {i === selected && (
-                  <motion.div
-                    key={s.id}
-                    initial={{ opacity: 0, scale: 1.02, filter: "blur(8px)" }}
-                    animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
-                    exit={{ opacity: 0, scale: 0.99, filter: "blur(6px)" }}
-                    transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-                    className="absolute inset-0 w-full h-full"
-                  >
-                    {s.node}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+      {/* Embla viewport — paper-fold like transition */}
+      <div
+        className="w-full h-full overflow-hidden"
+        ref={emblaRef}
+        style={{ perspective: "1800px" }}
+      >
+        <div className="flex h-full" style={{ transformStyle: "preserve-3d" }}>
+          {slides.map((s, i) => {
+            const distance = i - selected;
+            const isActive = i === selected;
+            // Paper-opening: incoming page rotates from the right edge,
+            // outgoing page softly recedes.
+            const rotateY = distance === 0 ? 0 : distance > 0 ? 35 : -12;
+            const translateX = distance === 0 ? 0 : distance > 0 ? 40 : -20;
+            const scale = isActive ? 1 : 0.96;
+            const opacity = Math.abs(distance) > 1 ? 0 : isActive ? 1 : 0.4;
+            return (
+              <div
+                key={s.id}
+                className="relative flex-[0_0_100%] h-full"
+                aria-hidden={!isActive}
+                style={{
+                  transformStyle: "preserve-3d",
+                  transformOrigin: distance > 0 ? "left center" : "right center",
+                  transform: `perspective(1800px) rotateY(${rotateY}deg) translateX(${translateX}px) scale(${scale})`,
+                  opacity,
+                  transition:
+                    "transform 900ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
+                  willChange: "transform, opacity",
+                  boxShadow: isActive
+                    ? "0 30px 60px -30px rgba(0,0,0,0.35)"
+                    : "0 10px 30px -10px rgba(0,0,0,0.25)",
+                }}
+              >
+                {/* subtle paper crease shadow on the leading edge of incoming page */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-y-0 left-0 w-12"
+                  style={{
+                    background:
+                      "linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0))",
+                    opacity: distance > 0 ? 0.9 : 0,
+                    transition: "opacity 700ms ease",
+                  }}
+                />
+                <AnimatePresence mode="wait">
+                  {isActive && (
+                    <motion.div
+                      key={s.id}
+                      initial={{ opacity: 0, filter: "blur(6px)" }}
+                      animate={{ opacity: 1, filter: "blur(0px)" }}
+                      exit={{ opacity: 0, filter: "blur(4px)" }}
+                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                      className="absolute inset-0 w-full h-full"
+                    >
+                      {s.node}
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
         </div>
       </div>
 
