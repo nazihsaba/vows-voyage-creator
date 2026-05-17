@@ -11,6 +11,7 @@ import MyEvents from "./pages/MyEvents";
 import ManageLinks from "./pages/ManageLinks";
 import WeddingForm from "./pages/WeddingForm";
 import WeddingInvite from "./pages/WeddingInvite";
+import SeatingLookup from "./pages/SeatingLookup";
 
 import TemplateSelection from "./pages/TemplateSelection";
 import WeddingTemplates from "./pages/WeddingTemplates";
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/invite/preview" element={<WeddingInvite />} />
           <Route path="/invite/:slug/:linkSlug/:numberOfPersons" element={<WeddingInvite />} />
           <Route path="/invite/:slug" element={<WeddingInvite />} />
+          <Route path="/seating/:weddingSlug" element={<SeatingLookup />} />
           <Route path="/preview/modern-romance" element={<VeritePreview />} />
           
           
