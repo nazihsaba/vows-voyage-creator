@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { parseLocalDate } from "@/lib/weddingDate";
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
@@ -37,7 +38,7 @@ export const RsvpSection = ({
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === 'ar';
-  const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) : null);
+  const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
 
   return (

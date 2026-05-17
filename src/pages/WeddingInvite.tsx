@@ -354,7 +354,7 @@ const WeddingInvite = () => {
     }
   };
 
-  const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
+  const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) < new Date() : false;
 
   if (loading || (wedding && !envelopeAssetsReady)) {
     const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
@@ -512,7 +512,7 @@ const WeddingInvite = () => {
               {wedding.groom_name} & {wedding.bride_name}
             </h1>
             <p className="text-xl md:text-2xl tracking-wide">
-              {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+              {format(parseLocalDate(wedding.wedding_date), "MMMM dd, yyyy")}
             </p>
           </div>
         </TemplateRenderer>

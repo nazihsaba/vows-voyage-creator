@@ -419,7 +419,7 @@ const MyEvents = () => {
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm">
-                                  {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                                  {parseLocalDate(wedding.wedding_date).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",
