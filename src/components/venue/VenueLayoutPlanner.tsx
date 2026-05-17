@@ -105,6 +105,25 @@ export const VenueLayoutPlanner = forwardRef<VenueLayoutPlannerRef, Props>(({ we
     const init = async () => {
       setLoading(true);
       try {
+        // Ensure the auth session is hydrated before issuing RLS-protected requests.
+        // Without this, an unauthenticated SELECT can return empty and trigger an
+        // INSERT that gets rejected by row-level security.
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session) {
+          await new Promise<void>((resolve) => {
+            const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
+              if (s) {
+                sub.subscription.unsubscribe();
+                resolve();
+              }
+            });
+            // Safety timeout so we don't hang forever on a logged-out user
+            setTimeout(() => {
+              sub.subscription.unsubscribe();
+              resolve();
+            }, 3000);
+          });
+        }
         const { data: projects, error } = await supabase
           .from("venue_projects")
           .select("*")
