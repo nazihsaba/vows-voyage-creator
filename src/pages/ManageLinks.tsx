@@ -2298,7 +2298,7 @@ const ManageLinks = () => {
           }
         }}
       >
-        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[calc(100vw-1rem)] sm:max-w-lg md:max-w-2xl max-h-[90vh] overflow-y-auto p-4 sm:p-6">
           <DialogHeader>
             <DialogTitle>{editingTable ? "Edit Table" : "Create Table"}</DialogTitle>
             <DialogDescription>
@@ -2306,7 +2306,7 @@ const ManageLinks = () => {
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4 py-2">
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div>
                 <Label htmlFor="t-num">Table Number *</Label>
                 <Input
@@ -2340,12 +2340,12 @@ const ManageLinks = () => {
               </div>
               <Tabs defaultValue="without" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-9">
-                  <TabsTrigger value="without" className="text-xs">Without Table</TabsTrigger>
-                  <TabsTrigger value="with" className="text-xs">With Table</TabsTrigger>
+                  <TabsTrigger value="without" className="text-[11px] sm:text-xs px-1">Without Table</TabsTrigger>
+                  <TabsTrigger value="with" className="text-[11px] sm:text-xs px-1">With Table</TabsTrigger>
                 </TabsList>
                 {(["without", "with"] as const).map((tab) => (
                   <TabsContent key={tab} value={tab} className="mt-2">
-                    <div className="border rounded-lg max-h-64 overflow-y-auto divide-y">
+                    <div className="border rounded-lg max-h-64 sm:max-h-80 overflow-y-auto divide-y">
                       {(() => {
                         const all = Object.values(invitees).flat();
                         if (all.length === 0) {
