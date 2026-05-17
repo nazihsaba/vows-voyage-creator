@@ -195,13 +195,17 @@ const ManageLinks = () => {
 
   useEffect(() => {
     if (weddingId) {
-      fetchData();
+      // Only show the full-page loading skeleton on the initial load; subsequent
+      // refreshes (triggered by `refresh`) fetch silently so the user keeps
+      // their scroll position and the list doesn't unmount.
+      fetchData({ silent: refresh > 0 });
     }
   }, [weddingId, refresh]);
 
-  const fetchData = async () => {
+  const fetchData = async ({ silent = false }: { silent?: boolean } = {}) => {
     try {
-      setLoading(true);
+      if (!silent) setLoading(true);
+
 
       // Fetch wedding details
       const { data: weddingData, error: weddingError } = await supabase
@@ -261,7 +265,7 @@ const ManageLinks = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
