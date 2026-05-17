@@ -2235,7 +2235,16 @@ const ManageLinks = () => {
             </div>
             <div>
               <Label>Select invitees</Label>
-              <div className="mt-2 border rounded-lg max-h-64 overflow-y-auto divide-y">
+              <div className="relative mt-2 mb-2">
+                <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-muted-foreground" />
+                <Input
+                  value={tableInviteeSearch}
+                  onChange={(e) => setTableInviteeSearch(e.target.value)}
+                  placeholder="Search invitees..."
+                  className="pl-8 h-9"
+                />
+              </div>
+              <div className="border rounded-lg max-h-64 overflow-y-auto divide-y">
                 {(() => {
                   const all = Object.values(invitees).flat();
                   if (all.length === 0) {
@@ -2245,6 +2254,25 @@ const ManageLinks = () => {
                       </div>
                     );
                   }
+                  const q = tableInviteeSearch.trim().toLowerCase();
+                  const filtered = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
+                  if (filtered.length === 0) {
+                    return (
+                      <div className="p-3 text-xs text-muted-foreground text-center">No invitees match "{tableInviteeSearch}"</div>
+                    );
+                  }
+                  return filtered;
+                })()
+                  .toString === undefined
+                  ? null
+                  : null}
+                {(() => {
+                  const all = Object.values(invitees).flat();
+                  if (all.length === 0) return null;
+                  const q = tableInviteeSearch.trim().toLowerCase();
+                  const filtered = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
+                  return filtered;
+                })()
                   return all.map((inv) => {
                     const checked = tableForm.selectedInviteeIds.includes(inv.id);
                     const currentTable = inv.table_number;
