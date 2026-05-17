@@ -406,13 +406,15 @@ const ManageLinks = () => {
         if (error) throw error;
       }
 
-      // Insert new invitees
+      // Insert new invitees (with display order based on current position)
       for (const inv of pendingNewInvitees) {
+        const order = editInvitees.findIndex((i) => i.id === inv.id);
         const { error } = await supabase.from("invitees").insert({
           invitation_link_id: inv.invitation_link_id,
           name: inv.name.replace(/\b\w/g, (c) => c.toUpperCase()),
           is_attending: inv.is_attending,
           table_number: inv.table_number,
+          display_order: order >= 0 ? order : 0,
         } as any);
         if (error) throw error;
       }
@@ -427,6 +429,18 @@ const ManageLinks = () => {
           const { error } = await supabase.from("invitees").update(sanitizedUpdates).eq("id", id);
           if (error) throw error;
         }
+      }
+
+      // Persist display order for existing invitees whose position changed
+      for (let i = 0; i < editInvitees.length; i++) {
+        const inv = editInvitees[i];
+        if (inv.id.startsWith("temp-")) continue;
+        if (pendingDeleteIds.includes(inv.id)) continue;
+        const { error } = await (supabase as any)
+          .from("invitees")
+          .update({ display_order: i })
+          .eq("id", inv.id);
+        if (error) throw error;
       }
 
       toast({ title: "Success", description: "Link updated successfully" });
