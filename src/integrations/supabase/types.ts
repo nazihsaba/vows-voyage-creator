@@ -366,6 +366,30 @@ export type Database = {
           },
         ]
       }
+      wedding_tables: {
+        Row: {
+          created_at: string
+          id: string
+          name: string | null
+          table_number: number
+          wedding_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          table_number: number
+          wedding_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string | null
+          table_number?: number
+          wedding_id?: string
+        }
+        Relationships: []
+      }
       weddings: {
         Row: {
           audio_end_time: number | null
