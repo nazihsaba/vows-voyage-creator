@@ -344,6 +344,74 @@ const ManageLinks = () => {
     }
   };
 
+  const openEditTableDialog = (tableNum: number) => {
+    const t = weddingTables.find((wt) => wt.table_number === tableNum);
+    if (!t) return;
+    const assigned = Object.values(invitees)
+      .flat()
+      .filter((i) => i.table_number === tableNum)
+      .map((i) => i.id);
+    setTableForm({
+      table_number: String(t.table_number),
+      name: t.name ?? "",
+      selectedInviteeIds: assigned,
+    });
+    setTableInviteeSearch("");
+    setEditingTable({ id: t.id, originalNumber: t.table_number });
+  };
+
+  const handleSaveTableEdit = async () => {
+    if (!editingTable || !weddingId) return;
+    const newNum = parseInt(tableForm.table_number);
+    if (!newNum || newNum < 1) {
+      toast({ title: "Invalid table number", description: "Enter a positive number", variant: "destructive" });
+      return;
+    }
+    if (newNum !== editingTable.originalNumber && weddingTables.some((t) => t.table_number === newNum)) {
+      toast({ title: "Table exists", description: `Table ${newNum} already exists`, variant: "destructive" });
+      return;
+    }
+    setSavingTable(true);
+    try {
+      // Update the table row
+      const { error: tErr } = await (supabase as any)
+        .from("wedding_tables")
+        .update({ table_number: newNum, name: tableForm.name.trim() || null })
+        .eq("id", editingTable.id);
+      if (tErr) throw tErr;
+
+      const linkIds = links.map((l) => l.id);
+      const originallyAssignedIds = Object.values(invitees)
+        .flat()
+        .filter((i) => i.table_number === editingTable.originalNumber)
+        .map((i) => i.id);
+      const selectedSet = new Set(tableForm.selectedInviteeIds);
+
+      // Unassign invitees that were on this table but were deselected
+      const toUnassign = originallyAssignedIds.filter((id) => !selectedSet.has(id));
+      if (toUnassign.length > 0) {
+        await (supabase as any).from("invitees").update({ table_number: null }).in("id", toUnassign);
+      }
+
+      // Assign selected invitees to the new table number (covers number change & newly added)
+      if (tableForm.selectedInviteeIds.length > 0) {
+        await (supabase as any)
+          .from("invitees")
+          .update({ table_number: newNum })
+          .in("id", tableForm.selectedInviteeIds);
+      }
+
+      toast({ title: "Table updated", description: `Table ${newNum} saved` });
+      setEditingTable(null);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Error", description: err.message || "Failed to update table", variant: "destructive" });
+    } finally {
+      setSavingTable(false);
+    }
+  };
+
   const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const sanitizedLinkName = linkName
       .toLowerCase()
