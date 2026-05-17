@@ -1,4 +1,5 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import { parseLocalDate } from "@/lib/weddingDate";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
@@ -437,7 +438,7 @@ export const LumiereTemplate = ({
   };
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
-  const weddingDate = new Date(wedding.wedding_date);
+  const weddingDate = parseLocalDate(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
 
   const welcomeDrinkLoc = locations.find((loc) => loc.type === "welcome_drink");

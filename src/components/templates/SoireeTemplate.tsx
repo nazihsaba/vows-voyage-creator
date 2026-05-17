@@ -1,4 +1,5 @@
 import { useRef, useEffect, useState, useCallback, ReactNode } from "react";
+import { parseLocalDate } from "@/lib/weddingDate";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -59,7 +60,7 @@ export const SoireeTemplate = ({
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
-  const weddingDate = new Date(wedding.wedding_date);
+  const weddingDate = parseLocalDate(wedding.wedding_date);
   const dateFormatted = weddingDate.toLocaleDateString(dateLocale, {
     day: "numeric",
     month: "long",
