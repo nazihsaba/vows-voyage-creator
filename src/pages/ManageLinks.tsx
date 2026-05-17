@@ -346,18 +346,17 @@ const ManageLinks = () => {
 
   const openEditTableDialog = (tableNum: number) => {
     const t = weddingTables.find((wt) => wt.table_number === tableNum);
-    if (!t) return;
     const assigned = Object.values(invitees)
       .flat()
       .filter((i) => i.table_number === tableNum)
       .map((i) => i.id);
     setTableForm({
-      table_number: String(t.table_number),
-      name: t.name ?? "",
+      table_number: String(tableNum),
+      name: t?.name ?? "",
       selectedInviteeIds: assigned,
     });
     setTableInviteeSearch("");
-    setEditingTable({ id: t.id, originalNumber: t.table_number });
+    setEditingTable({ id: t?.id ?? null, originalNumber: tableNum });
   };
 
   const handleSaveTableEdit = async () => {
@@ -373,14 +372,22 @@ const ManageLinks = () => {
     }
     setSavingTable(true);
     try {
-      // Update the table row
-      const { error: tErr } = await (supabase as any)
-        .from("wedding_tables")
-        .update({ table_number: newNum, name: tableForm.name.trim() || null })
-        .eq("id", editingTable.id);
-      if (tErr) throw tErr;
+      // Upsert the wedding_tables row (create one if this was an unmanaged table)
+      if (editingTable.id) {
+        const { error: tErr } = await (supabase as any)
+          .from("wedding_tables")
+          .update({ table_number: newNum, name: tableForm.name.trim() || null })
+          .eq("id", editingTable.id);
+        if (tErr) throw tErr;
+      } else {
+        const { error: tErr } = await (supabase as any).from("wedding_tables").insert({
+          wedding_id: weddingId,
+          table_number: newNum,
+          name: tableForm.name.trim() || null,
+        });
+        if (tErr) throw tErr;
+      }
 
-      const linkIds = links.map((l) => l.id);
       const originallyAssignedIds = Object.values(invitees)
         .flat()
         .filter((i) => i.table_number === editingTable.originalNumber)
