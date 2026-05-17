@@ -142,19 +142,8 @@ const Dashboard = () => {
         { icon: Calendar, text: "RSVP" },
       ],
     },
-    {
-      id: "soiree-swipe",
-      name: "Soirée",
-      description: "Horizontal swipe storytelling — each screen a new chapter",
-      image: lumiereTemplate,
-      features: [
-        { icon: Sparkles, text: "Swipe Navigation" },
-        { icon: Images, text: "Photo Gallery" },
-        { icon: MapPin, text: "Event Locations" },
-        { icon: Clock, text: "Countdown Timer" },
-        { icon: Calendar, text: "RSVP" },
-      ],
-    },
+    // Soirée template hidden
+
     // Opulence template hidden
   ];
 
