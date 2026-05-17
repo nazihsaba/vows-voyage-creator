@@ -373,20 +373,27 @@ const ManageLinks = () => {
     }
     setSavingTable(true);
     try {
+      const trimmedName = tableForm.name.trim() || null;
+      let savedTableId = editingTable.id;
       // Upsert the wedding_tables row (create one if this was an unmanaged table)
       if (editingTable.id) {
         const { error: tErr } = await (supabase as any)
           .from("wedding_tables")
-          .update({ table_number: newNum, name: tableForm.name.trim() || null })
+          .update({ table_number: newNum, name: trimmedName })
           .eq("id", editingTable.id);
         if (tErr) throw tErr;
       } else {
-        const { error: tErr } = await (supabase as any).from("wedding_tables").insert({
-          wedding_id: weddingId,
-          table_number: newNum,
-          name: tableForm.name.trim() || null,
-        });
+        const { data: inserted, error: tErr } = await (supabase as any)
+          .from("wedding_tables")
+          .insert({
+            wedding_id: weddingId,
+            table_number: newNum,
+            name: trimmedName,
+          })
+          .select()
+          .single();
         if (tErr) throw tErr;
+        savedTableId = inserted?.id ?? null;
       }
 
       const originallyAssignedIds = Object.values(invitees)
@@ -398,20 +405,58 @@ const ManageLinks = () => {
       // Unassign invitees that were on this table but were deselected
       const toUnassign = originallyAssignedIds.filter((id) => !selectedSet.has(id));
       if (toUnassign.length > 0) {
-        await (supabase as any).from("invitees").update({ table_number: null }).in("id", toUnassign);
+        const { error: uErr } = await (supabase as any)
+          .from("invitees")
+          .update({ table_number: null })
+          .in("id", toUnassign);
+        if (uErr) throw uErr;
       }
 
       // Assign selected invitees to the new table number (covers number change & newly added)
       if (tableForm.selectedInviteeIds.length > 0) {
-        await (supabase as any)
+        const { error: aErr } = await (supabase as any)
           .from("invitees")
           .update({ table_number: newNum })
           .in("id", tableForm.selectedInviteeIds);
+        if (aErr) throw aErr;
       }
+
+      // Optimistically update local state so the UI reflects changes instantly
+      // without waiting for a full refetch.
+      setWeddingTables((prev) => {
+        const next = prev.filter((t) => t.table_number !== editingTable.originalNumber);
+        const existingIdx = next.findIndex((t) => t.table_number === newNum);
+        const row = {
+          id: savedTableId ?? `temp-${newNum}`,
+          wedding_id: weddingId,
+          table_number: newNum,
+          name: trimmedName,
+        } as WeddingTable;
+        if (existingIdx >= 0) next[existingIdx] = row;
+        else next.push(row);
+        return next.sort((a, b) => a.table_number - b.table_number);
+      });
+
+      const unassignSet = new Set(toUnassign);
+      const assignSet = new Set(tableForm.selectedInviteeIds);
+      setInvitees((prev) => {
+        const next: Record<string, typeof prev[string]> = {};
+        for (const [k, list] of Object.entries(prev)) {
+          next[k] = list.map((i) => {
+            if (assignSet.has(i.id)) return { ...i, table_number: newNum };
+            if (unassignSet.has(i.id)) return { ...i, table_number: null };
+            // If table number itself changed, migrate any others still on the old number
+            if (i.table_number === editingTable.originalNumber && newNum !== editingTable.originalNumber) {
+              return { ...i, table_number: newNum };
+            }
+            return i;
+          });
+        }
+        return next;
+      });
 
       toast({ title: "Table updated", description: `Table ${newNum} saved` });
       setEditingTable(null);
-      setRefresh((r) => r + 1);
     } catch (err: any) {
       console.error(err);
       toast({ title: "Error", description: err.message || "Failed to update table", variant: "destructive" });
