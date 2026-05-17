@@ -152,6 +152,7 @@ const ManageLinks = () => {
   const [savingTable, setSavingTable] = useState(false);
   const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
   const [tableInviteeSearch, setTableInviteeSearch] = useState("");
+  const [editingTable, setEditingTable] = useState<{ id: string; originalNumber: number } | null>(null);
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
@@ -340,6 +341,74 @@ const ManageLinks = () => {
       setRefresh((r) => r + 1);
     } catch (err: any) {
       toast({ title: "Error", description: err.message || "Failed to delete table", variant: "destructive" });
+    }
+  };
+
+  const openEditTableDialog = (tableNum: number) => {
+    const t = weddingTables.find((wt) => wt.table_number === tableNum);
+    if (!t) return;
+    const assigned = Object.values(invitees)
+      .flat()
+      .filter((i) => i.table_number === tableNum)
+      .map((i) => i.id);
+    setTableForm({
+      table_number: String(t.table_number),
+      name: t.name ?? "",
+      selectedInviteeIds: assigned,
+    });
+    setTableInviteeSearch("");
+    setEditingTable({ id: t.id, originalNumber: t.table_number });
+  };
+
+  const handleSaveTableEdit = async () => {
+    if (!editingTable || !weddingId) return;
+    const newNum = parseInt(tableForm.table_number);
+    if (!newNum || newNum < 1) {
+      toast({ title: "Invalid table number", description: "Enter a positive number", variant: "destructive" });
+      return;
+    }
+    if (newNum !== editingTable.originalNumber && weddingTables.some((t) => t.table_number === newNum)) {
+      toast({ title: "Table exists", description: `Table ${newNum} already exists`, variant: "destructive" });
+      return;
+    }
+    setSavingTable(true);
+    try {
+      // Update the table row
+      const { error: tErr } = await (supabase as any)
+        .from("wedding_tables")
+        .update({ table_number: newNum, name: tableForm.name.trim() || null })
+        .eq("id", editingTable.id);
+      if (tErr) throw tErr;
+
+      const linkIds = links.map((l) => l.id);
+      const originallyAssignedIds = Object.values(invitees)
+        .flat()
+        .filter((i) => i.table_number === editingTable.originalNumber)
+        .map((i) => i.id);
+      const selectedSet = new Set(tableForm.selectedInviteeIds);
+
+      // Unassign invitees that were on this table but were deselected
+      const toUnassign = originallyAssignedIds.filter((id) => !selectedSet.has(id));
+      if (toUnassign.length > 0) {
+        await (supabase as any).from("invitees").update({ table_number: null }).in("id", toUnassign);
+      }
+
+      // Assign selected invitees to the new table number (covers number change & newly added)
+      if (tableForm.selectedInviteeIds.length > 0) {
+        await (supabase as any)
+          .from("invitees")
+          .update({ table_number: newNum })
+          .in("id", tableForm.selectedInviteeIds);
+      }
+
+      toast({ title: "Table updated", description: `Table ${newNum} saved` });
+      setEditingTable(null);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Error", description: err.message || "Failed to update table", variant: "destructive" });
+    } finally {
+      setSavingTable(false);
     }
   };
 
@@ -1751,17 +1820,30 @@ const ManageLinks = () => {
                                       </Badge>
                                     )}
                                     {isManagedTable && (
-                                      <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        className="h-6 w-6 text-muted-foreground hover:text-destructive"
-                                        onClick={(e) => {
-                                          e.stopPropagation();
-                                          setDeleteTableId(String(tableNum));
-                                        }}
-                                      >
-                                        <Trash2 className="w-3 h-3" />
-                                      </Button>
+                                      <>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            openEditTableDialog(tableNum);
+                                          }}
+                                        >
+                                          <Pencil className="w-3 h-3" />
+                                        </Button>
+                                        <Button
+                                          variant="ghost"
+                                          size="icon"
+                                          className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                          onClick={(e) => {
+                                            e.stopPropagation();
+                                            setDeleteTableId(String(tableNum));
+                                          }}
+                                        >
+                                          <Trash2 className="w-3 h-3" />
+                                        </Button>
+                                      </>
                                     )}
                                   </div>
                                 </div>
@@ -2202,11 +2284,19 @@ const ManageLinks = () => {
         </DialogContent>
       </Dialog>
 
-      {/* Create Table Dialog */}
-      <Dialog open={createTableOpen} onOpenChange={setCreateTableOpen}>
+      {/* Create / Edit Table Dialog */}
+      <Dialog
+        open={createTableOpen || !!editingTable}
+        onOpenChange={(o) => {
+          if (!o) {
+            setCreateTableOpen(false);
+            setEditingTable(null);
+          }
+        }}
+      >
         <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle>Create Table</DialogTitle>
+            <DialogTitle>{editingTable ? "Edit Table" : "Create Table"}</DialogTitle>
             <DialogDescription>
               Set the table number and optionally a name, then choose who sits at this table.
             </DialogDescription>
@@ -2266,6 +2356,8 @@ const ManageLinks = () => {
                   return filtered.map((inv) => {
                     const checked = tableForm.selectedInviteeIds.includes(inv.id);
                     const currentTable = inv.table_number;
+                    const isOnThisTable =
+                      editingTable && currentTable === editingTable.originalNumber;
                     return (
                       <label
                         key={inv.id}
@@ -2283,7 +2375,7 @@ const ManageLinks = () => {
                           }}
                         />
                         <span className="flex-1 truncate">{inv.name}</span>
-                        {currentTable != null && (
+                        {currentTable != null && !isOnThisTable && (
                           <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                             Table {currentTable}
                           </Badge>
@@ -2302,12 +2394,19 @@ const ManageLinks = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setCreateTableOpen(false)} disabled={savingTable}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setCreateTableOpen(false);
+                setEditingTable(null);
+              }}
+              disabled={savingTable}
+            >
               Cancel
             </Button>
-            <Button onClick={handleCreateTable} disabled={savingTable}>
+            <Button onClick={editingTable ? handleSaveTableEdit : handleCreateTable} disabled={savingTable}>
               {savingTable ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
-              Create
+              {editingTable ? "Save" : "Create"}
             </Button>
           </DialogFooter>
         </DialogContent>
