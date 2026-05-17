@@ -1,4 +1,5 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import { parseLocalDate } from "@/lib/weddingDate";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -214,7 +215,7 @@ export const EclatTemplate = ({
             fieldId="wedding-date-display"
             text={getFieldValue(
               "wedding-date-display",
-              new Date(wedding.wedding_date).toLocaleDateString(dateLocale, {
+              parseLocalDate(wedding.wedding_date).toLocaleDateString(dateLocale, {
                 weekday: "long",
                 year: "numeric",
                 month: "long",

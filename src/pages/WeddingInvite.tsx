@@ -14,6 +14,7 @@ import { downloadCardAsImage } from "@/utils/downloadCard";
 import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 import waxSealHeart from "@/assets/wax-seal-heart.webp";
 import paperTexture from "@/assets/envelope-paper-texture.jpeg";
+import { parseLocalDate } from "@/lib/weddingDate";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -354,7 +355,7 @@ const WeddingInvite = () => {
     }
   };
 
-  const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? new Date(wedding.rsvp_deadline) < new Date() : false;
+  const isRsvpDeadlinePassed = wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) < new Date() : false;
 
   if (loading || (wedding && !envelopeAssetsReady)) {
     const hasNames = !!(wedding?.groom_name && wedding?.bride_name);
@@ -512,7 +513,7 @@ const WeddingInvite = () => {
               {wedding.groom_name} & {wedding.bride_name}
             </h1>
             <p className="text-xl md:text-2xl tracking-wide">
-              {format(new Date(wedding.wedding_date), "MMMM dd, yyyy")}
+              {format(parseLocalDate(wedding.wedding_date), "MMMM dd, yyyy")}
             </p>
           </div>
         </TemplateRenderer>

@@ -48,6 +48,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { parseLocalDate } from "@/lib/weddingDate";
 
 interface Wedding {
   id: string;
@@ -419,7 +420,7 @@ const MyEvents = () => {
                                   {wedding.bride_name} & {wedding.groom_name}
                                 </CardTitle>
                                 <CardDescription className="mt-1 text-sm">
-                                  {new Date(wedding.wedding_date).toLocaleDateString("en-US", {
+                                  {parseLocalDate(wedding.wedding_date).toLocaleDateString("en-US", {
                                     year: "numeric",
                                     month: "long",
                                     day: "numeric",

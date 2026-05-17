@@ -1,4 +1,5 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import { parseLocalDate } from "@/lib/weddingDate";
 import { useRef, useState, useEffect } from "react";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 import { EditableField } from "@/components/EditableField";
@@ -316,7 +317,7 @@ export const OpulenceTemplate = ({
     }
   };
 
-  const weddingDate = new Date(wedding.wedding_date);
+  const weddingDate = parseLocalDate(wedding.wedding_date);
   const hasGiftCards = giftCards && giftCards.length > 0;
 
   const scrollTo = (id: string) => {
