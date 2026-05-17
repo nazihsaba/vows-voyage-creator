@@ -90,6 +90,38 @@ export type Database = {
           },
         ]
       }
+      guest_photos: {
+        Row: {
+          created_at: string
+          id: string
+          storage_path: string
+          uploader_name: string | null
+          wedding_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          storage_path: string
+          uploader_name?: string | null
+          wedding_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          storage_path?: string
+          uploader_name?: string | null
+          wedding_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_guest_photos_wedding"
+            columns: ["wedding_id"]
+            isOneToOne: false
+            referencedRelation: "weddings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       invitation_links: {
         Row: {
           country_code: string | null
