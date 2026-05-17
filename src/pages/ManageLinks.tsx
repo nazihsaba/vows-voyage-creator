@@ -65,7 +65,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface WeddingTable {
+  id: string;
+  table_number: number;
+  name: string | null;
+}
 
 interface InvitationLink {
   id: string;
@@ -135,6 +142,15 @@ const ManageLinks = () => {
   const [venuePayUrl, setVenuePayUrl] = useState<string | null>(null);
   const [venuePayError, setVenuePayError] = useState<string | null>(null);
   const [genState, setGenState] = useState(getGenerationState());
+  const [weddingTables, setWeddingTables] = useState<WeddingTable[]>([]);
+  const [createTableOpen, setCreateTableOpen] = useState(false);
+  const [tableForm, setTableForm] = useState<{
+    table_number: string;
+    name: string;
+    selectedInviteeIds: string[];
+  }>({ table_number: "", name: "", selectedInviteeIds: [] });
+  const [savingTable, setSavingTable] = useState(false);
+  const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
@@ -226,6 +242,14 @@ const ManageLinks = () => {
         });
         setInvitees(groupedInvitees);
       }
+
+      // Fetch wedding tables
+      const { data: tablesData } = await (supabase as any)
+        .from("wedding_tables")
+        .select("*")
+        .eq("wedding_id", weddingId)
+        .order("table_number", { ascending: true });
+      setWeddingTables((tablesData || []) as WeddingTable[]);
     } catch (error) {
       console.error("Error fetching data:", error);
       toast({
@@ -235,6 +259,85 @@ const ManageLinks = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const openCreateTableDialog = () => {
+    // suggest next available table number
+    const used = new Set<number>();
+    weddingTables.forEach((t) => used.add(t.table_number));
+    Object.values(invitees)
+      .flat()
+      .forEach((i) => {
+        if (i.table_number != null) used.add(i.table_number);
+      });
+    let next = 1;
+    while (used.has(next)) next++;
+    setTableForm({ table_number: String(next), name: "", selectedInviteeIds: [] });
+    setCreateTableOpen(true);
+  };
+
+  const handleCreateTable = async () => {
+    if (!weddingId) return;
+    const tableNum = parseInt(tableForm.table_number);
+    if (!tableNum || tableNum < 1) {
+      toast({ title: "Invalid table number", description: "Enter a positive number", variant: "destructive" });
+      return;
+    }
+    // Check uniqueness against existing tables
+    if (weddingTables.some((t) => t.table_number === tableNum)) {
+      toast({ title: "Table exists", description: `Table ${tableNum} already exists`, variant: "destructive" });
+      return;
+    }
+    setSavingTable(true);
+    try {
+      const { error: tErr } = await (supabase as any).from("wedding_tables").insert({
+        wedding_id: weddingId,
+        table_number: tableNum,
+        name: tableForm.name.trim() || null,
+      });
+      if (tErr) throw tErr;
+
+      if (tableForm.selectedInviteeIds.length > 0) {
+        const { error: uErr } = await (supabase as any)
+          .from("invitees")
+          .update({ table_number: tableNum })
+          .in("id", tableForm.selectedInviteeIds);
+        if (uErr) throw uErr;
+      }
+      toast({ title: "Table created", description: `Table ${tableNum} has been added` });
+      setCreateTableOpen(false);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Error", description: err.message || "Failed to create table", variant: "destructive" });
+    } finally {
+      setSavingTable(false);
+    }
+  };
+
+  const handleDeleteTable = async (tableNum: number) => {
+    if (!weddingId) return;
+    try {
+      // Unassign invitees from this table
+      await (supabase as any)
+        .from("invitees")
+        .update({ table_number: null })
+        .eq("table_number", tableNum)
+        .in(
+          "invitation_link_id",
+          links.map((l) => l.id),
+        );
+      await (supabase as any)
+        .from("wedding_tables")
+        .delete()
+        .eq("wedding_id", weddingId)
+        .eq("table_number", tableNum);
+      toast({ title: "Table deleted", description: `Table ${tableNum} removed` });
+      setDeleteTableId(null);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to delete table", variant: "destructive" });
     }
   };
 
@@ -1545,6 +1648,17 @@ const ManageLinks = () => {
 
                   {/* Tables Panel */}
                   <div className="w-full flex-shrink-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold text-foreground">Tables</h3>
+                      <Button
+                        size="sm"
+                        onClick={openCreateTableDialog}
+                        className="rounded-full text-xs h-8 px-3"
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        Create Table
+                      </Button>
+                    </div>
                     {(() => {
                       const tableMap: Record<
                         number,
@@ -1554,6 +1668,10 @@ const ManageLinks = () => {
                           inviteeList: { name: string; is_attending: boolean | null }[];
                         }
                       > = {};
+                      // Seed with explicitly-created tables (so empty ones show)
+                      weddingTables.forEach((t) => {
+                        tableMap[t.table_number] = { total: 0, attending: 0, inviteeList: [] };
+                      });
                       Object.values(invitees)
                         .flat()
                         .forEach((invitee) => {
@@ -1571,13 +1689,17 @@ const ManageLinks = () => {
                             });
                           }
                         });
+                      const nameByNum: Record<number, string | null> = {};
+                      weddingTables.forEach((t) => {
+                        nameByNum[t.table_number] = t.name;
+                      });
                       const tableNumbers = Object.keys(tableMap)
                         .map(Number)
                         .sort((a, b) => a - b);
                       if (tableNumbers.length === 0)
                         return (
                           <div className="text-center py-12 text-muted-foreground text-sm">
-                            No table numbers assigned yet. Edit a group to assign a table number.
+                            No tables yet. Click "Create Table" to add one.
                           </div>
                         );
                       return (
@@ -1586,6 +1708,8 @@ const ManageLinks = () => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
                             const isTableExpanded = !collapsedTables.includes(tableNum);
+                            const customName = nameByNum[tableNum];
+                            const isManagedTable = weddingTables.some((t) => t.table_number === tableNum);
                             return (
                               <div
                                 key={tableNum}
@@ -1601,15 +1725,18 @@ const ManageLinks = () => {
                                     )
                                   }
                                 >
-                                  <div className="flex items-center gap-1.5">
+                                  <div className="flex items-center gap-1.5 min-w-0">
                                     {isTableExpanded ? (
-                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                                     ) : (
-                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                                     )}
-                                    <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
+                                    <span className="font-semibold text-sm text-foreground truncate">
+                                      Table {tableNum}
+                                      {customName ? ` · ${customName}` : ""}
+                                    </span>
                                   </div>
-                                  <div className="flex items-center gap-1.5">
+                                  <div className="flex items-center gap-1.5 shrink-0">
                                     <span className="text-xs text-muted-foreground">
                                       {attending}/{total} attending
                                     </span>
@@ -1621,37 +1748,56 @@ const ManageLinks = () => {
                                         Full
                                       </Badge>
                                     )}
+                                    {isManagedTable && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setDeleteTableId(String(tableNum));
+                                        }}
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </div>
                                 {isTableExpanded && (
                                   <div className="mt-2 space-y-1 border-t pt-2">
-                                    {inviteeList.map((inv, i) => (
-                                      <div key={i} className="flex items-center justify-between text-xs">
-                                        <span className="truncate mr-2 text-foreground">{inv.name}</span>
-                                        {inv.is_attending === true ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Attending
-                                          </Badge>
-                                        ) : inv.is_attending === false ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Not Attending
-                                          </Badge>
-                                        ) : (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Pending
-                                          </Badge>
-                                        )}
+                                    {inviteeList.length === 0 ? (
+                                      <div className="text-[11px] text-muted-foreground italic">
+                                        No invitees seated yet
                                       </div>
-                                    ))}
+                                    ) : (
+                                      inviteeList.map((inv, i) => (
+                                        <div key={i} className="flex items-center justify-between text-xs">
+                                          <span className="truncate mr-2 text-foreground">{inv.name}</span>
+                                          {inv.is_attending === true ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Attending
+                                            </Badge>
+                                          ) : inv.is_attending === false ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Not Attending
+                                            </Badge>
+                                          ) : (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Pending
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      ))
+                                    )}
                                   </div>
                                 )}
                               </div>
@@ -2053,6 +2199,116 @@ const ManageLinks = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Create Table Dialog */}
+      <Dialog open={createTableOpen} onOpenChange={setCreateTableOpen}>
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create Table</DialogTitle>
+            <DialogDescription>
+              Set the table number and optionally a name, then choose who sits at this table.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="t-num">Table Number *</Label>
+                <Input
+                  id="t-num"
+                  type="number"
+                  min={1}
+                  value={tableForm.table_number}
+                  onChange={(e) => setTableForm((f) => ({ ...f, table_number: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="t-name">Name (optional)</Label>
+                <Input
+                  id="t-name"
+                  placeholder="e.g. Family"
+                  value={tableForm.name}
+                  onChange={(e) => setTableForm((f) => ({ ...f, name: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Select invitees</Label>
+              <div className="mt-2 border rounded-lg max-h-64 overflow-y-auto divide-y">
+                {(() => {
+                  const all = Object.values(invitees).flat();
+                  if (all.length === 0) {
+                    return (
+                      <div className="p-3 text-xs text-muted-foreground text-center">
+                        No invitees yet. Add invitees to a group first.
+                      </div>
+                    );
+                  }
+                  return all.map((inv) => {
+                    const checked = tableForm.selectedInviteeIds.includes(inv.id);
+                    const currentTable = inv.table_number;
+                    return (
+                      <label
+                        key={inv.id}
+                        className="flex items-center gap-2 p-2.5 text-sm cursor-pointer hover:bg-muted/40"
+                      >
+                        <Checkbox
+                          checked={checked}
+                          onCheckedChange={(v) => {
+                            setTableForm((f) => ({
+                              ...f,
+                              selectedInviteeIds: v
+                                ? [...f.selectedInviteeIds, inv.id]
+                                : f.selectedInviteeIds.filter((id) => id !== inv.id),
+                            }));
+                          }}
+                        />
+                        <span className="flex-1 truncate">{inv.name}</span>
+                        {currentTable != null && (
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                            Table {currentTable}
+                          </Badge>
+                        )}
+                      </label>
+                    );
+                  });
+                })()}
+              </div>
+              {tableForm.selectedInviteeIds.length > 0 && (
+                <p className="text-[11px] text-muted-foreground mt-1.5">
+                  {tableForm.selectedInviteeIds.length} selected. Re-assigning invitees from another table will move
+                  them here.
+                </p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateTableOpen(false)} disabled={savingTable}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateTable} disabled={savingTable}>
+              {savingTable ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!deleteTableId} onOpenChange={(o) => !o && setDeleteTableId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Table {deleteTableId}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Any invitees seated at this table will be unassigned. This won't delete the invitees themselves.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteTableId && handleDeleteTable(parseInt(deleteTableId))}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
