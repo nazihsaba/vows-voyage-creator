@@ -265,7 +265,7 @@ const ManageLinks = () => {
         variant: "destructive",
       });
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
