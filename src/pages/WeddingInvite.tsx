@@ -261,7 +261,9 @@ const WeddingInvite = () => {
             const { data: inviteesData } = await (supabase as any)
               .from("invitees")
               .select("*")
-              .eq("invitation_link_id", linkData.id);
+              .eq("invitation_link_id", linkData.id)
+              .order("display_order", { ascending: true })
+              .order("name");
 
             setInvitees(inviteesData || []);
 
