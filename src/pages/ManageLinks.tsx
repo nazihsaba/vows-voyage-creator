@@ -2222,7 +2222,7 @@ const ManageLinks = () => {
                 />
               </div>
               <div>
-                <Label htmlFor="t-name">Name (optional)</Label>
+                <Label htmlFor="t-name">Table Name (optional)</Label>
                 <Input
                   id="t-name"
                   placeholder="e.g. Family"
