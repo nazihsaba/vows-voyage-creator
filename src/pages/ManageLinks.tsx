@@ -209,6 +209,7 @@ const ManageLinks = () => {
           .from("invitees")
           .select("*")
           .in("invitation_link_id", linkIds)
+          .order("display_order", { ascending: true })
           .order("name");
 
         if (inviteesError) throw inviteesError;
