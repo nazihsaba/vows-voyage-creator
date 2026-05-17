@@ -1648,6 +1648,17 @@ const ManageLinks = () => {
 
                   {/* Tables Panel */}
                   <div className="w-full flex-shrink-0">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3 className="text-sm font-semibold text-foreground">Tables</h3>
+                      <Button
+                        size="sm"
+                        onClick={openCreateTableDialog}
+                        className="rounded-full text-xs h-8 px-3"
+                      >
+                        <Plus className="w-3.5 h-3.5 mr-1" />
+                        Create Table
+                      </Button>
+                    </div>
                     {(() => {
                       const tableMap: Record<
                         number,
@@ -1657,6 +1668,10 @@ const ManageLinks = () => {
                           inviteeList: { name: string; is_attending: boolean | null }[];
                         }
                       > = {};
+                      // Seed with explicitly-created tables (so empty ones show)
+                      weddingTables.forEach((t) => {
+                        tableMap[t.table_number] = { total: 0, attending: 0, inviteeList: [] };
+                      });
                       Object.values(invitees)
                         .flat()
                         .forEach((invitee) => {
@@ -1674,13 +1689,17 @@ const ManageLinks = () => {
                             });
                           }
                         });
+                      const nameByNum: Record<number, string | null> = {};
+                      weddingTables.forEach((t) => {
+                        nameByNum[t.table_number] = t.name;
+                      });
                       const tableNumbers = Object.keys(tableMap)
                         .map(Number)
                         .sort((a, b) => a - b);
                       if (tableNumbers.length === 0)
                         return (
                           <div className="text-center py-12 text-muted-foreground text-sm">
-                            No table numbers assigned yet. Edit a group to assign a table number.
+                            No tables yet. Click "Create Table" to add one.
                           </div>
                         );
                       return (
@@ -1689,6 +1708,8 @@ const ManageLinks = () => {
                             const { total, attending, inviteeList } = tableMap[tableNum];
                             const isFull = attending >= total && total > 0;
                             const isTableExpanded = !collapsedTables.includes(tableNum);
+                            const customName = nameByNum[tableNum];
+                            const isManagedTable = weddingTables.some((t) => t.table_number === tableNum);
                             return (
                               <div
                                 key={tableNum}
@@ -1704,15 +1725,18 @@ const ManageLinks = () => {
                                     )
                                   }
                                 >
-                                  <div className="flex items-center gap-1.5">
+                                  <div className="flex items-center gap-1.5 min-w-0">
                                     {isTableExpanded ? (
-                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground" />
+                                      <ChevronDown className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                                     ) : (
-                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground" />
+                                      <ChevronRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
                                     )}
-                                    <span className="font-semibold text-sm text-foreground">Table {tableNum}</span>
+                                    <span className="font-semibold text-sm text-foreground truncate">
+                                      Table {tableNum}
+                                      {customName ? ` · ${customName}` : ""}
+                                    </span>
                                   </div>
-                                  <div className="flex items-center gap-1.5">
+                                  <div className="flex items-center gap-1.5 shrink-0">
                                     <span className="text-xs text-muted-foreground">
                                       {attending}/{total} attending
                                     </span>
@@ -1724,37 +1748,56 @@ const ManageLinks = () => {
                                         Full
                                       </Badge>
                                     )}
+                                    {isManagedTable && (
+                                      <Button
+                                        variant="ghost"
+                                        size="icon"
+                                        className="h-6 w-6 text-muted-foreground hover:text-destructive"
+                                        onClick={(e) => {
+                                          e.stopPropagation();
+                                          setDeleteTableId(String(tableNum));
+                                        }}
+                                      >
+                                        <Trash2 className="w-3 h-3" />
+                                      </Button>
+                                    )}
                                   </div>
                                 </div>
                                 {isTableExpanded && (
                                   <div className="mt-2 space-y-1 border-t pt-2">
-                                    {inviteeList.map((inv, i) => (
-                                      <div key={i} className="flex items-center justify-between text-xs">
-                                        <span className="truncate mr-2 text-foreground">{inv.name}</span>
-                                        {inv.is_attending === true ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Attending
-                                          </Badge>
-                                        ) : inv.is_attending === false ? (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Not Attending
-                                          </Badge>
-                                        ) : (
-                                          <Badge
-                                            variant="secondary"
-                                            className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0"
-                                          >
-                                            Pending
-                                          </Badge>
-                                        )}
+                                    {inviteeList.length === 0 ? (
+                                      <div className="text-[11px] text-muted-foreground italic">
+                                        No invitees seated yet
                                       </div>
-                                    ))}
+                                    ) : (
+                                      inviteeList.map((inv, i) => (
+                                        <div key={i} className="flex items-center justify-between text-xs">
+                                          <span className="truncate mr-2 text-foreground">{inv.name}</span>
+                                          {inv.is_attending === true ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-emerald-100 text-emerald-700 border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Attending
+                                            </Badge>
+                                          ) : inv.is_attending === false ? (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-red-100 text-red-700 border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Not Attending
+                                            </Badge>
+                                          ) : (
+                                            <Badge
+                                              variant="secondary"
+                                              className="bg-amber-100 text-[#865814] border-0 text-[10px] px-1.5 py-0"
+                                            >
+                                              Pending
+                                            </Badge>
+                                          )}
+                                        </div>
+                                      ))
+                                    )}
                                   </div>
                                 )}
                               </div>
