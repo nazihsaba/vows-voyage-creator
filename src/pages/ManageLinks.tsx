@@ -65,7 +65,14 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+
+interface WeddingTable {
+  id: string;
+  table_number: number;
+  name: string | null;
+}
 
 interface InvitationLink {
   id: string;
