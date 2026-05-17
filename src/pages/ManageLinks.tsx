@@ -814,7 +814,7 @@ const ManageLinks = () => {
         tableMap[Number(tableNum)].forEach((inv) => {
           const link = links.find((l) => l.id === inv.invitation_link_id);
           rows.push({
-            "Link Name": link?.link_name || "—",
+            "Group Name": link?.link_name || "—",
             "Guest Name": inv.name,
             "Table Number": Number(tableNum),
             "Table Name": tableInfo?.name || "",
