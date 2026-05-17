@@ -275,6 +275,7 @@ const ManageLinks = () => {
     let next = 1;
     while (used.has(next)) next++;
     setTableForm({ table_number: String(next), name: "", selectedInviteeIds: [] });
+    setTableInviteeSearch("");
     setCreateTableOpen(true);
   };
 
