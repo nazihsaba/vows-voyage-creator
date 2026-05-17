@@ -2258,22 +2258,12 @@ const ManageLinks = () => {
                   const filtered = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
                   if (filtered.length === 0) {
                     return (
-                      <div className="p-3 text-xs text-muted-foreground text-center">No invitees match "{tableInviteeSearch}"</div>
+                      <div className="p-3 text-xs text-muted-foreground text-center">
+                        No invitees match "{tableInviteeSearch}"
+                      </div>
                     );
                   }
-                  return filtered;
-                })()
-                  .toString === undefined
-                  ? null
-                  : null}
-                {(() => {
-                  const all = Object.values(invitees).flat();
-                  if (all.length === 0) return null;
-                  const q = tableInviteeSearch.trim().toLowerCase();
-                  const filtered = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
-                  return filtered;
-                })()
-                  return all.map((inv) => {
+                  return filtered.map((inv) => {
                     const checked = tableForm.selectedInviteeIds.includes(inv.id);
                     const currentTable = inv.table_number;
                     return (
