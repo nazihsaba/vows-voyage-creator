@@ -151,6 +151,7 @@ const ManageLinks = () => {
   }>({ table_number: "", name: "", selectedInviteeIds: [] });
   const [savingTable, setSavingTable] = useState(false);
   const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
+  const [tableInviteeSearch, setTableInviteeSearch] = useState("");
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
