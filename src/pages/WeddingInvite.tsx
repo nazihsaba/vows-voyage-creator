@@ -14,6 +14,7 @@ import { downloadCardAsImage } from "@/utils/downloadCard";
 import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 import waxSealHeart from "@/assets/wax-seal-heart.webp";
 import paperTexture from "@/assets/envelope-paper-texture.jpeg";
+import { parseLocalDate } from "@/lib/weddingDate";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();

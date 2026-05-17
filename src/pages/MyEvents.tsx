@@ -48,6 +48,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import { parseLocalDate } from "@/lib/weddingDate";
 
 interface Wedding {
   id: string;
