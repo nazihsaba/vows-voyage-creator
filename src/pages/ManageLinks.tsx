@@ -810,13 +810,14 @@ const ManageLinks = () => {
     Object.keys(tableMap)
       .sort((a, b) => Number(a) - Number(b))
       .forEach((tableNum) => {
+        const tableInfo = weddingTables.find((t) => t.table_number === Number(tableNum));
         tableMap[Number(tableNum)].forEach((inv) => {
           const link = links.find((l) => l.id === inv.invitation_link_id);
           rows.push({
-            "Table #": Number(tableNum),
+            "Link Name": link?.link_name || "—",
             "Guest Name": inv.name,
-            Side: link?.side || "—",
-            Status: inv.is_attending === true ? "Attending" : inv.is_attending === false ? "Not Attending" : "Pending",
+            "Table Number": Number(tableNum),
+            "Table Name": tableInfo?.name || "",
           });
         });
       });
