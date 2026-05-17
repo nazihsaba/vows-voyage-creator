@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMemo } from "react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
+import { getCountdownTarget } from "@/lib/weddingDate";
 
 interface CountdownTimerProps {
   targetDate: Date | string;
@@ -20,7 +21,7 @@ export const CountdownTimer = ({ targetDate, variant = "default" }: CountdownTim
   useEffect(() => {
     const updateCountdown = () => {
       const now = new Date();
-      const target = typeof targetDate === "string" ? new Date(targetDate) : targetDate;
+      const target = getCountdownTarget(targetDate);
       const diff = target.getTime() - now.getTime();
 
       if (diff > 0) {

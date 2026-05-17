@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import LumiereTornCard from "./LumiereTornCard";
+import { getCountdownTarget } from "@/lib/weddingDate";
 
 interface LumiereCountdownProps {
   targetDate: string;
@@ -14,7 +15,7 @@ const LumiereCountdown = ({ targetDate }: LumiereCountdownProps) => {
 
   useEffect(() => {
     const update = () => {
-      const diff = new Date(targetDate).getTime() - Date.now();
+      const diff = getCountdownTarget(targetDate).getTime() - Date.now();
       if (diff > 0) {
         setTimeRemaining({
           days: Math.floor(diff / 86400000),
