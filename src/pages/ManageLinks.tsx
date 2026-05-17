@@ -2340,12 +2340,12 @@ const ManageLinks = () => {
               </div>
               <Tabs defaultValue="without" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-9">
-                  <TabsTrigger value="without" className="text-xs">Without Table</TabsTrigger>
-                  <TabsTrigger value="with" className="text-xs">With Table</TabsTrigger>
+                  <TabsTrigger value="without" className="text-[11px] sm:text-xs px-1">Without Table</TabsTrigger>
+                  <TabsTrigger value="with" className="text-[11px] sm:text-xs px-1">With Table</TabsTrigger>
                 </TabsList>
                 {(["without", "with"] as const).map((tab) => (
                   <TabsContent key={tab} value={tab} className="mt-2">
-                    <div className="border rounded-lg max-h-64 overflow-y-auto divide-y">
+                    <div className="border rounded-lg max-h-64 sm:max-h-80 overflow-y-auto sm:grid sm:grid-cols-2 sm:divide-x divide-y sm:[&>*:nth-child(2n)]:border-l">
                       {(() => {
                         const all = Object.values(invitees).flat();
                         if (all.length === 0) {
