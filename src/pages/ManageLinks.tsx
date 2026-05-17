@@ -2199,6 +2199,116 @@ const ManageLinks = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      {/* Create Table Dialog */}
+      <Dialog open={createTableOpen} onOpenChange={setCreateTableOpen}>
+        <DialogContent className="sm:max-w-md max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Create Table</DialogTitle>
+            <DialogDescription>
+              Set the table number and optionally a name, then choose who sits at this table.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4 py-2">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <Label htmlFor="t-num">Table Number *</Label>
+                <Input
+                  id="t-num"
+                  type="number"
+                  min={1}
+                  value={tableForm.table_number}
+                  onChange={(e) => setTableForm((f) => ({ ...f, table_number: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="t-name">Name (optional)</Label>
+                <Input
+                  id="t-name"
+                  placeholder="e.g. Family"
+                  value={tableForm.name}
+                  onChange={(e) => setTableForm((f) => ({ ...f, name: e.target.value }))}
+                />
+              </div>
+            </div>
+            <div>
+              <Label>Select invitees</Label>
+              <div className="mt-2 border rounded-lg max-h-64 overflow-y-auto divide-y">
+                {(() => {
+                  const all = Object.values(invitees).flat();
+                  if (all.length === 0) {
+                    return (
+                      <div className="p-3 text-xs text-muted-foreground text-center">
+                        No invitees yet. Add invitees to a group first.
+                      </div>
+                    );
+                  }
+                  return all.map((inv) => {
+                    const checked = tableForm.selectedInviteeIds.includes(inv.id);
+                    const currentTable = inv.table_number;
+                    return (
+                      <label
+                        key={inv.id}
+                        className="flex items-center gap-2 p-2.5 text-sm cursor-pointer hover:bg-muted/40"
+                      >
+                        <Checkbox
+                          checked={checked}
+                          onCheckedChange={(v) => {
+                            setTableForm((f) => ({
+                              ...f,
+                              selectedInviteeIds: v
+                                ? [...f.selectedInviteeIds, inv.id]
+                                : f.selectedInviteeIds.filter((id) => id !== inv.id),
+                            }));
+                          }}
+                        />
+                        <span className="flex-1 truncate">{inv.name}</span>
+                        {currentTable != null && (
+                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                            Table {currentTable}
+                          </Badge>
+                        )}
+                      </label>
+                    );
+                  });
+                })()}
+              </div>
+              {tableForm.selectedInviteeIds.length > 0 && (
+                <p className="text-[11px] text-muted-foreground mt-1.5">
+                  {tableForm.selectedInviteeIds.length} selected. Re-assigning invitees from another table will move
+                  them here.
+                </p>
+              )}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCreateTableOpen(false)} disabled={savingTable}>
+              Cancel
+            </Button>
+            <Button onClick={handleCreateTable} disabled={savingTable}>
+              {savingTable ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : null}
+              Create
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <AlertDialog open={!!deleteTableId} onOpenChange={(o) => !o && setDeleteTableId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Table {deleteTableId}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Any invitees seated at this table will be unassigned. This won't delete the invitees themselves.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={() => deleteTableId && handleDeleteTable(parseInt(deleteTableId))}>
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
