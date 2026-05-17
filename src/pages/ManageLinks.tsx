@@ -41,6 +41,8 @@ import {
   Shield,
   AlertCircle,
   MessageCircle,
+  ArrowUp,
+  ArrowDown,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -209,6 +211,7 @@ const ManageLinks = () => {
           .from("invitees")
           .select("*")
           .in("invitation_link_id", linkIds)
+          .order("display_order", { ascending: true })
           .order("name");
 
         if (inviteesError) throw inviteesError;
@@ -369,6 +372,16 @@ const ManageLinks = () => {
     }
   };
 
+  const handleMoveInvitee = (index: number, direction: -1 | 1) => {
+    setEditInvitees((prev) => {
+      const next = [...prev];
+      const target = index + direction;
+      if (target < 0 || target >= next.length) return prev;
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
   const handleEditSave = async () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
@@ -393,13 +406,15 @@ const ManageLinks = () => {
         if (error) throw error;
       }
 
-      // Insert new invitees
+      // Insert new invitees (with display order based on current position)
       for (const inv of pendingNewInvitees) {
+        const order = editInvitees.findIndex((i) => i.id === inv.id);
         const { error } = await supabase.from("invitees").insert({
           invitation_link_id: inv.invitation_link_id,
           name: inv.name.replace(/\b\w/g, (c) => c.toUpperCase()),
           is_attending: inv.is_attending,
           table_number: inv.table_number,
+          display_order: order >= 0 ? order : 0,
         } as any);
         if (error) throw error;
       }
@@ -414,6 +429,18 @@ const ManageLinks = () => {
           const { error } = await supabase.from("invitees").update(sanitizedUpdates).eq("id", id);
           if (error) throw error;
         }
+      }
+
+      // Persist display order for existing invitees whose position changed
+      for (let i = 0; i < editInvitees.length; i++) {
+        const inv = editInvitees[i];
+        if (inv.id.startsWith("temp-")) continue;
+        if (pendingDeleteIds.includes(inv.id)) continue;
+        const { error } = await (supabase as any)
+          .from("invitees")
+          .update({ display_order: i })
+          .eq("id", inv.id);
+        if (error) throw error;
       }
 
       toast({ title: "Success", description: "Link updated successfully" });
@@ -1813,11 +1840,33 @@ const ManageLinks = () => {
                 {editInvitees.length === 0 ? (
                   <p className="text-sm text-muted-foreground italic py-2">No guests added yet</p>
                 ) : (
-                  editInvitees.map((invitee) => (
+                  editInvitees.map((invitee, idx) => (
                     <div
                       key={invitee.id}
                       className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5 sm:py-2"
                     >
+                      <div className="flex flex-col flex-shrink-0 mr-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-4 w-5 p-0 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={idx === 0}
+                          onClick={() => handleMoveInvitee(idx, -1)}
+                          aria-label="Move guest up"
+                        >
+                          <ArrowUp className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-4 w-5 p-0 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={idx === editInvitees.length - 1}
+                          onClick={() => handleMoveInvitee(idx, 1)}
+                          aria-label="Move guest down"
+                        >
+                          <ArrowDown className="w-3 h-3" />
+                        </Button>
+                      </div>
                       <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <div className="flex items-center gap-1">

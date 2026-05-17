@@ -137,6 +137,7 @@ export type Database = {
       invitees: {
         Row: {
           created_at: string
+          display_order: number
           id: string
           invitation_link_id: string
           is_attending: boolean | null
@@ -145,6 +146,7 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          display_order?: number
           id?: string
           invitation_link_id: string
           is_attending?: boolean | null
@@ -153,6 +155,7 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          display_order?: number
           id?: string
           invitation_link_id?: string
           is_attending?: boolean | null
