@@ -2338,57 +2338,73 @@ const ManageLinks = () => {
                   className="pl-8 h-9"
                 />
               </div>
-              <div className="border rounded-lg max-h-64 overflow-y-auto divide-y">
-                {(() => {
-                  const all = Object.values(invitees).flat();
-                  if (all.length === 0) {
-                    return (
-                      <div className="p-3 text-xs text-muted-foreground text-center">
-                        No invitees yet. Add invitees to a group first.
-                      </div>
-                    );
-                  }
-                  const q = tableInviteeSearch.trim().toLowerCase();
-                  const filtered = q ? all.filter((i) => i.name.toLowerCase().includes(q)) : all;
-                  if (filtered.length === 0) {
-                    return (
-                      <div className="p-3 text-xs text-muted-foreground text-center">
-                        No invitees match "{tableInviteeSearch}"
-                      </div>
-                    );
-                  }
-                  return filtered.map((inv) => {
-                    const checked = tableForm.selectedInviteeIds.includes(inv.id);
-                    const currentTable = inv.table_number;
-                    const isOnThisTable =
-                      editingTable && currentTable === editingTable.originalNumber;
-                    return (
-                      <label
-                        key={inv.id}
-                        className="flex items-center gap-2 p-2.5 text-sm cursor-pointer hover:bg-muted/40"
-                      >
-                        <Checkbox
-                          checked={checked}
-                          onCheckedChange={(v) => {
-                            setTableForm((f) => ({
-                              ...f,
-                              selectedInviteeIds: v
-                                ? [...f.selectedInviteeIds, inv.id]
-                                : f.selectedInviteeIds.filter((id) => id !== inv.id),
-                            }));
-                          }}
-                        />
-                        <span className="flex-1 truncate">{inv.name}</span>
-                        {currentTable != null && !isOnThisTable && (
-                          <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                            Table {currentTable}
-                          </Badge>
-                        )}
-                      </label>
-                    );
-                  });
-                })()}
-              </div>
+              <Tabs defaultValue="without" className="w-full">
+                <TabsList className="grid w-full grid-cols-2 h-9">
+                  <TabsTrigger value="without" className="text-xs">Without Table</TabsTrigger>
+                  <TabsTrigger value="with" className="text-xs">With Table</TabsTrigger>
+                </TabsList>
+                {(["without", "with"] as const).map((tab) => (
+                  <TabsContent key={tab} value={tab} className="mt-2">
+                    <div className="border rounded-lg max-h-64 overflow-y-auto divide-y">
+                      {(() => {
+                        const all = Object.values(invitees).flat();
+                        if (all.length === 0) {
+                          return (
+                            <div className="p-3 text-xs text-muted-foreground text-center">
+                              No invitees yet. Add invitees to a group first.
+                            </div>
+                          );
+                        }
+                        const q = tableInviteeSearch.trim().toLowerCase();
+                        const scoped = all.filter((i) => {
+                          const isOnThisTable =
+                            editingTable && i.table_number === editingTable.originalNumber;
+                          const hasTable = i.table_number != null && !isOnThisTable;
+                          return tab === "with" ? hasTable : !hasTable;
+                        });
+                        const filtered = q ? scoped.filter((i) => i.name.toLowerCase().includes(q)) : scoped;
+                        if (filtered.length === 0) {
+                          return (
+                            <div className="p-3 text-xs text-muted-foreground text-center">
+                              {q ? `No invitees match "${tableInviteeSearch}"` : "No invitees in this group."}
+                            </div>
+                          );
+                        }
+                        return filtered.map((inv) => {
+                          const checked = tableForm.selectedInviteeIds.includes(inv.id);
+                          const currentTable = inv.table_number;
+                          const isOnThisTable =
+                            editingTable && currentTable === editingTable.originalNumber;
+                          return (
+                            <label
+                              key={inv.id}
+                              className="flex items-center gap-2 p-2.5 text-sm cursor-pointer hover:bg-muted/40"
+                            >
+                              <Checkbox
+                                checked={checked}
+                                onCheckedChange={(v) => {
+                                  setTableForm((f) => ({
+                                    ...f,
+                                    selectedInviteeIds: v
+                                      ? [...f.selectedInviteeIds, inv.id]
+                                      : f.selectedInviteeIds.filter((id) => id !== inv.id),
+                                  }));
+                                }}
+                              />
+                              <span className="flex-1 truncate">{inv.name}</span>
+                              {currentTable != null && !isOnThisTable && (
+                                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                                  Table {currentTable}
+                                </Badge>
+                              )}
+                            </label>
+                          );
+                        });
+                      })()}
+                    </div>
+                  </TabsContent>
+                ))}
+              </Tabs>
               {tableForm.selectedInviteeIds.length > 0 && (
                 <p className="text-[11px] text-muted-foreground mt-1.5">
                   {tableForm.selectedInviteeIds.length} selected. Re-assigning invitees from another table will move
