@@ -1840,11 +1840,33 @@ const ManageLinks = () => {
                 {editInvitees.length === 0 ? (
                   <p className="text-sm text-muted-foreground italic py-2">No guests added yet</p>
                 ) : (
-                  editInvitees.map((invitee) => (
+                  editInvitees.map((invitee, idx) => (
                     <div
                       key={invitee.id}
                       className="flex items-center justify-between rounded-lg bg-muted/40 px-3 py-2.5 sm:py-2"
                     >
+                      <div className="flex flex-col flex-shrink-0 mr-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-4 w-5 p-0 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={idx === 0}
+                          onClick={() => handleMoveInvitee(idx, -1)}
+                          aria-label="Move guest up"
+                        >
+                          <ArrowUp className="w-3 h-3" />
+                        </Button>
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-4 w-5 p-0 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={idx === editInvitees.length - 1}
+                          onClick={() => handleMoveInvitee(idx, 1)}
+                          aria-label="Move guest down"
+                        >
+                          <ArrowDown className="w-3 h-3" />
+                        </Button>
+                      </div>
                       <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <div className="flex items-center gap-1">
