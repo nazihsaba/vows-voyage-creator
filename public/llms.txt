@@ -1,0 +1,9 @@
+# Auréa Invites
+
+> Design beautiful digital wedding invitations, manage your guest list, collect RSVPs, and plan your seating — all from one elegant platform.
+
+Auréa Invites helps couples create premium digital wedding invitations from a curated set of templates, share them with guests via personalized links, collect RSVPs, manage tables and seating, and plan their venue layout.
+
+## Pages
+
+- [Home](/): Overview of Auréa Invites and its wedding invitation templates.
