@@ -262,6 +262,85 @@ const ManageLinks = () => {
     }
   };
 
+  const openCreateTableDialog = () => {
+    // suggest next available table number
+    const used = new Set<number>();
+    weddingTables.forEach((t) => used.add(t.table_number));
+    Object.values(invitees)
+      .flat()
+      .forEach((i) => {
+        if (i.table_number != null) used.add(i.table_number);
+      });
+    let next = 1;
+    while (used.has(next)) next++;
+    setTableForm({ table_number: String(next), name: "", selectedInviteeIds: [] });
+    setCreateTableOpen(true);
+  };
+
+  const handleCreateTable = async () => {
+    if (!weddingId) return;
+    const tableNum = parseInt(tableForm.table_number);
+    if (!tableNum || tableNum < 1) {
+      toast({ title: "Invalid table number", description: "Enter a positive number", variant: "destructive" });
+      return;
+    }
+    // Check uniqueness against existing tables
+    if (weddingTables.some((t) => t.table_number === tableNum)) {
+      toast({ title: "Table exists", description: `Table ${tableNum} already exists`, variant: "destructive" });
+      return;
+    }
+    setSavingTable(true);
+    try {
+      const { error: tErr } = await (supabase as any).from("wedding_tables").insert({
+        wedding_id: weddingId,
+        table_number: tableNum,
+        name: tableForm.name.trim() || null,
+      });
+      if (tErr) throw tErr;
+
+      if (tableForm.selectedInviteeIds.length > 0) {
+        const { error: uErr } = await (supabase as any)
+          .from("invitees")
+          .update({ table_number: tableNum })
+          .in("id", tableForm.selectedInviteeIds);
+        if (uErr) throw uErr;
+      }
+      toast({ title: "Table created", description: `Table ${tableNum} has been added` });
+      setCreateTableOpen(false);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      console.error(err);
+      toast({ title: "Error", description: err.message || "Failed to create table", variant: "destructive" });
+    } finally {
+      setSavingTable(false);
+    }
+  };
+
+  const handleDeleteTable = async (tableNum: number) => {
+    if (!weddingId) return;
+    try {
+      // Unassign invitees from this table
+      await (supabase as any)
+        .from("invitees")
+        .update({ table_number: null })
+        .eq("table_number", tableNum)
+        .in(
+          "invitation_link_id",
+          links.map((l) => l.id),
+        );
+      await (supabase as any)
+        .from("wedding_tables")
+        .delete()
+        .eq("wedding_id", weddingId)
+        .eq("table_number", tableNum);
+      toast({ title: "Table deleted", description: `Table ${tableNum} removed` });
+      setDeleteTableId(null);
+      setRefresh((r) => r + 1);
+    } catch (err: any) {
+      toast({ title: "Error", description: err.message || "Failed to delete table", variant: "destructive" });
+    }
+  };
+
   const getInviteUrl = (linkName: string, numberOfPersons: number) => {
     const sanitizedLinkName = linkName
       .toLowerCase()
