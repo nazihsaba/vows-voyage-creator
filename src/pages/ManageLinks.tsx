@@ -372,6 +372,16 @@ const ManageLinks = () => {
     }
   };
 
+  const handleMoveInvitee = (index: number, direction: -1 | 1) => {
+    setEditInvitees((prev) => {
+      const next = [...prev];
+      const target = index + direction;
+      if (target < 0 || target >= next.length) return prev;
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    });
+  };
+
   const handleEditSave = async () => {
     if (!editingLink || !editForm.number_of_persons) return;
     try {
