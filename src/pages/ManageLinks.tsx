@@ -152,6 +152,7 @@ const ManageLinks = () => {
   const [savingTable, setSavingTable] = useState(false);
   const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
   const [tableInviteeSearch, setTableInviteeSearch] = useState("");
+  const [editingTable, setEditingTable] = useState<{ id: string; originalNumber: number } | null>(null);
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
