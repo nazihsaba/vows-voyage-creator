@@ -135,7 +135,8 @@ export const RsvpSection = ({
                   placeholder={t("rsvp.wishesPlaceholder")}
                   rows={4}
                   maxLength={1000}
-                  className="resize-none bg-white"
+                  style={{ fontFamily: "var(--font-template-body)" }}
+                  className="resize-none bg-white placeholder:[font-family:var(--font-template-body)]"
                 />
               </div>
               <Button
