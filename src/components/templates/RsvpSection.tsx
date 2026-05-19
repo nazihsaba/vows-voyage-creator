@@ -72,7 +72,7 @@ export const RsvpSection = ({
                       key={invitee.id}
                       className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200`}
                     >
-                      <span className={`text-xl font-serif ${accentColorClass}`}>{invitee.name}</span>
+                      <span className="text-xl font-serif text-black">{invitee.name}</span>
                       <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${invitee.name}`}>
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                           <Checkbox
