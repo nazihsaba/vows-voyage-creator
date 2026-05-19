@@ -78,25 +78,23 @@ export const RsvpSection = ({
                       className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200`}
                     >
                       <span className={`text-xl font-serif ${accentColorClass}`}>{invitee.name}</span>
-                      <div className="flex items-center gap-2" role="group" aria-label={`RSVP for ${invitee.name}`}>
-                        <button
-                          type="button"
-                          disabled={disabled}
-                          onClick={() => handleRsvpToggle(invitee.id, isAttending ? null : true)}
-                          aria-pressed={isAttending}
-                          className={cn(baseBtn, isAttending ? accentBg : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
-                        >
-                          {t("rsvp.attending")}
-                        </button>
-                        <button
-                          type="button"
-                          disabled={disabled}
-                          onClick={() => handleRsvpToggle(invitee.id, isNotAttending ? null : false)}
-                          aria-pressed={isNotAttending}
-                          className={cn(baseBtn, isNotAttending ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
-                        >
-                          {t("rsvp.notAttending")}
-                        </button>
+                      <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${invitee.name}`}>
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                          <Checkbox
+                            disabled={disabled}
+                            checked={isAttending}
+                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked ? true : null)}
+                          />
+                          <span className="text-sm text-gray-700">{t("rsvp.attending")}</span>
+                        </label>
+                        <label className="flex items-center gap-2 cursor-pointer select-none">
+                          <Checkbox
+                            disabled={disabled}
+                            checked={isNotAttending}
+                            onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked ? false : null)}
+                          />
+                          <span className="text-sm text-gray-700">{t("rsvp.notAttending")}</span>
+                        </label>
                       </div>
                     </div>
                   );
