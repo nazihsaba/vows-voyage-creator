@@ -424,26 +424,28 @@ export const AuraTemplate = ({
           </section>
         )}
 
-        {/* ===== FULL-WIDTH GALLERY IMAGE ===== */}
-        <AnimatedSection animation="fade-in">
-          <section className="w-full px-4 py-12">
-            <div className="max-w-6xl mx-auto">
-              <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
-                <img
-                  src={
-                    gallery && gallery.length > 0
-                      ? gallery[0].image_url
-                      : "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=1200&h=800&fit=crop"
-                  }
-                  alt="Wedding moment"
-                  className="w-full h-full object-cover"
-                  style={{ objectPosition: `50% ${Math.min(100, Math.max(0, gallery?.[0]?.position_y ?? 50))}%` }}
-                  loading="lazy"
-                />
+        {/* ===== FULL-WIDTH ENDING IMAGE ===== */}
+        {(wedding.aura_ending_image_url || (gallery && gallery.length > 0)) && (
+          <AnimatedSection animation="fade-in">
+            <section className="w-full px-4 py-12">
+              <div className="max-w-6xl mx-auto">
+                <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
+                  <img
+                    src={wedding.aura_ending_image_url || gallery[0].image_url}
+                    alt="Wedding moment"
+                    className="w-full h-full object-cover"
+                    style={{
+                      objectPosition: wedding.aura_ending_image_url
+                        ? "50% 50%"
+                        : `50% ${Math.min(100, Math.max(0, gallery?.[0]?.position_y ?? 50))}%`,
+                    }}
+                    loading="lazy"
+                  />
+                </div>
               </div>
-            </div>
-          </section>
-        </AnimatedSection>
+            </section>
+          </AnimatedSection>
+        )}
 
         {/* ===== RSVP SECTION ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
