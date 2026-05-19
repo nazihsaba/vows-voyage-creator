@@ -175,6 +175,7 @@ export type Database = {
           is_attending: boolean | null
           name: string
           table_number: number | null
+          wishes_message: string | null
         }
         Insert: {
           created_at?: string
@@ -184,6 +185,7 @@ export type Database = {
           is_attending?: boolean | null
           name: string
           table_number?: number | null
+          wishes_message?: string | null
         }
         Update: {
           created_at?: string
@@ -193,6 +195,7 @@ export type Database = {
           is_attending?: boolean | null
           name?: string
           table_number?: number | null
+          wishes_message?: string | null
         }
         Relationships: [
           {
@@ -466,6 +469,7 @@ export type Database = {
           video_url: string | null
           wedding_date: string
           welcoming_text: string | null
+          wishes_enabled: boolean
         }
         Insert: {
           audio_end_time?: number | null
@@ -510,6 +514,7 @@ export type Database = {
           video_url?: string | null
           wedding_date: string
           welcoming_text?: string | null
+          wishes_enabled?: boolean
         }
         Update: {
           audio_end_time?: number | null
@@ -554,6 +559,7 @@ export type Database = {
           video_url?: string | null
           wedding_date?: string
           welcoming_text?: string | null
+          wishes_enabled?: boolean
         }
         Relationships: []
       }
