@@ -44,6 +44,9 @@ export const RsvpSection = ({
   const isArabic = i18n.language === 'ar';
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
+  const wishesEnabled = !!wedding?.wishes_enabled;
+  const [wishesMessage, setWishesMessage] = useState("");
+
 
   return (
     <AnimatedSection animation="fade-up">
