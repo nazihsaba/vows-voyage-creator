@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
+
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
