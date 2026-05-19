@@ -430,6 +430,7 @@ export type Database = {
           audio_end_time: number | null
           audio_start_time: number | null
           audio_url: string | null
+          aura_ending_image_url: string | null
           bride_family: string | null
           bride_name: string
           closing_message: string | null
@@ -476,6 +477,7 @@ export type Database = {
           audio_end_time?: number | null
           audio_start_time?: number | null
           audio_url?: string | null
+          aura_ending_image_url?: string | null
           bride_family?: string | null
           bride_name: string
           closing_message?: string | null
@@ -522,6 +524,7 @@ export type Database = {
           audio_end_time?: number | null
           audio_start_time?: number | null
           audio_url?: string | null
+          aura_ending_image_url?: string | null
           bride_family?: string | null
           bride_name?: string
           closing_message?: string | null
