@@ -90,39 +90,14 @@ export const RsvpSection = ({
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
-                {wishesEnabled && !isRsvpDeadlinePassed && (
-                  <div className="py-12">
-                  <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200 whitespace-nowrap max-w-[calc(100%-2rem)]">
-                      <Label
-                        htmlFor="wishes-message"
-                        className="text-[11px] uppercase tracking-[0.18em] text-gray-600 font-medium"
-                        style={{ fontFamily: "var(--font-template-body)" }}
-                      >
-                        {t("rsvp.wishesTitle")}
-                      </Label>
-                    </div>
-                    <Textarea
-                      id="wishes-message"
-                      value={wishesMessage}
-                      onChange={(e) => setWishesMessage(e.target.value.slice(0, 1000))}
-                      placeholder={t("rsvp.wishesPlaceholder")}
-                      rows={4}
-                      maxLength={1000}
-                      style={{ fontFamily: "var(--font-template-body)" }}
-                      className="resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:[font-family:var(--font-template-body)] placeholder:italic text-[#3e2723] p-0"
-                    />
-                    <div className="flex justify-end mt-2">
-                      <span className="text-[11px] text-gray-500 tabular-nums">{wishesMessage.length}/1000</span>
-                    </div>
-                  </div>
-                  </div>
+                {showWishes && (
+                  <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="inline" />
                 )}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
                 ) : (
                   <Button
-                    onClick={() => handleRsvpSubmit(wishesEnabled ? wishesMessage.trim() : undefined)}
+                    onClick={() => handleRsvpSubmit(showWishes ? wishesMessage.trim() : undefined)}
                     disabled={submittingRsvp}
                     className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                     size="lg"
