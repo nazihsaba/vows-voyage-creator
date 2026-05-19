@@ -206,6 +206,7 @@ const WeddingForm = () => {
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const isLumiereTemplate = template === "lumiere-editorial";
+  const isDoreeTemplate = template === "bible-verse-tabs";
   const isEclatTemplate = template === "classic-romance";
   const isVeriteTemplate = template === "modern-wedding";
   // Templates that show an optional Welcome Drink Time inside Venue Details
