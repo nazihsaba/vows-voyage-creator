@@ -7,7 +7,6 @@ import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
 
-
 interface RsvpSectionProps {
   staticDeadline?: Date;
   wedding?: any;
@@ -22,7 +21,6 @@ interface RsvpSectionProps {
   bgClassName?: string;
   cardBgClassName?: string;
   accentColorClass?: string;
-
 }
 
 export const RsvpSection = ({
@@ -41,14 +39,13 @@ export const RsvpSection = ({
   accentColorClass = "text-primary",
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
-  const isArabic = i18n.language === 'ar';
+  const isArabic = i18n.language === "ar";
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const wishesEnabled = !!wedding?.wishes_enabled;
   // Show wishes in live invites only when enabled; always show in previews
   const showWishes = (wishesEnabled || isPreview) && !isRsvpDeadlinePassed;
   const [wishesMessage, setWishesMessage] = useState("");
-
 
   return (
     <AnimatedSection animation="fade-up">
@@ -99,9 +96,7 @@ export const RsvpSection = ({
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
-                {showWishes && (
-                  <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="inline" />
-                )}
+                {showWishes && <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="inline" />}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
                 ) : (
@@ -128,7 +123,7 @@ export const RsvpSection = ({
                 className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                 size="lg"
               >
-                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.sendWishes")}
+                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submitting")}
               </Button>
             </div>
           )}
@@ -143,7 +138,6 @@ export const RsvpSection = ({
               </p>
             </div>
           )}
-
         </div>
       </section>
     </AnimatedSection>
