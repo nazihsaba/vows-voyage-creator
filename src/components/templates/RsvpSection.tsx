@@ -89,7 +89,8 @@ export const RsvpSection = ({
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
                 {wishesEnabled && !isRsvpDeadlinePassed && (
-                  <div className="relative my-14 rounded-xl border border-gray-200 bg-white p-6 pt-8">
+                  <div className="py-12">
+                  <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
                       <Label
                         htmlFor="wishes-message"
@@ -113,6 +114,7 @@ export const RsvpSection = ({
                       <span className="text-[11px] text-gray-500 tabular-nums">{wishesMessage.length}/1000</span>
                     </div>
                   </div>
+                  </div>
                 )}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
@@ -132,8 +134,8 @@ export const RsvpSection = ({
 
           {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
           {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
-            <div className="space-y-4 pt-6 border-t border-gray-300">
-              <div className="relative my-14 rounded-xl border border-gray-200 bg-white p-6 pt-8">
+            <div className="space-y-8 pt-10 border-t border-gray-300">
+              <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
                   <Label
                     htmlFor="wishes-message-standalone"
