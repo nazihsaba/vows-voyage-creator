@@ -110,32 +110,9 @@ export const RsvpSection = ({
           )}
 
           {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
-          {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
+          {showWishes && invitees.length === 0 && (
             <div className="space-y-8 pt-10 border-t border-gray-300">
-              <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200 whitespace-nowrap max-w-[calc(100%-2rem)]">
-                  <Label
-                    htmlFor="wishes-message-standalone"
-                    className="text-[11px] uppercase tracking-[0.18em] text-gray-600 font-medium"
-                    style={{ fontFamily: "var(--font-template-body)" }}
-                  >
-                    {t("rsvp.wishesTitle")}
-                  </Label>
-                </div>
-                <Textarea
-                  id="wishes-message-standalone"
-                  value={wishesMessage}
-                  onChange={(e) => setWishesMessage(e.target.value.slice(0, 1000))}
-                  placeholder={t("rsvp.wishesPlaceholder")}
-                  rows={4}
-                  maxLength={1000}
-                  style={{ fontFamily: "var(--font-template-body)" }}
-                  className="resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:[font-family:var(--font-template-body)] placeholder:italic text-[#3e2723] p-0"
-                />
-                <div className="flex justify-end mt-2">
-                  <span className="text-[11px] text-gray-500 tabular-nums">{wishesMessage.length}/1000</span>
-                </div>
-              </div>
+              <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="standalone" />
               <Button
                 onClick={() => handleRsvpSubmit(wishesMessage.trim())}
                 disabled={submittingRsvp || !wishesMessage.trim()}
