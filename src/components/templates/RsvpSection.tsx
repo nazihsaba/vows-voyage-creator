@@ -89,10 +89,18 @@ export const RsvpSection = ({
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
                 {wishesEnabled && !isRsvpDeadlinePassed && (
-                  <div className="space-y-2">
-                    <Label htmlFor="wishes-message" className="text-template-body font-medium text-black" style={{ fontFamily: "var(--font-template-body)" }}>
-                      {t("rsvp.wishesTitle")}
-                    </Label>
+                  <div className="relative mt-6 rounded-2xl border border-[#e8dec6] bg-gradient-to-br from-white via-[#faf6ef] to-[#f3ebdc] p-6 pt-7 shadow-sm">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#e8dec6] shadow-sm">
+                      <span className="text-[#865814] text-sm leading-none">✦</span>
+                      <Label
+                        htmlFor="wishes-message"
+                        className="text-[11px] uppercase tracking-[0.18em] text-[#865814] font-medium"
+                        style={{ fontFamily: "var(--font-template-body)" }}
+                      >
+                        {t("rsvp.wishesTitle")}
+                      </Label>
+                      <span className="text-[#865814] text-sm leading-none">✦</span>
+                    </div>
                     <Textarea
                       id="wishes-message"
                       value={wishesMessage}
@@ -101,8 +109,11 @@ export const RsvpSection = ({
                       rows={4}
                       maxLength={1000}
                       style={{ fontFamily: "var(--font-template-body)" }}
-                      className="resize-none bg-white placeholder:[font-family:var(--font-template-body)]"
+                      className="resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:[font-family:var(--font-template-body)] placeholder:italic text-[#3e2723] p-0"
                     />
+                    <div className="flex justify-end mt-2">
+                      <span className="text-[11px] text-gray-500 tabular-nums">{wishesMessage.length}/1000</span>
+                    </div>
                   </div>
                 )}
                 {isRsvpDeadlinePassed ? (
@@ -124,10 +135,18 @@ export const RsvpSection = ({
           {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
           {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
             <div className="space-y-4 pt-6 border-t border-gray-300">
-              <div className="space-y-2">
-                <Label htmlFor="wishes-message-standalone" className="text-template-body font-medium text-black" style={{ fontFamily: "var(--font-template-body)" }}>
-                  {t("rsvp.wishesTitle")}
-                </Label>
+              <div className="relative mt-6 rounded-2xl border border-[#e8dec6] bg-gradient-to-br from-white via-[#faf6ef] to-[#f3ebdc] p-6 pt-7 shadow-sm">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#e8dec6] shadow-sm">
+                  <span className="text-[#865814] text-sm leading-none">✦</span>
+                  <Label
+                    htmlFor="wishes-message-standalone"
+                    className="text-[11px] uppercase tracking-[0.18em] text-[#865814] font-medium"
+                    style={{ fontFamily: "var(--font-template-body)" }}
+                  >
+                    {t("rsvp.wishesTitle")}
+                  </Label>
+                  <span className="text-[#865814] text-sm leading-none">✦</span>
+                </div>
                 <Textarea
                   id="wishes-message-standalone"
                   value={wishesMessage}
@@ -136,8 +155,11 @@ export const RsvpSection = ({
                   rows={4}
                   maxLength={1000}
                   style={{ fontFamily: "var(--font-template-body)" }}
-                  className="resize-none bg-white placeholder:[font-family:var(--font-template-body)]"
+                  className="resize-none border-0 bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 placeholder:[font-family:var(--font-template-body)] placeholder:italic text-[#3e2723] p-0"
                 />
+                <div className="flex justify-end mt-2">
+                  <span className="text-[11px] text-gray-500 tabular-nums">{wishesMessage.length}/1000</span>
+                </div>
               </div>
               <Button
                 onClick={() => handleRsvpSubmit(wishesMessage.trim())}
