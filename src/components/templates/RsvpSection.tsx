@@ -89,17 +89,15 @@ export const RsvpSection = ({
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
                 {wishesEnabled && !isRsvpDeadlinePassed && (
-                  <div className="relative mt-6 rounded-2xl border border-[#e8dec6] bg-gradient-to-br from-white via-[#faf6ef] to-[#f3ebdc] p-6 pt-7 shadow-sm">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 flex items-center gap-2 px-3 py-1 rounded-full bg-white border border-[#e8dec6] shadow-sm">
-                      <span className="text-[#865814] text-sm leading-none">✦</span>
+                  <div className="relative my-8 rounded-xl border border-gray-200 bg-white p-6 pt-8">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
                       <Label
                         htmlFor="wishes-message"
-                        className="text-[11px] uppercase tracking-[0.18em] text-[#865814] font-medium"
+                        className="text-[11px] uppercase tracking-[0.18em] text-gray-600 font-medium"
                         style={{ fontFamily: "var(--font-template-body)" }}
                       >
                         {t("rsvp.wishesTitle")}
                       </Label>
-                      <span className="text-[#865814] text-sm leading-none">✦</span>
                     </div>
                     <Textarea
                       id="wishes-message"
