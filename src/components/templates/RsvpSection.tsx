@@ -68,10 +68,6 @@ export const RsvpSection = ({
                   const isAttending = response === true;
                   const isNotAttending = response === false;
                   const disabled = isRsvpDeadlinePassed;
-                  const baseBtn =
-                    "flex-1 sm:flex-initial px-4 py-2 rounded-md text-sm font-medium border transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
-                  const accentBg =
-                    accentColorClass === "text-black" ? "bg-black text-white border-black" : "bg-primary text-white border-primary";
                   return (
                     <div
                       key={invitee.id}
