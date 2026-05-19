@@ -32,7 +32,7 @@ interface GraceTemplateProps {
   getFieldStyle: (fieldId: string) => any;
   invitees?: any[];
   rsvpResponses?: Record<string, boolean>;
-  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean | null) => void;
   handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
