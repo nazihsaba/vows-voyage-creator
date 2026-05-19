@@ -295,11 +295,43 @@ const WeddingInvite = () => {
   };
 
   const handleRsvpSubmit = async (wishesMessage?: string) => {
-    if (invitees.length === 0) return;
+    const trimmedMessage = (wishesMessage || "").trim();
+
+    // Standalone wishes-only submit (no invitee link opened)
+    if (invitees.length === 0) {
+      if (!trimmedMessage) return;
+      setSubmittingRsvp(true);
+      try {
+        await supabase.functions.invoke("rsvp-notification", {
+          body: {
+            wedding_id: wedding?.id,
+            invitation_link_id: null,
+            wishes_message: trimmedMessage,
+            responses: [],
+            number_of_persons: 0,
+          },
+        });
+        toast({
+          title: "Message Sent",
+          description: "Thank you for your heartfelt wishes!",
+        });
+      } catch (error) {
+        console.error("Error sending wishes:", error);
+        toast({
+          title: "Error",
+          description: "Failed to send your wishes. Please try again.",
+          variant: "destructive",
+        });
+      } finally {
+        setSubmittingRsvp(false);
+      }
+      return;
+    }
+
 
     setSubmittingRsvp(true);
     try {
-      const trimmedMessage = (wishesMessage || "").trim();
+
       const updates = invitees.map((invitee) =>
         supabase
           .from("invitees")

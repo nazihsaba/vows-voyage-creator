@@ -120,6 +120,33 @@ export const RsvpSection = ({
             </div>
           )}
 
+          {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
+          {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
+            <div className="space-y-4 pt-6 border-t border-gray-300">
+              <div className="space-y-2">
+                <Label htmlFor="wishes-message-standalone" className={`text-base font-medium ${accentColorClass}`}>
+                  {t("rsvp.wishesTitle")}
+                </Label>
+                <Textarea
+                  id="wishes-message-standalone"
+                  value={wishesMessage}
+                  onChange={(e) => setWishesMessage(e.target.value.slice(0, 1000))}
+                  placeholder={t("rsvp.wishesPlaceholder")}
+                  rows={4}
+                  maxLength={1000}
+                  className="resize-none bg-white"
+                />
+              </div>
+              <Button
+                onClick={() => handleRsvpSubmit(wishesMessage.trim())}
+                disabled={submittingRsvp || !wishesMessage.trim()}
+                className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
+                size="lg"
+              >
+                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.sendWishes")}
+              </Button>
+            </div>
+          )}
 
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">
@@ -131,6 +158,7 @@ export const RsvpSection = ({
               </p>
             </div>
           )}
+
         </div>
       </section>
     </AnimatedSection>

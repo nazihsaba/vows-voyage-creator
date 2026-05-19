@@ -42,6 +42,7 @@
     "numberOfGuests": "Number of Guests: {{count}}",
     "deadlinePassed": "RSVP deadline has passed",
     "submit": "Submit RSVP",
+    "sendWishes": "Send Wishes",
     "submitting": "Submitting...",
     "rsvpBy": "Please RSVP by:",
     "confirmBefore": "Kindly confirm your attendance before this date:",
