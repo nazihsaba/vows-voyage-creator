@@ -31,7 +31,7 @@ const WeddingInvite = () => {
   const [invitees, setInvitees] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [fieldCustomizations, setFieldCustomizations] = useState<any>({});
-  const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean>>({});
+  const [rsvpResponses, setRsvpResponses] = useState<Record<string, boolean | null>>({});
   const [submittingRsvp, setSubmittingRsvp] = useState(false);
   const [envelopeAssetsReady, setEnvelopeAssetsReady] = useState(false);
   const [isOwner, setIsOwner] = useState(false);
@@ -268,9 +268,9 @@ const WeddingInvite = () => {
 
             setInvitees(inviteesData || []);
 
-            const responses: Record<string, boolean> = {};
+            const responses: Record<string, boolean | null> = {};
             inviteesData?.forEach((invitee: any) => {
-              if (invitee.is_attending !== null) {
+              if (invitee.is_attending !== null && invitee.is_attending !== undefined) {
                 responses[invitee.id] = invitee.is_attending;
               }
             });
@@ -287,11 +287,16 @@ const WeddingInvite = () => {
     fetchWedding();
   }, [slug, linkSlug, isPreview, isDraftPreview]);
 
-  const handleRsvpToggle = (inviteeId: string, isAttending: boolean) => {
-    setRsvpResponses((prev) => ({
-      ...prev,
-      [inviteeId]: isAttending,
-    }));
+  const handleRsvpToggle = (inviteeId: string, isAttending: boolean | null) => {
+    setRsvpResponses((prev) => {
+      const next = { ...prev };
+      if (isAttending === null) {
+        delete next[inviteeId];
+      } else {
+        next[inviteeId] = isAttending;
+      }
+      return next;
+    });
   };
 
   const handleRsvpSubmit = async (wishesMessage?: string) => {
@@ -332,15 +337,17 @@ const WeddingInvite = () => {
     setSubmittingRsvp(true);
     try {
 
-      const updates = invitees.map((invitee) =>
-        supabase
+      const updates = invitees.map((invitee) => {
+        const resp = rsvpResponses[invitee.id];
+        const isAttendingValue: boolean | null = resp === true ? true : resp === false ? false : null;
+        return supabase
           .from("invitees")
           .update({
-            is_attending: rsvpResponses[invitee.id] === true,
+            is_attending: isAttendingValue,
             ...(trimmedMessage ? { wishes_message: trimmedMessage } : {}),
           })
-          .eq("id", invitee.id),
-      );
+          .eq("id", invitee.id);
+      });
 
       const results = await Promise.all(updates);
 
@@ -349,20 +356,27 @@ const WeddingInvite = () => {
         throw new Error("Failed to update some invitees");
       }
 
-      const updatedInvitees = invitees.map((invitee) => ({
-        ...invitee,
-        is_attending: rsvpResponses[invitee.id] === true,
-        wishes_message: trimmedMessage || invitee.wishes_message,
-      }));
+      const updatedInvitees = invitees.map((invitee) => {
+        const resp = rsvpResponses[invitee.id];
+        const isAttendingValue: boolean | null = resp === true ? true : resp === false ? false : null;
+        return {
+          ...invitee,
+          is_attending: isAttendingValue,
+          wishes_message: trimmedMessage || invitee.wishes_message,
+        };
+      });
       setInvitees(updatedInvitees);
 
       // Fire-and-forget notification email to event owner
       try {
-        const responses = invitees.map((inv) => ({
-          name: inv.name,
-          is_attending: rsvpResponses[inv.id] === true,
-        }));
-        const numberOfPersons = responses.filter((r) => r.is_attending).length;
+        const responses = invitees.map((inv) => {
+          const r = rsvpResponses[inv.id];
+          return {
+            name: inv.name,
+            is_attending: r === true ? true : r === false ? false : null,
+          };
+        });
+        const numberOfPersons = responses.filter((r) => r.is_attending === true).length;
         supabase.functions
           .invoke("rsvp-notification", {
             body: {

@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
+
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
+import { cn } from "@/lib/utils";
 
 
 interface RsvpSectionProps {
@@ -13,8 +13,8 @@ interface RsvpSectionProps {
   wedding?: any;
   isPreview?: boolean;
   invitees?: any[];
-  rsvpResponses?: Record<string, boolean>;
-  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  rsvpResponses?: Record<string, boolean | null | undefined>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean | null) => void;
   handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
@@ -62,29 +62,44 @@ export const RsvpSection = ({
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="space-y-4">
-                {invitees.map((invitee: any) => (
-                  <div
-                    key={invitee.id}
-                    className={`flex items-center justify-between py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200 hover:bg-[#f5f0e8] transition-colors`}
-                  >
-                    <span className={`text-xl font-serif ${accentColorClass}`}>{invitee.name}</span>
-                    <div className="flex items-center gap-3">
-                      <Checkbox
-                        id={`rsvp-${invitee.id}`}
-                        checked={rsvpResponses[invitee.id] === true}
-                        onCheckedChange={(checked) => handleRsvpToggle(invitee.id, checked as boolean)}
-                        disabled={isRsvpDeadlinePassed}
-                        className="h-5 w-5"
-                      />
-                      <Label
-                        htmlFor={`rsvp-${invitee.id}`}
-                        className={`text-base cursor-pointer font-medium ${isRsvpDeadlinePassed ? "text-gray-400" : "text-[#3e2723]"}`}
-                      >
-                        {rsvpResponses[invitee.id] === true ? t("rsvp.attending") : t("rsvp.willAttend")}
-                      </Label>
+                {invitees.map((invitee: any) => {
+                  const response = rsvpResponses[invitee.id];
+                  const isAttending = response === true;
+                  const isNotAttending = response === false;
+                  const disabled = isRsvpDeadlinePassed;
+                  const baseBtn =
+                    "flex-1 sm:flex-initial px-4 py-2 rounded-md text-sm font-medium border transition-colors disabled:opacity-50 disabled:cursor-not-allowed";
+                  const accentBg =
+                    accentColorClass === "text-black" ? "bg-black text-white border-black" : "bg-primary text-white border-primary";
+                  return (
+                    <div
+                      key={invitee.id}
+                      className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200`}
+                    >
+                      <span className={`text-xl font-serif ${accentColorClass}`}>{invitee.name}</span>
+                      <div className="flex items-center gap-2" role="group" aria-label={`RSVP for ${invitee.name}`}>
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => handleRsvpToggle(invitee.id, isAttending ? null : true)}
+                          aria-pressed={isAttending}
+                          className={cn(baseBtn, isAttending ? accentBg : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
+                        >
+                          {t("rsvp.attending")}
+                        </button>
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => handleRsvpToggle(invitee.id, isNotAttending ? null : false)}
+                          aria-pressed={isNotAttending}
+                          className={cn(baseBtn, isNotAttending ? "bg-gray-800 text-white border-gray-800" : "bg-white text-gray-700 border-gray-300 hover:bg-gray-50")}
+                        >
+                          {t("rsvp.notAttending")}
+                        </button>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
               <div className="pt-6 border-t border-gray-300 space-y-4">
                 <p className="text-lg font-semibold text-center text-[#3e2723]">

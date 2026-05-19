@@ -30,8 +30,8 @@ interface LumiereTemplateProps {
   getFieldValue: (fieldId: string, defaultValue: string) => string;
   getFieldStyle: (fieldId: string) => any;
   invitees?: any[];
-  rsvpResponses?: Record<string, boolean>;
-  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  rsvpResponses?: Record<string, boolean | null>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean | null) => void;
   handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
