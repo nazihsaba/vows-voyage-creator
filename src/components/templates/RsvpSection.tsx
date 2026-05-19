@@ -1,11 +1,11 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
+import { cn } from "@/lib/utils";
 
 
 interface RsvpSectionProps {
@@ -13,8 +13,8 @@ interface RsvpSectionProps {
   wedding?: any;
   isPreview?: boolean;
   invitees?: any[];
-  rsvpResponses?: Record<string, boolean>;
-  handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
+  rsvpResponses?: Record<string, boolean | null | undefined>;
+  handleRsvpToggle?: (inviteeId: string, isAttending: boolean | null) => void;
   handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
