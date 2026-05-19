@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { WishesSection } from "./WishesSection";
 
 
 interface RsvpSectionProps {
