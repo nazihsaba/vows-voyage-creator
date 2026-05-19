@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 
 interface Props {
@@ -9,13 +9,27 @@ interface Props {
   positionY: number;
   onPositionChange: (value: number) => void;
   onRemove: () => void;
+  onMoveUp?: () => void;
+  onMoveDown?: () => void;
+  canMoveUp?: boolean;
+  canMoveDown?: boolean;
 }
 
 /**
  * Single editable gallery thumbnail with vertical-position slider.
  * Used in both WeddingForm and RoseGoldTabsForm for existing & pending images.
  */
-const GalleryImageEditor = ({ imageUrl, altText, positionY, onPositionChange, onRemove }: Props) => {
+const GalleryImageEditor = ({
+  imageUrl,
+  altText,
+  positionY,
+  onPositionChange,
+  onRemove,
+  onMoveUp,
+  onMoveDown,
+  canMoveUp,
+  canMoveDown,
+}: Props) => {
   const imgRef = useRef<HTMLImageElement>(null);
   const clamped = Math.min(100, Math.max(0, positionY ?? 50));
 
@@ -39,6 +53,36 @@ const GalleryImageEditor = ({ imageUrl, altText, positionY, onPositionChange, on
         >
           <X className="w-4 h-4" />
         </Button>
+        {(onMoveUp || onMoveDown) && (
+          <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+            {onMoveUp && (
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8 shadow-md"
+                disabled={!canMoveUp}
+                onClick={onMoveUp}
+                aria-label="Move image earlier"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </Button>
+            )}
+            {onMoveDown && (
+              <Button
+                type="button"
+                variant="secondary"
+                size="icon"
+                className="h-8 w-8 shadow-md"
+                disabled={!canMoveDown}
+                onClick={onMoveDown}
+                aria-label="Move image later"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            )}
+          </div>
+        )}
       </div>
       <MainPhotoPositionSlider
         imageUrl={imageUrl}
