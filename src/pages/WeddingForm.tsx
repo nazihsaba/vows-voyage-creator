@@ -756,6 +756,39 @@ const WeddingForm = () => {
     });
   };
 
+  const movePendingGalleryImage = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= galleryFiles.length) return;
+    const swap = <T,>(arr: T[]) => {
+      const next = [...arr];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    };
+    setGalleryFiles((prev) => swap(prev));
+    setGalleryPreviews((prev) => swap(prev));
+    setGalleryFilePositions((prev) => swap(prev));
+  };
+
+  const moveExistingGalleryImage = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= existingGalleryImages.length) return;
+    const reordered = [...existingGalleryImages];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setExistingGalleryImages(reordered);
+    try {
+      await Promise.all(
+        reordered.map((img, i) =>
+          supabase
+            .from("gallery_images")
+            .update({ image_order: i + 1 } as any)
+            .eq("id", img.id),
+        ),
+      );
+    } catch (err) {
+      console.error("Failed to save gallery order:", err);
+    }
+  };
+
   const removeExistingGalleryImage = async (imageId: string) => {
     try {
       const { error } = await supabase.from("gallery_images").delete().eq("id", imageId);
@@ -2704,7 +2737,7 @@ const WeddingForm = () => {
                   {/* Existing Gallery Images */}
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {existingGalleryImages.map((image) => (
+                      {existingGalleryImages.map((image, index) => (
                         <GalleryImageEditor
                           key={image.id}
                           imageUrl={image.image_url}
@@ -2712,6 +2745,10 @@ const WeddingForm = () => {
                           positionY={image.position_y ?? 50}
                           onPositionChange={(v) => updateExistingGalleryPosition(image.id, v)}
                           onRemove={() => removeExistingGalleryImage(image.id)}
+                          onMoveUp={() => moveExistingGalleryImage(index, -1)}
+                          onMoveDown={() => moveExistingGalleryImage(index, 1)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < existingGalleryImages.length - 1}
                         />
                       ))}
                     </div>
@@ -2728,6 +2765,10 @@ const WeddingForm = () => {
                           positionY={galleryFilePositions[index] ?? 50}
                           onPositionChange={(v) => updatePendingGalleryPosition(index, v)}
                           onRemove={() => removeGalleryImage(index)}
+                          onMoveUp={() => movePendingGalleryImage(index, -1)}
+                          onMoveDown={() => movePendingGalleryImage(index, 1)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < galleryPreviews.length - 1}
                         />
                       ))}
                     </div>
