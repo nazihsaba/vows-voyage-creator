@@ -104,7 +104,7 @@ Deno.serve(async (req) => {
     const encodedSubject = `=?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`;
 
     const rfc2822 = [
-      `From: Auréa Invites <aaureainvites@gmail.com>`,
+      `From: =?UTF-8?B?${btoa(unescape(encodeURIComponent("Auréa Invites")))}?= <aaureainvites@gmail.com>`,
       `To: ${recipientEmail}`,
       `Subject: ${encodedSubject}`,
       `MIME-Version: 1.0`,
