@@ -331,7 +331,7 @@ const WeddingInvite = () => {
 
     setSubmittingRsvp(true);
     try {
-      const trimmedMessage = (wishesMessage || "").trim();
+
       const updates = invitees.map((invitee) =>
         supabase
           .from("invitees")
