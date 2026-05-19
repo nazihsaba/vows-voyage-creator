@@ -123,7 +123,7 @@ export const RsvpSection = ({
                 className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                 size="lg"
               >
-                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submitting")}
+                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submit")}
               </Button>
             </div>
           )}
