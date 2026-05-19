@@ -189,6 +189,7 @@ const WeddingForm = () => {
     audio_end_time: 0,
     main_picture_position_y: 50,
     envelope_animation_enabled: false,
+    wishes_enabled: false,
     template_fonts: {} as Record<string, string>,
   });
   const mainImgRef = useRef<HTMLImageElement>(null);
