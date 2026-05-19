@@ -37,7 +37,8 @@
   "rsvp": {
     "title": "Join Our Celebration",
     "subtitle": "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-    "attending": "Attending ✓",
+    "attending": "Attending",
+    "notAttending": "Not Attending",
     "willAttend": "Will Attend?",
     "numberOfGuests": "Number of Guests: {{count}}",
     "deadlinePassed": "RSVP deadline has passed",
