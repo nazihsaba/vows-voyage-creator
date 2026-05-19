@@ -118,20 +118,6 @@ export const RsvpSection = ({
             </div>
           )}
 
-          {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
-          {showWishes && invitees.length === 0 && (
-            <div className="space-y-8 pt-10 border-t border-gray-300">
-              <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="standalone" />
-              <Button
-                onClick={() => handleRsvpSubmit(wishesMessage.trim())}
-                disabled={submittingRsvp || !wishesMessage.trim()}
-                className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
-                size="lg"
-              >
-                {submittingRsvp ? t("rsvp.submitting") : t("rsvp.sendWishes")}
-              </Button>
-            </div>
-          )}
 
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">
