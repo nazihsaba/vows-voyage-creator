@@ -671,6 +671,22 @@ const WeddingForm = () => {
     setFormData({ ...formData, lumiere_ending_image_url: "" } as any);
   };
 
+  const handleAuraEndingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAuraEndingFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setAuraEndingPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeAuraEnding = () => {
+    setAuraEndingFile(null);
+    setAuraEndingPreview("");
+    setFormData({ ...formData, aura_ending_image_url: "" } as any);
+  };
+
   // Aggressive but high-quality gallery compression: smaller files = faster template render.
   const GALLERY_COMPRESS_OPTS = {
     maxDimension: 1600,
