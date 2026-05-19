@@ -129,6 +129,8 @@ const WeddingForm = () => {
   const [socialPreviewUrl, setSocialPreviewUrl] = useState<string>("");
   const [lumiereEndingFile, setLumiereEndingFile] = useState<File | null>(null);
   const [lumiereEndingPreview, setLumiereEndingPreview] = useState<string>("");
+  const [auraEndingFile, setAuraEndingFile] = useState<File | null>(null);
+  const [auraEndingPreview, setAuraEndingPreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
@@ -182,6 +184,7 @@ const WeddingForm = () => {
     video_url: "",
     video_poster_url: "",
     lumiere_ending_image_url: "",
+    aura_ending_image_url: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
@@ -203,6 +206,7 @@ const WeddingForm = () => {
   const isOpulenceTemplate = template === "opulence-curtain";
   const isGraceTemplate = template === "video-cinematic" || template === "template6";
   const isLumiereTemplate = template === "lumiere-editorial";
+  const isDoreeTemplate = template === "bible-verse-tabs";
   const isEclatTemplate = template === "classic-romance";
   const isVeriteTemplate = template === "modern-wedding";
   // Templates that show an optional Welcome Drink Time inside Venue Details
@@ -456,6 +460,9 @@ const WeddingForm = () => {
       if ((data as any).lumiere_ending_image_url) {
         setLumiereEndingPreview((data as any).lumiere_ending_image_url);
       }
+      if ((data as any).aura_ending_image_url) {
+        setAuraEndingPreview((data as any).aura_ending_image_url);
+      }
       if (data.audio_url) {
         // Audio is already uploaded, just show it in the preview
       }
@@ -662,6 +669,22 @@ const WeddingForm = () => {
     setLumiereEndingFile(null);
     setLumiereEndingPreview("");
     setFormData({ ...formData, lumiere_ending_image_url: "" } as any);
+  };
+
+  const handleAuraEndingChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setAuraEndingFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => setAuraEndingPreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const removeAuraEnding = () => {
+    setAuraEndingFile(null);
+    setAuraEndingPreview("");
+    setFormData({ ...formData, aura_ending_image_url: "" } as any);
   };
 
   // Aggressive but high-quality gallery compression: smaller files = faster template render.
@@ -967,6 +990,7 @@ const WeddingForm = () => {
       let videoUrl = formData.video_url;
       let videoPosterUrl = (formData as any).video_poster_url || "";
       let lumiereEndingUrl = (formData as any).lumiere_ending_image_url || "";
+      let auraEndingUrl = (formData as any).aura_ending_image_url || "";
       let audioUrl = formData.audio_url;
 
       // Upload new image if selected (compressed for size/quality balance)
@@ -997,6 +1021,12 @@ const WeddingForm = () => {
       if (lumiereEndingFile) {
         const compressed = await compressImage(lumiereEndingFile);
         lumiereEndingUrl = await uploadImage(compressed, user.id);
+      }
+
+      // Upload Aura (Dorée) ending image if selected
+      if (auraEndingFile) {
+        const compressed = await compressImage(auraEndingFile);
+        auraEndingUrl = await uploadImage(compressed, user.id);
       }
 
       // Upload new audio if selected, or clear if removed
@@ -1083,6 +1113,7 @@ const WeddingForm = () => {
             video_url: videoUrl,
             video_poster_url: videoPosterUrl || null,
             lumiere_ending_image_url: lumiereEndingUrl || null,
+            aura_ending_image_url: auraEndingUrl || null,
             audio_url: audioUrl,
             audio_start_time: audioUrl ? audioTrimSettings?.startTime || 0 : null,
             audio_end_time: audioUrl ? audioTrimSettings?.endTime || 0 : null,
@@ -1102,6 +1133,7 @@ const WeddingForm = () => {
               video_url: videoUrl,
               video_poster_url: videoPosterUrl || null,
               lumiere_ending_image_url: lumiereEndingUrl || null,
+              aura_ending_image_url: auraEndingUrl || null,
               audio_url: audioUrl,
               audio_start_time: audioTrimSettings?.startTime || 0,
               audio_end_time: audioTrimSettings?.endTime || 0,
@@ -1122,6 +1154,7 @@ const WeddingForm = () => {
           video_url: videoUrl,
           video_poster_url: videoPosterUrl,
           lumiere_ending_image_url: lumiereEndingUrl,
+          aura_ending_image_url: auraEndingUrl,
           audio_url: audioUrl,
           audio_start_time: audioTrimSettings?.startTime || 0,
           audio_end_time: audioTrimSettings?.endTime || 0,
@@ -1923,6 +1956,53 @@ const WeddingForm = () => {
                       type="file"
                       accept="image/*"
                       onChange={handleLumiereEndingChange}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Dorée (Aura) Ending Image (shown below the Gifts section in the template) */}
+              {isDoreeTemplate && (
+                <div className="space-y-2">
+                  <Label htmlFor="aura_ending_image">Ending Image (optional)</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Shown below the gifts section, as a final closing image for your guests.
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    {auraEndingPreview ? (
+                      <div className="relative w-full max-w-sm mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                        <img
+                          src={auraEndingPreview}
+                          alt="Dorée ending preview"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={removeAuraEnding}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="aura_ending_image"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload ending image</span>
+                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                      </label>
+                    )}
+                    <Input
+                      id="aura_ending_image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleAuraEndingChange}
                       className="hidden"
                     />
                   </div>

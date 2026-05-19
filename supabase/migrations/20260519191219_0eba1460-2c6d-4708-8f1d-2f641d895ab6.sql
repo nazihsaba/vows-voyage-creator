@@ -1,0 +1,1 @@
+ALTER TABLE public.weddings ADD COLUMN IF NOT EXISTS aura_ending_image_url text;
