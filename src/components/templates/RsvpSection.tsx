@@ -89,7 +89,7 @@ export const RsvpSection = ({
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
                 {wishesEnabled && !isRsvpDeadlinePassed && (
-                  <div className="relative my-8 rounded-xl border border-gray-200 bg-white p-6 pt-8">
+                  <div className="relative my-14 rounded-xl border border-gray-200 bg-white p-6 pt-8">
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
                       <Label
                         htmlFor="wishes-message"
@@ -133,7 +133,7 @@ export const RsvpSection = ({
           {/* Standalone wishes block when no invitee link is opened (e.g. shared bare invite or preview) */}
           {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
             <div className="space-y-4 pt-6 border-t border-gray-300">
-              <div className="relative my-8 rounded-xl border border-gray-200 bg-white p-6 pt-8">
+              <div className="relative my-14 rounded-xl border border-gray-200 bg-white p-6 pt-8">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
                   <Label
                     htmlFor="wishes-message-standalone"
