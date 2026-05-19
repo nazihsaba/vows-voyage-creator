@@ -124,7 +124,7 @@ export const RsvpSection = ({
           {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
             <div className="space-y-4 pt-6 border-t border-gray-300">
               <div className="space-y-2">
-                <Label htmlFor="wishes-message-standalone" className={`text-base font-medium text-black`}>
+                <Label htmlFor="wishes-message-standalone" className={`text-template-body font-medium text-black`}>
                   {t("rsvp.wishesTitle")}
                 </Label>
                 <Textarea
