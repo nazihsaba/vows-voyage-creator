@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Auréa Invites <notify@aureainvites.com>",
-        to: [profile.email],
+        to: [recipientEmail],
         subject: `New RSVP — ${couple}`,
         html,
       }),
