@@ -91,7 +91,7 @@ export const RsvpSection = ({
                 {wishesEnabled && !isRsvpDeadlinePassed && (
                   <div className="py-12">
                   <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
+                    <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200 whitespace-nowrap max-w-[calc(100%-2rem)]">
                       <Label
                         htmlFor="wishes-message"
                         className="text-[11px] uppercase tracking-[0.18em] text-gray-600 font-medium"
@@ -136,7 +136,7 @@ export const RsvpSection = ({
           {wishesEnabled && invitees.length === 0 && !isRsvpDeadlinePassed && (
             <div className="space-y-8 pt-10 border-t border-gray-300">
               <div className="relative rounded-xl border border-gray-200 bg-white px-6 py-10">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-white border border-gray-200 whitespace-nowrap max-w-[calc(100%-2rem)]">
                   <Label
                     htmlFor="wishes-message-standalone"
                     className="text-[11px] uppercase tracking-[0.18em] text-gray-600 font-medium"
