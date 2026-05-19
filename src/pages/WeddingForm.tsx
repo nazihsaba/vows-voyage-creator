@@ -1331,7 +1331,25 @@ const WeddingForm = () => {
                 <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
               </div>
 
+              {/* Share Your Love & Wishes Toggle */}
+              <div className="flex items-start justify-between gap-3 p-3 rounded-lg border bg-muted/30">
+                <div className="flex-1 min-w-0">
+                  <Label htmlFor="enable-wishes" className="text-sm font-medium cursor-pointer">
+                    Enable "Share Your Love & Wishes"
+                  </Label>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Adds an optional message field to the RSVP. Messages are emailed to you when guests confirm.
+                  </p>
+                </div>
+                <Switch
+                  id="enable-wishes"
+                  checked={!!formData.wishes_enabled}
+                  onCheckedChange={(checked) => setFormData({ ...formData, wishes_enabled: checked })}
+                />
+              </div>
+
               {/* Envelope Animation Toggle hidden */}
+
 
               {/* Typography customizer (works on every template, with per-template defaults) */}
               <FontCustomizer
