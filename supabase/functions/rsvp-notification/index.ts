@@ -61,9 +61,10 @@ Deno.serve(async (req) => {
       });
     }
 
-    const RESEND_API_KEY = Deno.env.get("RESEND_API_KEY");
-    if (!RESEND_API_KEY) {
-      return new Response(JSON.stringify({ error: "RESEND_API_KEY missing" }), {
+    const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
+    const GOOGLE_MAIL_API_KEY = Deno.env.get("GOOGLE_MAIL_API_KEY");
+    if (!LOVABLE_API_KEY || !GOOGLE_MAIL_API_KEY) {
+      return new Response(JSON.stringify({ error: "Gmail connector not configured" }), {
         status: 500,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -98,23 +99,42 @@ Deno.serve(async (req) => {
       </div>
     </body></html>`;
 
-    const emailRes = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${RESEND_API_KEY}`,
-        "Content-Type": "application/json",
+    const subject = `New RSVP — ${couple}`;
+    // Encode subject as RFC 2047 to support non-ASCII (e.g. é)
+    const encodedSubject = `=?UTF-8?B?${btoa(unescape(encodeURIComponent(subject)))}?=`;
+
+    const rfc2822 = [
+      `From: Auréa Invites <aaureainvites@gmail.com>`,
+      `To: ${recipientEmail}`,
+      `Subject: ${encodedSubject}`,
+      `MIME-Version: 1.0`,
+      `Content-Type: text/html; charset="UTF-8"`,
+      `Content-Transfer-Encoding: base64`,
+      ``,
+      btoa(unescape(encodeURIComponent(html))),
+    ].join("\r\n");
+
+    const raw = btoa(unescape(encodeURIComponent(rfc2822)))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+    const emailRes = await fetch(
+      "https://connector-gateway.lovable.dev/google_mail/gmail/v1/users/me/messages/send",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${LOVABLE_API_KEY}`,
+          "X-Connection-Api-Key": GOOGLE_MAIL_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ raw }),
       },
-      body: JSON.stringify({
-        from: "Auréa Invites <notify@aureainvites.com>",
-        to: [recipientEmail],
-        subject: `New RSVP — ${couple}`,
-        html,
-      }),
-    });
+    );
 
     if (!emailRes.ok) {
       const errText = await emailRes.text();
-      console.error("Resend error:", errText);
+      console.error("Gmail error:", errText);
       return new Response(JSON.stringify({ error: "Email send failed", detail: errText }), {
         status: 502,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
