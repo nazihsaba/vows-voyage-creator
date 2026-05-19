@@ -88,11 +88,27 @@ export const RsvpSection = ({
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
+                {wishesEnabled && !isRsvpDeadlinePassed && (
+                  <div className="space-y-2">
+                    <Label htmlFor="wishes-message" className={`text-base font-medium ${accentColorClass}`}>
+                      {t("rsvp.wishesTitle")}
+                    </Label>
+                    <Textarea
+                      id="wishes-message"
+                      value={wishesMessage}
+                      onChange={(e) => setWishesMessage(e.target.value.slice(0, 1000))}
+                      placeholder={t("rsvp.wishesPlaceholder")}
+                      rows={4}
+                      maxLength={1000}
+                      className="resize-none bg-white"
+                    />
+                  </div>
+                )}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
                 ) : (
                   <Button
-                    onClick={handleRsvpSubmit}
+                    onClick={() => handleRsvpSubmit(wishesEnabled ? wishesMessage.trim() : undefined)}
                     disabled={submittingRsvp}
                     className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                     size="lg"
@@ -103,6 +119,7 @@ export const RsvpSection = ({
               </div>
             </div>
           )}
+
 
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">
