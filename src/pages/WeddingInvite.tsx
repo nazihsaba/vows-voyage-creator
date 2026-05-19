@@ -268,9 +268,9 @@ const WeddingInvite = () => {
 
             setInvitees(inviteesData || []);
 
-            const responses: Record<string, boolean> = {};
+            const responses: Record<string, boolean | null> = {};
             inviteesData?.forEach((invitee: any) => {
-              if (invitee.is_attending !== null) {
+              if (invitee.is_attending !== null && invitee.is_attending !== undefined) {
                 responses[invitee.id] = invitee.is_attending;
               }
             });
@@ -287,11 +287,16 @@ const WeddingInvite = () => {
     fetchWedding();
   }, [slug, linkSlug, isPreview, isDraftPreview]);
 
-  const handleRsvpToggle = (inviteeId: string, isAttending: boolean) => {
-    setRsvpResponses((prev) => ({
-      ...prev,
-      [inviteeId]: isAttending,
-    }));
+  const handleRsvpToggle = (inviteeId: string, isAttending: boolean | null) => {
+    setRsvpResponses((prev) => {
+      const next = { ...prev };
+      if (isAttending === null) {
+        delete next[inviteeId];
+      } else {
+        next[inviteeId] = isAttending;
+      }
+      return next;
+    });
   };
 
   const handleRsvpSubmit = async (wishesMessage?: string) => {
