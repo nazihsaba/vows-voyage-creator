@@ -17,3 +17,6 @@ verify_jwt = false
 
 [functions.whish-payment-callback]
 verify_jwt = false
+
+[functions.rsvp-notification]
+verify_jwt = false

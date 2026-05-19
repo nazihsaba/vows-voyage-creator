@@ -1,9 +1,12 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
+
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
@@ -12,13 +15,14 @@ interface RsvpSectionProps {
   invitees?: any[];
   rsvpResponses?: Record<string, boolean>;
   handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
-  handleRsvpSubmit?: () => void;
+  handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
   submittingRsvp?: boolean;
   bgClassName?: string;
   cardBgClassName?: string;
   accentColorClass?: string;
+
 }
 
 export const RsvpSection = ({
@@ -40,6 +44,9 @@ export const RsvpSection = ({
   const isArabic = i18n.language === 'ar';
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
+  const wishesEnabled = !!wedding?.wishes_enabled;
+  const [wishesMessage, setWishesMessage] = useState("");
+
 
   return (
     <AnimatedSection animation="fade-up">
@@ -81,11 +88,27 @@ export const RsvpSection = ({
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
                 </p>
+                {wishesEnabled && !isRsvpDeadlinePassed && (
+                  <div className="space-y-2">
+                    <Label htmlFor="wishes-message" className={`text-base font-medium ${accentColorClass}`}>
+                      {t("rsvp.wishesTitle")}
+                    </Label>
+                    <Textarea
+                      id="wishes-message"
+                      value={wishesMessage}
+                      onChange={(e) => setWishesMessage(e.target.value.slice(0, 1000))}
+                      placeholder={t("rsvp.wishesPlaceholder")}
+                      rows={4}
+                      maxLength={1000}
+                      className="resize-none bg-white"
+                    />
+                  </div>
+                )}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
                 ) : (
                   <Button
-                    onClick={handleRsvpSubmit}
+                    onClick={() => handleRsvpSubmit(wishesEnabled ? wishesMessage.trim() : undefined)}
                     disabled={submittingRsvp}
                     className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
                     size="lg"
@@ -96,6 +119,7 @@ export const RsvpSection = ({
               </div>
             </div>
           )}
+
 
           {rsvpDeadline && (
             <div className="pt-8 border-t border-gray-300">

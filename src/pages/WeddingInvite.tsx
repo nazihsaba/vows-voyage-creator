@@ -294,15 +294,19 @@ const WeddingInvite = () => {
     }));
   };
 
-  const handleRsvpSubmit = async () => {
+  const handleRsvpSubmit = async (wishesMessage?: string) => {
     if (invitees.length === 0) return;
 
     setSubmittingRsvp(true);
     try {
+      const trimmedMessage = (wishesMessage || "").trim();
       const updates = invitees.map((invitee) =>
         supabase
           .from("invitees")
-          .update({ is_attending: rsvpResponses[invitee.id] === true })
+          .update({
+            is_attending: rsvpResponses[invitee.id] === true,
+            ...(trimmedMessage ? { wishes_message: trimmedMessage } : {}),
+          })
           .eq("id", invitee.id),
       );
 
@@ -316,8 +320,31 @@ const WeddingInvite = () => {
       const updatedInvitees = invitees.map((invitee) => ({
         ...invitee,
         is_attending: rsvpResponses[invitee.id] === true,
+        wishes_message: trimmedMessage || invitee.wishes_message,
       }));
       setInvitees(updatedInvitees);
+
+      // Fire-and-forget notification email to event owner
+      try {
+        const responses = invitees.map((inv) => ({
+          name: inv.name,
+          is_attending: rsvpResponses[inv.id] === true,
+        }));
+        const numberOfPersons = responses.filter((r) => r.is_attending).length;
+        supabase.functions
+          .invoke("rsvp-notification", {
+            body: {
+              wedding_id: wedding?.id,
+              invitation_link_id: invitees[0]?.invitation_link_id,
+              wishes_message: trimmedMessage,
+              responses,
+              number_of_persons: numberOfPersons,
+            },
+          })
+          .catch((err) => console.error("rsvp-notification error:", err));
+      } catch (e) {
+        console.error("Failed to dispatch RSVP notification:", e);
+      }
 
       toast({
         title: "RSVP Submitted",
@@ -334,6 +361,7 @@ const WeddingInvite = () => {
       setSubmittingRsvp(false);
     }
   };
+
 
   const handleDownloadCard = async () => {
     setDownloadingCard(true);

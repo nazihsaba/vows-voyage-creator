@@ -44,7 +44,9 @@
     "submit": "Submit RSVP",
     "submitting": "Submitting...",
     "rsvpBy": "Please RSVP by:",
-    "confirmBefore": "Kindly confirm your attendance before this date:"
+    "confirmBefore": "Kindly confirm your attendance before this date:",
+    "wishesTitle": "Share Your Love & Wishes",
+    "wishesPlaceholder": "Leave a heartfelt note for the couple (optional)..."
   },
   "closing": {
     "defaultMessage": "We are so excited to share this special day with you! Please enjoy every moment, take lots of pictures, and make wonderful memories with us."

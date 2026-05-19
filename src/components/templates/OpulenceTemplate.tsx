@@ -24,7 +24,7 @@ interface OpulenceTemplateProps {
   invitees?: any[];
   rsvpResponses?: Record<string, boolean>;
   handleRsvpToggle?: (inviteeId: string, isAttending: boolean) => void;
-  handleRsvpSubmit?: () => void;
+  handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
   isRsvpDeadlinePassed?: boolean;
   submittingRsvp?: boolean;
