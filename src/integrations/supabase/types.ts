@@ -454,6 +454,7 @@ export type Database = {
           main_picture_position_y: number | null
           main_picture_url: string | null
           middle_text: string | null
+          notification_email: string | null
           payment_external_id: string | null
           payment_status: string | null
           recipient_name: string | null
@@ -499,6 +500,7 @@ export type Database = {
           main_picture_position_y?: number | null
           main_picture_url?: string | null
           middle_text?: string | null
+          notification_email?: string | null
           payment_external_id?: string | null
           payment_status?: string | null
           recipient_name?: string | null
@@ -544,6 +546,7 @@ export type Database = {
           main_picture_position_y?: number | null
           main_picture_url?: string | null
           middle_text?: string | null
+          notification_email?: string | null
           payment_external_id?: string | null
           payment_status?: string | null
           recipient_name?: string | null

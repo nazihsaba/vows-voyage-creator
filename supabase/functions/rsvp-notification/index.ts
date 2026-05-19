@@ -33,7 +33,7 @@ Deno.serve(async (req) => {
     // Get wedding + owner email
     const { data: wedding } = await supabase
       .from("weddings")
-      .select("id, user_id, groom_name, bride_name")
+      .select("id, user_id, groom_name, bride_name, notification_email")
       .eq("id", body.wedding_id)
       .maybeSingle();
 
@@ -44,14 +44,19 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { data: profile } = await supabase
-      .from("profiles")
-      .select("email, first_name")
-      .eq("id", wedding.user_id)
-      .maybeSingle();
+    let recipientEmail = (wedding.notification_email || "").trim();
 
-    if (!profile?.email) {
-      return new Response(JSON.stringify({ ok: true, skipped: "no owner email" }), {
+    if (!recipientEmail) {
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("email")
+        .eq("id", wedding.user_id)
+        .maybeSingle();
+      recipientEmail = profile?.email || "";
+    }
+
+    if (!recipientEmail) {
+      return new Response(JSON.stringify({ ok: true, skipped: "no recipient email" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
@@ -101,7 +106,7 @@ Deno.serve(async (req) => {
       },
       body: JSON.stringify({
         from: "Auréa Invites <notify@aureainvites.com>",
-        to: [profile.email],
+        to: [recipientEmail],
         subject: `New RSVP — ${couple}`,
         html,
       }),

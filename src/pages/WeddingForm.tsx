@@ -190,6 +190,7 @@ const WeddingForm = () => {
     main_picture_position_y: 50,
     envelope_animation_enabled: false,
     wishes_enabled: false,
+    notification_email: "",
     template_fonts: {} as Record<string, string>,
   });
   const mainImgRef = useRef<HTMLImageElement>(null);
@@ -1347,6 +1348,24 @@ const WeddingForm = () => {
                   onCheckedChange={(checked) => setFormData({ ...formData, wishes_enabled: checked })}
                 />
               </div>
+
+              {formData.wishes_enabled && (
+                <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
+                  <Label htmlFor="notification_email" className="text-sm font-medium">
+                    RSVP Notification Email *
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    Guest RSVPs and their wishes will be sent to this email address.
+                  </p>
+                  <Input
+                    id="notification_email"
+                    type="email"
+                    placeholder="you@example.com"
+                    value={formData.notification_email || ""}
+                    onChange={(e) => setFormData({ ...formData, notification_email: e.target.value })}
+                  />
+                </div>
+              )}
 
               {/* Envelope Animation Toggle hidden */}
 
