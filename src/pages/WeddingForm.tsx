@@ -1102,6 +1102,7 @@ const WeddingForm = () => {
           await supabase.storage.from("invitation-images").upload(`invites/${finalSlug}/main.jpg`, compressed, {
             contentType: "image/jpeg",
             upsert: true,
+            cacheControl: "0",
           });
           // Sync local state to reflect the saved image so a later "remove" knows it exists in storage
           const { data: pub } = supabase.storage
