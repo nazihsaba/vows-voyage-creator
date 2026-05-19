@@ -2737,7 +2737,7 @@ const WeddingForm = () => {
                   {/* Existing Gallery Images */}
                   {existingGalleryImages.length > 0 && (
                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-                      {existingGalleryImages.map((image) => (
+                      {existingGalleryImages.map((image, index) => (
                         <GalleryImageEditor
                           key={image.id}
                           imageUrl={image.image_url}
@@ -2745,6 +2745,10 @@ const WeddingForm = () => {
                           positionY={image.position_y ?? 50}
                           onPositionChange={(v) => updateExistingGalleryPosition(image.id, v)}
                           onRemove={() => removeExistingGalleryImage(image.id)}
+                          onMoveUp={() => moveExistingGalleryImage(index, -1)}
+                          onMoveDown={() => moveExistingGalleryImage(index, 1)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < existingGalleryImages.length - 1}
                         />
                       ))}
                     </div>
@@ -2761,6 +2765,10 @@ const WeddingForm = () => {
                           positionY={galleryFilePositions[index] ?? 50}
                           onPositionChange={(v) => updatePendingGalleryPosition(index, v)}
                           onRemove={() => removeGalleryImage(index)}
+                          onMoveUp={() => movePendingGalleryImage(index, -1)}
+                          onMoveDown={() => movePendingGalleryImage(index, 1)}
+                          canMoveUp={index > 0}
+                          canMoveDown={index < galleryPreviews.length - 1}
                         />
                       ))}
                     </div>
