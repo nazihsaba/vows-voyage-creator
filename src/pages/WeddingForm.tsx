@@ -1023,6 +1023,12 @@ const WeddingForm = () => {
         lumiereEndingUrl = await uploadImage(compressed, user.id);
       }
 
+      // Upload Aura (Dorée) ending image if selected
+      if (auraEndingFile) {
+        const compressed = await compressImage(auraEndingFile);
+        auraEndingUrl = await uploadImage(compressed, user.id);
+      }
+
       // Upload new audio if selected, or clear if removed
       if (audioFile) {
         // Convert Blob to File with a proper name
