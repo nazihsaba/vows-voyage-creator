@@ -460,6 +460,9 @@ const WeddingForm = () => {
       if ((data as any).lumiere_ending_image_url) {
         setLumiereEndingPreview((data as any).lumiere_ending_image_url);
       }
+      if ((data as any).aura_ending_image_url) {
+        setAuraEndingPreview((data as any).aura_ending_image_url);
+      }
       if (data.audio_url) {
         // Audio is already uploaded, just show it in the preview
       }
