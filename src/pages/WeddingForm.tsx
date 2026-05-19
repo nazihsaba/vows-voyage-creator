@@ -756,6 +756,39 @@ const WeddingForm = () => {
     });
   };
 
+  const movePendingGalleryImage = (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= galleryFiles.length) return;
+    const swap = <T,>(arr: T[]) => {
+      const next = [...arr];
+      [next[index], next[target]] = [next[target], next[index]];
+      return next;
+    };
+    setGalleryFiles((prev) => swap(prev));
+    setGalleryPreviews((prev) => swap(prev));
+    setGalleryFilePositions((prev) => swap(prev));
+  };
+
+  const moveExistingGalleryImage = async (index: number, direction: -1 | 1) => {
+    const target = index + direction;
+    if (target < 0 || target >= existingGalleryImages.length) return;
+    const reordered = [...existingGalleryImages];
+    [reordered[index], reordered[target]] = [reordered[target], reordered[index]];
+    setExistingGalleryImages(reordered);
+    try {
+      await Promise.all(
+        reordered.map((img, i) =>
+          supabase
+            .from("gallery_images")
+            .update({ image_order: i + 1 } as any)
+            .eq("id", img.id),
+        ),
+      );
+    } catch (err) {
+      console.error("Failed to save gallery order:", err);
+    }
+  };
+
   const removeExistingGalleryImage = async (imageId: string) => {
     try {
       const { error } = await supabase.from("gallery_images").delete().eq("id", imageId);
