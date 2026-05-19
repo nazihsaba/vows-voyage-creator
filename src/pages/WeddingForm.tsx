@@ -843,6 +843,7 @@ const WeddingForm = () => {
       await supabase.storage.from("invitation-images").upload(filePath, blob, {
         contentType,
         upsert: true,
+        cacheControl: "0",
       });
     } catch (err) {
       console.warn("OG image copy failed (non-blocking):", err);
