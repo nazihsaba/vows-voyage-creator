@@ -27,7 +27,7 @@ interface TemplateRendererProps {
   getFieldStyle: (fieldId: string) => any;
   children?: ReactNode;
   invitees?: any[];
-  rsvpResponses?: Record<string, boolean>;
+  rsvpResponses?: Record<string, boolean | null>;
   handleRsvpToggle?: (inviteeId: string, isAttending: boolean | null) => void;
   handleRsvpSubmit?: (wishesMessage?: string) => void;
   numberOfPersons?: number;
