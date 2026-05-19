@@ -90,7 +90,7 @@ export const RsvpSection = ({
                 </p>
                 {wishesEnabled && !isRsvpDeadlinePassed && (
                   <div className="space-y-2">
-                    <Label htmlFor="wishes-message" className={`text-base font-medium text-black`}>
+                    <Label htmlFor="wishes-message" className={`text-template-body font-medium text-black`}>
                       {t("rsvp.wishesTitle")}
                     </Label>
                     <Textarea
