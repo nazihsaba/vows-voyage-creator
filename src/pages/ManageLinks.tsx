@@ -548,10 +548,11 @@ const ManageLinks = () => {
     return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our happily ever after! ❤️\n\nWe would be honored to have you with us on this special day. ✨\n\nWe can't wait to see you! 💕`;
   };
 
-  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
-    const inviteUrl = getInviteUrl(linkName, numberOfPersons);
-    const message = buildInvitationMessage(linkName, inviteUrl);
+  const copyToClipboard = async (link: InvitationLink) => {
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const message = buildInvitationMessage(link.link_name, inviteUrl);
     await navigator.clipboard.writeText(message);
+    markLinkSent(link);
     toast({
       title: "Copied!",
       description: "Invitation message copied — paste it anywhere to share",
@@ -576,6 +577,7 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
+    markLinkSent(link);
     window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
