@@ -1725,7 +1725,17 @@ const ManageLinks = () => {
                                       {stats.notAttending}
                                     </Badge>
                                   </div>
-                                  <div onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                    {link.invite_sent_at && (
+                                      <button
+                                        type="button"
+                                        onClick={() => markLinkUnsent(link)}
+                                        title="Click to mark as not sent"
+                                        className="font-cormorant text-[11px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                                      >
+                                        Sent · {relativeSentTime(link.invite_sent_at)}
+                                      </button>
+                                    )}
                                     {/* Desktop / tablet: inline icon toolbar */}
                                     <div className="hidden sm:inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
                                       {link.phone_number && (
