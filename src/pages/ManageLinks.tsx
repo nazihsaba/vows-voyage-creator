@@ -86,6 +86,8 @@ interface InvitationLink {
   country_code: string | null;
   phone_number: string | null;
   created_at: string;
+  invite_sent_at: string | null;
+  invite_sent_count: number;
 }
 
 interface Invitee {
