@@ -758,7 +758,7 @@ export const LumiereTemplate = ({
         {/* ===== GALLERY ===== */}
         {gallery && gallery.length > 0 && (
           <div className="mt-64">
-            <LumiereGallery images={gallery} />
+            <LumiereGallery images={gallery} subtitle={wedding.gallery_subtitle} />
           </div>
         )}
 

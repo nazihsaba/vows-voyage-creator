@@ -188,6 +188,7 @@ const WeddingForm = () => {
     lumiere_ending_image_url: "",
     aura_ending_image_url: "",
     verite_ending_image_url: "",
+    gallery_subtitle: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
@@ -2979,6 +2980,27 @@ const WeddingForm = () => {
                   )}
                 </div>
               )}
+
+              {/* Optional gallery subtitle - shown below the "Our Moments" title in Lumière, Étoile, Dorée and Vérité templates */}
+              {(isLumiereTemplate ||
+                template === "etoile-carousel" ||
+                isDoreeTemplate ||
+                isVeriteTemplate) && (
+                <div className="space-y-2">
+                  <Label htmlFor="gallery_subtitle">Gallery Subtitle (optional)</Label>
+                  <p className="text-xs text-muted-foreground">
+                    A short line shown below the "Our Moments" title in your gallery section. Leave empty to hide.
+                  </p>
+                  <Input
+                    id="gallery_subtitle"
+                    value={(formData as any).gallery_subtitle || ""}
+                    onChange={(e) => setFormData({ ...formData, gallery_subtitle: e.target.value } as any)}
+                    placeholder="e.g. A glimpse of our journey together"
+                    maxLength={120}
+                  />
+                </div>
+              )}
+
 
               {/* Social Preview Image (for WhatsApp / Facebook / Instagram link previews) */}
               <div className="space-y-2">
