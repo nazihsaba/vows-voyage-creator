@@ -1448,7 +1448,7 @@ const ManageLinks = () => {
                                             <Button
                                               size="icon"
                                               variant="ghost"
-                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                              onClick={() => copyToClipboard(link)}
                                               title="Copy Link"
                                               className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                             >
@@ -1680,7 +1680,7 @@ const ManageLinks = () => {
                                       <Button
                                         size="icon"
                                         variant="ghost"
-                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        onClick={() => copyToClipboard(link)}
                                         title="Copy Link"
                                         className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       >
@@ -1751,7 +1751,7 @@ const ManageLinks = () => {
                                             </DropdownMenuItem>
                                           )}
                                           <DropdownMenuItem
-                                            onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                            onClick={() => copyToClipboard(link)}
                                           >
                                             <Copy className="w-4 h-4 mr-2" />
                                             Copy Link
