@@ -1052,6 +1052,12 @@ const WeddingForm = () => {
         auraEndingUrl = await uploadImage(compressed, user.id);
       }
 
+      // Upload Vérité ending image if selected
+      if (veriteEndingFile) {
+        const compressed = await compressImage(veriteEndingFile);
+        veriteEndingUrl = await uploadImage(compressed, user.id);
+      }
+
       // Upload new audio if selected, or clear if removed
       if (audioFile) {
         // Convert Blob to File with a proper name
