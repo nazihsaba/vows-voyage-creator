@@ -391,7 +391,12 @@ export const AuraTemplate = ({
         {gallery && gallery.length > 0 && (
           <section className="mb-16">
             <AnimatedSection animation="fade-in">
-              <h2 className="text-template-subtitle text-center text-primary mb-8">{t("gallery.title")}</h2>
+              <h2 className="text-template-subtitle text-center text-primary mb-2">{t("gallery.title")}</h2>
+              {wedding.gallery_subtitle && (
+                <p className="text-center text-template-body text-muted-foreground mb-8 px-4">
+                  {wedding.gallery_subtitle}
+                </p>
+              )}
             </AnimatedSection>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
               {gallery.map((image: any, index: number) => (
