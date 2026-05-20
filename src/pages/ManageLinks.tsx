@@ -159,6 +159,66 @@ const ManageLinks = () => {
   const [tableInviteeSearch, setTableInviteeSearch] = useState("");
   const [editingTable, setEditingTable] = useState<{ id: string | null; originalNumber: number } | null>(null);
 
+  const unsentStorageKey = weddingId ? `manage-links:unsentOnly:${weddingId}` : "";
+  const [showUnsentOnly, setShowUnsentOnly] = useState<boolean>(() => {
+    if (typeof window === "undefined" || !weddingId) return false;
+    return localStorage.getItem(`manage-links:unsentOnly:${weddingId}`) === "1";
+  });
+  useEffect(() => {
+    if (!unsentStorageKey || typeof window === "undefined") return;
+    localStorage.setItem(unsentStorageKey, showUnsentOnly ? "1" : "0");
+  }, [showUnsentOnly, unsentStorageKey]);
+
+  const relativeSentTime = (iso: string | null) => {
+    if (!iso) return "";
+    const diff = Date.now() - new Date(iso).getTime();
+    const s = Math.max(1, Math.floor(diff / 1000));
+    if (s < 60) return `${s}s ago`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 7) return `${d}d ago`;
+    const w = Math.floor(d / 7);
+    if (w < 5) return `${w}w ago`;
+    const mo = Math.floor(d / 30);
+    if (mo < 12) return `${mo}mo ago`;
+    return `${Math.floor(d / 365)}y ago`;
+  };
+
+  const markLinkSent = async (link: InvitationLink) => {
+    const now = new Date().toISOString();
+    const nextCount = (link.invite_sent_count || 0) + 1;
+    setLinks((prev) =>
+      prev.map((l) =>
+        l.id === link.id ? { ...l, invite_sent_at: now, invite_sent_count: nextCount } : l,
+      ),
+    );
+    try {
+      await (supabase as any)
+        .from("invitation_links")
+        .update({ invite_sent_at: now, invite_sent_count: nextCount })
+        .eq("id", link.id);
+    } catch (err) {
+      console.error("Failed to mark invite as sent:", err);
+    }
+  };
+
+  const markLinkUnsent = async (link: InvitationLink) => {
+    setLinks((prev) =>
+      prev.map((l) => (l.id === link.id ? { ...l, invite_sent_at: null, invite_sent_count: 0 } : l)),
+    );
+    try {
+      await (supabase as any)
+        .from("invitation_links")
+        .update({ invite_sent_at: null, invite_sent_count: 0 })
+        .eq("id", link.id);
+    } catch (err) {
+      console.error("Failed to clear invite sent state:", err);
+    }
+  };
+
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
       setGenState(s);
