@@ -364,18 +364,22 @@ export const VeriteTemplate = ({
         </div>
       </section>
 
-      {/* Gallery Image */}
-      {gallery.length > 0 && (
+      {/* Ending Image (below Wedding Events) */}
+      {(wedding.verite_ending_image_url || gallery.length > 0) && (
         <AnimatedSection animation="fade-in">
           <section className="w-full px-4">
             <div className="max-w-6xl mx-auto">
               <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
                 <img
-                  src={gallery[0].image_url}
+                  src={wedding.verite_ending_image_url || gallery[0].image_url}
                   alt="Wedding moment"
                   loading="lazy"
                   className="w-full h-full object-cover"
-                  style={{ objectPosition: `50% ${Math.min(100, Math.max(0, gallery[0].position_y ?? 50))}%` }}
+                  style={{
+                    objectPosition: wedding.verite_ending_image_url
+                      ? "50% 50%"
+                      : `50% ${Math.min(100, Math.max(0, gallery[0].position_y ?? 50))}%`,
+                  }}
                 />
               </div>
             </div>

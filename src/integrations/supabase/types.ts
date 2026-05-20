@@ -467,6 +467,7 @@ export type Database = {
           updated_at: string | null
           user_id: string
           venue_payment_status: string | null
+          verite_ending_image_url: string | null
           video_poster_url: string | null
           video_url: string | null
           wedding_date: string
@@ -514,6 +515,7 @@ export type Database = {
           updated_at?: string | null
           user_id: string
           venue_payment_status?: string | null
+          verite_ending_image_url?: string | null
           video_poster_url?: string | null
           video_url?: string | null
           wedding_date: string
@@ -561,6 +563,7 @@ export type Database = {
           updated_at?: string | null
           user_id?: string
           venue_payment_status?: string | null
+          verite_ending_image_url?: string | null
           video_poster_url?: string | null
           video_url?: string | null
           wedding_date?: string
