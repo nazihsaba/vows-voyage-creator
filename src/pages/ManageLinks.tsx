@@ -1406,7 +1406,24 @@ const ManageLinks = () => {
                                           )}
                                         </Button>
                                       </TableCell>
-                                      <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
+                                      <TableCell className="font-semibold text-foreground">
+                                        <span className="inline-flex items-center gap-1.5">
+                                          {link.invite_sent_at && (
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                markLinkUnsent(link);
+                                              }}
+                                              title="Mark as not sent"
+                                              className="text-primary hover:opacity-80 transition-opacity"
+                                            >
+                                              <CheckCircle2 className="w-4 h-4 fill-primary/20" />
+                                            </button>
+                                          )}
+                                          <span>{link.link_name}</span>
+                                        </span>
+                                      </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.side ? (
                                           <Badge
