@@ -2041,6 +2041,54 @@ const WeddingForm = () => {
                 </div>
               )}
 
+              {/* Vérité Ending Image (shown below the Wedding Events section in the template) */}
+              {isVeriteTemplate && (
+                <div className="space-y-2">
+                  <Label htmlFor="verite_ending_image">Ending Image (optional)</Label>
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Shown below the Wedding Events section, as a closing image for your guests.
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    {veriteEndingPreview ? (
+                      <div className="relative w-full max-w-sm mx-auto aspect-[3/4] rounded-lg overflow-hidden border-2 border-border bg-muted">
+                        <img
+                          src={veriteEndingPreview}
+                          alt="Vérité ending preview"
+                          loading="lazy"
+                          className="w-full h-full object-cover"
+                        />
+                        <Button
+                          type="button"
+                          variant="destructive"
+                          size="icon"
+                          className="absolute top-2 right-2"
+                          onClick={removeVeriteEnding}
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    ) : (
+                      <label
+                        htmlFor="verite_ending_image"
+                        className="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-border rounded-lg cursor-pointer bg-muted/20 hover:bg-muted/40 transition-colors"
+                      >
+                        <Upload className="w-12 h-12 mb-2 text-muted-foreground" />
+                        <span className="text-sm text-muted-foreground">Click to upload ending image</span>
+                        <span className="text-xs text-muted-foreground mt-1">PNG, JPG up to 10MB</span>
+                      </label>
+                    )}
+                    <Input
+                      id="verite_ending_image"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleVeriteEndingChange}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              )}
+
+
               {/* Audio Trim Field */}
               <AudioTrimField
                 key={`audio-${id}-${formData.audio_url}`}
