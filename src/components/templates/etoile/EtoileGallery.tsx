@@ -12,9 +12,10 @@ interface GalleryImage {
 interface EtoileGalleryProps {
   images: GalleryImage[];
   align?: "left" | "right";
+  subtitle?: string | null;
 }
 
-const EtoileGallery = ({ images, align = "left" }: EtoileGalleryProps) => {
+const EtoileGallery = ({ images, align = "left", subtitle }: EtoileGalleryProps) => {
   const { t } = useTranslation();
   if (!images || images.length === 0) return null;
 
@@ -22,7 +23,10 @@ const EtoileGallery = ({ images, align = "left" }: EtoileGalleryProps) => {
     <EtoileTornCard align={align}>
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
-          <h2 className="text-template-subtitle text-center text-black mb-8">{t("gallery.title")}</h2>
+          <h2 className="text-template-subtitle text-center text-black mb-2">{t("gallery.title")}</h2>
+          {subtitle && (
+            <p className="text-center text-template-body text-black/70 mb-8 px-4">{subtitle}</p>
+          )}
         </AnimatedSection>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3 max-w-2xl mx-auto">
           {images.map((image, index) => (
