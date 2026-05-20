@@ -808,28 +808,43 @@ const ManageLinks = () => {
     }));
   };
 
-  const filteredLinks = links.filter((link) => {
-    const linkInvitees = invitees[link.id] || [];
-    const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesGuestName = linkInvitees.some((invitee) =>
-      invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-    const matchesSearch = matchesLinkName || matchesGuestName;
+  const filteredLinks = links
+    .filter((link) => {
+      const linkInvitees = invitees[link.id] || [];
+      const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesGuestName = linkInvitees.some((invitee) =>
+        invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      const matchesSearch = matchesLinkName || matchesGuestName;
 
-    // Side filter
-    if (sideFilter && (link.side || "").toUpperCase() !== sideFilter) return false;
+      // Side filter
+      if (sideFilter && (link.side || "").toUpperCase() !== sideFilter) return false;
 
-    if (!statusFilter) return matchesSearch;
+      // Unsent-only filter
+      if (showUnsentOnly && link.invite_sent_at) return false;
 
-    // Filter: only show links that have at least one invitee matching the status
-    const hasMatchingStatus = linkInvitees.some((invitee) => {
-      if (statusFilter === "attending") return invitee.is_attending === true;
-      if (statusFilter === "not_attending") return invitee.is_attending === false;
-      if (statusFilter === "pending") return invitee.is_attending === null;
-      return true;
+      if (!statusFilter) return matchesSearch;
+
+      // Filter: only show links that have at least one invitee matching the status
+      const hasMatchingStatus = linkInvitees.some((invitee) => {
+        if (statusFilter === "attending") return invitee.is_attending === true;
+        if (statusFilter === "not_attending") return invitee.is_attending === false;
+        if (statusFilter === "pending") return invitee.is_attending === null;
+        return true;
+      });
+      return matchesSearch && hasMatchingStatus;
+    })
+    .sort((a, b) => {
+      // Default sort: unsent rows first, then sent rows by invite_sent_at desc
+      if (!a.invite_sent_at && !b.invite_sent_at) return 0;
+      if (!a.invite_sent_at) return -1;
+      if (!b.invite_sent_at) return 1;
+      return new Date(b.invite_sent_at).getTime() - new Date(a.invite_sent_at).getTime();
     });
-    return matchesSearch && hasMatchingStatus;
-  });
+
+  const sentCount = links.filter((l) => !!l.invite_sent_at).length;
+  const totalInvites = links.length;
+  const sentPct = totalInvites ? (sentCount / totalInvites) * 100 : 0;
 
   const exportGuestList = () => {
     const rows: any[] = [];
