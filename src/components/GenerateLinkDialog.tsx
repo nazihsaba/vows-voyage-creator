@@ -99,7 +99,7 @@ export const GenerateLinkDialog = ({
         .from("invitation_links")
         .insert({
           wedding_id: weddingId,
-          link_name: linkName.replace(/\b\w/g, (c) => c.toUpperCase()),
+          link_name: linkName.replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
           unique_slug: uniqueSlug,
           number_of_persons: validInvitees.length,
           side: side.trim() || null,
@@ -113,7 +113,7 @@ export const GenerateLinkDialog = ({
 
       const inviteeRecords = validInvitees.map((name) => ({
         invitation_link_id: linkData.id,
-        name: name.trim().replace(/\b\w/g, (c) => c.toUpperCase()),
+        name: name.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
       }));
 
       const { error: inviteeError } = await (supabase as any).from("invitees").insert(inviteeRecords);

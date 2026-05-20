@@ -1094,13 +1094,13 @@ const WeddingForm = () => {
         s
           .trim()
           .replace(/\s+/g, " ")
-          .replace(/\b\w/g, (c) => c.toUpperCase());
+          .replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase());
       // Preserve newlines (e.g. multi-line custom family text) by title-casing per line
       const toTitleCaseMultiline = (s: string) =>
         s
           .replace(/[ \t]+/g, " ")
           .split("\n")
-          .map((line) => line.trim().replace(/\b\w/g, (c) => c.toUpperCase()))
+          .map((line) => line.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()))
           .join("\n")
           .replace(/^\n+|\n+$/g, "");
       formData.groom_name = toTitleCase(formData.groom_name);

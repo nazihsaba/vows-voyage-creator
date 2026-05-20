@@ -309,7 +309,7 @@ const RoseGoldTabsForm = () => {
 
       // Trim and Title Case name fields before persisting
       const toTitleCase = (s: string) =>
-        s.trim().replace(/\s+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
+        s.trim().replace(/\s+/g, " ").replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase());
       formData.groom_name = toTitleCase(formData.groom_name);
       formData.bride_name = toTitleCase(formData.bride_name);
       formData.groom_family = formData.groom_family ? toTitleCase(formData.groom_family) : formData.groom_family;
