@@ -622,7 +622,7 @@ const ManageLinks = () => {
       const { error: linkError } = await (supabase as any)
         .from("invitation_links")
         .update({
-          link_name: editForm.link_name.replace(/\b\w/g, (c) => c.toUpperCase()),
+          link_name: editForm.link_name.replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
           number_of_persons: editForm.number_of_persons,
           side: editForm.side === "NONE" ? null : editForm.side || null,
           country_code: trimmedPhone ? trimmedCc || null : null,
@@ -642,7 +642,7 @@ const ManageLinks = () => {
         const order = editInvitees.findIndex((i) => i.id === inv.id);
         const { error } = await supabase.from("invitees").insert({
           invitation_link_id: inv.invitation_link_id,
-          name: inv.name.replace(/\b\w/g, (c) => c.toUpperCase()),
+          name: inv.name.replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
           is_attending: inv.is_attending,
           table_number: inv.table_number,
           display_order: order >= 0 ? order : 0,
@@ -655,7 +655,7 @@ const ManageLinks = () => {
         if (!pendingDeleteIds.includes(id)) {
           const sanitizedUpdates = { ...(updates as any) };
           if (sanitizedUpdates.name) {
-            sanitizedUpdates.name = sanitizedUpdates.name.replace(/\b\w/g, (c: string) => c.toUpperCase());
+            sanitizedUpdates.name = sanitizedUpdates.name.replace(/(^|\s)(\S)/g, (_m: string, s: string, c: string) => s + c.toUpperCase());
           }
           const { error } = await supabase.from("invitees").update(sanitizedUpdates).eq("id", id);
           if (error) throw error;
