@@ -266,7 +266,7 @@ export const VeriteTemplate = ({
         <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-6xl mx-auto">
             <AnimatedSection animation="fade-up">
-              <h2 className="text-template-subtitle text-center text-primary mb-2">{t("gallery.title")}</h2>
+              <h2 className={`text-template-subtitle text-center text-primary ${wedding.gallery_subtitle ? "mb-2" : "mb-8"}`}>{t("gallery.title")}</h2>
               {wedding.gallery_subtitle && (
                 <p className="text-center text-template-body text-muted-foreground mb-8 px-4">
                   {wedding.gallery_subtitle}
