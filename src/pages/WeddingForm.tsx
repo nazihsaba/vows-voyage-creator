@@ -999,6 +999,26 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate Dorée (Aura) ending image is required
+    if (isDoreeTemplate && !auraEndingFile && !auraEndingPreview) {
+      toast({
+        title: "Ending image required",
+        description: "Please upload an ending image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate Vérité ending image is required
+    if (isVeriteTemplate && !veriteEndingFile && !veriteEndingPreview) {
+      toast({
+        title: "Ending image required",
+        description: "Please upload an ending image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
@@ -1997,7 +2017,7 @@ const WeddingForm = () => {
               {/* Dorée (Aura) Ending Image (shown below the Gifts section in the template) */}
               {isDoreeTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="aura_ending_image">Ending Image (optional)</Label>
+                  <Label htmlFor="aura_ending_image">Ending Image *</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown below the gifts section, as a final closing image for your guests.
                   </p>
@@ -2044,7 +2064,7 @@ const WeddingForm = () => {
               {/* Vérité Ending Image (shown below the Wedding Events section in the template) */}
               {isVeriteTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="verite_ending_image">Ending Image (optional)</Label>
+                  <Label htmlFor="verite_ending_image">Ending Image *</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown below the Wedding Events section, as a closing image for your guests.
                   </p>
