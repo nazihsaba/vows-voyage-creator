@@ -1667,6 +1667,19 @@ const ManageLinks = () => {
                                       <ChevronRight className="w-4 h-4" />
                                     )}
                                   </Button>
+                                  {link.invite_sent_at && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        markLinkUnsent(link);
+                                      }}
+                                      title="Mark as not sent"
+                                      className="text-primary hover:opacity-80 transition-opacity flex-shrink-0"
+                                    >
+                                      <CheckCircle2 className="w-4 h-4 fill-primary/20" />
+                                    </button>
+                                  )}
                                   <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes'] flex-1 min-w-0">
                                     {link.link_name}
                                   </h3>
