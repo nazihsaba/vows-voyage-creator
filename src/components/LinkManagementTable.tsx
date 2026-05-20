@@ -102,7 +102,7 @@ export const LinkManagementTable = ({ weddingId, weddingSlug, refresh }: LinkMan
         .from("invitees")
         .select("*")
         .eq("invitation_link_id", linkId)
-        .order("name");
+        .order("created_at", { ascending: true });
 
       if (error) throw error;
       setInviteesByLink((prev) => ({ ...prev, [linkId]: data || [] }));
