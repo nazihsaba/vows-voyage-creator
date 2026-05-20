@@ -211,7 +211,7 @@ const WeddingForm = () => {
   const isLumiereTemplate = template === "lumiere-editorial";
   const isDoreeTemplate = template === "bible-verse-tabs";
   const isEclatTemplate = template === "classic-romance";
-  const isVeriteTemplate = template === "modern-wedding";
+  const isVeriteTemplate = template === "modern-wedding" || template === "template2";
   // Templates that show an optional Welcome Drink Time inside Venue Details
   // (in addition to the Aura family which already shows it as required).
   const showsWelcomeDrinkField = isAuraTemplate || isEclatTemplate || isGraceTemplate || isVeriteTemplate;
