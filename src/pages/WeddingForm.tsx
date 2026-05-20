@@ -999,6 +999,26 @@ const WeddingForm = () => {
       return;
     }
 
+    // Validate Dorée (Aura) ending image is required
+    if (isDoreeTemplate && !auraEndingFile && !auraEndingPreview) {
+      toast({
+        title: "Ending image required",
+        description: "Please upload an ending image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate Vérité ending image is required
+    if (isVeriteTemplate && !veriteEndingFile && !veriteEndingPreview) {
+      toast({
+        title: "Ending image required",
+        description: "Please upload an ending image for your invitation.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     setUploading(true);
 
