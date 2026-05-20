@@ -402,7 +402,7 @@ export const EtoileTemplate = ({
         {/* ===== GALLERY — RIGHT ===== */}
         {gallery && gallery.length > 0 && (
           <div className="mt-64">
-            <EtoileGallery images={gallery} align="right" />
+            <EtoileGallery images={gallery} align="right" subtitle={wedding.gallery_subtitle} />
           </div>
         )}
 
