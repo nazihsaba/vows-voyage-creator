@@ -444,6 +444,7 @@ export type Database = {
           envelope_animation_enabled: boolean
           event_title: string | null
           field_customizations: Json | null
+          gallery_subtitle: string | null
           groom_family: string | null
           groom_name: string
           heading_font_size: string | null
@@ -492,6 +493,7 @@ export type Database = {
           envelope_animation_enabled?: boolean
           event_title?: string | null
           field_customizations?: Json | null
+          gallery_subtitle?: string | null
           groom_family?: string | null
           groom_name: string
           heading_font_size?: string | null
@@ -540,6 +542,7 @@ export type Database = {
           envelope_animation_enabled?: boolean
           event_title?: string | null
           field_customizations?: Json | null
+          gallery_subtitle?: string | null
           groom_family?: string | null
           groom_name?: string
           heading_font_size?: string | null
