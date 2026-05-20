@@ -131,6 +131,8 @@ const WeddingForm = () => {
   const [lumiereEndingPreview, setLumiereEndingPreview] = useState<string>("");
   const [auraEndingFile, setAuraEndingFile] = useState<File | null>(null);
   const [auraEndingPreview, setAuraEndingPreview] = useState<string>("");
+  const [veriteEndingFile, setVeriteEndingFile] = useState<File | null>(null);
+  const [veriteEndingPreview, setVeriteEndingPreview] = useState<string>("");
   const [locations, setLocations] = useState({
     ceremony_location: "",
     ceremony_time: "",
