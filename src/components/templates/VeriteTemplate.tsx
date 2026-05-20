@@ -265,7 +265,15 @@ export const VeriteTemplate = ({
       {gallery.length > 0 && (
         <section className="py-16 px-4 bg-[#faf8f5]">
           <div className="max-w-6xl mx-auto">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <AnimatedSection animation="fade-up">
+              <h2 className="text-template-subtitle text-center text-primary mb-2">{t("gallery.title")}</h2>
+              {wedding.gallery_subtitle && (
+                <p className="text-center text-template-body text-muted-foreground mb-8 px-4">
+                  {wedding.gallery_subtitle}
+                </p>
+              )}
+            </AnimatedSection>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
               {gallery.slice(0, 8).map((image: any, index: number) => (
                 <AnimatedSection key={image.id || index} delay={index * 100} animation="scale-in">
                   <div className="aspect-square overflow-hidden rounded-lg shadow-lg">
