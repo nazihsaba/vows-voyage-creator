@@ -1,0 +1,2 @@
+REVOKE SELECT (invite_sent_at, invite_sent_count) ON public.invitation_links FROM anon;
+REVOKE UPDATE (invite_sent_at, invite_sent_count), INSERT (invite_sent_at, invite_sent_count) ON public.invitation_links FROM anon;

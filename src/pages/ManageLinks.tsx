@@ -43,6 +43,7 @@ import {
   MessageCircle,
   ArrowUp,
   ArrowDown,
+  CheckCircle2,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -85,6 +86,8 @@ interface InvitationLink {
   country_code: string | null;
   phone_number: string | null;
   created_at: string;
+  invite_sent_at: string | null;
+  invite_sent_count: number;
 }
 
 interface Invitee {
@@ -155,6 +158,66 @@ const ManageLinks = () => {
   const [deleteTableId, setDeleteTableId] = useState<string | null>(null);
   const [tableInviteeSearch, setTableInviteeSearch] = useState("");
   const [editingTable, setEditingTable] = useState<{ id: string | null; originalNumber: number } | null>(null);
+
+  const unsentStorageKey = weddingId ? `manage-links:unsentOnly:${weddingId}` : "";
+  const [showUnsentOnly, setShowUnsentOnly] = useState<boolean>(() => {
+    if (typeof window === "undefined" || !weddingId) return false;
+    return localStorage.getItem(`manage-links:unsentOnly:${weddingId}`) === "1";
+  });
+  useEffect(() => {
+    if (!unsentStorageKey || typeof window === "undefined") return;
+    localStorage.setItem(unsentStorageKey, showUnsentOnly ? "1" : "0");
+  }, [showUnsentOnly, unsentStorageKey]);
+
+  const relativeSentTime = (iso: string | null) => {
+    if (!iso) return "";
+    const diff = Date.now() - new Date(iso).getTime();
+    const s = Math.max(1, Math.floor(diff / 1000));
+    if (s < 60) return `${s}s ago`;
+    const m = Math.floor(s / 60);
+    if (m < 60) return `${m}m ago`;
+    const h = Math.floor(m / 60);
+    if (h < 24) return `${h}h ago`;
+    const d = Math.floor(h / 24);
+    if (d < 7) return `${d}d ago`;
+    const w = Math.floor(d / 7);
+    if (w < 5) return `${w}w ago`;
+    const mo = Math.floor(d / 30);
+    if (mo < 12) return `${mo}mo ago`;
+    return `${Math.floor(d / 365)}y ago`;
+  };
+
+  const markLinkSent = async (link: InvitationLink) => {
+    const now = new Date().toISOString();
+    const nextCount = (link.invite_sent_count || 0) + 1;
+    setLinks((prev) =>
+      prev.map((l) =>
+        l.id === link.id ? { ...l, invite_sent_at: now, invite_sent_count: nextCount } : l,
+      ),
+    );
+    try {
+      await (supabase as any)
+        .from("invitation_links")
+        .update({ invite_sent_at: now, invite_sent_count: nextCount })
+        .eq("id", link.id);
+    } catch (err) {
+      console.error("Failed to mark invite as sent:", err);
+    }
+  };
+
+  const markLinkUnsent = async (link: InvitationLink) => {
+    setLinks((prev) =>
+      prev.map((l) => (l.id === link.id ? { ...l, invite_sent_at: null, invite_sent_count: 0 } : l)),
+    );
+    try {
+      await (supabase as any)
+        .from("invitation_links")
+        .update({ invite_sent_at: null, invite_sent_count: 0 })
+        .eq("id", link.id);
+    } catch (err) {
+      console.error("Failed to clear invite sent state:", err);
+    }
+  };
 
   useEffect(() => {
     const unsub = subscribeGeneration((s) => {
@@ -485,10 +548,11 @@ const ManageLinks = () => {
     return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our happily ever after! ❤️\n\nWe would be honored to have you with us on this special day. ✨\n\nWe can't wait to see you! 💕`;
   };
 
-  const copyToClipboard = async (linkName: string, numberOfPersons: number) => {
-    const inviteUrl = getInviteUrl(linkName, numberOfPersons);
-    const message = buildInvitationMessage(linkName, inviteUrl);
+  const copyToClipboard = async (link: InvitationLink) => {
+    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const message = buildInvitationMessage(link.link_name, inviteUrl);
     await navigator.clipboard.writeText(message);
+    markLinkSent(link);
     toast({
       title: "Copied!",
       description: "Invitation message copied — paste it anywhere to share",
@@ -513,6 +577,7 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
+    markLinkSent(link);
     window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
@@ -743,28 +808,43 @@ const ManageLinks = () => {
     }));
   };
 
-  const filteredLinks = links.filter((link) => {
-    const linkInvitees = invitees[link.id] || [];
-    const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesGuestName = linkInvitees.some((invitee) =>
-      invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
-    );
-    const matchesSearch = matchesLinkName || matchesGuestName;
+  const filteredLinks = links
+    .filter((link) => {
+      const linkInvitees = invitees[link.id] || [];
+      const matchesLinkName = link.link_name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesGuestName = linkInvitees.some((invitee) =>
+        invitee.name.toLowerCase().includes(searchQuery.toLowerCase()),
+      );
+      const matchesSearch = matchesLinkName || matchesGuestName;
 
-    // Side filter
-    if (sideFilter && (link.side || "").toUpperCase() !== sideFilter) return false;
+      // Side filter
+      if (sideFilter && (link.side || "").toUpperCase() !== sideFilter) return false;
 
-    if (!statusFilter) return matchesSearch;
+      // Unsent-only filter
+      if (showUnsentOnly && link.invite_sent_at) return false;
 
-    // Filter: only show links that have at least one invitee matching the status
-    const hasMatchingStatus = linkInvitees.some((invitee) => {
-      if (statusFilter === "attending") return invitee.is_attending === true;
-      if (statusFilter === "not_attending") return invitee.is_attending === false;
-      if (statusFilter === "pending") return invitee.is_attending === null;
-      return true;
+      if (!statusFilter) return matchesSearch;
+
+      // Filter: only show links that have at least one invitee matching the status
+      const hasMatchingStatus = linkInvitees.some((invitee) => {
+        if (statusFilter === "attending") return invitee.is_attending === true;
+        if (statusFilter === "not_attending") return invitee.is_attending === false;
+        if (statusFilter === "pending") return invitee.is_attending === null;
+        return true;
+      });
+      return matchesSearch && hasMatchingStatus;
+    })
+    .sort((a, b) => {
+      // Default sort: unsent rows first, then sent rows by invite_sent_at desc
+      if (!a.invite_sent_at && !b.invite_sent_at) return 0;
+      if (!a.invite_sent_at) return -1;
+      if (!b.invite_sent_at) return 1;
+      return new Date(b.invite_sent_at).getTime() - new Date(a.invite_sent_at).getTime();
     });
-    return matchesSearch && hasMatchingStatus;
-  });
+
+  const sentCount = links.filter((l) => !!l.invite_sent_at).length;
+  const totalInvites = links.length;
+  const sentPct = totalInvites ? (sentCount / totalInvites) * 100 : 0;
 
   const exportGuestList = () => {
     const rows: any[] = [];
@@ -1234,6 +1314,39 @@ const ManageLinks = () => {
                 >
                   {/* Guests Panel */}
                   <div className="w-full flex-shrink-0">
+                    {/* Invite tracking header */}
+                    <div className="mb-3">
+                      <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <p
+                          className="font-cormorant text-foreground"
+                          style={{ fontSize: "16px" }}
+                        >
+                          {sentCount} of {totalInvites} invites sent
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setShowUnsentOnly((v) => !v)}
+                          className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                            showUnsentOnly
+                              ? "bg-primary/15 border-primary/40 text-primary"
+                              : "bg-muted/40 border-border/40 text-muted-foreground hover:bg-muted/60"
+                          }`}
+                          aria-pressed={showUnsentOnly}
+                        >
+                          Show unsent only
+                        </button>
+                      </div>
+                      <div
+                        className="mt-2 w-full rounded-full overflow-hidden"
+                        style={{ height: "4px", backgroundColor: "hsl(40 50% 95%)" }}
+                      >
+                        <div
+                          className="h-full bg-primary transition-all duration-500"
+                          style={{ width: `${sentPct}%` }}
+                        />
+                      </div>
+                    </div>
+
                     {/* Desktop Table View */}
                     <div className="hidden md:block rounded-xl overflow-hidden border border-border/30">
                       <div className="overflow-x-auto">
@@ -1293,7 +1406,24 @@ const ManageLinks = () => {
                                           )}
                                         </Button>
                                       </TableCell>
-                                      <TableCell className="font-semibold text-foreground">{link.link_name}</TableCell>
+                                      <TableCell className="font-semibold text-foreground">
+                                        <span className="inline-flex items-center gap-1.5">
+                                          {link.invite_sent_at && (
+                                            <button
+                                              type="button"
+                                              onClick={(e) => {
+                                                e.stopPropagation();
+                                                markLinkUnsent(link);
+                                              }}
+                                              title="Mark as not sent"
+                                              className="text-primary hover:opacity-80 transition-opacity"
+                                            >
+                                              <CheckCircle2 className="w-4 h-4 fill-primary/20" />
+                                            </button>
+                                          )}
+                                          <span>{link.link_name}</span>
+                                        </span>
+                                      </TableCell>
                                       <TableCell className="text-sm text-muted-foreground">
                                         {link.side ? (
                                           <Badge
@@ -1341,7 +1471,17 @@ const ManageLinks = () => {
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-right">
-                                        <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex items-center gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                                          {link.invite_sent_at && (
+                                            <button
+                                              type="button"
+                                              onClick={() => markLinkUnsent(link)}
+                                              title="Click to mark as not sent"
+                                              className="font-cormorant text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                            >
+                                              Sent · {relativeSentTime(link.invite_sent_at)}
+                                            </button>
+                                          )}
                                           <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
                                             {link.phone_number && (
                                               <Button
@@ -1368,7 +1508,7 @@ const ManageLinks = () => {
                                             <Button
                                               size="icon"
                                               variant="ghost"
-                                              onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                              onClick={() => copyToClipboard(link)}
                                               title="Copy Link"
                                               className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                             >
@@ -1527,6 +1667,19 @@ const ManageLinks = () => {
                                       <ChevronRight className="w-4 h-4" />
                                     )}
                                   </Button>
+                                  {link.invite_sent_at && (
+                                    <button
+                                      type="button"
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        markLinkUnsent(link);
+                                      }}
+                                      title="Mark as not sent"
+                                      className="text-primary hover:opacity-80 transition-opacity flex-shrink-0"
+                                    >
+                                      <CheckCircle2 className="w-4 h-4 fill-primary/20" />
+                                    </button>
+                                  )}
                                   <h3 className="font-semibold text-foreground text-sm truncate font-['great-vibes'] flex-1 min-w-0">
                                     {link.link_name}
                                   </h3>
@@ -1572,7 +1725,17 @@ const ManageLinks = () => {
                                       {stats.notAttending}
                                     </Badge>
                                   </div>
-                                  <div onClick={(e) => e.stopPropagation()}>
+                                  <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
+                                    {link.invite_sent_at && (
+                                      <button
+                                        type="button"
+                                        onClick={() => markLinkUnsent(link)}
+                                        title="Click to mark as not sent"
+                                        className="font-cormorant text-[11px] text-muted-foreground hover:text-foreground transition-colors whitespace-nowrap"
+                                      >
+                                        Sent · {relativeSentTime(link.invite_sent_at)}
+                                      </button>
+                                    )}
                                     {/* Desktop / tablet: inline icon toolbar */}
                                     <div className="hidden sm:inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
                                       {link.phone_number && (
@@ -1600,7 +1763,7 @@ const ManageLinks = () => {
                                       <Button
                                         size="icon"
                                         variant="ghost"
-                                        onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                        onClick={() => copyToClipboard(link)}
                                         title="Copy Link"
                                         className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
                                       >
@@ -1671,7 +1834,7 @@ const ManageLinks = () => {
                                             </DropdownMenuItem>
                                           )}
                                           <DropdownMenuItem
-                                            onClick={() => copyToClipboard(link.link_name, link.number_of_persons)}
+                                            onClick={() => copyToClipboard(link)}
                                           >
                                             <Copy className="w-4 h-4 mr-2" />
                                             Copy Link
