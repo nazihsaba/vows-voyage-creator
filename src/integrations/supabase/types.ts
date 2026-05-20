@@ -127,6 +127,8 @@ export type Database = {
           country_code: string | null
           created_at: string
           id: string
+          invite_sent_at: string | null
+          invite_sent_count: number
           link_name: string
           number_of_persons: number
           phone_number: string | null
@@ -138,6 +140,8 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           id?: string
+          invite_sent_at?: string | null
+          invite_sent_count?: number
           link_name: string
           number_of_persons?: number
           phone_number?: string | null
@@ -149,6 +153,8 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           id?: string
+          invite_sent_at?: string | null
+          invite_sent_count?: number
           link_name?: string
           number_of_persons?: number
           phone_number?: string | null
