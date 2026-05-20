@@ -1314,6 +1314,39 @@ const ManageLinks = () => {
                 >
                   {/* Guests Panel */}
                   <div className="w-full flex-shrink-0">
+                    {/* Invite tracking header */}
+                    <div className="mb-3">
+                      <div className="flex items-center justify-between gap-3 flex-wrap">
+                        <p
+                          className="font-cormorant text-foreground"
+                          style={{ fontSize: "16px" }}
+                        >
+                          {sentCount} of {totalInvites} invites sent
+                        </p>
+                        <button
+                          type="button"
+                          onClick={() => setShowUnsentOnly((v) => !v)}
+                          className={`text-xs px-3 py-1 rounded-full border transition-all ${
+                            showUnsentOnly
+                              ? "bg-primary/15 border-primary/40 text-primary"
+                              : "bg-muted/40 border-border/40 text-muted-foreground hover:bg-muted/60"
+                          }`}
+                          aria-pressed={showUnsentOnly}
+                        >
+                          Show unsent only
+                        </button>
+                      </div>
+                      <div
+                        className="mt-2 w-full rounded-full overflow-hidden"
+                        style={{ height: "4px", backgroundColor: "hsl(40 50% 95%)" }}
+                      >
+                        <div
+                          className="h-full bg-primary transition-all duration-500"
+                          style={{ width: `${sentPct}%` }}
+                        />
+                      </div>
+                    </div>
+
                     {/* Desktop Table View */}
                     <div className="hidden md:block rounded-xl overflow-hidden border border-border/30">
                       <div className="overflow-x-auto">
