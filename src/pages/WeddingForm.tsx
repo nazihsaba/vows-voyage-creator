@@ -2064,7 +2064,7 @@ const WeddingForm = () => {
               {/* Vérité Ending Image (shown below the Wedding Events section in the template) */}
               {isVeriteTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="verite_ending_image">Ending Image (optional)</Label>
+                  <Label htmlFor="verite_ending_image">Ending Image *</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown below the Wedding Events section, as a closing image for your guests.
                   </p>
