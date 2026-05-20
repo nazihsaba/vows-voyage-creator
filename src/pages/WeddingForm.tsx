@@ -1186,6 +1186,7 @@ const WeddingForm = () => {
           video_poster_url: videoPosterUrl,
           lumiere_ending_image_url: lumiereEndingUrl,
           aura_ending_image_url: auraEndingUrl,
+          verite_ending_image_url: veriteEndingUrl,
           audio_url: audioUrl,
           audio_start_time: audioTrimSettings?.startTime || 0,
           audio_end_time: audioTrimSettings?.endTime || 0,
