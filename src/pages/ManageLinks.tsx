@@ -1471,7 +1471,17 @@ const ManageLinks = () => {
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-right">
-                                        <div className="flex gap-1 justify-end" onClick={(e) => e.stopPropagation()}>
+                                        <div className="flex items-center gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                                          {link.invite_sent_at && (
+                                            <button
+                                              type="button"
+                                              onClick={() => markLinkUnsent(link)}
+                                              title="Click to mark as not sent"
+                                              className="font-cormorant text-xs text-muted-foreground hover:text-foreground transition-colors"
+                                            >
+                                              Sent · {relativeSentTime(link.invite_sent_at)}
+                                            </button>
+                                          )}
                                           <div className="inline-flex items-center gap-0.5 rounded-full bg-muted/40 p-0.5">
                                             {link.phone_number && (
                                               <Button
