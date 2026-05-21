@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LumiereCountdown from "./lumiere/LumiereCountdown";
 import LumiereEvents from "./lumiere/LumiereEvents";
@@ -117,13 +118,17 @@ const LumierePreview = () => {
         style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
       >
         {/* ===== MONOGRAM SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
+        <section className="min-h-screen flex flex-col items-center justify-center text-center relative">
           <div className="flex items-center gap-4 md:gap-6">
             <span className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0" style={{ animation: 'slideFromLeft 1.5s ease-out 0.3s forwards' }}>A</span>
             <svg className="w-8 h-8 md:w-10 md:h-10 text-white/70 opacity-0" viewBox="0 0 24 24" fill="currentColor" style={{ animation: 'zoomIn 1.2s ease-out 0.8s forwards' }}>
               <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
             </svg>
             <span className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s forwards' }}>E</span>
+          </div>
+
+          <div className="absolute bottom-8 animate-bounce">
+            <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>
 
