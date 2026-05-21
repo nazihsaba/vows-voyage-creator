@@ -1,6 +1,7 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { useRef, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
@@ -586,7 +587,7 @@ export const LumiereTemplate = ({
         dir={isArabic ? "rtl" : "ltr"}
       >
         {/* ===== MONOGRAM SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center">
+        <section className="min-h-screen flex flex-col items-center justify-center text-center relative">
           <div className="flex items-center gap-4 md:gap-6">
             <span
               className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0"
@@ -625,6 +626,10 @@ export const LumiereTemplate = ({
               </Button>
             </div>
           )}
+
+          <div className="absolute bottom-8 animate-bounce">
+            <ChevronDown className="w-8 h-8 text-white" />
+          </div>
         </section>
 
         {/* ===== HERO SECTION ===== */}
