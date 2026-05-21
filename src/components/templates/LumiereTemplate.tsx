@@ -1,6 +1,7 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { useRef, useEffect, useMemo, useState } from "react";
+import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
