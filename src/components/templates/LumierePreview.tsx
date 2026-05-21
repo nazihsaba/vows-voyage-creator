@@ -127,7 +127,7 @@ const LumierePreview = () => {
             <span className="text-template-monogram text-[5rem] md:text-[7rem] font-light text-white tracking-wider opacity-0" style={{ animation: 'slideFromRight 1.5s ease-out 0.3s forwards' }}>E</span>
           </div>
 
-          <div className="absolute bottom-8 animate-bounce">
+          <div className="absolute bottom-12 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>

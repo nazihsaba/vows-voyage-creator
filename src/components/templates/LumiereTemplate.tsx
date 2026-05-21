@@ -627,7 +627,7 @@ export const LumiereTemplate = ({
             </div>
           )}
 
-          <div className="absolute bottom-8 animate-bounce">
+          <div className="absolute bottom-12 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>
