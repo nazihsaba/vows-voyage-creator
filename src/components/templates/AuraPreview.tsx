@@ -103,7 +103,7 @@ export const AuraPreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
-                <p className="text-template-body font-semibold tracking-wide text-primary">
+                <p className="text-xl font-semibold tracking-wide text-primary">
                   Saturday, August 16th, 2026
                 </p>
               </div>
@@ -209,7 +209,7 @@ export const AuraPreview = () => {
                 <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
                   <div className="bg-background p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-foreground">{card.card_name}</p>
-                    <p className="text-muted-foreground mt-2">{card.card_number}</p>
+                    <p className="text-lg text-muted-foreground mt-2">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}

@@ -226,7 +226,7 @@ export const EclatTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-template-body tracking-wide"
+            className="text-xl tracking-wide"
           />
           {!hasStarted && (
             <Button
