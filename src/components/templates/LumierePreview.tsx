@@ -173,7 +173,7 @@ const LumierePreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-white/30 mx-auto" />
-                <p className="text-template-body font-semibold tracking-wide text-white">Saturday, August 16th, 2026</p>
+                <p className="text-xl font-semibold tracking-wide text-white">Saturday, August 16th, 2026</p>
               </div>
             </div>
           </div>

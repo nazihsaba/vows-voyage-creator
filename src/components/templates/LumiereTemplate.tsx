@@ -743,7 +743,7 @@ export const LumiereTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
-                  className="text-template-body font-semibold tracking-wide text-white"
+                  className="text-xl font-semibold tracking-wide text-white"
                 />
               </div>
             </div>
