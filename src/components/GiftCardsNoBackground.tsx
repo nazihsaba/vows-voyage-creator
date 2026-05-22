@@ -42,7 +42,7 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
                 <div className="flex-1 flex flex-col justify-center">
                   <div className="text-lg font-semibold text-gray-800 text-template-body">{card.card_name}</div>
                   <div className="flex items-center gap-2 mt-1 justify-between">
-                    <p className="text-base text-gray-700 text-template-body">{card.card_number}</p>
+                    <p className="text-lg text-gray-700 text-template-body">{card.card_number}</p>
                     <Copy
                       className="h-5 w-5 cursor-pointer text-gray-500 hover:text-gray-800 transition-colors"
                       onClick={() => copyToClipboard(card.card_number, card.card_name)}

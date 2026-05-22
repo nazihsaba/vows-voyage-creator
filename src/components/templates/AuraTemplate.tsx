@@ -305,7 +305,7 @@ export const AuraTemplate = ({
                   onUpdate={onFieldUpdate}
                   isPreview={isPreview}
                   tag="p"
-                  className="text-template-body font-semibold tracking-wide text-primary"
+                  className="text-xl font-semibold tracking-wide text-primary"
                 />
               </div>
             </div>

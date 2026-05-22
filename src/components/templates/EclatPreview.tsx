@@ -154,7 +154,7 @@ export const EclatPreview = () => {
             <h1 className="text-template-title">{staticWedding.bride_name}</h1>
           </div>
 
-          <p className="text-template-body tracking-wide">
+          <p className="text-xl tracking-wide">
             {new Date(staticWedding.wedding_date).toLocaleDateString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -344,7 +344,7 @@ export const EclatPreview = () => {
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                    <p className="text-gray-600 mt-2">{card.card_number}</p>
+                    <p className="text-lg text-gray-600 mt-2">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}
