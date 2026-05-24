@@ -9,7 +9,7 @@ interface State {
   error?: string;
 }
 
-const WEBHOOK_URL = "https://aurea-invites.app.n8n.cloud/webhook-test/automatic-links-2";
+const WEBHOOK_URL = "https://aurea-invites.app.n8n.cloud/webhook/automatic-links-2";
 
 let state: State = { status: "idle", weddingId: null, message: "" };
 const listeners = new Set<(s: State) => void>();
@@ -37,10 +37,7 @@ async function getLinksCount(weddingId: string): Promise<number> {
 }
 
 async function getInviteesCount(weddingId: string): Promise<number> {
-  const { data: linkRows } = await (supabase as any)
-    .from("invitation_links")
-    .select("id")
-    .eq("wedding_id", weddingId);
+  const { data: linkRows } = await (supabase as any).from("invitation_links").select("id").eq("wedding_id", weddingId);
   const ids = (linkRows ?? []).map((r: any) => r.id);
   if (ids.length === 0) return 0;
   const { count } = await (supabase as any)
