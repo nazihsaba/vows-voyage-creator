@@ -692,8 +692,9 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
         transition={{ delay: 0.8, duration: 1 }}
         className="mt-10 [&_*]:text-white"
       >
-      <CountdownTimer targetDate={date} />
-    </motion.div>
+        <CountdownTimer targetDate={date} />
+      </motion.div>
+    </div>
   </div>
 );
 
