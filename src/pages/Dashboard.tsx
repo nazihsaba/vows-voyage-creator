@@ -142,9 +142,19 @@ const Dashboard = () => {
         { icon: Calendar, text: "RSVP" },
       ],
     },
-    // Soirée template hidden
-
-    // Opulence template hidden
+    {
+      id: "soiree-swipe",
+      name: "Soirée",
+      description: "Horizontal swipe storytelling with cinematic transitions",
+      image: lumiereTemplate,
+      features: [
+        { icon: Video, text: "Video Background" },
+        { icon: Images, text: "Photo Gallery" },
+        { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+      ],
+    },
   ];
 
   return (

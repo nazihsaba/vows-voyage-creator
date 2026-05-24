@@ -13,6 +13,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
 import eprisTemplate from "@/assets/epris-preview.jpg";
+import soireeTemplate from "@/assets/lumiere-4.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
@@ -22,8 +23,9 @@ const AuraPreview = lazy(() => import("@/components/templates/AuraPreview").then
 const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"));
 const EtoilePreview = lazy(() => import("@/components/templates/EtoilePreview"));
 const EprisPreview = lazy(() => import("@/components/templates/EprisPreview"));
+const SoireePreview = lazy(() => import("@/components/templates/SoireePreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile" | "epris";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile" | "epris" | "soiree";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
@@ -68,6 +70,13 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     featured: false,
     templateKey: "etoile",
   },
+  {
+    image: soireeTemplate,
+    label: "Soirée",
+    tagline: "Cinematic swipe storytelling",
+    featured: false,
+    templateKey: "soiree",
+  },
 ];
 
 const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.ComponentType>> = {
@@ -78,6 +87,7 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   lumiere: LumierePreview,
   etoile: EtoilePreview,
   epris: EprisPreview,
+  soiree: SoireePreview,
 };
 
 const PreviewLoadingFallback = () => (
