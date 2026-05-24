@@ -433,63 +433,78 @@ const NamesSlide = ({
   bride,
   groom,
   date,
+  backgroundImage,
 }: {
   bride: string;
   groom: string;
   date: string;
+  backgroundImage?: string;
 }) => (
-  <div className={`${slideContainer} bg-[#f6f1ea]`}>
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3, duration: 0.9 }}
-      className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-black/60"
-    >
-      Together with their families
-    </motion.p>
+  <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+    {backgroundImage && (
+      <motion.img
+        src={backgroundImage}
+        alt=""
+        initial={{ scale: 1.08 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 6, ease: "easeOut" }}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    )}
+    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+    <div className={`${slideContainer} text-white`}>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.9 }}
+        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
+      >
+        Together with their families
+      </motion.p>
 
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 1 }}
-      className="mt-10 text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
-    >
-      {bride}
-    </motion.h2>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 1 }}
+        className="mt-10 text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
+      >
+        {bride}
+      </motion.h2>
 
-    <motion.span
-      initial={{ opacity: 0, scale: 0.8 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ delay: 0.9, duration: 0.7 }}
-      className="my-6 text-3xl md:text-4xl italic font-light text-black/70"
-    >
-      &amp;
-    </motion.span>
+      <motion.span
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 0.9, duration: 0.7 }}
+        className="my-6 text-3xl md:text-4xl italic font-light text-white/80"
+      >
+        &amp;
+      </motion.span>
 
-    <motion.h2
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 1.1, duration: 1 }}
-      className="text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
-    >
-      {groom}
-    </motion.h2>
+      <motion.h2
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1.1, duration: 1 }}
+        className="text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
+      >
+        {groom}
+      </motion.h2>
 
-    <motion.div
-      initial={{ width: 0 }}
-      animate={{ width: 64 }}
-      transition={{ delay: 1.5, duration: 0.8 }}
-      className="h-[1px] bg-black/40 mt-10"
-    />
+      <motion.div
+        initial={{ width: 0 }}
+        animate={{ width: 64 }}
+        transition={{ delay: 1.5, duration: 0.8 }}
+        className="h-[1px] bg-white/70 mt-10"
+      />
 
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 1.7, duration: 0.8 }}
-      className="mt-6 text-xs md:text-sm tracking-[0.35em] uppercase text-black/70"
-    >
-      {date}
-    </motion.p>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.7, duration: 0.8 }}
+        className="mt-6 text-xs md:text-sm tracking-[0.35em] uppercase text-white/85"
+      >
+        {date}
+      </motion.p>
+    </div>
   </div>
 );
 
