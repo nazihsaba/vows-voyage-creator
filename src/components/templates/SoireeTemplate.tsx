@@ -155,6 +155,10 @@ export const SoireeTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
+  const namesBg = gallery?.[1]?.image_url || gallery?.[0]?.image_url || heroMedia;
+  const countdownBg = gallery?.[2]?.image_url || gallery?.[gallery.length - 1]?.image_url || heroMedia;
+  const eventsBg = gallery?.[3]?.image_url || gallery?.[1]?.image_url || heroMedia;
+
   const slides: { id: string; node: ReactNode }[] = [
     {
       id: "welcome",
@@ -167,6 +171,7 @@ export const SoireeTemplate = ({
           bride={brideName}
           groom={groomName}
           date={dateFormatted}
+          backgroundImage={namesBg}
         />
       ),
     },
@@ -187,13 +192,15 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
+        dateFormatted={dateFormatted}
+        backgroundImage={eventsBg}
       />
     ),
   });
 
   slides.push({
     id: "countdown",
-    node: <CountdownSlide date={wedding.wedding_date} />,
+    node: <CountdownSlide date={wedding.wedding_date} backgroundImage={countdownBg} />,
   });
 
   if (gallery && gallery.length > 0) {
