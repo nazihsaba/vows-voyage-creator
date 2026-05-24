@@ -9,7 +9,7 @@ interface State {
   error?: string;
 }
 
-const WEBHOOK_URL = "https://aurea-invites.app.n8n.cloud/webhook/read-invitees-csv";
+const WEBHOOK_URL = "https://aurea-invites.app.n8n.cloud/webhook-test/automatic-links-2";
 
 let state: State = { status: "idle", weddingId: null, message: "" };
 const listeners = new Set<(s: State) => void>();
