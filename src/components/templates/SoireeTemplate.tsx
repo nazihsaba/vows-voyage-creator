@@ -3,12 +3,12 @@ import { parseLocalDate } from "@/lib/weddingDate";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import { EventIcon } from "@/components/templates/EventIcon";
 import LanguageToggle from "@/components/templates/LanguageToggle";
-import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
+import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
@@ -227,6 +227,11 @@ export const SoireeTemplate = ({
     ),
   });
 
+  slides.push({
+    id: "footer",
+    node: <FooterSlide />,
+  });
+
   return (
     <div
       className="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-[#f6f1ea] text-[#1a1a1a]"
@@ -360,13 +365,6 @@ export const SoireeTemplate = ({
         <LanguageToggle />
       </div>
 
-      {isPreview && selected === totalSlides - 1 && (
-        <div className="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
-          <div className="pointer-events-auto">
-            <TemplatePreviewFooter />
-          </div>
-        </div>
-      )}
     </div>
   );
 };
@@ -772,6 +770,32 @@ const RsvpSlide = ({
         accentColorClass="text-black"
       />
     </div>
+  </div>
+);
+
+const FooterSlide = () => (
+  <div className={`${slideContainer} bg-[#f6f1ea]`}>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1, duration: 0.8 }}
+      className="flex flex-col items-center justify-center gap-3"
+    >
+      <p className="text-[10px] tracking-[0.4em] uppercase text-black/55">
+        Made for love, by
+      </p>
+      <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
+        <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain" />
+      </a>
+      <a
+        href="https://www.instagram.com/aureainvites?igsh=MXJjYmJrejF3ejI3eQ=="
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1 text-black/50 hover:text-black transition-colors"
+      >
+        <Instagram className="h-5 w-5" />
+      </a>
+    </motion.div>
   </div>
 );
 
