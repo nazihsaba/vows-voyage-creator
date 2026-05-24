@@ -536,118 +536,162 @@ const EventsSlide = ({
   venue,
   ceremonyName,
   venueName,
+  dateFormatted,
+  backgroundImage,
 }: {
   ceremony?: any;
   venue?: any;
   ceremonyName?: string;
   venueName?: string;
-}) => (
-  <div className={`${slideContainer} bg-[#f6f1ea]`}>
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3, duration: 0.8 }}
-      className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-black/60"
-    >
-      The Day
-    </motion.p>
-    <motion.h3
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.9 }}
-      className="mt-3 text-4xl md:text-5xl italic font-light"
-    >
-      Events
-    </motion.h3>
+  dateFormatted?: string;
+  backgroundImage?: string;
+}) => {
+  const events = [
+    ceremony && {
+      id: "ceremony",
+      title: "Ceremony",
+      time: formatTimeTo12Hour(ceremony.time) || "—",
+      location: ceremonyName || "",
+      link: ceremony.location_link,
+      icon: ceremony.icon || "material-symbols:church-rounded",
+    },
+    venue && {
+      id: "venue",
+      title: "Reception",
+      time: formatTimeTo12Hour(venue.time) || "—",
+      location: venueName || "",
+      link: venue.location_link,
+      icon: venue.icon || "solar:confetti-bold",
+    },
+  ].filter(Boolean) as Array<{
+    id: string;
+    title: string;
+    time: string;
+    location: string;
+    link?: string;
+    icon: string;
+  }>;
 
-    <div className="mt-10 w-full max-w-md space-y-6">
-      {ceremony && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.7, duration: 0.8 }}
-          className="text-center border-t border-b border-black/15 py-6"
-        >
-          <div className="flex justify-center mb-3 text-black/70">
-            <EventIcon icon={ceremony.icon || "material-symbols:church-rounded"} className="w-6 h-6" />
-          </div>
-          <p className="text-[10px] tracking-[0.4em] uppercase text-black/55 mb-2">
-            Ceremony
-          </p>
-          <p className="text-2xl italic font-light">{formatTimeTo12Hour(ceremony.time) || "—"}</p>
-          {ceremonyName && (
-            <p className="mt-2 text-sm text-black/70 tracking-wide">{ceremonyName}</p>
-          )}
-          {ceremony.location_link && (
-            <a
-              href={ceremony.location_link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase border-b border-black/40 pb-0.5"
-            >
-              View Map
-            </a>
-          )}
-        </motion.div>
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+      {backgroundImage && (
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
       )}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#f6f1ea]/85 via-[#f6f1ea]/80 to-[#f6f1ea]/95" />
+      <div className={`${slideContainer} overflow-y-auto`}>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
+          className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-black/60"
+        >
+          The Day
+        </motion.p>
+        <motion.h3
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.9 }}
+          className="mt-3 text-4xl md:text-5xl italic font-light"
+        >
+          Events
+        </motion.h3>
+        {dateFormatted && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.8 }}
+            className="mt-3 text-xs tracking-[0.35em] uppercase text-black/65"
+          >
+            {dateFormatted}
+          </motion.p>
+        )}
 
-      {venue && (
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.9, duration: 0.8 }}
-          className="text-center border-b border-black/15 py-6"
-        >
-          <div className="flex justify-center mb-3 text-black/70">
-            <EventIcon icon={venue.icon || "solar:confetti-bold"} className="w-6 h-6" />
+        <div className="relative mt-10 w-full max-w-md">
+          <div className="absolute left-1/2 top-2 bottom-2 w-px bg-black/25 -translate-x-1/2" />
+          <div className="space-y-12">
+            {events.map((event, index) => (
+              <motion.div
+                key={event.id}
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.7 + index * 0.2, duration: 0.8 }}
+                className="relative flex items-start"
+              >
+                <div className="flex-1 pr-6 text-right">
+                  <p className="text-[10px] tracking-[0.4em] uppercase text-black/55 mb-1">
+                    {event.title}
+                  </p>
+                  <p className="text-2xl italic font-light">{event.time}</p>
+                </div>
+                <div className="absolute left-1/2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-black z-10 ring-4 ring-[#f6f1ea]" />
+                <div className="flex-1 pl-6 text-left">
+                  <EventIcon icon={event.icon} className="w-5 h-5 mb-1 text-black/70" />
+                  {event.location && (
+                    <p className="text-sm text-black/75 leading-snug">{event.location}</p>
+                  )}
+                  {event.link && (
+                    <a
+                      href={event.link}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-block mt-2 text-[10px] tracking-[0.3em] uppercase border-b border-black/40 pb-0.5"
+                    >
+                      View Map
+                    </a>
+                  )}
+                </div>
+              </motion.div>
+            ))}
           </div>
-          <p className="text-[10px] tracking-[0.4em] uppercase text-black/55 mb-2">
-            Reception
-          </p>
-          <p className="text-2xl italic font-light">{formatTimeTo12Hour(venue.time) || "—"}</p>
-          {venueName && (
-            <p className="mt-2 text-sm text-black/70 tracking-wide">{venueName}</p>
-          )}
-          {venue.location_link && (
-            <a
-              href={venue.location_link}
-              target="_blank"
-              rel="noreferrer"
-              className="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase border-b border-black/40 pb-0.5"
-            >
-              View Map
-            </a>
-          )}
-        </motion.div>
-      )}
+        </div>
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
-const CountdownSlide = ({ date }: { date: string }) => (
-  <div className={`${slideContainer} bg-[#1a1a1a] text-white`}>
-    <motion.p
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ delay: 0.3, duration: 0.8 }}
-      className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/65"
-    >
-      Counting the moments
-    </motion.p>
-    <motion.h3
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.5, duration: 0.9 }}
-      className="mt-3 text-4xl md:text-5xl italic font-light"
-    >
-      Until We Say I Do
-    </motion.h3>
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.8, duration: 1 }}
-      className="mt-10 [&_*]:text-white"
-    >
+const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundImage?: string }) => (
+  <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#1a1a1a] text-white">
+    {backgroundImage && (
+      <motion.img
+        src={backgroundImage}
+        alt=""
+        initial={{ scale: 1.08 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 6, ease: "easeOut" }}
+        className="absolute inset-0 w-full h-full object-cover"
+      />
+    )}
+    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/75" />
+    <div className={`${slideContainer} text-white`}>
+      <motion.p
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.8 }}
+        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/75"
+      >
+        Counting the moments
+      </motion.p>
+      <motion.h3
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.5, duration: 0.9 }}
+        className="mt-3 text-4xl md:text-5xl italic font-light"
+      >
+        Until We Say I Do
+      </motion.h3>
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 1 }}
+        className="mt-10 [&_*]:text-white"
+      >
       <CountdownTimer targetDate={date} />
     </motion.div>
   </div>
