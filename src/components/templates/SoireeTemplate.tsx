@@ -349,11 +349,11 @@ export const SoireeTemplate = ({
       <AnimatePresence>
         {selected === 0 && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0 }}
+            initial={{ opacity: 0, x: "-50%", y: 8 }}
+            animate={{ opacity: 1, x: "-50%", y: 0 }}
+            exit={{ opacity: 0, x: "-50%" }}
             transition={{ delay: 1.6, duration: 0.8 }}
-            className="absolute bottom-16 left-1/2 -translate-x-1/2 text-[10px] tracking-[0.4em] uppercase text-white/90 mix-blend-difference z-30 select-none text-center"
+            className="absolute bottom-16 left-1/2 text-[10px] tracking-[0.4em] uppercase text-white/90 mix-blend-difference z-30 select-none text-center"
           >
             ← swipe ←
           </motion.div>
