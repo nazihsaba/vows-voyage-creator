@@ -168,18 +168,31 @@ export const GenerateLinkDialog = ({
     }
   };
 
-  const handleDownloadTemplate = () => {
-    const link = document.createElement('a');
-    link.href = '/invitation_template.xlsx';
-    link.download = 'invitation_template.xlsx';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDownloadTemplate = async () => {
+    try {
+      const res = await fetch('/invitation_template.xlsx');
+      if (!res.ok) throw new Error('Failed to fetch template');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'invitation_template.xlsx';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
 
-    toast({
-      title: "Success",
-      description: "Template downloaded successfully",
-    });
+      toast({
+        title: "Success",
+        description: "Template downloaded successfully",
+      });
+    } catch (e) {
+      toast({
+        title: "Error",
+        description: "Could not download template",
+        variant: "destructive",
+      });
+    }
   };
 
   const getLinksCount = async () => {
