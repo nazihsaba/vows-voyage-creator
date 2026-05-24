@@ -773,4 +773,30 @@ const RsvpSlide = ({
   </div>
 );
 
+const FooterSlide = () => (
+  <div className={`${slideContainer} bg-[#f6f1ea]`}>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 1, duration: 0.8 }}
+      className="flex flex-col items-center justify-center gap-3"
+    >
+      <p className="text-[10px] tracking-[0.4em] uppercase text-black/55">
+        Made for love, by
+      </p>
+      <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
+        <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain" />
+      </a>
+      <a
+        href="https://www.instagram.com/aureainvites?igsh=MXJjYmJrejF3ejI3eQ=="
+        target="_blank"
+        rel="noopener noreferrer"
+        className="mt-1 text-black/50 hover:text-black transition-colors"
+      >
+        <Instagram className="h-5 w-5" />
+      </a>
+    </motion.div>
+  </div>
+);
+
 export default SoireeTemplate;
