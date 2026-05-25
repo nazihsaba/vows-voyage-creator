@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useRef, useState } from "react";
-import { ChevronRight } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
 
 export type DayEvent = {
   id: string;
@@ -24,9 +24,9 @@ export type DayProgrammeProps = {
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
-  en: { hint: "tap to reveal the day", map: "View Map" },
-  fr: { hint: "appuyez pour révéler la journée", map: "Voir la carte" },
-  ar: { hint: "اضغط لاكتشاف اليوم", map: "عرض الخريطة" },
+  en: { hint: "swipe to reveal the day", map: "View Map" },
+  fr: { hint: "glissez pour révéler la journée", map: "Voir la carte" },
+  ar: { hint: "اسحب لاكتشاف اليوم", map: "عرض الخريطة" },
 };
 
 const KEYFRAMES = `
@@ -54,6 +54,9 @@ export default function DayProgramme({
   const [agendaHeight, setAgendaHeight] = useState(0);
   const isRTL = locale === "ar";
 
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const swipeHandledRef = useRef(false);
+
   useEffect(() => {
     const check = () => setIsNarrow(window.innerWidth < 500);
     check();
@@ -77,6 +80,50 @@ export default function DayProgramme({
     if (!hasInteracted) setHasInteracted(true);
     setStep((s) => Math.min(total - 1, s + 1));
   };
+  const retreat = () => {
+    if (!hasInteracted) setHasInteracted(true);
+    setStep((s) => Math.max(0, s - 1));
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    if (!t) return;
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+    swipeHandledRef.current = false;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    const t = e.touches[0];
+    if (!start || !t || swipeHandledRef.current) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy)) return;
+    const forward = isRTL ? dx > 0 : dx < 0;
+    // Forward swipe at end → let Embla advance to next slide
+    if (forward && atEnd) return;
+    // Otherwise we handle it internally; block Embla
+    e.stopPropagation();
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    const forward = isRTL ? dx > 0 : dx < 0;
+    if (forward) {
+      if (!atEnd) {
+        e.stopPropagation();
+        advance();
+      }
+    } else if (step > 0) {
+      e.stopPropagation();
+      retreat();
+    }
+  };
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
@@ -87,6 +134,9 @@ export default function DayProgramme({
       dir={isRTL ? "rtl" : "ltr"}
       className="absolute inset-0 overflow-hidden"
       style={{ touchAction: "pan-y", fontFamily: "system-ui, -apple-system, sans-serif" }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <style>{KEYFRAMES}</style>
 
@@ -96,8 +146,8 @@ export default function DayProgramme({
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
-            paddingTop: 36,
-            paddingBottom: isNarrow ? 160 : 180,
+            paddingTop: 84,
+            paddingBottom: isNarrow ? 130 : 150,
           }}
         >
           {/* Header — date is the title now */}
@@ -106,7 +156,7 @@ export default function DayProgramme({
               className="italic font-normal"
               style={{
                 fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
-                fontSize: isNarrow ? 36 : 44,
+                fontSize: isNarrow ? 30 : 38,
                 lineHeight: 1.1,
                 letterSpacing: "-0.01em",
                 color: "#ffffff",
@@ -365,42 +415,6 @@ export default function DayProgramme({
           ))}
         </div>
 
-        {/* Next button — chevron icon (only while there are more steps) */}
-        {!atEnd && (
-          <button
-            onClick={advance}
-            aria-label="Next step"
-            className="flex items-center justify-center"
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.18)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.5)",
-              color: "#ffffff",
-              cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-              animation: !hasInteracted ? "dp-bob 1.6s ease-in-out infinite" : undefined,
-              transition: "background 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.3)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.18)";
-            }}
-          >
-            <ChevronRight
-              style={{
-                width: 22,
-                height: 22,
-                transform: isRTL ? "scaleX(-1)" : undefined,
-              }}
-            />
-          </button>
-        )}
 
         {/* Hint */}
         <div
