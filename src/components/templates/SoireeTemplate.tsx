@@ -76,6 +76,11 @@ export const SoireeTemplate = ({
     "";
   const quoteReference = getLocalizedValue("aura_reference", (wedding as any).aura_reference) || "";
 
+  // Lock for the timeline slide: prevents Embla drag until all events revealed
+  const timelineLockRef = useRef(false);
+  const timelineSlideIdRef = useRef<string>("events");
+  const selectedRef = useRef(0);
+
   // Embla horizontal
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
@@ -84,6 +89,10 @@ export const SoireeTemplate = ({
     containScroll: "trimSnaps",
     duration: 55,
     skipSnaps: false,
+    watchDrag: (_api, evt) => {
+      // Block drag while sitting on the timeline slide with hidden events left
+      return !timelineLockRef.current;
+    },
   });
   const [selected, setSelected] = useState(0);
   const [totalSlides, setTotalSlides] = useState(0);
