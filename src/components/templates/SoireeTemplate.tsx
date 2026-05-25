@@ -852,24 +852,12 @@ const CountdownSlide = ({
               "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.20) 100%)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(212,175,55,0.18)",
+            border: "1px solid rgba(255,255,255,0.18)",
             padding: "40px 36px 28px",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
         >
-          {/* Corner ornaments */}
-          {[
-            "top-[14px] left-[14px] border-l border-t",
-            "top-[14px] right-[14px] border-r border-t",
-            "bottom-[14px] left-[14px] border-l border-b",
-            "bottom-[14px] right-[14px] border-r border-b",
-          ].map((c, i) => (
-            <span
-              key={i}
-              className={`absolute w-5 h-5 ${c}`}
-              style={{ borderColor: "rgba(212,175,55,0.55)", borderWidth: "0.5px" }}
-            />
-          ))}
+
 
           {/* Header */}
           <div
