@@ -247,8 +247,6 @@ export const SoireeTemplate = ({
       <CountdownSlide
         date={wedding.wedding_date}
         backgroundImage={countdownBg}
-        brideName={wedding.bride_name}
-        groomName={wedding.groom_name}
       />
     ),
   });
