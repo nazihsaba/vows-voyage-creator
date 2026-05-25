@@ -566,32 +566,76 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
         animate="visible"
       >
         <defs>
+          <linearGradient id="ringGoldA" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#f3d9a4" />
+            <stop offset="50%" stopColor="#b8862f" />
+            <stop offset="100%" stopColor="#7a5618" />
+          </linearGradient>
+          <linearGradient id="ringGoldB" x1="0" x2="0" y1="0" y2="1">
+            <stop offset="0%" stopColor="#f7e3b3" />
+            <stop offset="50%" stopColor="#d4af6c" />
+            <stop offset="100%" stopColor="#8a6a2a" />
+          </linearGradient>
           <linearGradient id="shimmerGrad" x1="0" x2="1" y1="0" y2="0">
             <stop offset="0%" stopColor="white" stopOpacity="0" />
             <stop offset="50%" stopColor="white" stopOpacity="0.7" />
             <stop offset="100%" stopColor="white" stopOpacity="0" />
           </linearGradient>
         </defs>
+
+        {/* Left ring — gold band */}
         <motion.circle
-          cx="80" cy="50" r="34" fill="none" stroke="#b8862f" strokeWidth="1.2"
+          cx="80" cy="50" r="30" fill="none"
+          stroke="url(#ringGoldA)" strokeWidth="5"
           variants={{
             hidden: { pathLength: 0, opacity: 0 },
             visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.2 } },
           }}
         />
+        {/* inner highlight line for jewelry depth */}
         <motion.circle
-          cx="120" cy="50" r="34" fill="none" stroke="#d4af6c" strokeWidth="1.2"
+          cx="80" cy="50" r="27" fill="none"
+          stroke="#fff4d8" strokeOpacity="0.55" strokeWidth="0.6"
+          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ delay: 2, duration: 0.8 }}
+        />
+
+        {/* Right ring — gold band with tiny diamond */}
+        <motion.circle
+          cx="120" cy="50" r="30" fill="none"
+          stroke="url(#ringGoldB)" strokeWidth="5"
           variants={{
             hidden: { pathLength: 0, opacity: 0 },
             visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.8 } },
           }}
         />
+        <motion.circle
+          cx="120" cy="50" r="27" fill="none"
+          stroke="#fff4d8" strokeOpacity="0.55" strokeWidth="0.6"
+          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ delay: 2.6, duration: 0.8 }}
+        />
+        {/* Diamond on top of right ring */}
+        <motion.g
+          initial={{ scale: 0, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ delay: 2.8, duration: 0.6, ease: "backOut" }}
+          style={{ transformOrigin: "120px 20px" }}
+        >
+          <polygon points="120,15 124,20 120,27 116,20" fill="#fff8e1" stroke="#b8862f" strokeWidth="0.5" />
+          <motion.circle
+            cx="120" cy="20" r="1.2" fill="#ffffff"
+            animate={{ opacity: [0.3, 1, 0.3] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.g>
+
+        {/* Shimmer sweep across the rings */}
         <motion.rect
           x="0" y="0" width="40" height="100" fill="url(#shimmerGrad)"
           initial={{ x: -60, opacity: 0 }}
           animate={{ x: 220, opacity: [0, 0.6, 0] }}
           transition={{ duration: 2.8, delay: 2.2, repeat: Infinity, repeatDelay: 4 }}
         />
+
       </motion.svg>
 
       {/* Ornamental flourish — top */}
