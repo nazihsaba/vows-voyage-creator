@@ -1204,7 +1204,7 @@ const RsvpSlide = ({
   }));
 
   return (
-    <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-hidden">
+    <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-y-auto">
       {/* Decorative background */}
       <div className="pointer-events-none absolute inset-0 overflow-hidden">
         {/* Soft warm glow */}
