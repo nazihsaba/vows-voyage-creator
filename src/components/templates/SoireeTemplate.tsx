@@ -200,7 +200,14 @@ export const SoireeTemplate = ({
 
   slides.push({
     id: "countdown",
-    node: <CountdownSlide date={wedding.wedding_date} backgroundImage={countdownBg} />,
+    node: (
+      <CountdownSlide
+        date={wedding.wedding_date}
+        backgroundImage={countdownBg}
+        brideName={wedding.bride_name}
+        groomName={wedding.groom_name}
+      />
+    ),
   });
 
   if (gallery && gallery.length > 0) {
