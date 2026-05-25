@@ -1053,7 +1053,7 @@ const CountdownSlide = ({
                 right: "25%",
                 height: "0.5px",
                 background:
-                  "linear-gradient(90deg,transparent,#d4af6c 50%,transparent)",
+                  "linear-gradient(90deg,transparent,rgba(255,255,255,0.7) 50%,transparent)",
               }}
             />
             <div
