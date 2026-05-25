@@ -22,6 +22,10 @@ export type DayProgrammeProps = {
   events: DayEvent[];
   locale?: Locale;
   onStateChange?: (s: { atEnd: boolean; step: number }) => void;
+  entryDirection?: "forward" | "backward";
+  entryNonce?: number;
+  onRequestNext?: () => void;
+  onRequestPrev?: () => void;
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
