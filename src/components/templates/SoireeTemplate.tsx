@@ -903,10 +903,11 @@ const CountdownSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0.4 }}
+          style={{ opacity: 0.55 }}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
+
 
       <div className="absolute inset-0 flex items-center justify-center px-5 py-10">
         <motion.div
@@ -1089,22 +1090,12 @@ const CountdownSlide = ({
                   >
                     {u.label}
                   </span>
-                  {u.pulse && (
-                    <span
-                      className="ml-auto rounded-full"
-                      style={{
-                        width: "5px",
-                        height: "5px",
-                        background: "#ffffff",
-                        boxShadow: "0 0 8px rgba(255,255,255,0.7)",
-                        animation: "auPulse 1s ease-out infinite",
-                      }}
-                    />
-                  )}
                 </div>
               ))}
             </div>
           </div>
+
+
 
           {/* Footer */}
           <div className="relative z-10 text-center mt-7 pt-5">
