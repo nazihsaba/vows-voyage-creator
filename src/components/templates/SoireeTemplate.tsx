@@ -777,7 +777,10 @@ const EventsSlide = ({
   venueName,
   dateFormatted,
   backgroundImage,
-  onTimelineStateChange,
+  entryDirection,
+  entryNonce,
+  onRequestNext,
+  onRequestPrev,
 }: {
   ceremony?: any;
   venue?: any;
@@ -785,7 +788,10 @@ const EventsSlide = ({
   venueName?: string;
   dateFormatted?: string;
   backgroundImage?: string;
-  onTimelineStateChange?: (s: { atEnd: boolean; step: number }) => void;
+  entryDirection?: "forward" | "backward";
+  entryNonce?: number;
+  onRequestNext?: () => void;
+  onRequestPrev?: () => void;
 }) => {
   const programmeEvents: DayEvent[] = [
     ceremony && {
