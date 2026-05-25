@@ -841,7 +841,10 @@ const EventsSlide = ({
       <DayProgramme
         date={dateFormatted || ""}
         events={programmeEvents}
-        onStateChange={onTimelineStateChange}
+        entryDirection={entryDirection}
+        entryNonce={entryNonce}
+        onRequestNext={onRequestNext}
+        onRequestPrev={onRequestPrev}
       />
     </div>
   );
