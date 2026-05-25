@@ -508,9 +508,10 @@ const NamesSlide = ({
         animate={{ scale: 1 }}
         transition={{ duration: 6, ease: "easeOut" }}
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.55 }}
       />
     )}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className={`${slideContainer} text-white`}>
       <motion.p
         initial={{ opacity: 0 }}
