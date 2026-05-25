@@ -22,6 +22,10 @@ export type DayProgrammeProps = {
   events: DayEvent[];
   locale?: Locale;
   onStateChange?: (s: { atEnd: boolean; step: number }) => void;
+  entryDirection?: "forward" | "backward";
+  entryNonce?: number;
+  onRequestNext?: () => void;
+  onRequestPrev?: () => void;
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
@@ -46,6 +50,10 @@ export default function DayProgramme({
   events,
   locale = "en",
   onStateChange,
+  entryDirection,
+  entryNonce,
+  onRequestNext,
+  onRequestPrev,
 }: DayProgrammeProps) {
   const strings = STRINGS[locale];
   const total = Math.max(1, events.length);
@@ -124,12 +132,31 @@ export default function DayProgramme({
       if (!atEnd) {
         e.stopPropagation();
         advance();
+      } else {
+        onRequestNext?.();
       }
-    } else if (step > 0) {
-      e.stopPropagation();
-      retreat();
+    } else {
+      if (step > 0) {
+        e.stopPropagation();
+        retreat();
+      } else {
+        onRequestPrev?.();
+      }
     }
   };
+
+  // Reset step on entry based on direction (forward → start, backward → end)
+  useEffect(() => {
+    if (!entryNonce) return;
+    if (entryDirection === "backward") {
+      setStep(total - 1);
+      setHasInteracted(true);
+    } else {
+      setStep(0);
+      setHasInteracted(false);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryNonce]);
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
