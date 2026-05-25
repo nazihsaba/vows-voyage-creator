@@ -116,6 +116,16 @@ export const SoireeTemplate = ({
     };
   }, [emblaApi]);
 
+  const slidesIdsRef = useRef<string[]>([]);
+  const [timelineAtEnd, setTimelineAtEnd] = useState(false);
+  // Recompute lock whenever the selected slide or timeline progress changes
+  useEffect(() => {
+    const current = slidesIdsRef.current[selected];
+    timelineLockRef.current =
+      current === timelineSlideIdRef.current && !timelineAtEnd;
+  }, [selected, timelineAtEnd]);
+
+
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
