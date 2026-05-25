@@ -875,13 +875,9 @@ const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 const CountdownSlide = ({
   date,
   backgroundImage,
-  brideName,
-  groomName,
 }: {
   date: string;
   backgroundImage?: string;
-  brideName?: string;
-  groomName?: string;
 }) => {
   const { d, h, m, s } = useCountdown(date);
 
