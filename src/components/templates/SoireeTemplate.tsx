@@ -915,11 +915,6 @@ const CountdownSlide = ({
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative w-full max-w-[640px] rounded-[14px] overflow-hidden"
           style={{
-            background:
-              "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.20) 100%)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.18)",
             padding: "40px 36px 28px",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
