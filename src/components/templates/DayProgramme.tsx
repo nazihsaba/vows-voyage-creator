@@ -50,6 +50,10 @@ export default function DayProgramme({
   events,
   locale = "en",
   onStateChange,
+  entryDirection,
+  entryNonce,
+  onRequestNext,
+  onRequestPrev,
 }: DayProgrammeProps) {
   const strings = STRINGS[locale];
   const total = Math.max(1, events.length);
