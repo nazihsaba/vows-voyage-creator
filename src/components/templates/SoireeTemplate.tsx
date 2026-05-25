@@ -444,6 +444,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
           loop
           playsInline
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 1 }}
         />
       ) : (
         <motion.img
@@ -453,12 +454,13 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.55 }}
         />
       )
     ) : (
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a] to-[#3a3a3a]" />
     )}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60" />
+    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
       <motion.p
         initial={{ opacity: 0, y: 12 }}
@@ -506,9 +508,10 @@ const NamesSlide = ({
         animate={{ scale: 1 }}
         transition={{ duration: 6, ease: "easeOut" }}
         className="absolute inset-0 w-full h-full object-cover"
+        style={{ opacity: 0.55 }}
       />
     )}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className={`${slideContainer} text-white`}>
       <motion.p
         initial={{ opacity: 0 }}
