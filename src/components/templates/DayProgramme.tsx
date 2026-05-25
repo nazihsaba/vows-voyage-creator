@@ -78,6 +78,10 @@ export default function DayProgramme({
   const progress = total <= 1 ? 1 : step / (total - 1);
   const atEnd = step >= total - 1;
 
+  useEffect(() => {
+    onStateChange?.({ atEnd, step });
+  }, [atEnd, step, onStateChange]);
+
   const advance = () => {
     if (!hasInteracted) setHasInteracted(true);
     setStep((s) => Math.min(total - 1, s + 1));
