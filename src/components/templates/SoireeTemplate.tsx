@@ -271,6 +271,9 @@ export const SoireeTemplate = ({
     node: <FooterSlide />,
   });
 
+  slidesIdsRef.current = slides.map((s) => s.id);
+
+
   return (
     <div
       className="fixed inset-0 w-full h-[100dvh] overflow-hidden bg-[#f6f1ea] text-[#1a1a1a]"
