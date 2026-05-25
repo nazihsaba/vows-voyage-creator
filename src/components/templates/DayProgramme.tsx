@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { ChevronRight } from "lucide-react";
 
 export type DayEvent = {
   id: string;
@@ -22,93 +23,35 @@ export type DayProgrammeProps = {
   locale?: Locale;
 };
 
-const STRINGS: Record<Locale, { eyebrow: string; title: string; hint: string; map: string }> = {
-  en: { eyebrow: "The Day", title: "Programme", hint: "swipe to reveal the day", map: "View Map" },
-  fr: { eyebrow: "Le Jour", title: "Programme", hint: "glissez pour révéler la journée", map: "Voir la carte" },
-  ar: { eyebrow: "اليوم", title: "البرنامج", hint: "اسحب لاكتشاف اليوم", map: "عرض الخريطة" },
-};
-
-const RingPair = ({
-  progress,
-  size = "spine",
-  active = false,
-}: {
-  progress: number;
-  size?: "spine" | "thumb";
-  active?: boolean;
-}) => {
-  const ringDiameter = size === "spine" ? 16 : 14;
-  const halfHeight = size === "spine" ? 18 : 16;
-  const halfWidth = size === "spine" ? 36 : 32;
-  const ringGap = 14 - progress * 20; // 14 → -6
-  const r = Math.round(212 - progress * 28);
-  const g = Math.round(160 - progress * 24);
-  const b = Math.round(64 + progress * 7);
-  const ringColor = `rgb(${r}, ${g}, ${b})`;
-  const glowIntensity = 0.2 + progress * 0.55 + (active ? 0.2 : 0);
-  const glowSize = 4 + progress * 12;
-  const offset = ringDiameter / 2;
-
-  const baseStyle = {
-    position: "absolute" as const,
-    top: "50%",
-    width: ringDiameter,
-    height: ringDiameter,
-    border: `1.5px solid ${ringColor}`,
-    borderRadius: "50%",
-    transform: "translate(-50%, -50%)",
-    boxShadow: `0 0 ${glowSize}px rgba(184,134,11,${glowIntensity})`,
-    transition: "left 0.12s linear, border-color 0.3s ease, box-shadow 0.3s ease",
-  };
-
-  return (
-    <div style={{ position: "relative", width: halfWidth, height: halfHeight }}>
-      <div
-        style={{
-          ...baseStyle,
-          left: `calc(50% - ${offset}px - ${ringGap / 2}px)`,
-          zIndex: 1,
-        }}
-      />
-      <div
-        style={{
-          ...baseStyle,
-          left: `calc(50% + ${offset}px + ${ringGap / 2}px)`,
-          zIndex: 2,
-        }}
-      />
-    </div>
-  );
+const STRINGS: Record<Locale, { hint: string; map: string }> = {
+  en: { hint: "tap to reveal the day", map: "View Map" },
+  fr: { hint: "appuyez pour révéler la journée", map: "Voir la carte" },
+  ar: { hint: "اضغط لاكتشاف اليوم", map: "عرض الخريطة" },
 };
 
 const KEYFRAMES = `
-@keyframes dp-eyebrow { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes dp-title { from { opacity: 0; filter: blur(8px); transform: scale(0.94); } to { opacity: 1; filter: blur(0); transform: scale(1); } }
 @keyframes dp-fade { from { opacity: 0; } to { opacity: 1; } }
 @keyframes dp-rule { from { width: 0; } to { width: 56px; } }
-@keyframes dp-bob { 0%, 100% { transform: translate(-50%, -50%); } 50% { transform: translate(-50%, calc(-50% - 3px)); } }
-@keyframes dp-hero-pulse {
-  0%, 100% { box-shadow: 0 0 0 1px rgba(184,134,11,0.45), 0 0 0 0 rgba(184,134,11,0); }
-  50% { box-shadow: 0 0 0 1px rgba(184,134,11,0.6), 0 0 0 6px rgba(184,134,11,0.12); }
+@keyframes dp-bob { 0%, 100% { transform: translate(0, 0); } 50% { transform: translate(4px, 0); } }
+@keyframes dp-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(255,255,255,0.45), 0 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 0 1px rgba(255,255,255,0.7), 0 0 0 6px rgba(255,255,255,0.12); }
 }
 `;
 
 export default function DayProgramme({
-  title,
-  eyebrow,
   date,
   events,
   locale = "en",
 }: DayProgrammeProps) {
   const strings = STRINGS[locale];
-  const [progress, setProgress] = useState(0);
+  const total = Math.max(1, events.length);
+  const [step, setStep] = useState(0); // 0..total-1
   const [hasInteracted, setHasInteracted] = useState(false);
   const [isNarrow, setIsNarrow] = useState(false);
-  const [activeThumb, setActiveThumb] = useState(false);
-  const trackRef = useRef<HTMLDivElement>(null);
   const agendaRef = useRef<HTMLDivElement>(null);
   const [agendaHeight, setAgendaHeight] = useState(0);
-  const draggingRef = useRef(false);
   const isRTL = locale === "ar";
 
   useEffect(() => {
@@ -127,68 +70,17 @@ export default function DayProgramme({
     return () => ro.disconnect();
   }, []);
 
-  const setFromClientX = (clientX: number) => {
-    if (!trackRef.current) return;
-    const rect = trackRef.current.getBoundingClientRect();
-    const p = Math.max(0, Math.min(1, (clientX - rect.left) / rect.width));
-    setProgress(p);
-    if (!hasInteracted && p > 0.02) setHasInteracted(true);
-  };
+  const progress = total <= 1 ? 1 : step / (total - 1);
+  const atEnd = step >= total - 1;
 
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      if (!draggingRef.current) return;
-      setFromClientX(e.clientX);
-    };
-    const onUp = () => {
-      draggingRef.current = false;
-      setActiveThumb(false);
-    };
-    const onTouchMove = (e: TouchEvent) => {
-      if (!draggingRef.current) return;
-      e.preventDefault();
-      if (e.touches[0]) setFromClientX(e.touches[0].clientX);
-    };
-    const onTouchEnd = () => {
-      draggingRef.current = false;
-      setActiveThumb(false);
-    };
-    document.addEventListener("mousemove", onMove);
-    document.addEventListener("mouseup", onUp);
-    document.addEventListener("touchmove", onTouchMove, { passive: false });
-    document.addEventListener("touchend", onTouchEnd);
-    return () => {
-      document.removeEventListener("mousemove", onMove);
-      document.removeEventListener("mouseup", onUp);
-      document.removeEventListener("touchmove", onTouchMove);
-      document.removeEventListener("touchend", onTouchEnd);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasInteracted]);
-
-  const onTrackMouseDown = (e: React.MouseEvent) => {
-    draggingRef.current = true;
-    setActiveThumb(true);
-    setFromClientX(e.clientX);
+  const advance = () => {
+    if (!hasInteracted) setHasInteracted(true);
+    setStep((s) => Math.min(total - 1, s + 1));
   };
-  const onTrackTouchStart = (e: React.TouchEvent) => {
-    if (!e.touches[0]) return;
-    draggingRef.current = true;
-    setActiveThumb(true);
-    setFromClientX(e.touches[0].clientX);
-  };
-
-  const thresholds = useMemo(() => {
-    if (events.length <= 1) return [0];
-    return events.map((_, i) => (i * 0.95) / (events.length - 1));
-  }, [events]);
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
   const spineLeft = timeColWidth + spineColWidth / 2;
-
-  const baseOverlay = `linear-gradient(135deg, rgba(239,224,197,${0.82 - progress * 0.12}) 0%, rgba(227,209,176,${0.78 - progress * 0.1}) 55%, rgba(207,187,153,0.75) 100%)`;
-  const twilightOverlay = `linear-gradient(135deg, rgba(232,200,160,${progress * 0.4}) 0%, rgba(216,176,144,${progress * 0.35}) 50%, rgba(184,152,144,${progress * 0.45}) 100%)`;
 
   return (
     <div
@@ -197,11 +89,6 @@ export default function DayProgramme({
       style={{ touchAction: "pan-y", fontFamily: "system-ui, -apple-system, sans-serif" }}
     >
       <style>{KEYFRAMES}</style>
-
-      {/* Morning overlay */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: baseOverlay }} />
-      {/* Twilight overlay */}
-      <div className="absolute inset-0 pointer-events-none" style={{ background: twilightOverlay }} />
 
       {/* Content */}
       <div className="relative z-10 w-full h-full overflow-y-auto">
@@ -213,53 +100,30 @@ export default function DayProgramme({
             paddingBottom: isNarrow ? 160 : 180,
           }}
         >
-          {/* Header */}
+          {/* Header — date is the title now */}
           <div className="text-center">
-            <p
-              className="uppercase text-[#6B4F35]"
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.44em",
-                opacity: 0,
-                animation: "dp-eyebrow 0.7s 0.2s cubic-bezier(0.2,0.7,0.2,1) forwards",
-              }}
-            >
-              {eyebrow || strings.eyebrow}
-            </p>
             <h1
               className="italic font-normal"
               style={{
                 fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
-                fontSize: 56,
-                lineHeight: 1,
-                letterSpacing: "-0.02em",
-                color: "#2a1810",
-                marginTop: 14,
+                fontSize: isNarrow ? 36 : 44,
+                lineHeight: 1.1,
+                letterSpacing: "-0.01em",
+                color: "#ffffff",
+                textShadow: "0 2px 18px rgba(0,0,0,0.45)",
                 opacity: 0,
-                animation: "dp-title 1s 0.5s cubic-bezier(0.2,0.7,0.2,1) forwards",
-              }}
-            >
-              {title || strings.title}
-            </h1>
-            <p
-              className="uppercase text-[#6B4F35]"
-              style={{
-                fontSize: 10,
-                letterSpacing: "0.42em",
-                marginTop: 14,
-                opacity: 0,
-                animation: "dp-fade 0.6s 1s ease forwards",
+                animation: "dp-title 1s 0.3s cubic-bezier(0.2,0.7,0.2,1) forwards",
               }}
             >
               {date}
-            </p>
+            </h1>
             <div
               style={{
                 margin: "20px auto 0",
                 height: 1,
-                background: "#B8860A",
+                background: "rgba(255,255,255,0.7)",
                 width: 0,
-                animation: "dp-rule 0.7s 1.2s cubic-bezier(0.4,0,0.2,1) forwards",
+                animation: "dp-rule 0.7s 1s cubic-bezier(0.4,0,0.2,1) forwards",
               }}
             />
           </div>
@@ -274,7 +138,7 @@ export default function DayProgramme({
                 top: 14,
                 bottom: 14,
                 width: "0.5px",
-                background: "rgba(74,47,30,0.2)",
+                background: "rgba(255,255,255,0.25)",
                 transform: "translateX(-50%)",
               }}
             />
@@ -287,14 +151,14 @@ export default function DayProgramme({
                 width: "1px",
                 height: `calc(${progress} * (100% - 28px))`,
                 background:
-                  "linear-gradient(180deg, rgba(232,182,85,0.85) 0%, rgba(184,134,11,0.55) 100%)",
-                boxShadow: "0 0 10px rgba(232,182,85,0.4)",
+                  "linear-gradient(180deg, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 100%)",
+                boxShadow: "0 0 10px rgba(255,255,255,0.35)",
                 transform: "translateX(-50%)",
-                transition: "height 0.12s linear",
+                transition: "height 0.4s cubic-bezier(0.2,0.7,0.2,1)",
               }}
             />
 
-            {/* Rings on spine */}
+            {/* Marker on spine */}
             {agendaHeight > 0 && (
               <div
                 className="absolute pointer-events-none"
@@ -302,18 +166,20 @@ export default function DayProgramme({
                   left: spineLeft,
                   top: 14 + progress * (agendaHeight - 28),
                   transform: "translate(-50%, -50%)",
-                  transition: "top 0.12s linear",
+                  transition: "top 0.4s cubic-bezier(0.2,0.7,0.2,1)",
+                  width: 10,
+                  height: 10,
+                  borderRadius: "50%",
+                  background: "#ffffff",
+                  boxShadow: "0 0 12px rgba(255,255,255,0.7)",
                 }}
-              >
-                <RingPair progress={progress} size="spine" />
-              </div>
+              />
             )}
 
             {/* Event rows */}
             <div className="flex flex-col" style={{ gap: 36 }}>
               {events.map((event, idx) => {
-                const threshold = thresholds[idx];
-                const on = progress >= threshold - 0.001;
+                const on = idx <= step;
                 const heroOn = event.isHero && on;
                 const timeFontSize = event.isHero
                   ? isNarrow
@@ -344,7 +210,8 @@ export default function DayProgramme({
                         fontSize: timeFontSize,
                         lineHeight: 1.1,
                         letterSpacing: "-0.02em",
-                        color: "#2a1810",
+                        color: "#ffffff",
+                        textShadow: "0 1px 10px rgba(0,0,0,0.4)",
                         paddingRight: 14,
                         paddingTop: 6,
                       }}
@@ -358,7 +225,7 @@ export default function DayProgramme({
                             fontStyle: "italic",
                             fontSize: 12,
                             marginTop: 2,
-                            color: "#6B4F35",
+                            color: "rgba(255,255,255,0.8)",
                           }}
                         >
                           {event.minutePhrase}
@@ -366,47 +233,24 @@ export default function DayProgramme({
                       )}
                     </div>
 
-                    {/* Ring marker */}
-                    <div className="flex justify-center items-center" style={{ paddingTop: 8, position: "relative", zIndex: 2 }}>
+                    {/* Ring marker (single white ring on spine) */}
+                    <div
+                      className="flex justify-center items-center"
+                      style={{ paddingTop: 8, position: "relative", zIndex: 2 }}
+                    >
                       <div
                         style={{
-                          position: "relative",
-                          width: 34,
-                          height: 18,
+                          width: 14,
+                          height: 14,
+                          borderRadius: "50%",
+                          border: `1.5px solid ${on ? "#ffffff" : "rgba(255,255,255,0.4)"}`,
+                          background: on ? "rgba(255,255,255,0.15)" : "transparent",
+                          transition: "all 0.4s ease",
                           ...(heroOn
-                            ? { animation: "dp-hero-pulse 3s ease-in-out infinite", borderRadius: 999 }
+                            ? { animation: "dp-pulse 3s ease-in-out infinite" }
                             : {}),
                         }}
-                      >
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "50%",
-                            left: 4,
-                            width: 14,
-                            height: 14,
-                            borderRadius: "50%",
-                            border: `1.5px solid ${on ? "#B8860A" : "#C9B89A"}`,
-                            transform: "translateY(-50%)",
-                            transition: "border-color 0.4s ease",
-                            background: "transparent",
-                          }}
-                        />
-                        <div
-                          style={{
-                            position: "absolute",
-                            top: "50%",
-                            right: 4,
-                            width: 14,
-                            height: 14,
-                            borderRadius: "50%",
-                            border: `1.5px solid ${on ? "#B8860A" : "#C9B89A"}`,
-                            transform: "translateY(-50%)",
-                            transition: "border-color 0.4s ease",
-                            background: "transparent",
-                          }}
-                        />
-                      </div>
+                      />
                     </div>
 
                     {/* Event info */}
@@ -416,8 +260,9 @@ export default function DayProgramme({
                         style={{
                           fontSize: 10,
                           letterSpacing: "0.42em",
-                          color: "#6B4F35",
+                          color: "rgba(255,255,255,0.8)",
                           marginBottom: 7,
+                          textShadow: "0 1px 8px rgba(0,0,0,0.3)",
                         }}
                       >
                         {event.label}
@@ -429,7 +274,8 @@ export default function DayProgramme({
                           fontStyle: "italic",
                           fontSize: event.isHero ? 20 : 18,
                           lineHeight: 1.3,
-                          color: "#2a1810",
+                          color: "#ffffff",
+                          textShadow: "0 1px 10px rgba(0,0,0,0.4)",
                           marginBottom: 4,
                         }}
                       >
@@ -440,7 +286,7 @@ export default function DayProgramme({
                         style={{
                           fontSize: 9,
                           letterSpacing: "0.38em",
-                          color: "#6B4F35",
+                          color: "rgba(255,255,255,0.75)",
                         }}
                       >
                         {event.city}
@@ -454,20 +300,20 @@ export default function DayProgramme({
                           style={{
                             fontSize: 9,
                             letterSpacing: "0.42em",
-                            color: "#6B4F35",
+                            color: "rgba(255,255,255,0.85)",
                             paddingBottom: 3,
                             marginTop: 10,
-                            borderBottom: "0.5px solid rgba(107,79,53,0.5)",
+                            borderBottom: "0.5px solid rgba(255,255,255,0.5)",
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.color = "#2a1810";
-                            e.currentTarget.style.borderBottomColor = "#2a1810";
+                            e.currentTarget.style.color = "#ffffff";
+                            e.currentTarget.style.borderBottomColor = "#ffffff";
                             e.currentTarget.style.letterSpacing = "0.48em";
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.color = "#6B4F35";
+                            e.currentTarget.style.color = "rgba(255,255,255,0.85)";
                             e.currentTarget.style.borderBottomColor =
-                              "rgba(107,79,53,0.5)";
+                              "rgba(255,255,255,0.5)";
                             e.currentTarget.style.letterSpacing = "0.42em";
                           }}
                         >
@@ -483,9 +329,9 @@ export default function DayProgramme({
         </div>
       </div>
 
-      {/* Ring control */}
+      {/* Stepper control */}
       <div
-        className="absolute z-20"
+        className="absolute z-20 flex flex-col items-center"
         style={{
           bottom: 30,
           left: "50%",
@@ -494,80 +340,88 @@ export default function DayProgramme({
           maxWidth: 420,
         }}
       >
-        <div
-          ref={trackRef}
-          className="relative cursor-pointer"
-          style={{ height: 24, display: "flex", alignItems: "center" }}
-          onMouseDown={onTrackMouseDown}
-          onTouchStart={onTrackTouchStart}
-        >
-          {/* Track */}
-          <div
-            className="absolute left-0 right-0"
+        {/* Step dots */}
+        <div className="flex items-center justify-center gap-2 mb-4">
+          {events.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => {
+                if (!hasInteracted) setHasInteracted(true);
+                setStep(i);
+              }}
+              aria-label={`Step ${i + 1}`}
+              style={{
+                width: i === step ? 22 : 6,
+                height: 6,
+                borderRadius: 999,
+                background:
+                  i <= step ? "#ffffff" : "rgba(255,255,255,0.35)",
+                transition: "all 0.4s cubic-bezier(0.2,0.7,0.2,1)",
+                border: "none",
+                cursor: "pointer",
+                padding: 0,
+              }}
+            />
+          ))}
+        </div>
+
+        {/* Next button — chevron icon (only while there are more steps) */}
+        {!atEnd && (
+          <button
+            onClick={advance}
+            aria-label="Next step"
+            className="flex items-center justify-center"
             style={{
-              height: "0.5px",
-              background: "rgba(74,47,30,0.3)",
-              top: "50%",
-              transform: "translateY(-50%)",
+              width: 48,
+              height: 48,
+              borderRadius: "50%",
+              background: "rgba(255,255,255,0.18)",
+              backdropFilter: "blur(8px)",
+              WebkitBackdropFilter: "blur(8px)",
+              border: "1px solid rgba(255,255,255,0.5)",
+              color: "#ffffff",
+              cursor: "pointer",
+              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+              animation: !hasInteracted ? "dp-bob 1.6s ease-in-out infinite" : undefined,
+              transition: "background 0.3s ease",
             }}
-          />
-          {/* Track fill */}
-          <div
-            className="absolute left-0"
-            style={{
-              height: 1,
-              width: `calc(${progress} * 100%)`,
-              background:
-                "linear-gradient(90deg, rgba(244,200,74,0.8), rgba(184,134,11,0.7))",
-              boxShadow: "0 0 6px rgba(232,182,85,0.4)",
-              top: "50%",
-              transform: "translateY(-50%)",
-              transition: "width 0.12s linear",
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.3)";
             }}
-          />
-          {/* Thumb */}
-          <div
-            className="absolute"
-            style={{
-              left: `calc(${progress} * 100%)`,
-              top: "50%",
-              transform: `translate(-50%, -50%) scale(${activeThumb ? 1.15 : 1})`,
-              cursor: activeThumb ? "grabbing" : "grab",
-              transition: "transform 0.2s ease",
-              ...(!hasInteracted
-                ? { animation: "dp-bob 2s 1.5s ease-in-out infinite" }
-                : {}),
-            }}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-              draggingRef.current = true;
-              setActiveThumb(true);
-              setFromClientX(e.clientX);
-            }}
-            onTouchStart={(e) => {
-              if (!e.touches[0]) return;
-              draggingRef.current = true;
-              setActiveThumb(true);
-              setFromClientX(e.touches[0].clientX);
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.18)";
             }}
           >
-            <RingPair progress={progress} size="thumb" active={activeThumb} />
-          </div>
-        </div>
+            <ChevronRight
+              style={{
+                width: 22,
+                height: 22,
+                transform: isRTL ? "scaleX(-1)" : undefined,
+              }}
+            />
+          </button>
+        )}
 
         {/* Hint */}
         <div
-          className="text-center mt-4 uppercase"
+          className="text-center mt-3 uppercase"
           style={{
             fontSize: 10,
             letterSpacing: "0.4em",
-            color: "#6B4F35",
-            opacity: hasInteracted ? 0 : 0.85,
-            transition: "opacity 0.8s ease",
+            color: "rgba(255,255,255,0.85)",
+            opacity: hasInteracted ? (atEnd ? 0.85 : 0) : 0.85,
+            transition: "opacity 0.6s ease",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
+            textShadow: "0 1px 8px rgba(0,0,0,0.4)",
           }}
         >
-          {strings.hint}
+          {atEnd && hasInteracted
+            ? locale === "fr"
+              ? "glissez pour continuer"
+              : locale === "ar"
+                ? "اسحب للمتابعة"
+                : "swipe to continue"
+            : strings.hint}
         </div>
       </div>
     </div>
