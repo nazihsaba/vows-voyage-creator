@@ -759,6 +759,7 @@ const EventsSlide = ({
   venueName,
   dateFormatted,
   backgroundImage,
+  onTimelineStateChange,
 }: {
   ceremony?: any;
   venue?: any;
@@ -766,6 +767,7 @@ const EventsSlide = ({
   venueName?: string;
   dateFormatted?: string;
   backgroundImage?: string;
+  onTimelineStateChange?: (s: { atEnd: boolean; step: number }) => void;
 }) => {
   const programmeEvents: DayEvent[] = [
     ceremony && {
@@ -807,11 +809,15 @@ const EventsSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.55 }}
         />
       )}
+      {/* Dark overlay to improve timeline readability */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
       <DayProgramme
         date={dateFormatted || ""}
         events={programmeEvents}
+        onStateChange={onTimelineStateChange}
       />
     </div>
   );
