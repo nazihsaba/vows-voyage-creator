@@ -146,8 +146,8 @@ export default function DayProgramme({
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
-            paddingTop: 36,
-            paddingBottom: isNarrow ? 160 : 180,
+            paddingTop: 84,
+            paddingBottom: isNarrow ? 130 : 150,
           }}
         >
           {/* Header — date is the title now */}
@@ -156,7 +156,7 @@ export default function DayProgramme({
               className="italic font-normal"
               style={{
                 fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
-                fontSize: isNarrow ? 36 : 44,
+                fontSize: isNarrow ? 30 : 38,
                 lineHeight: 1.1,
                 letterSpacing: "-0.01em",
                 color: "#ffffff",
