@@ -700,6 +700,24 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
   );
 };
 
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+
+const parseHourPhrase = (time?: string): { hour: number; phrase: string } | null => {
+  if (!time) return null;
+  const m = /^(\d{1,2}):?(\d{2})?/.exec(time.trim());
+  if (!m) return null;
+  const h24 = parseInt(m[1], 10);
+  const min = m[2] ? parseInt(m[2], 10) : 0;
+  if (Number.isNaN(h24)) return null;
+  let hour = h24 % 12;
+  if (hour === 0) hour = 12;
+  let phrase: string;
+  if (h24 < 12) phrase = min === 30 ? "half past, morning" : "in the morning";
+  else if (h24 < 17) phrase = min === 30 ? "half past noon" : "in the afternoon";
+  else phrase = min === 30 ? "half past, evening" : "in the evening";
+  return { hour, phrase };
+};
+
 const EventsSlide = ({
   ceremony,
   venue,
@@ -715,31 +733,65 @@ const EventsSlide = ({
   dateFormatted?: string;
   backgroundImage?: string;
 }) => {
-  const events = [
+  const programmeEvents: DayEvent[] = [
     ceremony && {
-      id: "ceremony",
-      title: "Ceremony",
-      time: formatTimeTo12Hour(ceremony.time) || "—",
-      location: ceremonyName || "",
-      link: ceremony.location_link,
-      icon: ceremony.icon || "material-symbols:church-rounded",
+      raw: ceremony,
+      label: "Ceremony",
+      name: ceremonyName,
+      isHero: true,
     },
     venue && {
-      id: "venue",
-      title: "Reception",
-      time: formatTimeTo12Hour(venue.time) || "—",
-      location: venueName || "",
-      link: venue.location_link,
-      icon: venue.icon || "solar:confetti-bold",
+      raw: venue,
+      label: "Reception",
+      name: venueName,
+      isHero: true,
     },
-  ].filter(Boolean) as Array<{
-    id: string;
-    title: string;
-    time: string;
-    location: string;
-    link?: string;
-    icon: string;
-  }>;
+  ]
+    .filter(Boolean)
+    .map((e: any, idx: number) => {
+      const parsed = parseHourPhrase(e.raw.time);
+      return {
+        id: `${idx}`,
+        hour: parsed?.hour ?? 12,
+        minutePhrase: parsed?.phrase,
+        romanNumeral: ROMAN[idx] || `${idx + 1}`,
+        label: e.label,
+        venue: e.name || "",
+        city: "",
+        mapUrl: e.raw.location_link,
+        isHero: e.isHero,
+      } as DayEvent;
+    });
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+      {backgroundImage && (
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      <DayProgramme
+        date={dateFormatted || ""}
+        events={programmeEvents}
+      />
+    </div>
+  );
+};
+
+const _LegacyEventsSlide_UNUSED = ({
+  ceremony,
+  venue,
+  ceremonyName,
+  venueName,
+  dateFormatted,
+  backgroundImage,
+}: any) => {
+  const events: any[] = [];
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
