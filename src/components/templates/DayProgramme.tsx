@@ -415,42 +415,6 @@ export default function DayProgramme({
           ))}
         </div>
 
-        {/* Next button — chevron icon (only while there are more steps) */}
-        {!atEnd && (
-          <button
-            onClick={advance}
-            aria-label="Next step"
-            className="flex items-center justify-center"
-            style={{
-              width: 48,
-              height: 48,
-              borderRadius: "50%",
-              background: "rgba(255,255,255,0.18)",
-              backdropFilter: "blur(8px)",
-              WebkitBackdropFilter: "blur(8px)",
-              border: "1px solid rgba(255,255,255,0.5)",
-              color: "#ffffff",
-              cursor: "pointer",
-              boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
-              animation: !hasInteracted ? "dp-bob 1.6s ease-in-out infinite" : undefined,
-              transition: "background 0.3s ease",
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.3)";
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.background = "rgba(255,255,255,0.18)";
-            }}
-          >
-            <ChevronRight
-              style={{
-                width: 22,
-                height: 22,
-                transform: isRTL ? "scaleX(-1)" : undefined,
-              }}
-            />
-          </button>
-        )}
 
         {/* Hint */}
         <div
