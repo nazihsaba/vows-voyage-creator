@@ -54,6 +54,9 @@ export default function DayProgramme({
   const [agendaHeight, setAgendaHeight] = useState(0);
   const isRTL = locale === "ar";
 
+  const touchStartRef = useRef<{ x: number; y: number } | null>(null);
+  const swipeHandledRef = useRef(false);
+
   useEffect(() => {
     const check = () => setIsNarrow(window.innerWidth < 500);
     check();
@@ -77,6 +80,50 @@ export default function DayProgramme({
     if (!hasInteracted) setHasInteracted(true);
     setStep((s) => Math.min(total - 1, s + 1));
   };
+  const retreat = () => {
+    if (!hasInteracted) setHasInteracted(true);
+    setStep((s) => Math.max(0, s - 1));
+  };
+
+  const onTouchStart = (e: React.TouchEvent) => {
+    const t = e.touches[0];
+    if (!t) return;
+    touchStartRef.current = { x: t.clientX, y: t.clientY };
+    swipeHandledRef.current = false;
+  };
+  const onTouchMove = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    const t = e.touches[0];
+    if (!start || !t || swipeHandledRef.current) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 12 || Math.abs(dx) < Math.abs(dy)) return;
+    const forward = isRTL ? dx > 0 : dx < 0;
+    // Forward swipe at end → let Embla advance to next slide
+    if (forward && atEnd) return;
+    // Otherwise we handle it internally; block Embla
+    e.stopPropagation();
+  };
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const start = touchStartRef.current;
+    touchStartRef.current = null;
+    if (!start) return;
+    const t = e.changedTouches[0];
+    if (!t) return;
+    const dx = t.clientX - start.x;
+    const dy = t.clientY - start.y;
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return;
+    const forward = isRTL ? dx > 0 : dx < 0;
+    if (forward) {
+      if (!atEnd) {
+        e.stopPropagation();
+        advance();
+      }
+    } else if (step > 0) {
+      e.stopPropagation();
+      retreat();
+    }
+  };
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
@@ -87,6 +134,9 @@ export default function DayProgramme({
       dir={isRTL ? "rtl" : "ltr"}
       className="absolute inset-0 overflow-hidden"
       style={{ touchAction: "pan-y", fontFamily: "system-ui, -apple-system, sans-serif" }}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
     >
       <style>{KEYFRAMES}</style>
 
