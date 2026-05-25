@@ -1008,7 +1008,7 @@ const CountdownSlide = ({
                         fontWeight: 400,
                         fontSize: "clamp(28px, 7vw, 44px)",
                         lineHeight: 1,
-                        color: "#fff4d8",
+                        color: "#ffffff",
                         minWidth: "52px",
                         fontVariantNumeric: "tabular-nums",
                       }}
