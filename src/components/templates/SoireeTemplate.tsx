@@ -852,24 +852,12 @@ const CountdownSlide = ({
               "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.20) 100%)",
             backdropFilter: "blur(8px)",
             WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(212,175,55,0.18)",
+            border: "1px solid rgba(255,255,255,0.18)",
             padding: "40px 36px 28px",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
         >
-          {/* Corner ornaments */}
-          {[
-            "top-[14px] left-[14px] border-l border-t",
-            "top-[14px] right-[14px] border-r border-t",
-            "bottom-[14px] left-[14px] border-l border-b",
-            "bottom-[14px] right-[14px] border-r border-b",
-          ].map((c, i) => (
-            <span
-              key={i}
-              className={`absolute w-5 h-5 ${c}`}
-              style={{ borderColor: "rgba(212,175,55,0.55)", borderWidth: "0.5px" }}
-            />
-          ))}
+
 
           {/* Header */}
           <div
@@ -889,7 +877,8 @@ const CountdownSlide = ({
                 fontStyle: "italic",
                 fontSize: "16px",
                 letterSpacing: "0.04em",
-                color: "#f3d9a4",
+                color: "rgba(255,255,255,0.95)",
+
                 textTransform: "none",
               }}
             >
@@ -933,8 +922,9 @@ const CountdownSlide = ({
                       lineHeight: 1.05,
                       letterSpacing: "-0.03em",
                       fontSize: "clamp(110px, 26vw, 190px)",
-                      color: "#f3d9a4",
-                      textShadow: "0 2px 18px rgba(212,175,55,0.25)",
+                      color: "#ffffff",
+                      textShadow: "0 2px 18px rgba(255,255,255,0.15)",
+
                       WebkitFontSmoothing: "antialiased",
                       MozOsxFontSmoothing: "grayscale",
                     }}
@@ -964,7 +954,8 @@ const CountdownSlide = ({
                 width: "1px",
                 height: "220px",
                 background:
-                  "linear-gradient(180deg,transparent 0%,#b8862f 18%,#d4af6c 50%,#b8862f 82%,transparent 100%)",
+                  "linear-gradient(180deg,transparent 0%,rgba(255,255,255,0.5) 18%,rgba(255,255,255,0.85) 50%,rgba(255,255,255,0.5) 82%,transparent 100%)",
+
               }}
             >
               {[24, 50, 76].map((top) => (
@@ -976,7 +967,7 @@ const CountdownSlide = ({
                     left: "-3px",
                     width: "7px",
                     height: "0.5px",
-                    background: "#d4af6c",
+                    background: "rgba(255,255,255,0.7)",
                     opacity: 0.55,
                   }}
                 />
@@ -989,7 +980,7 @@ const CountdownSlide = ({
                   width: "4px",
                   height: "50px",
                   background:
-                    "linear-gradient(180deg,transparent,rgba(255,228,181,0.95),transparent)",
+                    "linear-gradient(180deg,transparent,rgba(255,255,255,0.95),transparent)",
                   animation: "auTravel 6s ease-in-out infinite",
                   filter: "blur(0.5px)",
                 }}
@@ -1017,7 +1008,7 @@ const CountdownSlide = ({
                         fontWeight: 400,
                         fontSize: "clamp(28px, 7vw, 44px)",
                         lineHeight: 1,
-                        color: "#fff4d8",
+                        color: "#ffffff",
                         minWidth: "52px",
                         fontVariantNumeric: "tabular-nums",
                       }}
@@ -1042,8 +1033,8 @@ const CountdownSlide = ({
                       style={{
                         width: "5px",
                         height: "5px",
-                        background: "#d4af6c",
-                        boxShadow: "0 0 8px rgba(212,175,55,0.8)",
+                        background: "#ffffff",
+                        boxShadow: "0 0 8px rgba(255,255,255,0.7)",
                         animation: "auPulse 1s ease-out infinite",
                       }}
                     />
@@ -1062,7 +1053,7 @@ const CountdownSlide = ({
                 right: "25%",
                 height: "0.5px",
                 background:
-                  "linear-gradient(90deg,transparent,#d4af6c 50%,transparent)",
+                  "linear-gradient(90deg,transparent,rgba(255,255,255,0.7) 50%,transparent)",
               }}
             />
             <div
@@ -1076,11 +1067,11 @@ const CountdownSlide = ({
               }}
             >
               until{" "}
-              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
                 ◆
               </span>{" "}
               we say{" "}
-              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
                 ◆
               </span>{" "}
               I do
