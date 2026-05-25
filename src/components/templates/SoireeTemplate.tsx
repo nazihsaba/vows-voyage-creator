@@ -980,7 +980,7 @@ const CountdownSlide = ({
                   width: "4px",
                   height: "50px",
                   background:
-                    "linear-gradient(180deg,transparent,rgba(255,228,181,0.95),transparent)",
+                    "linear-gradient(180deg,transparent,rgba(255,255,255,0.95),transparent)",
                   animation: "auTravel 6s ease-in-out infinite",
                   filter: "blur(0.5px)",
                 }}
