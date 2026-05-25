@@ -218,6 +218,13 @@ export const SoireeTemplate = ({
     });
   }
 
+  if (giftCards && giftCards.length > 0) {
+    slides.push({
+      id: "gifts",
+      node: <GiftsSlide giftCards={giftCards} backgroundImage={namesBg} />,
+    });
+  }
+
   slides.push({
     id: "rsvp",
     node: (
@@ -234,6 +241,7 @@ export const SoireeTemplate = ({
       />
     ),
   });
+
 
   slides.push({
     id: "footer",
