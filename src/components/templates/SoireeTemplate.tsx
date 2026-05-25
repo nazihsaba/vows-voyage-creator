@@ -1131,7 +1131,7 @@ const GiftsSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 1 }}
+          style={{ opacity: 0.55 }}
         />
       )}
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
