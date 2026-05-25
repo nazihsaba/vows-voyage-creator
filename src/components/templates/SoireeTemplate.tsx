@@ -499,7 +499,7 @@ const NamesSlide = ({
   date: string;
   backgroundImage?: string;
 }) => (
-  <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+  <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {backgroundImage && (
       <motion.img
         src={backgroundImage}
