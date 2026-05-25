@@ -1194,26 +1194,158 @@ const RsvpSlide = ({
   isRsvpDeadlinePassed,
   submittingRsvp,
   isPreview,
-}: any) => (
-  <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-y-auto">
-    <div className="min-h-full flex flex-col justify-center py-16">
-      <RsvpSection
-        wedding={wedding}
-        invitees={invitees}
-        rsvpResponses={rsvpResponses}
-        handleRsvpToggle={handleRsvpToggle}
-        handleRsvpSubmit={handleRsvpSubmit}
-        numberOfPersons={numberOfPersons}
-        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-        submittingRsvp={submittingRsvp}
-        isPreview={isPreview}
-        bgClassName="bg-transparent"
-        cardBgClassName="bg-white/70 backdrop-blur"
-        accentColorClass="text-black"
-      />
+}: any) => {
+  const bubbles = Array.from({ length: 12 }).map((_, i) => ({
+    left: `${(i * 8.3 + 4) % 100}%`,
+    size: 6 + ((i * 7) % 10),
+    delay: (i * 0.7) % 7,
+    duration: 9 + ((i * 1.3) % 6),
+    drift: ((i % 2 === 0 ? 1 : -1) * (8 + (i % 5) * 3)),
+  }));
+
+  return (
+    <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-y-auto">
+      {/* Decorative background */}
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        {/* Soft warm glow */}
+        <div
+          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[120%] h-[60%] opacity-60"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(212,175,108,0.18) 0%, rgba(212,175,108,0.05) 45%, transparent 70%)",
+          }}
+        />
+
+        {/* Rising champagne bubbles */}
+        {bubbles.map((b, i) => (
+          <motion.span
+            key={i}
+            className="absolute rounded-full"
+            style={{
+              left: b.left,
+              bottom: "-20px",
+              width: b.size,
+              height: b.size,
+              background:
+                "radial-gradient(circle at 30% 30%, rgba(255,244,216,0.95), rgba(212,175,108,0.35) 60%, rgba(184,134,47,0.15))",
+              boxShadow: "0 0 8px rgba(212,175,108,0.35)",
+            }}
+            initial={{ y: 0, x: 0, opacity: 0 }}
+            animate={{
+              y: "-110vh",
+              x: [0, b.drift, -b.drift / 2, b.drift / 3, 0],
+              opacity: [0, 0.9, 0.9, 0],
+            }}
+            transition={{
+              duration: b.duration,
+              delay: b.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+
+        {/* Top-left ornamental sprig */}
+        <motion.svg
+          viewBox="0 0 120 80"
+          className="absolute top-6 left-6 w-24 h-16 md:w-32 md:h-20"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.6, ease: "easeOut" }}
+        >
+          <motion.path
+            d="M5 70 Q 30 60, 50 40 T 110 10"
+            fill="none"
+            stroke="#b8862f"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2.2, ease: "easeInOut" }}
+          />
+          {[
+            { cx: 25, cy: 62, r: 2.2 },
+            { cx: 45, cy: 46, r: 1.8 },
+            { cx: 70, cy: 30, r: 2 },
+            { cx: 95, cy: 16, r: 1.6 },
+          ].map((leaf, idx) => (
+            <motion.ellipse
+              key={idx}
+              cx={leaf.cx}
+              cy={leaf.cy}
+              rx={leaf.r * 2.2}
+              ry={leaf.r}
+              fill="#d4af6c"
+              opacity="0.55"
+              transform={`rotate(${-30 + idx * 8} ${leaf.cx} ${leaf.cy})`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 0.55, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.2 + idx * 0.15 }}
+            />
+          ))}
+        </motion.svg>
+
+        {/* Bottom-right ornamental sprig (mirrored) */}
+        <motion.svg
+          viewBox="0 0 120 80"
+          className="absolute bottom-6 right-6 w-24 h-16 md:w-32 md:h-20"
+          style={{ transform: "scale(-1, -1)" }}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1.6, delay: 0.3, ease: "easeOut" }}
+        >
+          <motion.path
+            d="M5 70 Q 30 60, 50 40 T 110 10"
+            fill="none"
+            stroke="#b8862f"
+            strokeWidth="0.8"
+            strokeLinecap="round"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 2.2, delay: 0.3, ease: "easeInOut" }}
+          />
+          {[
+            { cx: 25, cy: 62, r: 2.2 },
+            { cx: 45, cy: 46, r: 1.8 },
+            { cx: 70, cy: 30, r: 2 },
+            { cx: 95, cy: 16, r: 1.6 },
+          ].map((leaf, idx) => (
+            <motion.ellipse
+              key={idx}
+              cx={leaf.cx}
+              cy={leaf.cy}
+              rx={leaf.r * 2.2}
+              ry={leaf.r}
+              fill="#d4af6c"
+              opacity="0.55"
+              transform={`rotate(${-30 + idx * 8} ${leaf.cx} ${leaf.cy})`}
+              initial={{ opacity: 0, scale: 0 }}
+              animate={{ opacity: 0.55, scale: 1 }}
+              transition={{ duration: 0.6, delay: 1.5 + idx * 0.15 }}
+            />
+          ))}
+        </motion.svg>
+      </div>
+
+      <div className="relative min-h-full flex flex-col justify-center py-16">
+        <RsvpSection
+          wedding={wedding}
+          invitees={invitees}
+          rsvpResponses={rsvpResponses}
+          handleRsvpToggle={handleRsvpToggle}
+          handleRsvpSubmit={handleRsvpSubmit}
+          numberOfPersons={numberOfPersons}
+          isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+          submittingRsvp={submittingRsvp}
+          isPreview={isPreview}
+          bgClassName="bg-transparent"
+          cardBgClassName="bg-white/70 backdrop-blur"
+          accentColorClass="text-black"
+        />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 const FooterSlide = () => (
   <div className={`${slideContainer} bg-[#f6f1ea]`}>
