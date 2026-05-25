@@ -12,6 +12,7 @@ import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
 
 interface SoireeTemplateProps {
   wedding: any;
@@ -700,6 +701,24 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
   );
 };
 
+const ROMAN = ["I", "II", "III", "IV", "V", "VI", "VII", "VIII"];
+
+const parseHourPhrase = (time?: string): { hour: number; phrase: string } | null => {
+  if (!time) return null;
+  const m = /^(\d{1,2}):?(\d{2})?/.exec(time.trim());
+  if (!m) return null;
+  const h24 = parseInt(m[1], 10);
+  const min = m[2] ? parseInt(m[2], 10) : 0;
+  if (Number.isNaN(h24)) return null;
+  let hour = h24 % 12;
+  if (hour === 0) hour = 12;
+  let phrase: string;
+  if (h24 < 12) phrase = min === 30 ? "half past, morning" : "in the morning";
+  else if (h24 < 17) phrase = min === 30 ? "half past noon" : "in the afternoon";
+  else phrase = min === 30 ? "half past, evening" : "in the evening";
+  return { hour, phrase };
+};
+
 const EventsSlide = ({
   ceremony,
   venue,
@@ -715,31 +734,35 @@ const EventsSlide = ({
   dateFormatted?: string;
   backgroundImage?: string;
 }) => {
-  const events = [
+  const programmeEvents: DayEvent[] = [
     ceremony && {
-      id: "ceremony",
-      title: "Ceremony",
-      time: formatTimeTo12Hour(ceremony.time) || "—",
-      location: ceremonyName || "",
-      link: ceremony.location_link,
-      icon: ceremony.icon || "material-symbols:church-rounded",
+      raw: ceremony,
+      label: "Ceremony",
+      name: ceremonyName,
+      isHero: true,
     },
     venue && {
-      id: "venue",
-      title: "Reception",
-      time: formatTimeTo12Hour(venue.time) || "—",
-      location: venueName || "",
-      link: venue.location_link,
-      icon: venue.icon || "solar:confetti-bold",
+      raw: venue,
+      label: "Reception",
+      name: venueName,
+      isHero: true,
     },
-  ].filter(Boolean) as Array<{
-    id: string;
-    title: string;
-    time: string;
-    location: string;
-    link?: string;
-    icon: string;
-  }>;
+  ]
+    .filter(Boolean)
+    .map((e: any, idx: number) => {
+      const parsed = parseHourPhrase(e.raw.time);
+      return {
+        id: `${idx}`,
+        hour: parsed?.hour ?? 12,
+        minutePhrase: parsed?.phrase,
+        romanNumeral: ROMAN[idx] || `${idx + 1}`,
+        label: e.label,
+        venue: e.name || "",
+        city: "",
+        mapUrl: e.raw.location_link,
+        isHero: e.isHero,
+      } as DayEvent;
+    });
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
@@ -753,77 +776,14 @@ const EventsSlide = ({
           className="absolute inset-0 w-full h-full object-cover"
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-[#f6f1ea]/85 via-[#f6f1ea]/80 to-[#f6f1ea]/95" />
-      <div className={`${slideContainer} overflow-y-auto`}>
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3, duration: 0.8 }}
-          className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-black/60"
-        >
-          The Day
-        </motion.p>
-        <motion.h3
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.9 }}
-          className="mt-3 text-4xl md:text-5xl italic font-light"
-        >
-          Events
-        </motion.h3>
-        {dateFormatted && (
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6, duration: 0.8 }}
-            className="mt-3 text-xs tracking-[0.35em] uppercase text-black/65"
-          >
-            {dateFormatted}
-          </motion.p>
-        )}
-
-        <div className="relative mt-10 w-full max-w-md">
-          <div className="absolute left-1/2 top-2 bottom-2 w-px bg-black/25 -translate-x-1/2" />
-          <div className="space-y-12">
-            {events.map((event, index) => (
-              <motion.div
-                key={event.id}
-                initial={{ opacity: 0, y: 16 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.7 + index * 0.2, duration: 0.8 }}
-                className="relative flex items-start"
-              >
-                <div className="flex-1 pr-6 text-right">
-                  <p className="text-[10px] tracking-[0.4em] uppercase text-black/55 mb-1">
-                    {event.title}
-                  </p>
-                  <p className="text-2xl italic font-light">{event.time}</p>
-                </div>
-                <div className="absolute left-1/2 top-1.5 -translate-x-1/2 w-3 h-3 rounded-full bg-black z-10 ring-4 ring-[#f6f1ea]" />
-                <div className="flex-1 pl-6 text-left">
-                  <EventIcon icon={event.icon} className="w-5 h-5 mb-1 text-black/70" />
-                  {event.location && (
-                    <p className="text-sm text-black/75 leading-snug">{event.location}</p>
-                  )}
-                  {event.link && (
-                    <a
-                      href={event.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-block mt-2 text-[10px] tracking-[0.3em] uppercase border-b border-black/40 pb-0.5"
-                    >
-                      View Map
-                    </a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </div>
+      <DayProgramme
+        date={dateFormatted || ""}
+        events={programmeEvents}
+      />
     </div>
   );
 };
+
 
 const useCountdown = (target: string) => {
   const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
