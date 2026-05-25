@@ -922,8 +922,9 @@ const CountdownSlide = ({
                       lineHeight: 1.05,
                       letterSpacing: "-0.03em",
                       fontSize: "clamp(110px, 26vw, 190px)",
-                      color: "#f3d9a4",
-                      textShadow: "0 2px 18px rgba(212,175,55,0.25)",
+                      color: "#ffffff",
+                      textShadow: "0 2px 18px rgba(255,255,255,0.15)",
+
                       WebkitFontSmoothing: "antialiased",
                       MozOsxFontSmoothing: "grayscale",
                     }}
