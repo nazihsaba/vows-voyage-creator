@@ -967,7 +967,7 @@ const CountdownSlide = ({
                     left: "-3px",
                     width: "7px",
                     height: "0.5px",
-                    background: "#d4af6c",
+                    background: "rgba(255,255,255,0.7)",
                     opacity: 0.55,
                   }}
                 />
