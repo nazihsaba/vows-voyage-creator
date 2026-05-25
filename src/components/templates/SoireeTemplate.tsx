@@ -1122,7 +1122,7 @@ const GiftsSlide = ({
   };
 
   return (
-    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
       {backgroundImage && (
         <motion.img
           src={backgroundImage}
@@ -1131,9 +1131,10 @@ const GiftsSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.55 }}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65" />
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
 
       <div className={`${slideContainer} text-white`}>
         <motion.p
