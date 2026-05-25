@@ -89,8 +89,9 @@ export const SoireeTemplate = ({
     containScroll: "trimSnaps",
     duration: 55,
     skipSnaps: false,
-    watchDrag: (_api, evt) => {
-      // Block drag while sitting on the timeline slide with hidden events left
+    watchDrag: (_api, _evt) => {
+      // While on the timeline slide, DayProgramme owns the swipe entirely
+      // and will call scrollNext/scrollPrev when crossing a boundary.
       return !timelineLockRef.current;
     },
   });
