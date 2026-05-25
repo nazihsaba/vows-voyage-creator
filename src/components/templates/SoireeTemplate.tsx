@@ -1327,7 +1327,7 @@ const RsvpSlide = ({
         </motion.svg>
       </div>
 
-      <div className="relative min-h-full flex flex-col justify-center py-16">
+      <div className="relative h-full flex flex-col justify-center px-4 py-6">
         <RsvpSection
           wedding={wedding}
           invitees={invitees}
