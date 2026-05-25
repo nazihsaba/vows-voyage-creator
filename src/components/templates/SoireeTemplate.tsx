@@ -825,47 +825,315 @@ const EventsSlide = ({
   );
 };
 
-const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundImage?: string }) => (
-  <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#1a1a1a] text-white">
-    {backgroundImage && (
-      <motion.img
-        src={backgroundImage}
-        alt=""
-        initial={{ scale: 1.08 }}
-        animate={{ scale: 1 }}
-        transition={{ duration: 6, ease: "easeOut" }}
-        className="absolute inset-0 w-full h-full object-cover"
-      />
-    )}
-    <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/45 to-black/75" />
-    <div className={`${slideContainer} text-white`}>
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.8 }}
-        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/75"
-      >
-        Counting the moments
-      </motion.p>
-      <motion.h3
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 0.9 }}
-        className="mt-3 text-4xl md:text-5xl italic font-light"
-      >
-        Until We Say I Do
-      </motion.h3>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.8, duration: 1 }}
-        className="mt-10 [&_*]:text-white"
-      >
-        <CountdownTimer targetDate={date} />
-      </motion.div>
+const useCountdown = (target: string) => {
+  const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
+  useEffect(() => {
+    const tick = () => {
+      const diff = Math.max(0, new Date(target).getTime() - Date.now());
+      setT({
+        d: Math.floor(diff / 86400000),
+        h: Math.floor((diff % 86400000) / 3600000),
+        m: Math.floor((diff % 3600000) / 60000),
+        s: Math.floor((diff % 60000) / 1000),
+      });
+    };
+    tick();
+    const id = window.setInterval(tick, 1000);
+    return () => window.clearInterval(id);
+  }, [target]);
+  return t;
+};
+
+const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
+
+const CountdownSlide = ({
+  date,
+  backgroundImage,
+  brideName,
+  groomName,
+}: {
+  date: string;
+  backgroundImage?: string;
+  brideName?: string;
+  groomName?: string;
+}) => {
+  const { d, h, m, s } = useCountdown(date);
+  const initials = `${(brideName?.[0] || "").toUpperCase()} & ${(groomName?.[0] || "").toUpperCase()}`;
+  const dateLabel = date
+    ? new Date(date).toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "long",
+        year: "numeric",
+      })
+    : "";
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#1a1a1a] text-white">
+      {backgroundImage && (
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+
+      <div className="absolute inset-0 flex items-center justify-center px-5 py-10">
+        <motion.div
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
+          className="relative w-full max-w-[640px] rounded-[14px] overflow-hidden"
+          style={{
+            background:
+              "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.20) 100%)",
+            backdropFilter: "blur(8px)",
+            WebkitBackdropFilter: "blur(8px)",
+            border: "1px solid rgba(212,175,55,0.18)",
+            padding: "40px 36px 28px",
+            fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
+          }}
+        >
+          {/* Corner ornaments */}
+          {[
+            "top-[14px] left-[14px] border-l border-t",
+            "top-[14px] right-[14px] border-r border-t",
+            "bottom-[14px] left-[14px] border-l border-b",
+            "bottom-[14px] right-[14px] border-r border-b",
+          ].map((c, i) => (
+            <span
+              key={i}
+              className={`absolute w-5 h-5 ${c}`}
+              style={{ borderColor: "rgba(212,175,55,0.55)", borderWidth: "0.5px" }}
+            />
+          ))}
+
+          {/* Header */}
+          <div
+            className="flex justify-between items-center mb-6 relative z-10"
+            style={{
+              fontFamily: "system-ui, -apple-system, sans-serif",
+              fontSize: "8px",
+              letterSpacing: "0.36em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,0.7)",
+            }}
+          >
+            <span className="hidden sm:inline">The Wedding Of</span>
+            <span
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontSize: "16px",
+                letterSpacing: "0.04em",
+                color: "#f3d9a4",
+                textTransform: "none",
+              }}
+            >
+              {initials}
+            </span>
+            <span className="hidden sm:inline">{dateLabel}</span>
+          </div>
+
+          {/* Grid */}
+          <div
+            className="grid items-center relative z-10"
+            style={{
+              gridTemplateColumns: "1fr 1px 0.5fr",
+              gap: "22px",
+              minHeight: "240px",
+            }}
+          >
+            {/* Days hero */}
+            <div className="text-left relative">
+              <div
+                className="inline-block overflow-hidden"
+                style={{ height: "clamp(120px, 30vw, 200px)" }}
+              >
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={d}
+                    initial={{ y: -20, opacity: 0, rotateX: 40 }}
+                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
+                    exit={{ y: 20, opacity: 0, rotateX: -40 }}
+                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                    className="inline-block"
+                    style={{
+                      fontStyle: "italic",
+                      fontWeight: 400,
+                      lineHeight: 1,
+                      letterSpacing: "-0.04em",
+                      fontSize: "clamp(110px, 28vw, 200px)",
+                      background:
+                        "linear-gradient(110deg,#f7e3b3 0%,#d4af6c 25%,#fff4d8 50%,#d4af6c 75%,#b8862f 100%)",
+                      backgroundSize: "220% 100%",
+                      WebkitBackgroundClip: "text",
+                      backgroundClip: "text",
+                      WebkitTextFillColor: "transparent",
+                      animation: "auShim 7s ease-in-out infinite",
+                    }}
+                  >
+                    {d}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+              <div
+                className="mt-3"
+                style={{
+                  fontFamily: "system-ui, -apple-system, sans-serif",
+                  fontSize: "9px",
+                  letterSpacing: "0.42em",
+                  textTransform: "uppercase",
+                  color: "rgba(255,255,255,0.7)",
+                }}
+              >
+                Days remaining
+              </div>
+            </div>
+
+            {/* Divider */}
+            <div
+              className="relative mx-auto overflow-visible"
+              style={{
+                width: "1px",
+                height: "220px",
+                background:
+                  "linear-gradient(180deg,transparent 0%,#b8862f 18%,#d4af6c 50%,#b8862f 82%,transparent 100%)",
+              }}
+            >
+              {[24, 50, 76].map((top) => (
+                <span
+                  key={top}
+                  className="absolute"
+                  style={{
+                    top: `${top}%`,
+                    left: "-3px",
+                    width: "7px",
+                    height: "0.5px",
+                    background: "#d4af6c",
+                    opacity: 0.55,
+                  }}
+                />
+              ))}
+              <span
+                className="absolute"
+                style={{
+                  top: "-50px",
+                  left: "-1.5px",
+                  width: "4px",
+                  height: "50px",
+                  background:
+                    "linear-gradient(180deg,transparent,rgba(255,228,181,0.95),transparent)",
+                  animation: "auTravel 6s ease-in-out infinite",
+                  filter: "blur(0.5px)",
+                }}
+              />
+            </div>
+
+            {/* Seconds column */}
+            <div className="flex flex-col gap-5">
+              {[
+                { v: pad(h), label: "Hours" },
+                { v: pad(m), label: "Minutes" },
+                { v: pad(s), label: "Seconds", pulse: true },
+              ].map((u) => (
+                <div key={u.label} className="flex items-baseline gap-3 relative">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={u.v}
+                      initial={{ y: -8, opacity: 0 }}
+                      animate={{ y: 0, opacity: 1 }}
+                      exit={{ y: 8, opacity: 0 }}
+                      transition={{ duration: 0.35, ease: [0.4, 0, 0.2, 1] }}
+                      className="inline-block text-right"
+                      style={{
+                        fontStyle: "italic",
+                        fontWeight: 400,
+                        fontSize: "clamp(28px, 7vw, 44px)",
+                        lineHeight: 1,
+                        color: "#fff4d8",
+                        minWidth: "52px",
+                        fontVariantNumeric: "tabular-nums",
+                      }}
+                    >
+                      {u.v}
+                    </motion.span>
+                  </AnimatePresence>
+                  <span
+                    style={{
+                      fontFamily: "system-ui, -apple-system, sans-serif",
+                      fontSize: "8px",
+                      letterSpacing: "0.38em",
+                      textTransform: "uppercase",
+                      color: "rgba(255,255,255,0.7)",
+                    }}
+                  >
+                    {u.label}
+                  </span>
+                  {u.pulse && (
+                    <span
+                      className="ml-auto rounded-full"
+                      style={{
+                        width: "5px",
+                        height: "5px",
+                        background: "#d4af6c",
+                        boxShadow: "0 0 8px rgba(212,175,55,0.8)",
+                        animation: "auPulse 1s ease-out infinite",
+                      }}
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer */}
+          <div className="relative z-10 text-center mt-7 pt-5">
+            <span
+              className="absolute top-0"
+              style={{
+                left: "25%",
+                right: "25%",
+                height: "0.5px",
+                background:
+                  "linear-gradient(90deg,transparent,#d4af6c 50%,transparent)",
+              }}
+            />
+            <div
+              style={{
+                fontFamily: "'Cormorant Garamond', serif",
+                fontStyle: "italic",
+                fontWeight: 300,
+                fontSize: "15px",
+                letterSpacing: "0.18em",
+                color: "rgba(255,255,255,0.85)",
+              }}
+            >
+              until{" "}
+              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+                ◆
+              </span>{" "}
+              we say{" "}
+              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+                ◆
+              </span>{" "}
+              I do
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <style>{`
+        @keyframes auShim {0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+        @keyframes auTravel {0%{top:-50px;opacity:0}15%{opacity:1}85%{opacity:1}100%{top:220px;opacity:0}}
+        @keyframes auPulse {0%{transform:scale(1);opacity:1}50%{transform:scale(2);opacity:.3}100%{transform:scale(1);opacity:1}}
+      `}</style>
     </div>
-  </div>
-);
+  );
+};
 
 const GallerySlide = ({ images }: { images: any[] }) => {
   const [active, setActive] = useState(0);
