@@ -132,12 +132,30 @@ export default function DayProgramme({
       if (!atEnd) {
         e.stopPropagation();
         advance();
+      } else {
+        onRequestNext?.();
       }
-    } else if (step > 0) {
-      e.stopPropagation();
-      retreat();
+    } else {
+      if (step > 0) {
+        e.stopPropagation();
+        retreat();
+      } else {
+        onRequestPrev?.();
+      }
     }
   };
+
+  // Reset step on entry based on direction (forward → start, backward → end)
+  useEffect(() => {
+    if (entryNonce === undefined) return;
+    setHasInteracted(true);
+    if (entryDirection === "backward") {
+      setStep(total - 1);
+    } else {
+      setStep(0);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [entryNonce]);
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
