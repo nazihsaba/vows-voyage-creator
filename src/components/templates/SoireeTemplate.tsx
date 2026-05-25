@@ -877,7 +877,8 @@ const CountdownSlide = ({
                 fontStyle: "italic",
                 fontSize: "16px",
                 letterSpacing: "0.04em",
-                color: "#f3d9a4",
+                color: "rgba(255,255,255,0.95)",
+
                 textTransform: "none",
               }}
             >
