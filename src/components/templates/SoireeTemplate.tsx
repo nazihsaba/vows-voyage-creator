@@ -1095,10 +1095,7 @@ const CountdownSlide = ({
             </div>
           </div>
 
-                </div>
-              ))}
-            </div>
-          </div>
+
 
           {/* Footer */}
           <div className="relative z-10 text-center mt-7 pt-5">
