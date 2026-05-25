@@ -24,9 +24,9 @@ export type DayProgrammeProps = {
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
-  en: { hint: "tap to reveal the day", map: "View Map" },
-  fr: { hint: "appuyez pour révéler la journée", map: "Voir la carte" },
-  ar: { hint: "اضغط لاكتشاف اليوم", map: "عرض الخريطة" },
+  en: { hint: "swipe to reveal the day", map: "View Map" },
+  fr: { hint: "glissez pour révéler la journée", map: "Voir la carte" },
+  ar: { hint: "اسحب لاكتشاف اليوم", map: "عرض الخريطة" },
 };
 
 const KEYFRAMES = `
