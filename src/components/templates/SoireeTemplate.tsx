@@ -1229,7 +1229,7 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5, ease: [1, 0, 1, 1] }}
-          className="absolute inset-2 w-auto h-auto object-cover rounded-lg border border-white/10"
+          className="absolute inset-0 w-full h-full object-cover"
         />
       </AnimatePresence>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30" />
