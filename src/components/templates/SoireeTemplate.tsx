@@ -247,8 +247,6 @@ export const SoireeTemplate = ({
       <CountdownSlide
         date={wedding.wedding_date}
         backgroundImage={countdownBg}
-        brideName={wedding.bride_name}
-        groomName={wedding.groom_name}
       />
     ),
   });
@@ -875,23 +873,11 @@ const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 const CountdownSlide = ({
   date,
   backgroundImage,
-  brideName,
-  groomName,
 }: {
   date: string;
   backgroundImage?: string;
-  brideName?: string;
-  groomName?: string;
 }) => {
   const { d, h, m, s } = useCountdown(date);
-  const initials = `${(brideName?.[0] || "").toUpperCase()} & ${(groomName?.[0] || "").toUpperCase()}`;
-  const dateLabel = date
-    ? new Date(date).toLocaleDateString("en-US", {
-        day: "2-digit",
-        month: "long",
-        year: "numeric",
-      })
-    : "";
 
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#1a1a1a] text-white">
@@ -916,39 +902,10 @@ const CountdownSlide = ({
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative w-full max-w-[640px] rounded-[14px] overflow-hidden"
           style={{
-            padding: "40px 36px 28px",
+            padding: "28px 36px",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
         >
-
-
-          {/* Header */}
-          <div
-            className="flex justify-between items-center mb-6 relative z-10"
-            style={{
-              fontFamily: "system-ui, -apple-system, sans-serif",
-              fontSize: "8px",
-              letterSpacing: "0.36em",
-              textTransform: "uppercase",
-              color: "rgba(255,255,255,0.7)",
-            }}
-          >
-            <span className="hidden sm:inline">The Wedding Of</span>
-            <span
-              style={{
-                fontFamily: "'Cormorant Garamond', serif",
-                fontStyle: "italic",
-                fontSize: "16px",
-                letterSpacing: "0.04em",
-                color: "rgba(255,255,255,0.95)",
-
-                textTransform: "none",
-              }}
-            >
-              {initials}
-            </span>
-            <span className="hidden sm:inline">{dateLabel}</span>
-          </div>
 
           {/* Grid */}
           <div
