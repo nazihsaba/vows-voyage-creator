@@ -506,28 +506,148 @@ const NamesSlide = ({
   </div>
 );
 
-const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string }) => (
-  <div className={`${slideContainer} bg-[#efe7dc]`}>
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.3, duration: 1 }}
-      className="max-w-xl text-center"
-    >
-      <p className="text-5xl md:text-6xl italic font-light leading-none text-black/40 mb-4">
-        &ldquo;
-      </p>
-      <p className="text-xl md:text-2xl italic font-light leading-relaxed text-black/85">
-        {quote}
-      </p>
-      {reference && (
-        <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-black/55">
-          — {reference}
+const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string }) => {
+  const petals = Array.from({ length: 14 }).map((_, i) => ({
+    left: `${(i * 7.3) % 100}%`,
+    delay: (i % 7) * 0.6,
+    duration: 9 + (i % 5) * 1.6,
+    size: 6 + (i % 4) * 2,
+    drift: (i % 2 === 0 ? 1 : -1) * (20 + (i % 3) * 14),
+  }));
+
+  return (
+    <div className={`${slideContainer} bg-[#efe7dc] relative overflow-hidden`}>
+      {/* Soft golden glow */}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(circle at 50% 45%, rgba(212,175,108,0.18), transparent 60%)",
+        }}
+      />
+
+      {/* Floating petals */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        {petals.map((p, i) => (
+          <motion.span
+            key={i}
+            className="absolute block rounded-full"
+            style={{
+              left: p.left,
+              top: "-5%",
+              width: p.size,
+              height: p.size,
+              background:
+                "radial-gradient(circle at 30% 30%, #f3d9b1, #c79a55 70%, transparent)",
+              opacity: 0.75,
+            }}
+            initial={{ y: "-10%", x: 0, rotate: 0, opacity: 0 }}
+            animate={{
+              y: "115%",
+              x: [0, p.drift, -p.drift / 2, p.drift / 3],
+              rotate: [0, 180, 360],
+              opacity: [0, 0.85, 0.85, 0],
+            }}
+            transition={{
+              duration: p.duration,
+              delay: p.delay,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
+        ))}
+      </div>
+
+      {/* Interlocking wedding rings */}
+      <motion.svg
+        viewBox="0 0 200 100"
+        className="absolute top-[14%] left-1/2 -translate-x-1/2 w-44 md:w-56 pointer-events-none"
+        initial="hidden"
+        animate="visible"
+      >
+        <defs>
+          <linearGradient id="shimmerGrad" x1="0" x2="1" y1="0" y2="0">
+            <stop offset="0%" stopColor="white" stopOpacity="0" />
+            <stop offset="50%" stopColor="white" stopOpacity="0.7" />
+            <stop offset="100%" stopColor="white" stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        <motion.circle
+          cx="80" cy="50" r="34" fill="none" stroke="#b8862f" strokeWidth="1.2"
+          variants={{
+            hidden: { pathLength: 0, opacity: 0 },
+            visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.2 } },
+          }}
+        />
+        <motion.circle
+          cx="120" cy="50" r="34" fill="none" stroke="#d4af6c" strokeWidth="1.2"
+          variants={{
+            hidden: { pathLength: 0, opacity: 0 },
+            visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.8 } },
+          }}
+        />
+        <motion.rect
+          x="0" y="0" width="40" height="100" fill="url(#shimmerGrad)"
+          initial={{ x: -60, opacity: 0 }}
+          animate={{ x: 220, opacity: [0, 0.6, 0] }}
+          transition={{ duration: 2.8, delay: 2.2, repeat: Infinity, repeatDelay: 4 }}
+        />
+      </motion.svg>
+
+      {/* Ornamental flourish — top */}
+      <motion.svg
+        viewBox="0 0 200 20"
+        className="absolute top-[34%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1 }}
+      >
+        <motion.path
+          d="M0 10 Q50 0 100 10 T200 10"
+          fill="none" stroke="#b8862f" strokeWidth="0.8"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
+        />
+        <motion.circle
+          cx="100" cy="10" r="1.8" fill="#b8862f"
+          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          transition={{ delay: 2.6, duration: 0.5 }}
+        />
+      </motion.svg>
+
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4, duration: 1 }}
+        className="max-w-xl text-center relative z-10 px-6"
+      >
+        <p className="text-5xl md:text-6xl italic font-light leading-none text-black/40 mb-4">
+          &ldquo;
         </p>
-      )}
-    </motion.div>
-  </div>
-);
+        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-black/85">
+          {quote}
+        </p>
+        {reference && (
+          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-black/55">
+            — {reference}
+          </p>
+        )}
+      </motion.div>
+
+      {/* Ornamental flourish — bottom (mirrored) */}
+      <motion.svg
+        viewBox="0 0 200 20"
+        className="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none rotate-180"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 1 }}
+      >
+        <motion.path
+          d="M0 10 Q50 0 100 10 T200 10"
+          fill="none" stroke="#b8862f" strokeWidth="0.8"
+          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          transition={{ duration: 1.6, delay: 1.6, ease: "easeInOut" }}
+        />
+      </motion.svg>
+    </div>
+  );
+};
 
 const EventsSlide = ({
   ceremony,
