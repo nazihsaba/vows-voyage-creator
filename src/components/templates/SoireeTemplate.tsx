@@ -118,13 +118,27 @@ export const SoireeTemplate = ({
   }, [emblaApi]);
 
   const slidesIdsRef = useRef<string[]>([]);
-  const [timelineAtEnd, setTimelineAtEnd] = useState(false);
-  // Recompute lock whenever the selected slide or timeline progress changes
+  // Entry direction into the timeline slide ("forward" from previous, "backward" from next)
+  const prevSelectedRef = useRef(0);
+  const [timelineEntry, setTimelineEntry] = useState<{ dir: "forward" | "backward"; nonce: number }>({
+    dir: "forward",
+    nonce: 0,
+  });
   useEffect(() => {
     const current = slidesIdsRef.current[selected];
-    timelineLockRef.current =
-      current === timelineSlideIdRef.current && !timelineAtEnd;
-  }, [selected, timelineAtEnd]);
+    const prev = prevSelectedRef.current;
+    if (current === timelineSlideIdRef.current && selected !== prev) {
+      const dir: "forward" | "backward" = selected > prev ? "forward" : "backward";
+      setTimelineEntry((e) => ({ dir, nonce: e.nonce + 1 }));
+    }
+    prevSelectedRef.current = selected;
+  }, [selected]);
+  // Lock Embla drag whenever we're sitting on the timeline slide; DayProgramme
+  // will programmatically trigger scrollNext/scrollPrev once it's done.
+  useEffect(() => {
+    const current = slidesIdsRef.current[selected];
+    timelineLockRef.current = current === timelineSlideIdRef.current;
+  }, [selected]);
 
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
