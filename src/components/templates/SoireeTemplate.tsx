@@ -99,7 +99,11 @@ export const SoireeTemplate = ({
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
+    const onSelect = () => {
+      const i = emblaApi.selectedScrollSnap();
+      setSelected(i);
+      selectedRef.current = i;
+    };
     setTotalSlides(emblaApi.scrollSnapList().length);
     onSelect();
     emblaApi.on("select", onSelect);
