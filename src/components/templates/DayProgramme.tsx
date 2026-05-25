@@ -21,6 +21,7 @@ export type DayProgrammeProps = {
   date: string;
   events: DayEvent[];
   locale?: Locale;
+  onStateChange?: (s: { atEnd: boolean; step: number }) => void;
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
