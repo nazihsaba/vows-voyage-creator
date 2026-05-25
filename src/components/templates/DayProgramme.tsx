@@ -22,10 +22,10 @@ export type DayProgrammeProps = {
   locale?: Locale;
 };
 
-const STRINGS: Record<Locale, { eyebrow: string; title: string; apart: string; together: string; hint: string; map: string }> = {
-  en: { eyebrow: "The Day", title: "Programme", apart: "Apart", together: "Together", hint: "drag the rings across the day", map: "View Map" },
-  fr: { eyebrow: "Le Jour", title: "Programme", apart: "Séparés", together: "Unis", hint: "faites glisser les anneaux à travers la journée", map: "Voir la carte" },
-  ar: { eyebrow: "اليوم", title: "البرنامج", apart: "منفصلان", together: "متّحدان", hint: "اسحب الخواتم عبر اليوم", map: "عرض الخريطة" },
+const STRINGS: Record<Locale, { eyebrow: string; title: string; hint: string; map: string }> = {
+  en: { eyebrow: "The Day", title: "Programme", hint: "swipe to reveal the day", map: "View Map" },
+  fr: { eyebrow: "Le Jour", title: "Programme", hint: "glissez pour révéler la journée", map: "Voir la carte" },
+  ar: { eyebrow: "اليوم", title: "البرنامج", hint: "اسحب لاكتشاف اليوم", map: "عرض الخريطة" },
 };
 
 const RingPair = ({
@@ -366,41 +366,46 @@ export default function DayProgramme({
                       )}
                     </div>
 
-                    {/* Numeral disc */}
-                    <div className="flex justify-center" style={{ paddingTop: 4 }}>
+                    {/* Ring marker */}
+                    <div className="flex justify-center items-center" style={{ paddingTop: 8, position: "relative", zIndex: 2 }}>
                       <div
                         style={{
-                          width: 34,
-                          height: 34,
-                          borderRadius: "50%",
-                          background: on ? "#F6E8CC" : "#EFE0C5",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
                           position: "relative",
-                          zIndex: 2,
-                          transition: "background 0.4s ease",
+                          width: 34,
+                          height: 18,
                           ...(heroOn
-                            ? {
-                                animation: "dp-hero-pulse 3s ease-in-out infinite",
-                                boxShadow:
-                                  "0 0 0 1px rgba(184,134,11,0.45), 0 0 16px rgba(184,134,11,0.2)",
-                              }
+                            ? { animation: "dp-hero-pulse 3s ease-in-out infinite", borderRadius: 999 }
                             : {}),
                         }}
                       >
-                        <span
+                        <div
                           style={{
-                            fontFamily:
-                              "'Cormorant Garamond', Garamond, Georgia, serif",
-                            fontStyle: "italic",
-                            fontSize: event.isHero ? 19 : 17,
-                            color: event.isHero ? "#B8860A" : "#8B6A3D",
-                            lineHeight: 1,
+                            position: "absolute",
+                            top: "50%",
+                            left: 4,
+                            width: 14,
+                            height: 14,
+                            borderRadius: "50%",
+                            border: `1.5px solid ${on ? "#B8860A" : "#C9B89A"}`,
+                            transform: "translateY(-50%)",
+                            transition: "border-color 0.4s ease",
+                            background: "transparent",
                           }}
-                        >
-                          {event.romanNumeral}
-                        </span>
+                        />
+                        <div
+                          style={{
+                            position: "absolute",
+                            top: "50%",
+                            right: 4,
+                            width: 14,
+                            height: 14,
+                            borderRadius: "50%",
+                            border: `1.5px solid ${on ? "#B8860A" : "#C9B89A"}`,
+                            transform: "translateY(-50%)",
+                            transition: "border-color 0.4s ease",
+                            background: "transparent",
+                          }}
+                        />
                       </div>
                     </div>
 
@@ -550,27 +555,14 @@ export default function DayProgramme({
           </div>
         </div>
 
-        {/* Labels */}
-        <div
-          className="flex justify-between mt-3"
-          style={{
-            fontSize: 9,
-            letterSpacing: "0.4em",
-            color: "#6B4F35",
-            textTransform: "uppercase",
-          }}
-        >
-          <span>{isRTL ? strings.together : strings.apart}</span>
-          <span>{isRTL ? strings.apart : strings.together}</span>
-        </div>
-
         {/* Hint */}
         <div
-          className="text-center italic mt-2"
+          className="text-center mt-4 uppercase"
           style={{
-            fontSize: 11,
+            fontSize: 10,
+            letterSpacing: "0.4em",
             color: "#6B4F35",
-            opacity: hasInteracted ? 0 : 0.7,
+            opacity: hasInteracted ? 0 : 0.85,
             transition: "opacity 0.8s ease",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
