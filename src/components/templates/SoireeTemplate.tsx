@@ -1090,18 +1090,11 @@ const CountdownSlide = ({
                   >
                     {u.label}
                   </span>
-                  {u.pulse && (
-                    <span
-                      className="ml-auto rounded-full"
-                      style={{
-                        width: "5px",
-                        height: "5px",
-                        background: "#ffffff",
-                        boxShadow: "0 0 8px rgba(255,255,255,0.7)",
-                        animation: "auPulse 1s ease-out infinite",
-                      }}
-                    />
-                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+
                 </div>
               ))}
             </div>
