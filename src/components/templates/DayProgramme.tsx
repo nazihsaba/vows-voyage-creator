@@ -21,6 +21,7 @@ export type DayProgrammeProps = {
   date: string;
   events: DayEvent[];
   locale?: Locale;
+  onStateChange?: (s: { atEnd: boolean; step: number }) => void;
 };
 
 const STRINGS: Record<Locale, { hint: string; map: string }> = {
@@ -44,6 +45,7 @@ export default function DayProgramme({
   date,
   events,
   locale = "en",
+  onStateChange,
 }: DayProgrammeProps) {
   const strings = STRINGS[locale];
   const total = Math.max(1, events.length);
@@ -75,6 +77,10 @@ export default function DayProgramme({
 
   const progress = total <= 1 ? 1 : step / (total - 1);
   const atEnd = step >= total - 1;
+
+  useEffect(() => {
+    onStateChange?.({ atEnd, step });
+  }, [atEnd, step, onStateChange]);
 
   const advance = () => {
     if (!hasInteracted) setHasInteracted(true);

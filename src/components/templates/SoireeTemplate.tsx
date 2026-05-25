@@ -76,6 +76,11 @@ export const SoireeTemplate = ({
     "";
   const quoteReference = getLocalizedValue("aura_reference", (wedding as any).aura_reference) || "";
 
+  // Lock for the timeline slide: prevents Embla drag until all events revealed
+  const timelineLockRef = useRef(false);
+  const timelineSlideIdRef = useRef<string>("events");
+  const selectedRef = useRef(0);
+
   // Embla horizontal
   const [emblaRef, emblaApi] = useEmblaCarousel({
     axis: "x",
@@ -84,13 +89,21 @@ export const SoireeTemplate = ({
     containScroll: "trimSnaps",
     duration: 55,
     skipSnaps: false,
+    watchDrag: (_api, evt) => {
+      // Block drag while sitting on the timeline slide with hidden events left
+      return !timelineLockRef.current;
+    },
   });
   const [selected, setSelected] = useState(0);
   const [totalSlides, setTotalSlides] = useState(0);
 
   useEffect(() => {
     if (!emblaApi) return;
-    const onSelect = () => setSelected(emblaApi.selectedScrollSnap());
+    const onSelect = () => {
+      const i = emblaApi.selectedScrollSnap();
+      setSelected(i);
+      selectedRef.current = i;
+    };
     setTotalSlides(emblaApi.scrollSnapList().length);
     onSelect();
     emblaApi.on("select", onSelect);
@@ -102,6 +115,16 @@ export const SoireeTemplate = ({
       emblaApi.off("select", onSelect);
     };
   }, [emblaApi]);
+
+  const slidesIdsRef = useRef<string[]>([]);
+  const [timelineAtEnd, setTimelineAtEnd] = useState(false);
+  // Recompute lock whenever the selected slide or timeline progress changes
+  useEffect(() => {
+    const current = slidesIdsRef.current[selected];
+    timelineLockRef.current =
+      current === timelineSlideIdRef.current && !timelineAtEnd;
+  }, [selected, timelineAtEnd]);
+
 
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
@@ -195,6 +218,7 @@ export const SoireeTemplate = ({
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
+        onTimelineStateChange={(s) => setTimelineAtEnd(s.atEnd)}
       />
     ),
   });
@@ -247,6 +271,9 @@ export const SoireeTemplate = ({
     id: "footer",
     node: <FooterSlide />,
   });
+
+  slidesIdsRef.current = slides.map((s) => s.id);
+
 
   return (
     <div
@@ -720,11 +747,9 @@ const parseHourPhrase = (time?: string): { hour: number; phrase: string } | null
   if (Number.isNaN(h24)) return null;
   let hour = h24 % 12;
   if (hour === 0) hour = 12;
-  let phrase: string;
-  if (h24 < 12) phrase = min === 30 ? "half past, morning" : "in the morning";
-  else if (h24 < 17) phrase = min === 30 ? "half past noon" : "in the afternoon";
-  else phrase = min === 30 ? "half past, evening" : "in the evening";
-  return { hour, phrase };
+  const phrase = h24 >= 12 ? "PM" : "AM";
+  const display = min > 0 ? `:${min.toString().padStart(2, "0")} ${phrase}` : phrase;
+  return { hour, phrase: display };
 };
 
 const EventsSlide = ({
@@ -734,6 +759,7 @@ const EventsSlide = ({
   venueName,
   dateFormatted,
   backgroundImage,
+  onTimelineStateChange,
 }: {
   ceremony?: any;
   venue?: any;
@@ -741,6 +767,7 @@ const EventsSlide = ({
   venueName?: string;
   dateFormatted?: string;
   backgroundImage?: string;
+  onTimelineStateChange?: (s: { atEnd: boolean; step: number }) => void;
 }) => {
   const programmeEvents: DayEvent[] = [
     ceremony && {
@@ -782,11 +809,15 @@ const EventsSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.55 }}
         />
       )}
+      {/* Dark overlay to improve timeline readability */}
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
       <DayProgramme
         date={dateFormatted || ""}
         events={programmeEvents}
+        onStateChange={onTimelineStateChange}
       />
     </div>
   );
