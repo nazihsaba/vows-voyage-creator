@@ -460,7 +460,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
     ) : (
       <div className="absolute inset-0 bg-gradient-to-b from-[#1a1a1a] to-[#3a3a3a]" />
     )}
-    <div className="absolute inset-1 bg-black/40 pointer-events-none" />
+    <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className="absolute inset-0 flex flex-col items-center justify-center text-white text-center px-6">
       <motion.p
         initial={{ opacity: 0, y: 12 }}
