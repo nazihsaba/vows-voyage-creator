@@ -1067,11 +1067,11 @@ const CountdownSlide = ({
               }}
             >
               until{" "}
-              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
                 ◆
               </span>{" "}
               we say{" "}
-              <span style={{ color: "#d4af6c", margin: "0 10px", fontSize: "8px" }}>
+              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
                 ◆
               </span>{" "}
               I do
