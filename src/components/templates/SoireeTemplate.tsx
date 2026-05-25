@@ -720,11 +720,9 @@ const parseHourPhrase = (time?: string): { hour: number; phrase: string } | null
   if (Number.isNaN(h24)) return null;
   let hour = h24 % 12;
   if (hour === 0) hour = 12;
-  let phrase: string;
-  if (h24 < 12) phrase = min === 30 ? "half past, morning" : "in the morning";
-  else if (h24 < 17) phrase = min === 30 ? "half past noon" : "in the afternoon";
-  else phrase = min === 30 ? "half past, evening" : "in the evening";
-  return { hour, phrase };
+  const phrase = h24 >= 12 ? "PM" : "AM";
+  const display = min > 0 ? `:${min.toString().padStart(2, "0")} ${phrase}` : phrase;
+  return { hour, phrase: display };
 };
 
 const EventsSlide = ({
