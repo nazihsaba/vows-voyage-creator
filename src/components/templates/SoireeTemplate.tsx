@@ -903,9 +903,10 @@ const CountdownSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.4 }}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
 
       <div className="absolute inset-0 flex items-center justify-center px-5 py-10">
         <motion.div
@@ -914,11 +915,6 @@ const CountdownSlide = ({
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1] }}
           className="relative w-full max-w-[640px] rounded-[14px] overflow-hidden"
           style={{
-            background:
-              "radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 60%, rgba(0,0,0,0.20) 100%)",
-            backdropFilter: "blur(8px)",
-            WebkitBackdropFilter: "blur(8px)",
-            border: "1px solid rgba(255,255,255,0.18)",
             padding: "40px 36px 28px",
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
