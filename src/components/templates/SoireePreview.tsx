@@ -47,7 +47,10 @@ const SoireePreview = () => (
     wedding={sampleWedding}
     locations={sampleLocations}
     gallery={sampleGallery}
-    giftCards={[]}
+    giftCards={[
+      { id: "g1", card_name: "Bride's Account", card_number: "1234 5678 9012 3456" },
+      { id: "g2", card_name: "Groom's Account", card_number: "9876 5432 1098 7654" },
+    ]}
     isPreview={true}
     onFieldUpdate={() => {}}
     getFieldValue={(_, d) => d}

@@ -218,6 +218,13 @@ export const SoireeTemplate = ({
     });
   }
 
+  if (giftCards && giftCards.length > 0) {
+    slides.push({
+      id: "gifts",
+      node: <GiftsSlide giftCards={giftCards} backgroundImage={namesBg} />,
+    });
+  }
+
   slides.push({
     id: "rsvp",
     node: (
@@ -234,6 +241,7 @@ export const SoireeTemplate = ({
       />
     ),
   });
+
 
   slides.push({
     id: "footer",
@@ -1088,6 +1096,112 @@ const CountdownSlide = ({
     </div>
   );
 };
+const GiftsSlide = ({
+  giftCards,
+  backgroundImage,
+}: {
+  giftCards: any[];
+  backgroundImage?: string;
+}) => {
+  const { t } = useTranslation();
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  const copyToClipboard = async (text: string, id: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopiedId(id);
+      window.setTimeout(() => setCopiedId((c) => (c === id ? null : c)), 1600);
+    } catch {
+      /* ignore */
+    }
+  };
+
+  return (
+    <div className="absolute inset-0 w-full h-full overflow-hidden bg-[#f6f1ea]">
+      {backgroundImage && (
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
+      )}
+      <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/35 to-black/65" />
+
+      <div className={`${slideContainer} text-white`}>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.9 }}
+          className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
+        >
+          {t("gifts.subtitle", "With Love & Gratitude")}
+        </motion.p>
+        <motion.h2
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4, duration: 1 }}
+          className="mt-4 text-4xl md:text-5xl italic font-light tracking-wide text-center"
+        >
+          {t("gifts.title", "Gift Registry")}
+        </motion.h2>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: 48 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+          className="h-[1px] bg-white/70 mt-5"
+        />
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.1, duration: 0.8 }}
+          className="mt-5 text-xs md:text-sm tracking-wider text-white/75 text-center max-w-sm"
+        >
+          {t(
+            "gifts.tap_to_copy",
+            "Tap a card to copy the number",
+          )}
+        </motion.p>
+
+        <div className="mt-8 w-full max-w-md grid gap-3">
+          {giftCards.map((card, index) => {
+            const id = card.id ?? String(index);
+            const isCopied = copiedId === id;
+            return (
+              <motion.button
+                key={id}
+                type="button"
+                onClick={() => copyToClipboard(card.card_number, id)}
+                initial={{ opacity: 0, y: 18 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.6 + index * 0.12, duration: 0.7 }}
+                whileTap={{ scale: 0.98 }}
+                className="group relative w-full text-left bg-white/95 hover:bg-white text-[#1a1a1a] rounded-xl px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-colors"
+              >
+                <p className="text-[10px] tracking-[0.35em] uppercase text-[#6b6b6b]">
+                  {card.card_name}
+                </p>
+                <p className="mt-2 text-lg md:text-xl font-light tracking-wider tabular-nums break-all">
+                  {card.card_number}
+                </p>
+                <span
+                  className={`absolute top-3 right-4 text-[10px] tracking-[0.3em] uppercase transition-opacity ${
+                    isCopied ? "opacity-100 text-[#1a1a1a]" : "opacity-40 group-hover:opacity-70 text-[#6b6b6b]"
+                  }`}
+                >
+                  {isCopied ? t("gifts.copied", "Copied") : t("gifts.copy", "Copy")}
+                </span>
+              </motion.button>
+            );
+          })}
+        </div>
+      </div>
+    </div>
+  );
+};
+
 
 const GallerySlide = ({ images }: { images: any[] }) => {
   const [active, setActive] = useState(0);
