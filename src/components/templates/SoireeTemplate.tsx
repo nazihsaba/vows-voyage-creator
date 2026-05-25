@@ -218,6 +218,7 @@ export const SoireeTemplate = ({
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
+        onTimelineStateChange={(s) => setTimelineAtEnd(s.atEnd)}
       />
     ),
   });
