@@ -147,12 +147,13 @@ export default function DayProgramme({
 
   // Reset step on entry based on direction (forward → start, backward → end)
   useEffect(() => {
-    if (entryNonce === undefined) return;
-    setHasInteracted(true);
+    if (!entryNonce) return;
     if (entryDirection === "backward") {
       setStep(total - 1);
+      setHasInteracted(true);
     } else {
       setStep(0);
+      setHasInteracted(false);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entryNonce]);
