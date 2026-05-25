@@ -1213,7 +1213,7 @@ const GallerySlide = ({ images }: { images: any[] }) => {
   useEffect(() => {
     const id = window.setInterval(
       () => setActive((a) => (a + 1) % images.length),
-      4200,
+      2800,
     );
     return () => window.clearInterval(id);
   }, [images.length]);
@@ -1224,11 +1224,11 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           key={active}
           src={images[active]?.image_url}
           alt=""
-          initial={{ opacity: 0, scale: 1.05 }}
+          initial={{ opacity: 1, scale: 1 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 1.02 }}
-          transition={{ duration: 1.2, ease: [0.22, 1, 0.36, 1] }}
-          className="absolute inset-0 w-full h-full object-cover"
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: [1, 0, 1, 1] }}
+          className="absolute inset-2 w-auto h-auto object-cover rounded-lg border border-white/10"
         />
       </AnimatePresence>
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-black/30" />
