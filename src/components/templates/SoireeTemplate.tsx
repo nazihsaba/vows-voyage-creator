@@ -1033,8 +1033,8 @@ const CountdownSlide = ({
                       style={{
                         width: "5px",
                         height: "5px",
-                        background: "#d4af6c",
-                        boxShadow: "0 0 8px rgba(212,175,55,0.8)",
+                        background: "#ffffff",
+                        boxShadow: "0 0 8px rgba(255,255,255,0.7)",
                         animation: "auPulse 1s ease-out infinite",
                       }}
                     />
