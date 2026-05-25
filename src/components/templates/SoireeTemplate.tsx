@@ -1146,14 +1146,6 @@ const RsvpSlide = ({
   submittingRsvp,
   isPreview,
 }: any) => {
-  const bubbles = Array.from({ length: 18 }).map((_, i) => ({
-    left: `${(i * 5.7 + 3) % 100}%`,
-    size: 5 + ((i * 7) % 12),
-    delay: (i * 0.55) % 8,
-    duration: 7 + ((i * 1.3) % 5),
-    drift: ((i % 2 === 0 ? 1 : -1) * (6 + (i % 5) * 3)),
-  }));
-
   return (
     <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-y-auto">
       {/* Decorative background */}
@@ -1166,40 +1158,6 @@ const RsvpSlide = ({
               "radial-gradient(ellipse at center, rgba(212,175,108,0.18) 0%, rgba(212,175,108,0.05) 45%, transparent 70%)",
           }}
         />
-
-        {/* Rising champagne bubbles — pop near the top */}
-        {bubbles.map((b, i) => (
-          <motion.span
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: b.left,
-              bottom: "-20px",
-              width: b.size,
-              height: b.size,
-              background:
-                "radial-gradient(circle at 32% 30%, rgba(255,255,255,0.95) 0%, rgba(255,248,224,0.55) 18%, rgba(232,205,150,0.18) 55%, rgba(184,134,47,0.05) 80%, transparent 100%)",
-              border: "0.5px solid rgba(255,244,216,0.45)",
-              boxShadow:
-                "inset -1px -1px 2px rgba(184,134,47,0.18), inset 1.5px 1.5px 2px rgba(255,255,255,0.6), 0 0 6px rgba(212,175,108,0.25)",
-            }}
-            initial={{ y: 0, x: 0, opacity: 0, scale: 1 }}
-            animate={{
-              y: ["0vh", "-15vh", "-55vh", "-82vh", "-86vh"],
-              x: [0, b.drift, -b.drift / 2, b.drift / 3, b.drift / 4],
-              opacity: [0, 0.9, 0.95, 0.95, 0],
-              scale: [1, 1, 1, 1.05, 1.9],
-            }}
-            transition={{
-              duration: b.duration,
-              delay: b.delay,
-              repeat: Infinity,
-              ease: "easeOut",
-              times: [0, 0.12, 0.6, 0.92, 1],
-            }}
-          />
-        ))}
-
 
         {/* Top-left ornamental sprig */}
         <motion.svg
