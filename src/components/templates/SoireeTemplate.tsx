@@ -950,30 +950,33 @@ const CountdownSlide = ({
             {/* Days hero */}
             <div className="text-left relative">
               <div
-                className="inline-block overflow-hidden"
-                style={{ height: "clamp(120px, 30vw, 200px)" }}
+                className="inline-block"
+                style={{
+                  minHeight: "clamp(140px, 30vw, 220px)",
+                  paddingTop: "0.15em",
+                  paddingBottom: "0.25em",
+                  paddingLeft: "0.05em",
+                  paddingRight: "0.1em",
+                }}
               >
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={d}
-                    initial={{ y: -20, opacity: 0, rotateX: 40 }}
-                    animate={{ y: 0, opacity: 1, rotateX: 0 }}
-                    exit={{ y: 20, opacity: 0, rotateX: -40 }}
-                    transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+                    initial={{ y: -16, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    exit={{ y: 16, opacity: 0 }}
+                    transition={{ duration: 0.45, ease: [0.4, 0, 0.2, 1] }}
                     className="inline-block"
                     style={{
                       fontStyle: "italic",
-                      fontWeight: 400,
-                      lineHeight: 1,
-                      letterSpacing: "-0.04em",
-                      fontSize: "clamp(110px, 28vw, 200px)",
-                      background:
-                        "linear-gradient(110deg,#f7e3b3 0%,#d4af6c 25%,#fff4d8 50%,#d4af6c 75%,#b8862f 100%)",
-                      backgroundSize: "220% 100%",
-                      WebkitBackgroundClip: "text",
-                      backgroundClip: "text",
-                      WebkitTextFillColor: "transparent",
-                      animation: "auShim 7s ease-in-out infinite",
+                      fontWeight: 500,
+                      lineHeight: 1.05,
+                      letterSpacing: "-0.03em",
+                      fontSize: "clamp(110px, 26vw, 190px)",
+                      color: "#f3d9a4",
+                      textShadow: "0 2px 18px rgba(212,175,55,0.25)",
+                      WebkitFontSmoothing: "antialiased",
+                      MozOsxFontSmoothing: "grayscale",
                     }}
                   >
                     {d}
