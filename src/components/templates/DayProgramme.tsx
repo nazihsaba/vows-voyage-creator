@@ -45,6 +45,7 @@ export default function DayProgramme({
   date,
   events,
   locale = "en",
+  onStateChange,
 }: DayProgrammeProps) {
   const strings = STRINGS[locale];
   const total = Math.max(1, events.length);
