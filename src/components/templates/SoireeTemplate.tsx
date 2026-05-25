@@ -954,7 +954,8 @@ const CountdownSlide = ({
                 width: "1px",
                 height: "220px",
                 background:
-                  "linear-gradient(180deg,transparent 0%,#b8862f 18%,#d4af6c 50%,#b8862f 82%,transparent 100%)",
+                  "linear-gradient(180deg,transparent 0%,rgba(255,255,255,0.5) 18%,rgba(255,255,255,0.85) 50%,rgba(255,255,255,0.5) 82%,transparent 100%)",
+
               }}
             >
               {[24, 50, 76].map((top) => (
