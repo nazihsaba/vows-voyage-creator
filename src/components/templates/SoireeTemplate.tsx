@@ -903,9 +903,10 @@ const CountdownSlide = ({
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.4 }}
         />
       )}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/55 to-black/80" />
+      <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/65 to-black/85" />
 
       <div className="absolute inset-0 flex items-center justify-center px-5 py-10">
         <motion.div
