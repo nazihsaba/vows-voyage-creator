@@ -417,7 +417,7 @@ const WeddingForm = () => {
     template === "opulence-curtain" ||
     template === "lumiere-editorial" ||
     template === "etoile-carousel" ||
-    template === "soiree-swipe";
+    template === "tresor-swipe";
 
   useEffect(() => {
     if (id) {
@@ -945,8 +945,8 @@ const WeddingForm = () => {
 
     // Validate main wedding photo is required (skip for video templates and carousel/swipe templates which use video/gallery instead)
     const isEtoileTemplate = template === "etoile-carousel";
-    const isSoireeTemplate = template === "soiree-swipe";
-    if (!isVideoTemplate && !isEtoileTemplate && !isSoireeTemplate && !imageFile && !formData.main_picture_url) {
+    const isTresorTemplate = template === "tresor-swipe";
+    if (!isVideoTemplate && !isEtoileTemplate && !isTresorTemplate && !imageFile && !formData.main_picture_url) {
       toast({
         title: "Main photo required",
         description: "Please upload a main wedding photo.",
@@ -1252,7 +1252,7 @@ const WeddingForm = () => {
         "bible-verse-tabs",
         "lumiere-editorial",
         "etoile-carousel",
-        "soiree-swipe",
+        "tresor-swipe",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
@@ -1913,7 +1913,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : template !== "etoile-carousel" && template !== "soiree-swipe" ? (
+              ) : template !== "etoile-carousel" && template !== "tresor-swipe" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">
                     Main Wedding Photo <span className="text-foreground">*</span>
