@@ -569,10 +569,10 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
           animate={{ scale: 1 }}
           transition={{ duration: 6, ease: "easeOut" }}
           className="absolute inset-0 w-full h-full object-cover"
-          style={{ opacity: 0.4 }}
+          style={{ opacity: 0.55 }}
         />
       )}
-      <div className="absolute inset-0 bg-[#efe7dc]/50 pointer-events-none" />
+      <div className="absolute inset-0 bg-black/40 pointer-events-none" />
 
       {/* Soft golden glow */}
       <div
