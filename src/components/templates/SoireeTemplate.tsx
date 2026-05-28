@@ -202,6 +202,8 @@ export const SoireeTemplate = ({
   const namesBg = gallery?.[1]?.image_url || gallery?.[0]?.image_url || heroMedia;
   const countdownBg = gallery?.[2]?.image_url || gallery?.[gallery.length - 1]?.image_url || heroMedia;
   const eventsBg = gallery?.[3]?.image_url || gallery?.[1]?.image_url || heroMedia;
+  const quoteBg = gallery?.[4]?.image_url || gallery?.[2]?.image_url || heroMedia;
+
 
   const slides: { id: string; node: ReactNode }[] = [
     {
@@ -217,7 +219,7 @@ export const SoireeTemplate = ({
   if (quoteText) {
     slides.push({
       id: "quote",
-      node: <QuoteSlide quote={quoteText} reference={quoteReference} />,
+      node: <QuoteSlide quote={quoteText} reference={quoteReference} backgroundImage={quoteBg} />,
     });
   }
 
@@ -547,7 +549,7 @@ const NamesSlide = ({
   </div>
 );
 
-const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string }) => {
+const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; reference?: string; backgroundImage?: string }) => {
   const petals = Array.from({ length: 14 }).map((_, i) => ({
     left: `${(i * 7.3) % 100}%`,
     delay: (i % 7) * 0.6,
@@ -558,6 +560,20 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
 
   return (
     <div className={`${slideContainer} bg-[#efe7dc] relative overflow-hidden`}>
+      {/* Background image */}
+      {backgroundImage && (
+        <motion.img
+          src={backgroundImage}
+          alt=""
+          initial={{ scale: 1.08 }}
+          animate={{ scale: 1 }}
+          transition={{ duration: 6, ease: "easeOut" }}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ opacity: 0.4 }}
+        />
+      )}
+      <div className="absolute inset-0 bg-[#efe7dc]/50 pointer-events-none" />
+
       {/* Soft golden glow */}
       <div
         className="absolute inset-0 pointer-events-none"
