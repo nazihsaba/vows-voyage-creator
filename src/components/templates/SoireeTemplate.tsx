@@ -665,7 +665,7 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         <motion.path
           d="M0 10 Q50 0 100 10 T200 10"
           fill="none"
-          stroke="#b8862f"
+          stroke="#d4af37"
           strokeWidth="0.8"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
