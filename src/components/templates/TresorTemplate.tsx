@@ -213,10 +213,13 @@ export const TresorTemplate = ({
   const rsvpBg = slideBg(6);
 
 
+  const welcomeMedia = wedding.video_url || welcomeImage;
+  const welcomeIsVideo = !!(wedding.video_url || (welcomeMedia && /\.(mp4|webm|mov)$/i.test(welcomeMedia)));
+
   const slides: { id: string; node: ReactNode }[] = [
     {
       id: "welcome",
-      node: <WelcomeSlide media={heroMedia} isVideo={isVideo} />,
+      node: <WelcomeSlide media={welcomeMedia} isVideo={welcomeIsVideo} />,
     },
     {
       id: "names",
