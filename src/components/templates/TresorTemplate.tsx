@@ -285,7 +285,7 @@ export const TresorTemplate = ({
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
         submittingRsvp={submittingRsvp}
         isPreview={isPreview}
-        backgroundImage={countdownBg}
+        backgroundImage={rsvpBg}
       />
     ),
   });
