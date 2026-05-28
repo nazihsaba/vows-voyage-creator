@@ -229,6 +229,7 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
+        customEvents={customEvents}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
         entryDirection={timelineEntry.dir}
