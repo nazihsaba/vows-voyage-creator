@@ -707,6 +707,7 @@ const EventsSlide = ({
   venue,
   ceremonyName,
   venueName,
+  customEvents = [],
   dateFormatted,
   backgroundImage,
   entryDirection,
@@ -718,6 +719,7 @@ const EventsSlide = ({
   venue?: any;
   ceremonyName?: string;
   venueName?: string;
+  customEvents?: Array<{ raw: any; label: string; name?: string }>;
   dateFormatted?: string;
   backgroundImage?: string;
   entryDirection?: "forward" | "backward";
@@ -738,8 +740,15 @@ const EventsSlide = ({
       name: venueName,
       isHero: true,
     },
+    ...customEvents.map((c) => ({
+      raw: c.raw,
+      label: c.label,
+      name: c.name,
+      isHero: true,
+    })),
   ]
     .filter(Boolean)
+
     .map((e: any, idx: number) => {
       const parsed = parseHourPhrase(e.raw.time);
       return {
