@@ -1913,7 +1913,7 @@ const WeddingForm = () => {
                     />
                   </div>
                 </div>
-              ) : template !== "etoile-carousel" ? (
+              ) : template !== "etoile-carousel" && template !== "soiree-swipe" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">
                     Main Wedding Photo <span className="text-foreground">*</span>
