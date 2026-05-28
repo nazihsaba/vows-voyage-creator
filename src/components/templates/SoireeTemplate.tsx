@@ -647,10 +647,10 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         transition={{ delay: 0.4, duration: 1 }}
         className="max-w-xl text-center relative z-10 px-6"
       >
-        <p className="text-5xl md:text-6xl italic font-light leading-none text-black/40 mb-4">&ldquo;</p>
-        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-black/85">{quote}</p>
+        <p className="text-5xl md:text-6xl italic font-light leading-none text-white/40 mb-4">&ldquo;</p>
+        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-white">{quote}</p>
         {reference && (
-          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-black/55">— {reference}</p>
+          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-white/55">— {reference}</p>
         )}
       </motion.div>
 
