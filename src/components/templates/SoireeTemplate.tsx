@@ -390,9 +390,11 @@ export const SoireeTemplate = ({
       </AnimatePresence>
 
       {/* Language toggle / footer */}
-      <div className="absolute top-4 right-4 z-30">
-        <LanguageToggle />
-      </div>
+      {hasArabic && (
+        <div className="absolute top-4 right-4 z-30">
+          <LanguageToggle />
+        </div>
+      )}
     </div>
   );
 };
