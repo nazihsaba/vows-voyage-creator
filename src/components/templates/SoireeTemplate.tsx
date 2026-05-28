@@ -431,9 +431,11 @@ export const SoireeTemplate = ({
       </AnimatePresence>
 
       {/* Language toggle / footer */}
-      <div className="absolute top-4 right-4 z-30">
+      {/* Language toggle — always visible regardless of Arabic content in the form */}
+      <div className="absolute top-4 right-4 z-[60]">
         <LanguageToggle />
       </div>
+
 
     </div>
   );
