@@ -13,6 +13,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
+import { SoireeRsvpSlide } from "@/components/templates/soiree/SoireeRsvpSlide";
 
 interface SoireeTemplateProps {
   wedding: any;
