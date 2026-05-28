@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { RsvpSection } from "@/components/templates/RsvpSection";
+
 import { EventIcon } from "@/components/templates/EventIcon";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
