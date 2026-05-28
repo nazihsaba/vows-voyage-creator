@@ -416,7 +416,8 @@ const WeddingForm = () => {
     template === "bible-verse-tabs" ||
     template === "opulence-curtain" ||
     template === "lumiere-editorial" ||
-    template === "etoile-carousel";
+    template === "etoile-carousel" ||
+    template === "soiree-swipe";
 
   useEffect(() => {
     if (id) {
