@@ -9,6 +9,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { EventIcon } from "@/components/templates/EventIcon";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
+import soireeRings from "@/assets/soiree-rings.png";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
@@ -622,85 +623,16 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
         ))}
       </div>
 
-      {/* Interlocking wedding rings */}
-      <motion.svg
-        viewBox="0 0 200 100"
-        className="absolute top-[14%] left-1/2 -translate-x-1/2 w-44 md:w-56 pointer-events-none"
-        initial="hidden"
-        animate="visible"
-      >
-        <defs>
-          <linearGradient id="ringGoldA" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#f3d9a4" />
-            <stop offset="50%" stopColor="#b8862f" />
-            <stop offset="100%" stopColor="#7a5618" />
-          </linearGradient>
-          <linearGradient id="ringGoldB" x1="0" x2="0" y1="0" y2="1">
-            <stop offset="0%" stopColor="#f7e3b3" />
-            <stop offset="50%" stopColor="#d4af6c" />
-            <stop offset="100%" stopColor="#8a6a2a" />
-          </linearGradient>
-          <linearGradient id="shimmerGrad" x1="0" x2="1" y1="0" y2="0">
-            <stop offset="0%" stopColor="white" stopOpacity="0" />
-            <stop offset="50%" stopColor="white" stopOpacity="0.7" />
-            <stop offset="100%" stopColor="white" stopOpacity="0" />
-          </linearGradient>
-        </defs>
-
-        {/* Left ring — gold band */}
-        <motion.circle
-          cx="80" cy="50" r="30" fill="none"
-          stroke="url(#ringGoldA)" strokeWidth="5"
-          variants={{
-            hidden: { pathLength: 0, opacity: 0 },
-            visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.2 } },
-          }}
-        />
-        {/* inner highlight line for jewelry depth */}
-        <motion.circle
-          cx="80" cy="50" r="27" fill="none"
-          stroke="#fff4d8" strokeOpacity="0.55" strokeWidth="0.6"
-          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ delay: 2, duration: 0.8 }}
-        />
-
-        {/* Right ring — gold band with tiny diamond */}
-        <motion.circle
-          cx="120" cy="50" r="30" fill="none"
-          stroke="url(#ringGoldB)" strokeWidth="5"
-          variants={{
-            hidden: { pathLength: 0, opacity: 0 },
-            visible: { pathLength: 1, opacity: 1, transition: { duration: 1.8, ease: "easeInOut", delay: 0.8 } },
-          }}
-        />
-        <motion.circle
-          cx="120" cy="50" r="27" fill="none"
-          stroke="#fff4d8" strokeOpacity="0.55" strokeWidth="0.6"
-          initial={{ opacity: 0 }} animate={{ opacity: 0.55 }} transition={{ delay: 2.6, duration: 0.8 }}
-        />
-        {/* Diamond on top of right ring */}
-        <motion.g
-          initial={{ scale: 0, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 2.8, duration: 0.6, ease: "backOut" }}
-          style={{ transformOrigin: "120px 20px" }}
-        >
-          <polygon points="120,15 124,20 120,27 116,20" fill="#fff8e1" stroke="#b8862f" strokeWidth="0.5" />
-          <motion.circle
-            cx="120" cy="20" r="1.2" fill="#ffffff"
-            animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </motion.g>
-
-        {/* Shimmer sweep across the rings */}
-        <motion.rect
-          x="0" y="0" width="40" height="100" fill="url(#shimmerGrad)"
-          initial={{ x: -60, opacity: 0 }}
-          animate={{ x: 220, opacity: [0, 0.6, 0] }}
-          transition={{ duration: 2.8, delay: 2.2, repeat: Infinity, repeatDelay: 4 }}
-        />
-
-      </motion.svg>
+      {/* Interlocking wedding rings — hand-drawn line art */}
+      <motion.img
+        src={soireeRings}
+        alt=""
+        className="absolute top-[10%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none select-none"
+        initial={{ opacity: 0, y: -8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
+        draggable={false}
+      />
 
       {/* Ornamental flourish — top */}
       <motion.svg
