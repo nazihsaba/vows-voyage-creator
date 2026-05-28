@@ -624,7 +624,7 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         <motion.path
           d="M0 10 Q50 0 100 10 T200 10"
           fill="none"
-          stroke="#b8862f"
+          stroke="#d4af37"
           strokeWidth="0.8"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -634,7 +634,7 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
           cx="100"
           cy="10"
           r="1.8"
-          fill="#b8862f"
+          fill="#d4af37"
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
           transition={{ delay: 2.6, duration: 0.5 }}
