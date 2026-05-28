@@ -1252,6 +1252,7 @@ const WeddingForm = () => {
         "bible-verse-tabs",
         "lumiere-editorial",
         "etoile-carousel",
+        "soiree-swipe",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
