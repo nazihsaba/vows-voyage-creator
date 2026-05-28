@@ -247,14 +247,6 @@ export const TresorRsvpSlide = ({
                   }
                   className="group relative w-full overflow-hidden rounded-full border border-white/70 bg-white/95 hover:bg-white text-[#1a1a1a] tracking-[0.35em] uppercase text-[11px] py-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <span
-                    className="absolute inset-y-0 left-0 w-1"
-                    style={{ background: GOLD }}
-                  />
-                  <span
-                    className="absolute inset-y-0 right-0 w-1"
-                    style={{ background: GOLD }}
-                  />
                   {submittingRsvp
                     ? t("rsvp.submitting", "Submitting...")
                     : t("rsvp.submit", "Submit RSVP")}
