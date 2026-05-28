@@ -61,15 +61,11 @@ export const SoireeTemplate = ({
   const customEvents = locations
     .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
     .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
-    .map((l) => {
-      const m = /^custom_(\d+)$/.exec(l.type);
-      const idx = m ? m[1] : "";
-      return {
-        raw: l,
-        label: getLocalizedValue(`custom_title_${l.type}`, l.location_name || `Event ${idx}`),
-        name: getLocalizedValue(`custom_location_${l.type}`, l.location_name || ""),
-      };
-    });
+    .map((l) => ({
+      raw: l,
+      label: getLocalizedValue(`custom_title_${l.type}`, l.custom_title || l.location_name || "Event"),
+      name: getLocalizedValue(`custom_location_${l.type}`, l.location_name || ""),
+    }));
   const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
