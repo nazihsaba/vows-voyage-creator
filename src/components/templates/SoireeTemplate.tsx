@@ -53,7 +53,7 @@ export const SoireeTemplate = ({
   submittingRsvp = false,
 }: SoireeTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
