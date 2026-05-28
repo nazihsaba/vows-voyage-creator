@@ -58,6 +58,9 @@ export const SoireeTemplate = ({
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
+  const customLocations = [...locations]
+    .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
   const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
