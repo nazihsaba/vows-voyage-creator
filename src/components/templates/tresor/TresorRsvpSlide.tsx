@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Check, X } from "lucide-react";
 import { parseLocalDate } from "@/lib/weddingDate";
 
-interface SoireeRsvpSlideProps {
+interface TresorRsvpSlideProps {
   wedding: any;
   invitees?: any[];
   rsvpResponses?: Record<string, boolean | null | undefined>;
@@ -25,7 +25,7 @@ const GOLD_DEEP = "#70550f";
  * of the Soirée template: dark image backdrop, italic serif typography,
  * gold ornamental accents, and Embla-friendly soft fade-up motion.
  */
-export const SoireeRsvpSlide = ({
+export const TresorRsvpSlide = ({
   wedding,
   invitees = [],
   rsvpResponses = {},
@@ -36,7 +36,7 @@ export const SoireeRsvpSlide = ({
   submittingRsvp = false,
   isPreview = false,
   backgroundImage,
-}: SoireeRsvpSlideProps) => {
+}: TresorRsvpSlideProps) => {
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
@@ -386,4 +386,4 @@ const Sprig = ({
   </motion.svg>
 );
 
-export default SoireeRsvpSlide;
+export default TresorRsvpSlide;

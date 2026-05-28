@@ -539,14 +539,14 @@ export const templates: Template[] = [
     },
   },
   {
-    id: 'soiree-swipe',
+    id: 'tresor-swipe',
     name: 'Trésor',
     category: 'minimalist',
     description: 'Horizontal swipe storytelling — each screen a new chapter. Neutral ivory & black palette with cinematic transitions.',
     thumbnail: '/placeholder.svg',
     isPremium: true,
     isPopular: true,
-    component: 'SoireeTemplate',
+    component: 'TresorTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },

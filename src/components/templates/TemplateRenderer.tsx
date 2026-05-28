@@ -11,7 +11,7 @@ import { AuraTemplate } from './AuraTemplate';
 import { OpulenceTemplate } from './OpulenceTemplate';
 import { LumiereTemplate } from './LumiereTemplate';
 import { EtoileTemplate } from './EtoileTemplate';
-import { SoireeTemplate } from './SoireeTemplate';
+import { TresorTemplate } from './TresorTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -217,9 +217,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'SoireeTemplate') {
+  if (template.component === 'TresorTemplate') {
     return (
-      <SoireeTemplate
+      <TresorTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

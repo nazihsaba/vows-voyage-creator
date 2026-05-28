@@ -35,7 +35,7 @@ import { EclatPreview } from "@/components/templates/EclatPreview";
 import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
-import SoireePreview from "@/components/templates/SoireePreview";
+import TresorPreview from "@/components/templates/TresorPreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -143,7 +143,7 @@ const Dashboard = () => {
       ],
     },
     {
-      id: "soiree-swipe",
+      id: "tresor-swipe",
       name: "Trésor",
       description: "Horizontal swipe storytelling with cinematic transitions",
       image: lumiereTemplate,
@@ -288,7 +288,7 @@ const Dashboard = () => {
                           template6: "/dashboard/grace-form",
                           "lumiere-editorial": "/dashboard/lumiere-form",
                           "etoile-carousel": "/dashboard/etoile-form",
-                          "soiree-swipe": "/dashboard/soiree-form",
+                          "tresor-swipe": "/dashboard/tresor-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -364,7 +364,7 @@ const Dashboard = () => {
             {showPreview === "bible-verse-tabs" && <AuraPreview />}
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
-            {showPreview === "soiree-swipe" && <SoireePreview />}
+            {showPreview === "tresor-swipe" && <TresorPreview />}
           </div>
         </DialogContent>
       </Dialog>
