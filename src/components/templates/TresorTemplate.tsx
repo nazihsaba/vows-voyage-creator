@@ -199,16 +199,27 @@ export const TresorTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
-  const namesBg = gallery?.[1]?.image_url || gallery?.[0]?.image_url || heroMedia;
-  const countdownBg = gallery?.[2]?.image_url || gallery?.[gallery.length - 1]?.image_url || heroMedia;
-  const eventsBg = gallery?.[3]?.image_url || gallery?.[1]?.image_url || heroMedia;
-  const quoteBg = gallery?.[4]?.image_url || gallery?.[2]?.image_url || heroMedia;
+  // Dedicated 1:1 mapping — each slide uses its own gallery image in upload order.
+  // Slide 1 (welcome) → gallery[0], Slide 2 (names) → gallery[1], ... Slide 7 (rsvp) → gallery[6].
+  // The dedicated "gallery" slide still shows the full set.
+  const slideBg = (i: number) =>
+    gallery?.[i]?.image_url || gallery?.[gallery.length - 1]?.image_url || heroMedia;
+  const welcomeImage = slideBg(0);
+  const namesBg = slideBg(1);
+  const quoteBg = slideBg(2);
+  const eventsBg = slideBg(3);
+  const countdownBg = slideBg(4);
+  const giftsBg = slideBg(5);
+  const rsvpBg = slideBg(6);
 
+
+  const welcomeMedia = wedding.video_url || welcomeImage;
+  const welcomeIsVideo = !!(wedding.video_url || (welcomeMedia && /\.(mp4|webm|mov)$/i.test(welcomeMedia)));
 
   const slides: { id: string; node: ReactNode }[] = [
     {
       id: "welcome",
-      node: <WelcomeSlide media={heroMedia} isVideo={isVideo} />,
+      node: <WelcomeSlide media={welcomeMedia} isVideo={welcomeIsVideo} />,
     },
     {
       id: "names",
@@ -257,7 +268,7 @@ export const TresorTemplate = ({
   if (giftCards && giftCards.length > 0) {
     slides.push({
       id: "gifts",
-      node: <GiftsSlide giftCards={giftCards} backgroundImage={namesBg} />,
+      node: <GiftsSlide giftCards={giftCards} backgroundImage={giftsBg} />,
     });
   }
 
@@ -274,7 +285,7 @@ export const TresorTemplate = ({
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
         submittingRsvp={submittingRsvp}
         isPreview={isPreview}
-        backgroundImage={countdownBg}
+        backgroundImage={rsvpBg}
       />
     ),
   });
