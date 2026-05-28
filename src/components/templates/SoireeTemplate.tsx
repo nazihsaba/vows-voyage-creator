@@ -235,6 +235,11 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
+        customEvents={customLocations.map((loc) => ({
+          raw: loc,
+          label: getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title) || "Event",
+          name: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name),
+        }))}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
         entryDirection={timelineEntry.dir}
@@ -242,6 +247,7 @@ export const SoireeTemplate = ({
         onRequestNext={scrollNext}
         onRequestPrev={scrollPrev}
       />
+
     ),
   });
 
