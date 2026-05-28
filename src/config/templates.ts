@@ -540,7 +540,7 @@ export const templates: Template[] = [
   },
   {
     id: 'soiree-swipe',
-    name: 'Soirée',
+    name: 'Trésor',
     category: 'minimalist',
     description: 'Horizontal swipe storytelling — each screen a new chapter. Neutral ivory & black palette with cinematic transitions.',
     thumbnail: '/placeholder.svg',

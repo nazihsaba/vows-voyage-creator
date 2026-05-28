@@ -72,7 +72,7 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
   },
   {
     image: soireeTemplate,
-    label: "Soirée",
+    label: "Trésor",
     tagline: "Cinematic swipe storytelling",
     featured: false,
     templateKey: "soiree",

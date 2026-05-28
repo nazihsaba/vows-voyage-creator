@@ -144,7 +144,7 @@ const Dashboard = () => {
     },
     {
       id: "soiree-swipe",
-      name: "Soirée",
+      name: "Trésor",
       description: "Horizontal swipe storytelling with cinematic transitions",
       image: lumiereTemplate,
       features: [
