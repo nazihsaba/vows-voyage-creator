@@ -179,7 +179,7 @@ export default function DayProgramme({
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
-            paddingTop: 84,
+            paddingTop: 44,
             paddingBottom: isNarrow ? 130 : 150,
           }}
         >
