@@ -58,6 +58,14 @@ export const SoireeTemplate = ({
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
+  const customEvents = locations
+    .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0))
+    .map((l) => ({
+      raw: l,
+      label: getLocalizedValue(`custom_title_${l.type}`, l.custom_title || l.location_name || "Event"),
+      name: getLocalizedValue(`custom_location_${l.type}`, l.location_name || ""),
+    }));
   const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
@@ -221,6 +229,7 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
+        customEvents={customEvents}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
         entryDirection={timelineEntry.dir}
@@ -672,6 +681,7 @@ const EventsSlide = ({
   venue,
   ceremonyName,
   venueName,
+  customEvents = [],
   dateFormatted,
   backgroundImage,
   entryDirection,
@@ -683,6 +693,7 @@ const EventsSlide = ({
   venue?: any;
   ceremonyName?: string;
   venueName?: string;
+  customEvents?: { raw: any; label: string; name?: string }[];
   dateFormatted?: string;
   backgroundImage?: string;
   entryDirection?: "forward" | "backward";
@@ -703,6 +714,7 @@ const EventsSlide = ({
       name: venueName,
       isHero: true,
     },
+    ...customEvents.map((c) => ({ raw: c.raw, label: c.label, name: c.name, isHero: true })),
   ]
     .filter(Boolean)
     .map((e: any, idx: number) => {
