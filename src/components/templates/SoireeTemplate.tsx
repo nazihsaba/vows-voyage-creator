@@ -269,7 +269,7 @@ export const SoireeTemplate = ({
   slides.push({
     id: "rsvp",
     node: (
-      <RsvpSlide
+      <SoireeRsvpSlide
         wedding={wedding}
         invitees={invitees}
         rsvpResponses={rsvpResponses}
@@ -279,6 +279,7 @@ export const SoireeTemplate = ({
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
         submittingRsvp={submittingRsvp}
         isPreview={isPreview}
+        backgroundImage={countdownBg}
       />
     ),
   });
