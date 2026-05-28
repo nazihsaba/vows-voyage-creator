@@ -1,4 +1,4 @@
-import { SoireeTemplate } from "./SoireeTemplate";
+import { TresorTemplate } from "./TresorTemplate";
 import lumiere1 from "@/assets/lumiere-1.jpg";
 import lumiere2 from "@/assets/lumiere-2.jpg";
 import lumiere3 from "@/assets/lumiere-3.jpg";
@@ -42,8 +42,8 @@ const sampleGallery = [
   { id: "5", image_url: lumiere6 },
 ];
 
-const SoireePreview = () => (
-  <SoireeTemplate
+const TresorPreview = () => (
+  <TresorTemplate
     wedding={sampleWedding}
     locations={sampleLocations}
     gallery={sampleGallery}
@@ -58,4 +58,4 @@ const SoireePreview = () => (
   />
 );
 
-export default SoireePreview;
+export default TresorPreview;

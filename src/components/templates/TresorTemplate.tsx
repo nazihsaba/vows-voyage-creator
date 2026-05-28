@@ -13,9 +13,9 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
-import { SoireeRsvpSlide } from "@/components/templates/soiree/SoireeRsvpSlide";
+import { TresorRsvpSlide } from "@/components/templates/tresor/TresorRsvpSlide";
 
-interface SoireeTemplateProps {
+interface TresorTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -38,7 +38,7 @@ interface SoireeTemplateProps {
  * Soirée — Horizontal swipe storytelling template.
  * Neutral ivory / beige / black palette. Mobile-first.
  */
-export const SoireeTemplate = ({
+export const TresorTemplate = ({
   wedding,
   locations,
   gallery,
@@ -51,7 +51,7 @@ export const SoireeTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: SoireeTemplateProps) => {
+}: TresorTemplateProps) => {
   const { t } = useTranslation();
   const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -264,7 +264,7 @@ export const SoireeTemplate = ({
   slides.push({
     id: "rsvp",
     node: (
-      <SoireeRsvpSlide
+      <TresorRsvpSlide
         wedding={wedding}
         invitees={invitees}
         rsvpResponses={rsvpResponses}
@@ -1167,4 +1167,4 @@ const FooterSlide = () => (
   </div>
 );
 
-export default SoireeTemplate;
+export default TresorTemplate;
