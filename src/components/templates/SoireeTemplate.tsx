@@ -53,14 +53,11 @@ export const SoireeTemplate = ({
   submittingRsvp = false,
 }: SoireeTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, getLocalizedValue } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
-  const customLocations = [...locations]
-    .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
-    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
   const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
@@ -74,10 +71,7 @@ export const SoireeTemplate = ({
 
   const brideName = getLocalizedValue("bride_name", wedding.bride_name) || "Bride";
   const groomName = getLocalizedValue("groom_name", wedding.groom_name) || "Groom";
-  const quoteText =
-    getLocalizedValue("aura_quote", (wedding as any).aura_quote) ||
-    wedding.main_description ||
-    "";
+  const quoteText = getLocalizedValue("aura_quote", (wedding as any).aura_quote) || wedding.main_description || "";
   const quoteReference = getLocalizedValue("aura_reference", (wedding as any).aura_reference) || "";
 
   // Lock for the timeline slide: prevents Embla drag until all events revealed
@@ -144,7 +138,6 @@ export const SoireeTemplate = ({
     timelineLockRef.current = current === timelineSlideIdRef.current;
   }, [selected]);
 
-
   const scrollPrev = useCallback(() => emblaApi?.scrollPrev(), [emblaApi]);
   const scrollNext = useCallback(() => emblaApi?.scrollNext(), [emblaApi]);
 
@@ -209,14 +202,7 @@ export const SoireeTemplate = ({
     },
     {
       id: "names",
-      node: (
-        <NamesSlide
-          bride={brideName}
-          groom={groomName}
-          date={dateFormatted}
-          backgroundImage={namesBg}
-        />
-      ),
+      node: <NamesSlide bride={brideName} groom={groomName} date={dateFormatted} backgroundImage={namesBg} />,
     },
   ];
 
@@ -235,11 +221,6 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
-        customEvents={customLocations.map((loc) => ({
-          raw: loc,
-          label: getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title) || "Event",
-          name: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name),
-        }))}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
         entryDirection={timelineEntry.dir}
@@ -247,18 +228,12 @@ export const SoireeTemplate = ({
         onRequestNext={scrollNext}
         onRequestPrev={scrollPrev}
       />
-
     ),
   });
 
   slides.push({
     id: "countdown",
-    node: (
-      <CountdownSlide
-        date={wedding.wedding_date}
-        backgroundImage={countdownBg}
-      />
-    ),
+    node: <CountdownSlide date={wedding.wedding_date} backgroundImage={countdownBg} />,
   });
 
   if (gallery && gallery.length > 0) {
@@ -293,14 +268,12 @@ export const SoireeTemplate = ({
     ),
   });
 
-
   slides.push({
     id: "footer",
     node: <FooterSlide />,
   });
 
   slidesIdsRef.current = slides.map((s) => s.id);
-
 
   return (
     <div
@@ -309,21 +282,11 @@ export const SoireeTemplate = ({
     >
       {/* Audio */}
       {wedding.audio_url && (
-        <audio
-          ref={audioRef}
-          src={wedding.audio_url}
-          onTimeUpdate={handleTimeUpdate}
-          playsInline
-          className="hidden"
-        />
+        <audio ref={audioRef} src={wedding.audio_url} onTimeUpdate={handleTimeUpdate} playsInline className="hidden" />
       )}
 
       {/* Embla viewport — paper-fold like transition */}
-      <div
-        className="w-full h-full overflow-hidden"
-        ref={emblaRef}
-        style={{ perspective: "1800px" }}
-      >
+      <div className="w-full h-full overflow-hidden" ref={emblaRef} style={{ perspective: "1800px" }}>
         <div className="flex h-full" style={{ transformStyle: "preserve-3d" }}>
           {slides.map((s, i) => {
             const distance = i - selected;
@@ -344,12 +307,9 @@ export const SoireeTemplate = ({
                   transformOrigin: distance > 0 ? "left center" : "right center",
                   transform: `perspective(1800px) rotateY(${rotateY}deg) translateX(${translateX}px) scale(${scale})`,
                   opacity,
-                  transition:
-                    "transform 900ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
+                  transition: "transform 900ms cubic-bezier(0.22, 1, 0.36, 1), opacity 700ms ease",
                   willChange: "transform, opacity",
-                  boxShadow: isActive
-                    ? "0 30px 60px -30px rgba(0,0,0,0.35)"
-                    : "0 10px 30px -10px rgba(0,0,0,0.25)",
+                  boxShadow: isActive ? "0 30px 60px -30px rgba(0,0,0,0.35)" : "0 10px 30px -10px rgba(0,0,0,0.25)",
                 }}
               >
                 {/* subtle paper crease shadow on the leading edge of incoming page */}
@@ -357,8 +317,7 @@ export const SoireeTemplate = ({
                   aria-hidden
                   className="pointer-events-none absolute inset-y-0 left-0 w-12"
                   style={{
-                    background:
-                      "linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0))",
+                    background: "linear-gradient(to right, rgba(0,0,0,0.18), rgba(0,0,0,0))",
                     opacity: distance > 0 ? 0.9 : 0,
                     transition: "opacity 700ms ease",
                   }}
@@ -430,21 +389,17 @@ export const SoireeTemplate = ({
         )}
       </AnimatePresence>
 
-      {hasArabic && (
-        <div className="absolute top-4 right-4 z-[60]">
-          <LanguageToggle />
-        </div>
-      )}
-
-
+      {/* Language toggle / footer */}
+      <div className="absolute top-4 right-4 z-30">
+        <LanguageToggle />
+      </div>
     </div>
   );
 };
 
 /* ------------------ Slides ------------------ */
 
-const slideContainer =
-  "absolute inset-0 w-full h-full flex flex-col items-center justify-center px-6 md:px-14";
+const slideContainer = "absolute inset-0 w-full h-full flex flex-col items-center justify-center px-6 md:px-14";
 
 const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) => (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
@@ -481,7 +436,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
         transition={{ delay: 0.4, duration: 1 }}
         className="text-[10px] md:text-xs tracking-[0.5em] uppercase opacity-80"
       >
-        You're Invited
+        You're Invited to
       </motion.p>
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
@@ -596,8 +551,7 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
-          background:
-            "radial-gradient(circle at 50% 45%, rgba(212,175,108,0.18), transparent 60%)",
+          background: "radial-gradient(circle at 50% 45%, rgba(212,175,108,0.18), transparent 60%)",
         }}
       />
 
@@ -612,8 +566,7 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
               top: "-5%",
               width: p.size,
               height: p.size,
-              background:
-                "radial-gradient(circle at 30% 30%, #f3d9b1, #c79a55 70%, transparent)",
+              background: "radial-gradient(circle at 30% 30%, #f3d9b1, #c79a55 70%, transparent)",
               opacity: 0.75,
             }}
             initial={{ y: "-10%", x: 0, rotate: 0, opacity: 0 }}
@@ -637,17 +590,26 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
       <motion.svg
         viewBox="0 0 200 20"
         className="absolute top-[34%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.2, duration: 1 }}
       >
         <motion.path
           d="M0 10 Q50 0 100 10 T200 10"
-          fill="none" stroke="#b8862f" strokeWidth="0.8"
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          fill="none"
+          stroke="#b8862f"
+          strokeWidth="0.8"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
         />
         <motion.circle
-          cx="100" cy="10" r="1.8" fill="#b8862f"
-          initial={{ scale: 0 }} animate={{ scale: 1 }}
+          cx="100"
+          cy="10"
+          r="1.8"
+          fill="#b8862f"
+          initial={{ scale: 0 }}
+          animate={{ scale: 1 }}
           transition={{ delay: 2.6, duration: 0.5 }}
         />
       </motion.svg>
@@ -658,16 +620,10 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
         transition={{ delay: 0.4, duration: 1 }}
         className="max-w-xl text-center relative z-10 px-6"
       >
-        <p className="text-5xl md:text-6xl italic font-light leading-none text-black/40 mb-4">
-          &ldquo;
-        </p>
-        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-black/85">
-          {quote}
-        </p>
+        <p className="text-5xl md:text-6xl italic font-light leading-none text-black/40 mb-4">&ldquo;</p>
+        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-black/85">{quote}</p>
         {reference && (
-          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-black/55">
-            — {reference}
-          </p>
+          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-black/55">— {reference}</p>
         )}
       </motion.div>
 
@@ -675,12 +631,17 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
       <motion.svg
         viewBox="0 0 200 20"
         className="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none rotate-180"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.6, duration: 1 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.6, duration: 1 }}
       >
         <motion.path
           d="M0 10 Q50 0 100 10 T200 10"
-          fill="none" stroke="#b8862f" strokeWidth="0.8"
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
+          fill="none"
+          stroke="#b8862f"
+          strokeWidth="0.8"
+          initial={{ pathLength: 0 }}
+          animate={{ pathLength: 1 }}
           transition={{ duration: 1.6, delay: 1.6, ease: "easeInOut" }}
         />
       </motion.svg>
@@ -709,7 +670,6 @@ const EventsSlide = ({
   venue,
   ceremonyName,
   venueName,
-  customEvents = [],
   dateFormatted,
   backgroundImage,
   entryDirection,
@@ -721,7 +681,6 @@ const EventsSlide = ({
   venue?: any;
   ceremonyName?: string;
   venueName?: string;
-  customEvents?: Array<{ raw: any; label: string; name?: string }>;
   dateFormatted?: string;
   backgroundImage?: string;
   entryDirection?: "forward" | "backward";
@@ -742,15 +701,8 @@ const EventsSlide = ({
       name: venueName,
       isHero: true,
     },
-    ...customEvents.map((c) => ({
-      raw: c.raw,
-      label: c.label,
-      name: c.name,
-      isHero: true,
-    })),
   ]
     .filter(Boolean)
-
     .map((e: any, idx: number) => {
       const parsed = parseHourPhrase(e.raw.time);
       return {
@@ -793,7 +745,6 @@ const EventsSlide = ({
   );
 };
 
-
 const useCountdown = (target: string) => {
   const [t, setT] = useState({ d: 0, h: 0, m: 0, s: 0 });
   useEffect(() => {
@@ -815,13 +766,7 @@ const useCountdown = (target: string) => {
 
 const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
-const CountdownSlide = ({
-  date,
-  backgroundImage,
-}: {
-  date: string;
-  backgroundImage?: string;
-}) => {
+const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundImage?: string }) => {
   const { d, h, m, s } = useCountdown(date);
 
   return (
@@ -839,7 +784,6 @@ const CountdownSlide = ({
       )}
       <div className="absolute inset-0 bg-black/40 pointer-events-none" />
 
-
       <div className="absolute inset-0 flex items-center justify-center px-5 py-10">
         <motion.div
           initial={{ opacity: 0, y: 18 }}
@@ -851,7 +795,6 @@ const CountdownSlide = ({
             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
           }}
         >
-
           {/* Grid */}
           <div
             className="grid items-center relative z-10"
@@ -920,7 +863,6 @@ const CountdownSlide = ({
                 height: "220px",
                 background:
                   "linear-gradient(180deg,transparent 0%,rgba(255,255,255,0.5) 18%,rgba(255,255,255,0.85) 50%,rgba(255,255,255,0.5) 82%,transparent 100%)",
-
               }}
             >
               {[24, 50, 76].map((top) => (
@@ -944,8 +886,7 @@ const CountdownSlide = ({
                   left: "-1.5px",
                   width: "4px",
                   height: "50px",
-                  background:
-                    "linear-gradient(180deg,transparent,rgba(255,255,255,0.95),transparent)",
+                  background: "linear-gradient(180deg,transparent,rgba(255,255,255,0.95),transparent)",
                   animation: "auTravel 6s ease-in-out infinite",
                   filter: "blur(0.5px)",
                 }}
@@ -997,8 +938,6 @@ const CountdownSlide = ({
             </div>
           </div>
 
-
-
           {/* Footer */}
           <div className="relative z-10 text-center mt-7 pt-5">
             <span
@@ -1007,8 +946,7 @@ const CountdownSlide = ({
                 left: "25%",
                 right: "25%",
                 height: "0.5px",
-                background:
-                  "linear-gradient(90deg,transparent,rgba(255,255,255,0.7) 50%,transparent)",
+                background: "linear-gradient(90deg,transparent,rgba(255,255,255,0.7) 50%,transparent)",
               }}
             />
             <div
@@ -1021,15 +959,8 @@ const CountdownSlide = ({
                 color: "rgba(255,255,255,0.85)",
               }}
             >
-              until{" "}
-              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
-                ◆
-              </span>{" "}
-              we say{" "}
-              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>
-                ◆
-              </span>{" "}
-              I do
+              until <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> we say{" "}
+              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> I do
             </div>
           </div>
         </motion.div>
@@ -1043,13 +974,7 @@ const CountdownSlide = ({
     </div>
   );
 };
-const GiftsSlide = ({
-  giftCards,
-  backgroundImage,
-}: {
-  giftCards: any[];
-  backgroundImage?: string;
-}) => {
+const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgroundImage?: string }) => {
   const { t } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -1107,10 +1032,7 @@ const GiftsSlide = ({
           transition={{ delay: 1.1, duration: 0.8 }}
           className="mt-5 text-xs md:text-sm tracking-wider text-white/75 text-center max-w-sm"
         >
-          {t(
-            "gifts.tap_to_copy",
-            "Tap a card to copy the number",
-          )}
+          {t("gifts.tap_to_copy", "Tap a card to copy the number")}
         </motion.p>
 
         <div className="mt-8 w-full max-w-md grid gap-3">
@@ -1128,9 +1050,7 @@ const GiftsSlide = ({
                 whileTap={{ scale: 0.98 }}
                 className="group relative w-full text-left bg-white/95 hover:bg-white text-[#1a1a1a] rounded-xl px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-colors"
               >
-                <p className="text-[10px] tracking-[0.35em] uppercase text-[#6b6b6b]">
-                  {card.card_name}
-                </p>
+                <p className="text-[10px] tracking-[0.35em] uppercase text-[#6b6b6b]">{card.card_name}</p>
                 <p className="mt-2 text-lg md:text-xl font-light tracking-wider tabular-nums break-all">
                   {card.card_number}
                 </p>
@@ -1150,14 +1070,10 @@ const GiftsSlide = ({
   );
 };
 
-
 const GallerySlide = ({ images }: { images: any[] }) => {
   const [active, setActive] = useState(0);
   useEffect(() => {
-    const id = window.setInterval(
-      () => setActive((a) => (a + 1) % images.length),
-      2800,
-    );
+    const id = window.setInterval(() => setActive((a) => (a + 1) % images.length), 2800);
     return () => window.clearInterval(id);
   }, [images.length]);
   return (
@@ -1197,7 +1113,6 @@ const GallerySlide = ({ images }: { images: any[] }) => {
   );
 };
 
-
 const FooterSlide = () => (
   <div className={`${slideContainer} bg-[#f6f1ea]`}>
     <motion.div
@@ -1206,9 +1121,7 @@ const FooterSlide = () => (
       transition={{ delay: 1, duration: 0.8 }}
       className="flex flex-col items-center justify-center gap-3"
     >
-      <p className="text-[10px] tracking-[0.4em] uppercase text-black/55">
-        Made for love, by
-      </p>
+      <p className="text-[10px] tracking-[0.4em] uppercase text-black/55">Made for love, by</p>
       <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
         <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain" />
       </a>
