@@ -623,35 +623,24 @@ const QuoteSlide = ({ quote, reference }: { quote: string; reference?: string })
         ))}
       </div>
 
-      {/* Interlocking wedding rings — hand-drawn line art */}
-      <motion.img
-        src={soireeRings}
-        alt=""
-        className="absolute top-[10%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none select-none"
-        initial={{ opacity: 0, y: -8 }}
+      {/* Interlocking wedding rings — hand-drawn line art, gold tinted, replaces top flourish */}
+      <motion.div
+        className="absolute top-[30%] left-1/2 -translate-x-1/2 w-64 md:w-80 h-16 pointer-events-none"
+        initial={{ opacity: 0, y: -6 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.4, ease: "easeOut", delay: 0.2 }}
-        draggable={false}
+        transition={{ duration: 1.4, ease: "easeOut", delay: 0.6 }}
+        style={{
+          backgroundColor: "#b8862f",
+          WebkitMaskImage: `url(${soireeRings})`,
+          maskImage: `url(${soireeRings})`,
+          WebkitMaskRepeat: "no-repeat",
+          maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center",
+          maskPosition: "center",
+          WebkitMaskSize: "contain",
+          maskSize: "contain",
+        }}
       />
-
-      {/* Ornamental flourish — top */}
-      <motion.svg
-        viewBox="0 0 200 20"
-        className="absolute top-[34%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none"
-        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.2, duration: 1 }}
-      >
-        <motion.path
-          d="M0 10 Q50 0 100 10 T200 10"
-          fill="none" stroke="#b8862f" strokeWidth="0.8"
-          initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-          transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
-        />
-        <motion.circle
-          cx="100" cy="10" r="1.8" fill="#b8862f"
-          initial={{ scale: 0 }} animate={{ scale: 1 }}
-          transition={{ delay: 2.6, duration: 0.5 }}
-        />
-      </motion.svg>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
