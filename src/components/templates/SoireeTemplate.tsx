@@ -559,7 +559,7 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
   }));
 
   return (
-    <div className={`${slideContainer} bg-[#efe7dc] relative overflow-hidden`}>
+    <div className={`${slideContainer} bg-black relative overflow-hidden`}>
       {/* Background image */}
       {backgroundImage && (
         <motion.img
