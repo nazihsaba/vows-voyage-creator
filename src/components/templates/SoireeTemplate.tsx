@@ -202,6 +202,8 @@ export const SoireeTemplate = ({
   const namesBg = gallery?.[1]?.image_url || gallery?.[0]?.image_url || heroMedia;
   const countdownBg = gallery?.[2]?.image_url || gallery?.[gallery.length - 1]?.image_url || heroMedia;
   const eventsBg = gallery?.[3]?.image_url || gallery?.[1]?.image_url || heroMedia;
+  const quoteBg = gallery?.[4]?.image_url || gallery?.[2]?.image_url || heroMedia;
+
 
   const slides: { id: string; node: ReactNode }[] = [
     {
