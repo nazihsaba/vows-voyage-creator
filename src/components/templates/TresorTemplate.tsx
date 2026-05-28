@@ -268,7 +268,7 @@ export const TresorTemplate = ({
   if (giftCards && giftCards.length > 0) {
     slides.push({
       id: "gifts",
-      node: <GiftsSlide giftCards={giftCards} backgroundImage={namesBg} />,
+      node: <GiftsSlide giftCards={giftCards} backgroundImage={giftsBg} />,
     });
   }
 
