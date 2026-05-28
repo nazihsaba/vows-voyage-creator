@@ -288,7 +288,7 @@ const Dashboard = () => {
                           template6: "/dashboard/grace-form",
                           "lumiere-editorial": "/dashboard/lumiere-form",
                           "etoile-carousel": "/dashboard/etoile-form",
-                          "soiree-swipe": "/dashboard/lumiere-form",
+                          "soiree-swipe": "/dashboard/soiree-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
