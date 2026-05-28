@@ -17,8 +17,8 @@ interface SoireeRsvpSlideProps {
   backgroundImage?: string;
 }
 
-const GOLD = "#d4af6c";
-const GOLD_DEEP = "#b8862f";
+const GOLD = "#70550f";
+const GOLD_DEEP = "#70550f";
 
 /**
  * Soirée RSVP slide — matches the editorial cinematic aesthetic of the rest
