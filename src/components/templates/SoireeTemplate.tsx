@@ -58,6 +58,9 @@ export const SoireeTemplate = ({
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
+  const customLocations = [...locations]
+    .filter((l) => typeof l.type === "string" && l.type.startsWith("custom_"))
+    .sort((a, b) => (a.display_order ?? 0) - (b.display_order ?? 0));
   const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
@@ -232,6 +235,11 @@ export const SoireeTemplate = ({
         venue={venue}
         ceremonyName={getLocalizedValue("ceremony_location", ceremony?.location_name)}
         venueName={getLocalizedValue("venue_location", venue?.location_name)}
+        customEvents={customLocations.map((loc) => ({
+          raw: loc,
+          label: getLocalizedValue(`custom_title_${loc.type}`, loc.custom_title) || "Event",
+          name: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name),
+        }))}
         dateFormatted={dateFormatted}
         backgroundImage={eventsBg}
         entryDirection={timelineEntry.dir}
@@ -239,6 +247,7 @@ export const SoireeTemplate = ({
         onRequestNext={scrollNext}
         onRequestPrev={scrollPrev}
       />
+
     ),
   });
 
@@ -422,9 +431,11 @@ export const SoireeTemplate = ({
       </AnimatePresence>
 
       {/* Language toggle / footer */}
-      <div className="absolute top-4 right-4 z-30">
+      {/* Language toggle — always visible regardless of Arabic content in the form */}
+      <div className="absolute top-4 right-4 z-[60]">
         <LanguageToggle />
       </div>
+
 
     </div>
   );
@@ -698,6 +709,7 @@ const EventsSlide = ({
   venue,
   ceremonyName,
   venueName,
+  customEvents = [],
   dateFormatted,
   backgroundImage,
   entryDirection,
@@ -709,6 +721,7 @@ const EventsSlide = ({
   venue?: any;
   ceremonyName?: string;
   venueName?: string;
+  customEvents?: Array<{ raw: any; label: string; name?: string }>;
   dateFormatted?: string;
   backgroundImage?: string;
   entryDirection?: "forward" | "backward";
@@ -729,8 +742,15 @@ const EventsSlide = ({
       name: venueName,
       isHero: true,
     },
+    ...customEvents.map((c) => ({
+      raw: c.raw,
+      label: c.label,
+      name: c.name,
+      isHero: true,
+    })),
   ]
     .filter(Boolean)
+
     .map((e: any, idx: number) => {
       const parsed = parseHourPhrase(e.raw.time);
       return {
