@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { RsvpSection } from "@/components/templates/RsvpSection";
+
 import { EventIcon } from "@/components/templates/EventIcon";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
@@ -13,6 +13,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
+import { SoireeRsvpSlide } from "@/components/templates/soiree/SoireeRsvpSlide";
 
 interface SoireeTemplateProps {
   wedding: any;
@@ -268,7 +269,7 @@ export const SoireeTemplate = ({
   slides.push({
     id: "rsvp",
     node: (
-      <RsvpSlide
+      <SoireeRsvpSlide
         wedding={wedding}
         invitees={invitees}
         rsvpResponses={rsvpResponses}
@@ -278,6 +279,7 @@ export const SoireeTemplate = ({
         isRsvpDeadlinePassed={isRsvpDeadlinePassed}
         submittingRsvp={submittingRsvp}
         isPreview={isPreview}
+        backgroundImage={countdownBg}
       />
     ),
   });
@@ -1255,131 +1257,6 @@ const GallerySlide = ({ images }: { images: any[] }) => {
   );
 };
 
-const RsvpSlide = ({
-  wedding,
-  invitees,
-  rsvpResponses,
-  handleRsvpToggle,
-  handleRsvpSubmit,
-  numberOfPersons,
-  isRsvpDeadlinePassed,
-  submittingRsvp,
-  isPreview,
-}: any) => {
-  return (
-    <div className="absolute inset-0 w-full h-full bg-[#f6f1ea] overflow-y-auto">
-      {/* Decorative background */}
-      <div className="pointer-events-none absolute inset-0 overflow-hidden">
-        {/* Soft warm glow */}
-        <div
-          className="absolute -top-32 left-1/2 -translate-x-1/2 w-[120%] h-[60%] opacity-60"
-          style={{
-            background:
-              "radial-gradient(ellipse at center, rgba(212,175,108,0.18) 0%, rgba(212,175,108,0.05) 45%, transparent 70%)",
-          }}
-        />
-
-        {/* Top-left ornamental sprig */}
-        <motion.svg
-          viewBox="0 0 120 80"
-          className="absolute top-6 left-6 w-24 h-16 md:w-32 md:h-20"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.6, ease: "easeOut" }}
-        >
-          <motion.path
-            d="M5 70 Q 30 60, 50 40 T 110 10"
-            fill="none"
-            stroke="#b8862f"
-            strokeWidth="0.8"
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2.2, ease: "easeInOut" }}
-          />
-          {[
-            { cx: 25, cy: 62, r: 2.2 },
-            { cx: 45, cy: 46, r: 1.8 },
-            { cx: 70, cy: 30, r: 2 },
-            { cx: 95, cy: 16, r: 1.6 },
-          ].map((leaf, idx) => (
-            <motion.ellipse
-              key={idx}
-              cx={leaf.cx}
-              cy={leaf.cy}
-              rx={leaf.r * 2.2}
-              ry={leaf.r}
-              fill="#d4af6c"
-              opacity="0.55"
-              transform={`rotate(${-30 + idx * 8} ${leaf.cx} ${leaf.cy})`}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 0.55, scale: 1 }}
-              transition={{ duration: 0.6, delay: 1.2 + idx * 0.15 }}
-            />
-          ))}
-        </motion.svg>
-
-        {/* Bottom-right ornamental sprig (mirrored) */}
-        <motion.svg
-          viewBox="0 0 120 80"
-          className="absolute bottom-6 right-6 w-24 h-16 md:w-32 md:h-20"
-          style={{ transform: "scale(-1, -1)" }}
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1.6, delay: 0.3, ease: "easeOut" }}
-        >
-          <motion.path
-            d="M5 70 Q 30 60, 50 40 T 110 10"
-            fill="none"
-            stroke="#b8862f"
-            strokeWidth="0.8"
-            strokeLinecap="round"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1 }}
-            transition={{ duration: 2.2, delay: 0.3, ease: "easeInOut" }}
-          />
-          {[
-            { cx: 25, cy: 62, r: 2.2 },
-            { cx: 45, cy: 46, r: 1.8 },
-            { cx: 70, cy: 30, r: 2 },
-            { cx: 95, cy: 16, r: 1.6 },
-          ].map((leaf, idx) => (
-            <motion.ellipse
-              key={idx}
-              cx={leaf.cx}
-              cy={leaf.cy}
-              rx={leaf.r * 2.2}
-              ry={leaf.r}
-              fill="#d4af6c"
-              opacity="0.55"
-              transform={`rotate(${-30 + idx * 8} ${leaf.cx} ${leaf.cy})`}
-              initial={{ opacity: 0, scale: 0 }}
-              animate={{ opacity: 0.55, scale: 1 }}
-              transition={{ duration: 0.6, delay: 1.5 + idx * 0.15 }}
-            />
-          ))}
-        </motion.svg>
-      </div>
-
-      <div className="relative h-full flex flex-col justify-center px-4 py-6">
-        <RsvpSection
-          wedding={wedding}
-          invitees={invitees}
-          rsvpResponses={rsvpResponses}
-          handleRsvpToggle={handleRsvpToggle}
-          handleRsvpSubmit={handleRsvpSubmit}
-          numberOfPersons={numberOfPersons}
-          isRsvpDeadlinePassed={isRsvpDeadlinePassed}
-          submittingRsvp={submittingRsvp}
-          isPreview={isPreview}
-          bgClassName="bg-transparent"
-          cardBgClassName="bg-white/70 backdrop-blur"
-          accentColorClass="text-black"
-        />
-      </div>
-    </div>
-  );
-};
 
 const FooterSlide = () => (
   <div className={`${slideContainer} bg-[#f6f1ea]`}>
