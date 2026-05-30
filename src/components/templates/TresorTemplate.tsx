@@ -961,10 +961,10 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                       style={{
                         fontStyle: "italic",
                         fontWeight: 400,
-                        fontSize: "clamp(28px, 7vw, 44px)",
+                        fontSize: "clamp(44px, 11vw, 72px)",
                         lineHeight: 1,
                         color: "#ffffff",
-                        minWidth: "52px",
+                        minWidth: "72px",
                         fontVariantNumeric: "tabular-nums",
                       }}
                     >
@@ -974,7 +974,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                   <span
                     style={{
                       fontFamily: "system-ui, -apple-system, sans-serif",
-                      fontSize: "8px",
+                      fontSize: "11px",
                       letterSpacing: "0.38em",
                       textTransform: "uppercase",
                       color: "rgba(255,255,255,0.7)",
