@@ -88,7 +88,7 @@ serve(async (req: Request) => {
     // Verify ownership of the wedding
     const { data: wedding, error: weddingError } = await supabase
       .from("weddings")
-      .select("id, user_id, slug, bride_name, groom_name")
+      .select("id, user_id, slug, bride_name, groom_name, template_type")
       .eq("id", weddingId)
       .single();
 
@@ -129,7 +129,8 @@ serve(async (req: Request) => {
         }
       }
 
-      finalAmount = BASE_PUBLISH_FEE_USD * (1 - discountPercent / 100);
+      const baseFee = wedding.template_type === "tresor-swipe" ? TRESOR_PUBLISH_FEE_USD : BASE_PUBLISH_FEE_USD;
+      finalAmount = baseFee * (1 - discountPercent / 100);
       finalInvoice = `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}${appliedPromoLabel}`;
     } else {
       // Venue flow — keep existing behavior, trust client-supplied amount
