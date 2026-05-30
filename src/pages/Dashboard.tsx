@@ -22,6 +22,7 @@ import {
   Eye,
   X,
   Users,
+  Music,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
@@ -75,6 +76,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -88,6 +90,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -101,6 +104,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -114,6 +118,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -127,6 +132,7 @@ const Dashboard = () => {
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -140,6 +146,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
     {
@@ -153,6 +160,7 @@ const Dashboard = () => {
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
       ],
     },
   ];
