@@ -68,6 +68,7 @@ const Dashboard = () => {
     {
       id: "lumiere-editorial",
       name: "Lumière",
+      price: 100,
       description: "Cinematic video & torn-edge luxury editorial design",
       image: lumiereTemplate,
       features: [
@@ -82,6 +83,7 @@ const Dashboard = () => {
     {
       id: "template6",
       name: "Grâce",
+      price: 100,
       description: "Immersive full-screen video background experience",
       image: graceTemplate,
       features: [
@@ -96,6 +98,7 @@ const Dashboard = () => {
     {
       id: "template2",
       name: "Vérité",
+      price: 100,
       description: "Contemporary design with stunning gallery showcase",
       image: veriteTemplate,
       features: [
@@ -110,6 +113,7 @@ const Dashboard = () => {
     {
       id: "classic-romance",
       name: "Éclat",
+      price: 100,
       description: "Elegant scrollable design with photo gallery and RSVP",
       image: eclatTemplate,
       features: [
@@ -124,6 +128,7 @@ const Dashboard = () => {
     {
       id: "bible-verse-tabs",
       name: "Dorée",
+      price: 100,
       description: "Elegant tab design, family names & botanical decor",
       image: auraTemplate,
       features: [
@@ -138,6 +143,7 @@ const Dashboard = () => {
     {
       id: "etoile-carousel",
       name: "Étoile",
+      price: 100,
       description: "Fullscreen photo carousel with animated cards & cinematic reveals",
       image: etoileTemplate,
       features: [
@@ -152,6 +158,7 @@ const Dashboard = () => {
     {
       id: "tresor-swipe",
       name: "Trésor",
+      price: 100,
       description: "Horizontal swipe storytelling with cinematic transitions",
       image: lumiereTemplate,
       features: [
@@ -249,7 +256,7 @@ const Dashboard = () => {
                     <div className="p-5">
                       <div className="flex items-start justify-between gap-2 mb-1.5">
                         <CardTitle className="text-lg font-serif">{template.name}</CardTitle>
-                        <span className="flex-shrink-0 text-lg font-bold font-serif text-primary">{"$100"}</span>
+                        <span className="flex-shrink-0 text-lg font-bold font-serif text-primary">{`$${template.price}`}</span>
                       </div>
                       <CardDescription className="text-sm text-muted-foreground leading-relaxed">
                         {template.description}
