@@ -14,6 +14,7 @@ import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
 import { TresorRsvpSlide } from "@/components/templates/tresor/TresorRsvpSlide";
+import { TresorRings3D } from "@/components/templates/tresor/TresorRings3D";
 
 interface TresorTemplateProps {
   wedding: any;
