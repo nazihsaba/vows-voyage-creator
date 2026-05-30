@@ -129,7 +129,8 @@ serve(async (req: Request) => {
         }
       }
 
-      finalAmount = BASE_PUBLISH_FEE_USD * (1 - discountPercent / 100);
+      const baseFee = wedding.template_type === "tresor-swipe" ? TRESOR_PUBLISH_FEE_USD : BASE_PUBLISH_FEE_USD;
+      finalAmount = baseFee * (1 - discountPercent / 100);
       finalInvoice = `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}${appliedPromoLabel}`;
     } else {
       // Venue flow — keep existing behavior, trust client-supplied amount
