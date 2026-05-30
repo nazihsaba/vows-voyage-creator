@@ -659,8 +659,18 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
-        className="max-w-xl text-center relative z-10 px-6"
+        className="max-w-xl text-center relative z-10 px-6 flex flex-col items-center"
       >
+        {/* 3D interlocked rings */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.6, duration: 1.4, ease: "easeOut" }}
+          className="w-[260px] h-[200px] md:w-[340px] md:h-[240px] mb-2"
+        >
+          <TresorRings3D />
+        </motion.div>
+
         <p className="text-5xl md:text-6xl italic font-light leading-none text-white/40 mb-4">&ldquo;</p>
         <p className="text-xl md:text-2xl italic font-light leading-relaxed text-white">{quote}</p>
         {reference && (
