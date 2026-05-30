@@ -210,6 +210,7 @@ export const TresorTemplate = ({
   const quoteBg = slideBg(2);
   const eventsBg = slideBg(3);
   const countdownBg = slideBg(4);
+  const giftsBg = slideBg(5);
   const rsvpBg = slideBg(6);
   const footerBg = slideBg(7);
 
