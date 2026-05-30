@@ -294,7 +294,7 @@ export const TresorTemplate = ({
 
   slides.push({
     id: "footer",
-    node: <FooterSlide />,
+    node: <FooterSlide backgroundImage={footerBg} />,
   });
 
   slidesIdsRef.current = slides.map((s) => s.id);
