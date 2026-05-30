@@ -1117,7 +1117,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
 const GallerySlide = ({ images }: { images: any[] }) => {
   const [active, setActive] = useState(0);
   useEffect(() => {
-    const id = window.setInterval(() => setActive((a) => (a + 1) % images.length), 2800);
+    const id = window.setInterval(() => setActive((a) => (a + 1) % images.length), 1800);
     return () => window.clearInterval(id);
   }, [images.length]);
   return (
@@ -1127,10 +1127,10 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           key={active}
           src={images[active]?.image_url}
           alt=""
-          initial={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, scale: 1.05 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.5, ease: [1, 0, 1, 1] }}
+          transition={{ duration: 0.35, ease: "easeInOut" }}
           className="absolute inset-0 w-full h-full object-cover"
         />
       </AnimatePresence>
