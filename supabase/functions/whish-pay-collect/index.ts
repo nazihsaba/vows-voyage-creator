@@ -31,6 +31,7 @@ const PROMO_CODES: Record<string, number> = {
   "NK-20": 20,
 };
 const BASE_PUBLISH_FEE_USD = 100;
+const TRESOR_PUBLISH_FEE_USD = 120;
 
 serve(async (req: Request) => {
   // Handle CORS preflight
