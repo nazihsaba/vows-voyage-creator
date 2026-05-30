@@ -158,7 +158,7 @@ const Dashboard = () => {
     {
       id: "tresor-swipe",
       name: "Trésor",
-      price: 100,
+      price: 120,
       description: "Horizontal swipe storytelling with cinematic transitions",
       image: lumiereTemplate,
       features: [
