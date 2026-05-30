@@ -65,7 +65,8 @@ interface Wedding {
   payment_external_id?: string;
 }
 
-const PUBLISH_FEE_USD = 100; // Fee for publishing an event
+const getPublishFee = (templateType?: string) =>
+  templateType === "tresor-swipe" ? 120 : 100;
 
 const PROMO_CODES: Record<string, number> = {
   "A-HOST": 40,
