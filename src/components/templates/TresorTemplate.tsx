@@ -14,7 +14,7 @@ import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
 import { TresorRsvpSlide } from "@/components/templates/tresor/TresorRsvpSlide";
-import { TresorRings3D } from "@/components/templates/tresor/TresorRings3D";
+
 
 interface TresorTemplateProps {
   wedding: any;
@@ -653,12 +653,6 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         />
       </motion.svg>
 
-      {/* 3D interlocking golden rings */}
-      <div className="absolute inset-0 pointer-events-none flex items-start justify-center pt-[8%] md:pt-[6%] z-[5]">
-        <div className="w-[260px] h-[200px] md:w-[340px] md:h-[260px]">
-          <TresorRings3D />
-        </div>
-      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 16 }}
