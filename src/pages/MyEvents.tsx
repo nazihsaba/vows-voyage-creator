@@ -65,7 +65,8 @@ interface Wedding {
   payment_external_id?: string;
 }
 
-const PUBLISH_FEE_USD = 100; // Fee for publishing an event
+const getPublishFee = (templateType?: string) =>
+  templateType === "tresor-swipe" ? 120 : 100;
 
 const PROMO_CODES: Record<string, number> = {
   "A-HOST": 40,
@@ -281,8 +282,9 @@ const MyEvents = () => {
   };
 
   const getFinalAmount = () => {
-    if (!appliedPromo) return PUBLISH_FEE_USD;
-    return PUBLISH_FEE_USD * (1 - appliedPromo.discountPercent / 100);
+    const fee = getPublishFee(getPublishingWedding()?.template_type);
+    if (!appliedPromo) return fee;
+    return fee * (1 - appliedPromo.discountPercent / 100);
   };
 
   const handlePaymentProceed = async () => {
@@ -487,7 +489,7 @@ const MyEvents = () => {
                                   onClick={() => handlePublishClick(wedding.id)}
                                 >
                                   <CreditCard className="w-4 h-4 mr-2" />
-                                  Publish Event (${PUBLISH_FEE_USD})
+                                  Publish Event (${getPublishFee(wedding.template_type)})
                                 </Button>
                               )}
 
@@ -659,14 +661,16 @@ const MyEvents = () => {
               <div className="bg-muted/50 rounded-xl p-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Publishing fee</span>
-                  <span className="font-semibold">${PUBLISH_FEE_USD} USD</span>
+                  <span className="font-semibold">
+                    ${getPublishFee(getPublishingWedding()?.template_type)} USD
+                  </span>
                 </div>
                 {appliedPromo && (
                   <>
                     <div className="flex justify-between text-sm text-green-600">
                       <span>Discount ({appliedPromo.code} -{appliedPromo.discountPercent}%)</span>
                       <span className="font-semibold">
-                        -${(PUBLISH_FEE_USD * appliedPromo.discountPercent) / 100} USD
+                        -${(getPublishFee(getPublishingWedding()?.template_type) * appliedPromo.discountPercent) / 100} USD
                       </span>
                     </div>
                     <div className="border-t border-border/60 pt-2 flex justify-between text-sm">
