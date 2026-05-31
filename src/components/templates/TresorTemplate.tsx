@@ -1203,6 +1203,7 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
       </motion.div>
     </div>
   </div>
-);
+  );
+};
 
 export default TresorTemplate;
