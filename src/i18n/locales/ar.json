@@ -1,7 +1,16 @@
 {
   "hero": {
     "theWeddingOf": "حفل زفاف",
-    "tapToStart": "اضغط للبدء"
+    "tapToStart": "اضغط للبدء",
+    "youreInvitedTo": "أنتم مدعوون إلى",
+    "ourWedding": "حفل زفافنا"
+  },
+  "tresor": {
+    "untilWeSayIDo": "حتى نقول القبول",
+    "moments": "لحظات",
+    "ourStoryInFrames": "قصتنا في صور",
+    "madeForLoveBy": "صُنع بحب من قِبَل",
+    "reception": "حفل الاستقبال"
   },
   "family": {
     "theFamily": "عائلة {{name}}",
