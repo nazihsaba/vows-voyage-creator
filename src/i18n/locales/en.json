@@ -23,7 +23,8 @@
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes",
-    "seconds": "Seconds"
+    "seconds": "Seconds",
+    "daysRemaining": "Days remaining"
   },
   "events": {
     "title": "Wedding Events",
