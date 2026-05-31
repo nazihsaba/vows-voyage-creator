@@ -42,7 +42,8 @@
   },
   "gifts": {
     "title": "Wedding Gift",
-    "subtitle": "Your presence is our biggest gift. For those who desire a wedding list was set up:"
+    "subtitle": "Your presence is our biggest gift. For those who desire a wedding list was set up:",
+    "tap_to_copy": "Tap a card to copy the number"
   },
   "rsvp": {
     "title": "Join Our Celebration",
