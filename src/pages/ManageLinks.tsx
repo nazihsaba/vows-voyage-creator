@@ -668,6 +668,18 @@ const ManageLinks = () => {
     }
   };
 
+  const handleUpdateInviteeName = (inviteeId: string, name: string) => {
+    setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, name } : i)));
+    if (!inviteeId.startsWith("temp-")) {
+      setPendingUpdates((prev) => ({
+        ...prev,
+        [inviteeId]: { ...prev[inviteeId], name },
+      }));
+    } else {
+      setPendingNewInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, name } : i)));
+    }
+  };
+
   const handleMoveInvitee = (index: number, direction: -1 | 1) => {
     setEditInvitees((prev) => {
       const next = [...prev];
@@ -2308,7 +2320,12 @@ const ManageLinks = () => {
                           <ArrowDown className="w-3 h-3" />
                         </Button>
                       </div>
-                      <span className="text-sm font-medium truncate mr-2 flex-1 min-w-0">{invitee.name}</span>
+                      <Input
+                        value={invitee.name}
+                        onChange={(e) => handleUpdateInviteeName(invitee.id, e.target.value)}
+                        className="h-7 text-sm font-medium mr-2 flex-1 min-w-0 px-2"
+                        placeholder="Guest name"
+                      />
                       <div className="flex items-center gap-2 flex-shrink-0">
                         <div className="flex items-center gap-1">
                           <span className="text-[10px] text-muted-foreground whitespace-nowrap">Table #</span>
