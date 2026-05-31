@@ -197,7 +197,7 @@ export const TresorRsvpSlide = ({
               transition={{ delay: 0.8, duration: 0.8 }}
               className="mt-6 w-full max-w-md"
             >
-              <div className="relative rounded-xl border border-white/25 bg-white/10 backdrop-blur-md px-5 py-6">
+              <div className="relative rounded-xl bg-white/10 backdrop-blur-md px-5 py-6">
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/60 border border-white/20 whitespace-nowrap">
                   <span className="text-[10px] uppercase tracking-[0.3em] text-white/85">
                     {t("rsvp.wishesTitle", "Share Your Love & Wishes")}
