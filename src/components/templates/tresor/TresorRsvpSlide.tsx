@@ -97,14 +97,18 @@ export const TresorRsvpSlide = ({
           </motion.p>
 
           {/* Title */}
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 1 }}
-            className="mt-4 text-4xl md:text-5xl italic font-light tracking-wide text-center"
-          >
-            {hasInvitees ? t("rsvp.willAttend", "Will You Attend?") : t("rsvp.sendWishes", "Send Your Wishes")}
-          </motion.h2>
+          {(hasInvitees || showWishes) && (
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4, duration: 1 }}
+              className="mt-4 text-4xl md:text-5xl italic font-light tracking-wide text-center"
+            >
+              {hasInvitees
+                ? t("rsvp.willAttend", "Will You Attend?")
+                : t("rsvp.sendWishes", "Send Your Wishes")}
+            </motion.h2>
+          )}
 
           {/* Thin underline */}
           <motion.div
