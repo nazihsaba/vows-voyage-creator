@@ -328,9 +328,6 @@ const Dashboard = () => {
                   <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Bachelor</h2>
                   <p className="text-xs text-muted-foreground">Party invitations</p>
                 </div>
-                <Badge variant="secondary" className="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-700 border-0">
-                  Coming Soon
-                </Badge>
               </div>
             </div>
 
