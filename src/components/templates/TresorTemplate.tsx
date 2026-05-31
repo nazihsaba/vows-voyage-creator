@@ -427,7 +427,9 @@ export const TresorTemplate = ({
 
 const slideContainer = "absolute inset-0 w-full h-full flex flex-col items-center justify-center px-6 md:px-14";
 
-const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) => (
+const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {media ? (
       isVideo ? (
@@ -462,7 +464,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
         transition={{ delay: 0.4, duration: 1 }}
         className="text-[10px] md:text-xs tracking-[0.5em] uppercase opacity-80"
       >
-        You're Invited to
+        {t("hero.youreInvitedTo", "You're Invited to")}
       </motion.p>
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
@@ -470,7 +472,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
         transition={{ delay: 0.7, duration: 1.1 }}
         className="mt-5 text-5xl md:text-7xl italic font-light tracking-wide"
       >
-        Our Wedding
+        {t("hero.ourWedding", "Our Wedding")}
       </motion.h1>
       <motion.div
         initial={{ width: 0 }}
@@ -480,7 +482,8 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
       />
     </div>
   </div>
-);
+  );
+};
 
 const NamesSlide = ({
   bride,
@@ -492,7 +495,9 @@ const NamesSlide = ({
   groom: string;
   date: string;
   backgroundImage?: string;
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {backgroundImage && (
       <motion.img
@@ -513,7 +518,7 @@ const NamesSlide = ({
         transition={{ delay: 0.3, duration: 0.9 }}
         className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
       >
-        Together with their families
+        {t("aura.togetherWithFamilies", "Together with their families")}
       </motion.p>
 
       <motion.h2
@@ -560,7 +565,8 @@ const NamesSlide = ({
       </motion.p>
     </div>
   </div>
-);
+  );
+};
 
 const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; reference?: string; backgroundImage?: string }) => {
   const petals = Array.from({ length: 14 }).map((_, i) => ({
@@ -731,16 +737,17 @@ const EventsSlide = ({
   onRequestNext?: () => void;
   onRequestPrev?: () => void;
 }) => {
+  const { t } = useTranslation();
   const programmeEvents: DayEvent[] = [
     ceremony && {
       raw: ceremony,
-      label: "Ceremony",
+      label: t("events.ceremony", "Ceremony"),
       name: ceremonyName,
       isHero: true,
     },
     venue && {
       raw: venue,
-      label: "Reception",
+      label: t("tresor.reception", "Reception"),
       name: venueName,
       isHero: true,
     },
@@ -811,6 +818,7 @@ const useCountdown = (target: string) => {
 const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundImage?: string }) => {
+  const { t } = useTranslation();
   const { d, h, m, s } = useCountdown(date);
 
   return (
@@ -895,7 +903,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                   color: "rgba(255,255,255,0.7)",
                 }}
               >
-                Days remaining
+                {t("countdown.daysRemaining", "Days remaining")}
               </div>
             </div>
 
@@ -940,9 +948,9 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
             {/* Seconds column */}
             <div className="flex flex-col gap-5">
               {[
-                { v: pad(h), label: "Hours" },
-                { v: pad(m), label: "Minutes" },
-                { v: pad(s), label: "Seconds", pulse: true },
+                { v: pad(h), label: t("countdown.hours", "Hours") },
+                { v: pad(m), label: t("countdown.minutes", "Minutes") },
+                { v: pad(s), label: t("countdown.seconds", "Seconds"), pulse: true },
               ].map((u) => (
                 <div key={u.label} className="flex items-baseline gap-3 relative">
                   <AnimatePresence mode="wait">
@@ -1003,8 +1011,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                 color: "rgba(255,255,255,0.85)",
               }}
             >
-              until <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> we say{" "}
-              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> I do
+              {t("tresor.untilWeSayIDo", "until we say I do")}
             </div>
           </div>
         </motion.div>
@@ -1115,6 +1122,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
 };
 
 const GallerySlide = ({ images }: { images: any[] }) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(0);
   useEffect(() => {
     const id = window.setInterval(() => setActive((a) => (a + 1) % images.length), 1800);
@@ -1142,7 +1150,7 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="text-[10px] tracking-[0.5em] uppercase opacity-85"
         >
-          Moments
+          {t("tresor.moments", "Moments")}
         </motion.p>
         <motion.h3
           initial={{ opacity: 0, y: 14 }}
@@ -1150,14 +1158,16 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           transition={{ delay: 0.5, duration: 0.9 }}
           className="mt-2 text-3xl md:text-4xl italic font-light"
         >
-          Our Story in Frames
+          {t("tresor.ourStoryInFrames", "Our Story in Frames")}
         </motion.h3>
       </div>
     </div>
   );
 };
 
-const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => (
+const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {backgroundImage && (
       <motion.img
@@ -1178,7 +1188,7 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => (
         transition={{ delay: 1, duration: 0.8 }}
         className="flex flex-col items-center justify-center gap-3"
       >
-        <p className="text-[10px] tracking-[0.4em] uppercase text-white/70">Made for love, by</p>
+        <p className="text-[10px] tracking-[0.4em] uppercase text-white/70">{t("tresor.madeForLoveBy", "Made for love, by")}</p>
         <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
           <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain brightness-200" />
         </a>
@@ -1193,6 +1203,7 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => (
       </motion.div>
     </div>
   </div>
-);
+  );
+};
 
 export default TresorTemplate;

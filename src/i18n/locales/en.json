@@ -1,7 +1,16 @@
 {
   "hero": {
     "theWeddingOf": "The Wedding Of",
-    "tapToStart": "Tap To Start"
+    "tapToStart": "Tap To Start",
+    "youreInvitedTo": "You're Invited to",
+    "ourWedding": "Our Wedding"
+  },
+  "tresor": {
+    "untilWeSayIDo": "until we say I do",
+    "moments": "Moments",
+    "ourStoryInFrames": "Our Story in Frames",
+    "madeForLoveBy": "Made for love, by",
+    "reception": "Reception"
   },
   "family": {
     "theFamily": "{{name}} Family",
@@ -14,7 +23,8 @@
     "days": "Days",
     "hours": "Hours",
     "minutes": "Minutes",
-    "seconds": "Seconds"
+    "seconds": "Seconds",
+    "daysRemaining": "Days remaining"
   },
   "events": {
     "title": "Wedding Events",
@@ -32,7 +42,8 @@
   },
   "gifts": {
     "title": "Wedding Gift",
-    "subtitle": "Your presence is our biggest gift. For those who desire a wedding list was set up:"
+    "subtitle": "Your presence is our biggest gift. For those who desire a wedding list was set up:",
+    "tap_to_copy": "Tap a card to copy the number"
   },
   "rsvp": {
     "title": "Join Our Celebration",

@@ -1,7 +1,16 @@
 {
   "hero": {
     "theWeddingOf": "حفل زفاف",
-    "tapToStart": "اضغط للبدء"
+    "tapToStart": "اضغط للبدء",
+    "youreInvitedTo": "أنتم مدعوون إلى",
+    "ourWedding": "حفل زفافنا"
+  },
+  "tresor": {
+    "untilWeSayIDo": "حتى نقول القبول",
+    "moments": "لحظات",
+    "ourStoryInFrames": "قصتنا في صور",
+    "madeForLoveBy": "صُنع بحب من قِبَل",
+    "reception": "حفل الاستقبال"
   },
   "family": {
     "theFamily": "عائلة {{name}}",
@@ -14,7 +23,8 @@
     "days": "أيام",
     "hours": "ساعات",
     "minutes": "دقائق",
-    "seconds": "ثواني"
+    "seconds": "ثواني",
+    "daysRemaining": "الأيام المتبقية"
   },
   "events": {
     "title": "مناسبات الزفاف",
@@ -32,7 +42,8 @@
   },
   "gifts": {
     "title": "هدايا الزفاف",
-    "subtitle": "حضوركم هو أجمل هدية لنا. لمن يرغب، تم إعداد قائمة هدايا:"
+    "subtitle": "حضوركم هو أجمل هدية لنا. لمن يرغب، تم إعداد قائمة هدايا:",
+    "tap_to_copy": "اضغطوا على البطاقة لنسخ الرقم"
   },
   "rsvp": {
     "title": "انضموا إلى احتفالنا",
