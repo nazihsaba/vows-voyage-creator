@@ -793,6 +793,7 @@ const EventsSlide = ({
       <DayProgramme
         date={dateFormatted || ""}
         events={programmeEvents}
+        locale={locale}
         entryDirection={entryDirection}
         entryNonce={entryNonce}
         onRequestNext={onRequestNext}
