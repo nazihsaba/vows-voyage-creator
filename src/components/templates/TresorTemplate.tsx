@@ -742,7 +742,8 @@ const EventsSlide = ({
   onRequestNext?: () => void;
   onRequestPrev?: () => void;
 }) => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language === "ar" ? "ar" : "en";
   const programmeEvents: DayEvent[] = [
     ceremony && {
       raw: ceremony,
@@ -792,6 +793,7 @@ const EventsSlide = ({
       <DayProgramme
         date={dateFormatted || ""}
         events={programmeEvents}
+        locale={locale}
         entryDirection={entryDirection}
         entryNonce={entryNonce}
         onRequestNext={onRequestNext}
