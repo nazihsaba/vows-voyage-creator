@@ -818,6 +818,7 @@ const useCountdown = (target: string) => {
 const pad = (n: number) => (n < 10 ? `0${n}` : `${n}`);
 
 const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundImage?: string }) => {
+  const { t } = useTranslation();
   const { d, h, m, s } = useCountdown(date);
 
   return (
