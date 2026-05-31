@@ -427,7 +427,9 @@ export const TresorTemplate = ({
 
 const slideContainer = "absolute inset-0 w-full h-full flex flex-col items-center justify-center px-6 md:px-14";
 
-const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) => (
+const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {media ? (
       isVideo ? (
@@ -462,7 +464,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
         transition={{ delay: 0.4, duration: 1 }}
         className="text-[10px] md:text-xs tracking-[0.5em] uppercase opacity-80"
       >
-        You're Invited to
+        {t("hero.youreInvitedTo", "You're Invited to")}
       </motion.p>
       <motion.h1
         initial={{ opacity: 0, y: 20 }}
@@ -470,7 +472,7 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
         transition={{ delay: 0.7, duration: 1.1 }}
         className="mt-5 text-5xl md:text-7xl italic font-light tracking-wide"
       >
-        Our Wedding
+        {t("hero.ourWedding", "Our Wedding")}
       </motion.h1>
       <motion.div
         initial={{ width: 0 }}
@@ -480,7 +482,8 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
       />
     </div>
   </div>
-);
+  );
+};
 
 const NamesSlide = ({
   bride,
