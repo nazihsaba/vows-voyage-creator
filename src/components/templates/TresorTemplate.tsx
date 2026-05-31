@@ -1122,6 +1122,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
 };
 
 const GallerySlide = ({ images }: { images: any[] }) => {
+  const { t } = useTranslation();
   const [active, setActive] = useState(0);
   useEffect(() => {
     const id = window.setInterval(() => setActive((a) => (a + 1) % images.length), 1800);
