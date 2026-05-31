@@ -16,7 +16,6 @@ import {
   MapPin,
   Gift as GiftIcon,
   Clock,
-  GlassWater,
   Sparkles,
   UserCog,
   Eye,
