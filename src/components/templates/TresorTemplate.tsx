@@ -1197,7 +1197,13 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
       >
         <p className="text-[10px] tracking-[0.4em] uppercase text-white/70">{t("tresor.madeForLoveBy", "Made for love, by")}</p>
         <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
-          <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain brightness-200" />
+          <img
+            src={aureaLogo}
+            alt="Auréa Invites"
+            loading="lazy"
+            className="h-9 object-contain"
+            style={{ filter: "sepia(1) saturate(2.5) hue-rotate(350deg) brightness(0.85)" }}
+          />
         </a>
         <a
           href="https://www.instagram.com/aureainvites?igsh=MXJjYmJrejF3ejI3eQ=="
