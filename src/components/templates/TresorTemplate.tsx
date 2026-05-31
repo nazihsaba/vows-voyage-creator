@@ -948,9 +948,9 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
             {/* Seconds column */}
             <div className="flex flex-col gap-5">
               {[
-                { v: pad(h), label: "Hours" },
-                { v: pad(m), label: "Minutes" },
-                { v: pad(s), label: "Seconds", pulse: true },
+                { v: pad(h), label: t("countdown.hours", "Hours") },
+                { v: pad(m), label: t("countdown.minutes", "Minutes") },
+                { v: pad(s), label: t("countdown.seconds", "Seconds"), pulse: true },
               ].map((u) => (
                 <div key={u.label} className="flex items-baseline gap-3 relative">
                   <AnimatePresence mode="wait">
