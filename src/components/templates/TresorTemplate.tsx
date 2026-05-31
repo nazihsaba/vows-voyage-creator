@@ -1011,8 +1011,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                 color: "rgba(255,255,255,0.85)",
               }}
             >
-              until <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> we say{" "}
-              <span style={{ color: "rgba(255,255,255,0.7)", margin: "0 10px", fontSize: "8px" }}>◆</span> I do
+              {t("tresor.untilWeSayIDo", "until we say I do")}
             </div>
           </div>
         </motion.div>
