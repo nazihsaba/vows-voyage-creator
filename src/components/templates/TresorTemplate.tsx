@@ -9,6 +9,7 @@ import { CountdownTimer } from "@/components/CountdownTimer";
 import { EventIcon } from "@/components/templates/EventIcon";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
+import tresorCover from "@/assets/tresor-cover.jpeg";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
@@ -67,7 +68,7 @@ export const TresorTemplate = ({
       label: getLocalizedValue(`custom_title_${l.type}`, l.custom_title || l.location_name || "Event"),
       name: getLocalizedValue(`custom_location_${l.type}`, l.location_name || ""),
     }));
-  const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url;
+  const heroMedia: string | undefined = wedding.video_url || wedding.hero_media || gallery?.[0]?.image_url || tresorCover;
   const isVideo = !!(wedding.video_url || (heroMedia && /\.(mp4|webm|mov)$/i.test(heroMedia)));
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
