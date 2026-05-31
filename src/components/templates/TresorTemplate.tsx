@@ -495,7 +495,9 @@ const NamesSlide = ({
   groom: string;
   date: string;
   backgroundImage?: string;
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {backgroundImage && (
       <motion.img
