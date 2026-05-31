@@ -518,7 +518,7 @@ const NamesSlide = ({
         transition={{ delay: 0.3, duration: 0.9 }}
         className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
       >
-        Together with their families
+        {t("aura.togetherWithFamilies", "Together with their families")}
       </motion.p>
 
       <motion.h2
