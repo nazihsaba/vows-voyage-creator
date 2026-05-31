@@ -28,6 +28,7 @@ import graceTemplate from "@/assets/preview-wedding-10.jpg";
 import eclatTemplate from "@/assets/aura-preview-10.jpg";
 import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
+import tresorCover from "@/assets/tresor-cover.jpeg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
@@ -159,7 +160,7 @@ const Dashboard = () => {
       name: "Trésor",
       price: 120,
       description: "Horizontal swipe storytelling with cinematic transitions",
-      image: lumiereTemplate,
+      image: tresorCover,
       features: [
         { icon: Video, text: "Video Background" },
         { icon: Images, text: "Photo Gallery" },
