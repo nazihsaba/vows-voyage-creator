@@ -903,7 +903,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
                   color: "rgba(255,255,255,0.7)",
                 }}
               >
-                Days remaining
+                {t("countdown.daysRemaining", "Days remaining")}
               </div>
             </div>
 
