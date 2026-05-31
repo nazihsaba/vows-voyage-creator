@@ -1202,7 +1202,6 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
             alt="Auréa Invites"
             loading="lazy"
             className="h-9 object-contain"
-            style={{ filter: "sepia(1) saturate(2.5) hue-rotate(350deg) brightness(0.85)" }}
           />
         </a>
         <a
