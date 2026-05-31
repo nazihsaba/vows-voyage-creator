@@ -1,4 +1,7 @@
 {
+  "swipe": {
+    "hint": "← اسحب للمتابعة ←"
+  },
   "hero": {
     "theWeddingOf": "حفل زفاف",
     "tapToStart": "اضغط للبدء",
