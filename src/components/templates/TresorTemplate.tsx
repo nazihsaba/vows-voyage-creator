@@ -737,16 +737,17 @@ const EventsSlide = ({
   onRequestNext?: () => void;
   onRequestPrev?: () => void;
 }) => {
+  const { t } = useTranslation();
   const programmeEvents: DayEvent[] = [
     ceremony && {
       raw: ceremony,
-      label: "Ceremony",
+      label: t("events.ceremony", "Ceremony"),
       name: ceremonyName,
       isHero: true,
     },
     venue && {
       raw: venue,
-      label: "Reception",
+      label: t("tresor.reception", "Reception"),
       name: venueName,
       isHero: true,
     },
