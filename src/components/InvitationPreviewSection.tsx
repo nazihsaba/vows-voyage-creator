@@ -13,7 +13,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
 import eprisTemplate from "@/assets/epris-preview.jpg";
-import tresorTemplate from "@/assets/lumiere-4.jpg";
+import tresorTemplate from "@/assets/tresor-cover.jpeg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
