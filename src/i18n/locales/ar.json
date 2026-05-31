@@ -23,7 +23,8 @@
     "days": "أيام",
     "hours": "ساعات",
     "minutes": "دقائق",
-    "seconds": "ثواني"
+    "seconds": "ثواني",
+    "daysRemaining": "الأيام المتبقية"
   },
   "events": {
     "title": "مناسبات الزفاف",
