@@ -413,7 +413,7 @@ export const TresorTemplate = ({
             transition={{ delay: 1.6, duration: 0.8 }}
             className="absolute bottom-16 left-1/2 text-[10px] tracking-[0.4em] uppercase text-white/90 mix-blend-difference z-30 select-none text-center"
           >
-            ← swipe ←
+            {t("swipe.hint", "← swipe ←")}
           </motion.div>
         )}
       </AnimatePresence>

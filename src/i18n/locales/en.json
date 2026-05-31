@@ -1,4 +1,7 @@
 {
+  "swipe": {
+    "hint": "← swipe ←"
+  },
   "hero": {
     "theWeddingOf": "The Wedding Of",
     "tapToStart": "Tap To Start",
