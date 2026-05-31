@@ -1150,7 +1150,7 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           transition={{ delay: 0.3, duration: 0.8 }}
           className="text-[10px] tracking-[0.5em] uppercase opacity-85"
         >
-          Moments
+          {t("tresor.moments", "Moments")}
         </motion.p>
         <motion.h3
           initial={{ opacity: 0, y: 14 }}
@@ -1158,7 +1158,7 @@ const GallerySlide = ({ images }: { images: any[] }) => {
           transition={{ delay: 0.5, duration: 0.9 }}
           className="mt-2 text-3xl md:text-4xl italic font-light"
         >
-          Our Story in Frames
+          {t("tresor.ourStoryInFrames", "Our Story in Frames")}
         </motion.h3>
       </div>
     </div>
