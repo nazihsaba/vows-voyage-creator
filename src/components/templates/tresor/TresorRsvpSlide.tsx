@@ -245,7 +245,7 @@ export const TresorRsvpSlide = ({
                     submittingRsvp ||
                     (!hasInvitees && showWishes && !wishesMessage.trim())
                   }
-                  className="group relative w-full overflow-hidden rounded-full border border-white/70 bg-white/95 hover:bg-white text-[#1a1a1a] tracking-[0.35em] uppercase text-[11px] py-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="group relative w-full overflow-hidden rounded-full border border-white/70 bg-white text-[#1a1a1a] tracking-[0.35em] uppercase text-[11px] py-4 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {submittingRsvp
                     ? t("rsvp.submitting", "Submitting...")
