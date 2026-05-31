@@ -3,7 +3,7 @@ import { parseLocalDate } from "@/lib/weddingDate";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { ChevronLeft, ChevronRight, Instagram } from "lucide-react";
+import { ChevronLeft, ChevronRight, Instagram, Copy, Check } from "lucide-react";
 import { CountdownTimer } from "@/components/CountdownTimer";
 
 import { EventIcon } from "@/components/templates/EventIcon";
@@ -1099,11 +1099,11 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
                   {card.card_number}
                 </p>
                 <span
-                  className={`absolute top-3 right-4 text-[10px] tracking-[0.3em] uppercase transition-opacity ${
+                  className={`absolute top-3 right-4 transition-opacity ${
                     isCopied ? "opacity-100 text-[#1a1a1a]" : "opacity-40 group-hover:opacity-70 text-[#6b6b6b]"
                   }`}
                 >
-                  {isCopied ? t("gifts.copied", "Copied") : t("gifts.copy", "Copy")}
+                  {isCopied ? <Check size={16} /> : <Copy size={16} />}
                 </span>
               </motion.button>
             );
