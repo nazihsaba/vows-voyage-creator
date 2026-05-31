@@ -80,7 +80,11 @@ export const TresorTemplate = ({
 
   const brideName = getLocalizedValue("bride_name", wedding.bride_name) || "Bride";
   const groomName = getLocalizedValue("groom_name", wedding.groom_name) || "Groom";
-  const quoteText = getLocalizedValue("aura_quote", (wedding as any).aura_quote) || wedding.main_description || "";
+  const quoteText =
+    getLocalizedValue("aura_quote", (wedding as any).aura_quote || "") ||
+    getLocalizedValue("main_description", wedding.main_description || "") ||
+    getLocalizedValue("welcoming_text", wedding.welcoming_text || "") ||
+    "";
   const quoteReference = getLocalizedValue("aura_reference", (wedding as any).aura_reference) || "";
 
   // Lock for the timeline slide: prevents Embla drag until all events revealed
