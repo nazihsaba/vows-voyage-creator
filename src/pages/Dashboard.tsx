@@ -16,7 +16,6 @@ import {
   MapPin,
   Gift as GiftIcon,
   Clock,
-  GlassWater,
   Sparkles,
   UserCog,
   Eye,
@@ -314,39 +313,6 @@ const Dashboard = () => {
                   </CardContent>
                 </Card>
               ))}
-            </div>
-          </div>
-
-          {/* Bachelor Section - Coming Soon */}
-          <div>
-            <div className="flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-indigo-100 to-indigo-50 shadow-sm">
-                <GlassWater className="w-5 h-5 sm:w-6 sm:h-6 text-indigo-500" />
-              </div>
-              <div className="flex items-center gap-3">
-                <div>
-                  <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Bachelor</h2>
-                  <p className="text-xs text-muted-foreground">Party invitations</p>
-                </div>
-              </div>
-            </div>
-
-            <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
-              <Card className="border-0 bg-white/50 backdrop-blur-sm shadow-md opacity-60 flex flex-col rounded-2xl overflow-hidden">
-                <CardHeader className="p-0 flex-grow">
-                  <div className="aspect-video overflow-hidden">
-                    <div className="w-full h-full bg-gradient-to-br from-indigo-100 to-indigo-50 flex items-center justify-center">
-                      <GlassWater className="w-12 h-12 sm:w-14 sm:h-14 text-indigo-400" />
-                    </div>
-                  </div>
-                  <div className="p-5">
-                    <CardTitle className="text-lg font-serif mb-1.5">Bachelor Template</CardTitle>
-                    <CardDescription className="text-sm leading-relaxed">
-                      Celebrate your bachelor party in style
-                    </CardDescription>
-                  </div>
-                </CardHeader>
-              </Card>
             </div>
           </div>
         </div>
