@@ -668,6 +668,18 @@ const ManageLinks = () => {
     }
   };
 
+  const handleUpdateInviteeName = (inviteeId: string, name: string) => {
+    setEditInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, name } : i)));
+    if (!inviteeId.startsWith("temp-")) {
+      setPendingUpdates((prev) => ({
+        ...prev,
+        [inviteeId]: { ...prev[inviteeId], name },
+      }));
+    } else {
+      setPendingNewInvitees((prev) => prev.map((i) => (i.id === inviteeId ? { ...i, name } : i)));
+    }
+  };
+
   const handleMoveInvitee = (index: number, direction: -1 | 1) => {
     setEditInvitees((prev) => {
       const next = [...prev];
