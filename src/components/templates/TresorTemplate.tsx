@@ -1165,7 +1165,9 @@ const GallerySlide = ({ images }: { images: any[] }) => {
   );
 };
 
-const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => (
+const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
+  const { t } = useTranslation();
+  return (
   <div className="absolute inset-0 w-full h-full overflow-hidden bg-black">
     {backgroundImage && (
       <motion.img
