@@ -1188,7 +1188,7 @@ const FooterSlide = ({ backgroundImage }: { backgroundImage?: string }) => {
         transition={{ delay: 1, duration: 0.8 }}
         className="flex flex-col items-center justify-center gap-3"
       >
-        <p className="text-[10px] tracking-[0.4em] uppercase text-white/70">Made for love, by</p>
+        <p className="text-[10px] tracking-[0.4em] uppercase text-white/70">{t("tresor.madeForLoveBy", "Made for love, by")}</p>
         <a href="https://aureainvites.com" target="_blank" rel="noopener noreferrer">
           <img src={aureaLogo} alt="Auréa Invites" loading="lazy" className="h-9 object-contain brightness-200" />
         </a>
