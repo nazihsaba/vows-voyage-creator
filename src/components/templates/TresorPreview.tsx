@@ -1,16 +1,18 @@
 import { TresorTemplate } from "./TresorTemplate";
-import lumiere1 from "@/assets/lumiere-1.jpg";
-import lumiere2 from "@/assets/lumiere-2.jpg";
-import lumiere3 from "@/assets/lumiere-3.jpg";
-import lumiere4 from "@/assets/lumiere-4.jpg";
-import lumiere5 from "@/assets/lumiere-5.jpg";
-import lumiere6 from "@/assets/lumiere-6.jpg";
+import tresor1 from "@/assets/tresor/tresor-1.jpeg";
+import tresor2 from "@/assets/tresor/tresor-2.jpeg";
+import tresor3 from "@/assets/tresor/tresor-3.jpeg";
+import tresor4 from "@/assets/tresor/tresor-4.jpeg";
+import tresor5 from "@/assets/tresor/tresor-5.jpeg";
+import tresor6 from "@/assets/tresor/tresor-6.jpeg";
+import tresor7 from "@/assets/tresor/tresor-7.jpeg";
+import tresor8 from "@/assets/tresor/tresor-8.jpeg";
 
 const sampleWedding = {
   bride_name: "Aurélie",
   groom_name: "Maxime",
   wedding_date: "2026-08-16",
-  hero_media: lumiere1,
+  hero_media: tresor3,
   aura_quote:
     "And now these three remain: faith, hope and love. But the greatest of these is love.",
   aura_reference: "A promise, gently kept",
@@ -35,11 +37,14 @@ const sampleLocations = [
 ];
 
 const sampleGallery = [
-  { id: "1", image_url: lumiere2 },
-  { id: "2", image_url: lumiere3 },
-  { id: "3", image_url: lumiere4 },
-  { id: "4", image_url: lumiere5 },
-  { id: "5", image_url: lumiere6 },
+  { id: "1", image_url: tresor3 },
+  { id: "2", image_url: tresor4 },
+  { id: "3", image_url: tresor6 },
+  { id: "4", image_url: tresor1 },
+  { id: "5", image_url: tresor5 },
+  { id: "6", image_url: tresor2 },
+  { id: "7", image_url: tresor8 },
+  { id: "8", image_url: tresor7 },
 ];
 
 const TresorPreview = () => (
