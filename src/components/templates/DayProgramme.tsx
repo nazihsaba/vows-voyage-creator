@@ -421,8 +421,8 @@ export default function DayProgramme({
                             fontSize: 9,
                             letterSpacing: "0.42em",
                             color: "rgba(255,255,255,0.85)",
-                            paddingBottom: 3,
-                            marginTop: 10,
+                            paddingBottom: 2,
+                            marginTop: 6,
                             borderBottom: "0.5px solid rgba(255,255,255,0.5)",
                           }}
                           onMouseEnter={(e) => {
