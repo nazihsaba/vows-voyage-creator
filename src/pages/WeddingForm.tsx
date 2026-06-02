@@ -1435,12 +1435,22 @@ const WeddingForm = () => {
     }
   };
 
+  if (id && !initialLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
+        <div className="text-sm text-muted-foreground">Loading…</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
         <Button variant="ghost" onClick={() => navigate(-1)} className="mb-3 sm:mb-4 -ml-1">
           <ArrowLeft className="w-4 h-4 mr-2" />
           {cameFromMyEvents ? "My Events" : "Dashboard"}
+        </Button>
+
         </Button>
 
         <Card className="shadow-elegant overflow-hidden">
