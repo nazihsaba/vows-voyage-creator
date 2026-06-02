@@ -182,8 +182,8 @@ export default function DayProgramme({
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
-            paddingTop: isNarrow && events.length >= 5 ? 32 : 44,
-            paddingBottom: isNarrow ? (events.length >= 5 ? 110 : 130) : 150,
+            paddingTop: isNarrow && events.length >= 5 ? 24 : 40,
+            paddingBottom: isNarrow ? (events.length >= 5 ? 90 : 120) : 140,
           }}
         >
           {/* Header — date is the title now */}
@@ -215,7 +215,7 @@ export default function DayProgramme({
           </div>
 
           {/* Agenda */}
-          <div ref={agendaRef} className="relative mt-10" style={{ minHeight: 200 }}>
+          <div ref={agendaRef} className={`relative ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200 }}>
             {/* Static spine */}
             <div
               className="absolute pointer-events-none"
@@ -268,11 +268,11 @@ export default function DayProgramme({
               style={{
                 gap: isNarrow
                   ? events.length >= 5
-                    ? 18
+                    ? 12
                     : events.length === 4
-                      ? 24
-                      : 30
-                  : 36,
+                      ? 18
+                      : 24
+                  : 30,
               }}
             >
               {events.map((event, idx) => {
@@ -374,14 +374,14 @@ export default function DayProgramme({
 
 
                     {/* Event info */}
-                    <div className="text-left" style={{ paddingTop: 4 }}>
+                    <div className="text-left" style={{ paddingTop: 2 }}>
                       <p
                         className="uppercase"
                         style={{
                           fontSize: 10,
                           letterSpacing: "0.42em",
                           color: "rgba(255,255,255,0.8)",
-                          marginBottom: 7,
+                          marginBottom: 5,
                           textShadow: "0 1px 8px rgba(0,0,0,0.3)",
                         }}
                       >
@@ -392,11 +392,11 @@ export default function DayProgramme({
                           fontFamily:
                             "'Cormorant Garamond', Garamond, Georgia, serif",
                           fontStyle: "italic",
-                          fontSize: event.isHero ? 20 : 18,
-                          lineHeight: 1.3,
+                          fontSize: event.isHero ? 17 : 15,
+                          lineHeight: 1.25,
                           color: "#ffffff",
                           textShadow: "0 1px 10px rgba(0,0,0,0.4)",
-                          marginBottom: 4,
+                          marginBottom: 2,
                         }}
                       >
                         {event.venue}
@@ -421,8 +421,8 @@ export default function DayProgramme({
                             fontSize: 9,
                             letterSpacing: "0.42em",
                             color: "rgba(255,255,255,0.85)",
-                            paddingBottom: 3,
-                            marginTop: 10,
+                            paddingBottom: 2,
+                            marginTop: 6,
                             borderBottom: "0.5px solid rgba(255,255,255,0.5)",
                           }}
                           onMouseEnter={(e) => {
