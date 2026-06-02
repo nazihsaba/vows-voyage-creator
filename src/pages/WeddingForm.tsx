@@ -109,6 +109,7 @@ const WeddingForm = () => {
   const cameFromMyEvents = (location.state as any)?.from === "my-events";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [initialLoaded, setInitialLoaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [createdWeddingId, setCreatedWeddingId] = useState<string | null>(null);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
