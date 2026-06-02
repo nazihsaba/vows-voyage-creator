@@ -374,14 +374,14 @@ export default function DayProgramme({
 
 
                     {/* Event info */}
-                    <div className="text-left" style={{ paddingTop: 4 }}>
+                    <div className="text-left" style={{ paddingTop: 2 }}>
                       <p
                         className="uppercase"
                         style={{
                           fontSize: 10,
                           letterSpacing: "0.42em",
                           color: "rgba(255,255,255,0.8)",
-                          marginBottom: 7,
+                          marginBottom: 5,
                           textShadow: "0 1px 8px rgba(0,0,0,0.3)",
                         }}
                       >
@@ -392,11 +392,11 @@ export default function DayProgramme({
                           fontFamily:
                             "'Cormorant Garamond', Garamond, Georgia, serif",
                           fontStyle: "italic",
-                          fontSize: event.isHero ? 20 : 18,
-                          lineHeight: 1.3,
+                          fontSize: event.isHero ? 17 : 15,
+                          lineHeight: 1.25,
                           color: "#ffffff",
                           textShadow: "0 1px 10px rgba(0,0,0,0.4)",
-                          marginBottom: 4,
+                          marginBottom: 2,
                         }}
                       >
                         {event.venue}
