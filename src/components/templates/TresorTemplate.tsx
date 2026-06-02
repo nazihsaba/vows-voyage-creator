@@ -748,19 +748,29 @@ const EventsSlide = ({
   const programmeEvents: DayEvent[] = [
     ceremony && {
       raw: ceremony,
+      order: ceremony.display_order ?? 0,
       label: t("events.ceremony", "Ceremony"),
       name: ceremonyName,
       isHero: true,
     },
     venue && {
       raw: venue,
+      order: venue.display_order ?? 0,
       label: t("tresor.reception", "Reception"),
       name: venueName,
       isHero: true,
     },
-    ...customEvents.map((c) => ({ raw: c.raw, label: c.label, name: c.name, isHero: true })),
+    ...customEvents.map((c) => ({
+      raw: c.raw,
+      order: c.raw.display_order ?? 0,
+      label: c.label,
+      name: c.name,
+      isHero: true,
+    })),
   ]
     .filter(Boolean)
+    .sort((a: any, b: any) => (a.order ?? 0) - (b.order ?? 0))
+
     .map((e: any, idx: number) => {
       const parsed = parseHourPhrase(e.raw.time);
       return {
