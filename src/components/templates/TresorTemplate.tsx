@@ -1078,7 +1078,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.9 }}
-          className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
+          className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80 text-center"
         >
           {t("gifts.subtitle", "With Love & Gratitude")}
         </motion.p>
@@ -1094,7 +1094,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
           initial={{ width: 0 }}
           animate={{ width: 48 }}
           transition={{ delay: 0.9, duration: 0.8 }}
-          className="h-[1px] bg-white/70 mt-5"
+          className="h-[1px] bg-white/70 mt-5 mx-auto"
         />
         <motion.p
           initial={{ opacity: 0 }}
