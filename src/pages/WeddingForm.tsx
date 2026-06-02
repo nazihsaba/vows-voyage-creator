@@ -605,6 +605,8 @@ const WeddingForm = () => {
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
+    } finally {
+      setInitialLoaded(true);
     }
   };
 
