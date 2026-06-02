@@ -330,25 +330,48 @@ export default function DayProgramme({
                       )}
                     </div>
 
-                    {/* Ring marker (single white ring on spine) */}
+                    {/* Spine marker — uses event icon when provided, ring otherwise */}
                     <div
                       className="flex justify-center items-center"
-                      style={{ paddingTop: 8, position: "relative", zIndex: 2 }}
+                      style={{ paddingTop: 6, position: "relative", zIndex: 2 }}
                     >
-                      <div
-                        style={{
-                          width: 14,
-                          height: 14,
-                          borderRadius: "50%",
-                          border: `1.5px solid ${on ? "#ffffff" : "rgba(255,255,255,0.4)"}`,
-                          background: on ? "rgba(255,255,255,0.15)" : "transparent",
-                          transition: "all 0.4s ease",
-                          ...(heroOn
-                            ? { animation: "dp-pulse 3s ease-in-out infinite" }
-                            : {}),
-                        }}
-                      />
+                      {event.icon ? (
+                        <span
+                          style={{
+                            width: 22,
+                            height: 22,
+                            display: "inline-flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            color: on ? "#ffffff" : "rgba(255,255,255,0.4)",
+                            filter: on
+                              ? "drop-shadow(0 1px 4px rgba(0,0,0,0.4))"
+                              : "none",
+                            transition: "color 0.4s ease",
+                            ...(heroOn
+                              ? { animation: "dp-pulse 3s ease-in-out infinite", borderRadius: "50%" }
+                              : {}),
+                          }}
+                        >
+                          <EventIcon icon={event.icon} className="w-[22px] h-[22px]" />
+                        </span>
+                      ) : (
+                        <div
+                          style={{
+                            width: 14,
+                            height: 14,
+                            borderRadius: "50%",
+                            border: `1.5px solid ${on ? "#ffffff" : "rgba(255,255,255,0.4)"}`,
+                            background: on ? "rgba(255,255,255,0.15)" : "transparent",
+                            transition: "all 0.4s ease",
+                            ...(heroOn
+                              ? { animation: "dp-pulse 3s ease-in-out infinite" }
+                              : {}),
+                          }}
+                        />
+                      )}
                     </div>
+
 
                     {/* Event info */}
                     <div className="text-left" style={{ paddingTop: 4 }}>
