@@ -1096,14 +1096,6 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
           transition={{ delay: 0.9, duration: 0.8 }}
           className="h-[1px] bg-white/70 mt-5 mx-auto"
         />
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.1, duration: 0.8 }}
-          className="mt-5 text-xs md:text-sm tracking-wider text-white/75 text-center max-w-sm"
-        >
-          {t("gifts.tap_to_copy", "Tap a card to copy the number")}
-        </motion.p>
 
         <div className="mt-8 w-full max-w-md grid gap-3">
           {giftCards.map((card, index) => {
