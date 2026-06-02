@@ -1451,7 +1451,7 @@ const WeddingForm = () => {
           {cameFromMyEvents ? "My Events" : "Dashboard"}
         </Button>
 
-        </Button>
+
 
         <Card className="shadow-elegant overflow-hidden">
           <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
