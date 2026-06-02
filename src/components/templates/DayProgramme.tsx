@@ -263,7 +263,18 @@ export default function DayProgramme({
             )}
 
             {/* Event rows */}
-            <div className="flex flex-col" style={{ gap: 36 }}>
+            <div
+              className="flex flex-col"
+              style={{
+                gap: isNarrow
+                  ? events.length >= 5
+                    ? 18
+                    : events.length === 4
+                      ? 24
+                      : 30
+                  : 36,
+              }}
+            >
               {events.map((event, idx) => {
                 const on = idx <= step;
                 const heroOn = event.isHero && on;
