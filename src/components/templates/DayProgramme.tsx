@@ -215,7 +215,7 @@ export default function DayProgramme({
           </div>
 
           {/* Agenda */}
-          <div ref={agendaRef} className="relative mt-10" style={{ minHeight: 200 }}>
+          <div ref={agendaRef} className={`relative ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200 }}>
             {/* Static spine */}
             <div
               className="absolute pointer-events-none"
