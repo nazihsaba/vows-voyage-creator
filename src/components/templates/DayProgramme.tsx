@@ -182,8 +182,8 @@ export default function DayProgramme({
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
-            paddingTop: isNarrow && events.length >= 5 ? 32 : 44,
-            paddingBottom: isNarrow ? (events.length >= 5 ? 110 : 130) : 150,
+            paddingTop: isNarrow && events.length >= 5 ? 24 : 40,
+            paddingBottom: isNarrow ? (events.length >= 5 ? 90 : 120) : 140,
           }}
         >
           {/* Header — date is the title now */}
