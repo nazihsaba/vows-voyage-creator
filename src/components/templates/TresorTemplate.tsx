@@ -783,6 +783,7 @@ const EventsSlide = ({
         city: "",
         mapUrl: e.raw.location_link,
         isHero: e.isHero,
+        icon: e.raw?.icon,
       } as DayEvent;
     });
 
