@@ -202,8 +202,8 @@ export const TresorRsvpSlide = ({
               className="mt-6 w-full max-w-md"
             >
               <div className="relative rounded-xl bg-white/10 backdrop-blur-md px-5 py-4">
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-black/60 border border-white/20 whitespace-nowrap">
-                  <span className="text-[10px] uppercase tracking-[0.3em] text-white/85">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md whitespace-nowrap">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-white/90">
                     {t("rsvp.wishesTitle", "Share Your Love & Wishes")}
                   </span>
                 </div>
