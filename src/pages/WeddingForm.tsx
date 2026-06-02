@@ -109,6 +109,7 @@ const WeddingForm = () => {
   const cameFromMyEvents = (location.state as any)?.from === "my-events";
   const { toast } = useToast();
   const [loading, setLoading] = useState(false);
+  const [initialLoaded, setInitialLoaded] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [createdWeddingId, setCreatedWeddingId] = useState<string | null>(null);
   const [previewModalOpen, setPreviewModalOpen] = useState(false);
@@ -423,6 +424,8 @@ const WeddingForm = () => {
   useEffect(() => {
     if (id) {
       fetchWedding();
+    } else {
+      setInitialLoaded(true);
     }
   }, [id]);
 
@@ -604,6 +607,8 @@ const WeddingForm = () => {
       }
     } catch (error) {
       console.error("Error fetching wedding:", error);
+    } finally {
+      setInitialLoaded(true);
     }
   };
 
@@ -1430,6 +1435,14 @@ const WeddingForm = () => {
     }
   };
 
+  if (id && !initialLoaded) {
+    return (
+      <div className="min-h-screen bg-gradient-soft flex items-center justify-center">
+        <div className="text-sm text-muted-foreground">Loading…</div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-soft py-4 sm:py-8 px-3 sm:px-4">
       <div className="max-w-2xl mx-auto">
@@ -1437,6 +1450,8 @@ const WeddingForm = () => {
           <ArrowLeft className="w-4 h-4 mr-2" />
           {cameFromMyEvents ? "My Events" : "Dashboard"}
         </Button>
+
+
 
         <Card className="shadow-elegant overflow-hidden">
           <CardHeader className="px-4 sm:px-6 pt-5 sm:pt-6 pb-2 sm:pb-4">
