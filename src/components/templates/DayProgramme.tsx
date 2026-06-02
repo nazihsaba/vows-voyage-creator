@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { EventIcon } from "@/components/templates/EventIcon";
 
 
 export type DayEvent = {
@@ -11,7 +12,9 @@ export type DayEvent = {
   city: string;
   mapUrl?: string;
   isHero?: boolean;
+  icon?: string;
 };
+
 
 type Locale = "en" | "ar" | "fr";
 
