@@ -565,7 +565,7 @@ const NamesSlide = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 1.7, duration: 0.8 }}
-        className="mt-6 text-xs md:text-sm tracking-[0.35em] uppercase text-white/85"
+        className="mt-6 text-sm md:text-base tracking-[0.35em] uppercase text-white/85"
       >
         {date}
       </motion.p>
