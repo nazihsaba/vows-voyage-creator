@@ -268,11 +268,11 @@ export default function DayProgramme({
               style={{
                 gap: isNarrow
                   ? events.length >= 5
-                    ? 18
+                    ? 12
                     : events.length === 4
-                      ? 24
-                      : 30
-                  : 36,
+                      ? 18
+                      : 24
+                  : 30,
               }}
             >
               {events.map((event, idx) => {
