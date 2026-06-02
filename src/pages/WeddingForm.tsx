@@ -424,6 +424,8 @@ const WeddingForm = () => {
   useEffect(() => {
     if (id) {
       fetchWedding();
+    } else {
+      setInitialLoaded(true);
     }
   }, [id]);
 
