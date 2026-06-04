@@ -96,6 +96,7 @@ interface Invitee {
   is_attending: boolean | null;
   invitation_link_id: string;
   created_at: string;
+  responded_at: string | null;
   table_number: number | null;
 }
 
