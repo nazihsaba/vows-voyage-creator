@@ -195,21 +195,17 @@ const InvitationPreviewSection = () => {
 
       {/* Fullscreen Preview Dialog */}
       <Dialog open={!!activePreview} onOpenChange={(open) => !open && setActivePreview(null)}>
-        <DialogContent className="max-w-full w-full h-[100dvh] p-0 border-none rounded-none bg-white [&>button]:hidden overflow-hidden">
-          {/* Sticky header bar */}
-          <div className="sticky top-0 z-50 flex items-center justify-between px-4 py-3 bg-white/80 backdrop-blur-md border-b border-border/50">
-            <span className="text-sm font-semibold text-foreground tracking-wide">{activeLabel} — Preview</span>
+        <DialogContent className="p-0 gap-0 border-0 overflow-hidden w-full h-[100dvh] max-w-none max-h-none top-0 left-0 translate-x-0 translate-y-0 sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:w-[95vw] sm:h-[95vh] sm:rounded-lg [&>button]:hidden">
+          <div className="absolute top-3 right-3 z-50">
             <button
               onClick={() => setActivePreview(null)}
-              className="p-2 rounded-full hover:bg-muted transition-colors border-none outline-none focus:outline-none focus:ring-0 focus-visible:outline-none focus-visible:ring-0"
+              className="h-8 w-8 inline-flex items-center justify-center rounded-full shadow-md bg-black/50 hover:bg-black/60 text-white transition-colors"
               aria-label="Close preview"
             >
-              <X className="w-5 h-5 text-foreground" />
+              <X className="w-4 h-4" />
             </button>
           </div>
-
-          {/* Scrollable preview body */}
-          <div className="overflow-y-auto h-[calc(100dvh-52px)]">
+          <div className="overflow-y-auto h-full w-full">
             <Suspense fallback={<PreviewLoadingFallback />}>{ActiveComponent && <ActiveComponent />}</Suspense>
           </div>
         </DialogContent>
