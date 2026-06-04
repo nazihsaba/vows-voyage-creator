@@ -1617,8 +1617,8 @@ const ManageLinks = () => {
                                               )}
                                             </TableCell>
                                             <TableCell colSpan={3} className="text-sm text-muted-foreground">
-                                              {invitee.is_attending !== null
-                                                ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                              {invitee.is_attending !== null && invitee.responded_at
+                                                ? `Responded: ${new Date(invitee.responded_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
                                                 : "-"}
                                             </TableCell>
                                           </TableRow>
