@@ -1,0 +1,1 @@
+ALTER TABLE public.invitees ADD COLUMN IF NOT EXISTS responded_at timestamp with time zone;

@@ -96,6 +96,7 @@ interface Invitee {
   is_attending: boolean | null;
   invitation_link_id: string;
   created_at: string;
+  responded_at: string | null;
   table_number: number | null;
 }
 
@@ -627,6 +628,7 @@ const ManageLinks = () => {
       is_attending: null,
       invitation_link_id: editingLink.id,
       created_at: new Date().toISOString(),
+      responded_at: null,
       table_number: null,
     };
     setEditInvitees((prev) => [...prev, tempInvitee]);
@@ -1615,8 +1617,8 @@ const ManageLinks = () => {
                                               )}
                                             </TableCell>
                                             <TableCell colSpan={3} className="text-sm text-muted-foreground">
-                                              {invitee.is_attending !== null
-                                                ? `Responded: ${new Date(invitee.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
+                                              {invitee.is_attending !== null && invitee.responded_at
+                                                ? `Responded: ${new Date(invitee.responded_at).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}`
                                                 : "-"}
                                             </TableCell>
                                           </TableRow>

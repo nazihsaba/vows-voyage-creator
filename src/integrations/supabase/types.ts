@@ -180,6 +180,7 @@ export type Database = {
           invitation_link_id: string
           is_attending: boolean | null
           name: string
+          responded_at: string | null
           table_number: number | null
           wishes_message: string | null
         }
@@ -190,6 +191,7 @@ export type Database = {
           invitation_link_id: string
           is_attending?: boolean | null
           name: string
+          responded_at?: string | null
           table_number?: number | null
           wishes_message?: string | null
         }
@@ -200,6 +202,7 @@ export type Database = {
           invitation_link_id?: string
           is_attending?: boolean | null
           name?: string
+          responded_at?: string | null
           table_number?: number | null
           wishes_message?: string | null
         }
