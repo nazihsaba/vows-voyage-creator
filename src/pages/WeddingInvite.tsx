@@ -337,6 +337,7 @@ const WeddingInvite = () => {
     setSubmittingRsvp(true);
     try {
 
+      const respondedAt = new Date().toISOString();
       const updates = invitees.map((invitee) => {
         const resp = rsvpResponses[invitee.id];
         const isAttendingValue: boolean | null = resp === true ? true : resp === false ? false : null;
@@ -344,8 +345,9 @@ const WeddingInvite = () => {
           .from("invitees")
           .update({
             is_attending: isAttendingValue,
+            responded_at: isAttendingValue !== null ? respondedAt : null,
             ...(trimmedMessage ? { wishes_message: trimmedMessage } : {}),
-          })
+          } as any)
           .eq("id", invitee.id);
       });
 
