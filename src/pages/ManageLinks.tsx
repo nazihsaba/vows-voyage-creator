@@ -628,6 +628,7 @@ const ManageLinks = () => {
       is_attending: null,
       invitation_link_id: editingLink.id,
       created_at: new Date().toISOString(),
+      responded_at: null,
       table_number: null,
     };
     setEditInvitees((prev) => [...prev, tempInvitee]);
