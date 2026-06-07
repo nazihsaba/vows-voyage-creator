@@ -1838,25 +1838,39 @@ const ManageLinks = () => {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="w-48 bg-background z-50">
                                           {link.phone_number && (
-                                            <DropdownMenuItem onClick={() => openWhatsApp(link)}>
+                                            <DropdownMenuItem
+                                              onSelect={(e) => {
+                                                e.preventDefault();
+                                                openWhatsApp(link);
+                                              }}
+                                            >
                                               <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 mr-2" />
                                               Send via WhatsApp
                                             </DropdownMenuItem>
                                           )}
                                           {link.phone_number && stats.pending > 0 && (
-                                            <DropdownMenuItem onClick={() => openWhatsAppFollowUp(link)}>
+                                            <DropdownMenuItem
+                                              onSelect={(e) => {
+                                                e.preventDefault();
+                                                openWhatsAppFollowUp(link);
+                                              }}
+                                            >
                                               <MessageCircle className="w-4 h-4 mr-2 text-amber-600" />
                                               Follow up
                                             </DropdownMenuItem>
                                           )}
                                           <DropdownMenuItem
-                                            onClick={() => copyToClipboard(link)}
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              copyToClipboard(link);
+                                            }}
                                           >
                                             <Copy className="w-4 h-4 mr-2" />
                                             Copy Link
                                           </DropdownMenuItem>
                                           <DropdownMenuItem
-                                            onClick={() => {
+                                            onSelect={(e) => {
+                                              e.preventDefault();
                                               const sanitizedLinkName = link.link_name
                                                 .toLowerCase()
                                                 .replace(/[^a-z0-9]+/g, "-")
@@ -1870,12 +1884,22 @@ const ManageLinks = () => {
                                             <Eye className="w-4 h-4 mr-2" />
                                             Open Link
                                           </DropdownMenuItem>
-                                          <DropdownMenuItem onClick={() => openEditDialog(link)}>
+                                          <DropdownMenuItem
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              // Defer so the dropdown finishes closing before the dialog mounts,
+                                              // otherwise focus-trap conflicts make the dialog appear to do nothing on mobile.
+                                              setTimeout(() => openEditDialog(link), 50);
+                                            }}
+                                          >
                                             <Pencil className="w-4 h-4 mr-2" />
                                             Edit Link
                                           </DropdownMenuItem>
                                           <DropdownMenuItem
-                                            onClick={() => setDeleteId(link.id)}
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              setTimeout(() => setDeleteId(link.id), 50);
+                                            }}
                                             className="text-destructive focus:text-destructive"
                                           >
                                             <Trash2 className="w-4 h-4 mr-2" />
