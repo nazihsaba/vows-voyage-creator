@@ -579,8 +579,14 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
+    // Open the window synchronously FIRST so mobile browsers keep the user-gesture
+    // and don't block the popup. Then update sent state asynchronously.
+    const win = window.open(buildWhatsAppUrl(full, message), "_blank");
+    if (!win) {
+      // Fallback for mobile popup blockers — navigate in same tab.
+      window.location.href = buildWhatsAppUrl(full, message);
+    }
     markLinkSent(link);
-    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
@@ -588,7 +594,10 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
-    window.open(buildWhatsAppUrl(full, message), "_blank");
+    const win = window.open(buildWhatsAppUrl(full, message), "_blank");
+    if (!win) {
+      window.location.href = buildWhatsAppUrl(full, message);
+    }
   };
 
   const openEditDialog = (link: InvitationLink) => {
