@@ -579,8 +579,14 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
+    // Open the window synchronously FIRST so mobile browsers keep the user-gesture
+    // and don't block the popup. Then update sent state asynchronously.
+    const win = window.open(buildWhatsAppUrl(full, message), "_blank");
+    if (!win) {
+      // Fallback for mobile popup blockers — navigate in same tab.
+      window.location.href = buildWhatsAppUrl(full, message);
+    }
     markLinkSent(link);
-    window.open(buildWhatsAppUrl(full, message), "_blank");
   };
 
   const openWhatsAppFollowUp = (link: InvitationLink) => {
@@ -588,7 +594,10 @@ const ManageLinks = () => {
     if (!full) return;
     const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
-    window.open(buildWhatsAppUrl(full, message), "_blank");
+    const win = window.open(buildWhatsAppUrl(full, message), "_blank");
+    if (!win) {
+      window.location.href = buildWhatsAppUrl(full, message);
+    }
   };
 
   const openEditDialog = (link: InvitationLink) => {
@@ -1829,25 +1838,39 @@ const ManageLinks = () => {
                                         </DropdownMenuTrigger>
                                         <DropdownMenuContent align="end" className="w-48 bg-background z-50">
                                           {link.phone_number && (
-                                            <DropdownMenuItem onClick={() => openWhatsApp(link)}>
+                                            <DropdownMenuItem
+                                              onSelect={(e) => {
+                                                e.preventDefault();
+                                                openWhatsApp(link);
+                                              }}
+                                            >
                                               <img src={whatsappIcon} alt="WhatsApp" className="w-4 h-4 mr-2" />
                                               Send via WhatsApp
                                             </DropdownMenuItem>
                                           )}
                                           {link.phone_number && stats.pending > 0 && (
-                                            <DropdownMenuItem onClick={() => openWhatsAppFollowUp(link)}>
+                                            <DropdownMenuItem
+                                              onSelect={(e) => {
+                                                e.preventDefault();
+                                                openWhatsAppFollowUp(link);
+                                              }}
+                                            >
                                               <MessageCircle className="w-4 h-4 mr-2 text-amber-600" />
                                               Follow up
                                             </DropdownMenuItem>
                                           )}
                                           <DropdownMenuItem
-                                            onClick={() => copyToClipboard(link)}
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              copyToClipboard(link);
+                                            }}
                                           >
                                             <Copy className="w-4 h-4 mr-2" />
                                             Copy Link
                                           </DropdownMenuItem>
                                           <DropdownMenuItem
-                                            onClick={() => {
+                                            onSelect={(e) => {
+                                              e.preventDefault();
                                               const sanitizedLinkName = link.link_name
                                                 .toLowerCase()
                                                 .replace(/[^a-z0-9]+/g, "-")
@@ -1861,12 +1884,22 @@ const ManageLinks = () => {
                                             <Eye className="w-4 h-4 mr-2" />
                                             Open Link
                                           </DropdownMenuItem>
-                                          <DropdownMenuItem onClick={() => openEditDialog(link)}>
+                                          <DropdownMenuItem
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              // Defer so the dropdown finishes closing before the dialog mounts,
+                                              // otherwise focus-trap conflicts make the dialog appear to do nothing on mobile.
+                                              setTimeout(() => openEditDialog(link), 50);
+                                            }}
+                                          >
                                             <Pencil className="w-4 h-4 mr-2" />
                                             Edit Link
                                           </DropdownMenuItem>
                                           <DropdownMenuItem
-                                            onClick={() => setDeleteId(link.id)}
+                                            onSelect={(e) => {
+                                              e.preventDefault();
+                                              setTimeout(() => setDeleteId(link.id), 50);
+                                            }}
                                             className="text-destructive focus:text-destructive"
                                           >
                                             <Trash2 className="w-4 h-4 mr-2" />
