@@ -23,10 +23,11 @@ import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-10.jpg";
 
-import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
-import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
-import carouselRings from "@/assets/carousel-rings.jpg";
 import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
+import heroRingsShadow from "@/assets/hero-rings-shadow.jpeg.asset.json";
+import heroEnvelope from "@/assets/hero-envelope.jpeg.asset.json";
+import heroHandsRings from "@/assets/hero-hands-rings.jpeg.asset.json";
+import heroWhiteRoses from "@/assets/hero-white-roses.jpeg.asset.json";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
 
