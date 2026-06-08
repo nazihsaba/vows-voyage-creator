@@ -534,6 +534,15 @@ const NamesSlide = ({
     )}
     <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className={`${slideContainer} text-white`}>
+      <motion.p
+        initial={{ opacity: 0, y: -12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1, duration: 1 }}
+        className="mb-8 max-w-md text-center px-4 text-sm md:text-base italic font-light leading-relaxed text-white/85"
+      >
+        "Two souls, one journey — together forever."
+      </motion.p>
+
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -542,6 +551,7 @@ const NamesSlide = ({
       >
         {groom}
       </motion.h2>
+
 
       <motion.span
         initial={{ opacity: 0, scale: 0.8 }}
