@@ -240,8 +240,8 @@ export const TresorTemplate = ({
       id: "names",
       node: (
         <NamesSlide
-          bride={brideName}
-          groom={groomName}
+          bride={brideFamily}
+          groom={groomFamily}
           quote={quoteText}
           reference={quoteReference}
           backgroundImage={namesBg}
