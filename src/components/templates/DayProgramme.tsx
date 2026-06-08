@@ -296,10 +296,9 @@ export default function DayProgramme({
                 return (
                   <div
                     key={event.id}
-                    className="inline-grid items-start relative"
+                    className="grid items-start relative w-full"
                     style={{
-                      gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px minmax(0, auto)`,
-                      maxWidth: 520,
+                      gridTemplateColumns: `1fr ${spineColWidth}px 1fr`,
                       opacity: on ? 1 : 0.18,
                       transform: on ? "translateY(0)" : "translateY(6px)",
                       transition:
