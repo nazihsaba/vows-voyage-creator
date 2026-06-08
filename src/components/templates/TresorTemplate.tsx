@@ -55,7 +55,7 @@ export const TresorTemplate = ({
   submittingRsvp = false,
 }: TresorTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
@@ -81,6 +81,14 @@ export const TresorTemplate = ({
 
   const brideName = getLocalizedValue("bride_name", wedding.bride_name) || "Bride";
   const groomName = getLocalizedValue("groom_name", wedding.groom_name) || "Groom";
+  const brideFamily = formatFamily(
+    "bride_family",
+    wedding.bride_family || (wedding.bride_name ? wedding.bride_name.split(" ").pop() : "") || "Family",
+  );
+  const groomFamily = formatFamily(
+    "groom_family",
+    wedding.groom_family || (wedding.groom_name ? wedding.groom_name.split(" ").pop() : "") || "Family",
+  );
   const quoteText =
     getLocalizedValue("aura_quote", (wedding as any).aura_quote || "") ||
     getLocalizedValue("main_description", wedding.main_description || "") ||
@@ -230,16 +238,22 @@ export const TresorTemplate = ({
     },
     {
       id: "names",
-      node: <NamesSlide bride={brideName} groom={groomName} date={dateFormatted} backgroundImage={namesBg} />,
+      node: (
+        <NamesSlide
+          brideFamily={brideFamily}
+          groomFamily={groomFamily}
+          quote={quoteText}
+          reference={quoteReference}
+          backgroundImage={namesBg}
+        />
+      ),
     },
   ];
 
-  if (quoteText) {
-    slides.push({
-      id: "quote",
-      node: <QuoteSlide quote={quoteText} reference={quoteReference} backgroundImage={quoteBg} />,
-    });
-  }
+  slides.push({
+    id: "quote",
+    node: <QuoteSlide bride={brideName} groom={groomName} date={dateFormatted} backgroundImage={quoteBg} />,
+  });
 
   slides.push({
     id: "events",
@@ -492,14 +506,16 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
 };
 
 const NamesSlide = ({
-  bride,
-  groom,
-  date,
+  brideFamily,
+  groomFamily,
+  quote,
+  reference,
   backgroundImage,
 }: {
-  bride: string;
-  groom: string;
-  date: string;
+  brideFamily: string;
+  groomFamily: string;
+  quote?: string;
+  reference?: string;
   backgroundImage?: string;
 }) => {
   const { t } = useTranslation();
@@ -522,7 +538,7 @@ const NamesSlide = ({
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3, duration: 0.9 }}
-        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80"
+        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80 text-center"
       >
         {t("aura.togetherWithFamilies", "Together with their families")}
       </motion.p>
@@ -531,16 +547,16 @@ const NamesSlide = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.5, duration: 1 }}
-        className="mt-10 text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
+        className="mt-8 text-3xl md:text-5xl italic font-light text-center leading-[1.15]"
       >
-        {bride}
+        {groomFamily}
       </motion.h2>
 
       <motion.span
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.9, duration: 0.7 }}
-        className="my-6 text-3xl md:text-4xl italic font-light text-white/80"
+        className="my-4 text-2xl md:text-3xl italic font-light text-white/80"
       >
         &amp;
       </motion.span>
@@ -549,32 +565,38 @@ const NamesSlide = ({
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 1.1, duration: 1 }}
-        className="text-5xl md:text-7xl italic font-light text-center leading-[1.1]"
+        className="text-3xl md:text-5xl italic font-light text-center leading-[1.15]"
       >
-        {groom}
+        {brideFamily}
       </motion.h2>
 
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: 64 }}
-        transition={{ delay: 1.5, duration: 0.8 }}
-        className="h-[1px] bg-white/70 mt-10"
-      />
-
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.7, duration: 0.8 }}
-        className="mt-6 text-sm md:text-base tracking-[0.35em] uppercase text-white/85"
-      >
-        {date}
-      </motion.p>
+      {quote && (
+        <>
+          <motion.div
+            initial={{ width: 0 }}
+            animate={{ width: 64 }}
+            transition={{ delay: 1.5, duration: 0.8 }}
+            className="h-[1px] bg-white/70 mt-8"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.7, duration: 0.9 }}
+            className="mt-6 max-w-xl text-center px-2"
+          >
+            <p className="text-base md:text-xl italic font-light leading-relaxed text-white/95">{quote}</p>
+            {reference && (
+              <p className="mt-4 text-[10px] md:text-xs tracking-[0.4em] uppercase text-white/60">— {reference}</p>
+            )}
+          </motion.div>
+        </>
+      )}
     </div>
   </div>
   );
 };
 
-const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; reference?: string; backgroundImage?: string }) => {
+const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; groom: string; date: string; backgroundImage?: string }) => {
   const petals = Array.from({ length: 14 }).map((_, i) => ({
     left: `${(i * 7.3) % 100}%`,
     delay: (i % 7) * 0.6,
@@ -671,13 +693,46 @@ const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; refe
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
-        className="max-w-xl text-center relative z-10 px-6"
+        className="max-w-xl text-center relative z-10 px-6 flex flex-col items-center"
       >
-        <p className="text-5xl md:text-6xl italic font-light leading-none text-white/40 mb-4">&ldquo;</p>
-        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-white">{quote}</p>
-        {reference && (
-          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-white/55">— {reference}</p>
-        )}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
+        >
+          {bride}
+        </motion.h2>
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.9, duration: 0.7 }}
+          className="my-5 text-3xl md:text-4xl italic font-light text-white/80"
+        >
+          &amp;
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 1 }}
+          className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
+        >
+          {groom}
+        </motion.h2>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: 64 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="h-[1px] bg-white/70 mt-8"
+        />
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.7, duration: 0.8 }}
+          className="mt-6 text-base md:text-lg tracking-[0.35em] uppercase text-white/90"
+        >
+          {date}
+        </motion.p>
       </motion.div>
 
       {/* Ornamental flourish — bottom (mirrored) */}
