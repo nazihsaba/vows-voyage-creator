@@ -163,7 +163,7 @@ export default function DayProgramme({
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
-  const agendaMaxWidth = 520;
+  const spineLeft = timeColWidth + spineColWidth / 2;
 
   return (
     <div
@@ -216,12 +216,12 @@ export default function DayProgramme({
           </div>
 
           {/* Agenda */}
-          <div ref={agendaRef} className={`relative mx-auto ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200, maxWidth: agendaMaxWidth, width: "100%" }}>
+          <div ref={agendaRef} className={`relative ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200 }}>
             {/* Static spine */}
             <div
               className="absolute pointer-events-none"
               style={{
-                left: "50%",
+                left: spineLeft,
                 top: 14,
                 bottom: 14,
                 width: "0.5px",
@@ -233,7 +233,7 @@ export default function DayProgramme({
             <div
               className="absolute pointer-events-none"
               style={{
-                left: "50%",
+                left: spineLeft,
                 top: 14,
                 width: "1px",
                 height: `calc(${progress} * (100% - 28px))`,
@@ -250,7 +250,7 @@ export default function DayProgramme({
               <div
                 className="absolute pointer-events-none"
                 style={{
-                  left: "50%",
+                  left: spineLeft,
                   top: 14 + progress * (agendaHeight - 28),
                   transform: "translate(-50%, -50%)",
                   transition: "top 0.4s cubic-bezier(0.2,0.7,0.2,1)",
@@ -287,18 +287,15 @@ export default function DayProgramme({
                     ? 28
                     : 32;
 
-                // Split minutePhrase like ":30 PM" → minutes="30", period="PM"
-                const mp = event.minutePhrase?.trim() ?? "";
-                const mpMatch = mp.match(/^:(\d{2})\s*(.*)$/);
-                const minuteDigits = mpMatch?.[1];
-                const period = mpMatch ? mpMatch[2] : mp;
-
                 return (
                   <div
                     key={event.id}
-                    className="grid items-start relative w-full"
+                    className="grid items-start relative"
                     style={{
-                      gridTemplateColumns: `1fr ${spineColWidth}px 1fr`,
+                      gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px 1fr`,
+                      maxWidth: 520,
+                      width: "100%",
+                      justifySelf: "center",
                       opacity: on ? 1 : 0.18,
                       transform: on ? "translateY(0)" : "translateY(6px)",
                       transition:
@@ -321,8 +318,7 @@ export default function DayProgramme({
                       }}
                     >
                       {event.hour}
-                      {minuteDigits ? `:${minuteDigits}` : ""}
-                      {period && (
+                      {event.minutePhrase && (
                         <span
                           className="block"
                           style={{
@@ -333,7 +329,7 @@ export default function DayProgramme({
                             color: "rgba(255,255,255,0.8)",
                           }}
                         >
-                          {period}
+                          {event.minutePhrase}
                         </span>
                       )}
                     </div>
