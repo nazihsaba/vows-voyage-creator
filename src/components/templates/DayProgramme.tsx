@@ -292,6 +292,9 @@ export default function DayProgramme({
                     className="grid items-start relative"
                     style={{
                       gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px 1fr`,
+                      maxWidth: 520,
+                      width: "100%",
+                      justifySelf: "center",
                       opacity: on ? 1 : 0.18,
                       transform: on ? "translateY(0)" : "translateY(6px)",
                       transition:
