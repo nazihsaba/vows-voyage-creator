@@ -161,7 +161,7 @@ export default function DayProgramme({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entryNonce]);
 
-  const timeColWidth = isNarrow ? 75 : 95;
+  const timeColWidth = isNarrow ? 110 : 130;
   const spineColWidth = 56;
   const spineLeft = timeColWidth + spineColWidth / 2;
 
@@ -315,23 +315,36 @@ export default function DayProgramme({
                         textShadow: "0 1px 10px rgba(0,0,0,0.4)",
                         paddingRight: 14,
                         paddingTop: 6,
+                        whiteSpace: "nowrap",
                       }}
                     >
-                      {event.hour}
-                      {event.minutePhrase && (
-                        <span
-                          style={{
-                            fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
-                            fontStyle: "italic",
-                            fontSize: timeFontSize * 0.7,
-                            color: "rgba(255,255,255,0.65)",
-                            marginLeft: 2,
-                          }}
-                        >
-                          {event.minutePhrase}
-                        </span>
-                      )}
+                      {(() => {
+                        const phrase = event.minutePhrase ?? "";
+                        const m = phrase.match(/^(.*?)(\s*(?:AM|PM|am|pm))?$/);
+                        const minutes = m?.[1] ?? "";
+                        const ampm = (m?.[2] ?? "").trim();
+                        return (
+                          <>
+                            {event.hour}
+                            {minutes && <span style={{ marginLeft: 1 }}>{minutes}</span>}
+                            {ampm && (
+                              <span
+                                style={{
+                                  fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
+                                  fontStyle: "italic",
+                                  fontSize: timeFontSize * 0.6,
+                                  color: "rgba(255,255,255,0.65)",
+                                  marginLeft: 3,
+                                }}
+                              >
+                                {ampm}
+                              </span>
+                            )}
+                          </>
+                        );
+                      })()}
                     </div>
+
 
                     {/* Spine marker — uses event icon when provided, ring otherwise */}
                     <div
