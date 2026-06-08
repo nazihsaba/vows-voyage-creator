@@ -240,8 +240,8 @@ export const TresorTemplate = ({
       id: "names",
       node: (
         <NamesSlide
-          brideFamily={brideFamily}
-          groomFamily={groomFamily}
+          bride={brideName}
+          groom={groomName}
           quote={quoteText}
           reference={quoteReference}
           backgroundImage={namesBg}
@@ -506,14 +506,14 @@ const WelcomeSlide = ({ media, isVideo }: { media?: string; isVideo: boolean }) 
 };
 
 const NamesSlide = ({
-  brideFamily,
-  groomFamily,
+  bride,
+  groom,
   quote,
   reference,
   backgroundImage,
 }: {
-  brideFamily: string;
-  groomFamily: string;
+  bride: string;
+  groom: string;
   quote?: string;
   reference?: string;
   backgroundImage?: string;
@@ -534,29 +534,20 @@ const NamesSlide = ({
     )}
     <div className="absolute inset-0 bg-black/40 pointer-events-none" />
     <div className={`${slideContainer} text-white`}>
-      <motion.p
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.3, duration: 0.9 }}
-        className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80 text-center"
-      >
-        {t("aura.togetherWithFamilies", "Together with their families")}
-      </motion.p>
-
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.5, duration: 1 }}
-        className="mt-8 text-3xl md:text-5xl italic font-light text-center leading-[1.15]"
+        transition={{ delay: 0.3, duration: 1 }}
+        className="text-2xl md:text-4xl italic font-light text-center leading-[1.15]"
       >
-        {groomFamily}
+        {t("family.mrAndMrs", { name: groom })}
       </motion.h2>
 
       <motion.span
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: 1, scale: 1 }}
-        transition={{ delay: 0.9, duration: 0.7 }}
-        className="my-4 text-2xl md:text-3xl italic font-light text-white/80"
+        transition={{ delay: 0.7, duration: 0.7 }}
+        className="my-4 text-xl md:text-2xl italic font-light text-white/80"
       >
         &amp;
       </motion.span>
@@ -564,10 +555,10 @@ const NamesSlide = ({
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 1.1, duration: 1 }}
-        className="text-3xl md:text-5xl italic font-light text-center leading-[1.15]"
+        transition={{ delay: 0.9, duration: 1 }}
+        className="text-2xl md:text-4xl italic font-light text-center leading-[1.15]"
       >
-        {brideFamily}
+        {t("family.mrAndMrs", { name: bride })}
       </motion.h2>
 
       {quote && (
@@ -575,13 +566,13 @@ const NamesSlide = ({
           <motion.div
             initial={{ width: 0 }}
             animate={{ width: 64 }}
-            transition={{ delay: 1.5, duration: 0.8 }}
+            transition={{ delay: 1.3, duration: 0.8 }}
             className="h-[1px] bg-white/70 mt-8"
           />
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 1.7, duration: 0.9 }}
+            transition={{ delay: 1.5, duration: 0.9 }}
             className="mt-6 max-w-xl text-center px-2"
           >
             <p className="text-base md:text-xl italic font-light leading-relaxed text-white/95">{quote}</p>
