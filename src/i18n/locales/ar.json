@@ -16,8 +16,8 @@
     "reception": "حفل الاستقبال"
   },
   "family": {
-    "theFamily": "عائلة {{name}}",
-    "mrAndMrs": "عائلة السيد والسيدة {{name}}",
+    "theFamily": "{{name}}",
+    "mrAndMrs": "السيد والسيدة {{name}}",
     "defaultInvitation": "يتشرفون بدعوتكم لحضور حفل زفاف نجلهم وكريمتهم",
     "introLine": "يسر ويسعد"
   },
