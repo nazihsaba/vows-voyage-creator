@@ -575,7 +575,7 @@ const NamesSlide = ({
             transition={{ delay: 1.5, duration: 0.9 }}
             className="mt-6 max-w-xl text-center px-2"
           >
-            <p className="text-base md:text-xl italic font-light leading-relaxed text-white/95">cordially invite you...</p>
+            <p className="text-base md:text-xl italic font-light leading-relaxed text-white/95">Cordially invite you to celebrate the wedding of their son and daughter</p>
           </motion.div>
         </>
       )}
