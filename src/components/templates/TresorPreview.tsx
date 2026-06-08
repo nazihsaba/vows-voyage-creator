@@ -13,6 +13,8 @@ const sampleWedding = {
   groom_name: "Maxime",
   wedding_date: "2026-08-16",
   hero_media: tresor3,
+  bride_family: "Thomas Family",
+  groom_family: "Martin Family",
   aura_quote:
     "And now these three remain: faith, hope and love. But the greatest of these is love.",
   aura_reference: "A promise, gently kept",
