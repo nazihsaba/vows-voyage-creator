@@ -648,41 +648,42 @@ const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; gr
         ))}
       </div>
 
-      {/* Ornamental flourish — top */}
-      <motion.svg
-        viewBox="0 0 200 20"
-        className="absolute top-[34%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.2, duration: 1 }}
-      >
-        <motion.path
-          d="M0 10 Q50 0 100 10 T200 10"
-          fill="none"
-          stroke="#70550f"
-          strokeWidth="0.8"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
-        />
-        <motion.circle
-          cx="100"
-          cy="10"
-          r="1.8"
-          fill="#70550f"
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 2.6, duration: 0.5 }}
-        />
-      </motion.svg>
-
-
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
         className="max-w-xl text-center relative z-10 px-6 flex flex-col items-center"
       >
+        {/* Ornamental flourish — top (sits above the names) */}
+        <motion.svg
+          viewBox="0 0 200 20"
+          preserveAspectRatio="none"
+          className="w-[min(18rem,80vw)] h-5 mb-4 pointer-events-none"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.2, duration: 1 }}
+        >
+          <motion.path
+            d="M0 10 Q50 0 100 10 T200 10"
+            fill="none"
+            stroke="#70550f"
+            strokeWidth="0.8"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.6, delay: 1.2, ease: "easeInOut" }}
+          />
+          <motion.circle
+            cx="100"
+            cy="10"
+            r="1.8"
+            fill="#70550f"
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{ delay: 2.6, duration: 0.5 }}
+          />
+        </motion.svg>
+
         <motion.h2
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -721,26 +722,29 @@ const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; gr
         >
           {date}
         </motion.p>
+
+        {/* Ornamental flourish — bottom (mirrored, sits below the date) */}
+        <motion.svg
+          viewBox="0 0 200 20"
+          preserveAspectRatio="none"
+          className="w-[min(18rem,80vw)] h-5 mt-6 pointer-events-none rotate-180"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.6, duration: 1 }}
+        >
+          <motion.path
+            d="M0 10 Q50 0 100 10 T200 10"
+            fill="none"
+            stroke="#70550f"
+            strokeWidth="0.8"
+            vectorEffect="non-scaling-stroke"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 1.6, delay: 1.6, ease: "easeInOut" }}
+          />
+        </motion.svg>
       </motion.div>
 
-      {/* Ornamental flourish — bottom (mirrored) */}
-      <motion.svg
-        viewBox="0 0 200 20"
-        className="absolute bottom-[18%] left-1/2 -translate-x-1/2 w-56 md:w-72 pointer-events-none rotate-180"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 1.6, duration: 1 }}
-      >
-        <motion.path
-          d="M0 10 Q50 0 100 10 T200 10"
-          fill="none"
-          stroke="#70550f"
-          strokeWidth="0.8"
-          initial={{ pathLength: 0 }}
-          animate={{ pathLength: 1 }}
-          transition={{ duration: 1.6, delay: 1.6, ease: "easeInOut" }}
-        />
-      </motion.svg>
     </div>
   );
 };
