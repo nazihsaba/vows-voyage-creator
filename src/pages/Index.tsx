@@ -51,9 +51,10 @@ const Index = () => {
 
   const heroImages = [
     { src: tableDecor, alt: "Wedding celebration" },
-    { src: sparklers, alt: "Celebration sparklers" },
-    { src: flowerVase, alt: "Party celebration" },
-    { src: carouselRings, alt: "Wedding rings with flowers" },
+    { src: heroRingsShadow.url, alt: "Wedding rings in sunlight" },
+    { src: heroEnvelope.url, alt: "Wedding invitation envelope" },
+    { src: heroHandsRings.url, alt: "Couple's hands with rings" },
+    { src: heroWhiteRoses.url, alt: "White roses bouquet" },
   ];
 
   useEffect(() => {
