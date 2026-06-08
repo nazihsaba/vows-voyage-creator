@@ -238,16 +238,22 @@ export const TresorTemplate = ({
     },
     {
       id: "names",
-      node: <NamesSlide bride={brideName} groom={groomName} date={dateFormatted} backgroundImage={namesBg} />,
+      node: (
+        <NamesSlide
+          brideFamily={brideFamily}
+          groomFamily={groomFamily}
+          quote={quoteText}
+          reference={quoteReference}
+          backgroundImage={namesBg}
+        />
+      ),
     },
   ];
 
-  if (quoteText) {
-    slides.push({
-      id: "quote",
-      node: <QuoteSlide quote={quoteText} reference={quoteReference} backgroundImage={quoteBg} />,
-    });
-  }
+  slides.push({
+    id: "quote",
+    node: <QuoteSlide bride={brideName} groom={groomName} date={dateFormatted} backgroundImage={quoteBg} />,
+  });
 
   slides.push({
     id: "events",
