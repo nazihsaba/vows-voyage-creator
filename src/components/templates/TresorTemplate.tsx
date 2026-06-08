@@ -55,7 +55,7 @@ export const TresorTemplate = ({
   submittingRsvp = false,
 }: TresorTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue } = useArabicContent(wedding);
+  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
