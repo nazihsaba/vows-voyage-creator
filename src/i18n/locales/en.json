@@ -16,8 +16,8 @@
     "reception": "Reception"
   },
   "family": {
-    "theFamily": "{{name}} Family",
-    "mrAndMrs": "Mr. & Mrs. {{name}} Family",
+    "theFamily": "{{name}}",
+    "mrAndMrs": "Mr. & Mrs. {{name}}",
     "defaultInvitation": "Cordially invite you to celebrate the wedding of their son and daughter",
     "introLine": "It is with the greatest pleasure that the"
   },
