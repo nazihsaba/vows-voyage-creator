@@ -41,7 +41,7 @@ export const useArabicContent = (wedding: any) => {
           return isArabic ? `عائلة ${opts.name}` : `${opts.name} Family`;
         }
         if (key === "family.mrAndMrs") {
-          return isArabic ? `السيد والسيدة ${opts.name}` : `Mr. & Mrs. ${opts.name}`;
+          return isArabic ? `السيد والسيدة ${opts.name}` : `Mr. & Mrs. ${opts.name} Family`;
         }
         return opts.name;
       };
