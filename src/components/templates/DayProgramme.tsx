@@ -264,7 +264,7 @@ export default function DayProgramme({
 
             {/* Event rows */}
             <div
-              className="flex flex-col"
+              className="flex flex-col items-center"
               style={{
                 gap: isNarrow
                   ? events.length >= 5
