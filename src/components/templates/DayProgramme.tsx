@@ -161,7 +161,7 @@ export default function DayProgramme({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [entryNonce]);
 
-  const timeColWidth = isNarrow ? 75 : 95;
+  const timeColWidth = isNarrow ? 110 : 130;
   const spineColWidth = 56;
   const spineLeft = timeColWidth + spineColWidth / 2;
 
