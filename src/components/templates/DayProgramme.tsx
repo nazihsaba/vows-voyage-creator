@@ -320,13 +320,12 @@ export default function DayProgramme({
                       {event.hour}
                       {event.minutePhrase && (
                         <span
-                          className="block"
                           style={{
                             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
                             fontStyle: "italic",
-                            fontSize: 12,
-                            marginTop: 2,
-                            color: "rgba(255,255,255,0.8)",
+                            fontSize: timeFontSize,
+                            color: "#ffffff",
+                            marginLeft: 1,
                           }}
                         >
                           {event.minutePhrase}
