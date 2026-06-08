@@ -264,7 +264,7 @@ export default function DayProgramme({
 
             {/* Event rows */}
             <div
-              className="flex flex-col"
+              className="flex flex-col items-center"
               style={{
                 gap: isNarrow
                   ? events.length >= 5
@@ -292,6 +292,9 @@ export default function DayProgramme({
                     className="grid items-start relative"
                     style={{
                       gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px 1fr`,
+                      maxWidth: 520,
+                      width: "100%",
+                      justifySelf: "center",
                       opacity: on ? 1 : 0.18,
                       transform: on ? "translateY(0)" : "translateY(6px)",
                       transition:
