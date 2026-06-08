@@ -595,10 +595,6 @@ const NamesSlide = ({
   </div>
   );
 };
-    </div>
-  </div>
-  );
-};
 
 const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; reference?: string; backgroundImage?: string }) => {
   const petals = Array.from({ length: 14 }).map((_, i) => ({
