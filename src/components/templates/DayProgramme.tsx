@@ -177,15 +177,16 @@ export default function DayProgramme({
       <style>{KEYFRAMES}</style>
 
       {/* Content */}
-      <div className="relative z-10 w-full h-full overflow-y-auto">
+      <div className="relative z-10 w-full h-full overflow-y-auto flex items-center justify-center">
         <div
           className="mx-auto w-full px-5"
           style={{
             maxWidth: 580,
             paddingTop: isNarrow && events.length >= 5 ? 24 : 40,
-            paddingBottom: isNarrow ? (events.length >= 5 ? 90 : 120) : 140,
+            paddingBottom: isNarrow ? (events.length >= 5 ? 110 : 140) : 160,
           }}
         >
+
           {/* Header — date is the title now */}
           <div className="text-center">
             <h1
