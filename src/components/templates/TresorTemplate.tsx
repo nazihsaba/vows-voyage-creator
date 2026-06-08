@@ -693,13 +693,46 @@ const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; gr
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.4, duration: 1 }}
-        className="max-w-xl text-center relative z-10 px-6"
+        className="max-w-xl text-center relative z-10 px-6 flex flex-col items-center"
       >
-        <p className="text-5xl md:text-6xl italic font-light leading-none text-white/40 mb-4">&ldquo;</p>
-        <p className="text-xl md:text-2xl italic font-light leading-relaxed text-white">{quote}</p>
-        {reference && (
-          <p className="mt-8 text-[10px] md:text-xs tracking-[0.4em] uppercase text-white/55">— {reference}</p>
-        )}
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 1 }}
+          className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
+        >
+          {bride}
+        </motion.h2>
+        <motion.span
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.9, duration: 0.7 }}
+          className="my-5 text-3xl md:text-4xl italic font-light text-white/80"
+        >
+          &amp;
+        </motion.span>
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 1.1, duration: 1 }}
+          className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
+        >
+          {groom}
+        </motion.h2>
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: 64 }}
+          transition={{ delay: 1.5, duration: 0.8 }}
+          className="h-[1px] bg-white/70 mt-8"
+        />
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.7, duration: 0.8 }}
+          className="mt-6 text-base md:text-lg tracking-[0.35em] uppercase text-white/90"
+        >
+          {date}
+        </motion.p>
       </motion.div>
 
       {/* Ornamental flourish — bottom (mirrored) */}
