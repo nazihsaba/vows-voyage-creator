@@ -540,7 +540,7 @@ const NamesSlide = ({
         transition={{ delay: 0.3, duration: 1 }}
         className="text-2xl md:text-4xl italic font-light text-center leading-[1.15]"
       >
-        {t("family.mrAndMrs", { name: groom })}
+        {groom}
       </motion.h2>
 
       <motion.span
