@@ -323,10 +323,9 @@ export default function DayProgramme({
                           style={{
                             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
                             fontStyle: "italic",
-                            fontSize: 12,
-                            color: "rgba(255,255,255,0.8)",
+                            fontSize: timeFontSize,
+                            color: "#ffffff",
                             marginLeft: 2,
-                            verticalAlign: "middle",
                           }}
                         >
                           {event.minutePhrase}
