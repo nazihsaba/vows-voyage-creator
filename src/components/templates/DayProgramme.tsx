@@ -287,15 +287,19 @@ export default function DayProgramme({
                     ? 28
                     : 32;
 
+                // Split minutePhrase like ":30 PM" → minutes="30", period="PM"
+                const mp = event.minutePhrase?.trim() ?? "";
+                const mpMatch = mp.match(/^:(\d{2})\s*(.*)$/);
+                const minuteDigits = mpMatch?.[1];
+                const period = mpMatch ? mpMatch[2] : mp;
+
                 return (
                   <div
                     key={event.id}
-                    className="grid items-start relative"
+                    className="inline-grid items-start relative"
                     style={{
-                      gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px 1fr`,
+                      gridTemplateColumns: `${timeColWidth}px ${spineColWidth}px minmax(0, auto)`,
                       maxWidth: 520,
-                      width: "100%",
-                      justifySelf: "center",
                       opacity: on ? 1 : 0.18,
                       transform: on ? "translateY(0)" : "translateY(6px)",
                       transition:
@@ -318,7 +322,8 @@ export default function DayProgramme({
                       }}
                     >
                       {event.hour}
-                      {event.minutePhrase && (
+                      {minuteDigits ? `:${minuteDigits}` : ""}
+                      {period && (
                         <span
                           className="block"
                           style={{
@@ -329,7 +334,7 @@ export default function DayProgramme({
                             color: "rgba(255,255,255,0.8)",
                           }}
                         >
-                          {event.minutePhrase}
+                          {period}
                         </span>
                       )}
                     </div>
