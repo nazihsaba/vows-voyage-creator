@@ -163,7 +163,7 @@ export default function DayProgramme({
 
   const timeColWidth = isNarrow ? 75 : 95;
   const spineColWidth = 56;
-  const spineLeft = timeColWidth + spineColWidth / 2;
+  const agendaMaxWidth = 520;
 
   return (
     <div
