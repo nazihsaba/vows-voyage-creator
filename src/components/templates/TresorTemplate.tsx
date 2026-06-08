@@ -596,7 +596,7 @@ const NamesSlide = ({
   );
 };
 
-const QuoteSlide = ({ quote, reference, backgroundImage }: { quote: string; reference?: string; backgroundImage?: string }) => {
+const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; groom: string; date: string; backgroundImage?: string }) => {
   const petals = Array.from({ length: 14 }).map((_, i) => ({
     left: `${(i * 7.3) % 100}%`,
     delay: (i % 7) * 0.6,
