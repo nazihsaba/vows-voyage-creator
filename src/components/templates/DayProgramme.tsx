@@ -216,12 +216,12 @@ export default function DayProgramme({
           </div>
 
           {/* Agenda */}
-          <div ref={agendaRef} className={`relative ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200 }}>
+          <div ref={agendaRef} className={`relative mx-auto ${isNarrow && events.length >= 5 ? 'mt-6' : 'mt-8'}`} style={{ minHeight: 200, maxWidth: agendaMaxWidth, width: "100%" }}>
             {/* Static spine */}
             <div
               className="absolute pointer-events-none"
               style={{
-                left: spineLeft,
+                left: "50%",
                 top: 14,
                 bottom: 14,
                 width: "0.5px",
@@ -233,7 +233,7 @@ export default function DayProgramme({
             <div
               className="absolute pointer-events-none"
               style={{
-                left: spineLeft,
+                left: "50%",
                 top: 14,
                 width: "1px",
                 height: `calc(${progress} * (100% - 28px))`,
@@ -250,7 +250,7 @@ export default function DayProgramme({
               <div
                 className="absolute pointer-events-none"
                 style={{
-                  left: spineLeft,
+                  left: "50%",
                   top: 14 + progress * (agendaHeight - 28),
                   transform: "translate(-50%, -50%)",
                   transition: "top 0.4s cubic-bezier(0.2,0.7,0.2,1)",
