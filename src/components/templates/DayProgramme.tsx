@@ -323,8 +323,8 @@ export default function DayProgramme({
                           style={{
                             fontFamily: "'Cormorant Garamond', Garamond, Georgia, serif",
                             fontStyle: "italic",
-                            fontSize: timeFontSize,
-                            color: "#ffffff",
+                            fontSize: timeFontSize * 0.7,
+                            color: "rgba(255,255,255,0.65)",
                             marginLeft: 2,
                           }}
                         >
