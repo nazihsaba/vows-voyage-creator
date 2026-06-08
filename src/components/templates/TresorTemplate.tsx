@@ -81,6 +81,14 @@ export const TresorTemplate = ({
 
   const brideName = getLocalizedValue("bride_name", wedding.bride_name) || "Bride";
   const groomName = getLocalizedValue("groom_name", wedding.groom_name) || "Groom";
+  const brideFamily = formatFamily(
+    "bride_family",
+    wedding.bride_family || (wedding.bride_name ? wedding.bride_name.split(" ").pop() : "") || "Family",
+  );
+  const groomFamily = formatFamily(
+    "groom_family",
+    wedding.groom_family || (wedding.groom_name ? wedding.groom_name.split(" ").pop() : "") || "Family",
+  );
   const quoteText =
     getLocalizedValue("aura_quote", (wedding as any).aura_quote || "") ||
     getLocalizedValue("main_description", wedding.main_description || "") ||
