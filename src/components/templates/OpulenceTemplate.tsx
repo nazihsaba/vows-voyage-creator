@@ -532,7 +532,7 @@ export const OpulenceTemplate = ({
                     </Button>
                   )}
                   {loc.note && (
-                    <p className="text-xs text-primary whitespace-pre-wrap max-w-md mx-auto">{loc.note}</p>
+                    <p className="text-xs text-[#865814] whitespace-pre-wrap max-w-md mx-auto">{loc.note}</p>
                   )}
                 </div>
               );
