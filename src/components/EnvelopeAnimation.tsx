@@ -248,6 +248,55 @@ export const EnvelopeAnimation = ({
             }
             .env-idle { animation: envIdle 4.5s ease-in-out infinite; }
 
+            /* Cinematic light sweep across the closed envelope — a wide
+               diagonal highlight slowly travels across the paper, giving a
+               premium "breathing" shimmer like the reference video. */
+            @keyframes envSheen {
+              0%   { transform: translateX(-60%) rotate(18deg); opacity: 0; }
+              15%  { opacity: .55; }
+              50%  { opacity: .8;  }
+              85%  { opacity: .45; }
+              100% { transform: translateX(60%)  rotate(18deg); opacity: 0; }
+            }
+            .env-sheen {
+              position: absolute;
+              inset: -20% -30%;
+              pointer-events: none;
+              background: linear-gradient(
+                100deg,
+                transparent 35%,
+                rgba(255, 240, 215, 0.18) 47%,
+                rgba(255, 248, 230, 0.45) 50%,
+                rgba(255, 240, 215, 0.18) 53%,
+                transparent 65%
+              );
+              mix-blend-mode: screen;
+              border-radius: 14px;
+              animation: envSheen 6.5s cubic-bezier(.45,.05,.55,.95) infinite;
+              z-index: 5;
+            }
+            /* Ambient breathing tint — gentle warm/cool wash over the face. */
+            @keyframes envBreath {
+              0%, 100% { opacity: 0; }
+              50%      { opacity: .35; }
+            }
+            .env-breath {
+              position: absolute;
+              inset: 0;
+              pointer-events: none;
+              border-radius: 14px;
+              background:
+                radial-gradient(ellipse at 30% 25%, rgba(255,235,200,0.22), transparent 55%),
+                radial-gradient(ellipse at 75% 80%, rgba(40,30,20,0.28),   transparent 60%);
+              animation: envBreath 5.5s ease-in-out infinite;
+              z-index: 4;
+            }
+            .is-opening .env-sheen,
+            .is-opening .env-breath { animation: none; opacity: 0; }
+            @media (prefers-reduced-motion: reduce) {
+              .env-sheen, .env-breath { animation: none !important; opacity: 0 !important; }
+            }
+
             .env-zone:hover .env-target {
               transform: scale(1.025);
               filter: drop-shadow(0 42px 60px rgba(0,0,0,.6));
