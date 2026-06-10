@@ -2892,6 +2892,21 @@ const WeddingForm = () => {
                                       </SelectContent>
                                     </Select>
                                   </div>
+                                  <div className="space-y-1.5">
+                                    <Label htmlFor={`custom_note_${idx}`}>Add Note (optional)</Label>
+                                    <Textarea
+                                      id={`custom_note_${idx}`}
+                                      value={section.note}
+                                      onChange={(e) => {
+                                        const next = [...customSections];
+                                        next[idx] = { ...next[idx], note: e.target.value };
+                                        setCustomSections(next);
+                                      }}
+                                      placeholder="e.g. Dress code or special instructions"
+                                      maxLength={200}
+                                      rows={2}
+                                    />
+                                  </div>
                                 </CardContent>
                               </CollapsibleContent>
                             </Card>
