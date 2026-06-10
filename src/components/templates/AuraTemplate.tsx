@@ -109,6 +109,7 @@ export const AuraTemplate = ({
         location: getLocalizedValue("ceremony_location", ceremony.location_name),
         link: ceremony.location_link,
         icon: ceremony.icon || "material-symbols:church-rounded",
+        note: ceremony.note || "",
       },
     });
   }
