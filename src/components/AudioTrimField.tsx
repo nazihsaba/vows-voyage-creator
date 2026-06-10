@@ -18,7 +18,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
   onAudioRemoved,
   initialAudioUrl,
   initialStartTime = 0,
-  initialEndTime = 60,
+  initialEndTime = 90,
 }) => {
   const [file, setFile] = useState<File | null>(null);
   const [audioUrl, setAudioUrl] = useState<string | null>(initialAudioUrl || null);
