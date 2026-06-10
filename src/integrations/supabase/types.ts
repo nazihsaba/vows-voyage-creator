@@ -376,6 +376,7 @@ export type Database = {
           id: string
           location_link: string | null
           location_name: string | null
+          note: string | null
           time: string | null
           type: string
           wedding_id: string
@@ -388,6 +389,7 @@ export type Database = {
           id?: string
           location_link?: string | null
           location_name?: string | null
+          note?: string | null
           time?: string | null
           type: string
           wedding_id: string
@@ -400,6 +402,7 @@ export type Database = {
           id?: string
           location_link?: string | null
           location_name?: string | null
+          note?: string | null
           time?: string | null
           type?: string
           wedding_id?: string
