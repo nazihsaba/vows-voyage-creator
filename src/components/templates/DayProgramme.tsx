@@ -457,6 +457,20 @@ export default function DayProgramme({
                           {strings.map}
                         </a>
                       )}
+                      {event.note && (
+                        <p
+                          style={{
+                            fontStyle: "italic",
+                            fontSize: 12,
+                            lineHeight: 1.35,
+                            color: "rgba(255,255,255,0.78)",
+                            marginTop: 8,
+                            whiteSpace: "pre-wrap",
+                          }}
+                        >
+                          {event.note}
+                        </p>
+                      )}
                     </div>
                   </div>
                 );
