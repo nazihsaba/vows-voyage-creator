@@ -2449,13 +2449,15 @@ const WeddingForm = () => {
                             )}
                           </div>
                           <div className="space-y-1.5">
-                            <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
+                            <Label htmlFor="venue_time">
+                              {isAuraTemplate ? "Dinner & Party Time" : "Time"}{" "}
+                              <span className="text-muted-foreground font-normal">(optional)</span>
+                            </Label>
                             <Input
                               id="venue_time"
                               type="time"
                               value={locations.venue_time}
                               onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
-                              required
                               className="h-11 sm:h-10"
                             />
                           </div>
