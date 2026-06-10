@@ -2421,7 +2421,7 @@ const WeddingForm = () => {
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                         <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                           <div className="space-y-1.5">
-                            <Label htmlFor="venue_location">Location Name *</Label>
+                            <Label htmlFor="venue_location">Location Name <span className="text-muted-foreground font-normal">(optional)</span></Label>
                             <Input
                               id="venue_location"
                               value={locations.venue_location}
@@ -2430,7 +2430,6 @@ const WeddingForm = () => {
                                 if (enableArabic) debouncedTranslate("venue_location", e.target.value);
                               }}
                               placeholder="Reception venue name"
-                              required
                               className="h-11 sm:h-10"
                             />
                             {enableArabic && (
