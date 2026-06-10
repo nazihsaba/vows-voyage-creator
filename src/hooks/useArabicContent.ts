@@ -38,7 +38,7 @@ export const useArabicContent = (wedding: any) => {
       const format = wedding?.field_customizations?.family_name_format || "family";
       const t = (key: string, opts: any) => {
         if (key === "family.theFamily") {
-          return name;
+          return isArabic ? `عائلة ${opts.name}` : `${opts.name} Family`;
         }
         if (key === "family.mrAndMrs") {
           return isArabic ? `السيد والسيدة ${opts.name}` : `Mr. & Mrs. ${opts.name}`;
