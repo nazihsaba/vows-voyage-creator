@@ -2529,6 +2529,17 @@ const WeddingForm = () => {
                                 </SelectContent>
                               </Select>
                             </div>
+                            <div className="space-y-1.5 pt-2">
+                              <Label htmlFor="welcome_drink_note">Welcome Drink Note (optional)</Label>
+                              <Textarea
+                                id="welcome_drink_note"
+                                value={locations.welcome_drink_note}
+                                onChange={(e) => setLocations({ ...locations, welcome_drink_note: e.target.value })}
+                                placeholder="e.g. Cocktails on the terrace"
+                                maxLength={200}
+                                rows={2}
+                              />
+                            </div>
                           </div>
                         )}
                         <div className="space-y-1.5">
