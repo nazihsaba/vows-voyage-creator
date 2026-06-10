@@ -355,6 +355,7 @@ export const TemplateRenderer = ({
                     locationName={ceremony.location_name}
                     locationLink={ceremony.location_link}
                     time={ceremony.time}
+                    note={ceremony.note}
                   />
                 )}
                 {venue && (
@@ -364,6 +365,7 @@ export const TemplateRenderer = ({
                     locationLink={venue.location_link}
                     time={venue.time}
                     welcomeDrinkTime={welcomeDrink?.time}
+                    note={venue.note}
                   />
                 )}
               </div>
