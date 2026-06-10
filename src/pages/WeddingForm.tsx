@@ -2618,6 +2618,7 @@ const WeddingForm = () => {
                               time: "",
                               location_link: "",
                               icon: "solar:confetti-bold",
+                              note: "",
                             },
                           ]);
                           setTimelineOrder((prev) => [...prev, uid]);
