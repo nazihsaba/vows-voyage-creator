@@ -2224,7 +2224,12 @@ const WeddingForm = () => {
 
               {/* Location Fields */}
               <div className="space-y-4 sm:space-y-6 border-t pt-5 sm:pt-6">
-                <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
+                <div>
+                  <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    All event sections are optional — leave any field blank or remove a section to hide it from your invitation.
+                  </p>
+                </div>
 
                 {/* Ceremony Section */}
                 {showCeremony && (
