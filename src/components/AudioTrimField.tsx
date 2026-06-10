@@ -46,10 +46,10 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
       const d = audioRef.current.duration;
       setDuration(d);
       setStartTime(0);
-      setEndTime(Math.min(60, d));
+      setEndTime(Math.min(90, d));
       // Auto-trim on load
       if (file) {
-        await autoTrim(file, 0, Math.min(60, d));
+        await autoTrim(file, 0, Math.min(90, d));
       }
     }
   };
@@ -93,7 +93,7 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
 
 
   // Encode AudioBuffer to compressed MP3. Forces mono + 44.1 kHz + 96 kbps
-  // for tiny file sizes (~720 KB for 60s) with no audible loss on background music.
+  // for tiny file sizes (~1.1 MB for 90s) with no audible loss on background music.
   const audioBufferToMp3Blob = async (
     audioBuffer: AudioBuffer,
     audioContext: AudioContext
@@ -250,11 +250,11 @@ const AudioTrimField: React.FC<AudioTrimFieldProps> = ({
           {isTrimming ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Loader2 className="w-4 h-4 animate-spin" />
-              Auto-trimming to 60 seconds...
+              Auto-trimming to 90 seconds...
             </div>
           ) : (
             <div className="text-sm text-muted-foreground">
-              Original duration: {duration.toFixed(0)}s — trimmed to {Math.min(60, duration).toFixed(0)}s
+              Original duration: {duration.toFixed(0)}s — trimmed to {Math.min(90, duration).toFixed(0)}s
             </div>
           )}
         </>
