@@ -60,7 +60,7 @@ export const EventLocation = ({ type, locationName, locationLink, time, welcomeD
         )}
 
         {note && (
-          <p className="mt-4 text-sm italic text-muted-foreground text-center whitespace-pre-wrap">
+          <p className="mt-4 text-xs text-primary text-center whitespace-pre-wrap">
             {note}
           </p>
         )}
