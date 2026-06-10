@@ -471,6 +471,10 @@ export const EnvelopeAnimation = ({
                   zIndex: 0,
                 }}
               />
+              {/* Ambient breathing wash + slow diagonal light sheen for a
+                  cinematic premium idle effect. */}
+              <div aria-hidden="true" className="env-breath" />
+              <div aria-hidden="true" className="env-sheen" />
               {/* === ENVELOPE BODY === */}
               <svg
                 viewBox={`0 0 ${VB_W} ${VB_H}`}
