@@ -58,6 +58,12 @@ export const EventLocation = ({ type, locationName, locationLink, time, welcomeD
             </Button>
           </div>
         )}
+
+        {note && (
+          <p className="mt-4 text-sm italic text-muted-foreground text-center whitespace-pre-wrap">
+            {note}
+          </p>
+        )}
       </CardContent>
     </Card>
   );
