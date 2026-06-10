@@ -554,6 +554,7 @@ const WeddingForm = () => {
           time: l.time || "",
           location_link: l.location_link || "",
           icon: l.icon || "solar:confetti-bold",
+          note: l.note || "",
         }));
         const customDbTypeByUid = new Map<string, string>();
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
