@@ -2224,7 +2224,12 @@ const WeddingForm = () => {
 
               {/* Location Fields */}
               <div className="space-y-4 sm:space-y-6 border-t pt-5 sm:pt-6">
-                <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
+                <div>
+                  <h3 className="text-base sm:text-lg font-semibold">Event Locations</h3>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    All event sections are optional — leave any field blank or remove a section to hide it from your invitation.
+                  </p>
+                </div>
 
                 {/* Ceremony Section */}
                 {showCeremony && (
@@ -2280,7 +2285,7 @@ const WeddingForm = () => {
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                         <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                           <div className="space-y-1.5">
-                            <Label htmlFor="ceremony_location">Location Name *</Label>
+                            <Label htmlFor="ceremony_location">Location Name <span className="text-muted-foreground font-normal">(optional)</span></Label>
                             <Input
                               id="ceremony_location"
                               value={locations.ceremony_location}
@@ -2289,7 +2294,6 @@ const WeddingForm = () => {
                                 if (enableArabic) debouncedTranslate("ceremony_location", e.target.value);
                               }}
                               placeholder="Church or venue name"
-                              required
                               className="h-11 sm:h-10"
                             />
                             {enableArabic && (
@@ -2309,13 +2313,12 @@ const WeddingForm = () => {
                             )}
                           </div>
                           <div className="space-y-1.5">
-                            <Label htmlFor="ceremony_time">Time *</Label>
+                            <Label htmlFor="ceremony_time">Time <span className="text-muted-foreground font-normal">(optional)</span></Label>
                             <Input
                               id="ceremony_time"
                               type="time"
                               value={locations.ceremony_time}
                               onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
-                              required
                               className="h-11 sm:h-10"
                             />
                           </div>
@@ -2418,7 +2421,7 @@ const WeddingForm = () => {
                       <CardContent className="space-y-3 sm:space-y-4 px-3 sm:px-6 pb-4 sm:pb-6">
                         <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-4">
                           <div className="space-y-1.5">
-                            <Label htmlFor="venue_location">Location Name *</Label>
+                            <Label htmlFor="venue_location">Location Name <span className="text-muted-foreground font-normal">(optional)</span></Label>
                             <Input
                               id="venue_location"
                               value={locations.venue_location}
@@ -2427,7 +2430,6 @@ const WeddingForm = () => {
                                 if (enableArabic) debouncedTranslate("venue_location", e.target.value);
                               }}
                               placeholder="Reception venue name"
-                              required
                               className="h-11 sm:h-10"
                             />
                             {enableArabic && (
@@ -2447,13 +2449,15 @@ const WeddingForm = () => {
                             )}
                           </div>
                           <div className="space-y-1.5">
-                            <Label htmlFor="venue_time">{isAuraTemplate ? "Dinner & Party Time *" : "Time *"}</Label>
+                            <Label htmlFor="venue_time">
+                              {isAuraTemplate ? "Dinner & Party Time" : "Time"}{" "}
+                              <span className="text-muted-foreground font-normal">(optional)</span>
+                            </Label>
                             <Input
                               id="venue_time"
                               type="time"
                               value={locations.venue_time}
                               onChange={(e) => setLocations({ ...locations, venue_time: e.target.value })}
-                              required
                               className="h-11 sm:h-10"
                             />
                           </div>
