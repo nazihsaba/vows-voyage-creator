@@ -112,25 +112,45 @@ export const EnvelopeAnimation = ({
     }
   }, [hidden]);
 
-  // Load elegant calligraphy font once + preload wax seal so it appears
-  // instantly on the first envelope render.
+  // Load elegant calligraphy font + preload wax seal so both the typography
+  // and the seal appear on the very first paint of the envelope.
   useEffect(() => {
-    const id = "env-google-fonts";
-    if (document.getElementById(id)) return;
-    const link = document.createElement("link");
-    link.id = id;
-    link.rel = "stylesheet";
-    link.href =
-      "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
-    document.head.appendChild(link);
+    const head = document.head;
 
-    const preload = document.createElement("link");
-    preload.rel = "preload";
-    preload.as = "image";
-    preload.href = waxSealHeart;
-    preload.type = "image/webp";
-    document.head.appendChild(preload);
+    // Preconnect to Google Fonts for faster handshake.
+    if (!document.getElementById("env-gf-preconnect")) {
+      const pc1 = document.createElement("link");
+      pc1.id = "env-gf-preconnect";
+      pc1.rel = "preconnect";
+      pc1.href = "https://fonts.googleapis.com";
+      head.appendChild(pc1);
+      const pc2 = document.createElement("link");
+      pc2.rel = "preconnect";
+      pc2.href = "https://fonts.gstatic.com";
+      pc2.crossOrigin = "anonymous";
+      head.appendChild(pc2);
+    }
+
+    if (!document.getElementById("env-google-fonts")) {
+      const link = document.createElement("link");
+      link.id = "env-google-fonts";
+      link.rel = "stylesheet";
+      link.href =
+        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+      head.appendChild(link);
+    }
+
+    if (!document.getElementById("env-seal-preload")) {
+      const preload = document.createElement("link");
+      preload.id = "env-seal-preload";
+      preload.rel = "preload";
+      preload.as = "image";
+      preload.href = waxSealHeart;
+      preload.type = "image/webp";
+      head.appendChild(preload);
+    }
   }, []);
+
 
   // Decorative dust motes — drastically reduced on mobile (and removed when the
   // user prefers reduced motion) because each one is its own animated layer.
@@ -359,12 +379,19 @@ export const EnvelopeAnimation = ({
               .env-idle { animation: none; }
               .env-seal {
                 filter: none !important;
-                /* Replace drop-shadow filter with a cheap radial gradient backdrop
-                   applied via the surrounding wrapper instead. */
+                /* Flatten Z translation on mobile WebKit. Mobile compositors
+                   create a separate layer for any translateZ child, which
+                   detaches the seal from the parent flap's rotateX animation
+                   (the seal appears to "float" or lag behind the flap). With
+                   translateZ(0) the seal stays coplanar with the flap surface
+                   and rotates rigidly with it. DOM order (img after the flap
+                   svg) keeps the seal painted on top. */
+                transform: translate(-50%, -50%) translateZ(0) rotate(-3deg) !important;
               }
               /* Disable per-mote blur which costs an extra raster pass. */
               .env-mote { filter: none !important; }
             }
+
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
