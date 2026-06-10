@@ -841,6 +841,7 @@ const EventsSlide = ({
         mapUrl: e.raw.location_link,
         isHero: e.isHero,
         icon: e.raw?.icon,
+        note: e.raw?.note,
       } as DayEvent;
     });
 
