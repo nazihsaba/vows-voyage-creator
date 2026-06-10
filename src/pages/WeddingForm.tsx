@@ -139,12 +139,15 @@ const WeddingForm = () => {
     ceremony_time: "",
     ceremony_location_link: "",
     ceremony_icon: "material-symbols:church-rounded",
+    ceremony_note: "",
     venue_location: "",
     venue_time: "",
     venue_location_link: "",
     venue_icon: "solar:confetti-bold",
+    venue_note: "",
     welcome_drink_time: "",
     welcome_drink_icon: "asset:cheers",
+    welcome_drink_note: "",
   });
   const [showCeremony, setShowCeremony] = useState(true);
   const [showVenue, setShowVenue] = useState(true);
@@ -155,6 +158,7 @@ const WeddingForm = () => {
     time: string;
     location_link: string;
     icon: string;
+    note: string;
   };
   const MAX_CUSTOM_SECTIONS = 4;
   const newCustomUid = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
