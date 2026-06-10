@@ -325,14 +325,21 @@ export const EnvelopeAnimation = ({
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
             /* GPU promotion + crisp compositing for the animated layers.
-               IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap.
-               The flap rotates past 90° during the open animation; hiding the
-               back face makes the entire flap vanish on mobile WebKit, which
-               looks like the top of the envelope is "cut off" mid-animation. */
-            .env-target, .env-seal {
+               IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap
+               nor on .env-seal. The flap rotates past 90° during the open
+               animation and the seal lives inside the flap's 3D space; hiding
+               the back face makes the seal vanish on mobile WebKit even before
+               the user interacts (the seal's inherited transform from the
+               slightly tilted flap can be misread as back-facing). */
+            .env-target {
               -webkit-backface-visibility: hidden;
               -webkit-transform-style: preserve-3d;
               -webkit-font-smoothing: antialiased;
+            }
+            .env-seal {
+              -webkit-backface-visibility: visible;
+              backface-visibility: visible;
+              -webkit-transform-style: preserve-3d;
             }
             .env-flap-wrap {
               -webkit-backface-visibility: visible;
@@ -783,7 +790,7 @@ export const EnvelopeAnimation = ({
                   style={{
                     left: "50%",
                     top: `${(V_Y / VB_H) * 100}%`,
-                    transform: "translate(-50%, -50%) translateZ(8px) rotate(-3deg)",
+                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-3deg)",
                     width: "30%",
                     height: "auto",
                     opacity: 1,
