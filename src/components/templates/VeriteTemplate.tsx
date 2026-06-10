@@ -365,7 +365,7 @@ export const VeriteTemplate = ({
                       </a>
                     )}
                     {loc.note && (
-                      <p className="text-xs text-primary whitespace-pre-wrap mt-2">{loc.note}</p>
+                      <p className="text-xs text-[#865814] whitespace-pre-wrap mt-2">{loc.note}</p>
                     )}
                   </div>
                 </AnimatedSection>
