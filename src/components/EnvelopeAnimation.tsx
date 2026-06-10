@@ -344,6 +344,15 @@ export const EnvelopeAnimation = ({
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
+            .env-seal-static { opacity: 1; }
+            @keyframes envStaticSealOut {
+              0%   { opacity: 1; }
+              100% { opacity: 0; }
+            }
+            .is-opening .env-seal-static {
+              animation: envStaticSealOut 180ms ease-out forwards;
+            }
+
             /* GPU promotion + crisp compositing for the animated layers.
                IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap
                nor on .env-seal. The flap rotates past 90° during the open
@@ -829,6 +838,33 @@ export const EnvelopeAnimation = ({
                   }}
                 />
               </div>
+
+              {/* Static first-paint seal fallback. Some real mobile WebKit builds
+                  delay painting image children inside a 3D-rotated flap until the
+                  first interaction; this flat overlay guarantees the closed
+                  envelope shows the seal immediately, then yields to the animated
+                  flap seal on tap. */}
+              <img
+                src={waxSealHeart}
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                decoding="sync"
+                fetchPriority="high"
+                className="env-seal-static absolute pointer-events-none select-none"
+                draggable={false}
+                style={{
+                  left: "50%",
+                  top: `${(V_Y / VB_H) * 100}%`,
+                  transform: "translate(-50%, -50%) rotate(-3deg)",
+                  width: "30%",
+                  height: "auto",
+                  zIndex: 7,
+                  filter: isMobile
+                    ? "none"
+                    : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                }}
+              />
 
             </div>
 
