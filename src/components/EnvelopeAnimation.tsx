@@ -379,12 +379,19 @@ export const EnvelopeAnimation = ({
               .env-idle { animation: none; }
               .env-seal {
                 filter: none !important;
-                /* Replace drop-shadow filter with a cheap radial gradient backdrop
-                   applied via the surrounding wrapper instead. */
+                /* Flatten Z translation on mobile WebKit. Mobile compositors
+                   create a separate layer for any translateZ child, which
+                   detaches the seal from the parent flap's rotateX animation
+                   (the seal appears to "float" or lag behind the flap). With
+                   translateZ(0) the seal stays coplanar with the flap surface
+                   and rotates rigidly with it. DOM order (img after the flap
+                   svg) keeps the seal painted on top. */
+                transform: translate(-50%, -50%) translateZ(0) rotate(-3deg) !important;
               }
               /* Disable per-mote blur which costs an extra raster pass. */
               .env-mote { filter: none !important; }
             }
+
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
