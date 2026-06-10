@@ -13,6 +13,7 @@ export type DayEvent = {
   mapUrl?: string;
   isHero?: boolean;
   icon?: string;
+  note?: string;
 };
 
 
