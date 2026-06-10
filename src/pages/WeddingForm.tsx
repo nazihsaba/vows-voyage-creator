@@ -1331,7 +1331,7 @@ const WeddingForm = () => {
         await supabase.from("wedding_locations").delete().eq("wedding_id", weddingId);
       }
 
-      const locationInserts = [];
+      const locationInserts: any[] = [];
       if (locations.ceremony_location || locations.ceremony_time || locations.ceremony_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
@@ -1340,6 +1340,7 @@ const WeddingForm = () => {
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
           icon: locations.ceremony_icon,
+          note: locations.ceremony_note || null,
         });
       }
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
@@ -1350,6 +1351,7 @@ const WeddingForm = () => {
           time: locations.venue_time,
           location_link: locations.venue_location_link,
           icon: locations.venue_icon,
+          note: locations.venue_note || null,
         });
       }
       if (showsWelcomeDrinkField && locations.welcome_drink_time) {
@@ -1360,6 +1362,7 @@ const WeddingForm = () => {
           time: locations.welcome_drink_time,
           location_link: locations.venue_location_link,
           icon: locations.welcome_drink_icon || "asset:cheers",
+          note: locations.welcome_drink_note || null,
         });
       }
 
@@ -1378,7 +1381,8 @@ const WeddingForm = () => {
           location_link: s.location_link,
           icon: s.icon || "solar:confetti-bold",
           custom_title: s.title || null,
-        } as any);
+          note: s.note || null,
+        });
       });
 
       // Apply user-defined display_order from timelineOrder.
