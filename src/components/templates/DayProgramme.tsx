@@ -460,10 +460,9 @@ export default function DayProgramme({
                       {event.note && (
                         <p
                           style={{
-                            fontStyle: "italic",
-                            fontSize: 12,
+                            fontSize: 11,
                             lineHeight: 1.35,
-                            color: "rgba(255,255,255,0.78)",
+                            color: "#865814",
                             marginTop: 8,
                             whiteSpace: "pre-wrap",
                           }}

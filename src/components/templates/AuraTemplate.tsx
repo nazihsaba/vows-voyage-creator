@@ -383,7 +383,7 @@ export const AuraTemplate = ({
                           </a>
                         )}
                         {event.note && (
-                          <p className={`text-template-small text-muted-foreground italic mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
+                          <p className={`text-xs text-primary mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
                             {event.note}
                           </p>
                         )}

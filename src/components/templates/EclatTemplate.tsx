@@ -365,7 +365,7 @@ export const EclatTemplate = ({
                       </a>
                     )}
                     {loc.note && (
-                      <p className="text-template-small italic text-gray-600 whitespace-pre-wrap mt-2">{loc.note}</p>
+                      <p className="text-xs text-primary whitespace-pre-wrap mt-2">{loc.note}</p>
                     )}
                   </div>
                 </AnimatedSection>
