@@ -721,21 +721,7 @@ export const EnvelopeAnimation = ({
                   >
                     You&apos;re Invited
                   </div>
-                  {/* Calligraphic word */}
-                  <div
-                    style={{
-                      color: "#3a2a14",
-                      fontFamily: "'Cormorant Garamond', Georgia, serif",
-                      fontSize: "clamp(22px, 7vw, 44px)",
-                      fontStyle: "italic",
-                      fontWeight: 500,
-                      letterSpacing: "0.01em",
-                      lineHeight: 1.05,
-                      marginTop: "0.15em",
-                    }}
-                  >
-                    You're Invited
-                  </div>
+                  {/* Calligraphic word removed — duplicate of eyebrow above */}
                   {/* Decorative bottom hairline */}
                   <div
                     className="mx-auto"
