@@ -790,7 +790,7 @@ export const EnvelopeAnimation = ({
                   style={{
                     left: "50%",
                     top: `${(V_Y / VB_H) * 100}%`,
-                    transform: "translate(-50%, -50%) translateZ(8px) rotate(-3deg)",
+                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-3deg)",
                     width: "30%",
                     height: "auto",
                     opacity: 1,
