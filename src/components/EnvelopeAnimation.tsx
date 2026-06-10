@@ -759,6 +759,31 @@ export const EnvelopeAnimation = ({
                     transform="translate(0 -0.5)"
                   />
                 </svg>
+
+                {/* === WAX SEAL (heart PNG) ===
+                    Now a child of the flap so it rotates together with the
+                    opening top section — like real wax holding the flap shut. */}
+                <img
+                  src={waxSealHeart}
+                  alt=""
+                  aria-hidden="true"
+                  loading="eager"
+                  decoding="sync"
+                  fetchPriority="high"
+                  className="env-seal absolute pointer-events-none select-none"
+                  draggable={false}
+                  style={{
+                    left: "50%",
+                    top: `${(V_Y / VB_H) * 100}%`,
+                    transform: "translate(-50%, -50%) translateZ(8px) rotate(-3deg)",
+                    width: "30%",
+                    height: "auto",
+                    willChange: "transform",
+                    filter: isMobile
+                      ? "none"
+                      : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                  }}
+                />
               </div>
 
             </div>
