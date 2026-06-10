@@ -12,6 +12,7 @@ interface TimelineEvent {
   location: string;
   link?: string | null;
   icon: string;
+  note?: string | null;
 }
 
 interface LumiereEventsProps {
@@ -59,6 +60,11 @@ const LumiereEvents = ({ events, dateFormatted }: LumiereEventsProps) => {
                         <MapPin className="w-3.5 h-3.5" />
                         {t("events.location")}
                       </a>
+                    )}
+                    {event.note && (
+                      <p className={`text-template-small text-muted-foreground italic mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
+                        {event.note}
+                      </p>
                     )}
                   </div>
                 </div>

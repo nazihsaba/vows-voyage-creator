@@ -531,6 +531,9 @@ export const OpulenceTemplate = ({
                       </a>
                     </Button>
                   )}
+                  {loc.note && (
+                    <p className="text-sm italic opacity-70 whitespace-pre-wrap max-w-md mx-auto">{loc.note}</p>
+                  )}
                 </div>
               );
             })}

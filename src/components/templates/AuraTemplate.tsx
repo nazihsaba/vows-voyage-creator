@@ -109,6 +109,7 @@ export const AuraTemplate = ({
         location: getLocalizedValue("ceremony_location", ceremony.location_name),
         link: ceremony.location_link,
         icon: ceremony.icon || "material-symbols:church-rounded",
+        note: ceremony.note || "",
       },
     });
   }
@@ -123,6 +124,7 @@ export const AuraTemplate = ({
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
           icon: welcomeDrinkLoc.icon || "asset:cheers",
+          note: welcomeDrinkLoc.note || "",
         },
       });
     }
@@ -135,6 +137,7 @@ export const AuraTemplate = ({
         location: getLocalizedValue("venue_location", venue.location_name),
         link: venue.location_link,
         icon: venue.icon || "solar:confetti-bold",
+        note: venue.note || "",
       },
     });
   }
@@ -150,6 +153,7 @@ export const AuraTemplate = ({
           location: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name || ""),
           link: loc.location_link,
           icon: loc.icon || "solar:confetti-bold",
+          note: loc.note || "",
         },
       });
     });
@@ -377,6 +381,11 @@ export const AuraTemplate = ({
                             <MapPin className="w-4 h-4" />
                             {t("events.location")}
                           </a>
+                        )}
+                        {event.note && (
+                          <p className={`text-template-small text-muted-foreground italic mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
+                            {event.note}
+                          </p>
                         )}
                       </div>
                     </div>

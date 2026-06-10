@@ -137,6 +137,7 @@ export const EtoileTemplate = ({
         location: getLocalizedValue("ceremony_location", ceremony.location_name),
         link: ceremony.location_link,
         icon: ceremony.icon || "material-symbols:church-rounded",
+        note: ceremony.note || "",
       },
     });
   }
@@ -151,6 +152,7 @@ export const EtoileTemplate = ({
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
           icon: welcomeDrinkLoc.icon || "asset:cheers",
+          note: welcomeDrinkLoc.note || "",
         },
       });
     }
@@ -163,6 +165,7 @@ export const EtoileTemplate = ({
         location: getLocalizedValue("venue_location", venue.location_name),
         link: venue.location_link,
         icon: venue.icon || "solar:confetti-bold",
+        note: venue.note || "",
       },
     });
   }
@@ -178,6 +181,7 @@ export const EtoileTemplate = ({
           location: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name || ""),
           link: loc.location_link,
           icon: loc.icon || "solar:confetti-bold",
+          note: loc.note || "",
         },
       });
     });

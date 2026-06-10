@@ -139,12 +139,15 @@ const WeddingForm = () => {
     ceremony_time: "",
     ceremony_location_link: "",
     ceremony_icon: "material-symbols:church-rounded",
+    ceremony_note: "",
     venue_location: "",
     venue_time: "",
     venue_location_link: "",
     venue_icon: "solar:confetti-bold",
+    venue_note: "",
     welcome_drink_time: "",
     welcome_drink_icon: "asset:cheers",
+    welcome_drink_note: "",
   });
   const [showCeremony, setShowCeremony] = useState(true);
   const [showVenue, setShowVenue] = useState(true);
@@ -155,6 +158,7 @@ const WeddingForm = () => {
     time: string;
     location_link: string;
     icon: string;
+    note: string;
   };
   const MAX_CUSTOM_SECTIONS = 4;
   const newCustomUid = () => `c_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`;
@@ -516,12 +520,15 @@ const WeddingForm = () => {
           ceremony_time: ceremony?.time || "",
           ceremony_location_link: ceremony?.location_link || "",
           ceremony_icon: ceremony?.icon || "material-symbols:church-rounded",
+          ceremony_note: (ceremony as any)?.note || "",
           venue_location: venue?.location_name || "",
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
           venue_icon: venue?.icon || "solar:confetti-bold",
+          venue_note: (venue as any)?.note || "",
           welcome_drink_time: welcomeDrink?.time || "",
           welcome_drink_icon: welcomeDrink?.icon || "asset:cheers",
+          welcome_drink_note: (welcomeDrink as any)?.note || "",
         });
         setShowCeremony(!!(ceremony?.location_name || ceremony?.time || ceremony?.location_link));
         setShowVenue(!!(venue?.location_name || venue?.time || venue?.location_link));
@@ -547,6 +554,7 @@ const WeddingForm = () => {
           time: l.time || "",
           location_link: l.location_link || "",
           icon: l.icon || "solar:confetti-bold",
+          note: l.note || "",
         }));
         const customDbTypeByUid = new Map<string, string>();
         customRowsRaw.forEach((l: any, i) => customDbTypeByUid.set(customRows[i].uid, l.type));
@@ -1323,7 +1331,7 @@ const WeddingForm = () => {
         await supabase.from("wedding_locations").delete().eq("wedding_id", weddingId);
       }
 
-      const locationInserts = [];
+      const locationInserts: any[] = [];
       if (locations.ceremony_location || locations.ceremony_time || locations.ceremony_location_link) {
         locationInserts.push({
           wedding_id: weddingId,
@@ -1332,6 +1340,7 @@ const WeddingForm = () => {
           time: locations.ceremony_time,
           location_link: locations.ceremony_location_link,
           icon: locations.ceremony_icon,
+          note: locations.ceremony_note || null,
         });
       }
       if (locations.venue_location || locations.venue_time || locations.venue_location_link) {
@@ -1342,6 +1351,7 @@ const WeddingForm = () => {
           time: locations.venue_time,
           location_link: locations.venue_location_link,
           icon: locations.venue_icon,
+          note: locations.venue_note || null,
         });
       }
       if (showsWelcomeDrinkField && locations.welcome_drink_time) {
@@ -1352,6 +1362,7 @@ const WeddingForm = () => {
           time: locations.welcome_drink_time,
           location_link: locations.venue_location_link,
           icon: locations.welcome_drink_icon || "asset:cheers",
+          note: locations.welcome_drink_note || null,
         });
       }
 
@@ -1370,7 +1381,8 @@ const WeddingForm = () => {
           location_link: s.location_link,
           icon: s.icon || "solar:confetti-bold",
           custom_title: s.title || null,
-        } as any);
+          note: s.note || null,
+        });
       });
 
       // Apply user-defined display_order from timelineOrder.
@@ -2357,6 +2369,17 @@ const WeddingForm = () => {
                             </SelectContent>
                           </Select>
                         </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="ceremony_note">Add Note (optional)</Label>
+                          <Textarea
+                            id="ceremony_note"
+                            value={locations.ceremony_note}
+                            onChange={(e) => setLocations({ ...locations, ceremony_note: e.target.value })}
+                            placeholder="e.g. Dress code, parking info, or any special instructions"
+                            maxLength={200}
+                            rows={2}
+                          />
+                        </div>
                       </CardContent>
                     </CollapsibleContent>
                   </Card>
@@ -2506,6 +2529,17 @@ const WeddingForm = () => {
                                 </SelectContent>
                               </Select>
                             </div>
+                            <div className="space-y-1.5 pt-2">
+                              <Label htmlFor="welcome_drink_note">Welcome Drink Note (optional)</Label>
+                              <Textarea
+                                id="welcome_drink_note"
+                                value={locations.welcome_drink_note}
+                                onChange={(e) => setLocations({ ...locations, welcome_drink_note: e.target.value })}
+                                placeholder="e.g. Cocktails on the terrace"
+                                maxLength={200}
+                                rows={2}
+                              />
+                            </div>
                           </div>
                         )}
                         <div className="space-y-1.5">
@@ -2544,6 +2578,17 @@ const WeddingForm = () => {
                               ))}
                             </SelectContent>
                           </Select>
+                        </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="venue_note">Add Note (optional)</Label>
+                          <Textarea
+                            id="venue_note"
+                            value={locations.venue_note}
+                            onChange={(e) => setLocations({ ...locations, venue_note: e.target.value })}
+                            placeholder="e.g. Dress code, parking info, or any special instructions"
+                            maxLength={200}
+                            rows={2}
+                          />
                         </div>
                       </CardContent>
                     </CollapsibleContent>
@@ -2610,6 +2655,7 @@ const WeddingForm = () => {
                               time: "",
                               location_link: "",
                               icon: "solar:confetti-bold",
+                              note: "",
                             },
                           ]);
                           setTimelineOrder((prev) => [...prev, uid]);
@@ -2845,6 +2891,21 @@ const WeddingForm = () => {
                                         ))}
                                       </SelectContent>
                                     </Select>
+                                  </div>
+                                  <div className="space-y-1.5">
+                                    <Label htmlFor={`custom_note_${idx}`}>Add Note (optional)</Label>
+                                    <Textarea
+                                      id={`custom_note_${idx}`}
+                                      value={section.note}
+                                      onChange={(e) => {
+                                        const next = [...customSections];
+                                        next[idx] = { ...next[idx], note: e.target.value };
+                                        setCustomSections(next);
+                                      }}
+                                      placeholder="e.g. Dress code or special instructions"
+                                      maxLength={200}
+                                      rows={2}
+                                    />
                                   </div>
                                 </CardContent>
                               </CollapsibleContent>

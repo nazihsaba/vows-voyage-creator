@@ -364,6 +364,9 @@ export const EclatTemplate = ({
                         {t("events.viewOnMap")}
                       </a>
                     )}
+                    {loc.note && (
+                      <p className="text-template-small italic text-gray-600 whitespace-pre-wrap mt-2">{loc.note}</p>
+                    )}
                   </div>
                 </AnimatedSection>
               );

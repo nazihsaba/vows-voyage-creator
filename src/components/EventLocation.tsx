@@ -9,9 +9,10 @@ interface EventLocationProps {
   locationLink?: string;
   time?: string;
   welcomeDrinkTime?: string;
+  note?: string;
 }
 
-export const EventLocation = ({ type, locationName, locationLink, time, welcomeDrinkTime }: EventLocationProps) => {
+export const EventLocation = ({ type, locationName, locationLink, time, welcomeDrinkTime, note }: EventLocationProps) => {
   const title = type === "ceremony" ? "Ceremony" : "Venue";
 
   if (!locationName && !time) return null;
@@ -56,6 +57,12 @@ export const EventLocation = ({ type, locationName, locationLink, time, welcomeD
               </a>
             </Button>
           </div>
+        )}
+
+        {note && (
+          <p className="mt-4 text-sm italic text-muted-foreground text-center whitespace-pre-wrap">
+            {note}
+          </p>
         )}
       </CardContent>
     </Card>
