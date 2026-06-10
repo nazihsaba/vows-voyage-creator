@@ -12,6 +12,7 @@ interface TimelineEvent {
   location: string;
   link?: string | null;
   icon: string;
+  note?: string | null;
 }
 
 interface EtoileEventsProps {
