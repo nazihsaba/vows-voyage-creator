@@ -79,7 +79,7 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 5200;
+  const TOTAL = 3200;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
@@ -261,25 +261,12 @@ export const EnvelopeAnimation = ({
             }
 
             @keyframes envBody {
-              0%   { transform: scale(1)    translateY(0);     opacity: 1; }
-              55%  { transform: scale(1)    translateY(0);     opacity: 1; }
-              70%  { transform: scale(.995) translateY(20px);  opacity: 1; }
-              85%  { transform: scale(.98)  translateY(60px);  opacity: .7; }
-              100% { transform: scale(.94)  translateY(140px); opacity: 0; }
+              0%   { transform: scale(1)    translateY(0); opacity: 1; }
+              78%  { transform: scale(1)    translateY(0); opacity: 1; }
+              100% { transform: scale(1.04) translateY(0); opacity: 0; }
             }
             .is-opening .env-target {
-              animation: envBody ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
-            }
-
-            @keyframes envSealPop {
-              0%   { transform: translate(-50%,-50%) translateZ(20px) scale(1)    rotate(-3deg); opacity: 1; }
-              10%  { transform: translate(-50%,-50%) translateZ(20px) scale(1.12) rotate(-4deg); opacity: 1; }
-              22%  { transform: translate(-50%,-54%) translateZ(20px) scale(1.05) rotate(-2deg); opacity: .55; }
-              35%  { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
-              100% { transform: translate(-50%,-58%) translateZ(20px) scale(.92)  rotate(-1deg); opacity: 0; }
-            }
-            .is-opening .env-seal {
-              animation: envSealPop ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+              animation: envBody ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
@@ -774,38 +761,6 @@ export const EnvelopeAnimation = ({
                 </svg>
               </div>
 
-              {/* === WAX SEAL (heart PNG) === */}
-              {/* Sits straddling the V-fold so its top half rests on the flap
-                  and its bottom half on the body — like a real wax seal holding
-                  the envelope closed. translateZ pushes it forward in 3D space
-                  so it stays above the flap surface regardless of stacking
-                  quirks inside the preserve-3d context. */}
-              <img
-                src={waxSealHeart}
-                alt=""
-                aria-hidden="true"
-                loading="eager"
-                decoding="sync"
-                fetchPriority="high"
-                className="env-seal absolute pointer-events-none select-none"
-                draggable={false}
-                style={{
-                  left: "50%",
-                  top: `${(V_Y / VB_H) * 100}%`,
-                  transform: "translate(-50%, -50%) translateZ(20px) rotate(-3deg)",
-                  width: "30%",
-                  height: "auto",
-                  zIndex: 10,
-                  willChange: "transform, opacity",
-                  // Drop-shadow filters are extremely expensive on mobile GPUs
-                  // and force a per-frame raster of the seal — which is the
-                  // visible stutter at the top of the envelope during the
-                  // flap arc. Skip the filter on mobile entirely.
-                  filter: isMobile
-                    ? "none"
-                    : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
-                }}
-              />
             </div>
 
             {/* Tap hint */}
