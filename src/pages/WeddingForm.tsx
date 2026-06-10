@@ -520,12 +520,15 @@ const WeddingForm = () => {
           ceremony_time: ceremony?.time || "",
           ceremony_location_link: ceremony?.location_link || "",
           ceremony_icon: ceremony?.icon || "material-symbols:church-rounded",
+          ceremony_note: (ceremony as any)?.note || "",
           venue_location: venue?.location_name || "",
           venue_time: venue?.time || "",
           venue_location_link: venue?.location_link || "",
           venue_icon: venue?.icon || "solar:confetti-bold",
+          venue_note: (venue as any)?.note || "",
           welcome_drink_time: welcomeDrink?.time || "",
           welcome_drink_icon: welcomeDrink?.icon || "asset:cheers",
+          welcome_drink_note: (welcomeDrink as any)?.note || "",
         });
         setShowCeremony(!!(ceremony?.location_name || ceremony?.time || ceremony?.location_link));
         setShowVenue(!!(venue?.location_name || venue?.time || venue?.location_link));
