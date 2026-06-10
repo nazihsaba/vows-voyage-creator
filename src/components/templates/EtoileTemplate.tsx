@@ -181,6 +181,7 @@ export const EtoileTemplate = ({
           location: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name || ""),
           link: loc.location_link,
           icon: loc.icon || "solar:confetti-bold",
+          note: loc.note || "",
         },
       });
     });
