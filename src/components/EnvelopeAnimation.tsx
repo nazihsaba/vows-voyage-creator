@@ -112,7 +112,8 @@ export const EnvelopeAnimation = ({
     }
   }, [hidden]);
 
-  // Load elegant calligraphy font once.
+  // Load elegant calligraphy font once + preload wax seal so it appears
+  // instantly on the first envelope render.
   useEffect(() => {
     const id = "env-google-fonts";
     if (document.getElementById(id)) return;
@@ -122,6 +123,13 @@ export const EnvelopeAnimation = ({
     link.href =
       "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
     document.head.appendChild(link);
+
+    const preload = document.createElement("link");
+    preload.rel = "preload";
+    preload.as = "image";
+    preload.href = waxSealHeart;
+    preload.type = "image/webp";
+    document.head.appendChild(preload);
   }, []);
 
   // Decorative dust motes — drastically reduced on mobile (and removed when the
@@ -778,6 +786,8 @@ export const EnvelopeAnimation = ({
                     transform: "translate(-50%, -50%) translateZ(8px) rotate(-3deg)",
                     width: "30%",
                     height: "auto",
+                    opacity: 1,
+                    zIndex: 2,
                     willChange: "transform",
                     filter: isMobile
                       ? "none"
