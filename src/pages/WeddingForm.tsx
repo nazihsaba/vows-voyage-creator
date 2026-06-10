@@ -2369,6 +2369,17 @@ const WeddingForm = () => {
                             </SelectContent>
                           </Select>
                         </div>
+                        <div className="space-y-1.5">
+                          <Label htmlFor="ceremony_note">Add Note (optional)</Label>
+                          <Textarea
+                            id="ceremony_note"
+                            value={locations.ceremony_note}
+                            onChange={(e) => setLocations({ ...locations, ceremony_note: e.target.value })}
+                            placeholder="e.g. Dress code, parking info, or any special instructions"
+                            maxLength={200}
+                            rows={2}
+                          />
+                        </div>
                       </CardContent>
                     </CollapsibleContent>
                   </Card>
