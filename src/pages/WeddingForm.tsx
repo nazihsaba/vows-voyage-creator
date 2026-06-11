@@ -1183,9 +1183,14 @@ const WeddingForm = () => {
           }
         });
         fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
+        if (enableArabicOnly) {
+          fieldCustomizations.arabic_only = true;
+        } else {
+          delete fieldCustomizations.arabic_only;
+        }
       } else {
-        // Remove arabic key if disabled
-        const { arabic, ...rest } = fieldCustomizations;
+        // Remove arabic keys if disabled
+        const { arabic, arabic_only, ...rest } = fieldCustomizations;
         fieldCustomizations = rest;
       }
 
