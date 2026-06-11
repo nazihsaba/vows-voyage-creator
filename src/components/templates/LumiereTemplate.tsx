@@ -93,7 +93,7 @@ export const LumiereTemplate = ({
   submittingRsvp = false,
 }: LumiereTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoUrl = wedding.video_url || wedding.hero_media;
@@ -559,7 +559,7 @@ export const LumiereTemplate = ({
         };
       })()}
     >
-      {hasArabic && <LanguageToggle />}
+      {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" autoPlay onTimeUpdate={handleTimeUpdate} />

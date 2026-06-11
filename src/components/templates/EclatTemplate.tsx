@@ -57,7 +57,7 @@ export const EclatTemplate = ({
   submittingRsvp = false,
 }: EclatTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -159,7 +159,7 @@ export const EclatTemplate = ({
       {showLoader && (
         <TemplateLoader groomName={wedding.groom_name} brideName={wedding.bride_name} fadingOut={fadingOut} />
       )}
-      {hasArabic && <LanguageToggle />}
+      {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
         <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>

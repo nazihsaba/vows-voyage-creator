@@ -58,7 +58,7 @@ export const GraceTemplate = ({
   submittingRsvp = false,
 }: GraceTemplateProps) => {
   const { t, i18n } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -254,7 +254,7 @@ export const GraceTemplate = ({
       style={buildTemplateFontStyle("video-cinematic", wedding.template_fonts)}
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {hasArabic && <LanguageToggle />}
+      {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
         <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
