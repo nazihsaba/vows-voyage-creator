@@ -2610,11 +2610,28 @@ const WeddingForm = () => {
                               <Textarea
                                 id="welcome_drink_note"
                                 value={locations.welcome_drink_note}
-                                onChange={(e) => setLocations({ ...locations, welcome_drink_note: e.target.value })}
+                                onChange={(e) => {
+                                  setLocations({ ...locations, welcome_drink_note: e.target.value });
+                                  if (arabicEnabled) debouncedTranslate("welcome_drink_note", e.target.value);
+                                }}
                                 placeholder="e.g. Cocktails on the terrace"
                                 maxLength={200}
                                 rows={2}
                               />
+                              {arabicEnabled && (
+                                <div className="space-y-1 mt-2">
+                                  <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                                  <Textarea
+                                    value={arabicFields.welcome_drink_note || ""}
+                                    onChange={(e) => setArabicFields((prev) => ({ ...prev, welcome_drink_note: e.target.value }))}
+                                    dir="rtl"
+                                    rows={2}
+                                    className="min-h-[60px] text-right font-arabic"
+                                    placeholder={translatingFields.welcome_drink_note ? "Translating..." : ""}
+                                    disabled={translatingFields.welcome_drink_note}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
