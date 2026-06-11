@@ -388,6 +388,7 @@ const WeddingForm = () => {
       venue_note: locations.venue_note || "",
       welcome_drink_note: locations.welcome_drink_note || "",
       gallery_subtitle: (formData as any).gallery_subtitle || "",
+      rsvp_subtitle: (formData as any).rsvp_subtitle || "",
     };
     if (isAuraTemplate) {
       fieldsToTranslate.aura_quote = auraQuote;
