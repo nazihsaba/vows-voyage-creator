@@ -165,7 +165,7 @@ export const EtoileTemplate = ({
         location: getLocalizedValue("venue_location", venue.location_name),
         link: venue.location_link,
         icon: venue.icon || "solar:confetti-bold",
-        note: venue.note || "",
+        note: getLocalizedValue("venue_note", venue.note || ""),
       },
     });
   }
