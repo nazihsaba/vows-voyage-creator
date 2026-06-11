@@ -1511,6 +1511,25 @@ const WeddingForm = () => {
                 <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
               </div>
 
+              {/* Enable Only Arabic Language Toggle */}
+              <div className="flex items-start justify-between gap-3 p-3 rounded-lg border bg-muted/30">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <Languages className="w-4 h-4 text-muted-foreground" />
+                    <Label htmlFor="enable-arabic-only" className="text-sm font-medium cursor-pointer">
+                      Enable Only Arabic Language
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Renders the invitation in Arabic only. The English/Arabic toggle is hidden for guests.
+                  </p>
+                </div>
+                <Switch
+                  id="enable-arabic-only"
+                  checked={enableArabicOnly}
+                  onCheckedChange={handleEnableArabicOnly}
+                />
+
               {/* Share Your Love & Wishes Toggle */}
               <div className="flex items-start justify-between gap-3 p-3 rounded-lg border bg-muted/30">
                 <div className="flex-1 min-w-0">
