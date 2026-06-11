@@ -470,8 +470,12 @@ const WeddingForm = () => {
         if (fc.family_name_format) setFamilyNameFormat(fc.family_name_format);
         // Load Arabic fields
         if (fc["arabic"]) {
-          setEnableArabic(true);
           setArabicFields((prev) => ({ ...prev, ...fc["arabic"] }));
+        }
+        if (fc["arabic_only"] === true) {
+          setEnableArabicOnly(true);
+        } else if (fc["arabic"]) {
+          setEnableArabic(true);
         }
       }
       if (data.main_picture_url) {
