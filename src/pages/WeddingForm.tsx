@@ -3011,11 +3011,26 @@ const WeddingForm = () => {
                                         const next = [...customSections];
                                         next[idx] = { ...next[idx], note: e.target.value };
                                         setCustomSections(next);
+                                        if (arabicEnabled) debouncedTranslate(`custom_note_${section.uid}`, e.target.value);
                                       }}
                                       placeholder="e.g. Dress code or special instructions"
                                       maxLength={200}
                                       rows={2}
                                     />
+                                    {arabicEnabled && (
+                                      <div className="space-y-1 mt-2">
+                                        <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                                        <Textarea
+                                          value={arabicFields[`custom_note_${section.uid}`] || ""}
+                                          onChange={(e) => setArabicFields((prev) => ({ ...prev, [`custom_note_${section.uid}`]: e.target.value }))}
+                                          dir="rtl"
+                                          rows={2}
+                                          className="min-h-[60px] text-right font-arabic"
+                                          placeholder={translatingFields[`custom_note_${section.uid}`] ? "Translating..." : ""}
+                                          disabled={translatingFields[`custom_note_${section.uid}`]}
+                                        />
+                                      </div>
+                                    )}
                                   </div>
                                 </CardContent>
                               </CollapsibleContent>
