@@ -1181,11 +1181,14 @@ const WeddingForm = () => {
           if (!value) return;
           const titleMatch = key.match(/^custom_title_(.+)$/);
           const locMatch = key.match(/^custom_location_(.+)$/);
+          const noteMatch = key.match(/^custom_note_(.+)$/);
           if (titleMatch && uidToDbType.has(titleMatch[1])) {
             remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = value;
           } else if (locMatch && uidToDbType.has(locMatch[1])) {
             remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = value;
-          } else if (!titleMatch && !locMatch) {
+          } else if (noteMatch && uidToDbType.has(noteMatch[1])) {
+            remappedArabic[`custom_note_${uidToDbType.get(noteMatch[1])}`] = value;
+          } else if (!titleMatch && !locMatch && !noteMatch) {
             remappedArabic[key] = value;
           }
         });
