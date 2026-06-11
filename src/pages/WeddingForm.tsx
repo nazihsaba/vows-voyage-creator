@@ -194,7 +194,7 @@ const WeddingForm = () => {
     aura_ending_image_url: "",
     verite_ending_image_url: "",
     gallery_subtitle: "",
-    rsvp_subtitle: "",
+    rsvp_subtitle: "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
@@ -466,6 +466,7 @@ const WeddingForm = () => {
       setFormData({
         ...data,
         main_picture_position_y: data.main_picture_position_y ?? 50,
+        rsvp_subtitle: data.rsvp_subtitle || "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
       } as any);
       // Load Aura quote/reference from field_customizations
       if (data.field_customizations) {
