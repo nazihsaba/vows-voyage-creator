@@ -1,5 +1,6 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
@@ -92,7 +93,7 @@ export const AuraTemplate = ({
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = parseLocalDate(wedding.wedding_date);
-  const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
+  const dateFormatted = formatLocalizedDate(weddingDate, { day: "numeric", month: "long" }, isArabic);
 
   const welcomeDrinkLoc = locations.find((loc) => loc.type === "welcome_drink");
   const orderOf = (loc: any) =>
@@ -298,12 +299,12 @@ export const AuraTemplate = ({
                   fieldId="wedding-date-formatted"
                   text={getFieldValue(
                     "wedding-date-formatted",
-                    parseLocalDate(wedding.wedding_date).toLocaleDateString(dateLocale, {
+                    formatLocalizedDate(parseLocalDate(wedding.wedding_date), {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
                       year: "numeric",
-                    }),
+                    }, isArabic),
                   )}
                   style={getFieldStyle("wedding-date-formatted")}
                   onUpdate={onFieldUpdate}

@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Check, X } from "lucide-react";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { useArabicContent } from "@/hooks/useArabicContent";
 
 
@@ -279,11 +280,11 @@ export const TresorRsvpSlide = ({
                 style={{ background: GOLD }}
               />
               <p className="mt-3 text-xl md:text-2xl italic font-light text-white">
-                {rsvpDeadline.toLocaleDateString(dateLocale, {
+                {formatLocalizedDate(rsvpDeadline, {
                   year: "numeric",
                   month: "long",
                   day: "numeric",
-                })}
+                }, isArabic)}
               </p>
             </motion.div>
           )}

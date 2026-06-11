@@ -1,5 +1,6 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
@@ -314,12 +315,12 @@ export const GraceTemplate = ({
             fieldId="wedding-date-display"
             text={getFieldValue(
               "wedding-date-display",
-              parseLocalDate(wedding.wedding_date).toLocaleDateString(dateLocale, {
+              formatLocalizedDate(parseLocalDate(wedding.wedding_date), {
                 weekday: "long",
                 year: "numeric",
                 month: "long",
                 day: "numeric",
-              }),
+              }, isArabic),
             )}
             style={getFieldStyle("wedding-date-display")}
             onUpdate={onFieldUpdate}
