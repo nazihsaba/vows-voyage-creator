@@ -368,7 +368,7 @@ export const VeriteTemplate = ({
                       const noteKey = kind === "ceremony" ? "ceremony_note" : kind === "venue" ? "venue_note" : `custom_note_${loc.type}`;
                       const localizedNote = getLocalizedValue(noteKey, loc.note || "");
                       return localizedNote ? (
-                        <p className="text-xs text-[#865814] whitespace-pre-wrap mt-2">{localizedNote}</p>
+                        <p className="text-xs text-[#3e2723] whitespace-pre-wrap mt-2">{localizedNote}</p>
                       ) : null;
                     })()}
                   </div>
