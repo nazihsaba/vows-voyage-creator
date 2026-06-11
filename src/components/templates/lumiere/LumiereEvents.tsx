@@ -62,7 +62,7 @@ const LumiereEvents = ({ events, dateFormatted }: LumiereEventsProps) => {
                       </a>
                     )}
                     {event.note && (
-                      <p className={`text-xs text-[#865814] mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
+                      <p className={`text-xs text-muted-foreground mt-2 leading-snug whitespace-pre-wrap ${isArabic ? "text-right" : "text-left"}`}>
                         {event.note}
                       </p>
                     )}
