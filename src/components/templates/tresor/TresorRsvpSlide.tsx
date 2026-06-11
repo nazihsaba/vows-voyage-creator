@@ -42,6 +42,13 @@ export const TresorRsvpSlide = ({
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
+  const { getLocalizedValue } = useArabicContent(wedding);
+  const rsvpSubtitle = getLocalizedValue(
+    "rsvp_subtitle",
+    wedding?.rsvp_subtitle ||
+      t("rsvp.subtitle", "Please let us know if you can join us on our special day. Your presence would mean the world to us."),
+  );
+
 
   const wishesEnabled = !!wedding?.wishes_enabled;
   const showWishes = (wishesEnabled || isPreview) && !isRsvpDeadlinePassed;
