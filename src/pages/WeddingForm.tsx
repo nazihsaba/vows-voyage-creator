@@ -372,36 +372,52 @@ const WeddingForm = () => {
     [translateToArabic],
   );
 
+  const triggerArabicTranslations = useCallback(() => {
+    const fieldsToTranslate: Record<string, string> = {
+      groom_name: formData.groom_name,
+      bride_name: formData.bride_name,
+      groom_family: formData.groom_family || "",
+      bride_family: formData.bride_family || "",
+      welcoming_text: formData.welcoming_text || "",
+      main_description: formData.main_description || "",
+      ceremony_location: locations.ceremony_location,
+      venue_location: locations.venue_location,
+    };
+    if (isAuraTemplate) {
+      fieldsToTranslate.aura_quote = auraQuote;
+      fieldsToTranslate.aura_reference = auraReference;
+      customSections.forEach((s) => {
+        if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
+        if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+      });
+    }
+    Object.entries(fieldsToTranslate).forEach(([key, value]) => {
+      if (value && value.trim().length > 0 && !arabicFields[key]) {
+        translateToArabic(key, value);
+      }
+    });
+  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic]);
+
   const handleEnableArabic = useCallback(
     (enabled: boolean) => {
       setEnableArabic(enabled);
       if (enabled) {
-        const fieldsToTranslate: Record<string, string> = {
-          groom_name: formData.groom_name,
-          bride_name: formData.bride_name,
-          groom_family: formData.groom_family || "",
-          bride_family: formData.bride_family || "",
-          welcoming_text: formData.welcoming_text || "",
-          main_description: formData.main_description || "",
-          ceremony_location: locations.ceremony_location,
-          venue_location: locations.venue_location,
-        };
-        if (isAuraTemplate) {
-          fieldsToTranslate.aura_quote = auraQuote;
-          fieldsToTranslate.aura_reference = auraReference;
-          customSections.forEach((s) => {
-            if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
-            if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
-          });
-        }
-        Object.entries(fieldsToTranslate).forEach(([key, value]) => {
-          if (value && value.trim().length > 0 && !arabicFields[key]) {
-            translateToArabic(key, value);
-          }
-        });
+        setEnableArabicOnly(false);
+        triggerArabicTranslations();
       }
     },
-    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic],
+    [triggerArabicTranslations],
+  );
+
+  const handleEnableArabicOnly = useCallback(
+    (enabled: boolean) => {
+      setEnableArabicOnly(enabled);
+      if (enabled) {
+        setEnableArabic(false);
+        triggerArabicTranslations();
+      }
+    },
+    [triggerArabicTranslations],
   );
 
   const getMaxGalleryImages = () => {
