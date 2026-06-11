@@ -234,6 +234,7 @@ const WeddingForm = () => {
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
   const [enableArabicOnly, setEnableArabicOnly] = useState(false);
+  const arabicEnabled = enableArabic || enableArabicOnly;
   const [arabicFields, setArabicFields] = useState<Record<string, string>>({
     groom_name: "",
     bride_name: "",
