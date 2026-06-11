@@ -194,6 +194,7 @@ const WeddingForm = () => {
     aura_ending_image_url: "",
     verite_ending_image_url: "",
     gallery_subtitle: "",
+    rsvp_subtitle: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
