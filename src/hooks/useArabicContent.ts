@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import { useCallback } from 'react';
+import { useCallback, useEffect } from 'react';
 
 /**
  * Hook that provides a function to get dynamic content 
@@ -7,10 +7,22 @@ import { useCallback } from 'react';
  */
 export const useArabicContent = (wedding: any) => {
   const { i18n } = useTranslation();
-  const isArabic = i18n.language === 'ar';
   const arabicData = wedding?.field_customizations?.arabic || {};
+  const arabicOnly = wedding?.field_customizations?.arabic_only === true;
 
-  const hasArabic = Object.keys(arabicData).length > 0;
+  const hasArabic = Object.keys(arabicData).length > 0 || arabicOnly;
+
+  // When the wedding is set to Arabic-only, force the i18n language and document direction.
+  useEffect(() => {
+    if (arabicOnly && i18n.language !== 'ar') {
+      i18n.changeLanguage('ar');
+    }
+    if (arabicOnly) {
+      document.documentElement.dir = 'rtl';
+    }
+  }, [arabicOnly, i18n]);
+
+  const isArabic = arabicOnly || i18n.language === 'ar';
 
   /** 
    * Returns Arabic value if language is AR and Arabic data exists for that key,
@@ -52,5 +64,5 @@ export const useArabicContent = (wedding: any) => {
     [isArabic, arabicData, wedding?.field_customizations?.family_name_format],
   );
 
-  return { isArabic, hasArabic, getLocalizedValue, formatFamily };
+  return { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily };
 };
