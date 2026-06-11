@@ -506,6 +506,7 @@ export type Database = {
           payment_status: string | null
           recipient_name: string | null
           rsvp_deadline: string | null
+          rsvp_subtitle: string | null
           slug: string
           status: string | null
           template_fonts: Json
@@ -555,6 +556,7 @@ export type Database = {
           payment_status?: string | null
           recipient_name?: string | null
           rsvp_deadline?: string | null
+          rsvp_subtitle?: string | null
           slug: string
           status?: string | null
           template_fonts?: Json
@@ -604,6 +606,7 @@ export type Database = {
           payment_status?: string | null
           recipient_name?: string | null
           rsvp_deadline?: string | null
+          rsvp_subtitle?: string | null
           slug?: string
           status?: string | null
           template_fonts?: Json
