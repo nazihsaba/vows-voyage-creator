@@ -2677,11 +2677,28 @@ const WeddingForm = () => {
                           <Textarea
                             id="venue_note"
                             value={locations.venue_note}
-                            onChange={(e) => setLocations({ ...locations, venue_note: e.target.value })}
+                            onChange={(e) => {
+                              setLocations({ ...locations, venue_note: e.target.value });
+                              if (arabicEnabled) debouncedTranslate("venue_note", e.target.value);
+                            }}
                             placeholder="e.g. Dress code, parking info, or any special instructions"
                             maxLength={200}
                             rows={2}
                           />
+                          {arabicEnabled && (
+                            <div className="space-y-1 mt-2">
+                              <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                              <Textarea
+                                value={arabicFields.venue_note || ""}
+                                onChange={(e) => setArabicFields((prev) => ({ ...prev, venue_note: e.target.value }))}
+                                dir="rtl"
+                                rows={2}
+                                className="min-h-[60px] text-right font-arabic"
+                                placeholder={translatingFields.venue_note ? "Translating..." : ""}
+                                disabled={translatingFields.venue_note}
+                              />
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </CollapsibleContent>
