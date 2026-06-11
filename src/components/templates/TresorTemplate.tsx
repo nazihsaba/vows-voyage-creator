@@ -434,7 +434,7 @@ export const TresorTemplate = ({
       </AnimatePresence>
 
       {/* Language toggle / footer */}
-      {hasArabic && (
+      {hasArabic && !arabicOnly && (
         <div className="absolute top-4 right-4 z-30">
           <LanguageToggle />
         </div>
