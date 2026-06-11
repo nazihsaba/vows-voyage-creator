@@ -54,7 +54,7 @@ export const AuraTemplate = ({
   submittingRsvp = false,
 }: AuraTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
@@ -180,7 +180,7 @@ export const AuraTemplate = ({
       style={buildTemplateFontStyle("bible-verse-tabs", wedding.template_fonts)}
       dir={isArabic ? "rtl" : "ltr"}
     >
-      {hasArabic && <LanguageToggle />}
+      {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
         <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />

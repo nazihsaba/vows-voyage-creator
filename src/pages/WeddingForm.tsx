@@ -233,6 +233,8 @@ const WeddingForm = () => {
 
   // Arabic toggle and fields
   const [enableArabic, setEnableArabic] = useState(false);
+  const [enableArabicOnly, setEnableArabicOnly] = useState(false);
+  const arabicEnabled = enableArabic || enableArabicOnly;
   const [arabicFields, setArabicFields] = useState<Record<string, string>>({
     groom_name: "",
     bride_name: "",
@@ -371,36 +373,52 @@ const WeddingForm = () => {
     [translateToArabic],
   );
 
+  const triggerArabicTranslations = useCallback(() => {
+    const fieldsToTranslate: Record<string, string> = {
+      groom_name: formData.groom_name,
+      bride_name: formData.bride_name,
+      groom_family: formData.groom_family || "",
+      bride_family: formData.bride_family || "",
+      welcoming_text: formData.welcoming_text || "",
+      main_description: formData.main_description || "",
+      ceremony_location: locations.ceremony_location,
+      venue_location: locations.venue_location,
+    };
+    if (isAuraTemplate) {
+      fieldsToTranslate.aura_quote = auraQuote;
+      fieldsToTranslate.aura_reference = auraReference;
+      customSections.forEach((s) => {
+        if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
+        if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+      });
+    }
+    Object.entries(fieldsToTranslate).forEach(([key, value]) => {
+      if (value && value.trim().length > 0 && !arabicFields[key]) {
+        translateToArabic(key, value);
+      }
+    });
+  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic]);
+
   const handleEnableArabic = useCallback(
     (enabled: boolean) => {
       setEnableArabic(enabled);
       if (enabled) {
-        const fieldsToTranslate: Record<string, string> = {
-          groom_name: formData.groom_name,
-          bride_name: formData.bride_name,
-          groom_family: formData.groom_family || "",
-          bride_family: formData.bride_family || "",
-          welcoming_text: formData.welcoming_text || "",
-          main_description: formData.main_description || "",
-          ceremony_location: locations.ceremony_location,
-          venue_location: locations.venue_location,
-        };
-        if (isAuraTemplate) {
-          fieldsToTranslate.aura_quote = auraQuote;
-          fieldsToTranslate.aura_reference = auraReference;
-          customSections.forEach((s) => {
-            if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
-            if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
-          });
-        }
-        Object.entries(fieldsToTranslate).forEach(([key, value]) => {
-          if (value && value.trim().length > 0 && !arabicFields[key]) {
-            translateToArabic(key, value);
-          }
-        });
+        setEnableArabicOnly(false);
+        triggerArabicTranslations();
       }
     },
-    [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic],
+    [triggerArabicTranslations],
+  );
+
+  const handleEnableArabicOnly = useCallback(
+    (enabled: boolean) => {
+      setEnableArabicOnly(enabled);
+      if (enabled) {
+        setEnableArabic(false);
+        triggerArabicTranslations();
+      }
+    },
+    [triggerArabicTranslations],
   );
 
   const getMaxGalleryImages = () => {
@@ -453,8 +471,12 @@ const WeddingForm = () => {
         if (fc.family_name_format) setFamilyNameFormat(fc.family_name_format);
         // Load Arabic fields
         if (fc["arabic"]) {
-          setEnableArabic(true);
           setArabicFields((prev) => ({ ...prev, ...fc["arabic"] }));
+        }
+        if (fc["arabic_only"] === true) {
+          setEnableArabicOnly(true);
+        } else if (fc["arabic"]) {
+          setEnableArabic(true);
         }
       }
       if (data.main_picture_url) {
@@ -1141,7 +1163,7 @@ const WeddingForm = () => {
       fieldCustomizations.family_name_format = familyNameFormat;
 
       // Save Arabic translations if enabled
-      if (enableArabic) {
+      if (arabicEnabled) {
         // Remap custom section uid keys to stable DB keys (custom_1, custom_2, ...)
         const remappedArabic: Record<string, string> = {};
         const uidToDbType = new Map<string, string>();
@@ -1161,9 +1183,14 @@ const WeddingForm = () => {
           }
         });
         fieldCustomizations = { ...fieldCustomizations, arabic: remappedArabic };
+        if (enableArabicOnly) {
+          fieldCustomizations.arabic_only = true;
+        } else {
+          delete fieldCustomizations.arabic_only;
+        }
       } else {
-        // Remove arabic key if disabled
-        const { arabic, ...rest } = fieldCustomizations;
+        // Remove arabic keys if disabled
+        const { arabic, arabic_only, ...rest } = fieldCustomizations;
         fieldCustomizations = rest;
       }
 
@@ -1484,6 +1511,28 @@ const WeddingForm = () => {
                 <Switch id="enable-arabic" checked={enableArabic} onCheckedChange={handleEnableArabic} />
               </div>
 
+              {/* Enable Only Arabic Language Toggle */}
+              <div className="flex items-start justify-between gap-3 p-3 rounded-lg border bg-muted/30">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2">
+                    <Languages className="w-4 h-4 text-muted-foreground" />
+                    <Label htmlFor="enable-arabic-only" className="text-sm font-medium cursor-pointer">
+                      Enable Only Arabic Language
+                    </Label>
+                  </div>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Renders the invitation in Arabic only. The English/Arabic toggle is hidden for guests.
+                  </p>
+                </div>
+                <Switch
+                  id="enable-arabic-only"
+                  checked={enableArabicOnly}
+                  onCheckedChange={handleEnableArabicOnly}
+                />
+              </div>
+
+
+
               {/* Share Your Love & Wishes Toggle */}
               <div className="flex items-start justify-between gap-3 p-3 rounded-lg border bg-muted/30">
                 <div className="flex-1 min-w-0">
@@ -1541,14 +1590,14 @@ const WeddingForm = () => {
                     onChange={(e) => {
                       const sanitized = e.target.value.replace(/^\s+/, "");
                       setFormData({ ...formData, groom_name: sanitized });
-                      if (enableArabic) debouncedTranslate("groom_name", sanitized);
+                      if (arabicEnabled) debouncedTranslate("groom_name", sanitized);
                     }}
                     required
                     disabled={!!id}
                     className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
-                  {enableArabic && (
+                  {arabicEnabled && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">اسم العريس (Arabic)</Label>
                       <Input
@@ -1572,14 +1621,14 @@ const WeddingForm = () => {
                     onChange={(e) => {
                       const sanitized = e.target.value.replace(/^\s+/, "");
                       setFormData({ ...formData, bride_name: sanitized });
-                      if (enableArabic) debouncedTranslate("bride_name", sanitized);
+                      if (arabicEnabled) debouncedTranslate("bride_name", sanitized);
                     }}
                     required
                     disabled={!!id}
                     className="h-11 sm:h-10"
                   />
                   {id && <p className="text-xs text-muted-foreground">This field cannot be edited</p>}
-                  {enableArabic && (
+                  {arabicEnabled && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">اسم العروس (Arabic)</Label>
                       <Input
@@ -1631,7 +1680,7 @@ const WeddingForm = () => {
                       value={formData.groom_family}
                       onChange={(e) => {
                         setFormData({ ...formData, groom_family: e.target.value });
-                        if (enableArabic) debouncedTranslate("groom_family", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("groom_family", e.target.value);
                       }}
                       rows={3}
                       className="min-h-[88px]"
@@ -1643,12 +1692,12 @@ const WeddingForm = () => {
                       value={formData.groom_family}
                       onChange={(e) => {
                         setFormData({ ...formData, groom_family: e.target.value });
-                        if (enableArabic) debouncedTranslate("groom_family", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("groom_family", e.target.value);
                       }}
                       className="h-11 sm:h-10"
                     />
                   )}
-                  {enableArabic && (
+                  {arabicEnabled && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">عائلة العريس (Arabic)</Label>
                       {familyNameFormat === "none" ? (
@@ -1685,7 +1734,7 @@ const WeddingForm = () => {
                       value={formData.bride_family}
                       onChange={(e) => {
                         setFormData({ ...formData, bride_family: e.target.value });
-                        if (enableArabic) debouncedTranslate("bride_family", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("bride_family", e.target.value);
                       }}
                       rows={3}
                       className="min-h-[88px]"
@@ -1697,12 +1746,12 @@ const WeddingForm = () => {
                       value={formData.bride_family}
                       onChange={(e) => {
                         setFormData({ ...formData, bride_family: e.target.value });
-                        if (enableArabic) debouncedTranslate("bride_family", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("bride_family", e.target.value);
                       }}
                       className="h-11 sm:h-10"
                     />
                   )}
-                  {enableArabic && (
+                  {arabicEnabled && (
                     <div className="space-y-1 mt-2">
                       <Label className="text-xs text-muted-foreground">عائلة العروس (Arabic)</Label>
                       {familyNameFormat === "none" ? (
@@ -1769,12 +1818,12 @@ const WeddingForm = () => {
                   value={formData.welcoming_text}
                   onChange={(e) => {
                     setFormData({ ...formData, welcoming_text: e.target.value });
-                    if (enableArabic) debouncedTranslate("welcoming_text", e.target.value);
+                    if (arabicEnabled) debouncedTranslate("welcoming_text", e.target.value);
                   }}
                   rows={2}
                   className="min-h-[60px] text-base sm:text-sm"
                 />
-                {enableArabic && (
+                {arabicEnabled && (
                   <div className="space-y-1 mt-2">
                     <Label className="text-xs text-muted-foreground">نص الترحيب (Arabic)</Label>
                     <Textarea
@@ -1799,12 +1848,12 @@ const WeddingForm = () => {
                   value={formData.main_description}
                   onChange={(e) => {
                     setFormData({ ...formData, main_description: e.target.value });
-                    if (enableArabic) debouncedTranslate("main_description", e.target.value);
+                    if (arabicEnabled) debouncedTranslate("main_description", e.target.value);
                   }}
                   rows={3}
                   className="min-h-[80px] text-base sm:text-sm"
                 />
-                {enableArabic && (
+                {arabicEnabled && (
                   <div className="space-y-1 mt-2">
                     <Label className="text-xs text-muted-foreground">الوصف (Arabic)</Label>
                     <Textarea
@@ -1831,12 +1880,12 @@ const WeddingForm = () => {
                       value={auraQuote}
                       onChange={(e) => {
                         setAuraQuote(e.target.value);
-                        if (enableArabic) debouncedTranslate("aura_quote", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("aura_quote", e.target.value);
                       }}
                       rows={3}
                       placeholder="Two are better than one..."
                     />
-                    {enableArabic && (
+                    {arabicEnabled && (
                       <div className="space-y-1 mt-2">
                         <Label className="text-xs text-muted-foreground">الاقتباس (Arabic)</Label>
                         <Textarea
@@ -1858,11 +1907,11 @@ const WeddingForm = () => {
                       value={auraReference}
                       onChange={(e) => {
                         setAuraReference(e.target.value);
-                        if (enableArabic) debouncedTranslate("aura_reference", e.target.value);
+                        if (arabicEnabled) debouncedTranslate("aura_reference", e.target.value);
                       }}
                       placeholder="— Ecclesiastes 4:9-12"
                     />
-                    {enableArabic && (
+                    {arabicEnabled && (
                       <div className="space-y-1 mt-2">
                         <Label className="text-xs text-muted-foreground">المرجع (Arabic)</Label>
                         <Input
@@ -2276,7 +2325,7 @@ const WeddingForm = () => {
                               ceremony_location_link: "",
                               ceremony_icon: "material-symbols:church-rounded",
                             });
-                            if (enableArabic) {
+                            if (arabicEnabled) {
                               setArabicFields((prev) => ({ ...prev, ceremony_location: "" }));
                             }
                             setOpenLocationCards((prev) => ({ ...prev, ceremony: false }));
@@ -2298,13 +2347,13 @@ const WeddingForm = () => {
                               value={locations.ceremony_location}
                               onChange={(e) => {
                                 setLocations({ ...locations, ceremony_location: e.target.value });
-                                if (enableArabic) debouncedTranslate("ceremony_location", e.target.value);
+                                if (arabicEnabled) debouncedTranslate("ceremony_location", e.target.value);
                               }}
                               placeholder="Church or venue name"
                               required
                               className="h-11 sm:h-10"
                             />
-                            {enableArabic && (
+                            {arabicEnabled && (
                               <div className="space-y-1 mt-2">
                                 <Label className="text-xs text-muted-foreground">اسم موقع الحفل (Arabic)</Label>
                                 <Input
@@ -2425,7 +2474,7 @@ const WeddingForm = () => {
                               venue_icon: "solar:confetti-bold",
                               welcome_drink_time: "",
                             });
-                            if (enableArabic) {
+                            if (arabicEnabled) {
                               setArabicFields((prev) => ({ ...prev, venue_location: "" }));
                             }
                             setOpenLocationCards((prev) => ({ ...prev, venue: false }));
@@ -2447,13 +2496,13 @@ const WeddingForm = () => {
                               value={locations.venue_location}
                               onChange={(e) => {
                                 setLocations({ ...locations, venue_location: e.target.value });
-                                if (enableArabic) debouncedTranslate("venue_location", e.target.value);
+                                if (arabicEnabled) debouncedTranslate("venue_location", e.target.value);
                               }}
                               placeholder="Reception venue name"
                               required
                               className="h-11 sm:h-10"
                             />
-                            {enableArabic && (
+                            {arabicEnabled && (
                               <div className="space-y-1 mt-2">
                                 <Label className="text-xs text-muted-foreground">اسم مكان الحفل (Arabic)</Label>
                                 <Input
@@ -2778,12 +2827,12 @@ const WeddingForm = () => {
                                         const next = [...customSections];
                                         next[idx] = { ...next[idx], title: e.target.value };
                                         setCustomSections(next);
-                                        if (enableArabic) debouncedTranslate(`custom_title_${section.uid}`, e.target.value);
+                                        if (arabicEnabled) debouncedTranslate(`custom_title_${section.uid}`, e.target.value);
                                       }}
                                       placeholder="Cocktail Hour"
                                       className="h-11 sm:h-10"
                                     />
-                                    {enableArabic && (
+                                    {arabicEnabled && (
                                       <div className="space-y-1 mt-2">
                                         <Label className="text-xs text-muted-foreground">العنوان (Arabic)</Label>
                                         <Input
@@ -2809,13 +2858,13 @@ const WeddingForm = () => {
                                           const next = [...customSections];
                                           next[idx] = { ...next[idx], location_name: e.target.value };
                                           setCustomSections(next);
-                                          if (enableArabic) debouncedTranslate(`custom_location_${section.uid}`, e.target.value);
+                                          if (arabicEnabled) debouncedTranslate(`custom_location_${section.uid}`, e.target.value);
                                         }}
                                         placeholder="Venue or place"
                                         required
                                         className="h-11 sm:h-10"
                                       />
-                                      {enableArabic && (
+                                      {arabicEnabled && (
                                         <div className="space-y-1 mt-2">
                                           <Label className="text-xs text-muted-foreground">اسم الموقع (Arabic)</Label>
                                           <Input

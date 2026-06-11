@@ -55,7 +55,7 @@ export const TresorTemplate = ({
   submittingRsvp = false,
 }: TresorTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
@@ -434,7 +434,7 @@ export const TresorTemplate = ({
       </AnimatePresence>
 
       {/* Language toggle / footer */}
-      {hasArabic && (
+      {hasArabic && !arabicOnly && (
         <div className="absolute top-4 right-4 z-30">
           <LanguageToggle />
         </div>
