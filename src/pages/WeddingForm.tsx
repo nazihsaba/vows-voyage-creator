@@ -383,6 +383,10 @@ const WeddingForm = () => {
       main_description: formData.main_description || "",
       ceremony_location: locations.ceremony_location,
       venue_location: locations.venue_location,
+      ceremony_note: locations.ceremony_note || "",
+      venue_note: locations.venue_note || "",
+      welcome_drink_note: locations.welcome_drink_note || "",
+      gallery_subtitle: (formData as any).gallery_subtitle || "",
     };
     if (isAuraTemplate) {
       fieldsToTranslate.aura_quote = auraQuote;
@@ -390,6 +394,7 @@ const WeddingForm = () => {
       customSections.forEach((s) => {
         if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
         if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+        if (s.note) fieldsToTranslate[`custom_note_${s.uid}`] = s.note;
       });
     }
     Object.entries(fieldsToTranslate).forEach(([key, value]) => {
