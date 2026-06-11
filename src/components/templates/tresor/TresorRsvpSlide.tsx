@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Check, X } from "lucide-react";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { useArabicContent } from "@/hooks/useArabicContent";
+
 
 interface TresorRsvpSlideProps {
   wedding: any;
