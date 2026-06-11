@@ -593,8 +593,10 @@ const WeddingForm = () => {
           customDbTypeByUid.forEach((dbType, uid) => {
             const tKey = `custom_title_${dbType}`;
             const lKey = `custom_location_${dbType}`;
+            const nKey = `custom_note_${dbType}`;
             if (prev[tKey]) remapped[`custom_title_${uid}`] = prev[tKey];
             if (prev[lKey]) remapped[`custom_location_${uid}`] = prev[lKey];
+            if (prev[nKey]) remapped[`custom_note_${uid}`] = prev[nKey];
           });
           return remapped;
         });
