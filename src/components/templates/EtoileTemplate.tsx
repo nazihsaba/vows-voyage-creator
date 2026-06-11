@@ -137,7 +137,7 @@ export const EtoileTemplate = ({
         location: getLocalizedValue("ceremony_location", ceremony.location_name),
         link: ceremony.location_link,
         icon: ceremony.icon || "material-symbols:church-rounded",
-        note: ceremony.note || "",
+        note: getLocalizedValue("ceremony_note", ceremony.note || ""),
       },
     });
   }
@@ -152,7 +152,7 @@ export const EtoileTemplate = ({
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
           icon: welcomeDrinkLoc.icon || "asset:cheers",
-          note: welcomeDrinkLoc.note || "",
+          note: getLocalizedValue("welcome_drink_note", welcomeDrinkLoc.note || ""),
         },
       });
     }
@@ -165,7 +165,7 @@ export const EtoileTemplate = ({
         location: getLocalizedValue("venue_location", venue.location_name),
         link: venue.location_link,
         icon: venue.icon || "solar:confetti-bold",
-        note: venue.note || "",
+        note: getLocalizedValue("venue_note", venue.note || ""),
       },
     });
   }
@@ -181,7 +181,7 @@ export const EtoileTemplate = ({
           location: getLocalizedValue(`custom_location_${loc.type}`, loc.location_name || ""),
           link: loc.location_link,
           icon: loc.icon || "solar:confetti-bold",
-          note: loc.note || "",
+          note: getLocalizedValue(`custom_note_${loc.type}`, loc.note || ""),
         },
       });
     });
@@ -406,7 +406,7 @@ export const EtoileTemplate = ({
         {/* ===== GALLERY — RIGHT ===== */}
         {gallery && gallery.length > 0 && (
           <div className="mt-64">
-            <EtoileGallery images={gallery} align="right" subtitle={wedding.gallery_subtitle} />
+            <EtoileGallery images={gallery} align="right" subtitle={getLocalizedValue("gallery_subtitle", wedding.gallery_subtitle || "")} />
           </div>
         )}
 

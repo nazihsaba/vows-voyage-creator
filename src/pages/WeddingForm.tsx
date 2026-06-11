@@ -383,6 +383,10 @@ const WeddingForm = () => {
       main_description: formData.main_description || "",
       ceremony_location: locations.ceremony_location,
       venue_location: locations.venue_location,
+      ceremony_note: locations.ceremony_note || "",
+      venue_note: locations.venue_note || "",
+      welcome_drink_note: locations.welcome_drink_note || "",
+      gallery_subtitle: (formData as any).gallery_subtitle || "",
     };
     if (isAuraTemplate) {
       fieldsToTranslate.aura_quote = auraQuote;
@@ -390,6 +394,7 @@ const WeddingForm = () => {
       customSections.forEach((s) => {
         if (s.title) fieldsToTranslate[`custom_title_${s.uid}`] = s.title;
         if (s.location_name) fieldsToTranslate[`custom_location_${s.uid}`] = s.location_name;
+        if (s.note) fieldsToTranslate[`custom_note_${s.uid}`] = s.note;
       });
     }
     Object.entries(fieldsToTranslate).forEach(([key, value]) => {
@@ -588,8 +593,10 @@ const WeddingForm = () => {
           customDbTypeByUid.forEach((dbType, uid) => {
             const tKey = `custom_title_${dbType}`;
             const lKey = `custom_location_${dbType}`;
+            const nKey = `custom_note_${dbType}`;
             if (prev[tKey]) remapped[`custom_title_${uid}`] = prev[tKey];
             if (prev[lKey]) remapped[`custom_location_${uid}`] = prev[lKey];
+            if (prev[nKey]) remapped[`custom_note_${uid}`] = prev[nKey];
           });
           return remapped;
         });
@@ -1174,11 +1181,14 @@ const WeddingForm = () => {
           if (!value) return;
           const titleMatch = key.match(/^custom_title_(.+)$/);
           const locMatch = key.match(/^custom_location_(.+)$/);
+          const noteMatch = key.match(/^custom_note_(.+)$/);
           if (titleMatch && uidToDbType.has(titleMatch[1])) {
             remappedArabic[`custom_title_${uidToDbType.get(titleMatch[1])}`] = value;
           } else if (locMatch && uidToDbType.has(locMatch[1])) {
             remappedArabic[`custom_location_${uidToDbType.get(locMatch[1])}`] = value;
-          } else if (!titleMatch && !locMatch) {
+          } else if (noteMatch && uidToDbType.has(noteMatch[1])) {
+            remappedArabic[`custom_note_${uidToDbType.get(noteMatch[1])}`] = value;
+          } else if (!titleMatch && !locMatch && !noteMatch) {
             remappedArabic[key] = value;
           }
         });
@@ -2423,11 +2433,28 @@ const WeddingForm = () => {
                           <Textarea
                             id="ceremony_note"
                             value={locations.ceremony_note}
-                            onChange={(e) => setLocations({ ...locations, ceremony_note: e.target.value })}
+                            onChange={(e) => {
+                              setLocations({ ...locations, ceremony_note: e.target.value });
+                              if (arabicEnabled) debouncedTranslate("ceremony_note", e.target.value);
+                            }}
                             placeholder="e.g. Dress code, parking info, or any special instructions"
                             maxLength={200}
                             rows={2}
                           />
+                          {arabicEnabled && (
+                            <div className="space-y-1 mt-2">
+                              <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                              <Textarea
+                                value={arabicFields.ceremony_note || ""}
+                                onChange={(e) => setArabicFields((prev) => ({ ...prev, ceremony_note: e.target.value }))}
+                                dir="rtl"
+                                rows={2}
+                                className="min-h-[60px] text-right font-arabic"
+                                placeholder={translatingFields.ceremony_note ? "Translating..." : ""}
+                                disabled={translatingFields.ceremony_note}
+                              />
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </CollapsibleContent>
@@ -2583,11 +2610,28 @@ const WeddingForm = () => {
                               <Textarea
                                 id="welcome_drink_note"
                                 value={locations.welcome_drink_note}
-                                onChange={(e) => setLocations({ ...locations, welcome_drink_note: e.target.value })}
+                                onChange={(e) => {
+                                  setLocations({ ...locations, welcome_drink_note: e.target.value });
+                                  if (arabicEnabled) debouncedTranslate("welcome_drink_note", e.target.value);
+                                }}
                                 placeholder="e.g. Cocktails on the terrace"
                                 maxLength={200}
                                 rows={2}
                               />
+                              {arabicEnabled && (
+                                <div className="space-y-1 mt-2">
+                                  <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                                  <Textarea
+                                    value={arabicFields.welcome_drink_note || ""}
+                                    onChange={(e) => setArabicFields((prev) => ({ ...prev, welcome_drink_note: e.target.value }))}
+                                    dir="rtl"
+                                    rows={2}
+                                    className="min-h-[60px] text-right font-arabic"
+                                    placeholder={translatingFields.welcome_drink_note ? "Translating..." : ""}
+                                    disabled={translatingFields.welcome_drink_note}
+                                  />
+                                </div>
+                              )}
                             </div>
                           </div>
                         )}
@@ -2633,11 +2677,28 @@ const WeddingForm = () => {
                           <Textarea
                             id="venue_note"
                             value={locations.venue_note}
-                            onChange={(e) => setLocations({ ...locations, venue_note: e.target.value })}
+                            onChange={(e) => {
+                              setLocations({ ...locations, venue_note: e.target.value });
+                              if (arabicEnabled) debouncedTranslate("venue_note", e.target.value);
+                            }}
                             placeholder="e.g. Dress code, parking info, or any special instructions"
                             maxLength={200}
                             rows={2}
                           />
+                          {arabicEnabled && (
+                            <div className="space-y-1 mt-2">
+                              <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                              <Textarea
+                                value={arabicFields.venue_note || ""}
+                                onChange={(e) => setArabicFields((prev) => ({ ...prev, venue_note: e.target.value }))}
+                                dir="rtl"
+                                rows={2}
+                                className="min-h-[60px] text-right font-arabic"
+                                placeholder={translatingFields.venue_note ? "Translating..." : ""}
+                                disabled={translatingFields.venue_note}
+                              />
+                            </div>
+                          )}
                         </div>
                       </CardContent>
                     </CollapsibleContent>
@@ -2950,11 +3011,26 @@ const WeddingForm = () => {
                                         const next = [...customSections];
                                         next[idx] = { ...next[idx], note: e.target.value };
                                         setCustomSections(next);
+                                        if (arabicEnabled) debouncedTranslate(`custom_note_${section.uid}`, e.target.value);
                                       }}
                                       placeholder="e.g. Dress code or special instructions"
                                       maxLength={200}
                                       rows={2}
                                     />
+                                    {arabicEnabled && (
+                                      <div className="space-y-1 mt-2">
+                                        <Label className="text-xs text-muted-foreground">ملاحظة (Arabic)</Label>
+                                        <Textarea
+                                          value={arabicFields[`custom_note_${section.uid}`] || ""}
+                                          onChange={(e) => setArabicFields((prev) => ({ ...prev, [`custom_note_${section.uid}`]: e.target.value }))}
+                                          dir="rtl"
+                                          rows={2}
+                                          className="min-h-[60px] text-right font-arabic"
+                                          placeholder={translatingFields[`custom_note_${section.uid}`] ? "Translating..." : ""}
+                                          disabled={translatingFields[`custom_note_${section.uid}`]}
+                                        />
+                                      </div>
+                                    )}
                                   </div>
                                 </CardContent>
                               </CollapsibleContent>
@@ -3123,10 +3199,26 @@ const WeddingForm = () => {
                   <Input
                     id="gallery_subtitle"
                     value={(formData as any).gallery_subtitle || ""}
-                    onChange={(e) => setFormData({ ...formData, gallery_subtitle: e.target.value } as any)}
+                    onChange={(e) => {
+                      setFormData({ ...formData, gallery_subtitle: e.target.value } as any);
+                      if (arabicEnabled) debouncedTranslate("gallery_subtitle", e.target.value);
+                    }}
                     placeholder="e.g. A glimpse of our journey together"
                     maxLength={120}
                   />
+                  {arabicEnabled && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">العنوان الفرعي للمعرض (Arabic)</Label>
+                      <Input
+                        value={arabicFields.gallery_subtitle || ""}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, gallery_subtitle: e.target.value }))}
+                        dir="rtl"
+                        className="text-right font-arabic"
+                        placeholder={translatingFields.gallery_subtitle ? "Translating..." : ""}
+                        disabled={translatingFields.gallery_subtitle}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 

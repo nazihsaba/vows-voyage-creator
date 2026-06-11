@@ -364,9 +364,13 @@ export const VeriteTemplate = ({
                         {t("events.viewOnMap")}
                       </a>
                     )}
-                    {loc.note && (
-                      <p className="text-xs text-[#865814] whitespace-pre-wrap mt-2">{loc.note}</p>
-                    )}
+                    {(() => {
+                      const noteKey = kind === "ceremony" ? "ceremony_note" : kind === "venue" ? "venue_note" : `custom_note_${loc.type}`;
+                      const localizedNote = getLocalizedValue(noteKey, loc.note || "");
+                      return localizedNote ? (
+                        <p className="text-xs text-[#865814] whitespace-pre-wrap mt-2">{localizedNote}</p>
+                      ) : null;
+                    })()}
                   </div>
                 </AnimatedSection>
               );
