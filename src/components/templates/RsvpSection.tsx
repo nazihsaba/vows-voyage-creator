@@ -6,6 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
+import { useArabicContent } from "@/hooks/useArabicContent";
+
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
