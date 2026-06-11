@@ -3199,10 +3199,26 @@ const WeddingForm = () => {
                   <Input
                     id="gallery_subtitle"
                     value={(formData as any).gallery_subtitle || ""}
-                    onChange={(e) => setFormData({ ...formData, gallery_subtitle: e.target.value } as any)}
+                    onChange={(e) => {
+                      setFormData({ ...formData, gallery_subtitle: e.target.value } as any);
+                      if (arabicEnabled) debouncedTranslate("gallery_subtitle", e.target.value);
+                    }}
                     placeholder="e.g. A glimpse of our journey together"
                     maxLength={120}
                   />
+                  {arabicEnabled && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">العنوان الفرعي للمعرض (Arabic)</Label>
+                      <Input
+                        value={arabicFields.gallery_subtitle || ""}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, gallery_subtitle: e.target.value }))}
+                        dir="rtl"
+                        className="text-right font-arabic"
+                        placeholder={translatingFields.gallery_subtitle ? "Translating..." : ""}
+                        disabled={translatingFields.gallery_subtitle}
+                      />
+                    </div>
+                  )}
                 </div>
               )}
 
