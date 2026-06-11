@@ -6,6 +6,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { WishesSection } from "./WishesSection";
+import { useArabicContent } from "@/hooks/useArabicContent";
+
 
 interface RsvpSectionProps {
   staticDeadline?: Date;
@@ -39,6 +41,7 @@ export const RsvpSection = ({
   accentColorClass = "text-primary",
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
+  const { getLocalizedValue } = useArabicContent(wedding);
   const isArabic = i18n.language === "ar";
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
@@ -46,6 +49,7 @@ export const RsvpSection = ({
   // Show wishes in live invites only when enabled; always show in previews
   const showWishes = (wishesEnabled || isPreview) && !isRsvpDeadlinePassed;
   const [wishesMessage, setWishesMessage] = useState("");
+  const rsvpSubtitle = getLocalizedValue("rsvp_subtitle", wedding?.rsvp_subtitle || t("rsvp.subtitle"));
 
   return (
     <AnimatedSection animation="fade-up">
@@ -53,8 +57,9 @@ export const RsvpSection = ({
         <div className="max-w-4xl mx-auto">
           <div className="text-center mb-12">
             <h2 className={`text-template-subtitle text-center mb-12 ${accentColorClass}`}>{t("rsvp.title")}</h2>
-            <p className="text-center text-template-body mb-8 text-muted-foreground">{t("rsvp.subtitle")}</p>
+            <p className="text-center text-template-body mb-8 text-muted-foreground whitespace-pre-line">{rsvpSubtitle}</p>
           </div>
+
 
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">

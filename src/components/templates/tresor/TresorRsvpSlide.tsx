@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { Check, X } from "lucide-react";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { useArabicContent } from "@/hooks/useArabicContent";
+
 
 interface TresorRsvpSlideProps {
   wedding: any;
@@ -40,6 +42,13 @@ export const TresorRsvpSlide = ({
   const { t, i18n } = useTranslation();
   const isArabic = i18n.language === "ar";
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
+  const { getLocalizedValue } = useArabicContent(wedding);
+  const rsvpSubtitle = getLocalizedValue(
+    "rsvp_subtitle",
+    wedding?.rsvp_subtitle ||
+      t("rsvp.subtitle", "Please let us know if you can join us on our special day. Your presence would mean the world to us."),
+  );
+
 
   const wishesEnabled = !!wedding?.wishes_enabled;
   const showWishes = (wishesEnabled || isPreview) && !isRsvpDeadlinePassed;
@@ -123,13 +132,11 @@ export const TresorRsvpSlide = ({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 1.1, duration: 0.8 }}
-            className="mt-5 text-xs md:text-sm tracking-wider text-white/75 text-center max-w-md leading-relaxed"
+            className="mt-5 text-xs md:text-sm tracking-wider text-white/75 text-center max-w-md leading-relaxed whitespace-pre-line"
           >
-            {t(
-              "rsvp.subtitle",
-              "Please let us know if you can join us on our special day. Your presence would mean the world to us.",
-            )}
+            {rsvpSubtitle}
           </motion.p>
+
 
           {/* Invitee cards */}
           {hasInvitees && (

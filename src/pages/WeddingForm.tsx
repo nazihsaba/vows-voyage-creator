@@ -194,6 +194,7 @@ const WeddingForm = () => {
     aura_ending_image_url: "",
     verite_ending_image_url: "",
     gallery_subtitle: "",
+    rsvp_subtitle: "",
     template_type: searchParams.get("template") || "template1",
     custom_primary_color: "#E2C497",
     audio_url: "",
@@ -387,6 +388,7 @@ const WeddingForm = () => {
       venue_note: locations.venue_note || "",
       welcome_drink_note: locations.welcome_drink_note || "",
       gallery_subtitle: (formData as any).gallery_subtitle || "",
+      rsvp_subtitle: (formData as any).rsvp_subtitle || "",
     };
     if (isAuraTemplate) {
       fieldsToTranslate.aura_quote = auraQuote;
@@ -1578,7 +1580,45 @@ const WeddingForm = () => {
                 </div>
               )}
 
+              {/* RSVP subtitle — message shown under "Join Our Celebration" */}
+              <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
+                <Label htmlFor="rsvp_subtitle" className="text-sm font-medium">
+                  RSVP Subtitle (optional)
+                </Label>
+                <p className="text-xs text-muted-foreground">
+                  The short message shown under "Join Our Celebration" on your invitation. Leave empty to use the
+                  default text.
+                </p>
+                <Textarea
+                  id="rsvp_subtitle"
+                  value={(formData as any).rsvp_subtitle || ""}
+                  onChange={(e) => {
+                    setFormData({ ...formData, rsvp_subtitle: e.target.value } as any);
+                    if (arabicEnabled) debouncedTranslate("rsvp_subtitle", e.target.value);
+                  }}
+                  rows={3}
+                  maxLength={300}
+                  placeholder="Please let us know if you can join us on our special day. Your presence would mean the world to us."
+                  className="min-h-[72px] text-base sm:text-sm"
+                />
+                {arabicEnabled && (
+                  <div className="space-y-1 mt-2">
+                    <Label className="text-xs text-muted-foreground">عنوان فرعي للحضور (Arabic)</Label>
+                    <Textarea
+                      value={arabicFields.rsvp_subtitle || ""}
+                      onChange={(e) => setArabicFields((prev) => ({ ...prev, rsvp_subtitle: e.target.value }))}
+                      dir="rtl"
+                      rows={3}
+                      className="min-h-[72px] text-right font-arabic"
+                      placeholder={translatingFields.rsvp_subtitle ? "Translating..." : ""}
+                      disabled={translatingFields.rsvp_subtitle}
+                    />
+                  </div>
+                )}
+              </div>
+
               {/* Envelope Animation Toggle hidden */}
+
 
 
               {/* Typography customizer (works on every template, with per-template defaults) */}
