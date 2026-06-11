@@ -5,6 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { WishesSection } from "./WishesSection";
 import { useArabicContent } from "@/hooks/useArabicContent";
 
@@ -139,7 +140,7 @@ export const RsvpSection = ({
                 {invitees.length > 0 ? t("rsvp.rsvpBy") : t("rsvp.confirmBefore")}
               </p>
               <p className={`text-template-heading ${accentColorClass} text-center`}>
-                {rsvpDeadline.toLocaleDateString(dateLocale, { year: "numeric", month: "long", day: "numeric" })}
+                {formatLocalizedDate(rsvpDeadline, { year: "numeric", month: "long", day: "numeric" }, isArabic)}
               </p>
             </div>
           )}

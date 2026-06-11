@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback, ReactNode } from "react";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import useEmblaCarousel from "embla-carousel-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -73,11 +74,11 @@ export const TresorTemplate = ({
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = parseLocalDate(wedding.wedding_date);
-  const dateFormatted = weddingDate.toLocaleDateString(dateLocale, {
+  const dateFormatted = formatLocalizedDate(weddingDate, {
     day: "numeric",
     month: "long",
     year: "numeric",
-  });
+  }, isArabic);
 
   const brideName = getLocalizedValue("bride_name", wedding.bride_name) || "Bride";
   const groomName = getLocalizedValue("groom_name", wedding.groom_name) || "Groom";

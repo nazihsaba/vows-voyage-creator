@@ -1,5 +1,6 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { useRef, useEffect, useMemo, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -440,7 +441,7 @@ export const LumiereTemplate = ({
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = parseLocalDate(wedding.wedding_date);
-  const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
+  const dateFormatted = formatLocalizedDate(weddingDate, { day: "numeric", month: "long" }, isArabic);
 
   const welcomeDrinkLoc = locations.find((loc) => loc.type === "welcome_drink");
   const orderOf = (loc: any) =>
@@ -736,12 +737,12 @@ export const LumiereTemplate = ({
                   fieldId="wedding-date-formatted"
                   text={getFieldValue(
                     "wedding-date-formatted",
-                    weddingDate.toLocaleDateString(dateLocale, {
+                    formatLocalizedDate(weddingDate, {
                       weekday: "long",
                       month: "long",
                       day: "numeric",
                       year: "numeric",
-                    }),
+                    }, isArabic),
                   )}
                   style={{ ...getFieldStyle("wedding-date-formatted"), fontFamily: "var(--font-template-body)" }}
                   onUpdate={onFieldUpdate}

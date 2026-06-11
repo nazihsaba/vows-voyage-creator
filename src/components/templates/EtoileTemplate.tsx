@@ -1,5 +1,6 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { formatLocalizedDate } from "@/lib/formatDate";
 import { useRef, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Heart } from "lucide-react";
@@ -120,7 +121,7 @@ export const EtoileTemplate = ({
 
   const dateLocale = isArabic ? "ar-SA-u-ca-gregory" : "en-US";
   const weddingDate = parseLocalDate(wedding.wedding_date);
-  const dateFormatted = weddingDate.toLocaleDateString(dateLocale, { day: "numeric", month: "long" });
+  const dateFormatted = formatLocalizedDate(weddingDate, { day: "numeric", month: "long" }, isArabic);
 
   const welcomeDrinkLoc = locations.find((loc) => loc.type === "welcome_drink");
   const orderOf = (loc: any) =>
@@ -292,12 +293,12 @@ export const EtoileTemplate = ({
                 fieldId="wedding-date-display"
                 text={getFieldValue(
                   "wedding-date-display",
-                  weddingDate.toLocaleDateString(dateLocale, {
+                  formatLocalizedDate(weddingDate, {
                     weekday: "long",
                     year: "numeric",
                     month: "long",
                     day: "numeric",
-                  }),
+                  }, isArabic),
                 )}
                 style={getFieldStyle("wedding-date-display")}
                 onUpdate={onFieldUpdate}
