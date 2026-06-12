@@ -296,7 +296,7 @@ export const VeritePreview = () => {
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                    <p className="text-lg text-gray-600 mt-2">{card.card_number}</p>
+                    <p className="text-lg text-gray-600 mt-2 whitespace-pre-line">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}

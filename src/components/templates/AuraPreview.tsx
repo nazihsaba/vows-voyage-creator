@@ -209,7 +209,7 @@ export const AuraPreview = () => {
                 <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
                   <div className="bg-background p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-foreground">{card.card_name}</p>
-                    <p className="text-lg text-muted-foreground mt-2">{card.card_number}</p>
+                    <p className="text-lg text-muted-foreground mt-2 whitespace-pre-line">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}
