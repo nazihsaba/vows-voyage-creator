@@ -3117,7 +3117,7 @@ const WeddingForm = () => {
                       </div>
                       <div className="space-y-1.5">
                         <Label htmlFor={`card_number_${index}`}>Card Number</Label>
-                        <Input
+                        <Textarea
                           id={`card_number_${index}`}
                           value={card.card_number}
                           onChange={(e) => {
@@ -3125,8 +3125,9 @@ const WeddingForm = () => {
                             newCards[index].card_number = e.target.value;
                             setGiftCards(newCards);
                           }}
-                          placeholder="XXXX-XXXX-XXXX-XXXX"
-                          className="h-11 sm:h-10"
+                          placeholder={"XXXX-XXXX-XXXX-XXXX\nPress Enter for a new line"}
+                          rows={2}
+                          className="min-h-[44px] resize-y"
                         />
                       </div>
                     </div>

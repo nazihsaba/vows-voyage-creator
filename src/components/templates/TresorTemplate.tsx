@@ -1172,7 +1172,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
                 className="group relative w-full text-left bg-white/95 hover:bg-white text-[#1a1a1a] rounded-xl px-5 py-4 shadow-[0_8px_30px_rgba(0,0,0,0.25)] backdrop-blur-sm transition-colors"
               >
                 <p className="text-[10px] tracking-[0.35em] uppercase text-[#6b6b6b]">{card.card_name}</p>
-                <p className="mt-2 text-lg md:text-xl font-light tracking-wider tabular-nums break-all">
+                <p className="mt-2 text-lg md:text-xl font-light tracking-wider tabular-nums break-all whitespace-pre-line">
                   {card.card_number}
                 </p>
                 <span
