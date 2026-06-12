@@ -701,7 +701,7 @@ const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; gr
           transition={{ delay: 0.5, duration: 1 }}
           className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
         >
-          {bride}
+          {groom}
         </motion.h2>
         <motion.span
           initial={{ opacity: 0, scale: 0.8 }}
@@ -717,7 +717,7 @@ const QuoteSlide = ({ bride, groom, date, backgroundImage }: { bride: string; gr
           transition={{ delay: 1.1, duration: 1 }}
           className="text-5xl md:text-7xl italic font-light text-white leading-[1.1]"
         >
-          {groom}
+          {bride}
         </motion.h2>
         <motion.div
           initial={{ width: 0 }}
