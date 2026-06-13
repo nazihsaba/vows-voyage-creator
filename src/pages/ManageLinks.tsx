@@ -193,9 +193,7 @@ const ManageLinks = () => {
     const now = new Date().toISOString();
     const nextCount = (link.invite_sent_count || 0) + 1;
     setLinks((prev) =>
-      prev.map((l) =>
-        l.id === link.id ? { ...l, invite_sent_at: now, invite_sent_count: nextCount } : l,
-      ),
+      prev.map((l) => (l.id === link.id ? { ...l, invite_sent_at: now, invite_sent_count: nextCount } : l)),
     );
     try {
       await (supabase as any)
@@ -208,9 +206,7 @@ const ManageLinks = () => {
   };
 
   const markLinkUnsent = async (link: InvitationLink) => {
-    setLinks((prev) =>
-      prev.map((l) => (l.id === link.id ? { ...l, invite_sent_at: null, invite_sent_count: 0 } : l)),
-    );
+    setLinks((prev) => prev.map((l) => (l.id === link.id ? { ...l, invite_sent_at: null, invite_sent_count: 0 } : l)));
     try {
       await (supabase as any)
         .from("invitation_links")
@@ -234,8 +230,7 @@ const ManageLinks = () => {
   }, [weddingId]);
 
   const isGenerating =
-    genState.weddingId === weddingId &&
-    (genState.status === "uploading" || genState.status === "polling");
+    genState.weddingId === weddingId && (genState.status === "uploading" || genState.status === "polling");
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
 
@@ -271,7 +266,6 @@ const ManageLinks = () => {
   const fetchData = async ({ silent = false }: { silent?: boolean } = {}) => {
     try {
       if (!silent) setLoading(true);
-
 
       // Fetch wedding details
       const { data: weddingData, error: weddingError } = await supabase
@@ -402,11 +396,7 @@ const ManageLinks = () => {
           "invitation_link_id",
           links.map((l) => l.id),
         );
-      await (supabase as any)
-        .from("wedding_tables")
-        .delete()
-        .eq("wedding_id", weddingId)
-        .eq("table_number", tableNum);
+      await (supabase as any).from("wedding_tables").delete().eq("wedding_id", weddingId).eq("table_number", tableNum);
       toast({ title: "Table deleted", description: `Table ${tableNum} removed` });
       setDeleteTableId(null);
       setRefresh((r) => r + 1);
@@ -510,7 +500,7 @@ const ManageLinks = () => {
       const unassignSet = new Set(toUnassign);
       const assignSet = new Set(tableForm.selectedInviteeIds);
       setInvitees((prev) => {
-        const next: Record<string, typeof prev[string]> = {};
+        const next: Record<string, (typeof prev)[string]> = {};
         for (const [k, list] of Object.entries(prev)) {
           next[k] = list.map((i) => {
             if (assignSet.has(i.id)) return { ...i, table_number: newNum };
@@ -545,7 +535,7 @@ const ManageLinks = () => {
   // ensuring a consistent sharing experience whether the user clicks "Send via
   // WhatsApp" or copies the link and pastes it manually elsewhere.
   const buildInvitationMessage = (linkName: string, inviteUrl: string) => {
-    return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our happily ever after! ❤️\n\nWe would be honored to have you with us on this special day. ✨\n\nWe can't wait to see you! 💕`;
+    return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our happily ever after! ❤️\n\nWe would be honored to have you with us on this special day. ✨\n\nWe can't wait to see you!`;
   };
 
   const copyToClipboard = async (link: InvitationLink) => {
@@ -742,7 +732,10 @@ const ManageLinks = () => {
         if (!pendingDeleteIds.includes(id)) {
           const sanitizedUpdates = { ...(updates as any) };
           if (sanitizedUpdates.name) {
-            sanitizedUpdates.name = sanitizedUpdates.name.replace(/(^|\s)(\S)/g, (_m: string, s: string, c: string) => s + c.toUpperCase());
+            sanitizedUpdates.name = sanitizedUpdates.name.replace(
+              /(^|\s)(\S)/g,
+              (_m: string, s: string, c: string) => s + c.toUpperCase(),
+            );
           }
           const { error } = await supabase.from("invitees").update(sanitizedUpdates).eq("id", id);
           if (error) throw error;
@@ -754,10 +747,7 @@ const ManageLinks = () => {
         const inv = editInvitees[i];
         if (inv.id.startsWith("temp-")) continue;
         if (pendingDeleteIds.includes(inv.id)) continue;
-        const { error } = await (supabase as any)
-          .from("invitees")
-          .update({ display_order: i })
-          .eq("id", inv.id);
+        const { error } = await (supabase as any).from("invitees").update({ display_order: i }).eq("id", inv.id);
         if (error) throw error;
       }
 
@@ -1015,9 +1005,7 @@ const ManageLinks = () => {
           <div className="bg-card border border-border rounded-2xl shadow-2xl px-8 py-10 max-w-sm w-full flex flex-col items-center text-center gap-4">
             <Loader2 className="w-12 h-12 text-primary animate-spin" />
             <div>
-              <h3 className="text-lg font-semibold text-foreground">
-                Generating your links
-              </h3>
+              <h3 className="text-lg font-semibold text-foreground">Generating your links</h3>
               <p className="text-sm text-muted-foreground mt-2">
                 {genState.message || "Please wait while we create your invitation links and guests..."}
               </p>
@@ -1331,10 +1319,7 @@ const ManageLinks = () => {
                     {/* Invite tracking header */}
                     <div className="mb-3">
                       <div className="flex items-center justify-between gap-3 flex-wrap">
-                        <p
-                          className="font-cormorant text-foreground"
-                          style={{ fontSize: "16px" }}
-                        >
+                        <p className="font-cormorant text-foreground" style={{ fontSize: "16px" }}>
                           {sentCount} of {totalInvites} invites sent
                         </p>
                         <button
@@ -1485,7 +1470,10 @@ const ManageLinks = () => {
                                         </div>
                                       </TableCell>
                                       <TableCell className="text-right">
-                                        <div className="flex items-center gap-2 justify-end" onClick={(e) => e.stopPropagation()}>
+                                        <div
+                                          className="flex items-center gap-2 justify-end"
+                                          onClick={(e) => e.stopPropagation()}
+                                        >
                                           {link.invite_sent_at && (
                                             <button
                                               type="button"
@@ -1532,10 +1520,7 @@ const ManageLinks = () => {
                                               size="icon"
                                               variant="ghost"
                                               onClick={() => {
-                                                window.open(
-                                                  getInviteUrl(link),
-                                                  "_blank",
-                                                );
+                                                window.open(getInviteUrl(link), "_blank");
                                               }}
                                               title="Open Link"
                                               className="h-8 w-8 rounded-full hover:bg-white hover:shadow-sm transition-all"
@@ -1783,10 +1768,7 @@ const ManageLinks = () => {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => {
-                                          window.open(
-                                            getInviteUrl(link),
-                                            "_blank",
-                                          );
+                                          window.open(getInviteUrl(link), "_blank");
                                         }}
                                         title="Open Link"
                                         className="h-7 w-7 rounded-full hover:bg-white hover:shadow-sm transition-all"
@@ -1861,10 +1843,7 @@ const ManageLinks = () => {
                                           <DropdownMenuItem
                                             onSelect={(e) => {
                                               e.preventDefault();
-                                              window.open(
-                                                getInviteUrl(link),
-                                                "_blank",
-                                              );
+                                              window.open(getInviteUrl(link), "_blank");
                                             }}
                                           >
                                             <Eye className="w-4 h-4 mr-2" />
@@ -1968,11 +1947,7 @@ const ManageLinks = () => {
                   <div className="w-full flex-shrink-0">
                     <div className="flex items-center justify-between mb-3">
                       <h3 className="text-sm font-semibold text-foreground">Tables</h3>
-                      <Button
-                        size="sm"
-                        onClick={openCreateTableDialog}
-                        className="rounded-full text-xs h-8 px-3"
-                      >
+                      <Button size="sm" onClick={openCreateTableDialog} className="rounded-full text-xs h-8 px-3">
                         <Plus className="w-3.5 h-3.5 mr-1" />
                         Create Table
                       </Button>
@@ -2586,8 +2561,12 @@ const ManageLinks = () => {
               </div>
               <Tabs defaultValue="without" className="w-full">
                 <TabsList className="grid w-full grid-cols-2 h-9">
-                  <TabsTrigger value="without" className="text-[11px] sm:text-xs px-1">Without Table</TabsTrigger>
-                  <TabsTrigger value="with" className="text-[11px] sm:text-xs px-1">With Table</TabsTrigger>
+                  <TabsTrigger value="without" className="text-[11px] sm:text-xs px-1">
+                    Without Table
+                  </TabsTrigger>
+                  <TabsTrigger value="with" className="text-[11px] sm:text-xs px-1">
+                    With Table
+                  </TabsTrigger>
                 </TabsList>
                 {(["without", "with"] as const).map((tab) => (
                   <TabsContent key={tab} value={tab} className="mt-2">
@@ -2603,8 +2582,7 @@ const ManageLinks = () => {
                         }
                         const q = tableInviteeSearch.trim().toLowerCase();
                         const scoped = all.filter((i) => {
-                          const isOnThisTable =
-                            editingTable && i.table_number === editingTable.originalNumber;
+                          const isOnThisTable = editingTable && i.table_number === editingTable.originalNumber;
                           const hasTable = i.table_number != null && !isOnThisTable;
                           return tab === "with" ? hasTable : !hasTable;
                         });
@@ -2619,8 +2597,7 @@ const ManageLinks = () => {
                         return filtered.map((inv) => {
                           const checked = tableForm.selectedInviteeIds.includes(inv.id);
                           const currentTable = inv.table_number;
-                          const isOnThisTable =
-                            editingTable && currentTable === editingTable.originalNumber;
+                          const isOnThisTable = editingTable && currentTable === editingTable.originalNumber;
                           return (
                             <label
                               key={inv.id}
