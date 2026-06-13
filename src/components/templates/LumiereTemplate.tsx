@@ -325,39 +325,7 @@ export const LumiereTemplate = ({
     };
   }, []);
 
-  // Start audio on first scroll/wheel/touch — counts as user gesture so
-  // browsers that blocked autoplay will allow audio playback.
-  useEffect(() => {
-    if (!hasAudio) return;
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      const audio = audioRef.current;
-      if (audio) {
-        audio.muted = false;
-        audio.volume = 0.5;
-        audio.play().catch(() => {});
-      }
-      window.removeEventListener("scroll", start);
-      window.removeEventListener("wheel", start);
-      window.removeEventListener("touchmove", start);
-      window.removeEventListener("touchstart", start);
-      window.removeEventListener("keydown", start);
-    };
-    window.addEventListener("scroll", start, { passive: true });
-    window.addEventListener("wheel", start, { passive: true });
-    window.addEventListener("touchmove", start, { passive: true });
-    window.addEventListener("touchstart", start, { passive: true });
-    window.addEventListener("keydown", start);
-    return () => {
-      window.removeEventListener("scroll", start);
-      window.removeEventListener("wheel", start);
-      window.removeEventListener("touchmove", start);
-      window.removeEventListener("touchstart", start);
-      window.removeEventListener("keydown", start);
-    };
-  }, [hasAudio]);
+  // Scroll-resume + first-gesture unlock are handled by useTemplateAudio.
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
