@@ -309,10 +309,8 @@ export const LumiereTemplate = ({
         console.error("[Lumiere] Error calling video.play():", err);
       }
     }
-    // Also kick the audio (some browsers require a fresh user gesture)
-    if (wedding.audio_url && audioRef.current) {
-      audioRef.current.play().catch(() => {});
-    }
+    // Audio playback is unified through useTemplateAudio; trigger the unlock.
+    handleTapToPlay();
   };
 
   useEffect(() => {
