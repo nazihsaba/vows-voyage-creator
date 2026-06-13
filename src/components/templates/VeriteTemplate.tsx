@@ -19,6 +19,8 @@ import { useArabicContent } from "@/hooks/useArabicContent";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { useHeroLoader } from "@/hooks/useHeroLoader";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface VeriteTemplateProps {
   wedding: any;
