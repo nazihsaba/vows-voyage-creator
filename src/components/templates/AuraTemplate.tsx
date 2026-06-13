@@ -69,13 +69,16 @@ export const AuraTemplate = ({
       const playPromise = audio.play();
       if (playPromise) {
         playPromise.catch(() => {
+          const events = ["scroll", "wheel", "touchmove", "touchstart", "pointerdown", "click", "keydown"];
           const playOnInteraction = () => {
             audio.play().catch(() => {});
-            document.removeEventListener("click", playOnInteraction);
-            document.removeEventListener("touchstart", playOnInteraction);
+            events.forEach((ev) =>
+              window.removeEventListener(ev, playOnInteraction, { capture: true } as any)
+            );
           };
-          document.addEventListener("click", playOnInteraction);
-          document.addEventListener("touchstart", playOnInteraction);
+          events.forEach((ev) =>
+            window.addEventListener(ev, playOnInteraction, { passive: true, capture: true } as any)
+          );
         });
       }
     }
