@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { prewarmOGCache } from "@/lib/prewarmOG";
-import { slugifyLinkName } from "@/lib/slugifyLinkName";
+import { getInvitationLinkSlug, slugifyLinkName } from "@/lib/slugifyLinkName";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -117,8 +117,8 @@ export const GenerateLinkDialog = ({
 
       if (inviteeError) throw inviteeError;
 
-      const sanitizedLinkNameForUrl = slugifyLinkName(linkName);
-      const generatedLink = `https://go.aureainvites.com/invite/${uniqueSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
+      const sanitizedLinkNameForUrl = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
+      const generatedLink = `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
       prewarmOGCache(generatedLink);
 
       toast({
@@ -242,11 +242,11 @@ export const GenerateLinkDialog = ({
       });
   };
 
-  const sanitizedLinkName = slugifyLinkName(linkName);
+  const sanitizedLinkName = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
 
   const previewUrl =
     uniqueSlug && linkName
-      ? `https://go.aureainvites.com/invite/${uniqueSlug}/${encodeURIComponent(sanitizedLinkName)}/${invitees.filter((n) => n.trim()).length}`
+      ? `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkName)}/${invitees.filter((n) => n.trim()).length}`
       : "";
 
   return (
@@ -313,7 +313,7 @@ export const GenerateLinkDialog = ({
                   value={uniqueSlug}
                   onChange={(e) => {
                     setSlugManuallyEdited(true);
-                    setUniqueSlug(e.target.value.toLowerCase().replace(/\s+/g, "-"));
+                    setUniqueSlug(slugifyLinkName(e.target.value));
                   }}
                   className="h-9 sm:h-10 text-sm rounded-lg"
                 />

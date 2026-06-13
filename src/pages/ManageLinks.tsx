@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getGenerationState, subscribeGeneration } from "@/lib/linkGenerationQueue";
-import { slugifyLinkName } from "@/lib/slugifyLinkName";
+import { getInvitationLinkSlug } from "@/lib/slugifyLinkName";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -535,10 +535,10 @@ const ManageLinks = () => {
     }
   };
 
-  const getInviteUrl = (linkName: string, numberOfPersons: number) => {
-    const sanitizedLinkName = slugifyLinkName(linkName);
+  const getInviteUrl = (link: InvitationLink) => {
+    const sanitizedLinkName = getInvitationLinkSlug(link);
     const siteOrigin = "https://go.aureainvites.com";
-    return `${siteOrigin}/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`;
   };
 
   // Shared invitation message used both for WhatsApp button and clipboard copy,
@@ -549,7 +549,7 @@ const ManageLinks = () => {
   };
 
   const copyToClipboard = async (link: InvitationLink) => {
-    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getInviteUrl(link);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
     await navigator.clipboard.writeText(message);
     markLinkSent(link);
@@ -575,7 +575,7 @@ const ManageLinks = () => {
   const openWhatsApp = (link: InvitationLink) => {
     const full = getFullPhone(link);
     if (!full) return;
-    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getInviteUrl(link);
     const message = buildInvitationMessage(link.link_name, inviteUrl);
     // Open the window synchronously FIRST so mobile browsers keep the user-gesture
     // and don't block the popup. Then update sent state asynchronously.
@@ -590,7 +590,7 @@ const ManageLinks = () => {
   const openWhatsAppFollowUp = (link: InvitationLink) => {
     const full = getFullPhone(link);
     if (!full) return;
-    const inviteUrl = getInviteUrl(link.link_name, link.number_of_persons);
+    const inviteUrl = getInviteUrl(link);
     const message = `Hi ${link.link_name} 😊\n\nJust a gentle reminder! We’d love to know if you’ll be joining us for our special day. 🌸\n\nIf you haven’t already, please confirm your attendance here:\n${inviteUrl}\n\nWe truly hope to see you there! ❤️`;
     const win = window.open(buildWhatsAppUrl(full, message), "_blank");
     if (!win) {
@@ -1532,9 +1532,8 @@ const ManageLinks = () => {
                                               size="icon"
                                               variant="ghost"
                                               onClick={() => {
-                                                const s = slugifyLinkName(link.link_name);
                                                 window.open(
-                                                  `/invite/${wedding?.slug}/${encodeURIComponent(s)}/${link.number_of_persons}`,
+                                                  getInviteUrl(link),
                                                   "_blank",
                                                 );
                                               }}
@@ -1784,9 +1783,8 @@ const ManageLinks = () => {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => {
-                                          const sanitizedLinkName = slugifyLinkName(link.link_name);
                                           window.open(
-                                            `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
+                                            getInviteUrl(link),
                                             "_blank",
                                           );
                                         }}
@@ -1863,9 +1861,8 @@ const ManageLinks = () => {
                                           <DropdownMenuItem
                                             onSelect={(e) => {
                                               e.preventDefault();
-                                              const sanitizedLinkName = slugifyLinkName(link.link_name);
                                               window.open(
-                                                `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
+                                                getInviteUrl(link),
                                                 "_blank",
                                               );
                                             }}

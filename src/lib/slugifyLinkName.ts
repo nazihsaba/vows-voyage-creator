@@ -8,10 +8,46 @@
  */
 export function slugifyLinkName(name: string): string {
   if (!name) return "";
-  return name
+  const decoded = decodeLinkSlug(name);
+
+  return decoded
     .toString()
     .normalize("NFKC")
     .toLowerCase()
     .replace(/[^\p{L}\p{N}]+/gu, "-")
     .replace(/^-+|-+$/g, "");
+}
+
+export function decodeLinkSlug(value: string): string {
+  try {
+    return decodeURIComponent(value);
+  } catch {
+    return value;
+  }
+}
+
+export function normalizeLinkSlug(value: string): string {
+  return decodeLinkSlug(value).normalize("NFKC").trim().toLowerCase();
+}
+
+export function getInvitationLinkSlug(link: { unique_slug?: string | null; link_name?: string | null }): string {
+  const explicitSlug = slugifyLinkName(link.unique_slug || "");
+  return explicitSlug || slugifyLinkName(link.link_name || "");
+}
+
+export function invitationLinkSlugMatches(
+  link: { unique_slug?: string | null; link_name?: string | null },
+  incomingSlug: string,
+): boolean {
+  const target = normalizeLinkSlug(incomingSlug);
+  const candidates = [
+    getInvitationLinkSlug(link),
+    slugifyLinkName(link.link_name || ""),
+    link.link_name || "",
+  ];
+
+  return candidates.some((candidate) => {
+    const normalized = normalizeLinkSlug(candidate);
+    return normalized === target || slugifyLinkName(normalized) === target;
+  });
 }
