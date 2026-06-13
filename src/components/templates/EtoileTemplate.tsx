@@ -20,6 +20,8 @@ import EtoileGallery from "./etoile/EtoileGallery";
 import EtoileGifts from "./etoile/EtoileGifts";
 import EtoileRsvp from "./etoile/EtoileRsvp";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface EtoileTemplateProps {
   wedding: any;
