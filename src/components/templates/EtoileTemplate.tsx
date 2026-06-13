@@ -84,7 +84,7 @@ export const EtoileTemplate = ({
     return () => clearInterval(interval);
   }, [nextSlide, carouselImages.length]);
 
-  const { showTapToPlay, handleTapToPlay } = useTemplateAudio(
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked } = useTemplateAudio(
     audioRef,
     wedding.audio_url,
     wedding.audio_start_time,
@@ -212,7 +212,7 @@ export const EtoileTemplate = ({
       {wedding.audio_url && (
         <>
           <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
-          <TapToPlayMusic visible={showTapToPlay} onTap={handleTapToPlay} />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
         </>
       )}
 

@@ -22,11 +22,14 @@ export const useTemplateAudio = (
   audioStartTime: number | null | undefined,
 ) => {
   const [showTapToPlay, setShowTapToPlay] = useState(false);
+  const [isMusicUnlocked, setIsMusicUnlocked] = useState(false);
   const unlockedRef = useRef(false);
 
   useEffect(() => {
     if (!audioUrl || !audioRef.current) return;
     const audio = audioRef.current;
+    unlockedRef.current = false;
+    setIsMusicUnlocked(false);
     audio.currentTime = audioStartTime || 0;
     audio.loop = true;
     audio.volume = 0.5;
@@ -35,10 +38,18 @@ export const useTemplateAudio = (
     let started = false;
 
     const safePlay = () => {
-      const p = audio.play();
+      let p: Promise<void> | void;
+      try {
+        p = audio.play();
+      } catch {
+        return;
+      }
       if (p && typeof p.then === "function") {
         p.then(() => {
-          if (!audio.paused) started = true;
+          if (!audio.paused) {
+            started = true;
+            if (!ios) setIsMusicUnlocked(true);
+          }
         }).catch(() => {});
       }
     };
@@ -64,14 +75,13 @@ export const useTemplateAudio = (
       return cleanup;
     }
 
-    // Non-iOS: show tap-to-play, unlock on first user tap, then let scroll resume playback
+    // Non-iOS: keep a visible music control, unlock on first user tap, then let scroll resume playback
     setShowTapToPlay(true);
 
     const onFirstTap = () => {
       if (unlockedRef.current) return;
       unlockedRef.current = true;
       safePlay();
-      setShowTapToPlay(false);
       window.removeEventListener("pointerdown", onFirstTap, { capture: true } as any);
       window.removeEventListener("touchstart", onFirstTap, { capture: true } as any);
       window.removeEventListener("click", onFirstTap, { capture: true } as any);
@@ -99,10 +109,16 @@ export const useTemplateAudio = (
     const audio = audioRef.current;
     if (!audio) return;
     unlockedRef.current = true;
-    const p = audio.play();
-    if (p && typeof p.then === "function") p.catch(() => {});
-    setShowTapToPlay(false);
+    let p: Promise<void> | void;
+    try {
+      p = audio.play();
+    } catch {
+      return;
+    }
+    if (p && typeof p.then === "function") {
+      p.then(() => setIsMusicUnlocked(true)).catch(() => {});
+    }
   };
 
-  return { showTapToPlay, handleTapToPlay };
+  return { showTapToPlay, handleTapToPlay, isMusicUnlocked };
 };

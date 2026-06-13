@@ -62,7 +62,7 @@ export const AuraTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  const { showTapToPlay, handleTapToPlay } = useTemplateAudio(
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked } = useTemplateAudio(
     audioRef,
     wedding.audio_url,
     wedding.audio_start_time,
@@ -173,7 +173,7 @@ export const AuraTemplate = ({
       {wedding.audio_url && (
         <>
           <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
-          <TapToPlayMusic visible={showTapToPlay} onTap={handleTapToPlay} />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
         </>
       )}
 
