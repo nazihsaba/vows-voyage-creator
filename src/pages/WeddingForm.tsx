@@ -32,6 +32,7 @@ import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
+import NotificationEmailsField from "@/components/NotificationEmailsField";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
 
