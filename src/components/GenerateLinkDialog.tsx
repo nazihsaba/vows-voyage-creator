@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { prewarmOGCache } from "@/lib/prewarmOG";
+import { slugifyLinkName } from "@/lib/slugifyLinkName";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -51,11 +52,7 @@ export const GenerateLinkDialog = ({
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
     if (!slugManuallyEdited) {
-      const autoSlug = value
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "");
-      setUniqueSlug(autoSlug);
+      setUniqueSlug(slugifyLinkName(value));
     }
   };
 
@@ -120,11 +117,8 @@ export const GenerateLinkDialog = ({
 
       if (inviteeError) throw inviteeError;
 
-      const sanitizedLinkNameForUrl = linkName
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-      const generatedLink = `https://go.aureainvites.com/invite/${uniqueSlug}/${sanitizedLinkNameForUrl}/${validInvitees.length}`;
+      const sanitizedLinkNameForUrl = slugifyLinkName(linkName);
+      const generatedLink = `https://go.aureainvites.com/invite/${uniqueSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
       prewarmOGCache(generatedLink);
 
       toast({
@@ -248,14 +242,11 @@ export const GenerateLinkDialog = ({
       });
   };
 
-  const sanitizedLinkName = linkName
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
+  const sanitizedLinkName = slugifyLinkName(linkName);
 
   const previewUrl =
     uniqueSlug && linkName
-      ? `https://go.aureainvites.com/invite/${uniqueSlug}/${sanitizedLinkName}/${invitees.filter((n) => n.trim()).length}`
+      ? `https://go.aureainvites.com/invite/${uniqueSlug}/${encodeURIComponent(sanitizedLinkName)}/${invitees.filter((n) => n.trim()).length}`
       : "";
 
   return (

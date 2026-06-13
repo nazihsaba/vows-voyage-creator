@@ -15,6 +15,7 @@ import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
 import waxSealHeart from "@/assets/wax-seal-heart.webp";
 import paperTexture from "@/assets/envelope-paper-texture.jpeg";
 import { parseLocalDate } from "@/lib/weddingDate";
+import { slugifyLinkName } from "@/lib/slugifyLinkName";
 
 const WeddingInvite = () => {
   const { slug, linkSlug, numberOfPersons } = useParams();
@@ -250,12 +251,11 @@ const WeddingInvite = () => {
             .select("*")
             .eq("wedding_id", weddingData.id);
 
+          let decodedLinkSlug = linkSlug;
+          try { decodedLinkSlug = decodeURIComponent(linkSlug); } catch { /* keep as-is */ }
           const linkData = allLinks?.find((link: any) => {
-            const sanitizedLinkName = link.link_name
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, '-')
-              .replace(/^-+|-+$/g, '');
-            return sanitizedLinkName === linkSlug;
+            const sanitizedLinkName = slugifyLinkName(link.link_name);
+            return sanitizedLinkName === decodedLinkSlug;
           });
 
           if (linkData) {

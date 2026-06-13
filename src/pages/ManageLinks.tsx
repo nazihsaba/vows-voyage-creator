@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { getGenerationState, subscribeGeneration } from "@/lib/linkGenerationQueue";
+import { slugifyLinkName } from "@/lib/slugifyLinkName";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { useNavigate, useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -535,12 +536,9 @@ const ManageLinks = () => {
   };
 
   const getInviteUrl = (linkName: string, numberOfPersons: number) => {
-    const sanitizedLinkName = linkName
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+    const sanitizedLinkName = slugifyLinkName(linkName);
     const siteOrigin = "https://go.aureainvites.com";
-    return `${siteOrigin}/invite/${wedding?.slug}/${sanitizedLinkName}/${numberOfPersons}`;
+    return `${siteOrigin}/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${numberOfPersons}`;
   };
 
   // Shared invitation message used both for WhatsApp button and clipboard copy,
@@ -1534,12 +1532,9 @@ const ManageLinks = () => {
                                               size="icon"
                                               variant="ghost"
                                               onClick={() => {
-                                                const s = link.link_name
-                                                  .toLowerCase()
-                                                  .replace(/[^a-z0-9]+/g, "-")
-                                                  .replace(/^-+|-+$/g, "");
+                                                const s = slugifyLinkName(link.link_name);
                                                 window.open(
-                                                  `/invite/${wedding?.slug}/${s}/${link.number_of_persons}`,
+                                                  `/invite/${wedding?.slug}/${encodeURIComponent(s)}/${link.number_of_persons}`,
                                                   "_blank",
                                                 );
                                               }}
@@ -1789,12 +1784,9 @@ const ManageLinks = () => {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => {
-                                          const sanitizedLinkName = link.link_name
-                                            .toLowerCase()
-                                            .replace(/[^a-z0-9]+/g, "-")
-                                            .replace(/^-+|-+$/g, "");
+                                          const sanitizedLinkName = slugifyLinkName(link.link_name);
                                           window.open(
-                                            `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                            `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
                                             "_blank",
                                           );
                                         }}
@@ -1871,12 +1863,9 @@ const ManageLinks = () => {
                                           <DropdownMenuItem
                                             onSelect={(e) => {
                                               e.preventDefault();
-                                              const sanitizedLinkName = link.link_name
-                                                .toLowerCase()
-                                                .replace(/[^a-z0-9]+/g, "-")
-                                                .replace(/^-+|-+$/g, "");
+                                              const sanitizedLinkName = slugifyLinkName(link.link_name);
                                               window.open(
-                                                `/invite/${wedding?.slug}/${sanitizedLinkName}/${link.number_of_persons}`,
+                                                `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
                                                 "_blank",
                                               );
                                             }}
