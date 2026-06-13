@@ -51,11 +51,7 @@ export const GenerateLinkDialog = ({
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
     if (!slugManuallyEdited) {
-      const autoSlug = value
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "");
-      setUniqueSlug(autoSlug);
+      setUniqueSlug(slugifyLinkName(value));
     }
   };
 
