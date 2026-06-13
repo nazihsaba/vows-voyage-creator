@@ -193,27 +193,7 @@ export const TresorTemplate = ({
     };
   }, []);
 
-  // Audio
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
-    const tryPlay = () => audio.play().catch(() => {});
-    tryPlay();
-    const unlock = () => {
-      tryPlay();
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("click", unlock);
-    };
-    window.addEventListener("touchstart", unlock, { passive: true });
-    window.addEventListener("click", unlock);
-    return () => {
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("click", unlock);
-    };
-  }, [wedding.audio_url, wedding.audio_start_time]);
+  // Audio playback is owned by useTemplateAudio above.
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
