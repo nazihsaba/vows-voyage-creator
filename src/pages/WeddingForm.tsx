@@ -1571,17 +1571,13 @@ const WeddingForm = () => {
                   <p className="text-xs text-muted-foreground">
                     Guest RSVPs and their wishes will be sent to these addresses.
                   </p>
-                  {(() => {
-                    const emails = (formData.notification_email || "")
-                      .split(",")
-                      .map((s) => s.trim());
-                    const list = emails.length === 0 ? [""] : emails;
-                    const updateList = (next: string[]) => {
-                      setFormData({
-                        ...formData,
-                        notification_email: next.map((s) => s.trim()).filter(Boolean).join(", "),
-                      });
-                    };
+                  <NotificationEmailsField
+                    value={formData.notification_email || ""}
+                    onChange={(v) => setFormData({ ...formData, notification_email: v })}
+                  />
+                  {false && (() => {
+                    const list: string[] = [];
+                    const updateList = (_n: string[]) => {};
                     return (
                       <div className="space-y-2">
                         {list.map((email, idx) => (
