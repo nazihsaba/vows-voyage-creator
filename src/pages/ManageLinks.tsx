@@ -1532,9 +1532,8 @@ const ManageLinks = () => {
                                               size="icon"
                                               variant="ghost"
                                               onClick={() => {
-                                                const s = slugifyLinkName(link.link_name);
                                                 window.open(
-                                                  `/invite/${wedding?.slug}/${encodeURIComponent(s)}/${link.number_of_persons}`,
+                                                  getInviteUrl(link),
                                                   "_blank",
                                                 );
                                               }}
@@ -1784,9 +1783,8 @@ const ManageLinks = () => {
                                         size="icon"
                                         variant="ghost"
                                         onClick={() => {
-                                          const sanitizedLinkName = slugifyLinkName(link.link_name);
                                           window.open(
-                                            `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
+                                            getInviteUrl(link),
                                             "_blank",
                                           );
                                         }}
@@ -1863,9 +1861,8 @@ const ManageLinks = () => {
                                           <DropdownMenuItem
                                             onSelect={(e) => {
                                               e.preventDefault();
-                                              const sanitizedLinkName = slugifyLinkName(link.link_name);
                                               window.open(
-                                                `/invite/${wedding?.slug}/${encodeURIComponent(sanitizedLinkName)}/${link.number_of_persons}`,
+                                                getInviteUrl(link),
                                                 "_blank",
                                               );
                                             }}
