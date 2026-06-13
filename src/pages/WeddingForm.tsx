@@ -1575,50 +1575,6 @@ const WeddingForm = () => {
                     value={formData.notification_email || ""}
                     onChange={(v) => setFormData({ ...formData, notification_email: v })}
                   />
-                  {false && (() => {
-                    const list: string[] = [];
-                    const updateList = (_n: string[]) => {};
-                    return (
-                      <div className="space-y-2">
-                        {list.map((email, idx) => (
-                          <div key={idx} className="flex gap-2">
-                            <Input
-                              type="email"
-                              placeholder={idx === 0 ? "you@example.com" : "additional@example.com"}
-                              value={email}
-                              onChange={(e) => {
-                                const next = [...list];
-                                next[idx] = e.target.value;
-                                updateList(next);
-                              }}
-                            />
-                            {list.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => updateList(list.filter((_, i) => i !== idx))}
-                                aria-label="Remove email"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        ))}
-                        {list.length < 2 && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => updateList([...list, ""])}
-                          >
-                            <Plus className="h-4 w-4 mr-1" />
-                            Add another email
-                          </Button>
-                        )}
-                      </div>
-                    );
-                  })()}
                 </div>
               )}
 
