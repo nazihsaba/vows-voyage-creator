@@ -90,9 +90,6 @@ export const EtoileTemplate = ({
     wedding.audio_start_time,
   );
 
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
-  }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
