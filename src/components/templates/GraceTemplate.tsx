@@ -20,6 +20,8 @@ import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface GraceTemplateProps {
   wedding: any;
