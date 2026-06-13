@@ -318,10 +318,7 @@ export const OpulenceTemplate = ({
 
   const handleStart = () => {
     setStarted(true);
-    if (audioRef.current) {
-      audioRef.current.currentTime = wedding.audio_start_time || 0;
-      audioRef.current.play().catch(() => {});
-    }
+    handleTapToPlay();
   };
 
   const weddingDate = parseLocalDate(wedding.wedding_date);
