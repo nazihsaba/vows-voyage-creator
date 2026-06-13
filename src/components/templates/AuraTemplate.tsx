@@ -68,7 +68,7 @@ export const AuraTemplate = ({
     audio.volume = 0.5;
 
     let started = false;
-    const events = ["scroll", "wheel", "touchmove", "touchstart", "pointerdown", "click", "keydown"];
+    const events = ["scroll", "wheel"];
     const cleanup = () => {
       events.forEach((ev) =>
         window.removeEventListener(ev, tryStart, { capture: true } as any)
