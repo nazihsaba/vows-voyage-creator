@@ -215,9 +215,7 @@ export const VeritePreview = () => {
           <AnimatedSection animation="fade-up">
             <div>
               <h2 className="text-template-subtitle mb-6 text-primary">Wedding Events</h2>
-              <p className="text-template-body max-w-2xl mx-auto">
-                Join us in celebrating this special day
-              </p>
+              <p className="text-template-body max-w-2xl mx-auto">Join us in celebrating this special day</p>
             </div>
           </AnimatedSection>
 
@@ -289,7 +287,7 @@ export const VeritePreview = () => {
           <div className="max-w-4xl mx-auto">
             <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
             <p className="text-center text-template-body mb-8 text-gray-600">
-              Your presence is our biggest gift. For those who desire a wedding list was set up:
+              Your presence is our biggest gift. For those who desire, a wedding list was set up:
             </p>
             <div className="grid gap-4 md:grid-cols-2">
               {staticGiftCards.map((card, index) => (

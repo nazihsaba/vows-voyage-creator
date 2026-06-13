@@ -32,10 +32,14 @@ export const GiftCardsNoBackground = ({ giftCards, isOwner = false }: GiftCardsN
         <div className="text-center mb-12">
           <Gift className="w-12 h-12 text-white mx-auto mb-4" />
           <h2 className="text-template-subtitle mb-6 text-white">Wedding Gift</h2>
-          <p className="text-lg text-white">Your presence is our biggest gift. For those who desire a wedding list was set up:</p>
+          <p className="text-lg text-white">
+            Your presence is our biggest gift. For those who desire, a wedding list was set up:
+          </p>
         </div>
 
-        <div className={`grid gap-6 ${giftCards.length === 1 ? "md:grid-cols-1 md:max-w-md md:mx-auto" : "md:grid-cols-2"}`}>
+        <div
+          className={`grid gap-6 ${giftCards.length === 1 ? "md:grid-cols-1 md:max-w-md md:mx-auto" : "md:grid-cols-2"}`}
+        >
           {giftCards.map((card) => (
             <Card key={card.id} className="shadow-soft bg-gray-50 border border-gray-200">
               <CardContent className="p-6">

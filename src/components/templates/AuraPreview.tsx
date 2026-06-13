@@ -103,9 +103,7 @@ export const AuraPreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
-                <p className="text-xl font-semibold tracking-wide text-primary">
-                  Saturday, August 16th, 2026
-                </p>
+                <p className="text-xl font-semibold tracking-wide text-primary">Saturday, August 16th, 2026</p>
               </div>
             </div>
           </div>
@@ -176,19 +174,17 @@ export const AuraPreview = () => {
             <h2 className="text-template-subtitle text-center text-primary mb-8">Our Moments</h2>
           </AnimatedSection>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-2xl mx-auto">
-            {[doree1, doree2, doree3, doree4, doree5, doree6].map(
-              (src, index) => (
-                <AnimatedSection key={index} delay={index * 80} animation="scale-in">
-                  <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
-                    <img
-                      src={src}
-                      alt={`Wedding moment ${index + 1}`}
-                      className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
-                    />
-                  </div>
-                </AnimatedSection>
-              ),
-            )}
+            {[doree1, doree2, doree3, doree4, doree5, doree6].map((src, index) => (
+              <AnimatedSection key={index} delay={index * 80} animation="scale-in">
+                <div className="aspect-square overflow-hidden rounded-lg shadow-soft bg-muted">
+                  <img
+                    src={src}
+                    alt={`Wedding moment ${index + 1}`}
+                    className="w-full h-full object-cover hover:scale-110 transition-transform duration-500"
+                  />
+                </div>
+              </AnimatedSection>
+            ))}
           </div>
         </section>
 
@@ -198,7 +194,7 @@ export const AuraPreview = () => {
             <AnimatedSection animation="fade-in">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">Wedding Gift</h2>
               <p className="text-center text-template-body mb-8 text-muted-foreground">
-                Your presence is our biggest gift. For those who desire a wedding list was set up:
+                Your presence is our biggest gift. For those who desire, a wedding list was set up:
               </p>
             </AnimatedSection>
             <div className="grid gap-4 md:grid-cols-2">
