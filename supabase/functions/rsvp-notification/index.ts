@@ -44,22 +44,31 @@ Deno.serve(async (req) => {
       });
     }
 
-    let recipientEmail = (wedding.notification_email || "").trim();
+    const rawRecipients = (wedding.notification_email || "").trim();
+    let recipientList: string[] = rawRecipients
+      ? rawRecipients.split(/[,;\s]+/).map((s) => s.trim()).filter(Boolean)
+      : [];
 
-    if (!recipientEmail) {
+    if (recipientList.length === 0) {
       const { data: profile } = await supabase
         .from("profiles")
         .select("email")
         .eq("id", wedding.user_id)
         .maybeSingle();
-      recipientEmail = profile?.email || "";
+      if (profile?.email) recipientList = [profile.email];
     }
 
-    if (!recipientEmail) {
+    // Basic email shape filter
+    recipientList = recipientList.filter((e) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e));
+
+    if (recipientList.length === 0) {
       return new Response(JSON.stringify({ ok: true, skipped: "no recipient email" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
+    const recipientEmail = recipientList.join(", ");
+
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     const GOOGLE_MAIL_API_KEY = Deno.env.get("GOOGLE_MAIL_API_KEY");
