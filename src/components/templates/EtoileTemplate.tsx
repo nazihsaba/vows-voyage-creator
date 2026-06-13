@@ -84,7 +84,7 @@ export const EtoileTemplate = ({
     return () => clearInterval(interval);
   }, [nextSlide, carouselImages.length]);
 
-  const { showTapToPlay, handleTapToPlay, isMusicUnlocked } = useTemplateAudio(
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
     wedding.audio_url,
     wedding.audio_start_time,
