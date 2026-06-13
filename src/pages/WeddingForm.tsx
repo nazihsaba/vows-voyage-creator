@@ -1566,15 +1566,15 @@ const WeddingForm = () => {
               {formData.wishes_enabled && (
                 <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
                   <Label htmlFor="notification_email" className="text-sm font-medium">
-                    RSVP Notification Email *
+                    RSVP Notification Email(s) *
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Guest RSVPs and their wishes will be sent to this email address.
+                    Guest RSVPs and their wishes will be sent to these addresses. Separate multiple emails with a comma.
                   </p>
                   <Input
                     id="notification_email"
-                    type="email"
-                    placeholder="you@example.com"
+                    type="text"
+                    placeholder="you@example.com, partner@example.com"
                     value={formData.notification_email || ""}
                     onChange={(e) => setFormData({ ...formData, notification_email: e.target.value })}
                   />
