@@ -14,6 +14,8 @@ import tresorCover from "@/assets/tresor-cover.jpeg";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
 import { TresorRsvpSlide } from "@/components/templates/tresor/TresorRsvpSlide";
 
