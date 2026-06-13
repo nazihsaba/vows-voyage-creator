@@ -20,6 +20,8 @@ import EtoileGallery from "./etoile/EtoileGallery";
 import EtoileGifts from "./etoile/EtoileGifts";
 import EtoileRsvp from "./etoile/EtoileRsvp";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface EtoileTemplateProps {
   wedding: any;
@@ -82,36 +84,12 @@ export const EtoileTemplate = ({
     return () => clearInterval(interval);
   }, [nextSlide, carouselImages.length]);
 
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
+  const { showTapToPlay, handleTapToPlay } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
 
-    let started = false;
-    const events = ["scroll", "wheel"];
-    const cleanup = () => {
-      events.forEach((ev) =>
-        window.removeEventListener(ev, tryStart, { capture: true } as any)
-      );
-    };
-    const tryStart = () => {
-      if (started) { cleanup(); return; }
-      const p = audio.play();
-      if (p && typeof p.then === "function") {
-        p.then(() => {
-          if (!audio.paused) { started = true; cleanup(); }
-        }).catch(() => {});
-      }
-    };
-
-    tryStart();
-    events.forEach((ev) =>
-      window.addEventListener(ev, tryStart, { passive: true, capture: true } as any)
-    );
-    return cleanup;
-  }, [wedding.audio_url, wedding.audio_start_time]);
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
@@ -232,7 +210,10 @@ export const EtoileTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+        <>
+          <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+          <TapToPlayMusic visible={showTapToPlay} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Layer 1: Fixed background carousel */}

@@ -16,6 +16,8 @@ import LanguageToggle from "@/components/templates/LanguageToggle";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface AuraTemplateProps {
   wedding: any;
@@ -60,38 +62,11 @@ export const AuraTemplate = ({
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
-
-    let started = false;
-    const events = ["scroll", "wheel"];
-    const cleanup = () => {
-      events.forEach((ev) =>
-        window.removeEventListener(ev, tryStart, { capture: true } as any)
-      );
-    };
-    const tryStart = () => {
-      if (started) { cleanup(); return; }
-      const p = audio.play();
-      if (p && typeof p.then === "function") {
-        p.then(() => {
-          if (!audio.paused) { started = true; cleanup(); }
-        }).catch(() => {});
-      }
-    };
-
-    // attempt immediate autoplay
-    tryStart();
-    // always also attach interaction listeners (Android may resolve play() but stay silent)
-    events.forEach((ev) =>
-      window.addEventListener(ev, tryStart, { passive: true, capture: true } as any)
-    );
-    return cleanup;
-  }, [wedding.audio_url, wedding.audio_start_time]);
+  const { showTapToPlay, handleTapToPlay } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
 
   useEffect(() => {
     return () => { document.documentElement.dir = 'ltr'; };
@@ -196,7 +171,10 @@ export const AuraTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+        <>
+          <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+          <TapToPlayMusic visible={showTapToPlay} onTap={handleTapToPlay} />
+        </>
       )}
 
       <div>
