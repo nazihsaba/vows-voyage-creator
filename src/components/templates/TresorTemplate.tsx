@@ -314,7 +314,10 @@ export const TresorTemplate = ({
     >
       {/* Audio */}
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} onTimeUpdate={handleTimeUpdate} playsInline className="hidden" />
+        <>
+          <audio ref={setAudioElement} src={wedding.audio_url} onTimeUpdate={handleTimeUpdate} playsInline className="hidden" />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Embla viewport — paper-fold like transition */}
