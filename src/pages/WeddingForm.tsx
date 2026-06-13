@@ -32,6 +32,7 @@ import { Icon } from "@iconify/react";
 import AudioTrimField from "@/components/AudioTrimField";
 import MainPhotoPositionSlider from "@/components/MainPhotoPositionSlider";
 import GalleryImageEditor from "@/components/GalleryImageEditor";
+import NotificationEmailsField from "@/components/NotificationEmailsField";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
 
@@ -1571,58 +1572,10 @@ const WeddingForm = () => {
                   <p className="text-xs text-muted-foreground">
                     Guest RSVPs and their wishes will be sent to these addresses.
                   </p>
-                  {(() => {
-                    const emails = (formData.notification_email || "")
-                      .split(",")
-                      .map((s) => s.trim());
-                    const list = emails.length === 0 ? [""] : emails;
-                    const updateList = (next: string[]) => {
-                      setFormData({
-                        ...formData,
-                        notification_email: next.map((s) => s.trim()).filter(Boolean).join(", "),
-                      });
-                    };
-                    return (
-                      <div className="space-y-2">
-                        {list.map((email, idx) => (
-                          <div key={idx} className="flex gap-2">
-                            <Input
-                              type="email"
-                              placeholder={idx === 0 ? "you@example.com" : "additional@example.com"}
-                              value={email}
-                              onChange={(e) => {
-                                const next = [...list];
-                                next[idx] = e.target.value;
-                                updateList(next);
-                              }}
-                            />
-                            {list.length > 1 && (
-                              <Button
-                                type="button"
-                                variant="outline"
-                                size="icon"
-                                onClick={() => updateList(list.filter((_, i) => i !== idx))}
-                                aria-label="Remove email"
-                              >
-                                <X className="h-4 w-4" />
-                              </Button>
-                            )}
-                          </div>
-                        ))}
-                        {list.length < 2 && (
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => updateList([...list, ""])}
-                          >
-                            <Plus className="h-4 w-4 mr-1" />
-                            Add another email
-                          </Button>
-                        )}
-                      </div>
-                    );
-                  })()}
+                  <NotificationEmailsField
+                    value={formData.notification_email || ""}
+                    onChange={(v) => setFormData({ ...formData, notification_email: v })}
+                  />
                 </div>
               )}
 
