@@ -1565,19 +1565,64 @@ const WeddingForm = () => {
 
               {formData.wishes_enabled && (
                 <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
-                  <Label htmlFor="notification_email" className="text-sm font-medium">
+                  <Label className="text-sm font-medium">
                     RSVP Notification Email(s) *
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Guest RSVPs and their wishes will be sent to these addresses. Separate multiple emails with a comma.
+                    Guest RSVPs and their wishes will be sent to these addresses.
                   </p>
-                  <Input
-                    id="notification_email"
-                    type="text"
-                    placeholder="you@example.com, partner@example.com"
-                    value={formData.notification_email || ""}
-                    onChange={(e) => setFormData({ ...formData, notification_email: e.target.value })}
-                  />
+                  {(() => {
+                    const emails = (formData.notification_email || "")
+                      .split(",")
+                      .map((s) => s.trim());
+                    const list = emails.length === 0 ? [""] : emails;
+                    const updateList = (next: string[]) => {
+                      setFormData({
+                        ...formData,
+                        notification_email: next.map((s) => s.trim()).filter(Boolean).join(", "),
+                      });
+                    };
+                    return (
+                      <div className="space-y-2">
+                        {list.map((email, idx) => (
+                          <div key={idx} className="flex gap-2">
+                            <Input
+                              type="email"
+                              placeholder={idx === 0 ? "you@example.com" : "additional@example.com"}
+                              value={email}
+                              onChange={(e) => {
+                                const next = [...list];
+                                next[idx] = e.target.value;
+                                updateList(next);
+                              }}
+                            />
+                            {list.length > 1 && (
+                              <Button
+                                type="button"
+                                variant="outline"
+                                size="icon"
+                                onClick={() => updateList(list.filter((_, i) => i !== idx))}
+                                aria-label="Remove email"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            )}
+                          </div>
+                        ))}
+                        {list.length < 2 && (
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={() => updateList([...list, ""])}
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            Add another email
+                          </Button>
+                        )}
+                      </div>
+                    );
+                  })()}
                 </div>
               )}
 
