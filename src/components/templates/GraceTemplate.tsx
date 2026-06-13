@@ -187,22 +187,8 @@ export const GraceTemplate = ({
       console.warn("[Grace] videoRef.current is null on tap");
     }
 
-    // 2) Play the audio track (if configured)
-    if (wedding.audio_url && audioRef.current) {
-      const audio = audioRef.current;
-      const startTime = wedding.audio_start_time || 0;
-      if (startTime > 0) {
-        audio.currentTime = startTime;
-        await new Promise<void>((resolve) => {
-          audio.addEventListener("seeked", () => resolve(), { once: true });
-        });
-      }
-      try {
-        await audio.play();
-      } catch (err) {
-        console.log("Audio playback failed:", err);
-      }
-    }
+    // 2) Play the audio track via the shared controller
+    handleTapToPlay();
 
     setTimeout(() => {
       document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
