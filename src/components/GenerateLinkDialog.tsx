@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { prewarmOGCache } from "@/lib/prewarmOG";
-import { slugifyLinkName } from "@/lib/slugifyLinkName";
+import { getInvitationLinkSlug, slugifyLinkName } from "@/lib/slugifyLinkName";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -117,7 +117,7 @@ export const GenerateLinkDialog = ({
 
       if (inviteeError) throw inviteeError;
 
-      const sanitizedLinkNameForUrl = slugifyLinkName(linkName);
+      const sanitizedLinkNameForUrl = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
       const generatedLink = `https://go.aureainvites.com/invite/${uniqueSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
       prewarmOGCache(generatedLink);
 
@@ -242,7 +242,7 @@ export const GenerateLinkDialog = ({
       });
   };
 
-  const sanitizedLinkName = slugifyLinkName(linkName);
+  const sanitizedLinkName = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
 
   const previewUrl =
     uniqueSlug && linkName
