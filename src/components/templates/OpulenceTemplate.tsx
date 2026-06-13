@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface OpulenceTemplateProps {
   wedding: any;
@@ -272,6 +274,11 @@ export const OpulenceTemplate = ({
   submittingRsvp = false,
 }: OpulenceTemplateProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const [started, setStarted] = useState(false);
 
   // Lock body scroll until started
@@ -311,10 +318,7 @@ export const OpulenceTemplate = ({
 
   const handleStart = () => {
     setStarted(true);
-    if (audioRef.current) {
-      audioRef.current.currentTime = wedding.audio_start_time || 0;
-      audioRef.current.play().catch(() => {});
-    }
+    handleTapToPlay();
   };
 
   const weddingDate = parseLocalDate(wedding.wedding_date);
@@ -336,7 +340,10 @@ export const OpulenceTemplate = ({
       }}
     >
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+        <>
+          <audio ref={setAudioElement} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Curtains persist across entire template */}

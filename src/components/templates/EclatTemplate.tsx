@@ -19,6 +19,8 @@ import { useArabicContent } from "@/hooks/useArabicContent";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { useHeroLoader } from "@/hooks/useHeroLoader";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface EclatTemplateProps {
   wedding: any;
@@ -60,7 +62,12 @@ export const EclatTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
   const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
@@ -77,17 +84,7 @@ export const EclatTemplate = ({
 
   const handleStart = async () => {
     setHasStarted(true);
-    if (audioRef.current && wedding.audio_url) {
-      const audio = audioRef.current;
-      const startTime = wedding.audio_start_time || 0;
-      if (startTime > 0) {
-        audio.currentTime = startTime;
-        await new Promise<void>((resolve) => {
-          audio.addEventListener("seeked", () => resolve(), { once: true });
-        });
-      }
-      audio.play().catch((err) => console.error("Error playing audio:", err));
-    }
+    handleTapToPlay();
     document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
@@ -163,9 +160,12 @@ export const EclatTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} loop onTimeUpdate={handleTimeUpdate}>
-          <source src={wedding.audio_url} type="audio/mpeg" />
-        </audio>
+        <>
+          <audio ref={setAudioElement} loop onTimeUpdate={handleTimeUpdate}>
+            <source src={wedding.audio_url} type="audio/mpeg" />
+          </audio>
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       <div>

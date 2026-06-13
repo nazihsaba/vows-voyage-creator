@@ -14,6 +14,8 @@ import tresorCover from "@/assets/tresor-cover.jpeg";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 import DayProgramme, { type DayEvent } from "@/components/templates/DayProgramme";
 import { TresorRsvpSlide } from "@/components/templates/tresor/TresorRsvpSlide";
 
@@ -58,6 +60,11 @@ export const TresorTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
@@ -186,27 +193,7 @@ export const TresorTemplate = ({
     };
   }, []);
 
-  // Audio
-  useEffect(() => {
-    if (!wedding.audio_url || !audioRef.current) return;
-    const audio = audioRef.current;
-    audio.currentTime = wedding.audio_start_time || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
-    const tryPlay = () => audio.play().catch(() => {});
-    tryPlay();
-    const unlock = () => {
-      tryPlay();
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("click", unlock);
-    };
-    window.addEventListener("touchstart", unlock, { passive: true });
-    window.addEventListener("click", unlock);
-    return () => {
-      window.removeEventListener("touchstart", unlock);
-      window.removeEventListener("click", unlock);
-    };
-  }, [wedding.audio_url, wedding.audio_start_time]);
+  // Audio playback is owned by useTemplateAudio above.
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
@@ -327,7 +314,10 @@ export const TresorTemplate = ({
     >
       {/* Audio */}
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} onTimeUpdate={handleTimeUpdate} playsInline className="hidden" />
+        <>
+          <audio ref={setAudioElement} src={wedding.audio_url} onTimeUpdate={handleTimeUpdate} playsInline className="hidden" />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Embla viewport — paper-fold like transition */}

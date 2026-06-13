@@ -20,6 +20,8 @@ import LumiereTornCard from "./lumiere/LumiereTornCard";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { DEFAULT_TEMPLATE_FONTS, type TemplateFonts } from "@/components/FontCustomizer";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface LumiereTemplateProps {
   wedding: any;
@@ -96,6 +98,11 @@ export const LumiereTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoUrl = wedding.video_url || wedding.hero_media;
   const hasVideo = !!videoUrl;
@@ -302,92 +309,11 @@ export const LumiereTemplate = ({
         console.error("[Lumiere] Error calling video.play():", err);
       }
     }
-    // Also kick the audio (some browsers require a fresh user gesture)
-    if (wedding.audio_url && audioRef.current) {
-      audioRef.current.play().catch(() => {});
-    }
+    // Audio playback is unified through useTemplateAudio; trigger the unlock.
+    handleTapToPlay();
   };
 
-  useEffect(() => {
-    if (!hasVideo && !hasAudio) return;
-    const audio = audioRef.current;
-    if (audio) {
-      audio.currentTime = wedding.audio_start_time || 0;
-      audio.loop = true;
-      audio.muted = false;
-      audio.volume = 0.5;
-    }
-
-    let cancelled = false;
-    const video = videoRef.current;
-    let audioPlaying = !hasAudio || (!!audio && !audio.paused);
-    let videoPlaying = !hasVideo || (!!video && !video.paused);
-    let videoStable = !hasVideo || (!!video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET));
-    const releaseWhenPlaying = () => {
-      if (!cancelled && audioPlaying && videoPlaying && videoStable) {
-        setMediaPlaybackReady(true);
-      }
-    };
-    const tryPlay = () => {
-      if (cancelled) return;
-      if (!audio) {
-        audioPlaying = true;
-        releaseWhenPlaying();
-        return;
-      }
-      const p = audio.play();
-      if (p) {
-        p.then(() => {
-          audioPlaying = true;
-          releaseWhenPlaying();
-        }).catch(() => {});
-      } else {
-        audioPlaying = true;
-        releaseWhenPlaying();
-      }
-    };
-
-    const onVideoPlaying = () => {
-      videoPlaying = true;
-      window.setTimeout(() => {
-        if (!cancelled && video && !video.paused && !video.ended && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
-          videoStable = true;
-          tryPlay();
-          releaseWhenPlaying();
-        }
-      }, 260);
-    };
-    const checkVideoStable = () => {
-      if (video && !video.paused && isMediaReadyForReveal(video, VIDEO_BUFFER_TARGET)) {
-        videoPlaying = true;
-        videoStable = true;
-        tryPlay();
-        releaseWhenPlaying();
-      }
-    };
-    if (video) video.addEventListener("playing", onVideoPlaying);
-    if (video) video.addEventListener("progress", checkVideoStable);
-    if (video) video.addEventListener("canplaythrough", checkVideoStable);
-    if (video) video.addEventListener("timeupdate", checkVideoStable);
-
-    const t1 = window.setTimeout(tryPlay, 120);
-    const t2 = window.setTimeout(tryPlay, 600);
-    const t3 = window.setTimeout(tryPlay, 1400);
-    const t4 = window.setTimeout(tryPlay, 2600);
-    releaseWhenPlaying();
-
-    return () => {
-      cancelled = true;
-      window.clearTimeout(t1);
-      window.clearTimeout(t2);
-      window.clearTimeout(t3);
-      window.clearTimeout(t4);
-      if (video) video.removeEventListener("playing", onVideoPlaying);
-      if (video) video.removeEventListener("progress", checkVideoStable);
-      if (video) video.removeEventListener("canplaythrough", checkVideoStable);
-      if (video) video.removeEventListener("timeupdate", checkVideoStable);
-    };
-  }, [hasAudio, hasVideo, wedding.audio_url, wedding.audio_start_time]);
+  // Audio playback (start/scroll-resume/tap-unlock) is owned by useTemplateAudio.
 
   useEffect(() => {
     document.documentElement.classList.add("hide-scrollbar");
@@ -399,39 +325,7 @@ export const LumiereTemplate = ({
     };
   }, []);
 
-  // Start audio on first scroll/wheel/touch — counts as user gesture so
-  // browsers that blocked autoplay will allow audio playback.
-  useEffect(() => {
-    if (!hasAudio) return;
-    let started = false;
-    const start = () => {
-      if (started) return;
-      started = true;
-      const audio = audioRef.current;
-      if (audio) {
-        audio.muted = false;
-        audio.volume = 0.5;
-        audio.play().catch(() => {});
-      }
-      window.removeEventListener("scroll", start);
-      window.removeEventListener("wheel", start);
-      window.removeEventListener("touchmove", start);
-      window.removeEventListener("touchstart", start);
-      window.removeEventListener("keydown", start);
-    };
-    window.addEventListener("scroll", start, { passive: true });
-    window.addEventListener("wheel", start, { passive: true });
-    window.addEventListener("touchmove", start, { passive: true });
-    window.addEventListener("touchstart", start, { passive: true });
-    window.addEventListener("keydown", start);
-    return () => {
-      window.removeEventListener("scroll", start);
-      window.removeEventListener("wheel", start);
-      window.removeEventListener("touchmove", start);
-      window.removeEventListener("touchstart", start);
-      window.removeEventListener("keydown", start);
-    };
-  }, [hasAudio]);
+  // Scroll-resume + first-gesture unlock are handled by useTemplateAudio.
 
   const handleTimeUpdate = () => {
     const audio = audioRef.current;
@@ -563,7 +457,10 @@ export const LumiereTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} src={wedding.audio_url} preload="auto" autoPlay onTimeUpdate={handleTimeUpdate} />
+        <>
+          <audio ref={setAudioElement} src={wedding.audio_url} preload="auto" onTimeUpdate={handleTimeUpdate} />
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Layer 1: Fixed background video */}

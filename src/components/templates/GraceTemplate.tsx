@@ -20,6 +20,8 @@ import gracePreviewVideo from "@/assets/grace-preview-video.mp4";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
+import { useTemplateAudio } from "@/hooks/useTemplateAudio";
+import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
 
 interface GraceTemplateProps {
   wedding: any;
@@ -97,7 +99,12 @@ export const GraceTemplate = ({
     const t = window.setTimeout(() => setVideoLoading(false), 4000);
     return () => window.clearTimeout(t);
   }, [showLoader]);
-  const audioRef = useRef<HTMLAudioElement>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
   const welcomeDrink = locations.find((loc) => loc.type === "welcome_drink");
@@ -137,48 +144,7 @@ export const GraceTemplate = ({
     };
   }, []);
 
-  // Auto-play background audio after the template/video is ready.
-  // Falls back to first user interaction if the browser blocks autoplay.
-  useEffect(() => {
-    if (!wedding.audio_url) return;
-    if (videoLoading) return;
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    let cancelled = false;
-
-    const startAudio = async () => {
-      try {
-        const startTime = wedding.audio_start_time || 0;
-        if (startTime > 0 && Math.abs(audio.currentTime - startTime) > 0.05) {
-          audio.currentTime = startTime;
-        }
-        await audio.play();
-      } catch {
-        // Autoplay blocked — wait for first user interaction.
-        const resume = async () => {
-          if (cancelled) return;
-          try {
-            await audio.play();
-          } catch {
-            /* noop */
-          }
-          window.removeEventListener("pointerdown", resume);
-          window.removeEventListener("keydown", resume);
-          window.removeEventListener("touchstart", resume);
-        };
-        window.addEventListener("pointerdown", resume, { once: true });
-        window.addEventListener("keydown", resume, { once: true });
-        window.addEventListener("touchstart", resume, { once: true });
-      }
-    };
-
-    startAudio();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [wedding.audio_url, wedding.audio_start_time, videoLoading]);
+  // Audio playback is owned by useTemplateAudio (shared, platform-agnostic).
 
   const handleTimeUpdate = () => {
     if (!audioRef.current) return;
@@ -221,22 +187,8 @@ export const GraceTemplate = ({
       console.warn("[Grace] videoRef.current is null on tap");
     }
 
-    // 2) Play the audio track (if configured)
-    if (wedding.audio_url && audioRef.current) {
-      const audio = audioRef.current;
-      const startTime = wedding.audio_start_time || 0;
-      if (startTime > 0) {
-        audio.currentTime = startTime;
-        await new Promise<void>((resolve) => {
-          audio.addEventListener("seeked", () => resolve(), { once: true });
-        });
-      }
-      try {
-        await audio.play();
-      } catch (err) {
-        console.log("Audio playback failed:", err);
-      }
-    }
+    // 2) Play the audio track via the shared controller
+    handleTapToPlay();
 
     setTimeout(() => {
       document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
@@ -258,9 +210,12 @@ export const GraceTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
-          <source src={wedding.audio_url} type="audio/mpeg" />
-        </audio>
+        <>
+          <audio ref={setAudioElement} preload="auto" onTimeUpdate={handleTimeUpdate}>
+            <source src={wedding.audio_url} type="audio/mpeg" />
+          </audio>
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Hero */}
