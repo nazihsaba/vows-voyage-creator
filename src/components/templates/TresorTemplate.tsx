@@ -60,6 +60,11 @@ export const TresorTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
 
   const ceremony = locations.find((l) => l.type === "ceremony");
   const venue = locations.find((l) => l.type === "venue");
