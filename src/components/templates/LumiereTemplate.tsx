@@ -98,6 +98,11 @@ export const LumiereTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const videoUrl = wedding.video_url || wedding.hero_media;
   const hasVideo = !!videoUrl;
