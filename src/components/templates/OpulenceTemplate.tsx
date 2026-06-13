@@ -274,6 +274,11 @@ export const OpulenceTemplate = ({
   submittingRsvp = false,
 }: OpulenceTemplateProps) => {
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
+    audioRef,
+    wedding.audio_url,
+    wedding.audio_start_time,
+  );
   const [started, setStarted] = useState(false);
 
   // Lock body scroll until started
