@@ -210,9 +210,12 @@ export const GraceTemplate = ({
       {hasArabic && !arabicOnly && <LanguageToggle />}
 
       {wedding.audio_url && (
-        <audio ref={audioRef} preload="auto" onTimeUpdate={handleTimeUpdate}>
-          <source src={wedding.audio_url} type="audio/mpeg" />
-        </audio>
+        <>
+          <audio ref={setAudioElement} preload="auto" onTimeUpdate={handleTimeUpdate}>
+            <source src={wedding.audio_url} type="audio/mpeg" />
+          </audio>
+          <TapToPlayMusic visible={showTapToPlay} isUnlocked={isMusicUnlocked} onTap={handleTapToPlay} />
+        </>
       )}
 
       {/* Hero */}
