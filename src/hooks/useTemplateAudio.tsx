@@ -1,90 +1,87 @@
-import { useEffect, useRef, useState } from "react";
-
-const isIOSDevice = () => {
-  if (typeof navigator === "undefined") return false;
-  const ua = navigator.userAgent || "";
-  if (/iPad|iPhone|iPod/.test(ua)) return true;
-  // iPadOS 13+ reports as Mac
-  if ((navigator as any).platform === "MacIntel" && (navigator as any).maxTouchPoints > 1) return true;
-  return false;
-};
+import { useCallback, useEffect, useRef, useState } from "react";
 
 /**
- * Audio playback controller for templates.
- * - iOS: starts on first scroll/wheel (existing behavior).
- * - Non-iOS (Android etc.): exposes `showTapToPlay` so the template can render
- *   a "Tap to play music" button. First tap anywhere unlocks audio; after that,
- *   scroll can control playback.
+ * Shared, platform-agnostic audio controller for invitation templates.
+ *
+ * Behavior (identical on iOS, Android, desktop):
+ * - Renders a music-unlock button whenever an `audioUrl` is provided
+ *   (consumers read `showTapToPlay`).
+ * - On the first real user gesture anywhere on the page (pointerdown /
+ *   touchstart, captured), seeks to `audioStartTime` and attempts to play.
+ * - The floating button's onTap triggers the same unlock as a guaranteed
+ *   fallback for users who scroll without tapping.
+ * - After unlock, a scroll listener resumes playback if the browser pauses
+ *   the element.
+ * - Every play() call is wrapped in .catch(() => {}) to swallow rejections.
+ * - The setup effect re-runs when the <audio> element becomes available
+ *   (via the returned `setAudioElement` ref callback) so we don't miss the
+ *   mount.
  */
 export const useTemplateAudio = (
-  audioRef: React.RefObject<HTMLAudioElement>,
+  audioRef: React.MutableRefObject<HTMLAudioElement | null>,
   audioUrl: string | null | undefined,
   audioStartTime: number | null | undefined,
 ) => {
   const [showTapToPlay, setShowTapToPlay] = useState(false);
   const [isMusicUnlocked, setIsMusicUnlocked] = useState(false);
+  // Bumped whenever the <audio> element mounts/unmounts so the effect re-runs.
+  const [audioReadyTick, setAudioReadyTick] = useState(0);
   const unlockedRef = useRef(false);
 
+  // Ref callback consumers can pass to <audio ref={setAudioElement} />.
+  const setAudioElement = useCallback(
+    (el: HTMLAudioElement | null) => {
+      audioRef.current = el;
+      setAudioReadyTick((n) => n + 1);
+    },
+    [audioRef],
+  );
+
   useEffect(() => {
-    if (!audioUrl || !audioRef.current) return;
+    if (!audioUrl) {
+      setShowTapToPlay(false);
+      setIsMusicUnlocked(false);
+      unlockedRef.current = false;
+      return;
+    }
     const audio = audioRef.current;
-    unlockedRef.current = false;
-    setIsMusicUnlocked(false);
-    audio.currentTime = audioStartTime || 0;
-    audio.loop = true;
-    audio.volume = 0.5;
-
-    const ios = isIOSDevice();
-    let started = false;
-
-    const safePlay = () => {
-      let p: Promise<void> | void;
-      try {
-        p = audio.play();
-      } catch {
-        return;
-      }
-      if (p && typeof p.then === "function") {
-        p.then(() => {
-          if (!audio.paused) {
-            started = true;
-            if (!ios) setIsMusicUnlocked(true);
-          }
-        }).catch(() => {});
-      }
-    };
-
-    if (ios) {
-      // iOS: start on first scroll
-      const events = ["scroll", "wheel"];
-      const tryStart = () => {
-        if (started) {
-          cleanup();
-          return;
-        }
-        safePlay();
-      };
-      const cleanup = () => {
-        events.forEach((ev) =>
-          window.removeEventListener(ev, tryStart, { capture: true } as any),
-        );
-      };
-      events.forEach((ev) =>
-        window.addEventListener(ev, tryStart, { passive: true, capture: true } as any),
-      );
-      return cleanup;
+    if (!audio) {
+      setShowTapToPlay(false);
+      return;
     }
 
-    // Non-iOS: keep a visible music control, unlock on first user tap, then let scroll resume playback
+    unlockedRef.current = false;
+    setIsMusicUnlocked(false);
     setShowTapToPlay(true);
 
-    const onFirstTap = () => {
+    try {
+      audio.currentTime = audioStartTime || 0;
+    } catch {}
+    audio.loop = true;
+    if (audio.volume === 1) audio.volume = 0.5;
+
+    const safePlay = () => {
+      try {
+        const p = audio.play();
+        if (p && typeof (p as Promise<void>).then === "function") {
+          (p as Promise<void>)
+            .then(() => {
+              if (!audio.paused) {
+                unlockedRef.current = true;
+                setIsMusicUnlocked(true);
+              }
+            })
+            .catch(() => {});
+        }
+      } catch {}
+    };
+
+    const onFirstGesture = () => {
       if (unlockedRef.current) return;
-      unlockedRef.current = true;
+      try {
+        audio.currentTime = audioStartTime || 0;
+      } catch {}
       safePlay();
-      window.removeEventListener("pointerdown", onFirstTap, { capture: true } as any);
-      window.removeEventListener("touchstart", onFirstTap, { capture: true } as any);
-      window.removeEventListener("click", onFirstTap, { capture: true } as any);
     };
 
     const onScroll = () => {
@@ -92,33 +89,36 @@ export const useTemplateAudio = (
       if (audio.paused) safePlay();
     };
 
-    window.addEventListener("pointerdown", onFirstTap, { passive: true, capture: true } as any);
-    window.addEventListener("touchstart", onFirstTap, { passive: true, capture: true } as any);
-    window.addEventListener("click", onFirstTap, { passive: true, capture: true } as any);
-    window.addEventListener("scroll", onScroll, { passive: true } as any);
+    const gestureOpts: AddEventListenerOptions = { passive: true, capture: true };
+    window.addEventListener("pointerdown", onFirstGesture, gestureOpts);
+    window.addEventListener("touchstart", onFirstGesture, gestureOpts);
+    window.addEventListener("scroll", onScroll, { passive: true });
 
     return () => {
-      window.removeEventListener("pointerdown", onFirstTap, { capture: true } as any);
-      window.removeEventListener("touchstart", onFirstTap, { capture: true } as any);
-      window.removeEventListener("click", onFirstTap, { capture: true } as any);
+      window.removeEventListener("pointerdown", onFirstGesture, { capture: true } as any);
+      window.removeEventListener("touchstart", onFirstGesture, { capture: true } as any);
       window.removeEventListener("scroll", onScroll as any);
     };
-  }, [audioUrl, audioStartTime, audioRef]);
+  }, [audioUrl, audioStartTime, audioRef, audioReadyTick]);
 
-  const handleTapToPlay = () => {
+  const handleTapToPlay = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    unlockedRef.current = true;
-    let p: Promise<void> | void;
     try {
-      p = audio.play();
-    } catch {
-      return;
-    }
-    if (p && typeof p.then === "function") {
-      p.then(() => setIsMusicUnlocked(true)).catch(() => {});
-    }
-  };
+      audio.currentTime = audioStartTime || 0;
+    } catch {}
+    try {
+      const p = audio.play();
+      if (p && typeof (p as Promise<void>).then === "function") {
+        (p as Promise<void>)
+          .then(() => {
+            unlockedRef.current = true;
+            setIsMusicUnlocked(true);
+          })
+          .catch(() => {});
+      }
+    } catch {}
+  }, [audioRef, audioStartTime]);
 
-  return { showTapToPlay, handleTapToPlay, isMusicUnlocked };
+  return { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement };
 };
