@@ -31,8 +31,8 @@ export function normalizeLinkSlug(value: string): string {
 }
 
 export function getInvitationLinkSlug(link: { unique_slug?: string | null; link_name?: string | null }): string {
-  const explicitSlug = link.unique_slug?.toString().trim();
-  return explicitSlug ? slugifyLinkName(explicitSlug) : slugifyLinkName(link.link_name || "");
+  const explicitSlug = slugifyLinkName(link.unique_slug || "");
+  return explicitSlug || slugifyLinkName(link.link_name || "");
 }
 
 export function invitationLinkSlugMatches(
