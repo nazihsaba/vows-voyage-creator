@@ -1,25 +1,27 @@
 import { Music } from "lucide-react";
 
 interface TapToPlayMusicProps {
+  isUnlocked?: boolean;
   onTap: () => void;
   visible: boolean;
 }
 
 /**
- * On-brand, minimal floating "Tap to play music" control shown on non-iOS
- * devices where scroll cannot unlock audio. Hides itself after the first tap.
+ * On-brand, minimal floating music control shown on non-iOS devices where
+ * scroll cannot unlock audio. It dims after the first successful unlock.
  */
-const TapToPlayMusic = ({ onTap, visible }: TapToPlayMusicProps) => {
+const TapToPlayMusic = ({ isUnlocked = false, onTap, visible }: TapToPlayMusicProps) => {
   if (!visible) return null;
   return (
     <button
       type="button"
       onClick={onTap}
-      aria-label="Tap to play music"
-      className="fixed bottom-5 right-5 z-50 flex items-center gap-2 rounded-full bg-background/85 backdrop-blur px-3.5 py-2.5 shadow-lg border border-border/60 text-foreground/80 hover:text-foreground hover:bg-background transition-all animate-[fadeIn_0.4s_ease-out]"
+      aria-label={isUnlocked ? "Music enabled" : "Tap to play music"}
+      className={`fixed bottom-5 right-5 z-50 flex h-12 w-12 items-center justify-center rounded-full border border-border/60 bg-background/90 text-foreground shadow-lg backdrop-blur transition-all animate-[fadeIn_0.4s_ease-out] ${
+        isUnlocked ? "opacity-45" : "opacity-100"
+      }`}
     >
-      <Music className="w-4 h-4" />
-      <span className="text-xs tracking-wide">Tap to play music</span>
+      <Music className="w-5 h-5" />
     </button>
   );
 };
