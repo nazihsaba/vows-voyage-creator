@@ -84,17 +84,7 @@ export const EclatTemplate = ({
 
   const handleStart = async () => {
     setHasStarted(true);
-    if (audioRef.current && wedding.audio_url) {
-      const audio = audioRef.current;
-      const startTime = wedding.audio_start_time || 0;
-      if (startTime > 0) {
-        audio.currentTime = startTime;
-        await new Promise<void>((resolve) => {
-          audio.addEventListener("seeked", () => resolve(), { once: true });
-        });
-      }
-      audio.play().catch((err) => console.error("Error playing audio:", err));
-    }
+    handleTapToPlay();
     document.getElementById("family-section")?.scrollIntoView({ behavior: "smooth" });
   };
 
