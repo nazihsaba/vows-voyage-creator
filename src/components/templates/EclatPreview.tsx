@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronDown, Copy } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { Button } from "@/components/ui/button";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
@@ -344,18 +344,7 @@ export const EclatPreview = () => {
                 <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
                   <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                      <p className="text-lg text-gray-600 whitespace-pre-line">{card.card_number}</p>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(card.card_number);
-                        }}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
-                        aria-label="Copy card number"
-                      >
-                        <Copy size={18} />
-                      </button>
-                    </div>
+                    <p className="text-lg text-gray-600 mt-2 whitespace-pre-line">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}

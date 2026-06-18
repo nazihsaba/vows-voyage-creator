@@ -205,18 +205,7 @@ export const AuraPreview = () => {
                 <AnimatedSection key={card.id} delay={index * 100} animation="scale-in">
                   <div className="bg-background p-6 rounded-lg text-center">
                     <p className="font-semibold text-lg text-foreground">{card.card_name}</p>
-                    <div className="flex items-center justify-center gap-2 mt-2">
-                      <p className="text-lg text-muted-foreground whitespace-pre-line">{card.card_number}</p>
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(card.card_number);
-                        }}
-                        className="text-muted-foreground hover:text-foreground transition-colors"
-                        aria-label="Copy card number"
-                      >
-                        <Copy size={18} />
-                      </button>
-                    </div>
+                    <p className="text-lg text-muted-foreground mt-2 whitespace-pre-line">{card.card_number}</p>
                   </div>
                 </AnimatedSection>
               ))}
