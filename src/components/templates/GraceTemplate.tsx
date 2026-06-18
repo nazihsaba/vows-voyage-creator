@@ -461,7 +461,16 @@ export const GraceTemplate = ({
             <div className="max-w-4xl mx-auto">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
               <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
-              <GiftCards giftCards={giftCards} isOwner={isOwner} />
+              <div className="grid gap-4 md:grid-cols-2">
+                {giftCards.map((card, index) => (
+                  <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
+                    <div className="bg-white p-6 rounded-lg text-center">
+                      <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+                      <p className="text-lg text-gray-600 mt-2 whitespace-pre-line">{card.card_number}</p>
+                    </div>
+                  </AnimatedSection>
+                ))}
+              </div>
             </div>
           </section>
         </AnimatedSection>
