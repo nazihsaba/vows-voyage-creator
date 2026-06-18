@@ -4,7 +4,6 @@ import { formatLocalizedDate } from "@/lib/formatDate";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
