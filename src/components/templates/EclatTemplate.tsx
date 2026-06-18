@@ -4,9 +4,8 @@ import { formatLocalizedDate } from "@/lib/formatDate";
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
-import { GiftCards } from "@/components/GiftCards";
 import { EditableField } from "@/components/EditableField";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { EventIcon } from "@/components/templates/EventIcon";
 import { Button } from "@/components/ui/button";
@@ -390,7 +389,27 @@ export const EclatTemplate = ({
             <div className="max-w-4xl mx-auto">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
               <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
-              <GiftCards giftCards={giftCards} isOwner={isOwner} />
+              <div className="grid gap-4 md:grid-cols-2">
+                {giftCards.map((card, index) => (
+                  <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
+                    <div className="bg-[#faf8f5] p-6 rounded-lg text-center">
+                      <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        <p className="text-lg text-gray-600 whitespace-pre-line">{card.card_number}</p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(card.card_number);
+                          }}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                          aria-label="Copy card number"
+                        >
+                          <Copy size={18} />
+                        </button>
+                      </div>
+                    </div>
+                  </AnimatedSection>
+                ))}
+              </div>
             </div>
           </section>
         </AnimatedSection>
