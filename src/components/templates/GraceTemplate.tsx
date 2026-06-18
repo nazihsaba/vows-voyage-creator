@@ -5,7 +5,7 @@ import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CountdownTimer } from "@/components/CountdownTimer";
 import { EditableField } from "@/components/EditableField";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
 import { EventIcon } from "@/components/templates/EventIcon";
 import { Button } from "@/components/ui/button";
@@ -464,9 +464,20 @@ export const GraceTemplate = ({
               <div className="grid gap-4 md:grid-cols-2">
                 {giftCards.map((card, index) => (
                   <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">
-                    <div className="bg-white p-6 rounded-lg text-center">
+                    <div className="bg-white p-6 rounded-lg text-center relative">
                       <p className="font-semibold text-lg text-[#3e2723]">{card.card_name}</p>
-                      <p className="text-lg text-gray-600 mt-2 whitespace-pre-line">{card.card_number}</p>
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        <p className="text-lg text-gray-600 whitespace-pre-line">{card.card_number}</p>
+                        <button
+                          onClick={() => {
+                            navigator.clipboard.writeText(card.card_number);
+                          }}
+                          className="text-gray-400 hover:text-gray-600 transition-colors"
+                          aria-label="Copy card number"
+                        >
+                          <Copy size={18} />
+                        </button>
+                      </div>
                     </div>
                   </AnimatedSection>
                 ))}
