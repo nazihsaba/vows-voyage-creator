@@ -197,27 +197,34 @@ All colors MUST be HSL.
   }
 
   /* Arabic typography — applied whenever content is rendered RTL or lang=ar.
-     Overrides the Latin template fonts (which lack Arabic glyphs and fall back
-     to ugly system defaults) with proper Arabic webfonts. */
-  [dir="rtl"] .text-template-title,
-  [lang="ar"] .text-template-title,
-  [dir="rtl"] .text-template-subtitle,
-  [lang="ar"] .text-template-subtitle,
-  [dir="rtl"] .text-template-subtitle-white,
-  [lang="ar"] .text-template-subtitle-white,
-  [dir="rtl"] .text-template-monogram,
-  [lang="ar"] .text-template-monogram {
-    font-family: "Amiri", "Noto Naskh Arabic", serif;
+     Globally overrides any Latin/template fonts (including inline styles and
+     custom utility classes like font-serif, font-cinzel, font-cormorant, etc.)
+     with proper Arabic webfonts so every label, button and body text renders
+     correctly. Iconify/Lucide icons are SVG so they are unaffected. */
+  [lang="ar"],
+  [lang="ar"] *,
+  [dir="rtl"],
+  [dir="rtl"] * {
+    font-family: "Noto Naskh Arabic", "Amiri", serif !important;
   }
 
-  [dir="rtl"] .text-template-heading,
+  /* Use the more decorative Amiri for display/heading text in Arabic. */
+  [lang="ar"] .text-template-title,
+  [dir="rtl"] .text-template-title,
+  [lang="ar"] .text-template-subtitle,
+  [dir="rtl"] .text-template-subtitle,
+  [lang="ar"] .text-template-subtitle-white,
+  [dir="rtl"] .text-template-subtitle-white,
+  [lang="ar"] .text-template-monogram,
+  [dir="rtl"] .text-template-monogram,
   [lang="ar"] .text-template-heading,
-  [dir="rtl"] .text-template-body,
-  [lang="ar"] .text-template-body,
-  [dir="rtl"] .text-template-small,
-  [lang="ar"] .text-template-small {
-    font-family: "Noto Naskh Arabic", "Amiri", serif;
+  [dir="rtl"] .text-template-heading,
+  [lang="ar"] h1, [dir="rtl"] h1,
+  [lang="ar"] h2, [dir="rtl"] h2,
+  [lang="ar"] h3, [dir="rtl"] h3 {
+    font-family: "Amiri", "Noto Naskh Arabic", serif !important;
   }
+
 
   /* Smooth scrolling */
   html {
