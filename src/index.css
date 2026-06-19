@@ -225,6 +225,19 @@ All colors MUST be HSL.
     font-family: "Amiri", "Noto Naskh Arabic", serif !important;
   }
 
+  /* Arabic script must never have letter-spacing or uppercase applied —
+     both break letter joining and produce disconnected/garbled glyphs.
+     Force-reset them for any element under lang=ar / dir=rtl. */
+  [lang="ar"],
+  [lang="ar"] *,
+  [dir="rtl"],
+  [dir="rtl"] * {
+    letter-spacing: 0 !important;
+    text-transform: none !important;
+    font-feature-settings: normal !important;
+  }
+
+
 
   /* Smooth scrolling */
   html {
