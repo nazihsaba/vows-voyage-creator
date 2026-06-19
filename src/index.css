@@ -196,6 +196,29 @@ All colors MUST be HSL.
     font-family: var(--font-template-monogram);
   }
 
+  /* Arabic typography — applied whenever content is rendered RTL or lang=ar.
+     Overrides the Latin template fonts (which lack Arabic glyphs and fall back
+     to ugly system defaults) with proper Arabic webfonts. */
+  [dir="rtl"] .text-template-title,
+  [lang="ar"] .text-template-title,
+  [dir="rtl"] .text-template-subtitle,
+  [lang="ar"] .text-template-subtitle,
+  [dir="rtl"] .text-template-subtitle-white,
+  [lang="ar"] .text-template-subtitle-white,
+  [dir="rtl"] .text-template-monogram,
+  [lang="ar"] .text-template-monogram {
+    font-family: "Amiri", "Noto Naskh Arabic", serif;
+  }
+
+  [dir="rtl"] .text-template-heading,
+  [lang="ar"] .text-template-heading,
+  [dir="rtl"] .text-template-body,
+  [lang="ar"] .text-template-body,
+  [dir="rtl"] .text-template-small,
+  [lang="ar"] .text-template-small {
+    font-family: "Noto Naskh Arabic", "Amiri", serif;
+  }
+
   /* Smooth scrolling */
   html {
     scroll-behavior: smooth;
