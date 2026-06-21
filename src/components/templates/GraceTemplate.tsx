@@ -362,15 +362,17 @@ export const GraceTemplate = ({
       </section>
 
       {/* Countdown with Video Background */}
-      <section className="relative py-16 px-4 overflow-hidden">
-        <BackgroundVideo
-          src={wedding.video_url || gracePreviewVideo}
-          poster={(wedding as any).video_poster_url || undefined}
-          className="absolute inset-0 w-full h-full object-cover"
-          groomInitial={wedding.groom_name}
-          brideInitial={wedding.bride_name}
-          loaderTheme="light"
-        />
+      <section ref={countdownSectionRef} className="relative py-16 px-4 overflow-hidden">
+        {showCountdownVideo && (
+          <BackgroundVideo
+            src={wedding.video_url || gracePreviewVideo}
+            poster={(wedding as any).video_poster_url || undefined}
+            className="absolute inset-0 w-full h-full object-cover"
+            groomInitial={wedding.groom_name}
+            brideInitial={wedding.bride_name}
+            loaderTheme="light"
+          />
+        )}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <CountdownTimer targetDate={wedding.wedding_date} variant="dark" />
