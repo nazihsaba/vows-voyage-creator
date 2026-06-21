@@ -228,9 +228,7 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         <video
           ref={innerRef}
           className={className}
-          src={src}
           poster={poster}
-          {...(attemptAutoplay ? { autoPlay: true } : {})}
           muted
           loop={loop}
           playsInline
@@ -246,7 +244,9 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
             "x5-playsinline": "true",
             controlslist: "nodownload noplaybackrate noremoteplayback nofullscreen",
           } as Record<string, string>)}
-        />
+        >
+          <source src={src} type={type} />
+        </video>
 
         {/* Invisible tap-to-play fallback — only when autoplay was blocked
             (e.g. iOS Low Power Mode) and parent does NOT have its own entry button. */}
