@@ -1154,7 +1154,7 @@ const WeddingForm = () => {
           .replace(/^\n+|\n+$/g, "");
       formData.groom_name = toTitleCase(formData.groom_name);
       formData.bride_name = toTitleCase(formData.bride_name);
-      const familyCaser = familyNameFormat === "none" ? toTitleCaseMultiline : toTitleCase;
+      const familyCaser = familyNameFormat === "none" ? (s: string) => s : toTitleCase;
       formData.groom_family = formData.groom_family ? familyCaser(formData.groom_family) : formData.groom_family;
       formData.bride_family = formData.bride_family ? familyCaser(formData.bride_family) : formData.bride_family;
 
