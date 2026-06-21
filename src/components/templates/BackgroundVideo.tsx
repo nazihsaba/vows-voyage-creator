@@ -238,7 +238,9 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           controls={false}
           disablePictureInPicture
           disableRemotePlayback
-          style={{ visibility: loading || (attemptAutoplay && needsTap) ? "hidden" : "visible" }}
+          // Always visible — the poster (or first decoded frame) shows
+          // immediately so the user never sees a black/grey placeholder.
+          // Playback is still gated by buffering below, but the visual is up.
           {...({
             "webkit-playsinline": "true",
             "x5-playsinline": "true",
