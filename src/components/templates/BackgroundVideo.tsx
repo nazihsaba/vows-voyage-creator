@@ -77,10 +77,14 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       if (!video) return;
 
       let ready = false;
-      // Reveal as soon as we have a usable amount of video buffered.
-      // 25% lets us start playing quickly while keeping enough headroom
-      // to avoid an immediate stall on most networks.
-      const THRESHOLD = 0.25;
+      // Require a healthy buffer before revealing to avoid the
+      // "play → stall → play" stutter that happens when we start playback
+      // on just the first decoded frame. We want enough headroom that
+      // playback can sustain itself for a few seconds.
+      const THRESHOLD = 0.5;
+      // Or: enough buffered seconds (whichever happens first) so very long
+      // videos don't have to download 50% before we start.
+      const MIN_BUFFERED_SECONDS = 6;
 
       const bufferedFraction = () => {
         const dur = video.duration;
@@ -90,6 +94,14 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
           end = Math.max(end, video.buffered.end(i));
         }
         return end / dur;
+      };
+
+      const bufferedSeconds = () => {
+        let end = 0;
+        for (let i = 0; i < video.buffered.length; i++) {
+          end = Math.max(end, video.buffered.end(i));
+        }
+        return end;
       };
 
       const tryPlay = () => {
@@ -113,15 +125,13 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
 
       const checkProgress = () => {
         if (ready) return;
-        if (bufferedFraction() >= THRESHOLD) reveal();
+        if (bufferedFraction() >= THRESHOLD || bufferedSeconds() >= MIN_BUFFERED_SECONDS) {
+          reveal();
+        }
       };
 
       const onCanPlayThrough = () => {
-        // Fully buffered (or browser confident) — safe to reveal regardless of threshold.
-        reveal();
-      };
-      const onCanPlay = () => {
-        // Browser thinks it can start playing — reveal early for a fast UX.
+        // Fully buffered (or browser confident) — safe to reveal.
         reveal();
       };
       const onWaiting = () => {
@@ -133,10 +143,6 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       };
       const onStalled = () => {
         if (!ready) setLoading(true);
-      };
-      const onLoadedData = () => {
-        // First frame is decoded — reveal so the poster→video swap is seamless.
-        reveal();
       };
       const onProgress = () => {
         checkProgress();
