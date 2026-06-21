@@ -64,9 +64,11 @@ export const GraceTemplate = ({
   const [hasStarted, setHasStarted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const countdownSectionRef = useRef<HTMLElement>(null);
   const [videoLoading, setVideoLoading] = useState(true);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
+  const [showCountdownVideo, setShowCountdownVideo] = useState(false);
 
   // Wait for the template to paint underneath, then fade the loader out
   // — guarantees no blank flash between loader and template.
@@ -98,6 +100,25 @@ export const GraceTemplate = ({
     const t = window.setTimeout(() => setVideoLoading(false), 4000);
     return () => window.clearTimeout(t);
   }, [showLoader]);
+
+  useEffect(() => {
+    const section = countdownSectionRef.current;
+    if (!section || showCountdownVideo) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowCountdownVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [showCountdownVideo]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
@@ -341,15 +362,17 @@ export const GraceTemplate = ({
       </section>
 
       {/* Countdown with Video Background */}
-      <section className="relative py-16 px-4 overflow-hidden">
-        <BackgroundVideo
-          src={wedding.video_url || gracePreviewVideo}
-          poster={(wedding as any).video_poster_url || undefined}
-          className="absolute inset-0 w-full h-full object-cover"
-          groomInitial={wedding.groom_name}
-          brideInitial={wedding.bride_name}
-          loaderTheme="light"
-        />
+      <section ref={countdownSectionRef} className="relative py-16 px-4 overflow-hidden">
+        {showCountdownVideo && (
+          <BackgroundVideo
+            src={wedding.video_url || gracePreviewVideo}
+            poster={(wedding as any).video_poster_url || undefined}
+            className="absolute inset-0 w-full h-full object-cover"
+            groomInitial={wedding.groom_name}
+            brideInitial={wedding.bride_name}
+            loaderTheme="light"
+          />
+        )}
         <div className="absolute inset-0 bg-black/50" />
         <div className="relative z-10">
           <CountdownTimer targetDate={wedding.wedding_date} variant="dark" />
