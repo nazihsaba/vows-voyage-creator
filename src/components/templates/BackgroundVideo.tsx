@@ -210,11 +210,9 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
       return () => {
         window.clearTimeout(safety);
         video.removeEventListener("canplaythrough", onCanPlayThrough);
-        video.removeEventListener("canplay", onCanPlay);
         video.removeEventListener("waiting", onWaiting);
         video.removeEventListener("playing", onPlaying);
         video.removeEventListener("stalled", onStalled);
-        video.removeEventListener("loadeddata", onLoadedData);
         video.removeEventListener("progress", onProgress);
         video.removeEventListener("loadedmetadata", onLoadedMetadata);
         video.removeEventListener("pause", onPause);
