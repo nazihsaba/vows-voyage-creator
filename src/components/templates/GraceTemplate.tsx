@@ -64,9 +64,11 @@ export const GraceTemplate = ({
   const [hasStarted, setHasStarted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+  const countdownSectionRef = useRef<HTMLElement>(null);
   const [videoLoading, setVideoLoading] = useState(true);
   const [loaderFadingOut, setLoaderFadingOut] = useState(false);
   const [showLoader, setShowLoader] = useState(true);
+  const [showCountdownVideo, setShowCountdownVideo] = useState(false);
 
   // Wait for the template to paint underneath, then fade the loader out
   // — guarantees no blank flash between loader and template.
@@ -98,6 +100,25 @@ export const GraceTemplate = ({
     const t = window.setTimeout(() => setVideoLoading(false), 4000);
     return () => window.clearTimeout(t);
   }, [showLoader]);
+
+  useEffect(() => {
+    const section = countdownSectionRef.current;
+    if (!section || showCountdownVideo) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setShowCountdownVideo(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "600px 0px" },
+    );
+
+    observer.observe(section);
+    return () => observer.disconnect();
+  }, [showCountdownVideo]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
