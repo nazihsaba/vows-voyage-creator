@@ -119,6 +119,55 @@ export const GraceTemplate = ({
     return () => observer.disconnect();
   }, [showCountdownVideo]);
 
+  // Lumière-style aggressive autoplay: retry play() on mount and on
+  // visibility/focus until the browser accepts it. Keeps the hero video
+  // running automatically as soon as the template opens.
+  const videoUrl = wedding.video_url || gracePreviewVideo;
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    let cancelled = false;
+    let retry = 0;
+
+    video.muted = true;
+    video.playsInline = true;
+    video.preload = "auto";
+
+    const attemptPlay = () => {
+      if (cancelled) return;
+      const p = video.play();
+      if (p !== undefined) {
+        p.then(() => {
+          if (cancelled) return;
+          setAutoplayBlocked(false);
+          setHasStarted(true);
+        }).catch(() => {
+          if (cancelled) return;
+          retry = window.setTimeout(attemptPlay, 450);
+        });
+      }
+    };
+
+    const onLoaded = () => attemptPlay();
+    video.addEventListener("loadedmetadata", onLoaded);
+    video.addEventListener("loadeddata", onLoaded);
+    video.addEventListener("canplay", onLoaded);
+    video.addEventListener("canplaythrough", onLoaded);
+
+    try { video.load(); } catch { /* noop */ }
+    attemptPlay();
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(retry);
+      video.removeEventListener("loadedmetadata", onLoaded);
+      video.removeEventListener("loadeddata", onLoaded);
+      video.removeEventListener("canplay", onLoaded);
+      video.removeEventListener("canplaythrough", onLoaded);
+    };
+  }, [videoUrl]);
+
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
