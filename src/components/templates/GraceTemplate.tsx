@@ -218,7 +218,7 @@ export const GraceTemplate = ({
       )}
 
       {/* Hero */}
-      <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
+      <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden bg-black">
         <BackgroundVideo
           ref={videoRef}
           src={wedding.video_url || gracePreviewVideo}
