@@ -49,7 +49,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   "video-cinematic": {
     title: '"Dancing Script", cursive',
     subtitle: '"Dancing Script", cursive',
-    heading: '"Playfair Display", serif',
+    heading: '"Dancing Script", cursive',
     body: '"Playfair Display", serif',
     monogram: '"Playfair Display", serif',
     countdown: '"Playfair Display", serif',
