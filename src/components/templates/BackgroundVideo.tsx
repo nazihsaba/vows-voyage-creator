@@ -151,15 +151,13 @@ export const BackgroundVideo = forwardRef<HTMLVideoElement, BackgroundVideoProps
         checkProgress();
       };
 
-      // Hard safety: never block the loader more than 3.5s, even on slow networks.
-      const safety = window.setTimeout(reveal, 3500);
+      // Hard safety: never block the loader more than 8s, even on slow networks.
+      const safety = window.setTimeout(reveal, 8000);
 
       video.addEventListener("canplaythrough", onCanPlayThrough);
-      video.addEventListener("canplay", onCanPlay);
       video.addEventListener("waiting", onWaiting);
       video.addEventListener("playing", onPlaying);
       video.addEventListener("stalled", onStalled);
-      video.addEventListener("loadeddata", onLoadedData);
       video.addEventListener("progress", onProgress);
       video.addEventListener("loadedmetadata", onLoadedMetadata);
 
