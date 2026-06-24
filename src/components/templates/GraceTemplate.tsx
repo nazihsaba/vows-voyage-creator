@@ -288,7 +288,7 @@ export const GraceTemplate = ({
       )}
 
       {/* Hero */}
-      <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden px-4">
+      <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
         <BackgroundVideo
           ref={videoRef}
           src={wedding.video_url || gracePreviewVideo}
@@ -302,7 +302,7 @@ export const GraceTemplate = ({
         />
         <div className="absolute inset-0 bg-black/40" />
         <div
-          className="relative z-10 space-y-3 w-full max-w-xl transition-opacity duration-500"
+          className="relative z-10 space-y-6 px-4 max-w-2xl transition-opacity duration-500"
           style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
         >
           <EditableField
@@ -314,7 +314,7 @@ export const GraceTemplate = ({
             tag="p"
             className="text-template-small"
           />
-          <div className="space-y-1 py-2 md:py-3">
+          <div className="space-y-2 py-6 md:py-8">
             <EditableField
               fieldId="groom-name"
               text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
@@ -324,7 +324,7 @@ export const GraceTemplate = ({
               tag="h1"
               className="text-template-title"
             />
-            <p className="text-3xl md:text-4xl leading-none text-template-title">&</p>
+            <p className="text-4xl md:text-5xl text-template-title">&</p>
             <EditableField
               fieldId="bride-name"
               text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
@@ -350,19 +350,18 @@ export const GraceTemplate = ({
             onUpdate={onFieldUpdate}
             isPreview={isPreview}
             tag="p"
-            className="text-lg tracking-wide"
+            className="text-xl tracking-wide"
           />
           {autoplayBlocked && !hasStarted && (
             <Button
               onClick={handleStartClick}
-              className="mt-6 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
+              className="mt-8 bg-white/20 hover:bg-white/30 text-white border-2 border-white px-8 py-6 text-lg backdrop-blur-sm"
               style={{ fontFamily: "var(--font-template-body)" }}
             >
               {t("hero.tapToStart")}
             </Button>
           )}
         </div>
-
         <div className="absolute bottom-8 animate-bounce">
           <ChevronDown className="w-8 h-8 text-white" />
         </div>
