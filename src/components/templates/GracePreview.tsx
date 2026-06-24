@@ -103,7 +103,7 @@ export const GracePreview = () => {
       {videoLoading && <TemplateLoader groomName={staticWedding.groom_name} brideName={staticWedding.bride_name} />}
       <div className="w-full text-[#3e2723] font-serif overflow-x-hidden lg:px-[25%]">
         {/* Hero */}
-        <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden">
+        <section className="relative h-screen flex flex-col items-center justify-center text-center text-white overflow-hidden px-4">
           <BackgroundVideo
             src={staticWedding.video_url}
             className="absolute inset-0 w-full h-full object-cover"
@@ -114,16 +114,16 @@ export const GracePreview = () => {
           />
           <div className="absolute inset-0 bg-black/40" />
           <div
-            className="relative z-10 space-y-6 px-4 max-w-2xl animate-fade-in transition-opacity duration-500"
+            className="relative z-10 space-y-3 w-full max-w-xl animate-fade-in transition-opacity duration-500"
             style={{ opacity: videoLoading ? 0 : 1, visibility: videoLoading ? "hidden" : "visible" }}
           >
             <p className="text-template-small">The Wedding Of</p>
-            <div className="space-y-2 py-6 md:py-8">
+            <div className="space-y-1 py-2 md:py-3">
               <h1 className="text-template-title">{staticWedding.groom_name}</h1>
-              <p className="text-4xl md:text-5xl text-template-title">&</p>
+              <p className="text-3xl md:text-4xl leading-none text-template-title">&</p>
               <h1 className="text-template-title">{staticWedding.bride_name}</h1>
             </div>
-            <p className="text-xl tracking-wide">
+            <p className="text-lg tracking-wide">
               {staticWedding.wedding_date.toLocaleDateString("en-US", {
                 weekday: "long",
                 year: "numeric",
@@ -132,6 +132,7 @@ export const GracePreview = () => {
               })}
             </p>
           </div>
+
           <div className="absolute bottom-8 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
           </div>
