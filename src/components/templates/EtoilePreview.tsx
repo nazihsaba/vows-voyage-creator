@@ -117,7 +117,7 @@ const EtoilePreview = () => {
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]">
         {/* ===== HERO SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
+        <section className="min-h-screen relative flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
             <span
               className="text-lg md:text-xl tracking-[0.3em] uppercase"
@@ -152,7 +152,7 @@ const EtoilePreview = () => {
               Saturday, August 16, 2026
             </span>
           </div>
-          <div className="absolute bottom-8 animate-bounce">
+          <div className="absolute bottom-12 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>

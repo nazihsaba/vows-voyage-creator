@@ -236,7 +236,7 @@ export const EtoileTemplate = ({
       {/* Layer 3: Scrollable content */}
       <div className="relative z-[2]" dir={isArabic ? "rtl" : "ltr"}>
         {/* ===== HERO SECTION ===== */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center text-white">
+        <section className="min-h-screen relative flex flex-col items-center justify-center text-center text-white">
           <div className="relative z-10 px-4 max-w-2xl">
             <div style={{ animation: "gentleFadeUp 1.2s ease-out both" }}>
               <EditableField
@@ -299,7 +299,7 @@ export const EtoileTemplate = ({
               />
             </div>
           </div>
-          <div className="absolute bottom-8 animate-bounce">
+          <div className="absolute bottom-12 animate-bounce">
             <ChevronDown className="w-8 h-8 text-white" />
           </div>
         </section>
