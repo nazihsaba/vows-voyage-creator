@@ -249,7 +249,7 @@ export const EtoileTemplate = ({
                 className="text-lg md:text-xl tracking-[0.3em] uppercase"
               />
             </div>
-            <div className="space-y-4 mt-[9rem] mb-[9rem]">
+            <div className="space-y-4 mt-12 mb-12">
               <div className="text-left pl-4 md:pl-12" style={{ animation: "slideFromLeft 1.5s ease-out 0.3s both" }}>
                 <EditableField
                   fieldId="groom-name"

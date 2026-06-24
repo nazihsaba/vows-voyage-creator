@@ -125,7 +125,7 @@ const EtoilePreview = () => {
             >
               The Wedding Of
             </span>
-            <div className="space-y-4 mt-[9rem] mb-[9rem]">
+            <div className="space-y-4 mt-12 mb-12">
               <h1
                 className="text-template-title text-left pl-4 md:pl-12"
                 style={{ animation: "slideFromLeft 1.5s ease-out 0.3s both" }}
