@@ -12,8 +12,6 @@ import { useToast } from "@/hooks/use-toast";
 import { hexToHSL } from "@/lib/colorUtils";
 import { downloadCardAsImage } from "@/utils/downloadCard";
 import { EnvelopeAnimation } from "@/components/EnvelopeAnimation";
-import waxSealHeart from "@/assets/wax-seal-heart.webp";
-import paperTexture from "@/assets/envelope-paper-texture.jpeg";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { invitationLinkSlugMatches } from "@/lib/slugifyLinkName";
 
@@ -90,8 +88,8 @@ const WeddingInvite = () => {
     }
   }, [wedding]);
 
-  // Preload envelope assets (fonts + images) so the spinner stays visible
-  // until names, date, and envelope artwork are fully ready to render.
+  // Preload envelope fonts so the spinner stays visible until the
+  // editorial typefaces are ready to render.
   useEffect(() => {
     if (!wedding) return;
     if (!wedding.envelope_animation_enabled) {
@@ -101,14 +99,6 @@ const WeddingInvite = () => {
 
     let cancelled = false;
 
-    const loadImage = (src: string) =>
-      new Promise<void>((resolve) => {
-        const img = new Image();
-        img.onload = () => resolve();
-        img.onerror = () => resolve();
-        img.src = src;
-      });
-
     // Inject font link if not already present, then wait for it to load.
     const fontId = "env-google-fonts";
     if (!document.getElementById(fontId)) {
@@ -116,7 +106,7 @@ const WeddingInvite = () => {
       link.id = fontId;
       link.rel = "stylesheet";
       link.href =
-        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+        "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap";
       document.head.appendChild(link);
     }
 
@@ -125,19 +115,16 @@ const WeddingInvite = () => {
       if (!fontApi?.load) return;
       try {
         await Promise.all([
-          fontApi.load("italic 500 38px 'Cormorant Garamond'"),
-          fontApi.load("400 12px 'Cormorant Upright'"),
+          fontApi.load("400 38px 'Bodoni Moda'"),
+          fontApi.load("italic 400 22px 'Bodoni Moda'"),
+          fontApi.load("500 12px 'Jost'"),
         ]);
       } catch {
         // ignore — fall back to system serif
       }
     };
 
-    Promise.all([
-      loadImage(waxSealHeart),
-      loadImage(paperTexture),
-      loadFonts(),
-    ]).then(() => {
+    loadFonts().then(() => {
       if (!cancelled) setEnvelopeAssetsReady(true);
     });
 
