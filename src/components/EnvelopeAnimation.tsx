@@ -289,6 +289,9 @@ export const EnvelopeAnimation = ({
                 transition: "transform 500ms cubic-bezier(.22,1,.36,1)",
                 willChange: "transform, opacity",
                 overflow: "visible",
+                borderRadius: "14px",
+                boxShadow:
+                  "0 30px 60px -25px rgba(60,52,34,0.45), 0 12px 24px -12px rgba(60,52,34,0.25)",
               }}
             >
               {/* === ENVELOPE BODY === */}
