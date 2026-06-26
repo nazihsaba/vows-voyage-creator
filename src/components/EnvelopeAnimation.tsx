@@ -464,7 +464,7 @@ export const EnvelopeAnimation = ({
                     style={{
                       left: "10%",
                       right: "10%",
-                      top: `${((V_Y + 50) / VB_H) * 100}%`,
+                      top: `${((V_Y + 90) / VB_H) * 100}%`,
                       bottom: "9%",
                       color: "#2c2820",
                       zIndex: 2,
@@ -485,8 +485,8 @@ export const EnvelopeAnimation = ({
                       {bride || "\u00A0"}
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
-                      <div style={{ flex: 1, height: "1px", background: "rgba(166,139,90,0.4)" }} />
+                    <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem", justifyContent: "center" }}>
+                      <div style={{ flex: "none", width: "clamp(42px, 18%, 80px)", height: "1px", background: "rgba(166,139,90,0.4)" }} />
                       <span
                         style={{
                           fontFamily: "'Bodoni Moda', serif",
@@ -498,7 +498,7 @@ export const EnvelopeAnimation = ({
                       >
                         &amp;
                       </span>
-                      <div style={{ flex: 1, height: "1px", background: "rgba(166,139,90,0.4)" }} />
+                      <div style={{ flex: "none", width: "clamp(42px, 18%, 80px)", height: "1px", background: "rgba(166,139,90,0.4)" }} />
                     </div>
 
                     <div
