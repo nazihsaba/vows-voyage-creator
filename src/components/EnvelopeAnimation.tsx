@@ -27,7 +27,11 @@ export const EnvelopeAnimation = ({
 
   // Detect low-power mobile devices once on mount so we can scale down decorative
   // layers that murder the compositor on phones. Also respects prefers-reduced-motion.
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 767px), (pointer: coarse)").matches
+      : false
+  );
   const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -168,6 +172,16 @@ export const EnvelopeAnimation = ({
               100% { opacity: 0; pointer-events: none; }
             }
 
+            .env-zone {
+              width: 100%;
+              height: min(86vh, 640px);
+              max-width: 100%;
+            }
+            @media (max-width: 767px), (pointer: coarse) {
+              .env-zone { height: min(60vh, 440px); }
+            }
+
+
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
@@ -266,12 +280,7 @@ export const EnvelopeAnimation = ({
 
           <div
             className="env-zone relative cursor-pointer select-none outline-none"
-            style={{
-              perspective: "2400px",
-              width: "100%",
-              height: isMobile ? "min(60vh, 440px)" : "min(86vh, 640px)",
-              maxWidth: "100%",
-            }}
+            style={{ perspective: "2400px" }}
             onClick={handleOpen}
             onKeyDown={handleKey}
             role="button"
