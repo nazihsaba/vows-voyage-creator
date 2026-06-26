@@ -1,4 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
+import waxSealHeart from "@/assets/wax-seal-heart.webp";
 
 interface EnvelopeAnimationProps {
   groomName?: string;
