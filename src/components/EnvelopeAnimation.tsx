@@ -435,15 +435,12 @@ export const EnvelopeAnimation = ({
           <div
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
-              perspective: "2200px",
-              // Portrait envelope: tall and narrow, fills most of screen height.
-              // Use vh as an old-Safari-safe base, with dvh override below for
-              // modern browsers via @supports. Parent overlay uses
-              // -webkit-fill-available so the envelope is sized against the
-              // visible viewport (URL bar excluded) on iOS Safari.
-              height: "min(62vh, 92vw * (840/600))",
-              width: "min(92vw, 62vh * (600/840), 600px)",
-              maxWidth: "min(92vw, 600px)",
+              perspective: "2400px",
+              // Full-viewport envelope: spans the entire screen.
+              // vh fallback for old Safari; dvh override applied via @supports.
+              height: "100vh",
+              width: "100vw",
+              maxWidth: "none",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
