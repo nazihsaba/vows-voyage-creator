@@ -401,8 +401,39 @@ export const EnvelopeAnimation = ({
                     stroke="rgba(60,52,34,0.1)"
                     strokeWidth="1"
                   />
+
+                  {/* === FLORAL CORNER ORNAMENTS === */}
+                  <g opacity="0.5" stroke="#a68b5a" strokeWidth="1.1" strokeLinecap="round" fill="none">
+                    {/* top-left */}
+                    <g transform={`translate(28, ${V_Y + 90})`}>
+                      <path d="M0,80 Q10,40 50,30" />
+                      <path d="M0,80 Q30,70 40,20" />
+                      <path d="M0,80 Q50,80 70,40" />
+                      <path d="M22,55 Q28,48 34,52" />
+                      <path d="M40,38 Q46,30 52,34" />
+                      <circle cx="50" cy="30" r="2.4" fill="#a68b5a" />
+                      <circle cx="40" cy="20" r="1.8" fill="#a68b5a" />
+                      <circle cx="70" cy="40" r="2.4" fill="#a68b5a" />
+                      <ellipse cx="24" cy="62" rx="4" ry="2" fill="#a68b5a" opacity="0.55" transform="rotate(-30 24 62)" />
+                      <ellipse cx="46" cy="44" rx="3.5" ry="1.8" fill="#a68b5a" opacity="0.55" transform="rotate(20 46 44)" />
+                    </g>
+                    {/* bottom-right (mirrored) */}
+                    <g transform={`translate(${VB_W - 28}, ${VB_H - 90}) rotate(180)`}>
+                      <path d="M0,80 Q10,40 50,30" />
+                      <path d="M0,80 Q30,70 40,20" />
+                      <path d="M0,80 Q50,80 70,40" />
+                      <path d="M22,55 Q28,48 34,52" />
+                      <path d="M40,38 Q46,30 52,34" />
+                      <circle cx="50" cy="30" r="2.4" fill="#a68b5a" />
+                      <circle cx="40" cy="20" r="1.8" fill="#a68b5a" />
+                      <circle cx="70" cy="40" r="2.4" fill="#a68b5a" />
+                      <ellipse cx="24" cy="62" rx="4" ry="2" fill="#a68b5a" opacity="0.55" transform="rotate(-30 24 62)" />
+                      <ellipse cx="46" cy="44" rx="3.5" ry="1.8" fill="#a68b5a" opacity="0.55" transform="rotate(20 46 44)" />
+                    </g>
+                  </g>
                 </g>
               </svg>
+
 
               {/* === BRIDE & GROOM NAMES === */}
               {hasNames && (
