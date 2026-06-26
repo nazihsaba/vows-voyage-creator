@@ -401,10 +401,10 @@ export const EnvelopeAnimation = ({
                 <div
                   className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-center"
                   style={{
-                    left: "8%",
-                    right: "8%",
-                    top: `${((V_Y + 70) / VB_H) * 100}%`,
-                    bottom: "8%",
+                    left: "10%",
+                    right: "10%",
+                    top: `${((V_Y + 40) / VB_H) * 100}%`,
+                    bottom: "10%",
                     color: "#2c2820",
                     zIndex: 2,
                     fontFamily: "'Bodoni Moda', 'Jost', Georgia, serif",
@@ -413,13 +413,13 @@ export const EnvelopeAnimation = ({
                   <div
                     style={{
                       fontFamily: "'Jost', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "clamp(10px, 2.2vw, 12px)",
-                      letterSpacing: "0.5em",
+                      fontWeight: 400,
+                      fontSize: "clamp(9px, 1.9vw, 11px)",
+                      letterSpacing: "0.42em",
                       textTransform: "uppercase",
                       color: "#9c9788",
-                      paddingLeft: "0.5em",
-                      marginBottom: "1.2rem",
+                      paddingLeft: "0.42em",
+                      marginBottom: "0.9rem",
                     }}
                   >
                     The wedding of
@@ -427,8 +427,9 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.5vw, 42px)",
-                      lineHeight: 1.04,
+                      fontFamily: "'Bodoni Moda', serif",
+                      fontSize: "clamp(26px, 6vw, 38px)",
+                      lineHeight: 1.05,
                       fontWeight: 400,
                       color: "#221f18",
                     }}
@@ -442,9 +443,9 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Bodoni Moda', serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(20px, 4.2vw, 26px)",
-                      lineHeight: 1.1,
-                      margin: "0.2em 0",
+                      fontSize: "clamp(16px, 3.4vw, 22px)",
+                      lineHeight: 1,
+                      margin: "0.35em 0",
                       color: "#a59a7e",
                     }}
                   >
@@ -453,8 +454,9 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.5vw, 42px)",
-                      lineHeight: 1.04,
+                      fontFamily: "'Bodoni Moda', serif",
+                      fontSize: "clamp(26px, 6vw, 38px)",
+                      lineHeight: 1.05,
                       fontWeight: 400,
                       color: "#221f18",
                     }}
@@ -468,26 +470,28 @@ export const EnvelopeAnimation = ({
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: "14px",
-                        marginTop: "1.6rem",
+                        gap: "12px",
+                        marginTop: "1.4rem",
                       }}
                     >
-                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
                       <div
                         style={{
                           fontFamily: "'Jost', sans-serif",
                           fontWeight: 500,
-                          fontSize: "clamp(11px, 2.4vw, 13px)",
-                          letterSpacing: "0.34em",
+                          fontSize: "clamp(10px, 2.1vw, 12px)",
+                          letterSpacing: "0.32em",
                           color: "#5d5849",
-                          paddingLeft: "0.34em",
+                          paddingLeft: "0.32em",
                         }}
                       >
                         {formattedDate}
                       </div>
-                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
                     </div>
                   )}
+                </div>
+              )}
                 </div>
               )}
 
