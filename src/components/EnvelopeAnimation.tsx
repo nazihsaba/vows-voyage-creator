@@ -470,21 +470,6 @@ export const EnvelopeAnimation = ({
                       zIndex: 2,
                     }}
                   >
-                  {/* Top: label */}
-                  <div
-                    style={{
-                      fontFamily: "'Jost', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "clamp(9px, 1.9vw, 11px)",
-                      letterSpacing: "0.36em",
-                      textTransform: "uppercase",
-                      color: "#a68b5a",
-                      paddingLeft: "0.36em",
-                    }}
-                  >
-                    The wedding of
-                  </div>
-
                   {/* Middle: names with dividers */}
                   <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.45rem" }}>
                     <div
