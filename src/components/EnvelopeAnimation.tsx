@@ -27,7 +27,11 @@ export const EnvelopeAnimation = ({
 
   // Detect low-power mobile devices once on mount so we can scale down decorative
   // layers that murder the compositor on phones. Also respects prefers-reduced-motion.
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 767px), (pointer: coarse)").matches
+      : false
+  );
   const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => {
     if (typeof window === "undefined") return;
