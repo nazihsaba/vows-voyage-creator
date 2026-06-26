@@ -257,7 +257,7 @@ export const EnvelopeAnimation = ({
             }
             @keyframes envOverlayOut {
               0%   { opacity: 1; }
-              92%  { opacity: 1; }
+              70%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
