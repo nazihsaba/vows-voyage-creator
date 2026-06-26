@@ -492,8 +492,7 @@ export const EnvelopeAnimation = ({
                   )}
                 </div>
               )}
-                </div>
-              )}
+
 
               {/* === REVEAL PANEL (page 0 of the invitation) === */}
               <div
