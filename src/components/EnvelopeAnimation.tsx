@@ -666,26 +666,6 @@ export const EnvelopeAnimation = ({
 
             </div>
 
-            {/* Tap hint */}
-            <div
-              className="env-hint absolute left-0 right-0 text-center pointer-events-none"
-              style={{ bottom: "clamp(2rem, 6vh, 4rem)" }}
-            >
-              <p
-                className="animate-pulse"
-                style={{
-                  fontFamily: "'Jost', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "clamp(10px, 2.6vw, 12px)",
-                  letterSpacing: "0.42em",
-                  textTransform: "uppercase",
-                  color: "rgba(44,40,32,0.42)",
-                  paddingLeft: "0.42em",
-                }}
-              >
-                Tap to open
-              </p>
-            </div>
           </div>
         </div>
       )}
