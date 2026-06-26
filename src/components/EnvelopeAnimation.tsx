@@ -542,64 +542,31 @@ export const EnvelopeAnimation = ({
                   />
                 </svg>
 
-                {/* === BLIND-EMBOSS SEAL === */}
+                {/* === WAX SEAL === */}
                 <div
                   className="env-seal absolute pointer-events-none select-none"
                   draggable={false}
                   style={{
                     left: "50%",
                     top: `${(V_Y / VB_H) * 100}%`,
-                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-3deg)",
-                    width: "18%",
-                    minWidth: "92px",
+                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-4deg)",
+                    width: "22%",
+                    minWidth: "84px",
+                    maxWidth: "120px",
                     aspectRatio: "1 / 1",
                     zIndex: 2,
                     willChange: "transform",
                     filter: isMobile
-                      ? "none"
-                      : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
+                      ? "drop-shadow(0 4px 6px rgba(80,15,15,.35))"
+                      : "drop-shadow(0 10px 14px rgba(80,15,15,.45))",
                   }}
                 >
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      borderRadius: "50%",
-                      background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
-                      boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
-                      border: "1px solid rgba(120,108,84,.1)",
-                    }}
+                  <img
+                    src={waxSealHeart}
+                    alt=""
+                    draggable={false}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                   />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: "11%",
-                      borderRadius: "50%",
-                      boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
-                    }}
-                  />
-                  <svg
-                    viewBox="0 0 100 92"
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "50%",
-                      transform: "translate(-50%, -50%)",
-                      overflow: "visible",
-                      width: "48%",
-                      height: "auto",
-                    }}
-                  >
-                    <path
-                      d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
-                      fill="none"
-                      stroke="rgba(120,106,78,.5)"
-                      strokeWidth="3.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
-                    />
-                  </svg>
                 </div>
               </div>
 
@@ -610,56 +577,23 @@ export const EnvelopeAnimation = ({
                 style={{
                   left: "50%",
                   top: `${(V_Y / VB_H) * 100}%`,
-                  transform: "translate(-50%, -50%) rotate(-3deg)",
-                  width: "18%",
-                  minWidth: "92px",
+                  transform: "translate(-50%, -50%) rotate(-4deg)",
+                  width: "22%",
+                  minWidth: "84px",
+                  maxWidth: "120px",
                   aspectRatio: "1 / 1",
                   zIndex: 7,
                   filter: isMobile
-                    ? "none"
-                    : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
+                    ? "drop-shadow(0 4px 6px rgba(80,15,15,.35))"
+                    : "drop-shadow(0 10px 14px rgba(80,15,15,.45))",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
-                    boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
-                    border: "1px solid rgba(120,108,84,.1)",
-                  }}
+                <img
+                  src={waxSealHeart}
+                  alt=""
+                  draggable={false}
+                  style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                 />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: "11%",
-                    borderRadius: "50%",
-                    boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
-                  }}
-                />
-                <svg
-                  viewBox="0 0 100 92"
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                    overflow: "visible",
-                    width: "48%",
-                    height: "auto",
-                  }}
-                >
-                  <path
-                    d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
-                    fill="none"
-                    stroke="rgba(120,106,78,.5)"
-                    strokeWidth="3.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
-                  />
-                </svg>
               </div>
 
             </div>
