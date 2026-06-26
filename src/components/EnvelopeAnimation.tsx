@@ -79,7 +79,7 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 4200;
+  const TOTAL = 2800;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
@@ -257,7 +257,7 @@ export const EnvelopeAnimation = ({
             }
             @keyframes envOverlayOut {
               0%   { opacity: 1; }
-              92%  { opacity: 1; }
+              70%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
@@ -293,30 +293,12 @@ export const EnvelopeAnimation = ({
 
             @keyframes envBody {
               0%   { transform: translateY(0)    scale(1);    opacity: 1; }
-              50%  { transform: translateY(0)    scale(1);    opacity: 1; }
-              90%  { transform: translateY(85%)  scale(0.92); opacity: 0; }
-              100% { transform: translateY(85%)  scale(0.92); opacity: 0; }
+              55%  { transform: translateY(0)    scale(1);    opacity: 1; }
+              95%  { transform: translateY(95%)  scale(0.9);  opacity: 0; }
+              100% { transform: translateY(95%)  scale(0.9);  opacity: 0; }
             }
             .is-opening .env-target {
               animation: envBody ${TOTAL}ms cubic-bezier(0.55, 0.05, 0.25, 1) forwards;
-            }
-
-            /* Letter card rises out of the envelope V-opening, expands to fill
-               the viewport, then fades to reveal the actual invitation behind. */
-            .env-letter {
-              opacity: 0;
-              transform: translate(-50%, -10%) scale(0.18);
-            }
-            @keyframes envLetterRise {
-              0%   { opacity: 0; transform: translate(-50%, -10%) scale(0.18); }
-              45%  { opacity: 0; transform: translate(-50%, -10%) scale(0.18); }
-              55%  { opacity: 1; transform: translate(-50%, -25%) scale(0.22); }
-              80%  { opacity: 1; transform: translate(-50%, -50%) scale(1);    }
-              95%  { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
-              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
-            }
-            .is-opening .env-letter {
-              animation: envLetterRise ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
@@ -326,7 +308,7 @@ export const EnvelopeAnimation = ({
                visible "cuts" near the top of the envelope. */
             @keyframes envFlapLift {
               0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              45%  { transform: rotateX(-182deg);              opacity: 1; }
+              55%  { transform: rotateX(-182deg);              opacity: 1; }
               100% { transform: rotateX(-182deg);              opacity: 1; }
             }
             .env-flap-wrap {
@@ -871,112 +853,6 @@ export const EnvelopeAnimation = ({
                 }}
               />
 
-            </div>
-
-            {/* === RISING LETTER ===
-                After the flap opens, this card rises out of the envelope's
-                V-opening and scales up to fill the viewport, then fades away
-                to reveal the real invitation page rendered behind the overlay.
-                Positioned as a fixed sibling of the envelope so it can overflow
-                past the envelope bounds and grow to the full screen. */}
-            <div
-              className="env-letter fixed pointer-events-none flex flex-col items-center justify-center text-center"
-              aria-hidden="true"
-              style={{
-                left: "50%",
-                top: "50%",
-                width: "min(86vw, 520px)",
-                height: "min(72vh, 720px)",
-                transformOrigin: "center center",
-                background:
-                  "linear-gradient(180deg, rgb(250, 244, 230) 0%, rgb(244, 236, 216) 100%)",
-                borderRadius: 10,
-                boxShadow:
-                  "0 30px 60px rgba(0,0,0,0.45), 0 8px 18px rgba(0,0,0,0.25)",
-                padding: "8% 8%",
-                zIndex: 6,
-                fontFamily:
-                  "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
-                color: "#3a2a14",
-              }}
-            >
-              <div
-                style={{
-                  width: "44%",
-                  height: 1,
-                  background:
-                    "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
-                  marginBottom: "1.4em",
-                }}
-              />
-              <div
-                style={{
-                  fontSize: "clamp(11px, 2.6vw, 14px)",
-                  letterSpacing: "0.46em",
-                  textTransform: "uppercase",
-                  color: "#865814",
-                  fontWeight: 500,
-                  marginBottom: "1.2em",
-                }}
-              >
-                You&apos;re Invited
-              </div>
-              {hasNames && (
-                <>
-                  <div
-                    style={{
-                      fontSize: "clamp(28px, 6.8vw, 44px)",
-                      fontStyle: "italic",
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {bride || "\u00A0"}
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(36px, 9vw, 60px)",
-                      fontStyle: "italic",
-                      color: "#865814",
-                      lineHeight: 1,
-                      margin: "0.1em 0",
-                    }}
-                  >
-                    &amp;
-                  </div>
-                  <div
-                    style={{
-                      fontSize: "clamp(28px, 6.8vw, 44px)",
-                      fontStyle: "italic",
-                      lineHeight: 1.1,
-                    }}
-                  >
-                    {groom || "\u00A0"}
-                  </div>
-                </>
-              )}
-              {formattedDate && (
-                <div
-                  style={{
-                    marginTop: "1.4em",
-                    fontSize: "clamp(12px, 3vw, 15px)",
-                    letterSpacing: "0.42em",
-                    textTransform: "uppercase",
-                    color: "#865814",
-                    fontWeight: 600,
-                  }}
-                >
-                  {formattedDate}
-                </div>
-              )}
-              <div
-                style={{
-                  width: "44%",
-                  height: 1,
-                  background:
-                    "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
-                  marginTop: "1.4em",
-                }}
-              />
             </div>
 
             {/* Tap hint */}
