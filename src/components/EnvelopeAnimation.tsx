@@ -326,7 +326,7 @@ export const EnvelopeAnimation = ({
                visible "cuts" near the top of the envelope. */
             @keyframes envFlapLift {
               0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              90%  { transform: rotateX(-182deg);              opacity: 1; }
+              45%  { transform: rotateX(-182deg);              opacity: 1; }
               100% { transform: rotateX(-182deg);              opacity: 1; }
             }
             .env-flap-wrap {
