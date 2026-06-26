@@ -172,6 +172,16 @@ export const EnvelopeAnimation = ({
               100% { opacity: 0; pointer-events: none; }
             }
 
+            .env-zone {
+              width: 100%;
+              height: min(86vh, 640px);
+              max-width: 100%;
+            }
+            @media (max-width: 767px), (pointer: coarse) {
+              .env-zone { height: min(60vh, 440px); }
+            }
+
+
             @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
             .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
