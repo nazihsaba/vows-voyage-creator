@@ -1,6 +1,4 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
-import paperTexture from "@/assets/envelope-paper-texture.jpeg";
-import waxSealHeart from "@/assets/wax-seal-heart.webp";
 
 interface EnvelopeAnimationProps {
   groomName?: string;
@@ -13,7 +11,7 @@ interface EnvelopeAnimationProps {
 }
 
 /**
- * Full-screen photoreal envelope opener.
+ * Full-screen editorial envelope opener.
  */
 export const EnvelopeAnimation = ({
   groomName,
@@ -27,8 +25,7 @@ export const EnvelopeAnimation = ({
   const [hidden, setHidden] = useState(false);
 
   // Detect low-power mobile devices once on mount so we can scale down decorative
-  // layers (fibers, motes, drop-shadow filters) that murder the compositor on
-  // phones. Also respects prefers-reduced-motion.
+  // layers that murder the compositor on phones. Also respects prefers-reduced-motion.
   const [isMobile, setIsMobile] = useState(false);
   const [reduceMotion, setReduceMotion] = useState(false);
   useEffect(() => {
@@ -48,11 +45,9 @@ export const EnvelopeAnimation = ({
     };
   }, []);
 
-  // Brand highlight color used for the ampersand and seal accents.
-  const accent = "#865814";
-  // Kept for any future SVG accents but the names always use the brand gold.
-  void accentColor;
+  // New design uses a muted editorial palette; keep props for API compatibility.
   void primaryColor;
+  void accentColor;
 
   // Title-case helper so names always render with elegant capitalization.
   const toTitle = (s?: string) =>
@@ -65,25 +60,20 @@ export const EnvelopeAnimation = ({
   const bride = toTitle(brideName);
   const hasNames = Boolean(groom || bride);
 
-  // Format wedding date as e.g. "Twenty-Third of June, 2026" → keep simple: "23 · June · 2026".
+  // Format wedding date as DD.MM.YYYY to match the editorial design.
   const formattedDate = useMemo(() => {
     if (!weddingDate) return "";
     const d = new Date(weddingDate);
     if (isNaN(d.getTime())) return "";
-    const day = d.getUTCDate();
-    const month = d.toLocaleDateString("en-US", {
-      month: "long",
-      timeZone: "UTC",
-    });
+    const day = String(d.getUTCDate()).padStart(2, "0");
+    const month = String(d.getUTCMonth() + 1).padStart(2, "0");
     const year = d.getUTCFullYear();
-    return `${day} · ${month} · ${year}`;
+    return `${day}.${month}.${year}`;
   }, [weddingDate]);
 
   const TOTAL = 3600;
-  const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
-  const FLAP_CORNER_R = 14; // matches body rounded corners
-
-  // (Reveal image logic removed — replaced with a static welcome message.)
+  const FLAP_REST_TILT = -10;
+  const FLAP_CORNER_R = 14;
 
   const handleOpen = useCallback(() => {
     if (opening) return;
@@ -112,12 +102,10 @@ export const EnvelopeAnimation = ({
     }
   }, [hidden]);
 
-  // Load elegant calligraphy font + preload wax seal so both the typography
-  // and the seal appear on the very first paint of the envelope.
+  // Load the editorial typefaces used by the envelope design.
   useEffect(() => {
     const head = document.head;
 
-    // Preconnect to Google Fonts for faster handshake.
     if (!document.getElementById("env-gf-preconnect")) {
       const pc1 = document.createElement("link");
       pc1.id = "env-gf-preconnect";
@@ -136,60 +124,10 @@ export const EnvelopeAnimation = ({
       link.id = "env-google-fonts";
       link.rel = "stylesheet";
       link.href =
-        "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500&family=Cormorant+Upright:wght@300;400&display=swap";
+        "https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500&display=swap";
       head.appendChild(link);
     }
-
-    if (!document.getElementById("env-seal-preload")) {
-      const preload = document.createElement("link");
-      preload.id = "env-seal-preload";
-      preload.rel = "preload";
-      preload.as = "image";
-      preload.href = waxSealHeart;
-      preload.type = "image/webp";
-      head.appendChild(preload);
-    }
   }, []);
-
-
-  // Decorative dust motes — drastically reduced on mobile (and removed when the
-  // user prefers reduced motion) because each one is its own animated layer.
-  const moteCount = reduceMotion ? 0 : isMobile ? 5 : 14;
-  const motes = useMemo(
-    () =>
-      Array.from({ length: moteCount }).map((_, i) => ({
-        id: i,
-        left: Math.random() * 100,
-        top: 30 + Math.random() * 65,
-        size: 1.5 + Math.random() * 3,
-        delay: Math.random() * 3,
-        duration: 5 + Math.random() * 5,
-      })),
-    [moteCount]
-  );
-
-  // Subtle paper fibers scattered across the envelope face (deterministic).
-  // 80 strokes is fine on desktop but doubles SVG paint cost on phones; keep
-  // a much smaller deterministic set there.
-  const fiberCount = isMobile ? 24 : 80;
-  const fibers = useMemo(() => {
-    const rng = (seed: number) => {
-      let s = seed;
-      return () => {
-        s = (s * 9301 + 49297) % 233280;
-        return s / 233280;
-      };
-    };
-    const r = rng(7);
-    return Array.from({ length: fiberCount }).map((_, i) => ({
-      id: i,
-      x: r() * 600,
-      y: r() * 840,
-      len: 4 + r() * 10,
-      rot: r() * 360,
-      o: 0.05 + r() * 0.08,
-    }));
-  }, [fiberCount]);
 
   // SVG viewBox keeps geometry crisp regardless of pixel size.
   // Portrait orientation so the envelope fills vertical screen space.
@@ -208,48 +146,16 @@ export const EnvelopeAnimation = ({
             opening ? "is-opening" : ""
           }`}
         >
-          {/* Ambient glow */}
-          <div
-            className="env-glow absolute inset-0 pointer-events-none"
-            style={{
-              background: `radial-gradient(circle at 50% 50%, ${accent}33 0%, transparent 60%)`,
-            }}
-          />
-          {/* Floating dust motes */}
-          <div className="absolute inset-0 pointer-events-none overflow-hidden">
-            {motes.map((m) => (
-              <span
-                key={m.id}
-                className="env-mote absolute rounded-full"
-                style={{
-                  left: `${m.left}%`,
-                  top: `${m.top}%`,
-                  width: `${m.size}px`,
-                  height: `${m.size}px`,
-                  background: `radial-gradient(circle, ${accent}aa 0%, transparent 70%)`,
-                  animation: `envMote ${m.duration}s ease-in-out ${m.delay}s infinite`,
-                  filter: isMobile ? "none" : "blur(0.4px)",
-                  willChange: "transform, opacity",
-                }}
-              />
-            ))}
-          </div>
-
           <style>{`
             .env-overlay {
-              background: radial-gradient(ellipse at center, hsl(20 14% 10%) 0%, hsl(20 14% 4%) 100%);
+              background: #e7e3dc;
               opacity: 1;
               will-change: opacity;
-              /* Cascading height: each line overrides the previous if supported.
-                 Old Safari ignores dvh and falls back to -webkit-fill-available,
-                 which respects the visible viewport (excludes the URL bar) so
-                 the envelope's bottom and "Tap to open" hint stay on screen. */
               height: 100vh;
               height: -webkit-fill-available;
               height: 100dvh;
             }
             @supports (-webkit-touch-callout: none) {
-              /* iOS Safari specifically: prefer fill-available to avoid URL bar crop. */
               .env-overlay { height: -webkit-fill-available; }
             }
             .env-overlay.is-opening {
@@ -260,35 +166,17 @@ export const EnvelopeAnimation = ({
               60%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
-            @keyframes envMote {
-              0%, 100% { transform: translateY(0) translateX(0); opacity: .30; }
-              50%      { transform: translateY(-22px) translateX(6px); opacity: .85; }
-            }
-            @keyframes envGlowPulse {
-              0%, 100% { opacity: .85; transform: scale(1); }
-              50%      { opacity: 1;   transform: scale(1.04); }
-            }
-            .env-glow { animation: envGlowPulse 4s ease-in-out infinite; }
 
-            @keyframes envIdle {
-              0%, 100% { transform: translateY(0) rotate(0); }
-              50%      { transform: translateY(-6px) rotate(.15deg); }
-            }
-            .env-idle { animation: envIdle 4.5s ease-in-out infinite; }
+            @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
+            .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
 
-            .env-zone:hover .env-target {
-              transform: scale(1.01);
-              filter: drop-shadow(0 42px 60px rgba(0,0,0,.6));
+            .env-seal-static { opacity: 1; }
+            @keyframes envStaticSealOut {
+              0%   { opacity: 1; }
+              100% { opacity: 0; }
             }
-            /* Full-viewport envelope: spans the entire page width and height.
-               Keep portrait aspect (600/840) only as a fallback minimum so the
-               internal SVG never breaks; the actual surface fills the screen. */
-            @supports (height: 100dvh) {
-              .env-zone {
-                width: 100vw !important;
-                height: 100dvh !important;
-                max-width: none !important;
-              }
+            .is-opening .env-seal-static {
+              animation: envStaticSealOut 180ms ease-out forwards;
             }
 
             /* Envelope drop: starts while the flap is still finishing its arc,
@@ -305,8 +193,7 @@ export const EnvelopeAnimation = ({
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
-               tilt all the way back to -180°. Longer arc with a soft landing
-               curve so it never snaps at the end. */
+               tilt all the way back to -180°. */
             @keyframes envFlapLift {
               0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
               60%  { transform: rotateX(-182deg);              opacity: 1; }
@@ -318,17 +205,15 @@ export const EnvelopeAnimation = ({
             .is-opening .env-flap-wrap {
               animation: envFlapLift ${TOTAL}ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
             }
-            /* On mobile, a touch snappier so the arc never feels lazy on small
-               viewports — still smooth, just a tighter landing. */
             @media (max-width: 767px), (pointer: coarse) {
               .is-opening .env-flap-wrap {
                 animation-timing-function: cubic-bezier(0.22, 0.8, 0.28, 1);
               }
             }
 
-            /* "Welcome / You're Invited" lives behind the flap. It must stay
-               hidden while the envelope is closed and only fade in as the flap
-               rotates open, so the message is revealed — not pre-shown. */
+            /* The invitation page sits behind the flap; it fades in as the flap
+               rotates open, then the whole overlay fades away to reveal the
+               actual invitation content. */
             .env-reveal { opacity: 0; }
             @keyframes envRevealIn {
               0%   { opacity: 0; }
@@ -340,31 +225,9 @@ export const EnvelopeAnimation = ({
               animation: envRevealIn ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
 
-            /* Bride & groom names are tucked inside the envelope. They stay
-               hidden until the user taps, then fade in immediately. */
-            /* Bride & groom names + date are part of the envelope face and
-               stay visible at all times (before and during opening). */
             .env-names { opacity: 1; }
 
-            @keyframes envHint { 0%{opacity:1} 12%,100%{opacity:0} }
-            .is-opening .env-hint { animation: envHint ${TOTAL}ms ease-out forwards; }
-
-            .env-seal-static { opacity: 1; }
-            @keyframes envStaticSealOut {
-              0%   { opacity: 1; }
-              100% { opacity: 0; }
-            }
-            .is-opening .env-seal-static {
-              animation: envStaticSealOut 180ms ease-out forwards;
-            }
-
-            /* GPU promotion + crisp compositing for the animated layers.
-               IMPORTANT: do NOT set backface-visibility: hidden on .env-flap-wrap
-               nor on .env-seal. The flap rotates past 90° during the open
-               animation and the seal lives inside the flap's 3D space; hiding
-               the back face makes the seal vanish on mobile WebKit even before
-               the user interacts (the seal's inherited transform from the
-               slightly tilted flap can be misread as back-facing). */
+            /* GPU promotion + crisp compositing for the animated layers. */
             .env-target {
               -webkit-backface-visibility: hidden;
               -webkit-transform-style: preserve-3d;
@@ -385,31 +248,16 @@ export const EnvelopeAnimation = ({
               backface-visibility: visible;
             }
 
-            /* Mobile-tuned tweaks: smaller blur radius, no expensive drop-shadow
-               filter on the seal (it forces a full raster every frame on mobile
-               GPUs), and slimmer animations on the dust motes. */
             @media (max-width: 767px), (pointer: coarse) {
-              .env-glow { animation-duration: 6s; }
-              .env-idle { animation: none; }
               .env-seal {
                 filter: none !important;
-                /* Flatten Z translation on mobile WebKit. Mobile compositors
-                   create a separate layer for any translateZ child, which
-                   detaches the seal from the parent flap's rotateX animation
-                   (the seal appears to "float" or lag behind the flap). With
-                   translateZ(0) the seal stays coplanar with the flap surface
-                   and rotates rigidly with it. DOM order (img after the flap
-                   svg) keeps the seal painted on top. */
                 transform: translate(-50%, -50%) translateZ(0) rotate(-3deg) !important;
               }
-              /* Disable per-mote blur which costs an extra raster pass. */
-              .env-mote { filter: none !important; }
             }
-
 
             @media (prefers-reduced-motion: reduce) {
               .env-overlay { animation: none !important; opacity: 0 !important; pointer-events: none !important; }
-              .env-idle, .env-glow, .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal, .env-names {
+              .env-target, .env-flap-wrap, .env-seal, .env-hint, .env-reveal, .env-names {
                 animation: none !important;
               }
             }
@@ -419,8 +267,6 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "2400px",
-              // Full-viewport envelope: spans the entire screen.
-              // vh fallback for old Safari; dvh override applied via @supports.
               height: "100vh",
               width: "100vw",
               maxWidth: "none",
@@ -432,36 +278,17 @@ export const EnvelopeAnimation = ({
             aria-label="Tap to open invitation"
           >
             <div
-              className={`env-target ${!opening ? "env-idle" : ""}`}
+              className="env-target"
               style={{
                 width: "100%",
                 height: "100%",
                 position: "relative",
-                // No drop-shadow filter here — filters create a 2D rasterization
-                // boundary that flattens the 3D scene and clips the flap when it
-                // rotates past 90°. Shadow is delegated to the body SVG instead.
                 transformStyle: "preserve-3d",
-                transition:
-                  "transform 500ms cubic-bezier(.22,1,.36,1)",
+                transition: "transform 500ms cubic-bezier(.22,1,.36,1)",
                 willChange: "transform, opacity",
-                // Allow the flap to extend beyond the envelope bounds when folded back.
                 overflow: "visible",
               }}
             >
-              {/* Cast shadow under the whole envelope (separate layer so it doesn't
-                  flatten the 3D scene like a filter on the parent would). */}
-              <div
-                aria-hidden="true"
-                className="absolute inset-0 pointer-events-none"
-                style={{
-                  borderRadius: 14,
-                  boxShadow: isMobile
-                    ? "0 18px 28px rgba(0,0,0,.45)"
-                    : "0 38px 58px rgba(0,0,0,.55), 0 12px 18px rgba(0,0,0,.35)",
-                  transform: "translateZ(-1px)",
-                  zIndex: 0,
-                }}
-              />
               {/* === ENVELOPE BODY === */}
               <svg
                 viewBox={`0 0 ${VB_W} ${VB_H}`}
@@ -470,87 +297,98 @@ export const EnvelopeAnimation = ({
                 aria-hidden="true"
               >
                 <defs>
-                  <pattern
-                    id="env-paper"
-                    patternUnits="userSpaceOnUse"
-                    width={VB_W}
-                    height={VB_H}
-                  >
-                    <image
-                      href={paperTexture}
-                      x="0"
-                      y="0"
-                      width={VB_W}
-                      height={VB_H}
-                      preserveAspectRatio="xMidYMid slice"
-                    />
-                  </pattern>
-                  <radialGradient id="env-vignette" cx="50%" cy="55%" r="65%">
-                    <stop offset="60%" stopColor="rgba(0,0,0,0)" />
-                    <stop offset="100%" stopColor="rgba(70,55,35,0.22)" />
+                  <filter id="paperTooth" x="0" y="0" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.62" numOctaves="2" seed="6" stitchTiles="stitch" result="n" />
+                    <feColorMatrix in="n" type="saturate" values="0" result="g" />
+                    <feConvolveMatrix in="g" order="3" kernelMatrix="-2 -1 0 -1 0 1 0 1 2" divisor="1" bias="0.5" preserveAlpha="true" result="e" />
+                    <feColorMatrix in="e" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1" />
+                  </filter>
+                  <filter id="paperMottle" x="0" y="0" width="100%" height="100%">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="3" seed="2" stitchTiles="stitch" result="n" />
+                    <feColorMatrix in="n" type="saturate" values="0" result="g" />
+                    <feColorMatrix in="g" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0 1" />
+                  </filter>
+                  <filter id="foldBlur" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="1.7" />
+                  </filter>
+
+                  <linearGradient id="panelBottom" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#e6e0d3" />
+                    <stop offset="70%" stopColor="#eae4d8" />
+                    <stop offset="100%" stopColor="#e4ded1" />
+                  </linearGradient>
+                  <linearGradient id="panelLeft" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stopColor="#f1ece2" />
+                    <stop offset="75%" stopColor="#e9e3d6" />
+                    <stop offset="100%" stopColor="#e3ddd0" />
+                  </linearGradient>
+                  <linearGradient id="panelRight" x1="1" y1="0" x2="0" y2="0">
+                    <stop offset="0%" stopColor="#ece7dc" />
+                    <stop offset="75%" stopColor="#e5dfd2" />
+                    <stop offset="100%" stopColor="#dfd9cc" />
+                  </linearGradient>
+                  <linearGradient id="panelTop" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#f8f4ec" />
+                    <stop offset="72%" stopColor="#efeae0" />
+                    <stop offset="100%" stopColor="#e8e2d6" />
+                  </linearGradient>
+
+                  <radialGradient id="envVignette" cx="50%" cy="40%" r="75%">
+                    <stop offset="55%" stopColor="rgba(0,0,0,0)" />
+                    <stop offset="100%" stopColor="rgba(60,52,34,0.13)" />
                   </radialGradient>
-                  {/* Soft shadow cast by the closed flap onto the body face */}
-                  <linearGradient id="env-fold-shadow" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(0,0,0,0.42)" />
-                    <stop offset="55%" stopColor="rgba(0,0,0,0.10)" />
-                    <stop offset="100%" stopColor="rgba(0,0,0,0)" />
-                  </linearGradient>
-                  {/* Highlight along the bottom-fold ridge */}
-                  <linearGradient id="env-bottom-highlight" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="rgba(255,250,235,0)" />
-                    <stop offset="100%" stopColor="rgba(255,250,235,0.22)" />
-                  </linearGradient>
-                  <clipPath id="env-body-clip">
+                  <radialGradient id="envHighlight" cx="27%" cy="16%" r="65%">
+                    <stop offset="0%" stopColor="rgba(255,253,245,0.75)" />
+                    <stop offset="60%" stopColor="rgba(255,253,245,0)" />
+                  </radialGradient>
+
+                  <clipPath id="bodyRound">
                     <rect x="0" y="0" width={VB_W} height={VB_H} rx="14" ry="14" />
+                  </clipPath>
+                  <clipPath id="panelBottomClip">
+                    <polygon points={`0,${VB_H} ${VB_W},${VB_H} ${V_X},${V_Y}`} />
+                  </clipPath>
+                  <clipPath id="panelLeftClip">
+                    <polygon points={`0,0 0,${VB_H} ${V_X},${V_Y}`} />
+                  </clipPath>
+                  <clipPath id="panelRightClip">
+                    <polygon points={`${VB_W},0 ${VB_W},${VB_H} ${V_X},${V_Y}`} />
+                  </clipPath>
+                  <clipPath id="panelTopClip">
+                    <polygon points={`0,0 ${VB_W},0 ${V_X},${V_Y}`} />
                   </clipPath>
                 </defs>
 
-                <g clipPath="url(#env-body-clip)">
-                  <rect width={VB_W} height={VB_H} fill="url(#env-paper)" />
-                  {/* Fine paper fibers */}
-                  <g opacity="0.9">
-                    {fibers.map((f) => (
-                      <line
-                        key={f.id}
-                        x1={f.x}
-                        y1={f.y}
-                        x2={f.x + f.len}
-                        y2={f.y}
-                        stroke={`rgba(60,42,18,${f.o})`}
-                        strokeWidth="0.6"
-                        strokeLinecap="round"
-                        transform={`rotate(${f.rot} ${f.x} ${f.y})`}
-                      />
-                    ))}
-                  </g>
-                  {/* Soft shadow cast by the triangular flap onto the body face,
-                      hugging the V-edge so the flap reads as a separate piece of paper. */}
-                  <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0 L ${VB_W} ${V_Y + 50} L ${V_X} ${V_Y + 70} L 0 ${V_Y + 50} Z`}
-                    fill="url(#env-fold-shadow)"
-                    opacity="0.85"
-                  />
-                  {/* Crisp hairline along the flap's V-edge for a clean separation */}
-                  <path
-                    d={`M0 0 L ${V_X} ${V_Y} L ${VB_W} 0`}
-                    fill="none"
-                    stroke="rgba(40,28,10,0.18)"
-                    strokeWidth="0.8"
-                  />
-                  <rect width={VB_W} height={VB_H} fill="url(#env-vignette)" />
-                </g>
+                <g clipPath="url(#bodyRound)">
+                  <rect width={VB_W} height={VB_H} fill="#ece7dd" />
+                  <rect width={VB_W} height={VB_H} clipPath="url(#panelBottomClip)" fill="url(#panelBottom)" />
+                  <rect width={VB_W} height={VB_H} clipPath="url(#panelLeftClip)" fill="url(#panelLeft)" />
+                  <rect width={VB_W} height={VB_H} clipPath="url(#panelRightClip)" fill="url(#panelRight)" />
 
-                <rect
-                  x="0.5"
-                  y="0.5"
-                  width={VB_W - 1}
-                  height={VB_H - 1}
-                  rx="14"
-                  ry="14"
-                  fill="none"
-                  stroke="rgba(40,28,10,0.22)"
-                  strokeWidth="1"
-                />
+                  <rect width={VB_W} height={VB_H} fill="url(#envVignette)" style={{ mixBlendMode: "multiply" }} />
+                  <rect width={VB_W} height={VB_H} fill="#808080" filter="url(#paperMottle)" opacity="0.26" style={{ mixBlendMode: "overlay" }} />
+                  <rect width={VB_W} height={VB_H} fill="#808080" filter="url(#paperTooth)" opacity="0.4" style={{ mixBlendMode: "overlay" }} />
+                  <rect width={VB_W} height={VB_H} fill="url(#envHighlight)" style={{ mixBlendMode: "soft-light" }} />
+
+                  <g filter="url(#foldBlur)" stroke="rgba(60,52,34,0.2)" strokeWidth="2.2" transform="translate(1.5,1.7)">
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                  </g>
+                  <g stroke="rgba(255,255,250,0.65)" strokeWidth="1" transform="translate(-0.9,-1)">
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                  </g>
+
+                  <rect
+                    x="0.5"
+                    y="0.5"
+                    width={VB_W - 1}
+                    height={VB_H - 1}
+                    rx="14"
+                    ry="14"
+                    fill="none"
+                    stroke="rgba(60,52,34,0.1)"
+                    strokeWidth="1"
+                  />
+                </g>
               </svg>
 
               {/* === BRIDE & GROOM NAMES === */}
@@ -560,40 +398,34 @@ export const EnvelopeAnimation = ({
                   style={{
                     left: "8%",
                     right: "8%",
-                    // Anchored to the lower half of the envelope using top/bottom
-                    // bounds so the block always fits — even on short mobile
-                    // viewports — without overlapping the seal at the V-fold.
-                    top: `${((V_Y + 60) / VB_H) * 100}%`,
+                    top: `${((V_Y + 70) / VB_H) * 100}%`,
                     bottom: "8%",
-                    color: "#3a2a14",
+                    color: "#2c2820",
                     zIndex: 2,
-                    fontFamily:
-                      "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
+                    fontFamily: "'Bodoni Moda', 'Jost', Georgia, serif",
                   }}
                 >
-                  {/* Top hairline rule — matches the one between names and date */}
                   <div
-                    className="mx-auto mb-9"
-                    aria-hidden="true"
                     style={{
-                      width: "44%",
-                      height: "1px",
-                      background:
-                        "linear-gradient(to right, transparent, rgba(134,88,20,0.45), transparent)",
-                      opacity: 0.85,
+                      fontFamily: "'Jost', sans-serif",
+                      fontWeight: 500,
+                      fontSize: "clamp(10px, 2.2vw, 12px)",
+                      letterSpacing: "0.5em",
+                      textTransform: "uppercase",
+                      color: "#9c9788",
+                      paddingLeft: "0.5em",
+                      marginBottom: "1.2rem",
                     }}
-                  />
+                  >
+                    The wedding of
+                  </div>
 
                   <div
                     style={{
-                      fontSize: "clamp(24px, 6vw, 38px)",
-                      lineHeight: 1.05,
-                      fontStyle: "italic",
-                      fontWeight: 500,
-                      letterSpacing: "0.01em",
-                      textShadow: isMobile
-                        ? "none"
-                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      fontSize: "clamp(28px, 6.5vw, 42px)",
+                      lineHeight: 1.04,
+                      fontWeight: 400,
+                      color: "#221f18",
                     }}
                   >
                     {bride || "\u00A0"}
@@ -602,147 +434,72 @@ export const EnvelopeAnimation = ({
                   <div
                     aria-hidden="true"
                     style={{
-                      fontFamily: "'Cormorant Garamond', Georgia, serif",
+                      fontFamily: "'Bodoni Moda', serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(34px, 8.4vw, 56px)",
-                      lineHeight: 1,
-                      margin: "0.05em 0",
-                      color: "#865814",
-                      textShadow: isMobile
-                        ? "none"
-                        : "0 1px 0 rgba(255,250,235,0.45), 0 0 1px rgba(134,88,20,0.3)",
+                      fontSize: "clamp(20px, 4.2vw, 26px)",
+                      lineHeight: 1.1,
+                      margin: "0.2em 0",
+                      color: "#a59a7e",
                     }}
                   >
-                    &amp;
+                    and
                   </div>
 
                   <div
                     style={{
-                      fontSize: "clamp(24px, 6vw, 38px)",
-                      lineHeight: 1.05,
-                      fontStyle: "italic",
-                      fontWeight: 500,
-                      letterSpacing: "0.01em",
-                      textShadow: isMobile
-                        ? "none"
-                        : "0 1px 0 rgba(255,250,235,0.55), 0 0 1px rgba(58,42,20,0.25)",
+                      fontSize: "clamp(28px, 6.5vw, 42px)",
+                      lineHeight: 1.04,
+                      fontWeight: 400,
+                      color: "#221f18",
                     }}
                   >
                     {groom || "\u00A0"}
                   </div>
 
                   {formattedDate && (
-                    <>
+                    <div
+                      style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "14px",
+                        marginTop: "1.6rem",
+                      }}
+                    >
+                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
                       <div
-                        className="mx-auto mt-9"
-                        aria-hidden="true"
                         style={{
-                          width: "44%",
-                          height: "1px",
-                          background:
-                            "linear-gradient(to right, transparent, rgba(134,88,20,0.45), transparent)",
-                          opacity: 0.85,
-                        }}
-                      />
-                      <div
-                        className="mt-3"
-                        style={{
-                          fontFamily:
-                            "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                          fontSize: "clamp(14px, 3.2vw, 16px)",
-                          letterSpacing: "0.46em",
-                          textTransform: "uppercase",
-                          color: "#865814",
-                          fontWeight: 600,
+                          fontFamily: "'Jost', sans-serif",
+                          fontWeight: 500,
+                          fontSize: "clamp(11px, 2.4vw, 13px)",
+                          letterSpacing: "0.34em",
+                          color: "#5d5849",
+                          paddingLeft: "0.34em",
                         }}
                       >
                         {formattedDate}
                       </div>
-                    </>
+                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                    </div>
                   )}
                 </div>
               )}
 
-              {/* === REVEAL FRAME (photo behind the flap) ===
-                  Sits between the body face and the flap. Anchored to the upper
-                  portion of the envelope so it sits exactly where the flap was
-                  covering, giving the impression that the photo is being
-                  uncovered as the flap lifts. */}
-              {/* Welcome message tucked behind the flap. The triangular SVG
-                  clip matches the flap shape exactly so the message only shows
-                  inside the top section that opens. */}
+              {/* === REVEAL PANEL (page 0 of the invitation) === */}
               <div
                 className="env-reveal absolute inset-0 pointer-events-none"
                 aria-hidden="true"
                 style={{
-                  // Sits above the body face but below the closed flap (z-index 5).
-                  // No translateZ — on mobile WebKit, negative Z combined with
-                  // preserve-3d ancestors can render this element behind the
-                  // black overlay, making the welcome message vanish during the
-                  // flap rotation.
                   zIndex: 3,
                   willChange: "opacity",
-                  // Clip to the exact triangular flap shape using percentages so
-                  // it scales fluidly with the envelope on every screen size.
                   clipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
                   WebkitClipPath: `polygon(0% 0%, 100% 0%, 50% ${(V_Y / VB_H) * 100}%)`,
-                  background: "rgb(248, 240, 222)",
+                  background: "#f8f4ec",
                 }}
-              >
-                <div
-                  className="absolute left-0 right-0 text-center px-4"
-                  style={{
-                    top: `${(V_Y * 0.36 / VB_H) * 100}%`,
-                    fontFamily:
-                      "'Cormorant Garamond', 'Cormorant Upright', Georgia, serif",
-                  }}
-                >
-                  {/* Decorative top hairline */}
-                  <div
-                    className="mx-auto"
-                    style={{
-                      width: "32%",
-                      height: "1px",
-                      background:
-                        "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
-                      marginBottom: "0.6em",
-                    }}
-                  />
-                  {/* Eyebrow */}
-                  <div
-                    style={{
-                      color: "#865814",
-                      fontFamily:
-                        "'Cormorant Upright', 'Cormorant Garamond', Georgia, serif",
-                      fontSize: "clamp(8px, 2.2vw, 14px)",
-                      letterSpacing: "0.42em",
-                      textTransform: "uppercase",
-                      fontWeight: 400,
-                    }}
-                  >
-                    You&apos;re Invited
-                  </div>
-                  {/* Calligraphic word removed — duplicate of eyebrow above */}
-                  {/* Decorative bottom hairline */}
-                  <div
-                    className="mx-auto"
-                    style={{
-                      width: "32%",
-                      height: "1px",
-                      background:
-                        "linear-gradient(to right, transparent, rgba(134,88,20,0.55), transparent)",
-                      marginTop: "0.5em",
-                    }}
-                  />
-                </div>
-              </div>
-
+              />
 
               {/* === TRIANGULAR FLAP === */}
-              {/* Absolutely positioned, detached from layout flow; rotates around
-                  the top edge in true 3D so it can swing fully past 90° and rest
-                  behind/above the envelope without being clipped. */}
               <div
                 className="env-flap-wrap absolute inset-0"
                 style={{
@@ -750,10 +507,8 @@ export const EnvelopeAnimation = ({
                   transformStyle: "preserve-3d",
                   zIndex: 5,
                   willChange: "transform, opacity",
-                  // Keep the back of the paper visible after passing 90°.
                   backfaceVisibility: "visible",
                   WebkitBackfaceVisibility: "visible",
-                  // No CSS filter here — would flatten the 3D layer and re-clip it.
                   pointerEvents: "none",
                 }}
               >
@@ -767,92 +522,143 @@ export const EnvelopeAnimation = ({
                     <clipPath id="env-flap-clip">
                       <path d={`M0 ${FLAP_CORNER_R} Q0 0 ${FLAP_CORNER_R} 0 L ${VB_W - FLAP_CORNER_R} 0 Q ${VB_W} 0 ${VB_W} ${FLAP_CORNER_R} L ${V_X} ${V_Y} Z`} />
                     </clipPath>
-                    <linearGradient id="env-flap-shade" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="rgba(255,250,240,0.18)" />
-                      <stop offset="35%" stopColor="rgba(0,0,0,0)" />
-                      <stop offset="100%" stopColor="rgba(60,45,25,0.30)" />
-                    </linearGradient>
                   </defs>
 
                   <g clipPath="url(#env-flap-clip)">
-                    {/* Solid paper-color backing — guarantees the flap shape is
-                        opaque even on mobile WebKit where the textured <image>
-                        can fail to paint on the rotated back face. */}
-                    <rect width={VB_W} height={VB_H} fill="rgb(232, 222, 200)" />
-                    <image
-                      href={paperTexture}
-                      x={-VB_W * 0.1}
-                      y={-VB_H * 0.1}
-                      width={VB_W * 1.2}
-                      height={VB_H * 1.2}
-                      preserveAspectRatio="xMidYMid slice"
-                    />
-                    <rect width={VB_W} height={VB_H} fill="url(#env-flap-shade)" />
+                    <rect width={VB_W} height={VB_H} fill="#ece7dd" />
+                    <rect width={VB_W} height={VB_H} clipPath="url(#panelTopClip)" fill="url(#panelTop)" />
+                    <rect width={VB_W} height={VB_H} fill="#808080" filter="url(#paperMottle)" opacity="0.26" style={{ mixBlendMode: "overlay" }} />
+                    <rect width={VB_W} height={VB_H} fill="#808080" filter="url(#paperTooth)" opacity="0.4" style={{ mixBlendMode: "overlay" }} />
                   </g>
 
                   <path
                     d={`M${FLAP_CORNER_R} 0 L ${V_X} ${V_Y} L ${VB_W - FLAP_CORNER_R} 0`}
                     fill="none"
-                    stroke="rgba(255,250,235,0.30)"
-                    strokeWidth="0.5"
+                    stroke="rgba(255,255,250,0.65)"
+                    strokeWidth="1"
                     transform="translate(0 -0.5)"
                   />
                 </svg>
 
-                {/* === WAX SEAL (heart PNG) ===
-                    Now a child of the flap so it rotates together with the
-                    opening top section — like real wax holding the flap shut. */}
-                <img
-                  src={waxSealHeart}
-                  alt=""
-                  aria-hidden="true"
-                  loading="eager"
-                  decoding="sync"
-                  fetchPriority="high"
+                {/* === BLIND-EMBOSS SEAL === */}
+                <div
                   className="env-seal absolute pointer-events-none select-none"
                   draggable={false}
                   style={{
                     left: "50%",
                     top: `${(V_Y / VB_H) * 100}%`,
                     transform: "translate(-50%, -50%) translateZ(60px) rotate(-3deg)",
-                    width: "30%",
-                    height: "auto",
-                    opacity: 1,
+                    width: "18%",
+                    minWidth: "92px",
+                    aspectRatio: "1 / 1",
                     zIndex: 2,
                     willChange: "transform",
                     filter: isMobile
                       ? "none"
-                      : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                      : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
                   }}
-                />
+                >
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      borderRadius: "50%",
+                      background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
+                      boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
+                      border: "1px solid rgba(120,108,84,.1)",
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: "11%",
+                      borderRadius: "50%",
+                      boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
+                    }}
+                  />
+                  <svg
+                    viewBox="0 0 100 92"
+                    style={{
+                      position: "absolute",
+                      left: "50%",
+                      top: "50%",
+                      transform: "translate(-50%, -50%)",
+                      overflow: "visible",
+                      width: "48%",
+                      height: "auto",
+                    }}
+                  >
+                    <path
+                      d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
+                      fill="none"
+                      stroke="rgba(120,106,78,.5)"
+                      strokeWidth="3.2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
+                    />
+                  </svg>
+                </div>
               </div>
 
-              {/* Static first-paint seal fallback. Some real mobile WebKit builds
-                  delay painting image children inside a 3D-rotated flap until the
-                  first interaction; this flat overlay guarantees the closed
-                  envelope shows the seal immediately, then yields to the animated
-                  flap seal on tap. */}
-              <img
-                src={waxSealHeart}
-                alt=""
-                aria-hidden="true"
-                loading="eager"
-                decoding="sync"
-                fetchPriority="high"
+              {/* Static first-paint seal fallback. */}
+              <div
                 className="env-seal-static absolute pointer-events-none select-none"
                 draggable={false}
                 style={{
                   left: "50%",
                   top: `${(V_Y / VB_H) * 100}%`,
                   transform: "translate(-50%, -50%) rotate(-3deg)",
-                  width: "30%",
-                  height: "auto",
+                  width: "18%",
+                  minWidth: "92px",
+                  aspectRatio: "1 / 1",
                   zIndex: 7,
                   filter: isMobile
                     ? "none"
-                    : "drop-shadow(0 8px 10px rgba(0,0,0,0.55)) drop-shadow(0 2px 3px rgba(0,0,0,0.45))",
+                    : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
                 }}
-              />
+              >
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: 0,
+                    borderRadius: "50%",
+                    background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
+                    boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
+                    border: "1px solid rgba(120,108,84,.1)",
+                  }}
+                />
+                <div
+                  style={{
+                    position: "absolute",
+                    inset: "11%",
+                    borderRadius: "50%",
+                    boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
+                  }}
+                />
+                <svg
+                  viewBox="0 0 100 92"
+                  style={{
+                    position: "absolute",
+                    left: "50%",
+                    top: "50%",
+                    transform: "translate(-50%, -50%)",
+                    overflow: "visible",
+                    width: "48%",
+                    height: "auto",
+                  }}
+                >
+                  <path
+                    d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
+                    fill="none"
+                    stroke="rgba(120,106,78,.5)"
+                    strokeWidth="3.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
+                  />
+                </svg>
+              </div>
 
             </div>
 
@@ -862,8 +668,16 @@ export const EnvelopeAnimation = ({
               style={{ bottom: "clamp(2rem, 6vh, 4rem)" }}
             >
               <p
-                className="tracking-[0.5em] uppercase animate-pulse"
-                style={{ color: "#E8DCC4", fontSize: "clamp(10px, 2.6vw, 12px)" }}
+                className="animate-pulse"
+                style={{
+                  fontFamily: "'Jost', sans-serif",
+                  fontWeight: 400,
+                  fontSize: "clamp(10px, 2.6vw, 12px)",
+                  letterSpacing: "0.42em",
+                  textTransform: "uppercase",
+                  color: "rgba(44,40,32,0.42)",
+                  paddingLeft: "0.42em",
+                }}
               >
                 Tap to open
               </p>
