@@ -439,17 +439,37 @@ export const EnvelopeAnimation = ({
 
               {/* === BRIDE & GROOM NAMES === */}
               {hasNames && (
-                <div
-                  className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-between"
-                  style={{
-                    left: "10%",
-                    right: "10%",
-                    top: `${((V_Y + 50) / VB_H) * 100}%`,
-                    bottom: "9%",
-                    color: "#2c2820",
-                    zIndex: 2,
-                  }}
-                >
+                <>
+                  <div
+                    className="env-label absolute pointer-events-none select-none text-center"
+                    style={{
+                      left: "10%",
+                      right: "10%",
+                      top: "22%",
+                      color: "#a68b5a",
+                      zIndex: 6,
+                      fontFamily: "'Jost', sans-serif",
+                      fontWeight: 500,
+                      fontSize: "clamp(9px, 1.9vw, 11px)",
+                      letterSpacing: "0.36em",
+                      textTransform: "uppercase",
+                      paddingLeft: "0.36em",
+                    }}
+                  >
+                    The wedding of
+                  </div>
+
+                  <div
+                    className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-between"
+                    style={{
+                      left: "10%",
+                      right: "10%",
+                      top: `${((V_Y + 50) / VB_H) * 100}%`,
+                      bottom: "9%",
+                      color: "#2c2820",
+                      zIndex: 2,
+                    }}
+                  >
                   {/* Top: label */}
                   <div
                     style={{
