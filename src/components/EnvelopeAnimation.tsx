@@ -438,97 +438,100 @@ export const EnvelopeAnimation = ({
               {/* === BRIDE & GROOM NAMES === */}
               {hasNames && (
                 <div
-                  className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-center"
+                  className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-between"
                   style={{
                     left: "10%",
                     right: "10%",
-                    top: `${((V_Y + 40) / VB_H) * 100}%`,
-                    bottom: "10%",
+                    top: `${((V_Y + 50) / VB_H) * 100}%`,
+                    bottom: "9%",
                     color: "#2c2820",
                     zIndex: 2,
-                    fontFamily: "'Bodoni Moda', 'Jost', Georgia, serif",
                   }}
                 >
+                  {/* Top: label */}
                   <div
                     style={{
                       fontFamily: "'Jost', sans-serif",
-                      fontWeight: 400,
+                      fontWeight: 500,
                       fontSize: "clamp(9px, 1.9vw, 11px)",
-                      letterSpacing: "0.42em",
+                      letterSpacing: "0.36em",
                       textTransform: "uppercase",
-                      color: "#9c9788",
-                      paddingLeft: "0.42em",
-                      marginBottom: "0.9rem",
+                      color: "#a68b5a",
+                      paddingLeft: "0.36em",
                     }}
                   >
                     The wedding of
                   </div>
 
-                  <div
-                    style={{
-                      fontFamily: "'Bodoni Moda', serif",
-                      fontSize: "clamp(26px, 6vw, 38px)",
-                      lineHeight: 1.05,
-                      fontWeight: 400,
-                      color: "#221f18",
-                    }}
-                  >
-                    {bride || "\u00A0"}
-                  </div>
-
-                  <div
-                    aria-hidden="true"
-                    style={{
-                      fontFamily: "'Bodoni Moda', serif",
-                      fontStyle: "italic",
-                      fontWeight: 400,
-                      fontSize: "clamp(16px, 3.4vw, 22px)",
-                      lineHeight: 1,
-                      margin: "0.35em 0",
-                      color: "#a59a7e",
-                    }}
-                  >
-                    and
-                  </div>
-
-                  <div
-                    style={{
-                      fontFamily: "'Bodoni Moda', serif",
-                      fontSize: "clamp(26px, 6vw, 38px)",
-                      lineHeight: 1.05,
-                      fontWeight: 400,
-                      color: "#221f18",
-                    }}
-                  >
-                    {groom || "\u00A0"}
-                  </div>
-
-                  {formattedDate && (
+                  {/* Middle: names with dividers */}
+                  <div style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", gap: "0.45rem" }}>
                     <div
                       style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "12px",
-                        marginTop: "1.4rem",
+                        fontFamily: "'Bodoni Moda', serif",
+                        fontStyle: "italic",
+                        fontWeight: 400,
+                        fontSize: "clamp(28px, 7vw, 40px)",
+                        lineHeight: 1,
+                        color: "#3a3630",
                       }}
                     >
-                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                      {bride || "\u00A0"}
+                    </div>
+
+                    <div style={{ display: "flex", alignItems: "center", width: "100%", gap: "1rem" }}>
+                      <div style={{ flex: 1, height: "1px", background: "rgba(166,139,90,0.4)" }} />
+                      <span
+                        style={{
+                          fontFamily: "'Bodoni Moda', serif",
+                          fontStyle: "italic",
+                          fontSize: "clamp(18px, 4vw, 24px)",
+                          color: "#a68b5a",
+                          lineHeight: 1,
+                        }}
+                      >
+                        &amp;
+                      </span>
+                      <div style={{ flex: 1, height: "1px", background: "rgba(166,139,90,0.4)" }} />
+                    </div>
+
+                    <div
+                      style={{
+                        fontFamily: "'Bodoni Moda', serif",
+                        fontStyle: "italic",
+                        fontWeight: 400,
+                        fontSize: "clamp(28px, 7vw, 40px)",
+                        lineHeight: 1,
+                        color: "#3a3630",
+                      }}
+                    >
+                      {groom || "\u00A0"}
+                    </div>
+                  </div>
+
+                  {/* Bottom: date with bullets */}
+                  {formattedDate && (() => {
+                    const parts = formattedDate.split(".");
+                    const day = parts[0];
+                    const year = parts[2];
+                    const monthIdx = parseInt(parts[1], 10) - 1;
+                    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+                    const monthName = monthNames[monthIdx] || parts[1];
+                    return (
                       <div
                         style={{
                           fontFamily: "'Jost', sans-serif",
                           fontWeight: 500,
                           fontSize: "clamp(10px, 2.1vw, 12px)",
-                          letterSpacing: "0.32em",
+                          letterSpacing: "0.36em",
+                          textTransform: "uppercase",
                           color: "#5d5849",
-                          paddingLeft: "0.32em",
+                          paddingLeft: "0.36em",
                         }}
                       >
-                        {formattedDate}
+                        {day} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {monthName} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {year}
                       </div>
-                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
-                    </div>
-                  )}
+                    );
+                  })()}
                 </div>
               )}
 
@@ -545,6 +548,7 @@ export const EnvelopeAnimation = ({
                   background: "#f8f4ec",
                 }}
               />
+
 
               {/* === TRIANGULAR FLAP === */}
               <div
