@@ -384,10 +384,12 @@ export const EnvelopeAnimation = ({
                   <rect width={VB_W} height={VB_H} fill="url(#envHighlight)" style={{ mixBlendMode: "soft-light" }} />
 
                   <g filter="url(#foldBlur)" stroke="rgba(60,52,34,0.2)" strokeWidth="2.2" transform="translate(1.5,1.7)">
-                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y}`} />
+                    <path d={`M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} opacity="0.55" />
                   </g>
                   <g stroke="rgba(255,255,250,0.65)" strokeWidth="1" transform="translate(-0.9,-1)">
-                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y}`} />
+                    <path d={`M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} opacity="0.55" />
                   </g>
 
                   <rect
