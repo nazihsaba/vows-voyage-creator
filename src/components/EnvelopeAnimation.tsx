@@ -384,10 +384,12 @@ export const EnvelopeAnimation = ({
                   <rect width={VB_W} height={VB_H} fill="url(#envHighlight)" style={{ mixBlendMode: "soft-light" }} />
 
                   <g filter="url(#foldBlur)" stroke="rgba(60,52,34,0.2)" strokeWidth="2.2" transform="translate(1.5,1.7)">
-                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y}`} />
+                    <path d={`M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} opacity="0.55" />
                   </g>
                   <g stroke="rgba(255,255,250,0.65)" strokeWidth="1" transform="translate(-0.9,-1)">
-                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y} M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} />
+                    <path d={`M0 0 L${V_X} ${V_Y} M${VB_W} 0 L${V_X} ${V_Y}`} />
+                    <path d={`M0 ${VB_H} L${V_X} ${V_Y} M${VB_W} ${VB_H} L${V_X} ${V_Y}`} opacity="0.55" />
                   </g>
 
                   <rect
@@ -508,30 +510,47 @@ export const EnvelopeAnimation = ({
                     </div>
                   </div>
 
-                  {/* Bottom: date with bullets */}
-                  {formattedDate && (() => {
-                    const parts = formattedDate.split(".");
-                    const day = parts[0];
-                    const year = parts[2];
-                    const monthIdx = parseInt(parts[1], 10) - 1;
-                    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-                    const monthName = monthNames[monthIdx] || parts[1];
-                    return (
-                      <div
-                        style={{
-                          fontFamily: "'Jost', sans-serif",
-                          fontWeight: 500,
-                          fontSize: "clamp(10px, 2.1vw, 12px)",
-                          letterSpacing: "0.36em",
-                          textTransform: "uppercase",
-                          color: "#5d5849",
-                          paddingLeft: "0.36em",
-                        }}
-                      >
-                        {day} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {monthName} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {year}
-                      </div>
-                    );
-                  })()}
+                  {/* Bottom: date + tap hint */}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.7rem" }}>
+                    {formattedDate && (() => {
+                      const parts = formattedDate.split(".");
+                      const day = parts[0];
+                      const year = parts[2];
+                      const monthIdx = parseInt(parts[1], 10) - 1;
+                      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+                      const monthName = monthNames[monthIdx] || parts[1];
+                      return (
+                        <div
+                          style={{
+                            fontFamily: "'Jost', sans-serif",
+                            fontWeight: 500,
+                            fontSize: "clamp(10px, 2.1vw, 12px)",
+                            letterSpacing: "0.36em",
+                            textTransform: "uppercase",
+                            color: "#5d5849",
+                            paddingLeft: "0.36em",
+                          }}
+                        >
+                          {day} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {monthName} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {year}
+                        </div>
+                      );
+                    })()}
+
+                    <div
+                      className="env-hint animate-pulse"
+                      style={{
+                        fontFamily: "'Jost', sans-serif",
+                        fontWeight: 400,
+                        fontSize: "clamp(9px, 1.9vw, 11px)",
+                        letterSpacing: "0.42em",
+                        textTransform: "uppercase",
+                        color: "rgba(44,40,32,0.42)",
+                        paddingLeft: "0.42em",
+                      }}
+                    >
+                      Tap to open
+                    </div>
+                  </div>
                 </div>
               )}
 
@@ -647,26 +666,6 @@ export const EnvelopeAnimation = ({
 
             </div>
 
-            {/* Tap hint */}
-            <div
-              className="env-hint absolute left-0 right-0 text-center pointer-events-none"
-              style={{ bottom: "clamp(2rem, 6vh, 4rem)" }}
-            >
-              <p
-                className="animate-pulse"
-                style={{
-                  fontFamily: "'Jost', sans-serif",
-                  fontWeight: 400,
-                  fontSize: "clamp(10px, 2.6vw, 12px)",
-                  letterSpacing: "0.42em",
-                  textTransform: "uppercase",
-                  color: "rgba(44,40,32,0.42)",
-                  paddingLeft: "0.42em",
-                }}
-              >
-                Tap to open
-              </p>
-            </div>
           </div>
         </div>
       )}
