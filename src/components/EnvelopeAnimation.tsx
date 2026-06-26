@@ -510,30 +510,47 @@ export const EnvelopeAnimation = ({
                     </div>
                   </div>
 
-                  {/* Bottom: date with bullets */}
-                  {formattedDate && (() => {
-                    const parts = formattedDate.split(".");
-                    const day = parts[0];
-                    const year = parts[2];
-                    const monthIdx = parseInt(parts[1], 10) - 1;
-                    const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-                    const monthName = monthNames[monthIdx] || parts[1];
-                    return (
-                      <div
-                        style={{
-                          fontFamily: "'Jost', sans-serif",
-                          fontWeight: 500,
-                          fontSize: "clamp(10px, 2.1vw, 12px)",
-                          letterSpacing: "0.36em",
-                          textTransform: "uppercase",
-                          color: "#5d5849",
-                          paddingLeft: "0.36em",
-                        }}
-                      >
-                        {day} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {monthName} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {year}
-                      </div>
-                    );
-                  })()}
+                  {/* Bottom: date + tap hint */}
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "0.7rem" }}>
+                    {formattedDate && (() => {
+                      const parts = formattedDate.split(".");
+                      const day = parts[0];
+                      const year = parts[2];
+                      const monthIdx = parseInt(parts[1], 10) - 1;
+                      const monthNames = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+                      const monthName = monthNames[monthIdx] || parts[1];
+                      return (
+                        <div
+                          style={{
+                            fontFamily: "'Jost', sans-serif",
+                            fontWeight: 500,
+                            fontSize: "clamp(10px, 2.1vw, 12px)",
+                            letterSpacing: "0.36em",
+                            textTransform: "uppercase",
+                            color: "#5d5849",
+                            paddingLeft: "0.36em",
+                          }}
+                        >
+                          {day} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {monthName} <span style={{ color: "#a68b5a", margin: "0 0.35em" }}>•</span> {year}
+                        </div>
+                      );
+                    })()}
+
+                    <div
+                      className="env-hint animate-pulse"
+                      style={{
+                        fontFamily: "'Jost', sans-serif",
+                        fontWeight: 400,
+                        fontSize: "clamp(9px, 1.9vw, 11px)",
+                        letterSpacing: "0.42em",
+                        textTransform: "uppercase",
+                        color: "rgba(44,40,32,0.42)",
+                        paddingLeft: "0.42em",
+                      }}
+                    >
+                      Tap to open
+                    </div>
+                  </div>
                 </div>
               )}
 
