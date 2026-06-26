@@ -79,7 +79,7 @@ export const EnvelopeAnimation = ({
     return `${day} · ${month} · ${year}`;
   }, [weddingDate]);
 
-  const TOTAL = 2800;
+  const TOTAL = 3600;
   const FLAP_REST_TILT = -10; // degrees: flap sits slightly lifted by default
   const FLAP_CORNER_R = 14; // matches body rounded corners
 
@@ -253,11 +253,11 @@ export const EnvelopeAnimation = ({
               .env-overlay { height: -webkit-fill-available; }
             }
             .env-overlay.is-opening {
-              animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+              animation: envOverlayOut ${TOTAL}ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
             }
             @keyframes envOverlayOut {
               0%   { opacity: 1; }
-              70%  { opacity: 1; }
+              60%  { opacity: 1; }
               100% { opacity: 0; pointer-events: none; }
             }
             @keyframes envMote {
@@ -291,37 +291,38 @@ export const EnvelopeAnimation = ({
               }
             }
 
+            /* Envelope drop: starts while the flap is still finishing its arc,
+               so the two motions overlap into one continuous reveal instead of
+               a stop-then-start. Long ease-out tail makes the fall feel weighted. */
             @keyframes envBody {
-              0%   { transform: translateY(0)    scale(1);    opacity: 1; }
-              55%  { transform: translateY(0)    scale(1);    opacity: 1; }
-              95%  { transform: translateY(95%)  scale(0.9);  opacity: 0; }
-              100% { transform: translateY(95%)  scale(0.9);  opacity: 0; }
+              0%   { transform: translateY(0)     scale(1);    opacity: 1; }
+              45%  { transform: translateY(0)     scale(1);    opacity: 1; }
+              70%  { transform: translateY(20%)   scale(0.98); opacity: 0.92; }
+              100% { transform: translateY(110%)  scale(0.88); opacity: 0; }
             }
             .is-opening .env-target {
-              animation: envBody ${TOTAL}ms cubic-bezier(0.55, 0.05, 0.25, 1) forwards;
+              animation: envBody ${TOTAL}ms cubic-bezier(0.32, 0.04, 0.18, 1) forwards;
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
-               tilt all the way back to -180°. Two-keyframe form lets the easing
-               curve drive the entire arc continuously instead of stepping
-               between 6 angular waypoints — which on mobile manifests as
-               visible "cuts" near the top of the envelope. */
+               tilt all the way back to -180°. Longer arc with a soft landing
+               curve so it never snaps at the end. */
             @keyframes envFlapLift {
               0%   { transform: rotateX(${FLAP_REST_TILT}deg); opacity: 1; }
-              55%  { transform: rotateX(-182deg);              opacity: 1; }
+              60%  { transform: rotateX(-182deg);              opacity: 1; }
               100% { transform: rotateX(-182deg);              opacity: 1; }
             }
             .env-flap-wrap {
               transform: rotateX(${FLAP_REST_TILT}deg);
             }
             .is-opening .env-flap-wrap {
-              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+              animation: envFlapLift ${TOTAL}ms cubic-bezier(0.16, 0.84, 0.24, 1) forwards;
             }
-            /* On mobile, prefer a slightly snappier easing so the flap arc
-               feels continuous and finishes before the body slides away. */
+            /* On mobile, a touch snappier so the arc never feels lazy on small
+               viewports — still smooth, just a tighter landing. */
             @media (max-width: 767px), (pointer: coarse) {
               .is-opening .env-flap-wrap {
-                animation-timing-function: cubic-bezier(0.33, 0, 0.2, 1);
+                animation-timing-function: cubic-bezier(0.22, 0.8, 0.28, 1);
               }
             }
 
