@@ -293,30 +293,12 @@ export const EnvelopeAnimation = ({
 
             @keyframes envBody {
               0%   { transform: translateY(0)    scale(1);    opacity: 1; }
-              50%  { transform: translateY(0)    scale(1);    opacity: 1; }
-              90%  { transform: translateY(85%)  scale(0.92); opacity: 0; }
-              100% { transform: translateY(85%)  scale(0.92); opacity: 0; }
+              55%  { transform: translateY(0)    scale(1);    opacity: 1; }
+              95%  { transform: translateY(95%)  scale(0.9);  opacity: 0; }
+              100% { transform: translateY(95%)  scale(0.9);  opacity: 0; }
             }
             .is-opening .env-target {
               animation: envBody ${TOTAL}ms cubic-bezier(0.55, 0.05, 0.25, 1) forwards;
-            }
-
-            /* Letter card rises out of the envelope V-opening, expands to fill
-               the viewport, then fades to reveal the actual invitation behind. */
-            .env-letter {
-              opacity: 0;
-              transform: translate(-50%, -10%) scale(0.18);
-            }
-            @keyframes envLetterRise {
-              0%   { opacity: 0; transform: translate(-50%, -10%) scale(0.18); }
-              45%  { opacity: 0; transform: translate(-50%, -10%) scale(0.18); }
-              55%  { opacity: 1; transform: translate(-50%, -25%) scale(0.22); }
-              80%  { opacity: 1; transform: translate(-50%, -50%) scale(1);    }
-              95%  { opacity: 1; transform: translate(-50%, -50%) scale(1.04); }
-              100% { opacity: 0; transform: translate(-50%, -50%) scale(1.08); }
-            }
-            .is-opening .env-letter {
-              animation: envLetterRise ${TOTAL}ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
             }
 
             /* Full unfold: flap rotates around its top edge from a slight rest
