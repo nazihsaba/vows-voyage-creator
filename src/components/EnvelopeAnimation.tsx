@@ -1,4 +1,5 @@
 import { useState, useEffect, ReactNode, useMemo, useCallback } from "react";
+import waxSealHeart from "@/assets/wax-seal-heart.webp";
 
 interface EnvelopeAnimationProps {
   groomName?: string;
@@ -267,9 +268,10 @@ export const EnvelopeAnimation = ({
             className="env-zone relative cursor-pointer select-none outline-none"
             style={{
               perspective: "2400px",
-              height: "100vh",
-              width: "100vw",
-              maxWidth: "none",
+              width: "min(92vw, 460px)",
+              height: "min(86vh, 640px)",
+              aspectRatio: "5 / 7",
+              maxWidth: "100%",
             }}
             onClick={handleOpen}
             onKeyDown={handleKey}
@@ -287,6 +289,9 @@ export const EnvelopeAnimation = ({
                 transition: "transform 500ms cubic-bezier(.22,1,.36,1)",
                 willChange: "transform, opacity",
                 overflow: "visible",
+                borderRadius: "14px",
+                boxShadow:
+                  "0 30px 60px -25px rgba(60,52,34,0.45), 0 12px 24px -12px rgba(60,52,34,0.25)",
               }}
             >
               {/* === ENVELOPE BODY === */}
@@ -396,10 +401,10 @@ export const EnvelopeAnimation = ({
                 <div
                   className="env-names absolute pointer-events-none select-none text-center flex flex-col items-center justify-center"
                   style={{
-                    left: "8%",
-                    right: "8%",
-                    top: `${((V_Y + 70) / VB_H) * 100}%`,
-                    bottom: "8%",
+                    left: "10%",
+                    right: "10%",
+                    top: `${((V_Y + 40) / VB_H) * 100}%`,
+                    bottom: "10%",
                     color: "#2c2820",
                     zIndex: 2,
                     fontFamily: "'Bodoni Moda', 'Jost', Georgia, serif",
@@ -408,13 +413,13 @@ export const EnvelopeAnimation = ({
                   <div
                     style={{
                       fontFamily: "'Jost', sans-serif",
-                      fontWeight: 500,
-                      fontSize: "clamp(10px, 2.2vw, 12px)",
-                      letterSpacing: "0.5em",
+                      fontWeight: 400,
+                      fontSize: "clamp(9px, 1.9vw, 11px)",
+                      letterSpacing: "0.42em",
                       textTransform: "uppercase",
                       color: "#9c9788",
-                      paddingLeft: "0.5em",
-                      marginBottom: "1.2rem",
+                      paddingLeft: "0.42em",
+                      marginBottom: "0.9rem",
                     }}
                   >
                     The wedding of
@@ -422,8 +427,9 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.5vw, 42px)",
-                      lineHeight: 1.04,
+                      fontFamily: "'Bodoni Moda', serif",
+                      fontSize: "clamp(26px, 6vw, 38px)",
+                      lineHeight: 1.05,
                       fontWeight: 400,
                       color: "#221f18",
                     }}
@@ -437,9 +443,9 @@ export const EnvelopeAnimation = ({
                       fontFamily: "'Bodoni Moda', serif",
                       fontStyle: "italic",
                       fontWeight: 400,
-                      fontSize: "clamp(20px, 4.2vw, 26px)",
-                      lineHeight: 1.1,
-                      margin: "0.2em 0",
+                      fontSize: "clamp(16px, 3.4vw, 22px)",
+                      lineHeight: 1,
+                      margin: "0.35em 0",
                       color: "#a59a7e",
                     }}
                   >
@@ -448,8 +454,9 @@ export const EnvelopeAnimation = ({
 
                   <div
                     style={{
-                      fontSize: "clamp(28px, 6.5vw, 42px)",
-                      lineHeight: 1.04,
+                      fontFamily: "'Bodoni Moda', serif",
+                      fontSize: "clamp(26px, 6vw, 38px)",
+                      lineHeight: 1.05,
                       fontWeight: 400,
                       color: "#221f18",
                     }}
@@ -463,28 +470,29 @@ export const EnvelopeAnimation = ({
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        gap: "14px",
-                        marginTop: "1.6rem",
+                        gap: "12px",
+                        marginTop: "1.4rem",
                       }}
                     >
-                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
                       <div
                         style={{
                           fontFamily: "'Jost', sans-serif",
                           fontWeight: 500,
-                          fontSize: "clamp(11px, 2.4vw, 13px)",
-                          letterSpacing: "0.34em",
+                          fontSize: "clamp(10px, 2.1vw, 12px)",
+                          letterSpacing: "0.32em",
                           color: "#5d5849",
-                          paddingLeft: "0.34em",
+                          paddingLeft: "0.32em",
                         }}
                       >
                         {formattedDate}
                       </div>
-                      <div style={{ width: "28px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
+                      <div style={{ width: "26px", height: "1px", background: "rgba(44,40,32,0.3)" }} />
                     </div>
                   )}
                 </div>
               )}
+
 
               {/* === REVEAL PANEL (page 0 of the invitation) === */}
               <div
@@ -540,64 +548,31 @@ export const EnvelopeAnimation = ({
                   />
                 </svg>
 
-                {/* === BLIND-EMBOSS SEAL === */}
+                {/* === WAX SEAL === */}
                 <div
                   className="env-seal absolute pointer-events-none select-none"
                   draggable={false}
                   style={{
                     left: "50%",
                     top: `${(V_Y / VB_H) * 100}%`,
-                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-3deg)",
-                    width: "18%",
-                    minWidth: "92px",
+                    transform: "translate(-50%, -50%) translateZ(60px) rotate(-4deg)",
+                    width: "22%",
+                    minWidth: "84px",
+                    maxWidth: "120px",
                     aspectRatio: "1 / 1",
                     zIndex: 2,
                     willChange: "transform",
                     filter: isMobile
-                      ? "none"
-                      : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
+                      ? "drop-shadow(0 4px 6px rgba(80,15,15,.35))"
+                      : "drop-shadow(0 10px 14px rgba(80,15,15,.45))",
                   }}
                 >
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      borderRadius: "50%",
-                      background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
-                      boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
-                      border: "1px solid rgba(120,108,84,.1)",
-                    }}
+                  <img
+                    src={waxSealHeart}
+                    alt=""
+                    draggable={false}
+                    style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                   />
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: "11%",
-                      borderRadius: "50%",
-                      boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
-                    }}
-                  />
-                  <svg
-                    viewBox="0 0 100 92"
-                    style={{
-                      position: "absolute",
-                      left: "50%",
-                      top: "50%",
-                      transform: "translate(-50%, -50%)",
-                      overflow: "visible",
-                      width: "48%",
-                      height: "auto",
-                    }}
-                  >
-                    <path
-                      d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
-                      fill="none"
-                      stroke="rgba(120,106,78,.5)"
-                      strokeWidth="3.2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
-                    />
-                  </svg>
                 </div>
               </div>
 
@@ -608,56 +583,23 @@ export const EnvelopeAnimation = ({
                 style={{
                   left: "50%",
                   top: `${(V_Y / VB_H) * 100}%`,
-                  transform: "translate(-50%, -50%) rotate(-3deg)",
-                  width: "18%",
-                  minWidth: "92px",
+                  transform: "translate(-50%, -50%) rotate(-4deg)",
+                  width: "22%",
+                  minWidth: "84px",
+                  maxWidth: "120px",
                   aspectRatio: "1 / 1",
                   zIndex: 7,
                   filter: isMobile
-                    ? "none"
-                    : "drop-shadow(0 8px 10px rgba(60,52,38,.25))",
+                    ? "drop-shadow(0 4px 6px rgba(80,15,15,.35))"
+                    : "drop-shadow(0 10px 14px rgba(80,15,15,.45))",
                 }}
               >
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    borderRadius: "50%",
-                    background: "radial-gradient(130% 130% at 35% 28%, #f8f4eb, #ebe5d8 68%, #e0d9ca 100%)",
-                    boxShadow: "0 16px 26px -16px rgba(60,52,38,.4), inset 0 3px 4px rgba(255,255,255,.95), inset 0 -8px 12px rgba(120,108,84,.28)",
-                    border: "1px solid rgba(120,108,84,.1)",
-                  }}
+                <img
+                  src={waxSealHeart}
+                  alt=""
+                  draggable={false}
+                  style={{ width: "100%", height: "100%", objectFit: "contain", display: "block" }}
                 />
-                <div
-                  style={{
-                    position: "absolute",
-                    inset: "11%",
-                    borderRadius: "50%",
-                    boxShadow: "inset 0 2px 3px rgba(120,108,84,.3), inset 0 -2px 3px rgba(255,255,255,.85)",
-                  }}
-                />
-                <svg
-                  viewBox="0 0 100 92"
-                  style={{
-                    position: "absolute",
-                    left: "50%",
-                    top: "50%",
-                    transform: "translate(-50%, -50%)",
-                    overflow: "visible",
-                    width: "48%",
-                    height: "auto",
-                  }}
-                >
-                  <path
-                    d="M50 80 C31 61 12 49 12 31 C12 18 22 12 31 12 C40 12 47 18 50 27 C53 18 60 12 69 12 C78 12 88 18 88 31 C88 49 69 61 50 80 Z"
-                    fill="none"
-                    stroke="rgba(120,106,78,.5)"
-                    strokeWidth="3.2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    style={{ filter: "drop-shadow(0 1.2px 0 rgba(255,255,255,.9))" }}
-                  />
-                </svg>
               </div>
 
             </div>
