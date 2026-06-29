@@ -36,11 +36,18 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "lumiere",
   },
   {
-    image: graceTemplate,
-    label: "Grâce",
-    tagline: "Immersive video background",
+    image: tresorTemplate,
+    label: "Trésor",
+    tagline: "Cinematic swipe storytelling",
     featured: false,
-    templateKey: "grace",
+    templateKey: "tresor",
+  },
+  {
+    image: etoileTemplate,
+    label: "Étoile",
+    tagline: "PHOTO CAROUSEL & ANIMATED CARDS",
+    featured: false,
+    templateKey: "etoile",
   },
   {
     image: veriteTemplate,
@@ -64,18 +71,11 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "aura",
   },
   {
-    image: etoileTemplate,
-    label: "Étoile",
-    tagline: "PHOTO CAROUSEL & ANIMATED CARDS",
+    image: graceTemplate,
+    label: "Grâce",
+    tagline: "Immersive video background",
     featured: false,
-    templateKey: "etoile",
-  },
-  {
-    image: tresorTemplate,
-    label: "Trésor",
-    tagline: "Cinematic swipe storytelling",
-    featured: false,
-    templateKey: "tresor",
+    templateKey: "grace",
   },
 ];
 
