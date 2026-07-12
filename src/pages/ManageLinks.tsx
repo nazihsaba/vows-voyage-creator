@@ -535,6 +535,9 @@ const ManageLinks = () => {
   // ensuring a consistent sharing experience whether the user clicks "Send via
   // WhatsApp" or copies the link and pastes it manually elsewhere.
   const buildInvitationMessage = (linkName: string, inviteUrl: string) => {
+    if (wedding?.id === "6e1dcf00-3b74-453b-a63f-e0b9cbae85e6") {
+      return `${linkName}\n\nبقلوبٍ مفعمة بالفرح والمحبة، يسعدنا نحن قصي الهدهد ورغد البيطار دعوتكم لمشاركتنا أجمل لحظات حياتنا في حفل زفافنا.\n\nحضوركم سيكون أجمل هدية تُزيّن هذا اليوم الاستثنائي 💍✨\n\nجميع التفاصيل وتأكيد الحضور عبر الرابط\n${inviteUrl}\n\nبانتظاركم بشوق 🤍\n\n━━━━━━━━━━━━━━━\n\n🌸 Dear ${linkName}🌸\n\nWith hearts full of love and joy, we — Qusai Alhudhud & Raghad Albitar — invite you to celebrate the beginning of our happily ever after.\n\nYour presence would be the most beautiful gift on this special day 💍✨\n\nAll details and RSVP are here:\n${inviteUrl}\n\nWe can't wait to celebrate with you! 🤍`;
+    }
     return `${inviteUrl}\n\nDear ${linkName},\n\nWith love and joy, we — *${wedding?.groom_name} & ${wedding?.bride_name}* — invite you to celebrate our happily ever after! ❤️\n\nWe would be honored to have you with us on this special day. ✨\n\nWe can't wait to see you!`;
   };
 
