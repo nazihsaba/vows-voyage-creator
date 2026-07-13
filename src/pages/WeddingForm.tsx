@@ -1039,25 +1039,7 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate Lumière ending image is required
-    if (isLumiereTemplate && !lumiereEndingFile && !lumiereEndingPreview) {
-      toast({
-        title: "Ending image required",
-        description: "Please upload an ending image for your invitation.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate Dorée (Aura) ending image is required
-    if (isDoreeTemplate && !auraEndingFile && !auraEndingPreview) {
-      toast({
-        title: "Ending image required",
-        description: "Please upload an ending image for your invitation.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Ending image is optional for Lumière and Dorée (Aura family)
 
     // Validate Vérité ending image is required
     if (isVeriteTemplate && !veriteEndingFile && !veriteEndingPreview) {
@@ -2042,7 +2024,7 @@ const WeddingForm = () => {
               ) : template !== "etoile-carousel" && template !== "tresor-swipe" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">
-                    Main Wedding Photo <span className="text-foreground">*</span>
+                    Main Wedding Photo{!isAuraTemplate && <span className="text-foreground"> *</span>}
                   </Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
@@ -2100,7 +2082,7 @@ const WeddingForm = () => {
               {/* Lumière Ending Image (shown between RSVP and footer in template) */}
               {isLumiereTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="lumiere_ending_image">Ending Image *</Label>
+                  <Label htmlFor="lumiere_ending_image">Ending Image</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown right before the footer, as a final closing image for your guests.
                   </p>
@@ -2147,7 +2129,7 @@ const WeddingForm = () => {
               {/* Dorée (Aura) Ending Image (shown below the Gifts section in the template) */}
               {isDoreeTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="aura_ending_image">Ending Image *</Label>
+                  <Label htmlFor="aura_ending_image">Ending Image</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown below the gifts section, as a final closing image for your guests.
                   </p>
