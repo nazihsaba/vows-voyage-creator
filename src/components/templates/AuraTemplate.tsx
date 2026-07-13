@@ -437,7 +437,7 @@ export const AuraTemplate = ({
         )}
 
         {/* ===== FULL-WIDTH ENDING IMAGE ===== */}
-        {(wedding.aura_ending_image_url || (gallery && gallery.length > 0)) && (
+        {wedding.aura_ending_image_url !== "hidden" && (wedding.aura_ending_image_url || (gallery && gallery.length > 0)) && (
           <AnimatedSection animation="fade-in">
             <section className="w-full px-4 py-12">
               <div className="max-w-6xl mx-auto">
@@ -458,6 +458,7 @@ export const AuraTemplate = ({
             </section>
           </AnimatedSection>
         )}
+
 
         {/* ===== RSVP SECTION ===== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
