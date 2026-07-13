@@ -1,7 +1,7 @@
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { formatLocalizedDate } from "@/lib/formatDate";
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import { GiftCards } from "@/components/GiftCards";
@@ -59,6 +59,7 @@ export const AuraTemplate = ({
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [endingImageFailed, setEndingImageFailed] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
 
@@ -161,6 +162,14 @@ export const AuraTemplate = ({
   const timelineEvents = rawTimelineEntries.map((e) => e.event);
 
   const hasGiftCards = giftCards && giftCards.length > 0;
+  const rawAuraEndingImageUrl = typeof wedding.aura_ending_image_url === "string" ? wedding.aura_ending_image_url.trim() : "";
+  const hideAuraEndingImage = rawAuraEndingImageUrl.toLowerCase() === "hidden";
+  const fallbackEndingImage = !hideAuraEndingImage ? gallery?.find((image: any) => image?.image_url)?.image_url : "";
+  const endingImageUrl = hideAuraEndingImage ? "" : rawAuraEndingImageUrl || fallbackEndingImage || "";
+
+  useEffect(() => {
+    setEndingImageFailed(false);
+  }, [endingImageUrl]);
 
   return (
     <div
@@ -437,20 +446,21 @@ export const AuraTemplate = ({
         )}
 
         {/* ===== FULL-WIDTH ENDING IMAGE ===== */}
-        {wedding.aura_ending_image_url !== "hidden" && ((wedding.aura_ending_image_url && wedding.aura_ending_image_url !== "hidden") || (gallery && gallery.length > 0)) && (
+        {endingImageUrl && !endingImageFailed && (
           <AnimatedSection animation="fade-in">
             <section className="w-full px-4 py-12">
               <div className="max-w-6xl mx-auto">
                 <div className="w-full h-[50vh] md:h-[60vh] overflow-hidden rounded-lg">
                   <img
-                    src={(wedding.aura_ending_image_url && wedding.aura_ending_image_url !== "hidden") ? wedding.aura_ending_image_url : gallery[0].image_url}
+                    src={endingImageUrl}
                     alt="Wedding moment"
                     className="w-full h-full object-cover"
                     style={{
-                      objectPosition: wedding.aura_ending_image_url
+                      objectPosition: rawAuraEndingImageUrl
                         ? "50% 50%"
                         : `50% ${Math.min(100, Math.max(0, gallery?.[0]?.position_y ?? 50))}%`,
                     }}
+                    onError={() => setEndingImageFailed(true)}
                     loading="lazy"
                   />
                 </div>
