@@ -2129,7 +2129,7 @@ const WeddingForm = () => {
               {/* Dorée (Aura) Ending Image (shown below the Gifts section in the template) */}
               {isDoreeTemplate && (
                 <div className="space-y-2">
-                  <Label htmlFor="aura_ending_image">Ending Image *</Label>
+                  <Label htmlFor="aura_ending_image">Ending Image</Label>
                   <p className="text-sm text-muted-foreground mb-2">
                     Shown below the gifts section, as a final closing image for your guests.
                   </p>
