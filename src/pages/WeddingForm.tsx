@@ -993,7 +993,7 @@ const WeddingForm = () => {
     // Validate main wedding photo is required (skip for video templates and carousel/swipe templates which use video/gallery instead)
     const isEtoileTemplate = template === "etoile-carousel";
     const isTresorTemplate = template === "tresor-swipe";
-    if (!isVideoTemplate && !isEtoileTemplate && !isTresorTemplate && !imageFile && !formData.main_picture_url) {
+    if (!isVideoTemplate && !isEtoileTemplate && !isTresorTemplate && !isAuraTemplate && !imageFile && !formData.main_picture_url) {
       toast({
         title: "Main photo required",
         description: "Please upload a main wedding photo.",
