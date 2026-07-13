@@ -2024,7 +2024,7 @@ const WeddingForm = () => {
               ) : template !== "etoile-carousel" && template !== "tresor-swipe" ? (
                 <div className="space-y-2">
                   <Label htmlFor="main_picture">
-                    Main Wedding Photo <span className="text-foreground">*</span>
+                    Main Wedding Photo{!isAuraTemplate && <span className="text-foreground"> *</span>}
                   </Label>
                   <div className="flex flex-col gap-4">
                     {imagePreview ? (
