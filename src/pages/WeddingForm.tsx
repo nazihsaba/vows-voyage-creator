@@ -1039,25 +1039,7 @@ const WeddingForm = () => {
       return;
     }
 
-    // Validate Lumière ending image is required
-    if (isLumiereTemplate && !lumiereEndingFile && !lumiereEndingPreview) {
-      toast({
-        title: "Ending image required",
-        description: "Please upload an ending image for your invitation.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Validate Dorée (Aura) ending image is required
-    if (isDoreeTemplate && !auraEndingFile && !auraEndingPreview) {
-      toast({
-        title: "Ending image required",
-        description: "Please upload an ending image for your invitation.",
-        variant: "destructive",
-      });
-      return;
-    }
+    // Ending image is optional for Lumière and Dorée (Aura family)
 
     // Validate Vérité ending image is required
     if (isVeriteTemplate && !veriteEndingFile && !veriteEndingPreview) {
