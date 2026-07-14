@@ -24,6 +24,8 @@ export const EnvelopeAnimation = ({
   weddingDate,
   primaryColor,
   accentColor,
+  labelText = "The wedding of",
+  conjunctionText = "&",
   children,
 }: EnvelopeAnimationProps) => {
   const [opening, setOpening] = useState(false);
