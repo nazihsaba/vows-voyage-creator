@@ -502,7 +502,7 @@ export const EnvelopeAnimation = ({
                           lineHeight: 1,
                         }}
                       >
-                        &amp;
+                        {conjunctionText}
                       </span>
                       <div style={{ flex: "none", width: "clamp(42px, 18%, 80px)", height: "1px", background: "rgba(166,139,90,0.4)" }} />
                     </div>
