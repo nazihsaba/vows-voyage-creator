@@ -462,7 +462,7 @@ export const EnvelopeAnimation = ({
                       paddingLeft: "0.36em",
                     }}
                   >
-                    The wedding of
+                    {labelText}
                   </div>
 
                   <div
