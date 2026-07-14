@@ -162,6 +162,7 @@ export const AuraTemplate = ({
   const timelineEvents = rawTimelineEntries.map((e) => e.event);
 
   const hasGiftCards = giftCards && giftCards.length > 0;
+  const isPatrickLeaWedding = wedding.id === "9c455d24-7730-4442-accc-05346c83d20b";
   const rawAuraEndingImageUrl = typeof wedding.aura_ending_image_url === "string" ? wedding.aura_ending_image_url.trim() : "";
   const hideAuraEndingImage = rawAuraEndingImageUrl.toLowerCase() === "hidden";
   const fallbackEndingImage = !hideAuraEndingImage ? gallery?.find((image: any) => image?.image_url)?.image_url : "";
@@ -224,7 +225,11 @@ export const AuraTemplate = ({
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.3s_forwards]">
-              <p className="text-template-body opacity-70">{getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}</p>
+              <p className="text-template-body opacity-70">
+                {isPatrickLeaWedding
+                  ? getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine")).replace(/\s+the\s*$/i, "")
+                  : getLocalizedValue("welcoming_text", wedding.welcoming_text || t("family.introLine"))}
+              </p>
             </div>
 
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.4s_forwards]">
@@ -246,7 +251,7 @@ export const AuraTemplate = ({
                     className="text-template-subtitle whitespace-pre-line"
                   />
                 </div>
-                <span className="text-3xl font-light text-template-subtitle">&</span>
+                <span className="text-3xl font-light text-template-subtitle">{isPatrickLeaWedding ? "and" : "&"}</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-family-name"
@@ -286,7 +291,7 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
                 <h1 className="text-template-title text-primary">
-                  {getLocalizedValue("groom_name", wedding.groom_name)} & {getLocalizedValue("bride_name", wedding.bride_name)}
+                  {getLocalizedValue("groom_name", wedding.groom_name)} {isPatrickLeaWedding ? "and" : "&"} {getLocalizedValue("bride_name", wedding.bride_name)}
                 </h1>
               </div>
             </div>
