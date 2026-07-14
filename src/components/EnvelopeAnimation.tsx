@@ -8,6 +8,10 @@ interface EnvelopeAnimationProps {
   weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
+  /** Label shown above the names. Defaults to "The wedding of". */
+  labelText?: string;
+  /** Conjunction between the names. Defaults to "&". */
+  conjunctionText?: string;
   children: ReactNode;
 }
 
