@@ -591,6 +591,7 @@ const WeddingInvite = () => {
   // Skip only when the owner is in edit mode (canEdit handled above).
   // Show in read-only previews and draft previews so users can verify it before publishing.
   if (wedding.envelope_animation_enabled) {
+    const isPatrickLea = wedding.id === "9c455d24-7730-4442-accc-05346c83d20b";
     return (
       <EnvelopeAnimation
         groomName={wedding.groom_name}
@@ -598,6 +599,8 @@ const WeddingInvite = () => {
         weddingDate={wedding.wedding_date}
         primaryColor={wedding.custom_primary_color}
         accentColor={wedding.custom_accent_color}
+        labelText={isPatrickLea ? "Wedding of" : undefined}
+        conjunctionText={isPatrickLea ? "and" : undefined}
       >
         {content}
       </EnvelopeAnimation>

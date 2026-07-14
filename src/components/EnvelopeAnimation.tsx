@@ -8,6 +8,10 @@ interface EnvelopeAnimationProps {
   weddingDate?: string;
   primaryColor?: string;
   accentColor?: string;
+  /** Label shown above the names. Defaults to "The wedding of". */
+  labelText?: string;
+  /** Conjunction between the names. Defaults to "&". */
+  conjunctionText?: string;
   children: ReactNode;
 }
 
@@ -20,6 +24,8 @@ export const EnvelopeAnimation = ({
   weddingDate,
   primaryColor,
   accentColor,
+  labelText = "The wedding of",
+  conjunctionText = "&",
   children,
 }: EnvelopeAnimationProps) => {
   const [opening, setOpening] = useState(false);
@@ -456,7 +462,7 @@ export const EnvelopeAnimation = ({
                       paddingLeft: "0.36em",
                     }}
                   >
-                    The wedding of
+                    {labelText}
                   </div>
 
                   <div
@@ -496,7 +502,7 @@ export const EnvelopeAnimation = ({
                           lineHeight: 1,
                         }}
                       >
-                        &amp;
+                        {conjunctionText}
                       </span>
                       <div style={{ flex: "none", width: "clamp(42px, 18%, 80px)", height: "1px", background: "rgba(166,139,90,0.4)" }} />
                     </div>
