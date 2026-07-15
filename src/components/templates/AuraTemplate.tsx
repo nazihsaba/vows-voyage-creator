@@ -291,7 +291,7 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
                 <h1 className="text-template-title text-primary">
-                  {getLocalizedValue("groom_name", wedding.groom_name)} {isPatrickLeaWedding ? "and" : "&"} {getLocalizedValue("bride_name", wedding.bride_name)}
+                  {getLocalizedValue("groom_name", wedding.groom_name)} {isArabic ? "و" : (isPatrickLeaWedding ? "and" : "&")} {getLocalizedValue("bride_name", wedding.bride_name)}
                 </h1>
               </div>
             </div>
