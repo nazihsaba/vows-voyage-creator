@@ -251,7 +251,7 @@ export const AuraTemplate = ({
                     className="text-template-subtitle whitespace-pre-line"
                   />
                 </div>
-                <span className="text-3xl font-light text-template-subtitle">{isPatrickLeaWedding || wedding.template_type === "bible-verse-tabs" ? "and" : "&"}</span>
+                <span className="text-3xl font-light text-template-subtitle">{isArabic ? "و" : (isPatrickLeaWedding || wedding.template_type === "bible-verse-tabs" ? "and" : "&")}</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-family-name"
@@ -291,7 +291,7 @@ export const AuraTemplate = ({
             <div className="opacity-0 animate-[scaleIn_0.7s_ease-out_0.7s_forwards]">
               <div className="py-4">
                 <h1 className="text-template-title text-primary">
-                  {getLocalizedValue("groom_name", wedding.groom_name)} {isPatrickLeaWedding ? "and" : "&"} {getLocalizedValue("bride_name", wedding.bride_name)}
+                  {getLocalizedValue("groom_name", wedding.groom_name)} {isArabic ? "و" : (isPatrickLeaWedding ? "and" : "&")} {getLocalizedValue("bride_name", wedding.bride_name)}
                 </h1>
               </div>
             </div>
