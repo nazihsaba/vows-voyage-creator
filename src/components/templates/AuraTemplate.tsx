@@ -251,7 +251,7 @@ export const AuraTemplate = ({
                     className="text-template-subtitle whitespace-pre-line"
                   />
                 </div>
-                <span className="text-3xl font-light text-template-subtitle">{isPatrickLeaWedding || wedding.template_type === "bible-verse-tabs" ? "and" : "&"}</span>
+                <span className="text-3xl font-light text-template-subtitle">{isArabic ? "و" : (isPatrickLeaWedding || wedding.template_type === "bible-verse-tabs" ? "and" : "&")}</span>
                 <div className="text-center space-y-1">
                   <EditableField
                     fieldId="bride-family-name"
