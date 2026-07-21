@@ -38,16 +38,20 @@ export const GenerateLinkDialog = ({
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const GUEST_COUNT_ONLY_WEDDING_ID = "4dd62c35-b0a3-4337-be47-e471a6435ee9";
+  const isGuestCountOnly = weddingId === GUEST_COUNT_ONLY_WEDDING_ID;
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
   const [countryCode, setCountryCode] = useState("+961");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [invitees, setInvitees] = useState<string[]>([""]);
+  const [numberOfGuests, setNumberOfGuests] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState("manual");
+
 
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
@@ -80,14 +84,30 @@ export const GenerateLinkDialog = ({
       return;
     }
 
-    const validInvitees = invitees.filter((name) => name.trim());
-    if (validInvitees.length === 0) {
-      toast({
-        title: "Error",
-        description: "Please add at least one invitee",
-        variant: "destructive",
-      });
-      return;
+    let inviteeNames: string[];
+    if (isGuestCountOnly) {
+      const count = Math.max(1, Math.floor(Number(numberOfGuests) || 0));
+      if (!phoneNumber.trim()) {
+        toast({
+          title: "Error",
+          description: "Please enter a phone number",
+          variant: "destructive",
+        });
+        return;
+      }
+      inviteeNames = Array.from({ length: count }, (_, i) => `Guest ${i + 1}`);
+    } else {
+      inviteeNames = invitees.filter((name) => name.trim()).map((n) =>
+        n.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase())
+      );
+      if (inviteeNames.length === 0) {
+        toast({
+          title: "Error",
+          description: "Please add at least one invitee",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     setLoading(true);
@@ -98,7 +118,7 @@ export const GenerateLinkDialog = ({
           wedding_id: weddingId,
           link_name: linkName.replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
           unique_slug: uniqueSlug,
-          number_of_persons: validInvitees.length,
+          number_of_persons: inviteeNames.length,
           side: side.trim() || null,
           country_code: phoneNumber.trim() ? countryCode.trim() || null : null,
           phone_number: phoneNumber.trim() ? phoneNumber.trim() : null,
@@ -108,9 +128,9 @@ export const GenerateLinkDialog = ({
 
       if (linkError) throw linkError;
 
-      const inviteeRecords = validInvitees.map((name) => ({
+      const inviteeRecords = inviteeNames.map((name) => ({
         invitation_link_id: linkData.id,
-        name: name.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
+        name,
       }));
 
       const { error: inviteeError } = await (supabase as any).from("invitees").insert(inviteeRecords);
@@ -118,8 +138,9 @@ export const GenerateLinkDialog = ({
       if (inviteeError) throw inviteeError;
 
       const sanitizedLinkNameForUrl = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
-      const generatedLink = `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
+      const generatedLink = `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${inviteeNames.length}`;
       prewarmOGCache(generatedLink);
+
 
       toast({
         title: "Success",
@@ -132,6 +153,8 @@ export const GenerateLinkDialog = ({
       setCountryCode("+961");
       setPhoneNumber("");
       setInvitees([""]);
+      setNumberOfGuests(1);
+
       setSlugManuallyEdited(false);
       onSuccess();
       onOpenChange(false);
@@ -244,10 +267,15 @@ export const GenerateLinkDialog = ({
 
   const sanitizedLinkName = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
 
+  const guestCountForPreview = isGuestCountOnly
+    ? Math.max(1, Math.floor(Number(numberOfGuests) || 0))
+    : invitees.filter((n) => n.trim()).length;
+
   const previewUrl =
     uniqueSlug && linkName
-      ? `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkName)}/${invitees.filter((n) => n.trim()).length}`
+      ? `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkName)}/${guestCountForPreview}`
       : "";
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -278,14 +306,17 @@ export const GenerateLinkDialog = ({
         {/* Body */}
         <div className="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto flex-1 min-h-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
-              <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
-                Manual
-              </TabsTrigger>
-              <TabsTrigger value="automatic" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
-                Automatic
-              </TabsTrigger>
-            </TabsList>
+            {!isGuestCountOnly && (
+              <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
+                <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
+                  Manual
+                </TabsTrigger>
+                <TabsTrigger value="automatic" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
+                  Automatic
+                </TabsTrigger>
+              </TabsList>
+            )}
+
 
             <TabsContent value="manual" className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 mt-0">
               <div className="space-y-1.5">
@@ -367,40 +398,59 @@ export const GenerateLinkDialog = ({
                 </Card>
               )}
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <Label className="text-xs sm:text-sm font-medium">
-                      Invitees ({invitees.filter((n) => n.trim()).length})
-                    </Label>
-                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
-                      Add the names of people for this invitation
-                    </p>
-                  </div>
-                  <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee} className="rounded-lg shrink-0 h-8 text-xs px-2.5">
-                    <Plus className="w-3.5 h-3.5 mr-1" />
-                    Add
-                  </Button>
-                </div>
-
+              {isGuestCountOnly ? (
                 <div className="space-y-1.5">
-                  {invitees.map((invitee, index) => (
-                    <div key={index} className="flex gap-1.5">
-                      <Input
-                        placeholder={`Invitee ${index + 1} name`}
-                        value={invitee}
-                        onChange={(e) => handleInviteeChange(index, e.target.value)}
-                        className="h-9 sm:h-10 text-sm rounded-lg"
-                      />
-                      {invitees.length > 1 && (
-                        <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)} className="shrink-0 h-9 w-9 sm:h-10 sm:w-10 rounded-lg">
-                          <X className="w-3.5 h-3.5" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
+                  <Label htmlFor="numberOfGuests" className="text-xs sm:text-sm font-medium">Number of Guests *</Label>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                    How many people are included in this invitation
+                  </p>
+                  <Input
+                    id="numberOfGuests"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={numberOfGuests}
+                    onChange={(e) => setNumberOfGuests(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+                    className="h-9 sm:h-10 text-sm rounded-lg"
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <Label className="text-xs sm:text-sm font-medium">
+                        Invitees ({invitees.filter((n) => n.trim()).length})
+                      </Label>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
+                        Add the names of people for this invitation
+                      </p>
+                    </div>
+                    <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee} className="rounded-lg shrink-0 h-8 text-xs px-2.5">
+                      <Plus className="w-3.5 h-3.5 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    {invitees.map((invitee, index) => (
+                      <div key={index} className="flex gap-1.5">
+                        <Input
+                          placeholder={`Invitee ${index + 1} name`}
+                          value={invitee}
+                          onChange={(e) => handleInviteeChange(index, e.target.value)}
+                          className="h-9 sm:h-10 text-sm rounded-lg"
+                        />
+                        {invitees.length > 1 && (
+                          <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)} className="shrink-0 h-9 w-9 sm:h-10 sm:w-10 rounded-lg">
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </TabsContent>
 
             <TabsContent value="automatic" className="space-y-4 sm:space-y-5 pt-3 sm:pt-4 mt-0">
