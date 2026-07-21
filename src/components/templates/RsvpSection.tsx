@@ -67,7 +67,6 @@ export const RsvpSection = ({
               <div className="space-y-4">
                 {(() => {
                   const HIDE_NAMES_WEDDING_IDS = [
-                    "4dd62c35-b0a3-4337-be47-e471a6435ee9",
                     "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
                   ];
                   const hideNames = HIDE_NAMES_WEDDING_IDS.includes(wedding?.id);
