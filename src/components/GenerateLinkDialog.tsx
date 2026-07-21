@@ -84,14 +84,30 @@ export const GenerateLinkDialog = ({
       return;
     }
 
-    const validInvitees = invitees.filter((name) => name.trim());
-    if (validInvitees.length === 0) {
-      toast({
-        title: "Error",
-        description: "Please add at least one invitee",
-        variant: "destructive",
-      });
-      return;
+    let inviteeNames: string[];
+    if (isGuestCountOnly) {
+      const count = Math.max(1, Math.floor(Number(numberOfGuests) || 0));
+      if (!phoneNumber.trim()) {
+        toast({
+          title: "Error",
+          description: "Please enter a phone number",
+          variant: "destructive",
+        });
+        return;
+      }
+      inviteeNames = Array.from({ length: count }, (_, i) => `Guest ${i + 1}`);
+    } else {
+      inviteeNames = invitees.filter((name) => name.trim()).map((n) =>
+        n.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase())
+      );
+      if (inviteeNames.length === 0) {
+        toast({
+          title: "Error",
+          description: "Please add at least one invitee",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     setLoading(true);
@@ -102,7 +118,7 @@ export const GenerateLinkDialog = ({
           wedding_id: weddingId,
           link_name: linkName.replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
           unique_slug: uniqueSlug,
-          number_of_persons: validInvitees.length,
+          number_of_persons: inviteeNames.length,
           side: side.trim() || null,
           country_code: phoneNumber.trim() ? countryCode.trim() || null : null,
           phone_number: phoneNumber.trim() ? phoneNumber.trim() : null,
@@ -112,9 +128,9 @@ export const GenerateLinkDialog = ({
 
       if (linkError) throw linkError;
 
-      const inviteeRecords = validInvitees.map((name) => ({
+      const inviteeRecords = inviteeNames.map((name) => ({
         invitation_link_id: linkData.id,
-        name: name.trim().replace(/(^|\s)(\S)/g, (_m, s, c) => s + c.toUpperCase()),
+        name,
       }));
 
       const { error: inviteeError } = await (supabase as any).from("invitees").insert(inviteeRecords);
@@ -122,8 +138,9 @@ export const GenerateLinkDialog = ({
       if (inviteeError) throw inviteeError;
 
       const sanitizedLinkNameForUrl = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
-      const generatedLink = `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${validInvitees.length}`;
+      const generatedLink = `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkNameForUrl)}/${inviteeNames.length}`;
       prewarmOGCache(generatedLink);
+
 
       toast({
         title: "Success",
