@@ -38,16 +38,20 @@ export const GenerateLinkDialog = ({
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
+  const GUEST_COUNT_ONLY_WEDDING_ID = "4dd62c35-b0a3-4337-be47-e471a6435ee9";
+  const isGuestCountOnly = weddingId === GUEST_COUNT_ONLY_WEDDING_ID;
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
   const [countryCode, setCountryCode] = useState("+961");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [invitees, setInvitees] = useState<string[]>([""]);
+  const [numberOfGuests, setNumberOfGuests] = useState<number>(1);
   const [loading, setLoading] = useState(false);
   const [slugManuallyEdited, setSlugManuallyEdited] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [activeTab, setActiveTab] = useState("manual");
+
 
   const handleLinkNameChange = (value: string) => {
     setLinkName(value);
