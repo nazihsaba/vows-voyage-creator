@@ -76,7 +76,7 @@ export const RsvpSection = ({
                   const isNotAttending = response === false;
                   const disabled = isRsvpDeadlinePassed;
                   const displayName = hideNames
-                    ? `${t("rsvp.guestLabel", { defaultValue: "Guest" })} ${index + 1}`
+                    ? `${index + 1}.`
                     : invitee.name;
                   return (
                     <div
