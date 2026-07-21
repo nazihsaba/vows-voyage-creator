@@ -306,14 +306,17 @@ export const GenerateLinkDialog = ({
         {/* Body */}
         <div className="px-4 sm:px-6 py-4 sm:py-5 overflow-y-auto flex-1 min-h-0">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
-              <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
-                Manual
-              </TabsTrigger>
-              <TabsTrigger value="automatic" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
-                Automatic
-              </TabsTrigger>
-            </TabsList>
+            {!isGuestCountOnly && (
+              <TabsList className="grid w-full grid-cols-2 h-9 sm:h-10 rounded-xl bg-muted/60">
+                <TabsTrigger value="manual" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
+                  Manual
+                </TabsTrigger>
+                <TabsTrigger value="automatic" className="rounded-lg text-xs sm:text-sm data-[state=active]:shadow-sm">
+                  Automatic
+                </TabsTrigger>
+              </TabsList>
+            )}
+
 
             <TabsContent value="manual" className="space-y-3 sm:space-y-4 pt-3 sm:pt-4 mt-0">
               <div className="space-y-1.5">
