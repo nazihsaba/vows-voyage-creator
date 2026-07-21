@@ -38,8 +38,11 @@ export const GenerateLinkDialog = ({
 }: GenerateLinkDialogProps) => {
   const { toast } = useToast();
   const navigate = useNavigate();
-  const GUEST_COUNT_ONLY_WEDDING_ID = "4dd62c35-b0a3-4337-be47-e471a6435ee9";
-  const isGuestCountOnly = weddingId === GUEST_COUNT_ONLY_WEDDING_ID;
+  const GUEST_COUNT_ONLY_WEDDING_IDS = [
+    "4dd62c35-b0a3-4337-be47-e471a6435ee9",
+    "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
+  ];
+  const isGuestCountOnly = GUEST_COUNT_ONLY_WEDDING_IDS.includes(weddingId);
   const [linkName, setLinkName] = useState("");
   const [uniqueSlug, setUniqueSlug] = useState("");
   const [side, setSide] = useState("");
