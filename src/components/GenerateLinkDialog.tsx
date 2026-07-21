@@ -398,40 +398,59 @@ export const GenerateLinkDialog = ({
                 </Card>
               )}
 
-              <div className="space-y-2">
-                <div className="flex items-center justify-between gap-2">
-                  <div className="min-w-0">
-                    <Label className="text-xs sm:text-sm font-medium">
-                      Invitees ({invitees.filter((n) => n.trim()).length})
-                    </Label>
-                    <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
-                      Add the names of people for this invitation
-                    </p>
-                  </div>
-                  <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee} className="rounded-lg shrink-0 h-8 text-xs px-2.5">
-                    <Plus className="w-3.5 h-3.5 mr-1" />
-                    Add
-                  </Button>
-                </div>
-
+              {isGuestCountOnly ? (
                 <div className="space-y-1.5">
-                  {invitees.map((invitee, index) => (
-                    <div key={index} className="flex gap-1.5">
-                      <Input
-                        placeholder={`Invitee ${index + 1} name`}
-                        value={invitee}
-                        onChange={(e) => handleInviteeChange(index, e.target.value)}
-                        className="h-9 sm:h-10 text-sm rounded-lg"
-                      />
-                      {invitees.length > 1 && (
-                        <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)} className="shrink-0 h-9 w-9 sm:h-10 sm:w-10 rounded-lg">
-                          <X className="w-3.5 h-3.5" />
-                        </Button>
-                      )}
-                    </div>
-                  ))}
+                  <Label htmlFor="numberOfGuests" className="text-xs sm:text-sm font-medium">Number of Guests *</Label>
+                  <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                    How many people are included in this invitation
+                  </p>
+                  <Input
+                    id="numberOfGuests"
+                    type="number"
+                    min={1}
+                    step={1}
+                    value={numberOfGuests}
+                    onChange={(e) => setNumberOfGuests(Math.max(1, Math.floor(Number(e.target.value) || 1)))}
+                    className="h-9 sm:h-10 text-sm rounded-lg"
+                  />
                 </div>
-              </div>
+              ) : (
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <Label className="text-xs sm:text-sm font-medium">
+                        Invitees ({invitees.filter((n) => n.trim()).length})
+                      </Label>
+                      <p className="text-[11px] sm:text-xs text-muted-foreground mt-0.5 leading-snug">
+                        Add the names of people for this invitation
+                      </p>
+                    </div>
+                    <Button type="button" variant="outline" size="sm" onClick={handleAddInvitee} className="rounded-lg shrink-0 h-8 text-xs px-2.5">
+                      <Plus className="w-3.5 h-3.5 mr-1" />
+                      Add
+                    </Button>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    {invitees.map((invitee, index) => (
+                      <div key={index} className="flex gap-1.5">
+                        <Input
+                          placeholder={`Invitee ${index + 1} name`}
+                          value={invitee}
+                          onChange={(e) => handleInviteeChange(index, e.target.value)}
+                          className="h-9 sm:h-10 text-sm rounded-lg"
+                        />
+                        {invitees.length > 1 && (
+                          <Button type="button" variant="outline" size="icon" onClick={() => handleRemoveInvitee(index)} className="shrink-0 h-9 w-9 sm:h-10 sm:w-10 rounded-lg">
+                            <X className="w-3.5 h-3.5" />
+                          </Button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
             </TabsContent>
 
             <TabsContent value="automatic" className="space-y-4 sm:space-y-5 pt-3 sm:pt-4 mt-0">
