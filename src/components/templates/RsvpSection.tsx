@@ -62,29 +62,26 @@ export const RsvpSection = ({
           </div>
 
 
-          {invitees.length > 0 && (
-            <div className="space-y-6 pt-6 border-t border-gray-300">
-              <div className="space-y-4">
-                {(() => {
-                  const HIDE_NAMES_WEDDING_IDS = [
-                    "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
-                  ];
-                  const hideNames = HIDE_NAMES_WEDDING_IDS.includes(wedding?.id);
-                  return invitees.map((invitee: any, index: number) => {
+          {invitees.length > 0 && (() => {
+            const HIDE_INVITEES_WEDDING_IDS = [
+              "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
+            ];
+            const hideInviteeList = HIDE_INVITEES_WEDDING_IDS.includes(wedding?.id);
+            if (hideInviteeList) return null;
+            return (
+              <div className="space-y-4 pt-6 border-t border-gray-300">
+                {invitees.map((invitee: any) => {
                   const response = rsvpResponses[invitee.id];
                   const isAttending = response === true;
                   const isNotAttending = response === false;
                   const disabled = isRsvpDeadlinePassed;
-                  const displayName = hideNames
-                    ? `${index + 1}.`
-                    : invitee.name;
                   return (
                     <div
                       key={invitee.id}
                       className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200`}
                     >
-                      <span className="text-xl font-serif text-black">{displayName}</span>
-                      <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${displayName}`}>
+                      <span className="text-xl font-serif text-black">{invitee.name}</span>
+                      <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${invitee.name}`}>
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                           <Checkbox
                             disabled={disabled}
@@ -104,9 +101,12 @@ export const RsvpSection = ({
                       </div>
                     </div>
                   );
-                  });
-                })()}
+                })}
               </div>
+            );
+          })()}
+          {invitees.length > 0 && (
+            <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="pt-6 border-t border-gray-300 space-y-4">
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
                   {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
