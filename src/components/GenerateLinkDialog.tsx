@@ -267,10 +267,15 @@ export const GenerateLinkDialog = ({
 
   const sanitizedLinkName = getInvitationLinkSlug({ unique_slug: uniqueSlug, link_name: linkName });
 
+  const guestCountForPreview = isGuestCountOnly
+    ? Math.max(1, Math.floor(Number(numberOfGuests) || 0))
+    : invitees.filter((n) => n.trim()).length;
+
   const previewUrl =
     uniqueSlug && linkName
-      ? `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkName)}/${invitees.filter((n) => n.trim()).length}`
+      ? `https://go.aureainvites.com/invite/${weddingSlug}/${encodeURIComponent(sanitizedLinkName)}/${guestCountForPreview}`
       : "";
+
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
