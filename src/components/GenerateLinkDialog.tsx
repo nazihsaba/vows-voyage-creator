@@ -153,6 +153,8 @@ export const GenerateLinkDialog = ({
       setCountryCode("+961");
       setPhoneNumber("");
       setInvitees([""]);
+      setNumberOfGuests(1);
+
       setSlugManuallyEdited(false);
       onSuccess();
       onOpenChange(false);
