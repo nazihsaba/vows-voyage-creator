@@ -65,18 +65,27 @@ export const RsvpSection = ({
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="space-y-4">
-                {invitees.map((invitee: any) => {
+                {(() => {
+                  const HIDE_NAMES_WEDDING_IDS = [
+                    "4dd62c35-b0a3-4337-be47-e471a6435ee9",
+                    "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
+                  ];
+                  const hideNames = HIDE_NAMES_WEDDING_IDS.includes(wedding?.id);
+                  return invitees.map((invitee: any, index: number) => {
                   const response = rsvpResponses[invitee.id];
                   const isAttending = response === true;
                   const isNotAttending = response === false;
                   const disabled = isRsvpDeadlinePassed;
+                  const displayName = hideNames
+                    ? `${t("rsvp.guestLabel", { defaultValue: "Guest" })} ${index + 1}`
+                    : invitee.name;
                   return (
                     <div
                       key={invitee.id}
                       className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200`}
                     >
-                      <span className="text-xl font-serif text-black">{invitee.name}</span>
-                      <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${invitee.name}`}>
+                      <span className="text-xl font-serif text-black">{displayName}</span>
+                      <div className="flex items-center gap-4" role="group" aria-label={`RSVP for ${displayName}`}>
                         <label className="flex items-center gap-2 cursor-pointer select-none">
                           <Checkbox
                             disabled={disabled}
@@ -96,7 +105,8 @@ export const RsvpSection = ({
                       </div>
                     </div>
                   );
-                })}
+                  });
+                })()}
               </div>
               <div className="pt-6 border-t border-gray-300 space-y-4">
                 <p className="text-lg font-semibold text-center text-[#3e2723]">
