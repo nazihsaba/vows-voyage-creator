@@ -69,6 +69,7 @@ export const RsvpSection = ({
           {invitees.length > 0 && (() => {
             const HIDE_INVITEES_WEDDING_IDS = [
               "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
+              "08c4a396-3377-43db-ab82-a1594daed3dc",
             ];
             const COUNT_ONLY_WEDDING_IDS = [
               "08c4a396-3377-43db-ab82-a1594daed3dc",
