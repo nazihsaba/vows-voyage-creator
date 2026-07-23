@@ -55,7 +55,6 @@ export const RsvpSection = ({
   const HIDE_RSVP_WEDDING_IDS = [
     "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
     "08c4a396-3377-43db-ab82-a1594daed3dc",
-    "9a73b786-fddb-4fc4-9cd1-c66800867398",
   ];
   if (HIDE_RSVP_WEDDING_IDS.includes(wedding?.id)) return null;
 
