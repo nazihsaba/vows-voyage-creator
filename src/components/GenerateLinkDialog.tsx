@@ -41,6 +41,7 @@ export const GenerateLinkDialog = ({
   const GUEST_COUNT_ONLY_WEDDING_IDS = [
     "4dd62c35-b0a3-4337-be47-e471a6435ee9",
     "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
+    "08c4a396-3377-43db-ab82-a1594daed3dc",
   ];
   const isGuestCountOnly = GUEST_COUNT_ONLY_WEDDING_IDS.includes(weddingId);
   const [linkName, setLinkName] = useState("");
