@@ -70,8 +70,23 @@ export const RsvpSection = ({
             const HIDE_INVITEES_WEDDING_IDS = [
               "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
             ];
+            const COUNT_ONLY_WEDDING_IDS = [
+              "08c4a396-3377-43db-ab82-a1594daed3dc",
+            ];
             const hideInviteeList = HIDE_INVITEES_WEDDING_IDS.includes(wedding?.id);
             if (hideInviteeList) return null;
+            const showCountOnly = COUNT_ONLY_WEDDING_IDS.includes(wedding?.id);
+            if (showCountOnly) {
+              return (
+                <div className="pt-6 border-t border-gray-300">
+                  <div className={`py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200 text-center`}>
+                    <span className="text-xl font-serif text-black">
+                      {t("rsvp.numberOfInvitees", { count: invitees.length, defaultValue: `Number of invitees: ${invitees.length}` })}
+                    </span>
+                  </div>
+                </div>
+              );
+            }
             return (
               <div className="space-y-4 pt-6 border-t border-gray-300">
                 {invitees.map((invitee: any) => {
@@ -109,6 +124,7 @@ export const RsvpSection = ({
               </div>
             );
           })()}
+
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="pt-6 border-t border-gray-300 space-y-4">
