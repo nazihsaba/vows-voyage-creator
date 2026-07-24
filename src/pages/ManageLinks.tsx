@@ -89,6 +89,7 @@ interface InvitationLink {
   created_at: string;
   invite_sent_at: string | null;
   invite_sent_count: number;
+  hide_invitees?: boolean;
 }
 
 interface Invitee {
@@ -132,6 +133,7 @@ const ManageLinks = () => {
     side: "",
     country_code: "+961",
     phone_number: "",
+    hide_invitees: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -610,6 +612,7 @@ const ManageLinks = () => {
       side: link.side || "NONE",
       country_code: cc || "+961",
       phone_number: phone,
+      hide_invitees: !!(link as any).hide_invitees,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -707,6 +710,7 @@ const ManageLinks = () => {
           side: editForm.side === "NONE" ? null : editForm.side || null,
           country_code: trimmedPhone ? trimmedCc || null : null,
           phone_number: trimmedPhone || null,
+          hide_invitees: editForm.hide_invitees,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
