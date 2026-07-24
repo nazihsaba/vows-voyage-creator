@@ -2291,7 +2291,25 @@ const ManageLinks = () => {
               </div>
             </div>
 
+            {/* Hide invitees toggle */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-invitees" className="text-sm font-medium">
+                  Guest count only
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Hide the individual invitees on the RSVP. Recipients will only see the number of guests attending.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-invitees"
+                checked={editForm.hide_invitees}
+                onCheckedChange={(v) => setEditForm((prev) => ({ ...prev, hide_invitees: v }))}
+              />
+            </div>
+
             {/* Invitees Section */}
+            {!editForm.hide_invitees && (
             <div className="space-y-2 pt-3 border-t">
               <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
@@ -2405,6 +2423,7 @@ const ManageLinks = () => {
                 </Button>
               </div>
             </div>
+            )}
           </div>
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
             <Button
