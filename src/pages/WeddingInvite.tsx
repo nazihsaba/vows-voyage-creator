@@ -247,6 +247,10 @@ const WeddingInvite = () => {
           const linkData = allLinks?.find((link: any) => invitationLinkSlugMatches(link, linkSlug));
 
           if (linkData) {
+            // Attach the active link to wedding so templates/RsvpSection can
+            // read per-link flags (e.g. hide_invitees).
+            setWedding((prev: any) => (prev ? { ...prev, _activeLink: linkData } : prev));
+
             const { data: inviteesData } = await (supabase as any)
               .from("invitees")
               .select("*")

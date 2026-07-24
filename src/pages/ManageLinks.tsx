@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import {
   Dialog,
@@ -89,6 +90,7 @@ interface InvitationLink {
   created_at: string;
   invite_sent_at: string | null;
   invite_sent_count: number;
+  hide_invitees?: boolean;
 }
 
 interface Invitee {
@@ -132,6 +134,7 @@ const ManageLinks = () => {
     side: "",
     country_code: "+961",
     phone_number: "",
+    hide_invitees: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -610,6 +613,7 @@ const ManageLinks = () => {
       side: link.side || "NONE",
       country_code: cc || "+961",
       phone_number: phone,
+      hide_invitees: !!(link as any).hide_invitees,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -707,6 +711,7 @@ const ManageLinks = () => {
           side: editForm.side === "NONE" ? null : editForm.side || null,
           country_code: trimmedPhone ? trimmedCc || null : null,
           phone_number: trimmedPhone || null,
+          hide_invitees: editForm.hide_invitees,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -2286,7 +2291,25 @@ const ManageLinks = () => {
               </div>
             </div>
 
+            {/* Hide invitees toggle */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-invitees" className="text-sm font-medium">
+                  Guest count only
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Hide the individual invitees on the RSVP. Recipients will only see the number of guests attending.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-invitees"
+                checked={editForm.hide_invitees}
+                onCheckedChange={(v) => setEditForm((prev) => ({ ...prev, hide_invitees: v }))}
+              />
+            </div>
+
             {/* Invitees Section */}
+            {!editForm.hide_invitees && (
             <div className="space-y-2 pt-3 border-t">
               <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
@@ -2400,6 +2423,7 @@ const ManageLinks = () => {
                 </Button>
               </div>
             </div>
+            )}
           </div>
           <DialogFooter className="flex-col-reverse sm:flex-row gap-2 sm:gap-0 pt-3 border-t">
             <Button
@@ -2407,7 +2431,7 @@ const ManageLinks = () => {
               disabled={
                 !editForm.link_name.trim() ||
                 !editForm.number_of_persons ||
-                editInvitees.length !== editForm.number_of_persons
+                (!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons)
               }
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
@@ -2420,7 +2444,7 @@ const ManageLinks = () => {
             >
               Close
             </Button>
-            {editInvitees.length !== editForm.number_of_persons && (
+            {!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons && (
               <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>
