@@ -52,10 +52,6 @@ export const RsvpSection = ({
   const [wishesMessage, setWishesMessage] = useState("");
   const rsvpSubtitle = getLocalizedValue("rsvp_subtitle", wedding?.rsvp_subtitle || t("rsvp.subtitle"));
 
-  const HIDE_RSVP_WEDDING_IDS = [
-    "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
-  ];
-  if (HIDE_RSVP_WEDDING_IDS.includes(wedding?.id)) return null;
 
 
   return (
@@ -69,30 +65,9 @@ export const RsvpSection = ({
 
 
           {invitees.length > 0 && (() => {
-            const HIDE_INVITEES_WEDDING_IDS = [
-              "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
-              "08c4a396-3377-43db-ab82-a1594daed3dc",
-            ];
-            const COUNT_ONLY_WEDDING_IDS = [
-              "08c4a396-3377-43db-ab82-a1594daed3dc",
-            ];
             const linkHideInvitees = !!wedding?._activeLink?.hide_invitees;
-            const hideInviteeList = linkHideInvitees || HIDE_INVITEES_WEDDING_IDS.includes(wedding?.id);
             if (linkHideInvitees) {
               // Per-link toggle: show only the guest count summary
-              return (
-                <div className="pt-6 border-t border-gray-300">
-                  <div className={`py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200 text-center`}>
-                    <span className="text-xl font-serif text-black">
-                      {t("rsvp.numberOfInvitees", { count: invitees.length, defaultValue: `Number of invitees: ${invitees.length}` })}
-                    </span>
-                  </div>
-                </div>
-              );
-            }
-            if (hideInviteeList) return null;
-            const showCountOnly = COUNT_ONLY_WEDDING_IDS.includes(wedding?.id);
-            if (showCountOnly) {
               return (
                 <div className="pt-6 border-t border-gray-300">
                   <div className={`py-4 px-6 ${cardBgClassName} rounded-lg border border-gray-200 text-center`}>

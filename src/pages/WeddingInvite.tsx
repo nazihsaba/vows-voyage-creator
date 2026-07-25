@@ -232,13 +232,7 @@ const WeddingInvite = () => {
 
         setGiftCards(giftCardsData || []);
 
-        const HIDE_LINK_RSVP_WEDDING_IDS = [
-          "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
-          "4dd62c35-b0a3-4337-be47-e471a6435ee9",
-        ];
-        const hideLinkRsvp = weddingData?.id ? HIDE_LINK_RSVP_WEDDING_IDS.includes(weddingData.id) : false;
-
-        if (linkSlug && weddingData?.id && !hideLinkRsvp) {
+        if (linkSlug && weddingData?.id) {
           const { data: allLinks } = await (supabase as any)
             .from("invitation_links")
             .select("*")
