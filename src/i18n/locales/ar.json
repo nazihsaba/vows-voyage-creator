@@ -55,6 +55,7 @@
     "notAttending": "لن أحضر",
     "willAttend": "هل ستحضر؟",
     "numberOfGuests": "عدد الضيوف: {{count}}",
+    "numberOfInvitees": "عدد المدعوين: {{count}}",
     "deadlinePassed": "انتهت مهلة تأكيد الحضور",
     "submit": "تأكيد الحضور",
     "submitting": "جارٍ الإرسال...",
