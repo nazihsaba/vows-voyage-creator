@@ -52,6 +52,13 @@ const previewCards: { image: string; label: string; tagline: string; featured: b
     templateKey: "etoile",
   },
   {
+    image: theatreTemplate,
+    label: "Théâtre",
+    tagline: "Curtain reveal & dramatic stages",
+    featured: false,
+    templateKey: "theatre",
+  },
+  {
     image: veriteTemplate,
     label: "Vérité",
     tagline: "Contemporary gallery showcase",
