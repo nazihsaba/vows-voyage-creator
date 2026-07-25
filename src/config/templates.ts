@@ -573,6 +573,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'theatre-opera',
+    name: 'Théâtre',
+    category: 'elegant',
+    description: 'Cinematic burgundy theatre — a story told in three acts with a rising curtain.',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'TheatreTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'countdown', enabled: true, order: 3, customizable: true },
+      { id: 'location', enabled: true, order: 4, customizable: true },
+      { id: 'gallery', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Cormorant Garamond',
+      fontSecondary: 'Playfair Display',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#4d0f1b',
+        secondary: '#c9a76a',
+        accent: '#faf9f5',
+        background: '#0d0d0d',
+        text: '#faf9f5',
+      },
+      borderRadius: 'none',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {

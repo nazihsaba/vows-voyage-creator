@@ -30,6 +30,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import tresorCover from "@/assets/tresor-cover.jpeg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
+import theatreTemplate from "@/assets/theatre-cover.jpg";
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
 import { EclatPreview } from "@/components/templates/EclatPreview";
@@ -37,6 +38,7 @@ import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
 import TresorPreview from "@/components/templates/TresorPreview";
+import TheatrePreview from "@/components/templates/TheatrePreview";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -165,6 +167,21 @@ const Dashboard = () => {
         { icon: Video, text: "Video Background" },
         { icon: Images, text: "Photo Gallery" },
         { icon: GiftIcon, text: "Gift Registry" },
+        { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
+      ],
+    },
+    {
+      id: "theatre-opera",
+      name: "Théâtre",
+      price: 120,
+      description: "Cinematic burgundy theatre — a story told in three acts with a rising curtain",
+      image: theatreTemplate,
+      features: [
+        { icon: Sparkles, text: "Curtain Reveal" },
+        { icon: Images, text: "Three-Act Story" },
+        { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Countdown Timer" },
         { icon: Calendar, text: "RSVP" },
         { icon: Music, text: "Background Music" },
@@ -304,6 +321,7 @@ const Dashboard = () => {
                           "lumiere-editorial": "/dashboard/lumiere-form",
                           "etoile-carousel": "/dashboard/etoile-form",
                           "tresor-swipe": "/dashboard/tresor-form",
+                          "theatre-opera": "/dashboard/theatre-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -344,6 +362,7 @@ const Dashboard = () => {
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
             {showPreview === "tresor-swipe" && <TresorPreview />}
+            {showPreview === "theatre-opera" && <TheatrePreview />}
           </div>
         </DialogContent>
       </Dialog>

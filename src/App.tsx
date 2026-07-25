@@ -50,6 +50,7 @@ const App = () => (
           <Route path="/dashboard/lumiere-form" element={<WeddingForm />} />
           <Route path="/dashboard/etoile-form" element={<WeddingForm />} />
           <Route path="/dashboard/tresor-form" element={<WeddingForm />} />
+          <Route path="/dashboard/theatre-form" element={<WeddingForm />} />
           
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />
           <Route path="/invite/preview" element={<WeddingInvite />} />
