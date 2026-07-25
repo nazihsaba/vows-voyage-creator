@@ -72,6 +72,15 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     monogram: '"Cormorant Garamond", serif',
     countdown: '"Cormorant Garamond", serif',
   },
+  // Théâtre — cinematic burgundy opera
+  "theatre-opera": {
+    title: '"Cormorant Garamond", serif',
+    subtitle: '"Cormorant Garamond", serif',
+    heading: '"Cormorant Garamond", serif',
+    body: '"Playfair Display", serif',
+    monogram: '"Cormorant Garamond", serif',
+    countdown: '"Cormorant Garamond", serif',
+  },
 };
 
 const FALLBACK: Required<TemplateFonts> = {
