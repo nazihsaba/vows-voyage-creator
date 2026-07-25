@@ -55,6 +55,7 @@
     "notAttending": "Not Attending",
     "willAttend": "Will Attend?",
     "numberOfGuests": "Number of Guests: {{count}}",
+    "numberOfInvitees": "Number of invitees: {{count}}",
     "deadlinePassed": "RSVP deadline has passed",
     "submit": "Submit RSVP",
     "sendWishes": "Send Wishes",
