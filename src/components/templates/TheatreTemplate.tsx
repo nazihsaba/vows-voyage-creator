@@ -330,25 +330,26 @@ export const TheatreTemplate = ({
                   margin: "26px 0",
                 }}
               />
-              <EditableField
-                fieldId="groom-name"
-                text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
-                style={getFieldStyle("groom-name")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="div"
-                className=""
+              <div
+                style={{
+                  fontSize: "clamp(46px, 9.5vw, 104px)",
+                  fontWeight: 300,
+                  lineHeight: 0.98,
+                  color: "#fbf7ef",
+                  letterSpacing: "0.01em",
+                  pointerEvents: "auto",
+                }}
               >
-                <span
-                  style={{
-                    fontSize: "clamp(46px, 9.5vw, 104px)",
-                    fontWeight: 300,
-                    lineHeight: 0.98,
-                    color: "#fbf7ef",
-                    letterSpacing: "0.01em",
-                  }}
+                <EditableField
+                  fieldId="groom-name"
+                  text={getFieldValue("groom-name", getLocalizedValue("groom_name", wedding.groom_name))}
+                  style={getFieldStyle("groom-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="span"
+                  className=""
                 />
-              </EditableField>
+              </div>
               <div
                 style={{
                   fontStyle: "italic",
@@ -360,25 +361,26 @@ export const TheatreTemplate = ({
               >
                 and
               </div>
-              <EditableField
-                fieldId="bride-name"
-                text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
-                style={getFieldStyle("bride-name")}
-                onUpdate={onFieldUpdate}
-                isPreview={isPreview}
-                tag="div"
-                className=""
+              <div
+                style={{
+                  fontSize: "clamp(46px, 9.5vw, 104px)",
+                  fontWeight: 300,
+                  lineHeight: 0.98,
+                  color: "#fbf7ef",
+                  letterSpacing: "0.01em",
+                  pointerEvents: "auto",
+                }}
               >
-                <span
-                  style={{
-                    fontSize: "clamp(46px, 9.5vw, 104px)",
-                    fontWeight: 300,
-                    lineHeight: 0.98,
-                    color: "#fbf7ef",
-                    letterSpacing: "0.01em",
-                  }}
+                <EditableField
+                  fieldId="bride-name"
+                  text={getFieldValue("bride-name", getLocalizedValue("bride_name", wedding.bride_name))}
+                  style={getFieldStyle("bride-name")}
+                  onUpdate={onFieldUpdate}
+                  isPreview={isPreview}
+                  tag="span"
+                  className=""
                 />
-              </EditableField>
+              </div>
               <div
                 style={{
                   display: "flex",
