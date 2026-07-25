@@ -496,7 +496,7 @@ export const TheatreTemplate = ({
             <div style={{ fontFamily: "'Jost', sans-serif", fontWeight: 300, fontSize: 10, letterSpacing: "0.58em", textTransform: "uppercase", color: GOLD }}>
               With joyful hearts
             </div>
-            <div style={{ marginTop: 30, maxWidth: 540 }}>
+            <div style={{ marginTop: 30, maxWidth: 540, fontSize: "clamp(25px, 4.4vw, 34px)", fontWeight: 400, lineHeight: 1.45 }}>
               <EditableField
                 fieldId="theatre-invitation-body"
                 text={getFieldValue(
@@ -511,12 +511,10 @@ export const TheatreTemplate = ({
                 isPreview={isPreview}
                 multiline
                 tag="p"
-                className=""
-              >
-                <p style={{ fontSize: "clamp(25px, 4.4vw, 34px)", fontWeight: 400, lineHeight: 1.45 }} />
-              </EditableField>
+                className="whitespace-pre-line"
+              />
             </div>
-            <div style={{ marginTop: 24, lineHeight: 1.6 }}>
+            <div style={{ marginTop: 24, lineHeight: 1.6, fontSize: 22, fontStyle: "italic", color: "#4a4132" }}>
               <EditableField
                 fieldId="groom-family"
                 text={formatFamily("groom_family", getFieldValue("groom-family", wedding.groom_family || ""))}
@@ -524,10 +522,8 @@ export const TheatreTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className=""
-              >
-                <p style={{ fontSize: 22, fontStyle: "italic", color: "#4a4132" }} />
-              </EditableField>
+                className="whitespace-pre-line"
+              />
               <EditableField
                 fieldId="bride-family"
                 text={formatFamily("bride_family", getFieldValue("bride-family", wedding.bride_family || ""))}
@@ -535,10 +531,8 @@ export const TheatreTemplate = ({
                 onUpdate={onFieldUpdate}
                 isPreview={isPreview}
                 tag="p"
-                className=""
-              >
-                <p style={{ fontSize: 22, fontStyle: "italic", color: "#4a4132" }} />
-              </EditableField>
+                className="whitespace-pre-line"
+              />
             </div>
             <div style={{ width: 1, height: 60, background: "linear-gradient(to bottom, #d6c6a4, transparent)", marginTop: 46 }} />
           </div>
