@@ -90,6 +90,7 @@ const templateComponents: Record<TemplateKey, React.LazyExoticComponent<React.Co
   etoile: EtoilePreview,
   epris: EprisPreview,
   tresor: TresorPreview,
+  theatre: TheatrePreview,
 };
 
 const PreviewLoadingFallback = () => (
