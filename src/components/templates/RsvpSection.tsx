@@ -52,10 +52,6 @@ export const RsvpSection = ({
   const [wishesMessage, setWishesMessage] = useState("");
   const rsvpSubtitle = getLocalizedValue("rsvp_subtitle", wedding?.rsvp_subtitle || t("rsvp.subtitle"));
 
-  const HIDE_RSVP_WEDDING_IDS = [
-    "d1d00a9f-7ffe-46ea-89f0-fbd061f562b1",
-  ];
-  if (HIDE_RSVP_WEDDING_IDS.includes(wedding?.id)) return null;
 
 
   return (
