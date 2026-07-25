@@ -633,18 +633,18 @@ export const TheatreTemplate = ({
                       Act {act.numeral}
                     </div>
                     <div>
-                      <EditableField
-                        fieldId={`theatre-act-${i}-title`}
-                        text={getFieldValue(`theatre-act-${i}-title`, act.title)}
-                        style={getFieldStyle(`theatre-act-${i}-title`)}
-                        onUpdate={onFieldUpdate}
-                        isPreview={isPreview}
-                        tag="div"
-                        className=""
-                      >
-                        <div style={{ fontSize: 27, fontWeight: 400, fontStyle: "italic" }} />
-                      </EditableField>
-                      <div style={{ marginTop: 10, maxWidth: "46ch" }}>
+                      <div style={{ fontSize: 27, fontWeight: 400, fontStyle: "italic" }}>
+                        <EditableField
+                          fieldId={`theatre-act-${i}-title`}
+                          text={getFieldValue(`theatre-act-${i}-title`, act.title)}
+                          style={getFieldStyle(`theatre-act-${i}-title`)}
+                          onUpdate={onFieldUpdate}
+                          isPreview={isPreview}
+                          tag="div"
+                          className=""
+                        />
+                      </div>
+                      <div style={{ marginTop: 10, maxWidth: "46ch", fontSize: 20, lineHeight: 1.65, color: "#4a4132" }}>
                         <EditableField
                           fieldId={`theatre-act-${i}-body`}
                           text={getFieldValue(`theatre-act-${i}-body`, act.body)}
@@ -653,10 +653,8 @@ export const TheatreTemplate = ({
                           isPreview={isPreview}
                           multiline
                           tag="div"
-                          className=""
-                        >
-                          <div style={{ fontSize: 20, lineHeight: 1.65, color: "#4a4132" }} />
-                        </EditableField>
+                          className="whitespace-pre-line"
+                        />
                       </div>
                     </div>
                   </div>
