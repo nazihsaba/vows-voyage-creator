@@ -14,6 +14,7 @@ import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
 import eprisTemplate from "@/assets/epris-preview.jpg";
 import tresorTemplate from "@/assets/tresor-cover.jpeg";
+import theatreTemplate from "@/assets/theatre-cover.jpg";
 
 // Lazy load preview components
 const GracePreview = lazy(() => import("@/components/templates/GracePreview"));
@@ -24,8 +25,9 @@ const LumierePreview = lazy(() => import("@/components/templates/LumierePreview"
 const EtoilePreview = lazy(() => import("@/components/templates/EtoilePreview"));
 const EprisPreview = lazy(() => import("@/components/templates/EprisPreview"));
 const TresorPreview = lazy(() => import("@/components/templates/TresorPreview"));
+const TheatrePreview = lazy(() => import("@/components/templates/TheatrePreview"));
 
-type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile" | "epris" | "tresor";
+type TemplateKey = "grace" | "verite" | "eclat" | "aura" | "lumiere" | "etoile" | "epris" | "tresor" | "theatre";
 
 const previewCards: { image: string; label: string; tagline: string; featured: boolean; templateKey: TemplateKey }[] = [
   {
