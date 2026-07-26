@@ -127,7 +127,6 @@ export type Database = {
           country_code: string | null
           created_at: string
           hide_invitees: boolean
-          hide_rsvp: boolean
           id: string
           invite_sent_at: string | null
           invite_sent_count: number
@@ -142,7 +141,6 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           hide_invitees?: boolean
-          hide_rsvp?: boolean
           id?: string
           invite_sent_at?: string | null
           invite_sent_count?: number
@@ -157,7 +155,6 @@ export type Database = {
           country_code?: string | null
           created_at?: string
           hide_invitees?: boolean
-          hide_rsvp?: boolean
           id?: string
           invite_sent_at?: string | null
           invite_sent_count?: number

@@ -91,7 +91,6 @@ interface InvitationLink {
   invite_sent_at: string | null;
   invite_sent_count: number;
   hide_invitees?: boolean;
-  hide_rsvp?: boolean;
 }
 
 interface Invitee {
@@ -136,7 +135,6 @@ const ManageLinks = () => {
     country_code: "+961",
     phone_number: "",
     hide_invitees: false,
-    hide_rsvp: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -616,7 +614,6 @@ const ManageLinks = () => {
       country_code: cc || "+961",
       phone_number: phone,
       hide_invitees: !!(link as any).hide_invitees,
-      hide_rsvp: !!(link as any).hide_rsvp,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -715,7 +712,6 @@ const ManageLinks = () => {
           country_code: trimmedPhone ? trimmedCc || null : null,
           phone_number: trimmedPhone || null,
           hide_invitees: editForm.hide_invitees,
-          hide_rsvp: editForm.hide_rsvp,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -2308,33 +2304,12 @@ const ManageLinks = () => {
               <Switch
                 id="edit-hide-invitees"
                 checked={editForm.hide_invitees}
-                onCheckedChange={(v) =>
-                  setEditForm((prev) => ({ ...prev, hide_invitees: v, hide_rsvp: v ? false : prev.hide_rsvp }))
-                }
-              />
-            </div>
-
-            {/* Hide entire RSVP section toggle */}
-            <div className="flex items-start justify-between gap-3 pt-3 border-t">
-              <div className="space-y-0.5 pr-2">
-                <Label htmlFor="edit-hide-rsvp" className="text-sm font-medium">
-                  Hide RSVP section
-                </Label>
-                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
-                  Completely hide the RSVP section from the invitation. Recipients won't see guest names or the number of guests.
-                </p>
-              </div>
-              <Switch
-                id="edit-hide-rsvp"
-                checked={editForm.hide_rsvp}
-                onCheckedChange={(v) =>
-                  setEditForm((prev) => ({ ...prev, hide_rsvp: v, hide_invitees: v ? false : prev.hide_invitees }))
-                }
+                onCheckedChange={(v) => setEditForm((prev) => ({ ...prev, hide_invitees: v }))}
               />
             </div>
 
             {/* Invitees Section */}
-            {!editForm.hide_invitees && !editForm.hide_rsvp && (
+            {!editForm.hide_invitees && (
             <div className="space-y-2 pt-3 border-t">
               <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
@@ -2456,7 +2431,7 @@ const ManageLinks = () => {
               disabled={
                 !editForm.link_name.trim() ||
                 !editForm.number_of_persons ||
-                (!editForm.hide_invitees && !editForm.hide_rsvp && editInvitees.length !== editForm.number_of_persons)
+                (!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons)
               }
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
@@ -2469,7 +2444,7 @@ const ManageLinks = () => {
             >
               Close
             </Button>
-            {!editForm.hide_invitees && !editForm.hide_rsvp && editInvitees.length !== editForm.number_of_persons && (
+            {!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons && (
               <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>

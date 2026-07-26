@@ -52,11 +52,6 @@ export const RsvpSection = ({
   const [wishesMessage, setWishesMessage] = useState("");
   const rsvpSubtitle = getLocalizedValue("rsvp_subtitle", wedding?.rsvp_subtitle || t("rsvp.subtitle"));
 
-  // Per-link toggle: completely hide the RSVP section for this invitation.
-  if (wedding?._activeLink?.hide_rsvp) {
-    return null;
-  }
-
 
 
   return (
@@ -124,11 +119,9 @@ export const RsvpSection = ({
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="pt-6 border-t border-gray-300 space-y-4">
-                {!wedding?._activeLink?.hide_invitees && (
-                  <p className="text-lg font-semibold text-center text-[#3e2723]">
-                    {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
-                  </p>
-                )}
+                <p className="text-lg font-semibold text-center text-[#3e2723]">
+                  {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
+                </p>
                 {showWishes && <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="inline" />}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>
