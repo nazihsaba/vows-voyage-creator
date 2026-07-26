@@ -136,6 +136,7 @@ const ManageLinks = () => {
     country_code: "+961",
     phone_number: "",
     hide_invitees: false,
+    hide_rsvp: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
