@@ -126,6 +126,7 @@ export type Database = {
         Row: {
           country_code: string | null
           created_at: string
+          hide_all_guests: boolean
           hide_invitees: boolean
           hide_rsvp: boolean
           id: string
@@ -141,6 +142,7 @@ export type Database = {
         Insert: {
           country_code?: string | null
           created_at?: string
+          hide_all_guests?: boolean
           hide_invitees?: boolean
           hide_rsvp?: boolean
           id?: string
@@ -156,6 +158,7 @@ export type Database = {
         Update: {
           country_code?: string | null
           created_at?: string
+          hide_all_guests?: boolean
           hide_invitees?: boolean
           hide_rsvp?: boolean
           id?: string
