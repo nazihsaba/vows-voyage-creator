@@ -616,6 +616,7 @@ const ManageLinks = () => {
       country_code: cc || "+961",
       phone_number: phone,
       hide_invitees: !!(link as any).hide_invitees,
+      hide_rsvp: !!(link as any).hide_rsvp,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
