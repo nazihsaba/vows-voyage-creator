@@ -52,6 +52,11 @@ export const RsvpSection = ({
   const [wishesMessage, setWishesMessage] = useState("");
   const rsvpSubtitle = getLocalizedValue("rsvp_subtitle", wedding?.rsvp_subtitle || t("rsvp.subtitle"));
 
+  // Per-link toggle: completely hide the RSVP section for this invitation.
+  if (wedding?._activeLink?.hide_rsvp) {
+    return null;
+  }
+
 
 
   return (
