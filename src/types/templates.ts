@@ -54,6 +54,7 @@ export interface Template {
   // Features
   isPremium: boolean;
   isPopular: boolean;
+  hidden?: boolean;
   
   // Configuration
   sections: TemplateSectionConfig[];

@@ -24,9 +24,9 @@ const TemplateSelection = () => {
     }
   };
 
-  const displayTemplates = activeCategory === 'all' 
+  const displayTemplates = (activeCategory === 'all' 
     ? templateConfig.templates 
-    : getTemplatesByCategory(activeCategory as TemplateCategory);
+    : getTemplatesByCategory(activeCategory as TemplateCategory)).filter(t => !t.hidden);
 
   const popularTemplates = getPopularTemplates();
 
