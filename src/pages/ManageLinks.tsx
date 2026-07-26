@@ -2469,7 +2469,7 @@ const ManageLinks = () => {
             >
               Close
             </Button>
-            {!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons && (
+            {!editForm.hide_invitees && !editForm.hide_rsvp && editInvitees.length !== editForm.number_of_persons && (
               <p className="text-xs text-destructive w-full text-center sm:text-right">
                 {editInvitees.length} of {editForm.number_of_persons} guests added
               </p>
