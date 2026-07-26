@@ -715,6 +715,7 @@ const ManageLinks = () => {
           country_code: trimmedPhone ? trimmedCc || null : null,
           phone_number: trimmedPhone || null,
           hide_invitees: editForm.hide_invitees,
+          hide_rsvp: editForm.hide_rsvp,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
