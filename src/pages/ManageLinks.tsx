@@ -91,6 +91,7 @@ interface InvitationLink {
   invite_sent_at: string | null;
   invite_sent_count: number;
   hide_invitees?: boolean;
+  hide_rsvp?: boolean;
 }
 
 interface Invitee {
