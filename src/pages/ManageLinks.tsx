@@ -2308,12 +2308,33 @@ const ManageLinks = () => {
               <Switch
                 id="edit-hide-invitees"
                 checked={editForm.hide_invitees}
-                onCheckedChange={(v) => setEditForm((prev) => ({ ...prev, hide_invitees: v }))}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({ ...prev, hide_invitees: v, hide_rsvp: v ? false : prev.hide_rsvp }))
+                }
+              />
+            </div>
+
+            {/* Hide entire RSVP section toggle */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-rsvp" className="text-sm font-medium">
+                  Hide RSVP section
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Completely hide the RSVP section from the invitation. Recipients won't see guest names or the number of guests.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-rsvp"
+                checked={editForm.hide_rsvp}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({ ...prev, hide_rsvp: v, hide_invitees: v ? false : prev.hide_invitees }))
+                }
               />
             </div>
 
             {/* Invitees Section */}
-            {!editForm.hide_invitees && (
+            {!editForm.hide_invitees && !editForm.hide_rsvp && (
             <div className="space-y-2 pt-3 border-t">
               <Label className="text-sm font-medium">Guests ({editInvitees.length})</Label>
               <div className="space-y-1.5 max-h-40 overflow-y-auto">
