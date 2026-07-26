@@ -2456,7 +2456,7 @@ const ManageLinks = () => {
               disabled={
                 !editForm.link_name.trim() ||
                 !editForm.number_of_persons ||
-                (!editForm.hide_invitees && editInvitees.length !== editForm.number_of_persons)
+                (!editForm.hide_invitees && !editForm.hide_rsvp && editInvitees.length !== editForm.number_of_persons)
               }
               className="w-full sm:w-auto h-11 sm:h-9 text-base sm:text-sm"
             >
