@@ -66,6 +66,10 @@ export const RsvpSection = ({
 
           {invitees.length > 0 && (() => {
             const linkHideInvitees = !!wedding?._activeLink?.hide_invitees;
+            const linkHideAllGuests = !!wedding?._activeLink?.hide_all_guests;
+            if (linkHideAllGuests) {
+              return null;
+            }
             if (linkHideInvitees) {
               // Per-link toggle: show only the guest count summary
               return (
@@ -119,9 +123,11 @@ export const RsvpSection = ({
           {invitees.length > 0 && (
             <div className="space-y-6 pt-6 border-t border-gray-300">
               <div className="pt-6 border-t border-gray-300 space-y-4">
-                <p className="text-lg font-semibold text-center text-[#3e2723]">
-                  {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
-                </p>
+                {!wedding?._activeLink?.hide_all_guests && (
+                  <p className="text-lg font-semibold text-center text-[#3e2723]">
+                    {t("rsvp.numberOfGuests", { count: numberOfPersons || invitees.length })}
+                  </p>
+                )}
                 {showWishes && <WishesSection value={wishesMessage} onChange={setWishesMessage} idSuffix="inline" />}
                 {isRsvpDeadlinePassed ? (
                   <p className="text-sm text-red-600 text-center font-medium">{t("rsvp.deadlinePassed")}</p>

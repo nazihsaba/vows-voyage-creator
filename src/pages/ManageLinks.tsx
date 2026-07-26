@@ -91,6 +91,7 @@ interface InvitationLink {
   invite_sent_at: string | null;
   invite_sent_count: number;
   hide_invitees?: boolean;
+  hide_all_guests?: boolean;
 }
 
 interface Invitee {
@@ -135,6 +136,7 @@ const ManageLinks = () => {
     country_code: "+961",
     phone_number: "",
     hide_invitees: false,
+    hide_all_guests: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -614,6 +616,7 @@ const ManageLinks = () => {
       country_code: cc || "+961",
       phone_number: phone,
       hide_invitees: !!(link as any).hide_invitees,
+      hide_all_guests: !!(link as any).hide_all_guests,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -712,6 +715,7 @@ const ManageLinks = () => {
           country_code: trimmedPhone ? trimmedCc || null : null,
           phone_number: trimmedPhone || null,
           hide_invitees: editForm.hide_invitees,
+          hide_all_guests: editForm.hide_all_guests,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -2304,7 +2308,36 @@ const ManageLinks = () => {
               <Switch
                 id="edit-hide-invitees"
                 checked={editForm.hide_invitees}
-                onCheckedChange={(v) => setEditForm((prev) => ({ ...prev, hide_invitees: v }))}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    hide_invitees: v,
+                    hide_all_guests: v ? false : prev.hide_all_guests,
+                  }))
+                }
+              />
+            </div>
+
+            {/* Hide all guests toggle (mutually exclusive with Guest count only) */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-all-guests" className="text-sm font-medium">
+                  Hide guests entirely
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Hide both the guest count and the individual names on the RSVP. Recipients will only see the RSVP buttons.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-all-guests"
+                checked={editForm.hide_all_guests}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({
+                    ...prev,
+                    hide_all_guests: v,
+                    hide_invitees: v ? false : prev.hide_invitees,
+                  }))
+                }
               />
             </div>
 

@@ -1,0 +1,1 @@
+ALTER TABLE public.invitation_links ADD COLUMN IF NOT EXISTS hide_all_guests boolean NOT NULL DEFAULT false;
