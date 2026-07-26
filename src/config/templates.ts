@@ -581,6 +581,7 @@ export const templates: Template[] = [
     thumbnail: '/placeholder.svg',
     isPremium: true,
     isPopular: true,
+    hidden: true,
     component: 'TheatreTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
