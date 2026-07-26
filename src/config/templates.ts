@@ -623,13 +623,13 @@ export const getTemplateById = (id: string): Template | undefined => {
 };
 
 export const getTemplatesByCategory = (category: TemplateCategory): Template[] => {
-  return templates.filter(t => t.category === category);
+  return templates.filter(t => t.category === category && !t.hidden);
 };
 
 export const getPopularTemplates = (): Template[] => {
-  return templates.filter(t => t.isPopular);
+  return templates.filter(t => t.isPopular && !t.hidden);
 };
 
 export const getFreeTemplates = (): Template[] => {
-  return templates.filter(t => !t.isPremium);
+  return templates.filter(t => !t.isPremium && !t.hidden);
 };
