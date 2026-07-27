@@ -92,6 +92,7 @@ interface InvitationLink {
   invite_sent_count: number;
   hide_invitees?: boolean;
   hide_all_guests?: boolean;
+  hide_gift_cards?: boolean;
 }
 
 interface Invitee {
