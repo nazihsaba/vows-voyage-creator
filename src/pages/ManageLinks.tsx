@@ -92,6 +92,7 @@ interface InvitationLink {
   invite_sent_count: number;
   hide_invitees?: boolean;
   hide_all_guests?: boolean;
+  hide_gift_cards?: boolean;
 }
 
 interface Invitee {
@@ -137,6 +138,7 @@ const ManageLinks = () => {
     phone_number: "",
     hide_invitees: false,
     hide_all_guests: false,
+    hide_gift_cards: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
@@ -617,6 +619,7 @@ const ManageLinks = () => {
       phone_number: phone,
       hide_invitees: !!(link as any).hide_invitees,
       hide_all_guests: !!(link as any).hide_all_guests,
+      hide_gift_cards: !!(link as any).hide_gift_cards,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
@@ -716,6 +719,7 @@ const ManageLinks = () => {
           phone_number: trimmedPhone || null,
           hide_invitees: editForm.hide_invitees,
           hide_all_guests: editForm.hide_all_guests,
+          hide_gift_cards: editForm.hide_gift_cards,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
@@ -2337,6 +2341,25 @@ const ManageLinks = () => {
                     hide_all_guests: v,
                     hide_invitees: v ? false : prev.hide_invitees,
                   }))
+                }
+              />
+            </div>
+
+            {/* Hide gift cards toggle */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-gift-cards" className="text-sm font-medium">
+                  Hide gift registry
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Hide the Gift Cards section on the invitation for this link only.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-gift-cards"
+                checked={editForm.hide_gift_cards}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({ ...prev, hide_gift_cards: v }))
                 }
               />
             </div>
