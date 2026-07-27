@@ -138,6 +138,7 @@ const ManageLinks = () => {
     phone_number: "",
     hide_invitees: false,
     hide_all_guests: false,
+    hide_gift_cards: false,
   });
   const [editInvitees, setEditInvitees] = useState<Invitee[]>([]);
   const [originalInvitees, setOriginalInvitees] = useState<Invitee[]>([]);
