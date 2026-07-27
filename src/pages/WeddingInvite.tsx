@@ -556,7 +556,7 @@ const WeddingInvite = () => {
           wedding={wedding}
           locations={locations}
           gallery={gallery}
-          giftCards={giftCards}
+          giftCards={(wedding as any)?._activeLink?.hide_gift_cards ? [] : giftCards}
           isOwner={isOwner}
           isPreview={canEdit}
           onFieldUpdate={updateFieldCustomization}
