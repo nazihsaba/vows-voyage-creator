@@ -2345,6 +2345,25 @@ const ManageLinks = () => {
               />
             </div>
 
+            {/* Hide gift cards toggle */}
+            <div className="flex items-start justify-between gap-3 pt-3 border-t">
+              <div className="space-y-0.5 pr-2">
+                <Label htmlFor="edit-hide-gift-cards" className="text-sm font-medium">
+                  Hide gift registry
+                </Label>
+                <p className="text-[11px] sm:text-xs text-muted-foreground leading-snug">
+                  Hide the Gift Cards section on the invitation for this link only.
+                </p>
+              </div>
+              <Switch
+                id="edit-hide-gift-cards"
+                checked={editForm.hide_gift_cards}
+                onCheckedChange={(v) =>
+                  setEditForm((prev) => ({ ...prev, hide_gift_cards: v }))
+                }
+              />
+            </div>
+
             {/* Invitees Section */}
             {!editForm.hide_invitees && (
             <div className="space-y-2 pt-3 border-t">
