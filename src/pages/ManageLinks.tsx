@@ -719,6 +719,7 @@ const ManageLinks = () => {
           phone_number: trimmedPhone || null,
           hide_invitees: editForm.hide_invitees,
           hide_all_guests: editForm.hide_all_guests,
+          hide_gift_cards: editForm.hide_gift_cards,
         })
         .eq("id", editingLink.id);
       if (linkError) throw linkError;
