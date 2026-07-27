@@ -619,6 +619,7 @@ const ManageLinks = () => {
       phone_number: phone,
       hide_invitees: !!(link as any).hide_invitees,
       hide_all_guests: !!(link as any).hide_all_guests,
+      hide_gift_cards: !!(link as any).hide_gift_cards,
     });
     setNewInviteeName("");
     const linkInvitees = invitees[link.id] || [];
