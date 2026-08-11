@@ -1014,20 +1014,21 @@ const WeddingForm = () => {
 
     // Welcome Drink Time is optional for all templates.
 
-    // Validate Additional Sections: Title, Location Name and Time are required for each
+    // Validate Additional Sections: Title and Location Name are required for each
     if (customSections.length > 0) {
       const incomplete = customSections.findIndex(
-        (s) => !s.title?.trim() || !s.location_name?.trim() || !s.time?.trim(),
+        (s) => !s.title?.trim() || !s.location_name?.trim(),
       );
       if (incomplete !== -1) {
         toast({
           title: "Additional section incomplete",
-          description: `Please fill in title, location name and time for section ${incomplete + 1}.`,
+          description: `Please fill in title and location name for section ${incomplete + 1}.`,
           variant: "destructive",
         });
         return;
       }
     }
+
 
     // Validate video is required for video templates
     if (isVideoTemplate && !videoFile && !formData.video_url) {
