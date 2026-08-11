@@ -2403,14 +2403,28 @@ const WeddingForm = () => {
                           </div>
                           <div className="space-y-1.5">
                             <Label htmlFor="ceremony_time">Time</Label>
-                            <Input
-                              id="ceremony_time"
-                              type="time"
-                              value={locations.ceremony_time}
-                              onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
-                              className="h-11 sm:h-10"
-                            />
+                            <div className="relative">
+                              <Input
+                                id="ceremony_time"
+                                type="time"
+                                value={locations.ceremony_time}
+                                onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
+                                className="h-11 sm:h-10 pr-10"
+                              />
+                              {locations.ceremony_time && (
+                                <button
+                                  type="button"
+                                  onClick={() => setLocations({ ...locations, ceremony_time: "" })}
+                                  className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                                  aria-label="Remove ceremony time"
+                                >
+                                  <X className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                            <p className="text-xs text-muted-foreground">Optional — clear it to hide the time.</p>
                           </div>
+
                         </div>
                         <div className="space-y-1.5">
                           <Label htmlFor="ceremony_location_link">Ceremony Map link</Label>
