@@ -94,7 +94,7 @@ export const AuraTemplate = ({
       event: {
         id: "ceremony",
         title: t("events.ceremony"),
-        time: formatTimeTo12Hour(ceremony.time) || "7:00 PM",
+        time: formatTimeTo12Hour(ceremony.time) || "",
         location: getLocalizedValue("ceremony_location", ceremony.location_name),
         link: ceremony.location_link,
         icon: ceremony.icon || "material-symbols:church-rounded",
@@ -109,7 +109,7 @@ export const AuraTemplate = ({
         event: {
           id: "welcome-drink",
           title: t("events.welcomeDrink"),
-          time: formatTimeTo12Hour(welcomeDrinkLoc.time || venue.time) || "8:00 PM",
+          time: formatTimeTo12Hour(welcomeDrinkLoc.time || venue.time) || "",
           location: getLocalizedValue("venue_location", venue.location_name),
           link: venue.location_link,
           icon: welcomeDrinkLoc.icon || "asset:cheers",
@@ -122,7 +122,7 @@ export const AuraTemplate = ({
       event: {
         id: "dinner-party",
         title: t("events.dinnerParty"),
-        time: formatTimeTo12Hour(venue.time) || "8:30 PM",
+        time: formatTimeTo12Hour(venue.time) || "",
         location: getLocalizedValue("venue_location", venue.location_name),
         link: venue.location_link,
         icon: venue.icon || "solar:confetti-bold",
