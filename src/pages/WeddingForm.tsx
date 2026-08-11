@@ -2402,13 +2402,12 @@ const WeddingForm = () => {
                             )}
                           </div>
                           <div className="space-y-1.5">
-                            <Label htmlFor="ceremony_time">Time *</Label>
+                            <Label htmlFor="ceremony_time">Time</Label>
                             <Input
                               id="ceremony_time"
                               type="time"
                               value={locations.ceremony_time}
                               onChange={(e) => setLocations({ ...locations, ceremony_time: e.target.value })}
-                              required
                               className="h-11 sm:h-10"
                             />
                           </div>
