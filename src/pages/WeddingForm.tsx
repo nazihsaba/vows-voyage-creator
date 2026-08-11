@@ -2962,7 +2962,7 @@ const WeddingForm = () => {
                                       )}
                                     </div>
                                     <div className="space-y-1.5">
-                                      <Label htmlFor={`custom_time_${idx}`}>Time *</Label>
+                                      <Label htmlFor={`custom_time_${idx}`}>Time</Label>
                                       <Input
                                         id={`custom_time_${idx}`}
                                         type="time"
@@ -2972,7 +2972,6 @@ const WeddingForm = () => {
                                           next[idx] = { ...next[idx], time: e.target.value };
                                           setCustomSections(next);
                                         }}
-                                        required
                                         className="h-11 sm:h-10"
                                       />
                                     </div>
