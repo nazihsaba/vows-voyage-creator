@@ -2990,17 +2990,34 @@ const WeddingForm = () => {
                                     </div>
                                     <div className="space-y-1.5">
                                       <Label htmlFor={`custom_time_${idx}`}>Time</Label>
-                                      <Input
-                                        id={`custom_time_${idx}`}
-                                        type="time"
-                                        value={section.time}
-                                        onChange={(e) => {
-                                          const next = [...customSections];
-                                          next[idx] = { ...next[idx], time: e.target.value };
-                                          setCustomSections(next);
-                                        }}
-                                        className="h-11 sm:h-10"
-                                      />
+                                      <div className="relative">
+                                        <Input
+                                          id={`custom_time_${idx}`}
+                                          type="time"
+                                          value={section.time}
+                                          onChange={(e) => {
+                                            const next = [...customSections];
+                                            next[idx] = { ...next[idx], time: e.target.value };
+                                            setCustomSections(next);
+                                          }}
+                                          className="h-11 sm:h-10 pr-10"
+                                        />
+                                        {section.time && (
+                                          <button
+                                            type="button"
+                                            onClick={() => {
+                                              const next = [...customSections];
+                                              next[idx] = { ...next[idx], time: "" };
+                                              setCustomSections(next);
+                                            }}
+                                            className="absolute right-2 top-1/2 -translate-y-1/2 p-1 rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
+                                            aria-label="Remove section time"
+                                          >
+                                            <X className="w-4 h-4" />
+                                          </button>
+                                        )}
+                                      </div>
+                                      <p className="text-xs text-muted-foreground">Optional — clear it to hide the time.</p>
                                     </div>
                                   </div>
                                   <div className="space-y-1.5">
