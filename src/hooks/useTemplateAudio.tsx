@@ -147,10 +147,12 @@ export const useTemplateAudio = (
 
 
     return () => {
-      window.removeEventListener("pointerdown", onFirstGesture, { capture: true } as any);
-      window.removeEventListener("touchstart", onFirstGesture, { capture: true } as any);
+      unbindGestures();
+      audio.removeEventListener("canplay", onCanPlay);
+      document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("scroll", onScroll as any);
     };
+
   }, [audioUrl, audioStartTime, audioRef, audioReadyTick]);
 
   // Keep the icon state in sync with actual playback (pause/play/ended).
