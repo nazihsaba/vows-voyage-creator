@@ -25,6 +25,7 @@ export const useTemplateAudio = (
   const [isMusicUnlocked, setIsMusicUnlocked] = useState(false);
   const [audioReadyTick, setAudioReadyTick] = useState(0);
   const unlockedRef = useRef(false);
+  const mutedRef = useRef(false);
 
   const setAudioElement = useCallback(
     (el: HTMLAudioElement | null) => {
@@ -45,6 +46,7 @@ export const useTemplateAudio = (
     if (!audio) return;
 
     unlockedRef.current = false;
+    mutedRef.current = false;
     setIsMusicUnlocked(false);
     setShowTapToPlay(false);
 
@@ -81,7 +83,7 @@ export const useTemplateAudio = (
     };
 
     const onFirstGesture = () => {
-      if (unlockedRef.current) return;
+      if (unlockedRef.current || mutedRef.current) return;
       try {
         audio.currentTime = audioStartTime || 0;
       } catch {}
@@ -104,7 +106,7 @@ export const useTemplateAudio = (
     });
 
     const onScroll = () => {
-      if (!unlockedRef.current) return;
+      if (!unlockedRef.current || mutedRef.current) return;
       if (audio.paused) {
         try {
           const p = audio.play();
@@ -145,6 +147,7 @@ export const useTemplateAudio = (
     if (!audio) return;
     if (!audio.paused) {
       audio.pause();
+      mutedRef.current = true;
       setIsMusicUnlocked(false);
       return;
     }
@@ -159,6 +162,7 @@ export const useTemplateAudio = (
         (p as Promise<void>)
           .then(() => {
             unlockedRef.current = true;
+            mutedRef.current = false;
             setIsMusicUnlocked(true);
             setShowTapToPlay(false);
           })
