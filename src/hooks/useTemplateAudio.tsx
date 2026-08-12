@@ -91,19 +91,46 @@ export const useTemplateAudio = (
     };
 
     const gestureOpts: AddEventListenerOptions = { passive: true, capture: true };
+    const gestureEvents = [
+      "pointerdown",
+      "touchstart",
+      "touchmove",
+      "wheel",
+      "scroll",
+      "keydown",
+      "click",
+    ] as const;
     let gestureBound = false;
     const bindGestures = () => {
       if (gestureBound) return;
       gestureBound = true;
-      window.addEventListener("pointerdown", onFirstGesture, gestureOpts);
-      window.addEventListener("touchstart", onFirstGesture, gestureOpts);
+      gestureEvents.forEach((ev) =>
+        window.addEventListener(ev, onFirstGesture, gestureOpts),
+      );
+    };
+    const unbindGestures = () => {
+      gestureEvents.forEach((ev) =>
+        window.removeEventListener(ev, onFirstGesture, { capture: true } as any),
+      );
     };
 
-    // Initial autoplay attempt; reveal button + bind gesture fallback on failure.
-    tryPlay(() => {
-      setShowTapToPlay(true);
-      bindGestures();
-    });
+    // Music is on by default: attempt autoplay immediately, and keep gesture
+    // fallbacks armed so playback starts at the first possible moment.
+    tryPlay(() => setShowTapToPlay(true));
+    bindGestures();
+
+    const onCanPlay = () => {
+      if (unlockedRef.current || mutedRef.current) return;
+      tryPlay();
+    };
+    audio.addEventListener("canplay", onCanPlay);
+
+    const onVisibility = () => {
+      if (document.visibilityState !== "visible") return;
+      if (mutedRef.current) return;
+      if (audio.paused) tryPlay();
+    };
+    document.addEventListener("visibilitychange", onVisibility);
 
     const onScroll = () => {
       if (!unlockedRef.current || mutedRef.current) return;
@@ -118,11 +145,14 @@ export const useTemplateAudio = (
     };
     window.addEventListener("scroll", onScroll, { passive: true });
 
+
     return () => {
-      window.removeEventListener("pointerdown", onFirstGesture, { capture: true } as any);
-      window.removeEventListener("touchstart", onFirstGesture, { capture: true } as any);
+      unbindGestures();
+      audio.removeEventListener("canplay", onCanPlay);
+      document.removeEventListener("visibilitychange", onVisibility);
       window.removeEventListener("scroll", onScroll as any);
     };
+
   }, [audioUrl, audioStartTime, audioRef, audioReadyTick]);
 
   // Keep the icon state in sync with actual playback (pause/play/ended).
