@@ -123,12 +123,36 @@ export const useTemplateAudio = (
     };
   }, [audioUrl, audioStartTime, audioRef, audioReadyTick]);
 
+  // Keep the icon state in sync with actual playback (pause/play/ended).
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    const sync = () => setIsMusicUnlocked(!audio.paused);
+    audio.addEventListener("play", sync);
+    audio.addEventListener("pause", sync);
+    audio.addEventListener("ended", sync);
+    sync();
+    return () => {
+      audio.removeEventListener("play", sync);
+      audio.removeEventListener("pause", sync);
+      audio.removeEventListener("ended", sync);
+    };
+  }, [audioRef, audioReadyTick, audioUrl]);
+
+  // Toggles playback: acts as unlock on first tap, mute/unmute afterwards.
   const handleTapToPlay = useCallback(() => {
     const audio = audioRef.current;
     if (!audio) return;
-    try {
-      audio.currentTime = audioStartTime || 0;
-    } catch {}
+    if (!audio.paused) {
+      audio.pause();
+      setIsMusicUnlocked(false);
+      return;
+    }
+    if (!unlockedRef.current) {
+      try {
+        audio.currentTime = audioStartTime || 0;
+      } catch {}
+    }
     try {
       const p = audio.play();
       if (p && typeof (p as Promise<void>).then === "function") {
@@ -145,3 +169,4 @@ export const useTemplateAudio = (
 
   return { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement };
 };
+
