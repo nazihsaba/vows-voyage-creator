@@ -22,6 +22,7 @@ import EtoileRsvp from "./etoile/EtoileRsvp";
 import { buildTemplateFontStyle } from "@/components/templateFontDefaults";
 import { useTemplateAudio } from "@/hooks/useTemplateAudio";
 import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
+import { getEtoileGallerySettings } from "@/lib/etoileGallery";
 
 interface EtoileTemplateProps {
   wedding: any;
@@ -68,7 +69,7 @@ export const EtoileTemplate = ({
 
   // Carousel state
   const [currentSlide, setCurrentSlide] = useState(0);
-  const carouselImages = gallery && gallery.length > 0 ? gallery.map((img: any) => img.image_url) : [];
+  const { backgroundImages: carouselImages, showOurMoments } = getEtoileGallerySettings(wedding.field_customizations, gallery || []);
 
   const { showLoader, fadingOut } = useHeroLoader({ imageUrl: carouselImages[0] });
 
@@ -396,7 +397,7 @@ export const EtoileTemplate = ({
         </div>
 
         {/* ===== GALLERY — RIGHT ===== */}
-        {gallery && gallery.length > 0 && (
+        {showOurMoments && (
           <div className="mt-64">
             <EtoileGallery images={gallery} align="right" subtitle={getLocalizedValue("gallery_subtitle", wedding.gallery_subtitle || "")} />
           </div>

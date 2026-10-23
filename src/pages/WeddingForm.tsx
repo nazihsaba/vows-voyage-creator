@@ -35,6 +35,7 @@ import GalleryImageEditor from "@/components/GalleryImageEditor";
 import NotificationEmailsField from "@/components/NotificationEmailsField";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
+import { getEtoileGallerySettings } from "@/lib/etoileGallery";
 
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
 import FontCustomizer, {
@@ -177,6 +178,7 @@ const WeddingForm = () => {
   const [auraQuote, setAuraQuote] = useState("Two are better than one. For if they fall, one will lift up the other.");
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [familyNameFormat, setFamilyNameFormat] = useState<"family" | "mr_mrs" | "none">("family");
+  const [hideOurMoments, setHideOurMoments] = useState(false);
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -464,6 +466,7 @@ const WeddingForm = () => {
       const { data, error } = await supabase.from("weddings").select("*").eq("id", id).single();
 
       if (error) throw error;
+      setHideOurMoments(getEtoileGallerySettings(data.field_customizations).hideOurMoments);
       setFormData({
         ...data,
         main_picture_position_y: data.main_picture_position_y ?? 50,
@@ -1155,6 +1158,9 @@ const WeddingForm = () => {
           }
         : { ...existingCustomizations };
       fieldCustomizations.family_name_format = familyNameFormat;
+      if (template === "etoile-carousel") {
+        fieldCustomizations.hide_our_moments = hideOurMoments;
+      }
 
       // Save Arabic translations if enabled
       if (arabicEnabled) {
@@ -3175,6 +3181,16 @@ const WeddingForm = () => {
               {/* Gallery Images Section - for templates with gallery support */}
               {shouldShowGalleryUpload && (
                 <div className="space-y-2">
+                  {template === "etoile-carousel" && (
+                    <div className="flex items-center justify-between gap-4 py-3">
+                      <Label htmlFor="hide-our-moments" className="cursor-pointer">Hide Our Moments section</Label>
+                      <Switch
+                        id="hide-our-moments"
+                        checked={hideOurMoments}
+                        onCheckedChange={setHideOurMoments}
+                      />
+                    </div>
+                  )}
                   <Label>
                     Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span>
                   </Label>
