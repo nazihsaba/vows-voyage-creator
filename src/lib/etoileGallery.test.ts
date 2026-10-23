@@ -1,21 +1,22 @@
-import { describe, expect, test } from "bun:test";
+import { describe, test } from "node:test";
+import { strict as assert } from "node:assert";
 import { getEtoileGallerySettings } from "./etoileGallery";
 
 const images = [{ image_url: "photo-1.jpg" }, { image_url: "photo-2.jpg" }];
 
 describe("Étoile Our Moments visibility", () => {
   test("hides Our Moments when toggled on", () => {
-    expect(getEtoileGallerySettings({ hide_our_moments: true }, images).showOurMoments).toBe(false);
+    assert.equal(getEtoileGallerySettings({ hide_our_moments: true }, images).showOurMoments, false);
   });
   test("keeps all background photos when Our Moments is hidden", () => {
-    expect(getEtoileGallerySettings({ hide_our_moments: true }, images).backgroundImages)
-      .toEqual(["photo-1.jpg", "photo-2.jpg"]);
+    assert.deepEqual(getEtoileGallerySettings({ hide_our_moments: true }, images).backgroundImages,
+      ["photo-1.jpg", "photo-2.jpg"]);
   });
   test("shows Our Moments by default and when toggled off", () => {
-    expect(getEtoileGallerySettings(undefined, images).showOurMoments).toBe(true);
-    expect(getEtoileGallerySettings({ hide_our_moments: false }, images).showOurMoments).toBe(true);
+    assert.equal(getEtoileGallerySettings(undefined, images).showOurMoments, true);
+    assert.equal(getEtoileGallerySettings({ hide_our_moments: false }, images).showOurMoments, true);
   });
   test("reads saved string customizations", () => {
-    expect(getEtoileGallerySettings('{"hide_our_moments":true}', images).hideOurMoments).toBe(true);
+    assert.equal(getEtoileGallerySettings('{"hide_our_moments":true}', images).hideOurMoments, true);
   });
 });
