@@ -8,4 +8,4 @@
  * 6–8 pm availability) is controlled inside Calendly itself,
  * under the event's "Availability" and "Limits" settings.
  */
-export const PHYSICAL_CARDS_CALENDLY_URL = "";
+export const PHYSICAL_CARDS_CALENDLY_URL = "https://calendly.com/nazihsaba23/physical-cards";
