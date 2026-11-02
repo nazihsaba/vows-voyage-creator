@@ -55,6 +55,12 @@ const buildUrl = (url: string) => {
   try {
     const u = new URL(url);
     u.searchParams.set("hide_gdpr_banner", "1");
+    // Hide Calendly's own side panel; our page shows the meeting details instead.
+    u.searchParams.set("hide_event_type_details", "1");
+    u.searchParams.set("hide_landing_page_details", "1");
+    // Auréa colors. Calendly only applies these on paid plans; free plans ignore them.
+    u.searchParams.set("background_color", "ffffff");
+    u.searchParams.set("text_color", "2b2b2b");
     // A deeper shade of the Auréa gold, so white button text stays readable.
     u.searchParams.set("primary_color", "b8925a");
     return u.toString();
@@ -125,7 +131,7 @@ const CalendlyEmbed = ({ url, prefill, className = "" }: CalendlyEmbedProps) => 
             The calendar couldn't load here. Please use the link below to book.
           </div>
         )}
-        <div ref={containerRef} className="w-full h-[700px] sm:h-[760px]" />
+        <div ref={containerRef} className="w-full h-[680px] sm:h-[700px]" />
       </div>
 
       <a

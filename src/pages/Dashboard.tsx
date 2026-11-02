@@ -280,32 +280,78 @@ const Dashboard = () => {
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {activeTab === "physical" ? (
-          <div>
-            <div className="flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-100 to-amber-50 shadow-sm">
-                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
-              </div>
-              <div>
-                <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Physical Cards</h2>
-                <p className="text-xs text-muted-foreground">Beautifully printed invitations, delivered to you</p>
+          <div className="relative">
+            {/* Soft decorative glow behind the section */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-[80%] h-64 rounded-full bg-primary/20 blur-3xl"
+            />
+
+            {/* Intro */}
+            <div className="relative text-center mb-8 sm:mb-12">
+              <p className="text-[11px] tracking-[0.35em] uppercase text-muted-foreground mb-3">Physical Cards</p>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
+                Book Your Consultation
+              </h2>
+              <p className="font-script text-2xl sm:text-3xl mt-2" style={{ color: "hsl(var(--primary-hover))" }}>
+                Let's design your cards together
+              </p>
+              <div className="flex items-center justify-center gap-3 mt-5" aria-hidden>
+                <span className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
+                <Sparkles className="w-4 h-4 text-primary" />
+                <span className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
               </div>
             </div>
 
-            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl overflow-hidden">
-              <CardHeader className="text-center px-6 pt-8 pb-4">
-                <div className="mx-auto p-3 rounded-full bg-gradient-to-br from-amber-100 to-rose-50 shadow-sm mb-3">
-                  <CalendarDays className="w-6 h-6 text-amber-600" />
+            <div className="relative grid gap-6 lg:gap-8 lg:grid-cols-[minmax(0,340px)_1fr] items-start">
+              {/* Details panel */}
+              <aside className="order-2 lg:order-1 rounded-3xl bg-white/80 backdrop-blur-sm border border-primary/30 shadow-md p-6 sm:p-8">
+                <h3 className="font-serif text-xl font-bold text-foreground">Your meeting</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed mt-2">
+                  Meet with us to choose the paper, finishes and design of your printed wedding cards.
+                </p>
+
+                <div className="mt-6 space-y-4">
+                  {[
+                    { icon: Clock, title: "Evening sessions", text: "Between 6:00 PM and 8:00 PM" },
+                    { icon: CalendarDays, title: "Plan ahead", text: "Book at least 3 days in advance" },
+                    { icon: Mail, title: "Instant confirmation", text: "Details are sent to your email" },
+                  ].map(({ icon: ItemIcon, title, text }) => (
+                    <div key={title} className="flex items-start gap-3">
+                      <div className="shrink-0 w-9 h-9 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center">
+                        <ItemIcon className="w-4 h-4 text-foreground/70" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-foreground">{title}</p>
+                        <p className="text-xs text-muted-foreground">{text}</p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <CardTitle className="text-xl sm:text-2xl font-serif">Book Your Meeting</CardTitle>
-                <CardDescription className="text-sm max-w-lg mx-auto leading-relaxed">
-                  Pick a time to meet with us and design your printed wedding cards together. Meetings are
-                  available between 6:00 PM and 8:00 PM and need to be booked at least 3 days in advance.
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="px-2 sm:px-6 pb-6">
+
+                <div className="my-6 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
+
+                <ol className="space-y-3">
+                  {["Choose a day", "Pick a time", "Confirm your details"].map((step, i) => (
+                    <li key={step} className="flex items-center gap-3 text-sm text-foreground">
+                      <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center">
+                        {i + 1}
+                      </span>
+                      {step}
+                    </li>
+                  ))}
+                </ol>
+              </aside>
+
+              {/* Calendar */}
+              <div className="order-1 lg:order-2 rounded-3xl bg-white shadow-xl border border-primary/30 p-2 sm:p-4">
+                <div className="flex items-center justify-center gap-2 pt-3 pb-1">
+                  <CalendarDays className="w-4 h-4 text-primary" />
+                  <p className="font-serif text-lg font-semibold text-foreground">Select a date & time</p>
+                </div>
                 <CalendlyEmbed url={PHYSICAL_CARDS_CALENDLY_URL} prefill={{ email: userEmail }} />
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         ) : (
         <div className="space-y-10 sm:space-y-16">
