@@ -49,9 +49,9 @@ const Index = () => {
   }, []);
 
   const heroImages = [
-    { src: tableDecor, alt: "Wedding celebration" },
-    { src: sparklers, alt: "Celebration sparklers" },
-    { src: flowerVase, alt: "Party celebration" },
+    { src: tableDecor, alt: "Elegant wedding table setting" },
+    { src: sparklers, alt: "Wedding celebration with sparklers" },
+    { src: flowerVase, alt: "Wedding flower arrangement" },
     { src: carouselRings, alt: "Wedding rings with flowers" },
   ];
 
@@ -68,7 +68,7 @@ const Index = () => {
       <header className="bg-white/80 backdrop-blur-sm shadow-soft sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <img src={aureaLogo} alt="Auréa" loading="lazy" className="h-14" />
+            <img src={aureaLogo} alt="Auréa Invites" className="h-14" />
           </div>
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
@@ -89,7 +89,14 @@ const Index = () => {
                 index === currentImageIndex ? "opacity-100" : "opacity-0"
               }`}
             >
-              <img src={image.src} alt={image.alt} loading="lazy" className="w-full h-full object-cover" />
+              <img
+                src={image.src}
+                alt={image.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchPriority={index === 0 ? "high" : "auto"}
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
             </div>
           ))}
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />

@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://www.aureainvites.com/sitemap.xml
+Sitemap: https://aureainvites.com/sitemap.xml

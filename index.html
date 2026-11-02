@@ -3,20 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auréa Invites — Digital Wedding Invitations & Guest Management</title>
-    <meta name="description" content="Design beautiful digital wedding invitations, manage your guest list, collect RSVPs, and plan your seating — all from one elegant platform by Auréa Invites." />
-    <link rel="canonical" href="/" />
-    <meta name="author" content="Wedding Invitations" />
+    <title>Auréa Invites — Luxury Digital Wedding Invitations in Lebanon</title>
+    <meta name="description" content="Create elegant digital wedding invitations in Lebanon. Collect RSVPs, manage guests and seating, and send a personal link to every guest. Designed in Beirut." />
+    <link rel="canonical" href="https://aureainvites.com/" />
+    <meta name="author" content="Auréa Invites" />
     <link rel="icon" href="/favicon.png" sizes="128x128" type="image/png" />
     <link rel="apple-touch-icon" href="/favicon.png" sizes="180x180" />
 
-    <meta property="og:title" content="You're Invited 💍 | A Special Wedding Celebration" />
-    <meta
-      property="og:description"
-      content="Celebrate love and joy with a beautifully crafted wedding invitation. Discover all the details of this special day and join the celebration.✨"
-    />
+    <meta property="og:title" content="Auréa Invites — Luxury Digital Wedding Invitations" />
+    <meta property="og:description" content="Elegant digital wedding invitations with RSVPs, guest lists and seating, all in one place. Designed in Beirut, Lebanon." />
     <meta property="og:type" content="website" />
-    <meta property="og:url" content="/" />
+    <meta property="og:url" content="https://aureainvites.com/" />
+    <meta property="og:locale" content="en_US" />
     <meta property="og:site_name" content="Auréa Invites" />
     <meta property="og:image" content="https://aureainvites.com/images/og-preview.jpg" />
     <meta property="og:image:secure_url" content="https://aureainvites.com/images/og-preview.jpg" />
@@ -26,25 +24,42 @@
     <meta property="og:image:alt" content="Auréa Invites — Digital Wedding Invitations" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:site" content="@wedding_invites" />
-    <meta name="twitter:title" content="You're Invited 💍 | A Special Wedding Celebration" />
-    <meta name="twitter:description" content="Celebrate love and joy with a beautifully crafted wedding invitation. Discover all the details of this special day and join the celebration.✨" />
+    <meta name="twitter:title" content="Auréa Invites — Luxury Digital Wedding Invitations" />
+    <meta name="twitter:description" content="Elegant digital wedding invitations with RSVPs, guest lists and seating, all in one place. Designed in Beirut, Lebanon." />
     <meta name="twitter:image" content="https://aureainvites.com/images/og-preview.jpg" />
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts used on the main pages: load first -->
     <link
-      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cormorant+Garamond:wght@300;400;700&family=Great+Vibes&family=Cinzel:wght@400;700&family=Jost:wght@200;300;400;500&family=Inter:wght@300;400;500;600&family=Montserrat:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
+    <!-- Fonts used inside invitation templates: load in the background so the page shows faster -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Cinzel:wght@400;600;700&family=Jost:wght@200;300;400;500&family=Montserrat:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
+    />
+    <noscript><link href="https://fonts.googleapis.com/css2?family=Cormorant:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400&family=Great+Vibes&family=Cinzel:wght@400;600;700&family=Jost:wght@200;300;400;500&family=Montserrat:wght@300;400;500;600;700&family=Amiri:wght@400;700&family=Noto+Naskh+Arabic:wght@400;500;600;700&family=Noto+Kufi+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet" /></noscript>
 
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",
         "@type": "Organization",
         "name": "Auréa Invites",
-        "url": "https://www.aureainvites.com/",
-        "logo": "https://www.aureainvites.com/favicon.png",
+        "url": "https://aureainvites.com/",
+        "logo": "https://aureainvites.com/favicon.png",
+        "description": "Luxury digital wedding invitations with RSVPs, guest lists and seating, designed in Beirut, Lebanon.",
+        "address": { "@type": "PostalAddress", "addressLocality": "Beirut", "addressCountry": "LB" },
+        "areaServed": { "@type": "Country", "name": "Lebanon" },
+        "contactPoint": {
+          "@type": "ContactPoint",
+          "telephone": "+961-79-077-970",
+          "contactType": "customer service",
+          "availableLanguage": ["English", "Arabic"]
+        },
         "sameAs": ["https://www.instagram.com/aureainvites"]
       }
     </script>
@@ -53,8 +68,8 @@
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "Auréa Invites",
-        "url": "https://www.aureainvites.com/",
-        "description": "Design beautiful digital wedding invitations, manage your guest list, collect RSVPs, and plan your seating."
+        "url": "https://aureainvites.com/",
+        "description": "Elegant digital wedding invitations with RSVPs, guest lists and seating, all in one place."
       }
     </script>
   </head>
