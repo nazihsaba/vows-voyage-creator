@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import aureaIcon from "@/assets/aureaLogoIcon.png";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -22,6 +22,8 @@ import {
   X,
   Users,
   Music,
+  Smartphone,
+  Mail,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
@@ -43,6 +45,23 @@ import TresorPreview from "@/components/templates/TresorPreview";
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState<string | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab: "digital" | "physical" =
+    searchParams.get("tab") === "physical" ? "physical" : "digital";
+
+  const switchTab = (tab: "digital" | "physical") => {
+    if (tab === activeTab) return;
+    const next = new URLSearchParams(searchParams);
+    if (tab === "digital") next.delete("tab");
+    else next.set("tab", tab);
+    setSearchParams(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
+  const cardTabs = [
+    { id: "digital" as const, label: "Digital Cards", icon: Smartphone },
+    { id: "physical" as const, label: "Physical Cards", icon: Mail },
+  ];
 
   useEffect(() => {
     checkUser();
@@ -189,10 +208,39 @@ const Dashboard = () => {
               />
               <div>
                 <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
-                  Choose Your Template
+                  {activeTab === "digital" ? "Choose Your Template" : "Physical Cards"}
                 </h1>
-                <p className="text-xs text-muted-foreground hidden sm:block">Create beautiful invitations</p>
+                <p className="text-xs text-muted-foreground hidden sm:block">
+                  {activeTab === "digital" ? "Create beautiful invitations" : "Printed invitations for your guests"}
+                </p>
               </div>
+            </div>
+            <div
+              role="tablist"
+              aria-label="Card type"
+              className="flex w-full sm:w-auto items-center gap-1 p-1 rounded-full bg-muted/60 border border-border/50 shadow-inner"
+            >
+              {cardTabs.map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    onClick={() => switchTab(tab.id)}
+                    className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 sm:px-5 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                      isActive
+                        ? "bg-primary text-primary-foreground shadow-sm"
+                        : "text-muted-foreground hover:text-foreground hover:bg-white/70"
+                    }`}
+                  >
+                    <TabIcon className="w-4 h-4" />
+                    {tab.label}
+                  </button>
+                );
+              })}
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
               <Button
@@ -225,6 +273,39 @@ const Dashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        {activeTab === "physical" ? (
+          <div>
+            <div className="flex items-center gap-3 mb-6 sm:mb-8">
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-amber-100 to-amber-50 shadow-sm">
+                <Mail className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
+              </div>
+              <div>
+                <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Physical Cards</h2>
+                <p className="text-xs text-muted-foreground">Beautifully printed invitations, delivered to you</p>
+              </div>
+            </div>
+
+            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl">
+              <CardContent className="py-16 sm:py-20 px-6 flex flex-col items-center text-center">
+                <div className="p-4 rounded-full bg-gradient-to-br from-amber-100 to-rose-50 shadow-sm mb-5">
+                  <Mail className="w-8 h-8 text-amber-600" />
+                </div>
+                <h3 className="text-xl sm:text-2xl font-serif font-bold text-foreground mb-2">Coming Soon</h3>
+                <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
+                  Our collection of printed wedding cards is on its way. In the meantime, explore our digital
+                  invitations.
+                </p>
+                <Button
+                  className="mt-6 rounded-full px-6 shadow-sm hover:shadow-md transition-all"
+                  onClick={() => switchTab("digital")}
+                >
+                  <Smartphone className="w-4 h-4 mr-2" />
+                  Browse Digital Cards
+                </Button>
+              </CardContent>
+            </Card>
+          </div>
+        ) : (
         <div className="space-y-10 sm:space-y-16">
           {/* Weddings Section */}
           <div>
@@ -319,6 +400,7 @@ const Dashboard = () => {
             </div>
           </div>
         </div>
+        )}
       </main>
 
       {/* Preview Modal */}
