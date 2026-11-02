@@ -24,6 +24,7 @@ import {
   Music,
   Smartphone,
   Mail,
+  CalendarDays,
 } from "lucide-react";
 import veriteTemplate from "@/assets/verite-preview-10.jpg";
 import graceTemplate from "@/assets/preview-wedding-10.jpg";
@@ -40,11 +41,14 @@ import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
 import TresorPreview from "@/components/templates/TresorPreview";
+import CalendlyEmbed from "@/components/CalendlyEmbed";
+import { PHYSICAL_CARDS_CALENDLY_URL } from "@/config/booking";
 
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const [showPreview, setShowPreview] = useState<string | null>(null);
+  const [userEmail, setUserEmail] = useState<string | undefined>();
   const [searchParams, setSearchParams] = useSearchParams();
   const activeTab: "digital" | "physical" =
     searchParams.get("tab") === "physical" ? "physical" : "digital";
@@ -76,7 +80,9 @@ const Dashboard = () => {
     } = await supabase.auth.getSession();
     if (!session && !loggingOut.current) {
       navigate("/auth");
+      return;
     }
+    setUserEmail(session?.user?.email ?? undefined);
   };
 
   const handleLogout = async () => {
@@ -285,23 +291,19 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl">
-              <CardContent className="py-16 sm:py-20 px-6 flex flex-col items-center text-center">
-                <div className="p-4 rounded-full bg-gradient-to-br from-amber-100 to-rose-50 shadow-sm mb-5">
-                  <Mail className="w-8 h-8 text-amber-600" />
+            <Card className="border-0 bg-white/80 backdrop-blur-sm shadow-md rounded-2xl overflow-hidden">
+              <CardHeader className="text-center px-6 pt-8 pb-4">
+                <div className="mx-auto p-3 rounded-full bg-gradient-to-br from-amber-100 to-rose-50 shadow-sm mb-3">
+                  <CalendarDays className="w-6 h-6 text-amber-600" />
                 </div>
-                <h3 className="text-xl sm:text-2xl font-serif font-bold text-foreground mb-2">Coming Soon</h3>
-                <p className="text-sm text-muted-foreground max-w-md leading-relaxed">
-                  Our collection of printed wedding cards is on its way. In the meantime, explore our digital
-                  invitations.
-                </p>
-                <Button
-                  className="mt-6 rounded-full px-6 shadow-sm hover:shadow-md transition-all"
-                  onClick={() => switchTab("digital")}
-                >
-                  <Smartphone className="w-4 h-4 mr-2" />
-                  Browse Digital Cards
-                </Button>
+                <CardTitle className="text-xl sm:text-2xl font-serif">Book Your Meeting</CardTitle>
+                <CardDescription className="text-sm max-w-lg mx-auto leading-relaxed">
+                  Pick a time to meet with us and design your printed wedding cards together. Meetings are
+                  available in the evening and need to be booked at least 4 days in advance.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="px-2 sm:px-6 pb-6">
+                <CalendlyEmbed url={PHYSICAL_CARDS_CALENDLY_URL} prefill={{ email: userEmail }} />
               </CardContent>
             </Card>
           </div>
