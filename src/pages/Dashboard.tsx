@@ -299,7 +299,7 @@ const Dashboard = () => {
                 <CardTitle className="text-xl sm:text-2xl font-serif">Book Your Meeting</CardTitle>
                 <CardDescription className="text-sm max-w-lg mx-auto leading-relaxed">
                   Pick a time to meet with us and design your printed wedding cards together. Meetings are
-                  available in the evening and need to be booked at least 4 days in advance.
+                  available between 6:00 PM and 8:00 PM and need to be booked at least 3 days in advance.
                 </CardDescription>
               </CardHeader>
               <CardContent className="px-2 sm:px-6 pb-6">
