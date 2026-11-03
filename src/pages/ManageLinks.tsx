@@ -57,6 +57,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { GenerateLinkDialog } from "@/components/GenerateLinkDialog";
 import { VenueLayoutPlanner, type VenueLayoutPlannerRef } from "@/components/venue/VenueLayoutPlanner";
+import { VENUE_PLANNER_ENABLED } from "@/config/features";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -240,6 +241,8 @@ const ManageLinks = () => {
     genState.weddingId === weddingId && (genState.status === "uploading" || genState.status === "polling");
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
+  // Hidden unless switched on, or the couple already paid for it
+  const showVenue = VENUE_PLANNER_ENABLED || isVenueUnlocked;
 
   // Handle venue payment return
   useEffect(() => {
@@ -1214,6 +1217,7 @@ const ManageLinks = () => {
                     <Grid2x2 className="w-3.5 h-3.5 mr-1.5" />
                     Tables
                   </Button>
+                  {showVenue && (
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
@@ -1231,6 +1235,7 @@ const ManageLinks = () => {
                     Venue
                     {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                   </Button>
+                  )}
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
                   <>
@@ -1282,7 +1287,7 @@ const ManageLinks = () => {
                               </DropdownMenuItem>
                             </>
                           )}
-                          {activeView !== "venue" && (
+                          {activeView !== "venue" && showVenue && (
                             <DropdownMenuItem
                               onClick={() => (isVenueUnlocked ? setActiveView("venue") : handleVenuePayment())}
                               disabled={venuePayLoading}

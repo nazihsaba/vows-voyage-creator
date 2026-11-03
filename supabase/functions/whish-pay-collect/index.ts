@@ -33,6 +33,9 @@ const PROMO_CODES: Record<string, number> = {
 const BASE_PUBLISH_FEE_USD = 100;
 const TRESOR_PUBLISH_FEE_USD = 120;
 
+// Venue planner is hidden on the site; refuse its payments too.
+const VENUE_PAYMENTS_ENABLED = false;
+
 serve(async (req: Request) => {
   // Handle CORS preflight
   if (req.method === "OPTIONS") {
@@ -133,7 +136,13 @@ serve(async (req: Request) => {
       finalAmount = baseFee * (1 - discountPercent / 100);
       finalInvoice = `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}${appliedPromoLabel}`;
     } else {
-      // Venue flow — keep existing behavior, trust client-supplied amount
+      // Venue flow — disabled while the venue planner is hidden
+      if (!VENUE_PAYMENTS_ENABLED) {
+        return new Response(JSON.stringify({ error: "This feature is not available" }), {
+          status: 410,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       if (!amount) {
         return new Response(JSON.stringify({ error: "Missing required field: amount" }), {
           status: 400,
