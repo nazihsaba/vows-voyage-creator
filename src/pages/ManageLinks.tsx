@@ -73,6 +73,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SeatingQRSection from "@/components/SeatingQRSection";
 
+/** Show the "Venue ($30)" button? Set to true to bring it back. */
+const SHOW_VENUE_PLANNER = false;
+
 interface WeddingTable {
   id: string;
   table_number: number;
@@ -1214,6 +1217,7 @@ const ManageLinks = () => {
                     <Grid2x2 className="w-3.5 h-3.5 mr-1.5" />
                     Tables
                   </Button>
+                  {SHOW_VENUE_PLANNER && (
                   <Button
                     variant={activeView === "venue" ? "default" : "ghost"}
                     size="sm"
@@ -1231,6 +1235,7 @@ const ManageLinks = () => {
                     Venue
                     {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                   </Button>
+                  )}
                 </div>
                 {(activeView === "venue" || links.length > 0) && (
                   <>
@@ -1282,7 +1287,7 @@ const ManageLinks = () => {
                               </DropdownMenuItem>
                             </>
                           )}
-                          {activeView !== "venue" && (
+                          {SHOW_VENUE_PLANNER && activeView !== "venue" && (
                             <DropdownMenuItem
                               onClick={() => (isVenueUnlocked ? setActiveView("venue") : handleVenuePayment())}
                               disabled={venuePayLoading}
