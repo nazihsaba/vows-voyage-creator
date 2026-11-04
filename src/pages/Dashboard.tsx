@@ -234,7 +234,7 @@ const Dashboard = () => {
             <div
               role="tablist"
               aria-label="Card type"
-              className="relative grid w-full sm:w-72 grid-cols-2 items-center p-1 rounded-full bg-muted/60 border border-border/50 shadow-inner"
+              className="relative grid w-full sm:w-[22rem] grid-cols-2 items-center p-1 rounded-full bg-muted/60 border border-border/50 shadow-inner"
             >
               <span
                 aria-hidden
@@ -252,14 +252,15 @@ const Dashboard = () => {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => switchTab(tab.id)}
-                    className={`relative z-10 flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-4 sm:px-5 py-2 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                    className={`relative z-10 flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-3 sm:px-4 py-2 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                       isActive
                         ? "text-primary-foreground"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
                     <TabIcon
-                      className={`w-4 h-4 transition-transform duration-300 ${
+                      aria-hidden
+                      className={`w-4 h-4 shrink-0 transition-transform duration-300 ${
                         isActive ? "scale-105" : "scale-100"
                       }`}
                     />
