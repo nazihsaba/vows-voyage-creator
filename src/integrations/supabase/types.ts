@@ -14,6 +14,54 @@ export type Database = {
   }
   public: {
     Tables: {
+      bookings: {
+        Row: {
+          created_at: string
+          email: string
+          end_time: string
+          google_event_id: string | null
+          id: string
+          meet_link: string | null
+          meeting_type: string
+          name: string
+          notes: string | null
+          phone: string | null
+          start_time: string
+          status: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          end_time: string
+          google_event_id?: string | null
+          id?: string
+          meet_link?: string | null
+          meeting_type: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          start_time: string
+          status?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          end_time?: string
+          google_event_id?: string | null
+          id?: string
+          meet_link?: string | null
+          meeting_type?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          start_time?: string
+          status?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       gallery_images: {
         Row: {
           alt_text: string | null
