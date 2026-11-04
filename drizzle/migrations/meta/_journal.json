@@ -1,0 +1,13 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1793816276933,
+      "tag": "0000_physical_card_bookings",
+      "breakpoints": true
+    }
+  ]
+}
