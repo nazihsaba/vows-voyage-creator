@@ -20,3 +20,6 @@ verify_jwt = false
 
 [functions.rsvp-notification]
 verify_jwt = false
+
+[functions.physical-booking]
+verify_jwt = false

@@ -41,7 +41,7 @@ import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
 import TresorPreview from "@/components/templates/TresorPreview";
-import CalendlyEmbed from "@/components/CalendlyEmbed";
+import BookingCalendar from "@/components/BookingCalendar";
 import { PHYSICAL_CARDS_CALENDLY_URL } from "@/config/booking";
 
 
@@ -337,7 +337,8 @@ const Dashboard = () => {
 
                 <div className="mt-6 space-y-4">
                   {[
-                    { icon: Clock, title: "Evening sessions", text: "Between 6:00 PM and 8:00 PM" },
+                    { icon: Clock, title: "Evening sessions", text: "Monday to Friday, 6:00 – 8:00 PM" },
+                    { icon: Video, title: "Online or by phone", text: "Google Meet or a WhatsApp call" },
                     { icon: CalendarDays, title: "Plan ahead", text: "Book at least 3 days in advance" },
                     { icon: Mail, title: "Instant confirmation", text: "Details are sent to your email" },
                   ].map(({ icon: ItemIcon, title, text }) => (
@@ -373,7 +374,7 @@ const Dashboard = () => {
                   <CalendarDays className="w-4 h-4 text-primary" />
                   <p className="font-serif text-lg font-semibold text-foreground">Select a date & time</p>
                 </div>
-                <CalendlyEmbed url={PHYSICAL_CARDS_CALENDLY_URL} prefill={{ email: userEmail }} />
+                <BookingCalendar prefillEmail={userEmail} calendlyUrl={PHYSICAL_CARDS_CALENDLY_URL} />
               </div>
             </div>
           </div>
