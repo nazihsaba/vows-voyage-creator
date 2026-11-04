@@ -426,7 +426,7 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
 
           {formError && <p className="text-sm text-destructive">{formError}</p>}
 
-          <Button type="submit" disabled={submitting} className="w-full rounded-full py-6 text-base">
+          <Button type="submit" disabled={submitting} className="w-full rounded-full py-6 text-base bg-foreground text-background hover:bg-foreground/85">
             {submitting ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <CalendarCheck className="w-4 h-4 mr-2" />}
             Confirm booking
           </Button>
@@ -445,7 +445,7 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
           {notice}
         </p>
       )}
-      <div className="grid gap-6 md:grid-cols-[minmax(0,1fr)_220px]">
+      <div className="mx-auto max-w-[760px] grid gap-6 md:gap-10 md:grid-cols-[minmax(0,420px)_minmax(0,1fr)]">
         {/* Month */}
         <div>
           <div className="flex items-center justify-between mb-4 px-1">
@@ -474,7 +474,7 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
 
           <div className="grid grid-cols-7 gap-1 sm:gap-1.5 text-center">
             {WEEKDAYS.map((w) => (
-              <div key={w} className="text-[10px] sm:text-[11px] uppercase tracking-[0.15em] text-muted-foreground pb-2">
+              <div key={w} className="text-xs text-muted-foreground pb-2">
                 {w}
               </div>
             ))}
@@ -495,15 +495,15 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
                   aria-pressed={selected}
                   className={`relative aspect-square rounded-full text-sm transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                     selected
-                      ? "bg-primary text-primary-foreground font-semibold shadow-md"
+                      ? "bg-foreground text-background font-semibold shadow-md"
                       : available
-                        ? "bg-primary/15 text-foreground font-medium hover:bg-primary/30"
-                        : "text-muted-foreground/40 cursor-default"
+                        ? "bg-[#f3e4cc] text-foreground font-medium hover:bg-[#e9d0a8]"
+                        : "text-muted-foreground/45 cursor-default"
                   }`}
                 >
                   {Number(k.slice(8))}
                   {k === todayKey && !selected && (
-                    <span className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-foreground/40" />
+                    <span className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-[#b8925a]" />
                   )}
                 </button>
               );
@@ -512,7 +512,7 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
         </div>
 
         {/* Times */}
-        <div className="md:border-l md:border-primary/20 md:pl-6">
+        <div className="md:border-l md:border-[#efe4d3] md:pl-10">
           {day ? (
             <>
               <p className="font-serif text-base font-semibold text-foreground">
@@ -525,7 +525,7 @@ const BookingCalendar = ({ prefillEmail, calendlyUrl }: BookingCalendarProps) =>
                     key={s}
                     type="button"
                     onClick={() => chooseSlot(s)}
-                    className="rounded-full border border-primary/60 py-2.5 text-sm font-medium text-foreground hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
+                    className="rounded-full border border-[#c6a46b] py-2.5 text-sm font-medium text-foreground hover:bg-foreground hover:text-background hover:border-foreground transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40"
                   >
                     {timeLabel(s)}
                   </button>

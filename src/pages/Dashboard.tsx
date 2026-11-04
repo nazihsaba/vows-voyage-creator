@@ -304,79 +304,91 @@ const Dashboard = () => {
           className="animate-in fade-in slide-in-from-bottom-3 duration-500 ease-out"
         >
         {activeTab === "physical" ? (
-          <div className="relative">
-            {/* Soft decorative glow behind the section */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -top-10 left-1/2 -translate-x-1/2 w-[80%] h-64 rounded-full bg-primary/20 blur-3xl"
-            />
-
-            {/* Intro */}
-            <div className="relative text-center mb-8 sm:mb-12">
-              <p className="text-[11px] tracking-[0.35em] uppercase text-muted-foreground mb-3">Physical Cards</p>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-bold text-foreground leading-tight">
-                Book Your Consultation
-              </h2>
-              <p className="font-script text-2xl sm:text-3xl mt-2" style={{ color: "hsl(var(--primary-hover))" }}>
-                Let's design your cards together
-              </p>
-              <div className="flex items-center justify-center gap-3 mt-5" aria-hidden>
-                <span className="h-px w-12 bg-gradient-to-r from-transparent to-primary" />
-                <Sparkles className="w-4 h-4 text-primary" />
-                <span className="h-px w-12 bg-gradient-to-l from-transparent to-primary" />
-              </div>
-            </div>
-
-            <div className="relative grid gap-6 lg:gap-8 lg:grid-cols-[minmax(0,340px)_1fr] items-start">
-              {/* Details panel */}
-              <aside className="order-2 lg:order-1 rounded-3xl bg-white/80 backdrop-blur-sm border border-primary/30 shadow-md p-6 sm:p-8">
-                <h3 className="font-serif text-xl font-bold text-foreground">Your meeting</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed mt-2">
-                  Meet with us to choose the paper, finishes and design of your printed wedding cards.
+          <div className="space-y-10 sm:space-y-14">
+            {/* Intro: what physical cards are, and what the call covers */}
+            <section className="grid items-center gap-10 lg:gap-16 lg:grid-cols-[minmax(0,1fr)_minmax(0,420px)]">
+              <div className="order-2 lg:order-1 max-w-xl">
+                <h2 className="font-serif text-[2.1rem] leading-[1.1] sm:text-5xl sm:leading-[1.08] font-bold text-foreground">
+                  Printed cards, designed with you
+                </h2>
+                <p className="mt-5 text-base sm:text-[17px] leading-relaxed text-muted-foreground">
+                  Book a short call with us. We'll go through paper, printing finishes, quantities and delivery dates,
+                  and shape a card that matches your wedding.
                 </p>
 
-                <div className="mt-6 space-y-4">
+                <dl className="mt-8 grid grid-cols-2 gap-x-6 sm:gap-x-10 border-t border-[#d9c3a0]/60">
                   {[
-                    { icon: Clock, title: "Evening sessions", text: "Monday to Friday, 6:00 – 8:00 PM" },
-                    { icon: Video, title: "Online or by phone", text: "Google Meet or a WhatsApp call" },
-                    { icon: CalendarDays, title: "Plan ahead", text: "Book at least 3 days in advance" },
-                    { icon: Mail, title: "Instant confirmation", text: "Details are sent to your email" },
-                  ].map(({ icon: ItemIcon, title, text }) => (
-                    <div key={title} className="flex items-start gap-3">
-                      <div className="shrink-0 w-9 h-9 rounded-full bg-primary/15 border border-primary/30 flex items-center justify-center">
-                        <ItemIcon className="w-4 h-4 text-foreground/70" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium text-foreground">{title}</p>
-                        <p className="text-xs text-muted-foreground">{text}</p>
-                      </div>
+                    { term: "When", detail: "Mon to Fri, 6 to 8 PM" },
+                    { term: "How", detail: "Google Meet or WhatsApp call" },
+                    { term: "Length", detail: "30 minutes" },
+                    { term: "Notice", detail: "Book 3 days ahead" },
+                  ].map(({ term, detail }) => (
+                    <div key={term} className="border-b border-[#d9c3a0]/60 py-3.5">
+                      <dt className="font-serif italic text-sm text-[#8a6a3b]">{term}</dt>
+                      <dd className="mt-0.5 text-sm sm:text-[15px] text-foreground">{detail}</dd>
                     </div>
                   ))}
+                </dl>
+
+                <a
+                  href="#book"
+                  className="mt-8 inline-flex items-center rounded-full bg-foreground px-7 py-3 text-sm font-medium text-background hover:bg-foreground/85 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                >
+                  Choose a time
+                </a>
+              </div>
+
+              {/* The memorable element: a small stack of printed cards */}
+              <div aria-hidden className="order-1 lg:order-2 relative mx-auto w-[250px] h-[300px] sm:w-[320px] sm:h-[380px]">
+                {/* Envelope */}
+                <div className="absolute inset-x-2 bottom-0 h-[62%] rotate-[7deg] rounded-[6px] bg-[#e8d2b8] shadow-[0_18px_40px_-18px_rgba(90,60,20,0.45)]">
+                  <div
+                    className="absolute inset-x-0 top-0 h-1/2 bg-[#dcc2a3]"
+                    style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
+                  />
                 </div>
-
-                <div className="my-6 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
-
-                <ol className="space-y-3">
-                  {["Choose a day", "Pick a time", "Confirm your details"].map((step, i) => (
-                    <li key={step} className="flex items-center gap-3 text-sm text-foreground">
-                      <span className="w-6 h-6 rounded-full bg-primary text-primary-foreground text-xs font-semibold flex items-center justify-center">
-                        {i + 1}
-                      </span>
-                      {step}
-                    </li>
-                  ))}
-                </ol>
-              </aside>
-
-              {/* Calendar */}
-              <div className="order-1 lg:order-2 rounded-3xl bg-white shadow-xl border border-primary/30 p-2 sm:p-4">
-                <div className="flex items-center justify-center gap-2 pt-3 pb-1">
-                  <CalendarDays className="w-4 h-4 text-primary" />
-                  <p className="font-serif text-lg font-semibold text-foreground">Select a date & time</p>
+                {/* Blush card behind */}
+                <div className="absolute left-0 top-4 w-[86%] h-[84%] -rotate-[8deg] rounded-[4px] bg-[#f1d9d6] shadow-[0_10px_30px_-16px_rgba(90,60,20,0.4)]" />
+                {/* Front invitation */}
+                <div className="absolute right-1 top-0 w-[86%] h-[88%] -rotate-[2deg] rounded-[4px] bg-[#fffdf8] shadow-[0_24px_50px_-20px_rgba(90,60,20,0.5)] motion-safe:animate-[card-settle_900ms_cubic-bezier(0.2,0.8,0.2,1)_both]">
+                  <div className="absolute inset-3 sm:inset-4 border border-[#c6a46b]">
+                    <div className="absolute inset-1 border border-[#c6a46b]/50" />
+                  </div>
+                  <div className="relative h-full flex flex-col items-center justify-center text-center px-8">
+                    <p className="font-serif italic text-[11px] sm:text-[13px] text-[#8a6a3b] leading-snug">
+                      Together with their families
+                    </p>
+                    <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground mt-3">Maya</p>
+                    <p className="font-serif italic text-sm text-[#8a6a3b] my-1">&amp;</p>
+                    <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground">Karim</p>
+                    <span className="block w-10 h-px bg-[#c6a46b] my-4" />
+                    <p className="font-serif text-[10px] sm:text-xs tracking-wide text-foreground/70">
+                      Saturday, the twelfth of June
+                    </p>
+                  </div>
+                  {/* Wax seal */}
+                  <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[radial-gradient(circle_at_35%_30%,#c98a86,#9e5d5a_70%)] shadow-[0_6px_14px_-4px_rgba(80,30,30,0.55)] flex items-center justify-center">
+                    <span className="font-script text-xl sm:text-2xl text-[#f6e3de]/90">A</span>
+                  </div>
                 </div>
+              </div>
+            </section>
+
+            {/* Booking */}
+            <section
+              id="book"
+              className="scroll-mt-28 rounded-[28px] bg-white border border-[#e7d8c2] shadow-[0_30px_60px_-40px_rgba(90,60,20,0.35)] overflow-hidden"
+            >
+              <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-2 flex flex-wrap items-end justify-between gap-2 border-b border-[#efe4d3]">
+                <div className="pb-4">
+                  <h3 className="font-serif text-2xl sm:text-[28px] font-bold text-foreground">Pick a time</h3>
+                  <p className="text-sm text-muted-foreground mt-1">Highlighted days have free times. All times are Beirut time.</p>
+                </div>
+              </div>
+              <div className="px-1 sm:px-2 pb-2">
                 <BookingCalendar prefillEmail={userEmail} calendlyUrl={PHYSICAL_CARDS_CALENDLY_URL} />
               </div>
-            </div>
+            </section>
           </div>
         ) : (
         <div className="space-y-10 sm:space-y-16">

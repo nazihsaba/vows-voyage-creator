@@ -409,3 +409,15 @@ video::-webkit-media-controls-panel {
   display: none !important;
   -webkit-appearance: none;
 }
+
+/* Physical cards page: the front invitation settles into place once on load. */
+@keyframes card-settle {
+  from {
+    opacity: 0;
+    transform: translateY(14px) rotate(4deg);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) rotate(-2deg);
+  }
+}
