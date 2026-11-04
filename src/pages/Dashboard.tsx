@@ -214,18 +214,34 @@ const Dashboard = () => {
               />
               <div>
                 <h1 className="text-lg sm:text-xl md:text-2xl font-serif font-bold text-foreground">
-                  {activeTab === "digital" ? "Choose Your Template" : "Physical Cards"}
+                  <span
+                    key={activeTab}
+                    className="inline-block animate-in fade-in slide-in-from-bottom-1 duration-300"
+                  >
+                    {activeTab === "digital" ? "Choose Your Template" : "Physical Cards"}
+                  </span>
                 </h1>
                 <p className="text-xs text-muted-foreground hidden sm:block">
-                  {activeTab === "digital" ? "Create beautiful invitations" : "Printed invitations for your guests"}
+                  <span
+                    key={`sub-${activeTab}`}
+                    className="inline-block animate-in fade-in duration-300"
+                  >
+                    {activeTab === "digital" ? "Create beautiful invitations" : "Printed invitations for your guests"}
+                  </span>
                 </p>
               </div>
             </div>
             <div
               role="tablist"
               aria-label="Card type"
-              className="flex w-full sm:w-auto items-center gap-1 p-1 rounded-full bg-muted/60 border border-border/50 shadow-inner"
+              className="relative grid w-full sm:w-64 grid-cols-2 items-center p-1 rounded-full bg-muted/60 border border-border/50 shadow-inner"
             >
+              <span
+                aria-hidden
+                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-primary shadow-sm transition-transform duration-300 ease-out will-change-transform ${
+                  activeTab === "physical" ? "translate-x-full" : "translate-x-0"
+                }`}
+              />
               {cardTabs.map((tab) => {
                 const TabIcon = tab.icon;
                 const isActive = activeTab === tab.id;
@@ -236,13 +252,17 @@ const Dashboard = () => {
                     role="tab"
                     aria-selected={isActive}
                     onClick={() => switchTab(tab.id)}
-                    className={`flex-1 sm:flex-none flex items-center justify-center gap-2 rounded-full px-4 sm:px-5 py-2 text-sm font-medium transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
+                    className={`relative z-10 flex items-center justify-center gap-2 rounded-full px-4 sm:px-5 py-2 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                       isActive
-                        ? "bg-primary text-primary-foreground shadow-sm"
-                        : "text-muted-foreground hover:text-foreground hover:bg-white/70"
+                        ? "text-primary-foreground"
+                        : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    <TabIcon className="w-4 h-4" />
+                    <TabIcon
+                      className={`w-4 h-4 transition-transform duration-300 ${
+                        isActive ? "scale-105" : "scale-100"
+                      }`}
+                    />
                     {tab.label}
                   </button>
                 );
