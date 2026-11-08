@@ -22,6 +22,8 @@ All colors MUST be HSL.
     --primary: 36 57% 74%;
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 68%;
+    /* Text color for text-primary - #865814 */
+    --primary-text: 35.8 74% 30.2%;
 
     /* Buttons - white background, bronze text and border (sand on hover) */
     --button: 0 0% 100%;
@@ -95,6 +97,8 @@ All colors MUST be HSL.
     --primary: 36 57% 68%;
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 62%;
+    /* Text color for text-primary - #865814 */
+    --primary-text: 35.8 74% 30.2%;
 
     /* Buttons - white background, bronze text and border (sand on hover) */
     --button: 0 0% 100%;

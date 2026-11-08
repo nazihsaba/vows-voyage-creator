@@ -84,6 +84,14 @@ export default {
           ring: "hsl(var(--sidebar-ring))",
         },
       },
+      // text-primary uses its own color (#865814); bg-primary, border-primary etc. keep --primary
+      textColor: {
+        primary: {
+          DEFAULT: "hsl(var(--primary-text))",
+          foreground: "hsl(var(--primary-foreground))",
+          hover: "hsl(var(--primary-hover))",
+        },
+      },
       backgroundImage: {
         "gradient-romantic": "var(--gradient-romantic)",
         "gradient-soft": "var(--gradient-soft)",
