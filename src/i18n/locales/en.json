@@ -87,6 +87,8 @@
     "giftLead": "Your presence is our greatest gift.",
     "giftText": "Should you wish to give a gift, you can use the details below.",
     "closing": "We can't wait to celebrate with you.",
-    "withLove": "With love,"
+    "withLove": "With love,",
+    "tapToFlip": "Tap to turn",
+    "addToCalendar": "Add to calendar"
   }
 }
