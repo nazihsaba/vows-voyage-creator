@@ -25,10 +25,9 @@ All colors MUST be HSL.
     /* Text color for text-primary - #865814 */
     --primary-text: 35.8 74% 30.2%;
 
-    /* Buttons - white background, bronze text and border (sand on hover) */
+    /* Buttons - white background, bronze text and border (no hover effect) */
     --button: 0 0% 100%;
     --button-foreground: 36 74% 30%;
-    --button-hover: 34 66% 87%;
 
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;
@@ -100,10 +99,9 @@ All colors MUST be HSL.
     /* Text color for text-primary - #865814 */
     --primary-text: 35.8 74% 30.2%;
 
-    /* Buttons - white background, bronze text and border (sand on hover) */
+    /* Buttons - white background, bronze text and border (no hover effect) */
     --button: 0 0% 100%;
     --button-foreground: 36 74% 30%;
-    --button-hover: 34 66% 87%;
 
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;

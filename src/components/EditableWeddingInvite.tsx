@@ -177,7 +177,7 @@ export const EditableWeddingInvite = ({ wedding, onUpdate, children }: EditableW
             <Button
               onClick={handleSave}
               disabled={isSaving}
-              className="border border-bronze bg-button text-button-foreground hover:bg-button-hover shadow-lg"
+              className="border border-bronze bg-button text-button-foreground shadow-lg"
             >
               <Save className="w-4 h-4 mr-2" />
               {isSaving ? "Saving..." : "Save"}
