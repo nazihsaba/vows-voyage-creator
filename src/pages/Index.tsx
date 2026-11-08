@@ -168,7 +168,7 @@ const Index = () => {
           <div className="text-center mb-16">
             <p className="text-sm uppercase tracking-[0.3em] text-section-label font-medium mb-3">Features</p>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-4">Everything You Need</h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            <p className="text-section-description text-lg max-w-xl mx-auto">
               Powerful tools to make your invitation truly unforgettable.
             </p>
           </div>
@@ -227,7 +227,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-4">
               Choose the experience that fits you best
             </h2>
-            <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+            <p className="text-section-description text-lg max-w-xl mx-auto">
               Create your invitation yourself, or let Auréa handle everything for you.
             </p>
           </div>
@@ -310,7 +310,7 @@ const Index = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-5 leading-tight">
             Your invitation is the first impression of your event
           </h2>
-          <p className="text-lg md:text-xl text-muted-foreground mb-10 italic font-light">
+          <p className="text-lg md:text-xl text-section-description mb-10 italic font-light">
             Make it elegant, organized, and easy to share.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">

@@ -34,6 +34,8 @@ All colors MUST be HSL.
 
     /* Section labels (small uppercase titles above headings) - #CC9950 */
     --section-label: 35.3 54.9% 55.7%;
+    /* Section descriptions (text under section headings) - #858585 */
+    --section-description: 0 0% 52.2%;
 
     /* Muted Blush - romance */
     --secondary: 358 44% 80%;
@@ -111,6 +113,8 @@ All colors MUST be HSL.
 
     /* Section labels (small uppercase titles above headings) - #CC9950 */
     --section-label: 35.3 54.9% 55.7%;
+    /* Section descriptions (text under section headings) - #858585 */
+    --section-description: 0 0% 52.2%;
 
     /* Muted Blush - darker for dark mode */
     --secondary: 358 44% 70%;

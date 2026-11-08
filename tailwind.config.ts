@@ -42,6 +42,7 @@ export default {
         },
         bronze: "hsl(var(--bronze))",
         "section-label": "hsl(var(--section-label))",
+        "section-description": "hsl(var(--section-description))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

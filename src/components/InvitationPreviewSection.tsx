@@ -159,7 +159,7 @@ const InvitationPreviewSection = () => {
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-5">
             More Than an Invitation — A Complete Wedding Experience
           </h2>
-          <p className="text-muted-foreground text-lg max-w-xl mx-auto">
+          <p className="text-section-description text-lg max-w-xl mx-auto">
             Beautifully designed templates, personalized for every guest, and ready to share instantly.
           </p>
         </div>
