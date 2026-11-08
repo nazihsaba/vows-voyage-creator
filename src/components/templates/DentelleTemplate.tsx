@@ -140,58 +140,287 @@ const Rings = ({ color }: { color: string }) => (
   </svg>
 );
 
-/** Burgundy wax seal with the couple's initials. */
-const WaxSeal = ({ initials, size = 132 }: { initials: string; size?: number }) => {
-  const path = useMemo(() => {
+/** Embroidered lace with raised thread, a diamond lattice and scattered pearls. */
+const embroideredLace = () => {
+  const petals = (cx: number, cy: number, n: number, rx: number, ry: number, off: number) =>
+    Array.from({ length: n }, (_, i) => {
+      const a = (360 / n) * i;
+      return `<ellipse cx='${cx}' cy='${cy - off}' rx='${rx}' ry='${ry}' transform='rotate(${a} ${cx} ${cy})'/>`;
+    }).join("");
+  const pearl = (x: number, y: number, r: number) =>
+    `<circle cx='${x + 0.6}' cy='${y + 0.9}' r='${r}' fill='#b9a698' opacity='.45'/><circle cx='${x}' cy='${y}' r='${r}' fill='url(#p)'/>`;
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'>
+<defs><radialGradient id='p' cx='35%' cy='30%' r='70%'><stop offset='0' stop-color='#ffffff'/><stop offset='.55' stop-color='#f3ece6'/><stop offset='1' stop-color='#d9cbc0'/></radialGradient></defs>
+<rect width='96' height='96' fill='#e6d9cf'/>
+<g fill='none' stroke-width='1.1'>
+<path d='M0 48 L48 0 L96 48 L48 96 Z' stroke='#c9b7aa' transform='translate(.6 .9)'/>
+<path d='M0 48 L48 0 L96 48 L48 96 Z' stroke='#f6efe9'/>
+<path d='M8 48 L48 8 L88 48 L48 88 Z' stroke='#f6efe9' stroke-width='.6' stroke-dasharray='1.4 2.6'/>
+</g>
+<g fill='#f1e8e1' stroke='#cbb9ac' stroke-width='.55'>${petals(48, 48, 6, 3.4, 6.6, 6.4)}${petals(0, 0, 5, 2.4, 4.6, 4.4)}${petals(96, 0, 5, 2.4, 4.6, 4.4)}${petals(0, 96, 5, 2.4, 4.6, 4.4)}${petals(96, 96, 5, 2.4, 4.6, 4.4)}</g>
+<g fill='none' stroke='#f6efe9' stroke-width='.9' stroke-linecap='round'>
+<path d='M30 30 q6 -2 8 4 M66 30 q-6 -2 -8 4 M30 66 q6 2 8 -4 M66 66 q-6 2 -8 -4'/>
+<path d='M48 26 q-4 -5 0 -9 q4 4 0 9 M48 70 q-4 5 0 9 q4 -4 0 -9 M26 48 q-5 -4 -9 0 q4 4 9 0 M70 48 q5 -4 9 0 q-4 4 -9 0'/>
+</g>
+${pearl(48, 48, 2.6)}${pearl(48, 14, 2.3)}${pearl(48, 82, 2.3)}${pearl(14, 48, 2.3)}${pearl(82, 48, 2.3)}
+${pearl(26, 26, 1.6)}${pearl(70, 26, 1.6)}${pearl(26, 70, 1.6)}${pearl(70, 70, 1.6)}
+</svg>`;
+  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
+};
+
+/** Cream oval wax seal with a pressed floral wreath and the couple's initials. */
+const IvorySeal = ({ initials, width = 118 }: { initials: string; width?: number }) => {
+  const id = `seal-${useId().replace(/:/g, "")}`;
+  const edge = useMemo(() => {
     const pts: string[] = [];
-    const n = 72;
+    const n = 80;
     for (let i = 0; i <= n; i++) {
       const a = (i / n) * Math.PI * 2;
-      const r = 54 + Math.sin(a * 7) * 2.2 + Math.sin(a * 13 + 1.3) * 1.4 + Math.cos(a * 3) * 1.2;
-      pts.push(`${(60 + Math.cos(a) * r).toFixed(2)} ${(60 + Math.sin(a) * r).toFixed(2)}`);
+      const wob = 1 + Math.sin(a * 9) * 0.018 + Math.sin(a * 5 + 0.7) * 0.014 + Math.cos(a * 13) * 0.01;
+      pts.push(`${(60 + Math.cos(a) * 54 * wob).toFixed(2)} ${(75 + Math.sin(a) * 69 * wob).toFixed(2)}`);
     }
     return `M${pts.join(" L")} Z`;
   }, []);
-  const id = `seal-${useId().replace(/:/g, "")}`;
+  // Leaves around the top of the inner oval.
+  const leaves = useMemo(() => {
+    const out: string[] = [];
+    for (let i = 0; i < 9; i++) {
+      const a = Math.PI * (1.08 + (i / 8) * 0.84);
+      const x = 60 + Math.cos(a) * 30 + Math.cos(a) * (i % 2 ? 3 : -3);
+      const y = 62 + Math.sin(a) * 32 + Math.sin(a) * (i % 2 ? 3 : -3);
+      const rot = (a * 180) / Math.PI + 90;
+      out.push(
+        `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.3" ry="4.6" transform="rotate(${(rot + (i % 2 ? 35 : -35)).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`,
+      );
+    }
+    return out.join("");
+  }, []);
   return (
-    <svg width={size} height={size} viewBox="0 0 120 120" aria-hidden>
+    <svg width={width} height={width * 1.25} viewBox="0 0 120 150" aria-hidden>
       <defs>
-        <radialGradient id={`${id}-g`} cx="38%" cy="32%" r="75%">
-          <stop offset="0%" stopColor="#9c3a48" />
-          <stop offset="55%" stopColor="#6e1e2c" />
-          <stop offset="100%" stopColor="#3d0c15" />
+        <radialGradient id={`${id}-g`} cx="40%" cy="32%" r="78%">
+          <stop offset="0%" stopColor="#fbf7f2" />
+          <stop offset="60%" stopColor="#ece2d8" />
+          <stop offset="100%" stopColor="#d3c3b5" />
         </radialGradient>
-        <radialGradient id={`${id}-h`} cx="35%" cy="28%" r="40%">
-          <stop offset="0%" stopColor="#ffffff" stopOpacity="0.28" />
-          <stop offset="100%" stopColor="#ffffff" stopOpacity="0" />
-        </radialGradient>
+        <filter id={`${id}-s`} x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#6b5446" floodOpacity="0.35" />
+        </filter>
       </defs>
-      <path d={path} fill={`url(#${id}-g)`} />
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#3a0a13" strokeOpacity="0.55" strokeWidth="2.5" />
-      <circle cx="60" cy="60" r="40" fill="none" stroke="#c46a76" strokeOpacity="0.35" strokeWidth="0.8" transform="translate(-0.8 -0.8)" />
-      <circle cx="60" cy="60" r="34" fill="none" stroke="#c46a76" strokeOpacity="0.28" strokeWidth="0.6" strokeDasharray="1 3" />
-      <text
-        x="60"
-        y="69"
-        textAnchor="middle"
-        fontSize="30"
-        fill="#e9b9bf"
-        fillOpacity="0.92"
-        style={{ fontFamily: FONT_MONOGRAM, paintOrder: "stroke" }}
-        stroke="#3a0a13"
-        strokeOpacity="0.45"
-        strokeWidth="1.4"
-      >
-        {initials}
-      </text>
-      <path d={path} fill={`url(#${id}-h)`} />
+      <path d={edge} fill={`url(#${id}-g)`} filter={`url(#${id}-s)`} />
+      {/* pressed rim */}
+      <ellipse cx="60" cy="75" rx="43" ry="57" fill="none" stroke="#c5b3a4" strokeWidth="2.4" />
+      <ellipse cx="59.3" cy="74.2" rx="43" ry="57" fill="none" stroke="#fffdf9" strokeWidth="1" opacity="0.9" />
+      <ellipse cx="60" cy="75" rx="38" ry="51" fill="#efe6dd" opacity="0.55" />
+      {/* wreath */}
+      <path d="M30 60 Q34 34 60 30 Q86 34 90 60" fill="none" stroke="#c4b1a1" strokeWidth="0.9" />
+      <path d="M30.6 59.4 Q34.6 33.4 60 29.4 Q85.4 33.4 89.4 59.4" fill="none" stroke="#fffdf9" strokeWidth="0.6" />
+      <g
+        fill="#e9dfd5"
+        stroke="#bfac9c"
+        strokeWidth="0.6"
+        dangerouslySetInnerHTML={{ __html: leaves }}
+      />
+      <g fill="#f8f2ec" stroke="#c9b7a8" strokeWidth="0.7">
+        <circle cx="60" cy="27" r="4.2" />
+        <circle cx="52" cy="29.5" r="2.6" />
+        <circle cx="68" cy="29.5" r="2.6" />
+      </g>
+      {/* initials, pressed: dark lower edge + light upper edge */}
+      <g style={{ fontFamily: FONT_MONOGRAM }} fontSize="27" textAnchor="middle">
+        <text x="60.8" y="94" fill="#b29f90">{initials}</text>
+        <text x="59.4" y="92.6" fill="#fffdf9">{initials}</text>
+        <text x="60" y="93.3" fill="#e2d5ca">{initials}</text>
+      </g>
     </svg>
+  );
+};
+
+/** Lace envelope: four lace flaps, a tulle X gathered at the centre, and the seal. */
+const LaceEnvelope = ({
+  initials,
+  opening,
+  onOpen,
+  label,
+}: {
+  initials: string;
+  opening: boolean;
+  onOpen: () => void;
+  label: string;
+}) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const [size, setSize] = useState({ w: 390, h: 844 });
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => setSize({ w: el.clientWidth || 390, h: el.clientHeight || 844 });
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const { w, h } = size;
+  const cx = w / 2;
+  const cy = h / 2;
+  const diag = Math.hypot(w, h);
+  const angle = (Math.atan2(h, w) * 180) / Math.PI;
+  const lace = embroideredLace();
+
+  // Scalloped, pearl-beaded lace edge for one side of a flap (from a corner to the centre),
+  // pushed `off` px into the flap so it shows beside the tulle.
+  const scallopEdge = (x1: number, y1: number, x2: number, y2: number, inward: [number, number], off: number) => {
+    const len = Math.hypot(x2 - x1, y2 - y1);
+    const ux = (x2 - x1) / len;
+    const uy = (y2 - y1) / len;
+    const ox = inward[0] * off;
+    const oy = inward[1] * off;
+    const step = 15;
+    const n = Math.floor(len / step);
+    let d = `M${(x1 + ox).toFixed(1)} ${(y1 + oy).toFixed(1)}`;
+    const pearls: Array<[number, number]> = [];
+    for (let i = 0; i < n; i++) {
+      const bx = x1 + ux * step * (i + 1) + ox;
+      const by = y1 + uy * step * (i + 1) + oy;
+      const mx = x1 + ux * step * (i + 0.5) + ox;
+      const my = y1 + uy * step * (i + 0.5) + oy;
+      // bump outward, toward the seam
+      d += ` Q${(mx - inward[0] * 9).toFixed(1)} ${(my - inward[1] * 9).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+      pearls.push([mx + inward[0] * 3.5, my + inward[1] * 3.5]);
+    }
+    return { d, pearls };
+  };
+
+  type FlapDef = {
+    key: string;
+    clip: string;
+    corners: Array<[number, number]>;
+    centroid: [number, number];
+    origin: string;
+    openTransform: string;
+    delay: string;
+    shade: number;
+  };
+  const flaps: FlapDef[] = [
+    { key: "left", clip: "polygon(0 0, 0 100%, 50% 50%)", corners: [[0, 0], [0, h]], centroid: [w / 6, h / 2], origin: "left center", openTransform: "rotateY(82deg)", delay: ".2s", shade: 0.965 },
+    { key: "right", clip: "polygon(100% 0, 100% 100%, 50% 50%)", corners: [[w, 0], [w, h]], centroid: [(5 * w) / 6, h / 2], origin: "right center", openTransform: "rotateY(-82deg)", delay: ".2s", shade: 0.965 },
+    { key: "bottom", clip: "polygon(0 100%, 100% 100%, 50% 50%)", corners: [[0, h], [w, h]], centroid: [w / 2, (5 * h) / 6], origin: "bottom center", openTransform: "translateY(102%)", delay: ".35s", shade: 0.94 },
+    { key: "top", clip: "polygon(0 0, 100% 0, 50% 50%)", corners: [[0, 0], [w, 0]], centroid: [w / 2, h / 6], origin: "top center", openTransform: "translateY(-102%)", delay: "0s", shade: 1 },
+  ];
+
+  const flapEl = (f: FlapDef) => {
+    const edges = f.corners.map(([x1, y1]) => {
+      const len = Math.hypot(cx - x1, cy - y1);
+      let nx = -(cy - y1) / len;
+      let ny = (cx - x1) / len;
+      const mx = (x1 + cx) / 2;
+      const my = (y1 + cy) / 2;
+      if ((f.centroid[0] - mx) * nx + (f.centroid[1] - my) * ny < 0) {
+        nx = -nx;
+        ny = -ny;
+      }
+      return scallopEdge(x1, y1, cx, cy, [nx, ny], 50);
+    });
+    return (
+      <div
+        key={f.key}
+        className="dt-anim absolute inset-0"
+        style={{
+          clipPath: f.clip,
+          transformOrigin: f.origin,
+          transform: opening ? f.openTransform : "none",
+          transition: `transform 1.9s cubic-bezier(.6,0,.25,1) ${f.delay}, opacity .7s ease calc(${f.delay} + 1.3s)`,
+          opacity: opening ? 0 : 1,
+        }}
+      >
+        <div className="absolute inset-0" style={{ backgroundImage: lace, backgroundSize: "96px 96px", backgroundPosition: "center", filter: `brightness(${f.shade})` }} />
+        <svg aria-hidden className="absolute inset-0" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
+          {edges.map((e, i) => (
+            <g key={i}>
+              <path d={e.d} fill="none" stroke="#bda898" strokeWidth="1.6" transform="translate(.7 1)" />
+              <path d={e.d} fill="none" stroke="#fbf7f2" strokeWidth="1.6" />
+              {e.pearls.map(([px, py], j) => (
+                <g key={j}>
+                  <circle cx={px + 0.5} cy={py + 0.8} r="2.3" fill="#a8917f" opacity=".45" />
+                  <circle cx={px} cy={py} r="2.3" fill="#fdfbf8" />
+                </g>
+              ))}
+            </g>
+          ))}
+        </svg>
+      </div>
+    );
+  };
+
+  return (
+    <div ref={ref} className="absolute inset-0 z-20 overflow-hidden" style={{ perspective: 1200, pointerEvents: opening ? "none" : "auto" }}>
+      {flaps.map(flapEl)}
+
+      {/* tulle X, gathered at the seal */}
+      {[angle, -angle].map((deg) => (
+        <div
+          key={deg}
+          className="dt-anim absolute left-1/2 top-1/2"
+          style={{
+            width: diag + 40,
+            height: 150,
+            marginLeft: -(diag + 40) / 2,
+            marginTop: -75,
+            transform: `rotate(${deg}deg)`,
+            clipPath: "polygon(0 8%, 50% 40%, 100% 8%, 100% 92%, 50% 60%, 0 92%)",
+            background:
+              "repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0px, rgba(255,255,255,.18) 6px, rgba(255,255,255,.62) 11px, rgba(250,245,240,.24) 17px)",
+            boxShadow: "inset 0 0 18px rgba(255,255,255,.6)",
+            backdropFilter: "blur(1.2px)",
+            WebkitBackdropFilter: "blur(1.2px)",
+            opacity: opening ? 0 : 0.95,
+            transition: "opacity 1.1s ease .35s",
+          }}
+        />
+      ))}
+
+      {/* seal */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <button
+          type="button"
+          onClick={onOpen}
+          aria-label={label}
+          className="dt-anim rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78] focus-visible:ring-offset-4"
+          style={{
+            transform: opening ? `translateY(-${Math.round(h * 0.75)}px) rotate(-6deg)` : "none",
+            transition: "transform 1.9s cubic-bezier(.6,0,.25,1), opacity 1s ease .7s",
+            opacity: opening ? 0 : 1,
+            animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite",
+          }}
+        >
+          <IvorySeal initials={initials} width={150} />
+        </button>
+        <p
+          className="dt-anim"
+          style={{
+            marginTop: 20,
+            fontFamily: FONT_HEADING,
+            fontStyle: "italic",
+            fontSize: 18,
+            color: "#4f3f36",
+            background: "rgba(251,247,242,.85)",
+            padding: "4px 16px",
+            borderRadius: 999,
+            opacity: opening ? 0 : 1,
+            transition: "opacity .3s ease",
+            animation: opening ? undefined : "dt-hint 2.6s ease-in-out infinite",
+          }}
+        >
+          {label}
+        </p>
+      </div>
+    </div>
   );
 };
 
 const KEYFRAMES = `
 @keyframes dt-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes dt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.035); } }
+@keyframes dt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+@keyframes dt-reveal { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
 @keyframes dt-hint { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) {
   .dt-anim { animation: none !important; transition: opacity .4s ease !important; transform: none !important; }
@@ -229,7 +458,7 @@ export const DentelleTemplate = ({
 
   const weddingDate = parseLocalDate(wedding.wedding_date);
   const pad = (n: number) => String(n).padStart(2, "0");
-  const numericDate = `${pad(weddingDate.getDate())} . ${pad(weddingDate.getMonth() + 1)} . ${weddingDate.getFullYear()}`;
+  const numericDate = `${pad(weddingDate.getDate())}.${pad(weddingDate.getMonth() + 1)}.${weddingDate.getFullYear()}`;
   const longDate = formatLocalizedDate(weddingDate, { day: "numeric", month: "long", year: "numeric" }, isArabic);
 
   const { showLoader, fadingOut } = useHeroLoader({ imageUrl: wedding.main_picture_url });
@@ -251,7 +480,7 @@ export const DentelleTemplate = ({
     if (opening) return;
     setOpening(true);
     audioRef.current?.play().catch(() => {});
-    window.setTimeout(() => setOpened(true), 1500);
+    window.setTimeout(() => setOpened(true), 2400);
   };
 
   // ---------- Countdown ----------
@@ -381,167 +610,90 @@ export const DentelleTemplate = ({
         {/* ==================== HERO ==================== */}
         <section
           className="relative overflow-hidden"
-          style={{ minHeight: "100svh", backgroundImage: lacePattern(LACE_LINE, LACE_BG) }}
+          style={{ minHeight: "100svh", backgroundImage: embroideredLace(), backgroundSize: "96px 96px", backgroundPosition: "center" }}
         >
-          <div
-            className="relative mx-auto flex items-center justify-center"
-            style={{ minHeight: "100svh", maxWidth: 560, padding: "28px 18px" }}
-          >
-            {/* Arch frame: outer line, eyelet band, inner line */}
+          <div className="relative mx-auto flex" style={{ minHeight: "100svh", maxWidth: 620, padding: "26px 24px" }}>
+            {/* Cream panel with arched ends, edged in pearls */}
             <div
-              className="relative w-full"
+              className="relative w-full flex flex-col items-center justify-center text-center"
               style={{
-                borderRadius: "999px 999px 22px 22px / 260px 260px 22px 22px",
-                border: `1px solid ${CHAMPAGNE}`,
-                padding: 7,
-                background: "rgba(255,253,250,0.55)",
-                boxShadow: "0 30px 60px -40px rgba(90,40,40,0.45)",
+                borderRadius: "50% / 17%",
+                background: "radial-gradient(ellipse at 50% 40%, #fdfaf6 0%, #f8f2ec 70%, #f1e8e0 100%)",
+                outline: "5px dotted #fbf8f4",
+                outlineOffset: 5,
+                boxShadow:
+                  "0 0 0 1.5px #f7f0ea, 0 0 0 3px #cdbcae, 0 0 0 14px rgba(246,239,233,.55), 0 18px 40px -18px rgba(90,60,40,.45), inset 0 0 40px rgba(205,188,174,.35)",
+                padding: "clamp(70px, 16vh, 120px) 26px",
+                minHeight: "calc(100svh - 52px)",
               }}
             >
               <div
                 style={{
-                  borderRadius: "999px 999px 16px 16px / 252px 252px 16px 16px",
-                  border: `3px dotted ${LACE_LINE}`,
-                  padding: 6,
+                  opacity: opened || opening ? 1 : 0,
+                  animation: opening || opened ? "dt-reveal 1.4s ease 1.2s both" : undefined,
                 }}
+                className="dt-anim flex flex-col items-center"
               >
-                <div
-                  className="flex flex-col items-center text-center"
-                  style={{
-                    borderRadius: "999px 999px 12px 12px / 244px 244px 12px 12px",
-                    border: `1px solid ${CHAMPAGNE}`,
-                    background: IVORY,
-                    padding: "clamp(78px, 18vw, 110px) 22px 46px",
-                    minHeight: "min(82svh, 760px)",
-                    justifyContent: "center",
-                  }}
-                >
-                  <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 19, color: MUTED, lineHeight: 1.35 }}>
-                    {t("dentelle.together", "Together with their families")}
+                <p style={{ fontFamily: FONT_HEADING, fontSize: 17, lineHeight: 1.3, color: MUTED, maxWidth: 160 }}>
+                  {t("dentelle.together", "Together with their families")}
+                </p>
+                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26 }}>
+                  <EditableField
+                    fieldId="groom-name"
+                    text={getFieldValue("groom-name", groomName)}
+                    style={getFieldStyle("groom-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="span"
+                    className=""
+                  />
+                </div>
+                <div style={{ fontFamily: FONT_HEADING, fontSize: 16, color: MUTED, margin: "4px 0" }}>&amp;</div>
+                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK }}>
+                  <EditableField
+                    fieldId="bride-name"
+                    text={getFieldValue("bride-name", brideName)}
+                    style={getFieldStyle("bride-name")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="span"
+                    className=""
+                  />
+                </div>
+                <p style={{ fontFamily: FONT_HEADING, fontSize: 18, letterSpacing: "0.04em", color: INK, marginTop: 30 }}>
+                  {isArabic ? longDate : numericDate}
+                </p>
+                <div className="flex justify-center" style={{ marginTop: 30 }}>
+                  <Bow color={INK} width={86} />
+                </div>
+                {mainPlace?.location_name && (
+                  <p style={{ fontFamily: FONT_HEADING, fontSize: 23, color: INK, lineHeight: 1.2, marginTop: 26 }}>
+                    {getLocalizedValue(mainPlace === venue ? "venue_location" : "ceremony_location", mainPlace.location_name)}
                   </p>
-                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.02, color: INK, marginTop: 22 }}>
-                    <EditableField
-                      fieldId="groom-name"
-                      text={getFieldValue("groom-name", groomName)}
-                      style={getFieldStyle("groom-name")}
-                      onUpdate={onFieldUpdate}
-                      isPreview={isPreview}
-                      tag="span"
-                      className=""
-                    />
-                  </div>
-                  <div style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 24, color: CHAMPAGNE, margin: "2px 0" }}>&amp;</div>
-                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.02, color: INK }}>
-                    <EditableField
-                      fieldId="bride-name"
-                      text={getFieldValue("bride-name", brideName)}
-                      style={getFieldStyle("bride-name")}
-                      onUpdate={onFieldUpdate}
-                      isPreview={isPreview}
-                      tag="span"
-                      className=""
-                    />
-                  </div>
-                  <p style={{ fontFamily: FONT_HEADING, fontSize: 21, letterSpacing: "0.12em", color: INK, marginTop: 28 }}>
-                    {isArabic ? longDate : numericDate}
-                  </p>
-                  <span style={{ display: "block", width: 46, height: 1, background: CHAMPAGNE, margin: "26px 0" }} />
-                  {mainPlace?.location_name && (
-                    <p style={{ fontFamily: FONT_HEADING, fontSize: 24, color: INK, lineHeight: 1.2 }}>
-                      {getLocalizedValue(mainPlace === venue ? "venue_location" : "ceremony_location", mainPlace.location_name)}
-                    </p>
-                  )}
-                  <div style={{ ...smallCaps, fontSize: 10, color: MUTED, marginTop: 8 }}>
-                    <EditableField
-                      fieldId="dentelle-city"
-                      text={getFieldValue("dentelle-city", t("dentelle.city", "Beirut, Lebanon"))}
-                      style={getFieldStyle("dentelle-city")}
-                      onUpdate={onFieldUpdate}
-                      isPreview={isPreview}
-                      tag="span"
-                      className=""
-                    />
-                  </div>
+                )}
+                <div style={{ ...smallCaps, fontSize: 9.5, color: MUTED, marginTop: 8 }}>
+                  <EditableField
+                    fieldId="dentelle-city"
+                    text={getFieldValue("dentelle-city", t("dentelle.city", "Beirut, Lebanon"))}
+                    style={getFieldStyle("dentelle-city")}
+                    onUpdate={onFieldUpdate}
+                    isPreview={isPreview}
+                    tag="span"
+                    className=""
+                  />
                 </div>
               </div>
             </div>
           </div>
 
-          {/* Lace veil with ribbons and wax seal — tap to open */}
+          {/* Lace envelope with tulle and wax seal — tap to open */}
           {!opened && (
-            <div
-              className="absolute inset-0 z-20 overflow-hidden"
-              style={{ pointerEvents: opening ? "none" : "auto" }}
-            >
-              {[0, 1].map((side) => (
-                <div
-                  key={side}
-                  className="dt-anim absolute top-0 bottom-0"
-                  style={{
-                    [side === 0 ? "left" : "right"]: 0,
-                    width: "50.5%",
-                    backgroundImage: lacePattern("#cdb9ad", "#f0e6de"),
-                    boxShadow: side === 0 ? "inset -30px 0 40px -30px rgba(80,40,40,.35)" : "inset 30px 0 40px -30px rgba(80,40,40,.35)",
-                    transform: opening ? `translateX(${side === 0 ? "-102%" : "102%"})` : "translateX(0)",
-                    transition: "transform 1.35s cubic-bezier(.7,0,.25,1) .25s",
-                  }}
-                />
-              ))}
-              {/* sheer ribbons crossing at the seal */}
-              {[38, -38].map((deg) => (
-                <div
-                  key={deg}
-                  className="dt-anim absolute left-1/2 top-1/2"
-                  style={{
-                    width: "190vmax",
-                    height: 64,
-                    marginLeft: "-95vmax",
-                    marginTop: -32,
-                    transform: `rotate(${deg}deg)`,
-                    background:
-                      "linear-gradient(to bottom, rgba(255,255,255,.15), rgba(255,253,250,.78) 30%, rgba(246,236,230,.82) 55%, rgba(255,255,255,.2))",
-                    borderTop: "1px solid rgba(205,185,173,.6)",
-                    borderBottom: "1px solid rgba(205,185,173,.6)",
-                    boxShadow: "0 6px 14px -8px rgba(80,40,40,.35)",
-                    opacity: opening ? 0 : 1,
-                    transition: "opacity .5s ease",
-                  }}
-                />
-              ))}
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <button
-                  type="button"
-                  onClick={openInvitation}
-                  aria-label={t("dentelle.tapToOpen", "Tap to open")}
-                  className="dt-anim rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-4"
-                  style={{
-                    filter: "drop-shadow(0 10px 14px rgba(60,10,20,.35))",
-                    transform: opening ? "scale(1.25)" : "scale(1)",
-                    opacity: opening ? 0 : 1,
-                    transition: "transform .6s ease, opacity .5s ease .1s",
-                    animation: opening ? undefined : "dt-breathe 3.2s ease-in-out infinite",
-                  }}
-                >
-                  <WaxSeal initials={initials} />
-                </button>
-                <p
-                  className="dt-anim"
-                  style={{
-                    ...smallCaps,
-                    marginTop: 26,
-                    color: WINE,
-                    background: "rgba(255,253,250,.82)",
-                    padding: "8px 16px",
-                    borderRadius: 999,
-                    opacity: opening ? 0 : 1,
-                    transition: "opacity .3s ease",
-                    animation: opening ? undefined : "dt-hint 2.4s ease-in-out infinite",
-                  }}
-                >
-                  {t("dentelle.tapToOpen", "Tap to open")}
-                </p>
-              </div>
-            </div>
+            <LaceEnvelope
+              initials={initials}
+              opening={opening}
+              onOpen={openInvitation}
+              label={t("dentelle.tapToOpen", "Tap to open")}
+            />
           )}
         </section>
 
