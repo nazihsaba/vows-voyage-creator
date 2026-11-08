@@ -255,7 +255,7 @@ const Dashboard = () => {
             >
               <span
                 aria-hidden
-                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-primary shadow-sm transition-transform duration-300 ease-out will-change-transform ${
+                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-button border border-bronze shadow-sm transition-transform duration-300 ease-out will-change-transform ${
                   activeTab === "physical" ? "translate-x-full" : "translate-x-0"
                 }`}
               />
@@ -271,7 +271,7 @@ const Dashboard = () => {
                     onClick={() => switchTab(tab.id)}
                     className={`relative z-10 flex items-center justify-center gap-2 whitespace-nowrap rounded-full px-3 sm:px-4 py-2 text-sm font-medium transition-colors duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40 ${
                       isActive
-                        ? "text-primary-foreground"
+                        ? "text-primary"
                         : "text-muted-foreground hover:text-foreground"
                     }`}
                   >
