@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
@@ -23,16 +23,13 @@ import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-10.jpg";
 
-import flowerVase from "@/assets/annie-spratt-z7V1ibFxju0-unsplash.jpg";
-import sparklers from "@/assets/ian-schneider-PAykYb-8Er8-unsplash.jpg";
-import carouselRings from "@/assets/carousel-rings.jpg";
-import tableDecor from "@/assets/taylor-gray-_9Lh9_uO34o-unsplash.jpg";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
 
+const GoldenVowsHero = lazy(() => import("@/components/GoldenVowsHero"));
+
 const Index = () => {
   const navigate = useNavigate();
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showComingSoon, setShowComingSoon] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -46,21 +43,6 @@ const Index = () => {
       setIsAuthenticated(!!session);
     });
     return () => subscription.unsubscribe();
-  }, []);
-
-  const heroImages = [
-    { src: tableDecor, alt: "Elegant wedding table setting" },
-    { src: sparklers, alt: "Wedding celebration with sparklers" },
-    { src: flowerVase, alt: "Wedding flower arrangement" },
-    { src: carouselRings, alt: "Wedding rings with flowers" },
-  ];
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentImageIndex((prev) => (prev + 1) % heroImages.length);
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -81,26 +63,16 @@ const Index = () => {
       </header>
 
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          {heroImages.map((image, index) => (
+        <Suspense
+          fallback={
             <div
-              key={index}
-              className={`absolute inset-0 transition-opacity duration-1000 ${
-                index === currentImageIndex ? "opacity-100" : "opacity-0"
-              }`}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                loading={index === 0 ? "eager" : "lazy"}
-                fetchPriority={index === 0 ? "high" : "auto"}
-                decoding="async"
-                className="w-full h-full object-cover"
-              />
-            </div>
-          ))}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/30" />
-        </div>
+              className="absolute inset-0"
+              style={{ background: "radial-gradient(ellipse at 50% 45%, #3a2a1c 0%, #1f1610 55%, #120d09 100%)" }}
+            />
+          }
+        >
+          <GoldenVowsHero />
+        </Suspense>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
             The Modern Way to Invite Your Wedding Guests
