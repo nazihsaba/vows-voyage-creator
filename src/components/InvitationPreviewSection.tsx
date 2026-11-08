@@ -155,7 +155,7 @@ const InvitationPreviewSection = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">Our Templates</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-bronze font-medium mb-3">Our Templates</p>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-5">
             More Than an Invitation — A Complete Wedding Experience
           </h2>

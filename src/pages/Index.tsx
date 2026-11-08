@@ -166,7 +166,7 @@ const Index = () => {
       <section className="py-24 px-4 bg-card/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">Features</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-bronze font-medium mb-3">Features</p>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-4">Everything You Need</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               Powerful tools to make your invitation truly unforgettable.
@@ -223,7 +223,7 @@ const Index = () => {
       <section className="py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">How It Works</p>
+            <p className="text-sm uppercase tracking-[0.3em] text-bronze font-medium mb-3">How It Works</p>
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-4">
               Choose the experience that fits you best
             </h2>
@@ -306,7 +306,7 @@ const Index = () => {
 
       <section className="py-24 px-4 bg-gradient-to-b from-card/50 to-white">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-4">The First Impression</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-bronze font-medium mb-4">The First Impression</p>
           <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-5 leading-tight">
             Your invitation is the first impression of your event
           </h2>
