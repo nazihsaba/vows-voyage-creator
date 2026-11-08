@@ -41,6 +41,7 @@ export default {
           foreground: "hsl(var(--button-foreground))",
         },
         bronze: "hsl(var(--bronze))",
+        "section-label": "hsl(var(--section-label))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

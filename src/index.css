@@ -32,6 +32,9 @@ All colors MUST be HSL.
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;
 
+    /* Section labels (small uppercase titles above headings) - #CC9950 */
+    --section-label: 35.3 54.9% 55.7%;
+
     /* Muted Blush - romance */
     --secondary: 358 44% 80%;
     --secondary-foreground: 0 0% 17%;
@@ -105,6 +108,9 @@ All colors MUST be HSL.
 
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;
+
+    /* Section labels (small uppercase titles above headings) - #CC9950 */
+    --section-label: 35.3 54.9% 55.7%;
 
     /* Muted Blush - darker for dark mode */
     --secondary: 358 44% 70%;
