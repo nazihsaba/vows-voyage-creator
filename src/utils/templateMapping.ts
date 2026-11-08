@@ -8,6 +8,7 @@ export const templateMapping: Record<string, string> = {
   'lumiere-editorial': 'lumiere-editorial',
   'etoile-carousel': 'etoile-carousel',
   'theatre-opera': 'theatre-opera',
+  'dentelle-lace': 'dentelle-lace',
 };
 
 // Reverse mapping for saving to database

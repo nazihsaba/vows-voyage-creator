@@ -13,6 +13,7 @@ import { LumiereTemplate } from './LumiereTemplate';
 import { EtoileTemplate } from './EtoileTemplate';
 import { TresorTemplate } from './TresorTemplate';
 import { TheatreTemplate } from './TheatreTemplate';
+import { DentelleTemplate } from './DentelleTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -221,6 +222,29 @@ export const TemplateRenderer = ({
   if (template.component === 'TresorTemplate') {
     return (
       <TresorTemplate
+        wedding={wedding}
+        locations={locations}
+        gallery={gallery}
+        giftCards={giftCards}
+        isOwner={isOwner}
+        isPreview={isPreview}
+        onFieldUpdate={onFieldUpdate}
+        getFieldValue={getFieldValue}
+        getFieldStyle={getFieldStyle}
+        invitees={invitees}
+        rsvpResponses={rsvpResponses}
+        handleRsvpToggle={handleRsvpToggle}
+        handleRsvpSubmit={handleRsvpSubmit}
+        numberOfPersons={numberOfPersons}
+        isRsvpDeadlinePassed={isRsvpDeadlinePassed}
+        submittingRsvp={submittingRsvp}
+      />
+    );
+  }
+
+  if (template.component === 'DentelleTemplate') {
+    return (
+      <DentelleTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

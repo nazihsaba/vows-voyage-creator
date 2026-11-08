@@ -33,6 +33,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import tresorCover from "@/assets/tresor-cover.jpeg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
+import dentelleCover from "@/assets/dentelle-cover.jpg";
 
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
@@ -41,6 +42,7 @@ import { AuraPreview } from "@/components/templates/AuraPreview";
 import LumierePreview from "@/components/templates/LumierePreview";
 import EtoilePreview from "@/components/templates/EtoilePreview";
 import TresorPreview from "@/components/templates/TresorPreview";
+import DentellePreview from "@/components/templates/DentellePreview";
 import BookingCalendar from "@/components/BookingCalendar";
 import { PHYSICAL_CARDS_CALENDLY_URL } from "@/config/booking";
 
@@ -193,6 +195,21 @@ const Dashboard = () => {
         { icon: Images, text: "Photo Gallery" },
         { icon: GiftIcon, text: "Gift Registry" },
         { icon: Clock, text: "Countdown Timer" },
+        { icon: Calendar, text: "RSVP" },
+        { icon: Music, text: "Background Music" },
+      ],
+    },
+    {
+      id: "dentelle-lace",
+      name: "Dentelle",
+      price: 100,
+      description: "Romantic lace with a wax-seal opening and burgundy accents",
+      image: dentelleCover,
+      features: [
+        { icon: Sparkles, text: "Wax Seal Opening" },
+        { icon: MapPin, text: "Event Locations" },
+        { icon: Clock, text: "Day Timeline & Countdown" },
+        { icon: GiftIcon, text: "Gift Registry" },
         { icon: Calendar, text: "RSVP" },
         { icon: Music, text: "Background Music" },
       ],
@@ -473,6 +490,7 @@ const Dashboard = () => {
                           "lumiere-editorial": "/dashboard/lumiere-form",
                           "etoile-carousel": "/dashboard/etoile-form",
                           "tresor-swipe": "/dashboard/tresor-form",
+                          "dentelle-lace": "/dashboard/dentelle-form",
                         };
                         const route = routeMap[template.id] || "/dashboard/create";
                         navigate(`${route}?eventType=weddings&template=${template.id}`);
@@ -515,6 +533,7 @@ const Dashboard = () => {
             {showPreview === "lumiere-editorial" && <LumierePreview />}
             {showPreview === "etoile-carousel" && <EtoilePreview />}
             {showPreview === "tresor-swipe" && <TresorPreview />}
+            {showPreview === "dentelle-lace" && <DentellePreview />}
           </div>
         </DialogContent>
       </Dialog>

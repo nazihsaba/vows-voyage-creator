@@ -610,6 +610,42 @@ export const templates: Template[] = [
       animations: true,
     },
   },
+  {
+    id: 'dentelle-lace',
+    name: 'Dentelle',
+    category: 'romantic',
+    description: 'Romantic ivory lace with a burgundy wax-seal opening, lace-edged burgundy bands and a timeline of the day.',
+    thumbnail: '/placeholder.svg',
+    isPremium: true,
+    isPopular: true,
+    component: 'DentelleTemplate',
+    sections: [
+      { id: 'hero', enabled: true, order: 1, customizable: true },
+      { id: 'story', enabled: true, order: 2, customizable: true },
+      { id: 'countdown', enabled: true, order: 3, customizable: true },
+      { id: 'location', enabled: true, order: 4, customizable: true },
+      { id: 'details', enabled: true, order: 5, customizable: true },
+      { id: 'gifts', enabled: true, order: 6, customizable: true },
+      { id: 'rsvp', enabled: true, order: 7, customizable: true },
+    ],
+    style: {
+      layout: 'single-page',
+      spacing: 'spacious',
+      fontPrimary: 'Great Vibes',
+      fontSecondary: 'Cormorant Garamond',
+      headingSize: 'xl',
+      colorScheme: {
+        primary: '#5a1824',
+        secondary: '#b79c78',
+        accent: '#f3ebe4',
+        background: '#faf6f1',
+        text: '#2f2626',
+      },
+      borderRadius: 'lg',
+      shadows: 'soft',
+      animations: true,
+    },
+  },
 ];
 
 export const templateConfig: TemplateConfig = {

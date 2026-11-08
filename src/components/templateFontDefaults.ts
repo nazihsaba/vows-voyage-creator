@@ -72,6 +72,15 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     monogram: '"Cormorant Garamond", serif',
     countdown: '"Cormorant Garamond", serif',
   },
+  // Dentelle — romantic lace
+  "dentelle-lace": {
+    title: '"Great Vibes", cursive',
+    subtitle: '"Cormorant Garamond", serif',
+    heading: '"Cormorant Garamond", serif',
+    body: '"Jost", sans-serif',
+    monogram: '"Great Vibes", cursive',
+    countdown: '"Cormorant Garamond", serif',
+  },
   // Théâtre — cinematic burgundy opera
   "theatre-opera": {
     title: '"Cormorant Garamond", serif',
