@@ -25,7 +25,7 @@ All colors MUST be HSL.
 
     /* Buttons - soft sand background with bronze text */
     --button: 34 66% 87%;
-    --button-foreground: 36 74% 30%;
+    --button-foreground: 0 0% 0%;
     --button-hover: 34 66% 82%;
 
     /* Bronze - section headings and accent text */
@@ -98,7 +98,7 @@ All colors MUST be HSL.
 
     /* Buttons - soft sand background with bronze text */
     --button: 34 66% 87%;
-    --button-foreground: 36 74% 30%;
+    --button-foreground: 0 0% 0%;
     --button-hover: 34 66% 82%;
 
     /* Bronze - section headings and accent text */
