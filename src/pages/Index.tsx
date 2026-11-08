@@ -234,7 +234,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {/* Option 1: DIY */}
-            <div className="rounded-2xl border border-bronze bg-card/50 p-8 md:p-10 flex flex-col">
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
@@ -256,18 +256,18 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="space-y-3 mt-auto">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 mt-auto">
                 {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
-                  <div key={perk} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-bronze" />
-                    <span className="text-sm text-muted-foreground">{perk}</span>
+                  <div key={perk} className="flex items-center gap-1">
+                    <Check className="w-3 h-3 text-bronze" />
+                    <span className="text-xs text-muted-foreground">{perk}</span>
                   </div>
                 ))}
               </div>
             </div>
 
             {/* Option 2: Managed */}
-            <div className="rounded-2xl border border-bronze bg-card/50 p-8 md:p-10 flex flex-col">
+            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Let Us Handle It</h3>
                 <p className="text-muted-foreground text-sm">
@@ -291,11 +291,11 @@ const Index = () => {
                   </div>
                 ))}
               </div>
-              <div className="space-y-3 mt-auto">
+              <div className="flex flex-wrap gap-x-4 gap-y-2 mt-auto">
                 {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
-                  <div key={perk} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-bronze" />
-                    <span className="text-sm text-muted-foreground">{perk}</span>
+                  <div key={perk} className="flex items-center gap-1">
+                    <Check className="w-3 h-3 text-bronze" />
+                    <span className="text-xs text-muted-foreground">{perk}</span>
                   </div>
                 ))}
               </div>
