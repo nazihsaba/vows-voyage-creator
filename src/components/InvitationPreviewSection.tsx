@@ -129,7 +129,7 @@ const TemplateCard = ({
 
     {/* Label badge */}
     <div className="absolute top-3 left-3">
-      <span className="bg-primary/90 text-primary-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+      <span className="bg-button text-button-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
         {card.label}
       </span>
     </div>
@@ -155,8 +155,8 @@ const InvitationPreviewSection = () => {
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16 max-w-2xl mx-auto">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">Our Templates</p>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5">
+          <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">Our Templates</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-5">
             More Than an Invitation — A Complete Wedding Experience
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl mx-auto">

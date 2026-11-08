@@ -41,6 +41,7 @@ export default {
           foreground: "hsl(var(--button-foreground))",
           hover: "hsl(var(--button-hover))",
         },
+        bronze: "hsl(var(--bronze))",
         secondary: {
           DEFAULT: "hsl(var(--secondary))",
           foreground: "hsl(var(--secondary-foreground))",

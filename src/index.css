@@ -28,6 +28,9 @@ All colors MUST be HSL.
     --button-foreground: 36 74% 30%;
     --button-hover: 34 66% 82%;
 
+    /* Bronze - section headings and accent text */
+    --bronze: 36 74% 30%;
+
     /* Muted Blush - romance */
     --secondary: 358 44% 80%;
     --secondary-foreground: 0 0% 17%;
@@ -97,6 +100,9 @@ All colors MUST be HSL.
     --button: 34 66% 87%;
     --button-foreground: 36 74% 30%;
     --button-hover: 34 66% 82%;
+
+    /* Bronze - section headings and accent text */
+    --bronze: 36 74% 30%;
 
     /* Muted Blush - darker for dark mode */
     --secondary: 358 44% 70%;

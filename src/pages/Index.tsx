@@ -132,7 +132,7 @@ const Index = () => {
 
                 <div className="flex flex-col items-center gap-5 px-8 pt-8 pb-10 text-center">
                   <div className="space-y-2">
-                    <h3 className="text-2xl font-serif font-bold text-primary tracking-tight">Coming Soon!</h3>
+                    <h3 className="text-2xl font-serif font-bold text-bronze tracking-tight">Coming Soon!</h3>
                     <p className="text-xs uppercase tracking-[0.25em] text-primary/50 font-medium">
                       Something special is brewing
                     </p>
@@ -166,8 +166,8 @@ const Index = () => {
       <section className="py-24 px-4 bg-card/50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">Features</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">Everything You Need</h2>
+            <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">Features</p>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-4">Everything You Need</h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
               Powerful tools to make your invitation truly unforgettable.
             </p>
@@ -210,7 +210,7 @@ const Index = () => {
                 className="group text-center p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
               >
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/20 transition-colors duration-300">
-                  <feature.icon className="w-7 h-7 text-primary" />
+                  <feature.icon className="w-7 h-7 text-bronze" />
                 </div>
                 <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
                 <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
@@ -223,8 +223,8 @@ const Index = () => {
       <section className="py-24 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
-            <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-3">How It Works</p>
-            <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-4">
+            <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-3">How It Works</p>
+            <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-4">
               Choose the experience that fits you best
             </h2>
             <p className="text-muted-foreground text-lg max-w-xl mx-auto">
@@ -236,7 +236,7 @@ const Index = () => {
             {/* Option 1: DIY */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-serif font-bold text-primary mb-2">Do It Yourself</h3>
+                <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
               </div>
               <div className="space-y-0 mb-8">
@@ -249,7 +249,7 @@ const Index = () => {
                   <div key={item.step}>
                     <div className="flex items-center gap-5 py-2">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-semibold text-primary">{item.step}</span>
+                        <span className="text-sm font-semibold text-bronze">{item.step}</span>
                       </div>
                       <p className="text-foreground text-base">{item.text}</p>
                     </div>
@@ -259,7 +259,7 @@ const Index = () => {
               <div className="space-y-3 mt-auto">
                 {["Instant access", "Full control", "Faster setup", "Easy to use"].map((perk) => (
                   <div key={perk} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-primary" />
+                    <Check className="w-4 h-4 text-bronze" />
                     <span className="text-sm text-muted-foreground">{perk}</span>
                   </div>
                 ))}
@@ -269,7 +269,7 @@ const Index = () => {
             {/* Option 2: Managed */}
             <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
-                <h3 className="text-2xl font-serif font-bold text-primary mb-2">Let Us Handle It</h3>
+                <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Let Us Handle It</h3>
                 <p className="text-muted-foreground text-sm">
                   Perfect for a more personalized, done-for-you experience
                 </p>
@@ -284,7 +284,7 @@ const Index = () => {
                   <div key={item.step}>
                     <div className="flex items-center gap-5 py-2">
                       <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                        <span className="text-sm font-semibold text-primary">{item.step}</span>
+                        <span className="text-sm font-semibold text-bronze">{item.step}</span>
                       </div>
                       <p className="text-foreground text-base">{item.text}</p>
                     </div>
@@ -294,7 +294,7 @@ const Index = () => {
               <div className="space-y-3 mt-auto">
                 {["Personalized support", "We handle the setup", "Less effort for you"].map((perk) => (
                   <div key={perk} className="flex items-center gap-2">
-                    <Check className="w-4 h-4 text-primary" />
+                    <Check className="w-4 h-4 text-bronze" />
                     <span className="text-sm text-muted-foreground">{perk}</span>
                   </div>
                 ))}
@@ -306,8 +306,8 @@ const Index = () => {
 
       <section className="py-24 px-4 bg-gradient-to-b from-card/50 to-white">
         <div className="max-w-3xl mx-auto text-center">
-          <p className="text-sm uppercase tracking-[0.3em] text-primary/70 font-medium mb-4">The First Impression</p>
-          <h2 className="text-4xl md:text-5xl font-serif font-bold text-primary mb-5 leading-tight">
+          <p className="text-sm uppercase tracking-[0.3em] text-black font-medium mb-4">The First Impression</p>
+          <h2 className="text-4xl md:text-5xl font-serif font-bold text-bronze mb-5 leading-tight">
             Your invitation is the first impression of your event
           </h2>
           <p className="text-lg md:text-xl text-muted-foreground mb-10 italic font-light">
@@ -340,7 +340,7 @@ const Index = () => {
               href="https://www.instagram.com/aureainvites?igsh=MXJjYmJrejF3ejI3eQ=="
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-bronze transition-colors"
               aria-label="Instagram"
             >
               <Instagram size={22} />
@@ -349,7 +349,7 @@ const Index = () => {
               href="https://tiktok.com"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-bronze transition-colors"
               aria-label="TikTok"
             >
               <svg
@@ -369,7 +369,7 @@ const Index = () => {
               href="https://wa.me/96179077970"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-muted-foreground hover:text-primary transition-colors"
+              className="text-muted-foreground hover:text-bronze transition-colors"
               aria-label="WhatsApp"
             >
               <Icon icon="basil:whatsapp-outline" className="w-6 h-6" />
