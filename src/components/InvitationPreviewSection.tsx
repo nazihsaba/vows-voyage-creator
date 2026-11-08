@@ -129,7 +129,7 @@ const TemplateCard = ({
 
     {/* Label badge */}
     <div className="absolute top-3 left-3">
-      <span className="bg-button text-button-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
+      <span className="border border-bronze bg-button text-button-foreground text-xs font-semibold px-3 py-1 rounded-full backdrop-blur-sm">
         {card.label}
       </span>
     </div>

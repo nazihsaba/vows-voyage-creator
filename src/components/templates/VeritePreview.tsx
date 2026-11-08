@@ -236,7 +236,7 @@ export const VeritePreview = () => {
                     href={ceremony.location_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
+                    className="inline-block border border-bronze bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
                   >
                     View on Map
                   </a>
@@ -259,7 +259,7 @@ export const VeritePreview = () => {
                     href={venue.location_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-block bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
+                    className="inline-block border border-bronze bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
                   >
                     View on Map
                   </a>

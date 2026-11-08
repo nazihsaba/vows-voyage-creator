@@ -113,14 +113,14 @@ const Index = () => {
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
-              className="text-lg px-8 py-6 bg-button text-button-foreground hover:bg-button-hover"
+              className="text-lg px-8 py-6 border border-bronze bg-button text-button-foreground hover:bg-button-hover"
             >
               Create My Invitation
             </Button>
             {/* <Button
               size="lg"
               onClick={() => setShowComingSoon(true)}
-              className="text-lg px-8 py-6 bg-button text-button-foreground hover:bg-button-hover"
+              className="text-lg px-8 py-6 border border-bronze bg-button text-button-foreground hover:bg-button-hover"
             >
               View Demo
             </Button> */}
@@ -147,7 +147,7 @@ const Index = () => {
 
                   <Button
                     onClick={() => setShowComingSoon(false)}
-                    className="mt-1 px-8 py-5 rounded-full bg-button text-button-foreground hover:bg-button-hover text-base font-medium shadow-md hover:shadow-lg transition-all duration-300"
+                    className="mt-1 px-8 py-5 rounded-full border border-bronze bg-button text-button-foreground hover:bg-button-hover text-base font-medium shadow-md hover:shadow-lg transition-all duration-300"
                   >
                     Can't Wait!
                   </Button>
@@ -317,14 +317,14 @@ const Index = () => {
             <Button
               size="lg"
               onClick={() => navigate("/dashboard")}
-              className="text-base px-8 py-6 bg-button text-button-foreground hover:bg-button-hover rounded-lg w-full sm:w-auto"
+              className="text-base px-8 py-6 border border-bronze bg-button text-button-foreground hover:bg-button-hover rounded-lg w-full sm:w-auto"
             >
               Create My Invitation
             </Button>
             <Button
               size="lg"
               onClick={() => window.open("https://wa.me/96179077970", "_blank")}
-              className="text-base px-8 py-6 bg-button text-button-foreground hover:bg-button-hover rounded-lg w-full sm:w-auto"
+              className="text-base px-8 py-6 border border-bronze bg-button text-button-foreground hover:bg-button-hover rounded-lg w-full sm:w-auto"
             >
               Let Auréa Handle It
             </Button>

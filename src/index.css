@@ -23,10 +23,10 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 68%;
 
-    /* Buttons - soft sand background with bronze text */
-    --button: 34 66% 87%;
-    --button-foreground: 0 0% 0%;
-    --button-hover: 34 66% 82%;
+    /* Buttons - white background, bronze text and border (sand on hover) */
+    --button: 0 0% 100%;
+    --button-foreground: 36 74% 30%;
+    --button-hover: 34 66% 87%;
 
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;
@@ -96,10 +96,10 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 62%;
 
-    /* Buttons - soft sand background with bronze text */
-    --button: 34 66% 87%;
-    --button-foreground: 0 0% 0%;
-    --button-hover: 34 66% 82%;
+    /* Buttons - white background, bronze text and border (sand on hover) */
+    --button: 0 0% 100%;
+    --button-foreground: 36 74% 30%;
+    --button-hover: 34 66% 87%;
 
     /* Bronze - section headings and accent text */
     --bronze: 36 74% 30%;
