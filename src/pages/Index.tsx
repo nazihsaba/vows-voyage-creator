@@ -207,7 +207,7 @@ const Index = () => {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="group text-center p-8 rounded-2xl bg-card/80 backdrop-blur-sm border border-border/50 hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
+                className="group text-center p-8 rounded-2xl bg-card/80 backdrop-blur-sm hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
               >
                 <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/20 transition-colors duration-300">
                   <feature.icon className="w-7 h-7 text-bronze" />
@@ -234,7 +234,7 @@ const Index = () => {
 
           <div className="grid md:grid-cols-2 gap-8 items-stretch">
             {/* Option 1: DIY */}
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
+            <div className="rounded-2xl border border-bronze bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Do It Yourself</h3>
                 <p className="text-muted-foreground text-sm">Perfect for a quick, hands-on experience</p>
@@ -267,7 +267,7 @@ const Index = () => {
             </div>
 
             {/* Option 2: Managed */}
-            <div className="rounded-2xl border border-dashed border-border bg-card/50 p-8 md:p-10 flex flex-col">
+            <div className="rounded-2xl border border-bronze bg-card/50 p-8 md:p-10 flex flex-col">
               <div className="text-center mb-8">
                 <h3 className="text-2xl font-serif font-bold text-bronze mb-2">Let Us Handle It</h3>
                 <p className="text-muted-foreground text-sm">
