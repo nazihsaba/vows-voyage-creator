@@ -488,7 +488,7 @@ export const GraceTemplate = ({
                         href={loc.location_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors text-template-body"
+                        className="inline-block bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors text-template-body"
                       >
                         {t("events.viewOnMap")}
                       </a>

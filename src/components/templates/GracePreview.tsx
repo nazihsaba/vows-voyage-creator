@@ -196,7 +196,7 @@ export const GracePreview = () => {
                       href={ceremony.location_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                      className="inline-block bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
                     >
                       View on Map
                     </a>
@@ -219,7 +219,7 @@ export const GracePreview = () => {
                       href={venue.location_link}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-block bg-primary text-white px-6 py-2 rounded-md transition-colors"
+                      className="inline-block bg-button text-button-foreground hover:bg-button-hover px-6 py-2 rounded-md transition-colors"
                     >
                       View on Map
                     </a>

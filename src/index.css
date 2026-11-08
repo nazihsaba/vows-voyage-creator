@@ -23,6 +23,11 @@ All colors MUST be HSL.
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 68%;
 
+    /* Buttons - soft sand background with bronze text */
+    --button: 34 66% 87%;
+    --button-foreground: 36 74% 30%;
+    --button-hover: 34 66% 82%;
+
     /* Muted Blush - romance */
     --secondary: 358 44% 80%;
     --secondary-foreground: 0 0% 17%;
@@ -87,6 +92,11 @@ All colors MUST be HSL.
     --primary: 36 57% 68%;
     --primary-foreground: 0 0% 17%;
     --primary-hover: 36 57% 62%;
+
+    /* Buttons - soft sand background with bronze text */
+    --button: 34 66% 87%;
+    --button-foreground: 36 74% 30%;
+    --button-hover: 34 66% 82%;
 
     /* Muted Blush - darker for dark mode */
     --secondary: 358 44% 70%;
