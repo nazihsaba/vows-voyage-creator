@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
@@ -22,11 +22,10 @@ import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-10.jpg";
+import heroInvitation from "@/assets/hero-invitation-realistic.jpg";
 
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
-
-const InvitationRevealHero = lazy(() => import("@/components/InvitationRevealHero"));
 
 const Index = () => {
   const navigate = useNavigate();
@@ -63,16 +62,20 @@ const Index = () => {
       </header>
 
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <Suspense
-          fallback={
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at 50% 45%, #3a2a1c 0%, #1f1610 55%, #120d09 100%)" }}
-            />
-          }
-        >
-          <InvitationRevealHero />
-        </Suspense>
+        <img
+          src={heroInvitation}
+          alt="Luxury wedding invitation with a wax-sealed envelope"
+          className="absolute inset-0 h-full w-full object-cover"
+          width={1920}
+          height={1088}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 42%, rgba(18,13,9,0.62) 0%, rgba(18,13,9,0.38) 55%, rgba(18,13,9,0.55) 100%)",
+          }}
+        />
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
             The Modern Way to Invite Your Wedding Guests
