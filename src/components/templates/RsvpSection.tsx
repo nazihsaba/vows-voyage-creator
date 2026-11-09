@@ -24,6 +24,8 @@ interface RsvpSectionProps {
   bgClassName?: string;
   cardBgClassName?: string;
   accentColorClass?: string;
+  /** Colour classes for the submit buttons; defaults to the primary (or black) button. */
+  buttonClassName?: string;
 }
 
 export const RsvpSection = ({
@@ -40,8 +42,12 @@ export const RsvpSection = ({
   bgClassName = "bg-white",
   cardBgClassName = "bg-[#faf8f5]",
   accentColorClass = "text-primary",
+  buttonClassName,
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
+  const submitButtonColors =
+    buttonClassName ??
+    `${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`;
   const { getLocalizedValue } = useArabicContent(wedding);
   const isArabic = i18n.language === "ar";
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
@@ -135,7 +141,7 @@ export const RsvpSection = ({
                   <Button
                     onClick={() => handleRsvpSubmit(showWishes ? wishesMessage.trim() : undefined)}
                     disabled={submittingRsvp}
-                    className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
+                    className={`w-full text-lg py-6 ${submitButtonColors}`}
                     size="lg"
                   >
                     {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submit")}
@@ -152,7 +158,7 @@ export const RsvpSection = ({
               <Button
                 onClick={() => handleRsvpSubmit(wishesMessage.trim())}
                 disabled={submittingRsvp || !wishesMessage.trim()}
-                className={`w-full text-lg py-6 ${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`}
+                className={`w-full text-lg py-6 ${submitButtonColors}`}
                 size="lg"
               >
                 {submittingRsvp ? t("rsvp.submitting") : t("rsvp.submit")}
