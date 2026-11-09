@@ -296,20 +296,20 @@ const Dashboard = () => {
                 My Events
               </Button>
               <Button
-                variant="brand"
+                variant="outline"
                 onClick={handleLogout}
-                className="flex-1 sm:flex-none rounded-full"
+                className="flex-1 sm:flex-none rounded-full border-border/60 hover:bg-muted/50"
               >
                 <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
                 <span className="sm:hidden">Logout</span>
               </Button>
               <Button
-                variant="brand"
+                variant="ghost"
                 size="icon"
                 onClick={() => navigate("/dashboard/settings")}
                 title="Settings"
-                className="rounded-full"
+                className="rounded-full hover:bg-muted/50"
               >
                 <UserCog className="w-5 h-5" />
               </Button>

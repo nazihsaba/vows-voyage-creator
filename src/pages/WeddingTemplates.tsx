@@ -96,7 +96,7 @@ const WeddingTemplates = () => {
                 Wedding Templates
               </h1>
             </div>
-            <Button variant="brand" onClick={() => navigate("/dashboard/select-event-type")}>
+            <Button variant="outline" onClick={() => navigate("/dashboard/select-event-type")}>
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back
             </Button>

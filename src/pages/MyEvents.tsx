@@ -351,16 +351,15 @@ const MyEvents = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <Button
-              variant="brand"
               onClick={() => navigate("/dashboard")}
-              className="rounded-full px-4 sm:px-5 shadow-sm text-sm"
+              className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
             >
               Create Event
             </Button>
             <Button
-              variant="brand"
+              variant="outline"
               onClick={() => navigate("/dashboard")}
-              className="rounded-full"
+              className="rounded-full border-border/60 hover:bg-muted/50"
             >
               <ArrowLeft className="w-4 h-4 sm:mr-2" />
               <span className="hidden sm:inline">Back</span>
