@@ -15,6 +15,8 @@ const buttonVariants = cva(
         secondary: "bg-secondary text-secondary-foreground hover:bg-secondary/80",
         ghost: "hover:bg-muted hover:text-muted-foreground",
         link: "text-primary underline-offset-4 hover:underline",
+        // Header and RSVP buttons: solid primary (bronze) with white text, no hover change
+        brand: "border border-bronze bg-bronze text-white",
       },
       size: {
         default: "h-10 px-4 py-2",

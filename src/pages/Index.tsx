@@ -53,9 +53,9 @@ const Index = () => {
           </div>
           <div className="flex items-center gap-3">
             {isAuthenticated ? (
-              <Button onClick={() => navigate("/dashboard/my-events")}>My Events</Button>
+              <Button variant="brand" onClick={() => navigate("/dashboard/my-events")}>My Events</Button>
             ) : (
-              <Button onClick={() => navigate("/auth")}>Sign In</Button>
+              <Button variant="brand" onClick={() => navigate("/auth")}>Sign In</Button>
             )}
           </div>
         </div>

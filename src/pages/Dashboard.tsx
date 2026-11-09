@@ -289,26 +289,27 @@ const Dashboard = () => {
             </div>
             <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
               <Button
+                variant="brand"
                 onClick={() => navigate("/dashboard/my-events")}
-                className="flex-1 sm:flex-none rounded-full px-5 shadow-sm hover:shadow-md transition-all"
+                className="flex-1 sm:flex-none rounded-full px-5 shadow-sm"
               >
                 My Events
               </Button>
               <Button
-                variant="outline"
+                variant="brand"
                 onClick={handleLogout}
-                className="flex-1 sm:flex-none rounded-full border-border/60 hover:bg-muted/50"
+                className="flex-1 sm:flex-none rounded-full"
               >
                 <LogOut className="w-4 h-4 sm:mr-2" />
                 <span className="hidden sm:inline">Logout</span>
                 <span className="sm:hidden">Logout</span>
               </Button>
               <Button
-                variant="ghost"
+                variant="brand"
                 size="icon"
                 onClick={() => navigate("/dashboard/settings")}
                 title="Settings"
-                className="rounded-full hover:bg-muted/50"
+                className="rounded-full"
               >
                 <UserCog className="w-5 h-5" />
               </Button>

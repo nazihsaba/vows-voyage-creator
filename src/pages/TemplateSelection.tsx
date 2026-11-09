@@ -46,7 +46,7 @@ const TemplateSelection = () => {
                 </p>
               </div>
             </div>
-            <Button variant="outline" onClick={() => navigate("/dashboard/select-event-type")}>
+            <Button variant="brand" onClick={() => navigate("/dashboard/select-event-type")}>
               Back
             </Button>
           </div>
@@ -59,7 +59,7 @@ const TemplateSelection = () => {
                   {templateConfig.templates.find(t => t.id === selectedTemplate)?.name}
                 </span>
               </div>
-              <Button onClick={handleContinue}>
+              <Button variant="brand" onClick={handleContinue}>
                 Continue with Template
               </Button>
             </div>

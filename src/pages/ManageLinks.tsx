@@ -1050,16 +1050,17 @@ const ManageLinks = () => {
           </div>
           <div className="flex items-center gap-2 sm:gap-3">
             <Button
+              variant="brand"
               onClick={() => setGenerateLinkOpen(true)}
-              className="rounded-full px-4 sm:px-5 shadow-sm hover:shadow-md transition-all text-sm"
+              className="rounded-full px-4 sm:px-5 shadow-sm text-sm"
             >
               <Plus className="w-4 h-4 mr-1" />
               Generate Link
             </Button>
             <Button
-              variant="outline"
+              variant="brand"
               onClick={() => navigate("/dashboard/my-events")}
-              className="rounded-full border-border/60 hover:bg-muted/50"
+              className="rounded-full"
             >
               <ArrowLeft className="w-4 h-4 sm:mr-2" />
               <span className="hidden sm:inline">Back</span>

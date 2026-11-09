@@ -99,7 +99,7 @@ const Settings = () => {
             <User className="w-8 h-8 text-primary" />
             <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">Settings</h1>
           </div>
-          <Button variant="outline" onClick={() => navigate("/dashboard")}>
+          <Button variant="brand" onClick={() => navigate("/dashboard")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back
           </Button>
