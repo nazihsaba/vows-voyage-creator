@@ -202,7 +202,7 @@ const Index = () => {
             <h2 className="text-4xl md:text-5xl font-serif font-bold text-black mb-4">
               Choose the experience that fits you best
             </h2>
-            <p className="text-section-description text-lg max-w-xl mx-auto">
+            <p className="text-section-description text-lg max-w-2xl mx-auto">
               Create your invitation yourself, or let Auréa handle everything for you.
             </p>
           </div>
