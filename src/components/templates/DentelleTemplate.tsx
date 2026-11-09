@@ -84,23 +84,6 @@ const SMALL_CAPS: React.CSSProperties = {
   textTransform: "uppercase",
 };
 
-/** Small repeating lace motif (eyelets, petals, dots) as a background image. */
-const lacePattern = (stroke: string, bg: string) => {
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='56' height='56' viewBox='0 0 56 56'>
-<rect width='56' height='56' fill='${bg}'/>
-<g fill='none' stroke='${stroke}' stroke-width='0.9'>
-<circle cx='28' cy='28' r='4.2'/>
-<circle cx='28' cy='19.5' r='3'/><circle cx='28' cy='36.5' r='3'/><circle cx='19.5' cy='28' r='3'/><circle cx='36.5' cy='28' r='3'/>
-<circle cx='0' cy='0' r='6'/><circle cx='56' cy='0' r='6'/><circle cx='0' cy='56' r='6'/><circle cx='56' cy='56' r='6'/>
-<path d='M10 28 Q14 22 18 28 M38 28 Q42 34 46 28 M28 10 Q34 14 28 18 M28 38 Q22 42 28 46'/>
-</g>
-<g fill='${stroke}'>
-<circle cx='28' cy='28' r='1.3'/><circle cx='28' cy='0' r='1.2'/><circle cx='0' cy='28' r='1.2'/><circle cx='56' cy='28' r='1.2'/><circle cx='28' cy='56' r='1.2'/>
-<circle cx='14' cy='14' r='0.9'/><circle cx='42' cy='14' r='0.9'/><circle cx='14' cy='42' r='0.9'/><circle cx='42' cy='42' r='0.9'/>
-</g></svg>`;
-  return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
-};
-
 /**
  * A fine lace trim between sections: small ivory scallops outlined in a champagne
  * thread, with a pearl in each scallop and a picot dot below it.
@@ -335,7 +318,8 @@ const Envelope = ({
   const flapEdge = `M0 0 L${tipL} Q${w / 2} ${flapH} ${tipRt} L${w} 0`;
   const bottomEdge = `M0 ${h} Q${w * 0.27} ${h * 0.64} ${w / 2} ${bottomTop} Q${w * 0.73} ${h * 0.64} ${w} ${h}`;
   const bottomPath = `${bottomEdge} Z`;
-  const liner = lacePattern("#d7c5b4", "#efe5da");
+  // Inside of the envelope: plain paper, a shade deeper than the outside.
+  const inside: React.CSSProperties = { backgroundColor: "#ece4d9", backgroundImage: grain(0.3), backgroundSize: "180px 180px" };
 
   // Inside of the envelope, around the window where the card sits.
   const strips = card
@@ -381,8 +365,7 @@ const Envelope = ({
                 top: s.y,
                 width: s.w,
                 height: s.h,
-                background: "#e6dbcf",
-                backgroundImage: liner,
+                ...inside,
                 backgroundPosition: `${-s.x}px ${-s.y}px`,
               }}
             />
@@ -461,8 +444,7 @@ const Envelope = ({
               backfaceVisibility: "hidden",
               WebkitBackfaceVisibility: "hidden",
               clipPath: `path("${flapPath}")`,
-              background: "#e9dfd3",
-              backgroundImage: liner,
+              ...inside,
             }}
           />
         </span>
