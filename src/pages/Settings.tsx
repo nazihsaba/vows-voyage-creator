@@ -96,8 +96,8 @@ const Settings = () => {
       <header className="bg-white shadow-soft">
         <div className="max-w-4xl mx-auto px-4 py-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <User className="w-8 h-8 text-primary" />
-            <h1 className="text-2xl md:text-3xl font-serif font-bold text-primary">Settings</h1>
+            <User className="w-8 h-8 text-black" />
+            <h1 className="text-2xl md:text-3xl font-serif font-bold text-black">Settings</h1>
           </div>
           <Button variant="outline" onClick={() => navigate("/dashboard")}>
             <ArrowLeft className="w-4 h-4 mr-2" />
