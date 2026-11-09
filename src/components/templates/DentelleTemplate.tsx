@@ -4,7 +4,7 @@ import { EditableField } from "@/components/EditableField";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
 import LanguageToggle from "@/components/templates/LanguageToggle";
 import { RsvpSection } from "@/components/templates/RsvpSection";
-import { GiftCards } from "@/components/GiftCards";
+import { Check, Copy } from "lucide-react";
 import { EventIcon } from "@/components/templates/EventIcon";
 import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { formatLocalizedDate } from "@/lib/formatDate";
@@ -503,6 +503,84 @@ const Envelope = ({
         </span>
       </button>
     </div>
+  );
+};
+
+/**
+ * Gift details for Dentelle: each provider's name in small caps, the number set
+ * in the heading serif, and a small copy pill, separated by a fine ornament.
+ */
+const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_name: string; card_number: string }> }) => {
+  const { t } = useTranslation();
+  const [copiedId, setCopiedId] = useState<string | null>(null);
+  const timer = useRef<number>();
+  useEffect(() => () => window.clearTimeout(timer.current), []);
+  const copy = (id: string, value: string) => {
+    navigator.clipboard
+      ?.writeText(value)
+      .then(() => {
+        setCopiedId(id);
+        window.clearTimeout(timer.current);
+        timer.current = window.setTimeout(() => setCopiedId(null), 1800);
+      })
+      .catch(() => {});
+  };
+  return (
+    <ul className="flex flex-col items-center" style={{ listStyle: "none", margin: 0, padding: 0 }}>
+      {giftCards.map((card, i) => {
+        const copied = copiedId === card.id;
+        return (
+          <li key={card.id} className="flex w-full flex-col items-center text-center">
+            {i > 0 && (
+              <span aria-hidden className="flex items-center justify-center" style={{ gap: 8, margin: "22px 0" }}>
+                <span style={{ width: 38, height: 1, background: LACE_LINE }} />
+                <span style={{ width: 4, height: 4, borderRadius: 999, background: CHAMPAGNE }} />
+                <span style={{ width: 38, height: 1, background: LACE_LINE }} />
+              </span>
+            )}
+            <p style={{ ...SMALL_CAPS, fontSize: 10.5, letterSpacing: "0.3em", color: CHAMPAGNE }}>{card.card_name}</p>
+            <p
+              dir="ltr"
+              style={{
+                fontFamily: FONT_HEADING,
+                fontSize: "clamp(24px, 7vw, 30px)",
+                lineHeight: 1.2,
+                letterSpacing: "0.08em",
+                color: INK,
+                marginTop: 6,
+                whiteSpace: "pre-line",
+                overflowWrap: "anywhere",
+              }}
+            >
+              {card.card_number}
+            </p>
+            <button
+              type="button"
+              onClick={() => copy(card.id, card.card_number)}
+              aria-label={`${t("dentelle.copy", "Copy")} ${card.card_name}`}
+              className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
+              style={{
+                ...SMALL_CAPS,
+                fontSize: 10,
+                letterSpacing: "0.24em",
+                gap: 8,
+                marginTop: 14,
+                padding: "9px 18px",
+                borderRadius: 999,
+                border: `1px solid ${COCOA}`,
+                background: copied ? COCOA : "transparent",
+                color: copied ? BAND_NUMBER : COCOA,
+                transition: "background .25s ease, color .25s ease",
+                cursor: "pointer",
+              }}
+            >
+              {copied ? <Check aria-hidden className="h-3.5 w-3.5" /> : <Copy aria-hidden className="h-3.5 w-3.5" />}
+              <span aria-live="polite">{copied ? t("dentelle.copied", "Copied") : t("dentelle.copy", "Copy")}</span>
+            </button>
+          </li>
+        );
+      })}
+    </ul>
   );
 };
 
@@ -1109,7 +1187,7 @@ export const DentelleTemplate = ({
                   />
                 </div>
                 <div style={{ marginTop: 26 }}>
-                  <GiftCards giftCards={giftCards} />
+                  <DentelleGiftCards giftCards={giftCards} />
                 </div>
               </div>
             </Reveal>
