@@ -61,11 +61,11 @@ const Index = () => {
         </div>
       </header>
 
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
+      <section className="relative flex h-[78svh] min-h-[480px] items-center justify-center overflow-hidden md:h-[600px]">
         <img
           src={heroInvitation}
           alt="Luxury wedding invitation with a wax-sealed envelope"
-          className="absolute inset-0 h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover object-center"
           width={1920}
           height={1088}
         />
@@ -76,11 +76,11 @@ const Index = () => {
               "radial-gradient(ellipse at 50% 42%, rgba(18,13,9,0.62) 0%, rgba(18,13,9,0.38) 55%, rgba(18,13,9,0.55) 100%)",
           }}
         />
-        <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
+        <div className="relative z-10 text-center text-white px-5 max-w-4xl mx-auto">
+          <h1 className="text-[1.65rem] leading-tight sm:text-5xl md:text-7xl font-serif font-bold mb-3">
             The Modern Way to Invite Your Wedding Guests
           </h1>
-          <p className="text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
+          <p className="text-sm sm:text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
             Design your wedding invitation, manage guests, RSVP responses, tables, and share personalized links — all in
             one place.
           </p>
@@ -130,7 +130,7 @@ const Index = () => {
               </DialogContent>
             </Dialog>
           </div>
-          <p className="text-sm md:text-base font-light tracking-wide opacity-75">
+          <p className="text-xs sm:text-sm md:text-base font-light tracking-wide opacity-75">
             No coding needed &nbsp;•&nbsp; Mobile-friendly &nbsp;•&nbsp; Share your invitation instantly
           </p>
         </div>
