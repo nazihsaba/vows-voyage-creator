@@ -26,7 +26,7 @@ import previewWedding5 from "@/assets/preview-wedding-10.jpg";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
 
-const GoldenVowsHero = lazy(() => import("@/components/GoldenVowsHero"));
+const InvitationRevealHero = lazy(() => import("@/components/InvitationRevealHero"));
 
 const Index = () => {
   const navigate = useNavigate();
@@ -71,7 +71,7 @@ const Index = () => {
             />
           }
         >
-          <GoldenVowsHero />
+          <InvitationRevealHero />
         </Suspense>
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
