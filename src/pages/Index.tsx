@@ -147,7 +147,7 @@ const Index = () => {
               Powerful tools to make your invitation truly unforgettable.
             </p>
           </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-6">
             {[
               {
                 icon: Calendar,
@@ -182,13 +182,13 @@ const Index = () => {
             ].map((feature) => (
               <div
                 key={feature.title}
-                className="group text-center p-8 rounded-2xl bg-card/80 backdrop-blur-sm hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
+                className="group text-center p-4 sm:p-8 rounded-2xl bg-card/80 backdrop-blur-sm hover:shadow-elegant hover:-translate-y-1 transition-all duration-500"
               >
-                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-5 group-hover:bg-primary/20 transition-colors duration-300">
-                  <feature.icon className="w-7 h-7 text-bronze" />
+                <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3 sm:mb-5 group-hover:bg-primary/20 transition-colors duration-300">
+                  <feature.icon className="w-5 h-5 sm:w-7 sm:h-7 text-bronze" />
                 </div>
-                <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                <p className="text-muted-foreground text-sm leading-relaxed">{feature.desc}</p>
+                <h3 className="text-sm sm:text-lg font-semibold leading-snug mb-1.5 sm:mb-2">{feature.title}</h3>
+                <p className="text-muted-foreground text-xs sm:text-sm leading-relaxed">{feature.desc}</p>
               </div>
             ))}
           </div>
