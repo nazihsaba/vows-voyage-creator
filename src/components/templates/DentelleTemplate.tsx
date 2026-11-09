@@ -1144,8 +1144,6 @@ export const DentelleTemplate = ({
                   background: "rgba(255,253,250,.94)",
                   border: `1px solid ${CHAMPAGNE}`,
                   borderRadius: 16,
-                  outline: `3px dotted ${LACE_LINE}`,
-                  outlineOffset: 6,
                   padding: "46px 22px 34px",
                 }}
               >
