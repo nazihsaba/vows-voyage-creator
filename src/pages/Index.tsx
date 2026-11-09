@@ -61,23 +61,27 @@ const Index = () => {
         </div>
       </header>
 
-      <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <img
-          src={heroInvitation}
-          alt="Luxury wedding invitation with a wax-sealed envelope"
-          className="absolute inset-0 h-full w-full object-cover"
-          width={1920}
-          height={1088}
-        />
+      {/* Phones: text on top, the invitation shown uncropped below it. md+: unchanged full-bleed photo. */}
+      <section className="relative bg-[#24180f] pt-12 pb-[66vw] md:bg-transparent md:p-0 md:h-[600px] flex items-start md:items-center justify-center overflow-hidden">
+        <div className="absolute bottom-0 left-1/2 w-[210%] -translate-x-[37%] md:inset-0 md:w-auto md:translate-x-0">
+          <img
+            src={heroInvitation}
+            alt="Luxury wedding invitation with a wax-sealed envelope"
+            className="block w-full h-auto md:absolute md:inset-0 md:h-full md:object-cover"
+            width={1920}
+            height={1088}
+          />
+          <div className="absolute inset-x-0 top-0 h-1/2 bg-gradient-to-b from-[#24180f] to-transparent md:hidden" />
+        </div>
         <div
-          className="absolute inset-0"
+          className="absolute inset-0 hidden md:block"
           style={{
             background:
               "radial-gradient(ellipse at 50% 42%, rgba(18,13,9,0.62) 0%, rgba(18,13,9,0.38) 55%, rgba(18,13,9,0.55) 100%)",
           }}
         />
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
-          <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-serif font-bold mb-3">
             The Modern Way to Invite Your Wedding Guests
           </h1>
           <p className="text-base md:text-lg font-light tracking-wide opacity-80 mb-6 italic">
