@@ -3407,7 +3407,7 @@ const WeddingForm = () => {
                   <Eye className="w-4 h-4 mr-2" />
                   Preview
                 </Button> */}
-                <Button type="submit" disabled={loading || uploading} className="h-11 sm:h-10 flex-1">
+                <Button type="submit" variant="brand" disabled={loading || uploading} className="h-11 sm:h-10 flex-1">
                   {loading || uploading ? <Loader2 className="w-4 h-4 animate-spin" /> : id ? "Update" : "Create"}
                 </Button>
               </div>
