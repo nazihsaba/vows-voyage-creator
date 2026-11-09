@@ -255,7 +255,7 @@ const Dashboard = () => {
             >
               <span
                 aria-hidden
-                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-button border border-bronze shadow-sm transition-transform duration-300 ease-out will-change-transform ${
+                className={`absolute top-1 bottom-1 left-1 w-[calc(50%-0.25rem)] rounded-full bg-button shadow-sm transition-transform duration-300 ease-out will-change-transform ${
                   activeTab === "physical" ? "translate-x-full" : "translate-x-0"
                 }`}
               />
@@ -334,15 +334,15 @@ const Dashboard = () => {
                   and shape a card that matches your wedding.
                 </p>
 
-                <dl className="mt-8 grid grid-cols-2 gap-x-6 sm:gap-x-10 border-t border-[#d9c3a0]/60">
+                <dl className="mt-8 grid grid-cols-2 gap-x-6 sm:gap-x-10 border-t border-bronze/20">
                   {[
                     { term: "When", detail: "Mon to Fri, 6 to 8 PM" },
                     { term: "How", detail: "Google Meet or WhatsApp call" },
                     { term: "Length", detail: "30 minutes" },
                     { term: "Notice", detail: "Book 3 days ahead" },
                   ].map(({ term, detail }) => (
-                    <div key={term} className="border-b border-[#d9c3a0]/60 py-3.5">
-                      <dt className="font-serif italic text-sm text-[#8a6a3b]">{term}</dt>
+                    <div key={term} className="border-b border-bronze/20 py-3.5">
+                      <dt className="font-serif italic text-sm text-bronze">{term}</dt>
                       <dd className="mt-0.5 text-sm sm:text-[15px] text-foreground">{detail}</dd>
                     </div>
                   ))}
@@ -350,7 +350,7 @@ const Dashboard = () => {
 
                 <a
                   href="#book"
-                  className="mt-8 inline-flex items-center rounded-full bg-foreground px-7 py-3 text-sm font-medium text-background hover:bg-foreground/85 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2"
+                  className="mt-8 inline-flex items-center rounded-full border border-bronze bg-button px-7 py-3 text-sm font-medium text-button-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-bronze focus-visible:ring-offset-2"
                 >
                   Choose a time
                 </a>
@@ -369,24 +369,24 @@ const Dashboard = () => {
                 <div className="absolute left-0 top-4 w-[86%] h-[84%] -rotate-[8deg] rounded-[4px] bg-[#f1d9d6] shadow-[0_10px_30px_-16px_rgba(90,60,20,0.4)]" />
                 {/* Front invitation */}
                 <div className="absolute right-1 top-0 w-[86%] h-[88%] -rotate-[2deg] rounded-[4px] bg-[#fffdf8] shadow-[0_24px_50px_-20px_rgba(90,60,20,0.5)] motion-safe:animate-[card-settle_900ms_cubic-bezier(0.2,0.8,0.2,1)_both]">
-                  <div className="absolute inset-3 sm:inset-4 border border-[#c6a46b]">
-                    <div className="absolute inset-1 border border-[#c6a46b]/50" />
+                  <div className="absolute inset-3 sm:inset-4 border border-bronze/60">
+                    <div className="absolute inset-1 border border-bronze/30" />
                   </div>
                   <div className="relative h-full flex flex-col items-center justify-center text-center px-8">
-                    <p className="font-serif italic text-[11px] sm:text-[13px] text-[#8a6a3b] leading-snug">
+                    <p className="font-serif italic text-[11px] sm:text-[13px] text-bronze leading-snug">
                       Together with their families
                     </p>
                     <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground mt-3">Maya</p>
-                    <p className="font-serif italic text-sm text-[#8a6a3b] my-1">&amp;</p>
+                    <p className="font-serif italic text-sm text-bronze my-1">&amp;</p>
                     <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground">Karim</p>
-                    <span className="block w-10 h-px bg-[#c6a46b] my-4" />
+                    <span className="block w-10 h-px bg-bronze/60 my-4" />
                     <p className="font-serif text-[10px] sm:text-xs tracking-wide text-foreground/70">
                       Saturday, the twelfth of June
                     </p>
                   </div>
                   {/* Wax seal */}
-                  <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[radial-gradient(circle_at_35%_30%,#c98a86,#9e5d5a_70%)] shadow-[0_6px_14px_-4px_rgba(80,30,30,0.55)] flex items-center justify-center">
-                    <span className="font-script text-xl sm:text-2xl text-[#f6e3de]/90">A</span>
+                  <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[radial-gradient(circle_at_35%_30%,#a97b3f,#865814_70%)] shadow-[0_6px_14px_-4px_rgba(80,50,20,0.55)] flex items-center justify-center">
+                    <span className="font-script text-xl sm:text-2xl text-[#fbf1e2]/90">A</span>
                   </div>
                 </div>
               </div>
@@ -395,9 +395,9 @@ const Dashboard = () => {
             {/* Booking */}
             <section
               id="book"
-              className="scroll-mt-28 rounded-[28px] bg-white border border-[#e7d8c2] shadow-[0_30px_60px_-40px_rgba(90,60,20,0.35)] overflow-hidden"
+              className="scroll-mt-28 rounded-[28px] bg-white border border-bronze/20 shadow-[0_30px_60px_-40px_rgba(90,60,20,0.35)] overflow-hidden"
             >
-              <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-2 flex flex-wrap items-end justify-between gap-2 border-b border-[#efe4d3]">
+              <div className="px-5 sm:px-8 pt-6 sm:pt-8 pb-2 flex flex-wrap items-end justify-between gap-2 border-b border-bronze/15">
                 <div className="pb-4">
                   <h3 className="font-serif text-2xl sm:text-[28px] font-bold text-foreground">Pick a time</h3>
                   <p className="text-sm text-muted-foreground mt-1">Highlighted days have free times. All times are Beirut time.</p>
