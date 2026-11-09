@@ -44,6 +44,7 @@ import EtoilePreview from "@/components/templates/EtoilePreview";
 import TresorPreview from "@/components/templates/TresorPreview";
 import DentellePreview from "@/components/templates/DentellePreview";
 import BookingCalendar from "@/components/BookingCalendar";
+import PrintedCardsIllustration from "@/components/PrintedCardsIllustration";
 import { PHYSICAL_CARDS_CALENDLY_URL } from "@/config/booking";
 
 
@@ -358,37 +359,7 @@ const Dashboard = () => {
 
               {/* The memorable element: a small stack of printed cards */}
               <div aria-hidden className="order-1 lg:order-2 relative mx-auto w-[250px] h-[300px] sm:w-[320px] sm:h-[380px]">
-                {/* Envelope */}
-                <div className="absolute inset-x-2 bottom-0 h-[62%] rotate-[7deg] rounded-[6px] bg-[#e8d2b8] shadow-[0_18px_40px_-18px_rgba(90,60,20,0.45)]">
-                  <div
-                    className="absolute inset-x-0 top-0 h-1/2 bg-[#dcc2a3]"
-                    style={{ clipPath: "polygon(0 0, 100% 0, 50% 100%)" }}
-                  />
-                </div>
-                {/* Blush card behind */}
-                <div className="absolute left-0 top-4 w-[86%] h-[84%] -rotate-[8deg] rounded-[4px] bg-[#f1d9d6] shadow-[0_10px_30px_-16px_rgba(90,60,20,0.4)]" />
-                {/* Front invitation */}
-                <div className="absolute right-1 top-0 w-[86%] h-[88%] -rotate-[2deg] rounded-[4px] bg-[#fffdf8] shadow-[0_24px_50px_-20px_rgba(90,60,20,0.5)] motion-safe:animate-[card-settle_900ms_cubic-bezier(0.2,0.8,0.2,1)_both]">
-                  <div className="absolute inset-3 sm:inset-4 border border-bronze/60">
-                    <div className="absolute inset-1 border border-bronze/30" />
-                  </div>
-                  <div className="relative h-full flex flex-col items-center justify-center text-center px-8">
-                    <p className="font-serif italic text-[11px] sm:text-[13px] text-bronze leading-snug">
-                      Together with their families
-                    </p>
-                    <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground mt-3">Maya</p>
-                    <p className="font-serif italic text-sm text-bronze my-1">&amp;</p>
-                    <p className="font-script text-[34px] sm:text-[44px] leading-none text-foreground">Karim</p>
-                    <span className="block w-10 h-px bg-bronze/60 my-4" />
-                    <p className="font-serif text-[10px] sm:text-xs tracking-wide text-foreground/70">
-                      Saturday, the twelfth of June
-                    </p>
-                  </div>
-                  {/* Wax seal */}
-                  <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-[radial-gradient(circle_at_35%_30%,#a97b3f,#865814_70%)] shadow-[0_6px_14px_-4px_rgba(80,50,20,0.55)] flex items-center justify-center">
-                    <span className="font-script text-xl sm:text-2xl text-[#fbf1e2]/90">A</span>
-                  </div>
-                </div>
+                <PrintedCardsIllustration className="absolute inset-0 w-full h-full" />
               </div>
             </section>
 
