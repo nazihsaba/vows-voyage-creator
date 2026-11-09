@@ -102,7 +102,7 @@ export const EFFECTS_CSS = `
 @keyframes dt-tick { from { transform: translateY(-55%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes dt-heart { 0% { transform: translate(-50%, 0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(calc(-50% + var(--dx)), -150px) scale(1.15) rotate(var(--rot)); opacity: 0; } }
 @keyframes dt-shine { 0%, 62% { transform: translateX(-140%) rotate(18deg); } 82%, 100% { transform: translateX(140%) rotate(18deg); } }
-@keyframes dt-pulse-dot { 0% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 3px rgba(90,24,36,.35); } 100% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 12px rgba(90,24,36,0); } }
+@keyframes dt-pulse-dot { 0% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 3px rgba(106,80,71,.35); } 100% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 12px rgba(106,80,71,0); } }
 @media (prefers-reduced-motion: reduce) {
   .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; transition: none; }
   .dt-tick, .dt-shine, .dt-heart { animation: none !important; }

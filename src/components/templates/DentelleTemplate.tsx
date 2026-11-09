@@ -30,8 +30,9 @@ import {
 
 /**
  * Dentelle — romantic lace invitation.
- * Ivory lace, a burgundy wax seal that opens the invitation, burgundy bands
- * with lace edges, and a vertical "The Day" timeline built from the events.
+ * Opens from a paper envelope sealed with wax, then an ivory card on linen,
+ * mocha bands with a fine lace trim, and a vertical "The Day" timeline built
+ * from the events.
  */
 
 interface DentelleTemplateProps {
@@ -57,10 +58,15 @@ interface DentelleTemplateProps {
 const IVORY = "#faf6f1";
 const LACE_BG = "#f3ebe4";
 const LACE_LINE = "#d8c6ba";
-const LACE_WHITE = "#fffdfa";
-const WINE = "#5a1824";
-const WINE_DEEP = "#45111b";
-const BLUSH = "#f2d6d6";
+const COCOA = "#6a5047";
+const COCOA_DEEP = "#4f3b34";
+// Text and details on the mocha bands
+const BAND_TEXT = "#efe4d8";
+const BAND_TITLE = "#f8f1e8";
+const BAND_NUMBER = "#fffaf3";
+const BAND_ACCENT = "#dcc5a6";
+const BAND_MUTED = "#cdb596";
+const BAND_LINE = "#a58d74";
 const INK = "#2f2626";
 const MUTED = "#7b6c66";
 const CHAMPAGNE = "#b79c78";
@@ -70,6 +76,13 @@ const FONT_HEADING = "var(--font-template-heading)";
 const FONT_BODY = "var(--font-template-body)";
 const FONT_COUNTDOWN = "var(--font-template-countdown)";
 const FONT_MONOGRAM = "var(--font-template-monogram)";
+
+const SMALL_CAPS: React.CSSProperties = {
+  fontFamily: FONT_BODY,
+  fontSize: 11,
+  letterSpacing: "0.32em",
+  textTransform: "uppercase",
+};
 
 /** Small repeating lace motif (eyelets, petals, dots) as a background image. */
 const lacePattern = (stroke: string, bg: string) => {
@@ -88,16 +101,20 @@ const lacePattern = (stroke: string, bg: string) => {
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 };
 
-/** A scalloped lace border that runs the full width. `holeColor` is the colour seen through the eyelets. */
+/**
+ * A fine lace trim between sections: small ivory scallops outlined in a champagne
+ * thread, with a pearl in each scallop and a picot dot below it.
+ * `band` is the colour of the section the trim sits on.
+ */
 const LaceEdge = ({
-  lace = LACE_WHITE,
-  holeColor = WINE,
-  outline = LACE_LINE,
+  lace = IVORY,
+  band = COCOA,
+  thread = CHAMPAGNE,
   flip = false,
 }: {
   lace?: string;
-  holeColor?: string;
-  outline?: string;
+  band?: string;
+  thread?: string;
   flip?: boolean;
 }) => {
   const id = `lace-${useId().replace(/:/g, "")}`;
@@ -105,23 +122,19 @@ const LaceEdge = ({
     <svg
       aria-hidden
       width="100%"
-      height="34"
-      style={{ display: "block", transform: flip ? "scaleY(-1)" : undefined }}
+      height="18"
+      style={{ display: "block", background: band, transform: flip ? "scaleY(-1)" : undefined }}
       preserveAspectRatio="none"
     >
       <defs>
-        <pattern id={id} width="44" height="34" patternUnits="userSpaceOnUse">
-          <path d="M0 0 H44 V14 A22 18 0 0 1 0 14 Z" fill={lace} />
-          <path d="M44 14 A22 18 0 0 1 0 14" fill="none" stroke={outline} strokeWidth="1" />
-          <path d="M40 13 A18 14 0 0 1 4 13" fill="none" stroke={outline} strokeWidth="0.6" strokeDasharray="1.5 2.5" />
-          <circle cx="22" cy="15" r="4.2" fill={holeColor} />
-          <circle cx="22" cy="15" r="5.6" fill="none" stroke={outline} strokeWidth="0.7" />
-          <circle cx="9" cy="7" r="1.6" fill={holeColor} />
-          <circle cx="35" cy="7" r="1.6" fill={holeColor} />
-          <circle cx="22" cy="5" r="1.1" fill={outline} />
+        <pattern id={id} width="26" height="18" patternUnits="userSpaceOnUse">
+          <path d="M0 0 H26 V5 A13 7 0 0 1 0 5 Z" fill={lace} />
+          <path d="M26 5 A13 7 0 0 1 0 5" fill="none" stroke={thread} strokeWidth="0.8" />
+          <circle cx="13" cy="7.6" r="1.25" fill={thread} opacity="0.55" />
+          <circle cx="13" cy="15.2" r="0.95" fill={thread} opacity="0.8" />
         </pattern>
       </defs>
-      <rect width="100%" height="34" fill={`url(#${id})`} />
+      <rect width="100%" height="18" fill={`url(#${id})`} />
     </svg>
   );
 };
@@ -151,115 +164,130 @@ const Rings = ({ color }: { color: string }) => (
   </svg>
 );
 
-/** Embroidered lace with raised thread, a diamond lattice and scattered pearls. */
-const embroideredLace = () => {
-  const petals = (cx: number, cy: number, n: number, rx: number, ry: number, off: number) =>
-    Array.from({ length: n }, (_, i) => {
-      const a = (360 / n) * i;
-      return `<ellipse cx='${cx}' cy='${cy - off}' rx='${rx}' ry='${ry}' transform='rotate(${a} ${cx} ${cy})'/>`;
-    }).join("");
-  const pearl = (x: number, y: number, r: number) =>
-    `<circle cx='${x + 0.6}' cy='${y + 0.9}' r='${r}' fill='#b9a698' opacity='.45'/><circle cx='${x}' cy='${y}' r='${r}' fill='url(#p)'/>`;
-  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='96' height='96' viewBox='0 0 96 96'>
-<defs><radialGradient id='p' cx='35%' cy='30%' r='70%'><stop offset='0' stop-color='#ffffff'/><stop offset='.55' stop-color='#f3ece6'/><stop offset='1' stop-color='#d9cbc0'/></radialGradient></defs>
-<rect width='96' height='96' fill='#e6d9cf'/>
-<g fill='none' stroke-width='1.1'>
-<path d='M0 48 L48 0 L96 48 L48 96 Z' stroke='#c9b7aa' transform='translate(.6 .9)'/>
-<path d='M0 48 L48 0 L96 48 L48 96 Z' stroke='#f6efe9'/>
-<path d='M8 48 L48 8 L88 48 L48 88 Z' stroke='#f6efe9' stroke-width='.6' stroke-dasharray='1.4 2.6'/>
-</g>
-<g fill='#f1e8e1' stroke='#cbb9ac' stroke-width='.55'>${petals(48, 48, 6, 3.4, 6.6, 6.4)}${petals(0, 0, 5, 2.4, 4.6, 4.4)}${petals(96, 0, 5, 2.4, 4.6, 4.4)}${petals(0, 96, 5, 2.4, 4.6, 4.4)}${petals(96, 96, 5, 2.4, 4.6, 4.4)}</g>
-<g fill='none' stroke='#f6efe9' stroke-width='.9' stroke-linecap='round'>
-<path d='M30 30 q6 -2 8 4 M66 30 q-6 -2 -8 4 M30 66 q6 2 8 -4 M66 66 q-6 2 -8 -4'/>
-<path d='M48 26 q-4 -5 0 -9 q4 4 0 9 M48 70 q-4 5 0 9 q4 -4 0 -9 M26 48 q-5 -4 -9 0 q4 4 9 0 M70 48 q5 -4 9 0 q-4 4 -9 0'/>
-</g>
-${pearl(48, 48, 2.6)}${pearl(48, 14, 2.3)}${pearl(48, 82, 2.3)}${pearl(14, 48, 2.3)}${pearl(82, 48, 2.3)}
-${pearl(26, 26, 1.6)}${pearl(70, 26, 1.6)}${pearl(26, 70, 1.6)}${pearl(70, 70, 1.6)}
-</svg>`;
+/** Fine paper grain as a tiling background image. */
+const grain = (alpha = 0.5) => {
+  const svg = `<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'>
+<filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/>
+<feColorMatrix values='0 0 0 0 0.36  0 0 0 0 0.28  0 0 0 0 0.21  0 0 0 ${alpha} 0'/></filter>
+<rect width='180' height='180' filter='url(#n)'/></svg>`;
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 };
 
-/** Cream oval wax seal with a pressed floral wreath and the couple's initials. */
-const IvorySeal = ({ initials, width = 118 }: { initials: string; width?: number }) => {
-  const id = `seal-${useId().replace(/:/g, "")}`;
+/** Warm linen backdrop: soft light from above, fine weave, grain and a gentle vignette. */
+const LINEN: React.CSSProperties = {
+  backgroundColor: "#e9e1d7",
+  backgroundImage: [
+    "radial-gradient(120% 75% at 50% 28%, rgba(255,251,246,.75) 0%, rgba(255,251,246,0) 62%)",
+    "radial-gradient(140% 110% at 50% 50%, rgba(0,0,0,0) 58%, rgba(92,70,58,.16) 100%)",
+    grain(0.42),
+    "repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, rgba(255,255,255,0) 1px 3px)",
+    "repeating-linear-gradient(90deg, rgba(110,88,72,.05) 0 1px, rgba(110,88,72,0) 1px 4px)",
+  ].join(","),
+  backgroundSize: "auto, auto, 180px 180px, auto, auto",
+};
+
+/** Ivory cotton card stock. */
+const PAPER: React.CSSProperties = {
+  backgroundColor: "#fcf9f4",
+  backgroundImage: `radial-gradient(120% 90% at 50% 20%, rgba(255,255,255,.7), rgba(255,255,255,0) 60%), ${grain(0.32)}`,
+  backgroundSize: "auto, 180px 180px",
+};
+
+/** SVG filter that adds paper grain inside whatever it is applied to. */
+const PaperGrain = ({ id, amount = 0.2 }: { id: string; amount?: number }) => (
+  <filter id={id} x="0" y="0" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="t" />
+    <feColorMatrix in="t" values={`0 0 0 0 0.33  0 0 0 0 0.26  0 0 0 0 0.2  0 0 0 ${amount} 0`} result="n" />
+    <feComposite in="n" in2="SourceGraphic" operator="in" result="g" />
+    <feMerge>
+      <feMergeNode in="SourceGraphic" />
+      <feMergeNode in="g" />
+    </feMerge>
+  </filter>
+);
+
+/** Mocha wax seal with a pressed rim, a small laurel and the couple's initials. */
+const WaxSeal = ({ initials, size = 96 }: { initials: string; size?: number }) => {
+  const id = `wax-${useId().replace(/:/g, "")}`;
   const edge = useMemo(() => {
     const pts: string[] = [];
-    const n = 80;
+    const n = 90;
     for (let i = 0; i <= n; i++) {
       const a = (i / n) * Math.PI * 2;
-      const wob = 1 + Math.sin(a * 9) * 0.018 + Math.sin(a * 5 + 0.7) * 0.014 + Math.cos(a * 13) * 0.01;
-      pts.push(`${(60 + Math.cos(a) * 54 * wob).toFixed(2)} ${(75 + Math.sin(a) * 69 * wob).toFixed(2)}`);
+      const wob = 1 + Math.sin(a * 7 + 0.4) * 0.03 + Math.sin(a * 3 + 1.3) * 0.025 + Math.cos(a * 11) * 0.012;
+      pts.push(`${(60 + Math.cos(a) * 52 * wob).toFixed(2)} ${(60 + Math.sin(a) * 52 * wob).toFixed(2)}`);
     }
     return `M${pts.join(" L")} Z`;
   }, []);
-  // Leaves around the top of the inner oval.
   const leaves = useMemo(() => {
     const out: string[] = [];
-    for (let i = 0; i < 9; i++) {
-      const a = Math.PI * (1.08 + (i / 8) * 0.84);
-      const x = 60 + Math.cos(a) * 30 + Math.cos(a) * (i % 2 ? 3 : -3);
-      const y = 62 + Math.sin(a) * 32 + Math.sin(a) * (i % 2 ? 3 : -3);
-      const rot = (a * 180) / Math.PI + 90;
-      out.push(
-        `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="2.3" ry="4.6" transform="rotate(${(rot + (i % 2 ? 35 : -35)).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`,
-      );
+    for (const side of [-1, 1]) {
+      for (let i = 0; i < 5; i++) {
+        const a = Math.PI / 2 + side * (0.5 + i * 0.27);
+        const x = 60 + Math.cos(a) * 30;
+        const y = 60 + Math.sin(a) * 30;
+        const rot = (a * 180) / Math.PI + (side > 0 ? 35 : -35);
+        out.push(`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="1.8" ry="4" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`);
+      }
     }
     return out.join("");
   }, []);
   return (
-    <svg width={width} height={width * 1.25} viewBox="0 0 120 150" aria-hidden>
+    <svg width={size} height={size} viewBox="0 0 120 120" aria-hidden style={{ overflow: "visible" }}>
       <defs>
-        <radialGradient id={`${id}-g`} cx="40%" cy="32%" r="78%">
-          <stop offset="0%" stopColor="#fbf7f2" />
-          <stop offset="60%" stopColor="#ece2d8" />
-          <stop offset="100%" stopColor="#d3c3b5" />
+        <radialGradient id={`${id}-g`} cx="38%" cy="32%" r="75%">
+          <stop offset="0%" stopColor="#957a6f" />
+          <stop offset="55%" stopColor="#6a5047" />
+          <stop offset="100%" stopColor="#47352f" />
         </radialGradient>
-        <filter id={`${id}-s`} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="3" stdDeviation="3" floodColor="#6b5446" floodOpacity="0.35" />
+        <radialGradient id={`${id}-in`} cx="60%" cy="65%" r="70%">
+          <stop offset="0%" stopColor="#7a5f55" />
+          <stop offset="100%" stopColor="#5a433b" />
+        </radialGradient>
+        <filter id={`${id}-s`} x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="2.5" stdDeviation="2.4" floodColor="#2e211c" floodOpacity="0.45" />
         </filter>
       </defs>
       <path d={edge} fill={`url(#${id}-g)`} filter={`url(#${id}-s)`} />
-      {/* pressed rim */}
-      <ellipse cx="60" cy="75" rx="43" ry="57" fill="none" stroke="#c5b3a4" strokeWidth="2.4" />
-      <ellipse cx="59.3" cy="74.2" rx="43" ry="57" fill="none" stroke="#fffdf9" strokeWidth="1" opacity="0.9" />
-      <ellipse cx="60" cy="75" rx="38" ry="51" fill="#efe6dd" opacity="0.55" />
-      {/* wreath */}
-      <path d="M30 60 Q34 34 60 30 Q86 34 90 60" fill="none" stroke="#c4b1a1" strokeWidth="0.9" />
-      <path d="M30.6 59.4 Q34.6 33.4 60 29.4 Q85.4 33.4 89.4 59.4" fill="none" stroke="#fffdf9" strokeWidth="0.6" />
-      <g
-        fill="#e9dfd5"
-        stroke="#bfac9c"
-        strokeWidth="0.6"
-        dangerouslySetInnerHTML={{ __html: leaves }}
-      />
-      <g fill="#f8f2ec" stroke="#c9b7a8" strokeWidth="0.7">
-        <circle cx="60" cy="27" r="4.2" />
-        <circle cx="52" cy="29.5" r="2.6" />
-        <circle cx="68" cy="29.5" r="2.6" />
+      {/* pressed well with a raised rim */}
+      <circle cx="60" cy="60" r="39" fill={`url(#${id}-in)`} />
+      <circle cx="60" cy="60" r="39" fill="none" stroke="#3b2b25" strokeWidth="2" opacity="0.7" />
+      <circle cx="59.3" cy="59.2" r="40.6" fill="none" stroke="#b39a8e" strokeWidth="1" opacity="0.65" />
+      {/* laurel */}
+      <g fill="#8c7166" stroke="#4a3731" strokeWidth="0.4" dangerouslySetInnerHTML={{ __html: leaves }} />
+      {/* initials, embossed */}
+      <g style={{ fontFamily: FONT_MONOGRAM }} fontSize="25" textAnchor="middle">
+        <text x="60.8" y="65" fill="#3a2a24">{initials}</text>
+        <text x="59.4" y="63.6" fill="#b49c90" opacity="0.8">{initials}</text>
+        <text x="60" y="64.3" fill="#7d6258">{initials}</text>
       </g>
-      {/* initials, pressed: dark lower edge + light upper edge */}
-      <g style={{ fontFamily: FONT_MONOGRAM }} fontSize="27" textAnchor="middle">
-        <text x="60.8" y="94" fill="#b29f90">{initials}</text>
-        <text x="59.4" y="92.6" fill="#fffdf9">{initials}</text>
-        <text x="60" y="93.3" fill="#e2d5ca">{initials}</text>
-      </g>
+      {/* wax sheen */}
+      <ellipse cx="44" cy="36" rx="17" ry="9" fill="#fff" opacity="0.13" transform="rotate(-32 44 36)" />
     </svg>
   );
 };
 
-/** Lace envelope: four lace flaps, a tulle X gathered at the centre, and the seal. */
-const LaceEnvelope = ({
+/**
+ * A paper envelope sealed with wax. Tapping it lifts the seal, opens the flap,
+ * slides the card out, then fades away to reveal the invitation.
+ */
+const Envelope = ({
   initials,
+  names,
+  dateText,
   opening,
   onOpen,
   label,
 }: {
   initials: string;
+  names: string;
+  dateText: string;
   opening: boolean;
   onOpen: () => void;
   label: string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
+  const uid = useId().replace(/:/g, "");
   const [size, setSize] = useState({ w: 390, h: 844 });
   useEffect(() => {
     const el = ref.current;
@@ -270,212 +298,252 @@ const LaceEnvelope = ({
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  const { w, h } = size;
-  const [tilt, setTilt] = useState({ x: 0, y: 0 });
-  const [pressed, setPressed] = useState(false);
+
   const reducedMotion = prefersReducedMotion();
+  // 0 closed · 1 seal lifts · 2 flap opens · 3 flap behind the card · 4 card slides out · 5 fade away
+  const [phase, setPhase] = useState(0);
+  useEffect(() => {
+    if (!opening) return;
+    if (reducedMotion) {
+      setPhase(5);
+      return;
+    }
+    const steps: Array<[number, number]> = [[1, 0], [2, 380], [3, 820], [4, 1250], [5, 2200]];
+    const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
+    return () => timers.forEach(clearTimeout);
+  }, [opening, reducedMotion]);
+
+  const [tilt, setTilt] = useState({ x: 0, y: 0 });
   const onMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (reducedMotion || opening) return;
     const r = e.currentTarget.getBoundingClientRect();
     setTilt({ x: ((e.clientX - r.left) / r.width - 0.5) * 2, y: ((e.clientY - r.top) / r.height - 0.5) * 2 });
   };
-  const cx = w / 2;
-  const cy = h / 2;
-  const diag = Math.hypot(w, h);
-  const angle = (Math.atan2(h, w) * 180) / Math.PI;
-  const lace = embroideredLace();
 
-  // Scalloped, pearl-beaded lace edge for one side of a flap (from a corner to the centre),
-  // pushed `off` px into the flap so it shows beside the tulle.
-  const scallopEdge = (x1: number, y1: number, x2: number, y2: number, inward: [number, number], off: number) => {
-    const len = Math.hypot(x2 - x1, y2 - y1);
-    const ux = (x2 - x1) / len;
-    const uy = (y2 - y1) / len;
-    const ox = inward[0] * off;
-    const oy = inward[1] * off;
-    const step = 15;
-    const n = Math.floor(len / step);
-    let d = `M${(x1 + ox).toFixed(1)} ${(y1 + oy).toFixed(1)}`;
-    const pearls: Array<[number, number]> = [];
-    for (let i = 0; i < n; i++) {
-      const bx = x1 + ux * step * (i + 1) + ox;
-      const by = y1 + uy * step * (i + 1) + oy;
-      const mx = x1 + ux * step * (i + 0.5) + ox;
-      const my = y1 + uy * step * (i + 0.5) + oy;
-      // bump outward, toward the seam
-      d += ` Q${(mx - inward[0] * 9).toFixed(1)} ${(my - inward[1] * 9).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
-      pearls.push([mx + inward[0] * 3.5, my + inward[1] * 3.5]);
-    }
-    return { d, pearls };
-  };
+  // Geometry, in px
+  const { w, h } = size;
+  const ew = Math.round(Math.min(w * 0.88, 540, (h * 0.5) / 0.68));
+  const eh = Math.round(ew * 0.68);
+  const flapH = Math.round(eh * 0.58);
+  const cw = Math.round(ew * 0.9);
+  const ch = Math.round(eh * 0.86);
+  const cardTop = eh - ch - 8;
+  const cardLift = Math.round(ch * 0.7);
+  const seal = Math.round(Math.min(Math.max(ew * 0.25, 72), 124));
 
-  type FlapDef = {
-    key: string;
-    clip: string;
-    corners: Array<[number, number]>;
-    centroid: [number, number];
-    origin: string;
-    openTransform: string;
-    delay: string;
-    shade: number;
-  };
-  const flaps: FlapDef[] = [
-    { key: "left", clip: "polygon(0 0, 0 100%, 50% 50%)", corners: [[0, 0], [0, h]], centroid: [w / 6, h / 2], origin: "left center", openTransform: "rotateY(82deg)", delay: ".2s", shade: 0.965 },
-    { key: "right", clip: "polygon(100% 0, 100% 100%, 50% 50%)", corners: [[w, 0], [w, h]], centroid: [(5 * w) / 6, h / 2], origin: "right center", openTransform: "rotateY(-82deg)", delay: ".2s", shade: 0.965 },
-    { key: "bottom", clip: "polygon(0 100%, 100% 100%, 50% 50%)", corners: [[0, h], [w, h]], centroid: [w / 2, (5 * h) / 6], origin: "bottom center", openTransform: "translateY(102%)", delay: ".35s", shade: 0.94 },
-    { key: "top", clip: "polygon(0 0, 100% 0, 50% 50%)", corners: [[0, 0], [w, 0]], centroid: [w / 2, h / 6], origin: "top center", openTransform: "translateY(-102%)", delay: "0s", shade: 1 },
-  ];
+  // Top flap: a triangle with a softly rounded tip.
+  const tipR = Math.max(10, ew * 0.035);
+  const sideLen = Math.hypot(ew / 2, flapH);
+  const ux = ew / 2 / sideLen;
+  const uy = flapH / sideLen;
+  const flapPath = `M0 0 H${ew} L${(ew / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)} Q${ew / 2} ${flapH} ${(ew / 2 - ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)} Z`;
+  const flapEdge = `M0 0 L${(ew / 2 - ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)} Q${ew / 2} ${flapH} ${(ew / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)} L${ew} 0`;
+  // Front pocket: two side flaps under a bottom flap.
+  const meetY = eh * 0.52;
+  const bottomTop = eh * 0.43;
+  const bottomPath = `M0 ${eh} Q${ew * 0.27} ${eh * 0.62} ${ew / 2} ${bottomTop} Q${ew * 0.73} ${eh * 0.62} ${ew} ${eh} Z`;
+  const bottomEdge = `M0 ${eh} Q${ew * 0.27} ${eh * 0.62} ${ew / 2} ${bottomTop} Q${ew * 0.73} ${eh * 0.62} ${ew} ${eh}`;
+  const liner = lacePattern("#d7c5b4", "#efe5da");
 
-  const flapEl = (f: FlapDef) => {
-    const edges = f.corners.map(([x1, y1]) => {
-      const len = Math.hypot(cx - x1, cy - y1);
-      let nx = -(cy - y1) / len;
-      let ny = (cx - x1) / len;
-      const mx = (x1 + cx) / 2;
-      const my = (y1 + cy) / 2;
-      if ((f.centroid[0] - mx) * nx + (f.centroid[1] - my) * ny < 0) {
-        nx = -nx;
-        ny = -ny;
-      }
-      return scallopEdge(x1, y1, cx, cy, [nx, ny], 50);
-    });
-    return (
-      <div
-        key={f.key}
-        className="dt-anim absolute inset-0"
-        style={{
-          clipPath: f.clip,
-          transformOrigin: f.origin,
-          transform: opening ? f.openTransform : "none",
-          transition: `transform 1.9s cubic-bezier(.6,0,.25,1) ${f.delay}, opacity .7s ease calc(${f.delay} + 1.3s)`,
-          opacity: opening ? 0 : 1,
-        }}
-      >
-        <div className="absolute inset-0" style={{ backgroundImage: lace, backgroundSize: "96px 96px", backgroundPosition: "center", filter: `brightness(${f.shade})` }} />
-        <svg aria-hidden className="absolute inset-0" width={w} height={h} viewBox={`0 0 ${w} ${h}`}>
-          {edges.map((e, i) => (
-            <g key={i}>
-              <path d={e.d} fill="none" stroke="#bda898" strokeWidth="1.6" transform="translate(.7 1)" />
-              <path d={e.d} fill="none" stroke="#fbf7f2" strokeWidth="1.6" />
-              {e.pearls.map(([px, py], j) => (
-                <g key={j}>
-                  <circle cx={px + 0.5} cy={py + 0.8} r="2.3" fill="#a8917f" opacity=".45" />
-                  <circle cx={px} cy={py} r="2.3" fill="#fdfbf8" />
-                </g>
-              ))}
-            </g>
-          ))}
-        </svg>
-      </div>
-    );
-  };
-
+  const ease = "cubic-bezier(.5,0,.25,1)";
   return (
     <div
       ref={ref}
-      className="absolute inset-0 z-20 overflow-hidden"
-      style={{ perspective: 1200, pointerEvents: opening ? "none" : "auto" }}
+      className="absolute inset-0 z-20 flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        ...LINEN,
+        perspective: 1400,
+        opacity: phase >= 5 ? 0 : 1,
+        transition: `opacity ${reducedMotion ? ".5s" : ".9s"} ease .15s`,
+        pointerEvents: opening ? "none" : "auto",
+      }}
       onPointerMove={onMove}
       onPointerLeave={() => setTilt({ x: 0, y: 0 })}
     >
-      {/* lace layer drifts slightly against the finger for depth */}
       <div
-        className="absolute"
+        className="dt-anim"
         style={{
-          inset: -14,
-          transform: `translate(${(-tilt.x * 8).toFixed(1)}px, ${(-tilt.y * 8).toFixed(1)}px)`,
-          transition: "transform .5s cubic-bezier(.2,.7,.2,1)",
-          perspective: 1200,
+          transform:
+            phase >= 5
+              ? `translateY(${Math.round(ch * 0.28) + 24}px) scale(.97)`
+              : `rotateX(${(-tilt.y * 3).toFixed(2)}deg) rotateY(${(tilt.x * 4).toFixed(2)}deg) translateY(${phase >= 4 ? Math.round(ch * 0.28) : 0}px)`,
+          // the envelope leaves a little before the linen fades, so the two cards never overlap
+          opacity: phase >= 5 ? 0 : 1,
+          transition:
+            phase >= 4 ? `transform 1s ${ease}, opacity .45s ease` : "transform .5s cubic-bezier(.2,.7,.2,1)",
         }}
       >
-      {flaps.map(flapEl)}
-
-      {/* tulle X, gathered at the seal */}
-      {[angle, -angle].map((deg) => (
-        <div
-          key={deg}
-          className="dt-anim absolute left-1/2 top-1/2"
-          style={{
-            width: diag + 40,
-            height: 150,
-            marginLeft: -(diag + 40) / 2,
-            marginTop: -75,
-            transform: `rotate(${deg}deg)`,
-            clipPath: "polygon(0 8%, 50% 40%, 100% 8%, 100% 92%, 50% 60%, 0 92%)",
-            background:
-              "repeating-linear-gradient(to bottom, rgba(255,255,255,.5) 0px, rgba(255,255,255,.18) 6px, rgba(255,255,255,.62) 11px, rgba(250,245,240,.24) 17px)",
-            boxShadow: "inset 0 0 18px rgba(255,255,255,.6)",
-            backdropFilter: "blur(1.2px)",
-            WebkitBackdropFilter: "blur(1.2px)",
-            opacity: opening ? 0 : 0.95,
-            transition: "opacity 1.1s ease .35s",
-          }}
-        />
-      ))}
-
-      </div>
-
-      {/* seal */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center" style={{ perspective: 700 }}>
         <button
           type="button"
           onClick={onOpen}
-          onPointerDown={() => setPressed(true)}
-          onPointerUp={() => setPressed(false)}
-          onPointerLeave={() => setPressed(false)}
           aria-label={label}
-          className="dt-anim rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78] focus-visible:ring-offset-4"
-          style={{
-            transform: opening
-              ? `translateY(-${Math.round(h * 0.75)}px) rotate(-6deg)`
-              : `rotateY(${(tilt.x * 10).toFixed(1)}deg) rotateX(${(-tilt.y * 10).toFixed(1)}deg) scale(${pressed ? 0.95 : 1})`,
-            transition: opening
-              ? "transform 1.9s cubic-bezier(.6,0,.25,1), opacity 1s ease .7s"
-              : "transform .35s cubic-bezier(.2,.7,.2,1)",
-            opacity: opening ? 0 : 1,
-          }}
+          className="dt-env relative block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78] focus-visible:ring-offset-8 focus-visible:ring-offset-[#e9e1d7]"
+          style={{ width: ew, height: eh, perspective: 1400, background: "none", border: 0, padding: 0, cursor: "pointer" }}
         >
-          <span className="relative block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
-            <IvorySeal initials={initials} width={150} />
-            {/* a soft shine that passes over the wax */}
+          <span className="dt-env-lift absolute inset-0 block">
+            {/* shadow on the linen */}
             <span
               aria-hidden
-              className="absolute overflow-hidden"
-              style={{ left: "5%", right: "5%", top: "4%", bottom: "4%", borderRadius: "50%", pointerEvents: "none" }}
+              className="absolute inset-0 block"
+              style={{
+                borderRadius: 3,
+                boxShadow: "0 34px 60px -30px rgba(70,48,38,.55), 0 10px 22px -12px rgba(70,48,38,.35), 0 1px 2px rgba(70,48,38,.18)",
+              }}
+            />
+            {/* inside of the envelope, lined in lace */}
+            <span aria-hidden className="absolute inset-0 block" style={{ borderRadius: 3, background: "#e6dbcf", backgroundImage: liner }} />
+
+            {/* top flap — closed it sits on top; opened it folds back behind the card */}
+            <span
+              aria-hidden
+              className="dt-anim absolute left-0 top-0 block"
+              style={{
+                width: ew,
+                height: flapH,
+                zIndex: phase >= 3 ? 1 : 4,
+                transformOrigin: "50% 0",
+                transformStyle: "preserve-3d",
+                transform: phase >= 2 ? "rotateX(180deg)" : "rotateX(0deg)",
+                transition: `transform .9s ${ease}`,
+              }}
             >
+              <svg
+                width={ew}
+                height={flapH}
+                viewBox={`0 0 ${ew} ${flapH}`}
+                className="absolute inset-0"
+                style={{ overflow: "visible", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+              >
+                <defs>
+                  <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0" stopColor="#f6f0e7" />
+                    <stop offset="1" stopColor="#f1e9de" />
+                  </linearGradient>
+                  <filter id={`${uid}-blur`} x="-10%" y="-10%" width="120%" height="140%">
+                    <feGaussianBlur stdDeviation="2.4" />
+                  </filter>
+                  <PaperGrain id={`${uid}-gf`} />
+                </defs>
+                <path d={flapPath} transform="translate(0 3)" fill="rgba(70,48,38,.3)" filter={`url(#${uid}-blur)`} />
+                <path d={flapPath} fill={`url(#${uid}-flap)`} filter={`url(#${uid}-gf)`} />
+                <path d={flapEdge} fill="none" stroke="#fffdf9" strokeWidth="1.1" opacity="0.85" />
+              </svg>
               <span
-                className="dt-shine absolute"
+                className="absolute inset-0 block"
                 style={{
-                  top: "-20%",
-                  bottom: "-20%",
-                  width: "38%",
-                  left: "31%",
-                  background: "linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent)",
-                  animation: "dt-shine 5s ease-in-out infinite",
+                  transform: "rotateX(180deg)",
+                  backfaceVisibility: "hidden",
+                  WebkitBackfaceVisibility: "hidden",
+                  clipPath: `path("${flapPath}")`,
+                  background: "#e9dfd3",
+                  backgroundImage: liner,
                 }}
               />
             </span>
+
+            {/* the card */}
+            <span
+              aria-hidden
+              className="dt-anim absolute block text-center"
+              style={{
+                ...PAPER,
+                left: (ew - cw) / 2,
+                top: cardTop,
+                width: cw,
+                height: ch,
+                zIndex: 2,
+                borderRadius: 2,
+                boxShadow: "0 1px 2px rgba(70,48,38,.14), 0 8px 16px -10px rgba(70,48,38,.3)",
+                transform: phase >= 4 ? `translateY(-${cardLift}px)` : "none",
+                transition: `transform 1.05s ${ease}`,
+              }}
+            >
+              <span className="absolute block" style={{ inset: 7, border: "1px solid #d9c7b0" }} />
+              <span className="block" style={{ paddingTop: ch * 0.13 }}>
+                <span className="block" style={{ ...SMALL_CAPS, fontSize: Math.max(8, ew * 0.02), color: MUTED }}>
+                  {dateText}
+                </span>
+                <span className="block" style={{ fontFamily: FONT_TITLE, fontSize: Math.round(ew * 0.085), lineHeight: 1.2, color: INK, marginTop: ch * 0.05 }}>
+                  {names}
+                </span>
+              </span>
+            </span>
+
+            {/* front pocket */}
+            <svg
+              aria-hidden
+              width={ew}
+              height={eh}
+              viewBox={`0 0 ${ew} ${eh}`}
+              className="absolute inset-0"
+              style={{ zIndex: 3, overflow: "visible" }}
+            >
+              <defs>
+                <linearGradient id={`${uid}-l`} x1="0" y1="0" x2="1" y2="0">
+                  <stop offset="0" stopColor="#f3ece2" />
+                  <stop offset="1" stopColor="#ebe2d6" />
+                </linearGradient>
+                <linearGradient id={`${uid}-r`} x1="1" y1="0" x2="0" y2="0">
+                  <stop offset="0" stopColor="#f1e9df" />
+                  <stop offset="1" stopColor="#e9e0d3" />
+                </linearGradient>
+                <linearGradient id={`${uid}-b`} x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stopColor="#f7f1e8" />
+                  <stop offset="1" stopColor="#efe6da" />
+                </linearGradient>
+                <filter id={`${uid}-soft`} x="-10%" y="-20%" width="120%" height="140%">
+                  <feGaussianBlur stdDeviation="2" />
+                </filter>
+                <PaperGrain id={`${uid}-gp`} />
+              </defs>
+              <g filter={`url(#${uid}-gp)`}>
+                <path d={`M0 0 L${ew / 2} ${meetY} L0 ${eh} Z`} fill={`url(#${uid}-l)`} />
+                <path d={`M${ew} 0 L${ew / 2} ${meetY} L${ew} ${eh} Z`} fill={`url(#${uid}-r)`} />
+                {/* soft shade where the bottom flap overlaps */}
+                <path d={bottomEdge} fill="none" stroke="rgba(70,48,38,.22)" strokeWidth="5" filter={`url(#${uid}-soft)`} />
+                <path d={bottomPath} fill={`url(#${uid}-b)`} />
+              </g>
+              <path d={`M0 0 L${ew / 2} ${meetY} L${ew} 0`} fill="none" stroke="#fffdf9" strokeWidth="1" opacity="0.7" />
+              <path d={bottomEdge} fill="none" stroke="#fffdf9" strokeWidth="1.1" opacity="0.85" />
+              <rect x="0.5" y="0.5" width={ew - 1} height={eh - 1} rx="3" fill="none" stroke="rgba(120,95,80,.18)" />
+            </svg>
+
+            {/* wax seal on the flap tip */}
+            <span
+              className="dt-anim absolute block"
+              style={{
+                left: ew / 2 - seal / 2,
+                top: flapH - seal * 0.6,
+                width: seal,
+                height: seal,
+                zIndex: 5,
+                transform: phase >= 1 ? "translateY(-14px) scale(1.06) rotate(-4deg)" : "none",
+                opacity: phase >= 1 ? 0 : 1,
+                transition: "transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s ease .05s",
+              }}
+            >
+              <span className="block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+                <WaxSeal initials={initials} size={seal} />
+              </span>
+            </span>
           </span>
         </button>
-        <p
-          className="dt-anim"
-          style={{
-            marginTop: 20,
-            fontFamily: FONT_HEADING,
-            fontStyle: "italic",
-            fontSize: 18,
-            color: "#4f3f36",
-            background: "rgba(251,247,242,.85)",
-            padding: "4px 16px",
-            borderRadius: 999,
-            opacity: opening ? 0 : 1,
-            transition: "opacity .3s ease",
-            animation: opening ? undefined : "dt-hint 2.6s ease-in-out infinite",
-          }}
-        >
-          {label}
-        </p>
       </div>
+      <p
+        className="dt-anim"
+        style={{
+          marginTop: Math.max(26, eh * 0.14),
+          fontFamily: FONT_HEADING,
+          fontStyle: "italic",
+          fontSize: 17,
+          color: "#6f5f57",
+          opacity: opening ? 0 : 1,
+          transition: "opacity .3s ease",
+          animation: opening ? undefined : "dt-hint 2.6s ease-in-out infinite",
+        }}
+      >
+        {label}
+      </p>
     </div>
   );
 };
@@ -495,6 +563,8 @@ const KEYFRAMES = `
 @keyframes dt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 @keyframes dt-reveal { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
 @keyframes dt-hint { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+.dt-env-lift { transition: transform .5s cubic-bezier(.2,.7,.2,1); }
+.dt-env:hover .dt-env-lift { transform: translateY(-4px); }
 @media (prefers-reduced-motion: reduce) {
   .dt-anim { animation: none !important; transition: opacity .4s ease !important; transform: none !important; }
 }
@@ -546,14 +616,14 @@ export const DentelleTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
-  // ---------- Opening: lace veil with wax seal ----------
+  // ---------- Opening: envelope with wax seal ----------
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
   const openInvitation = () => {
     if (opening) return;
     setOpening(true);
     audioRef.current?.play().catch(() => {});
-    window.setTimeout(() => setOpened(true), 2400);
+    window.setTimeout(() => setOpened(true), prefersReducedMotion() ? 700 : 3100);
   };
 
   const [medallionFlipped, setMedallionFlipped] = useState(false);
@@ -678,12 +748,7 @@ export const DentelleTemplate = ({
     </h2>
   );
 
-  const smallCaps: React.CSSProperties = {
-    fontFamily: FONT_BODY,
-    fontSize: 11,
-    letterSpacing: "0.32em",
-    textTransform: "uppercase",
-  };
+  const smallCaps = SMALL_CAPS;
 
   return (
     <div
@@ -713,35 +778,36 @@ export const DentelleTemplate = ({
         {/* ==================== HERO ==================== */}
         <section
           className="relative overflow-hidden"
-          style={{ minHeight: "100svh", backgroundImage: embroideredLace(), backgroundSize: "96px 96px", backgroundPosition: "center" }}
+          style={{ minHeight: "100svh", ...LINEN }}
         >
           <Petals ambient={14} active={opened} />
-          <div className="relative mx-auto flex" style={{ minHeight: "100svh", maxWidth: 620, padding: "26px 24px" }}>
-            {/* Cream panel with arched ends, edged in pearls */}
+          <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "28px 22px" }}>
+            {/* The invitation card, on linen */}
             <div
               className="relative w-full flex flex-col items-center justify-center text-center"
               style={{
-                borderRadius: "50% / 17%",
-                background: "radial-gradient(ellipse at 50% 40%, #fdfaf6 0%, #f8f2ec 70%, #f1e8e0 100%)",
-                outline: "5px dotted #fbf8f4",
-                outlineOffset: 5,
+                ...PAPER,
+                borderRadius: 3,
                 boxShadow:
-                  "0 0 0 1.5px #f7f0ea, 0 0 0 3px #cdbcae, 0 0 0 14px rgba(246,239,233,.55), 0 18px 40px -18px rgba(90,60,40,.45), inset 0 0 40px rgba(205,188,174,.35)",
-                padding: "clamp(70px, 16vh, 120px) 26px",
-                minHeight: "calc(100svh - 52px)",
+                  "0 1px 2px rgba(70,48,38,.12), 0 14px 26px -16px rgba(70,48,38,.35), 0 40px 70px -40px rgba(70,48,38,.5)",
+                padding: "clamp(64px, 12vh, 104px) 30px",
+                minHeight: "min(calc(100svh - 56px), 820px)",
               }}
             >
+              {/* letterpress double frame */}
+              <span aria-hidden className="absolute pointer-events-none" style={{ inset: 12, border: "1px solid #d9c7b0" }} />
+              <span aria-hidden className="absolute pointer-events-none" style={{ inset: 17, border: "0.5px solid #e6d9c8" }} />
               <div
                 style={{
                   opacity: opened || opening ? 1 : 0,
-                  animation: opening || opened ? "dt-reveal 1.4s ease 1.2s both" : undefined,
+                  animation: opening || opened ? "dt-reveal 1.4s ease 2.2s both" : undefined,
                 }}
                 className="dt-anim flex flex-col items-center"
               >
                 <p style={{ fontFamily: FONT_HEADING, fontSize: 17, lineHeight: 1.3, color: MUTED, maxWidth: 160 }}>
                   {t("dentelle.together", "Together with their families")}
                 </p>
-                <HeartTap color="#b8606d">
+                <HeartTap color="#a9776b">
                 <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26 }}>
                   <EditableField
                     fieldId="groom-name"
@@ -770,7 +836,7 @@ export const DentelleTemplate = ({
                   {isArabic ? longDate : numericDate}
                 </p>
                 <div className="flex justify-center" style={{ marginTop: 30, minHeight: 54 }}>
-                  {(opening || opened) && (
+                  {opened && (
                     <DrawOnView duration={2600}>
                       <Bow color={INK} width={86} />
                     </DrawOnView>
@@ -796,10 +862,12 @@ export const DentelleTemplate = ({
             </div>
           </div>
 
-          {/* Lace envelope with tulle and wax seal — tap to open */}
+          {/* Envelope sealed with wax — tap to open */}
           {!opened && (
-            <LaceEnvelope
+            <Envelope
               initials={initials}
+              names={`${groomName} & ${brideName}`}
+              dateText={numericDate}
               opening={opening}
               onOpen={openInvitation}
               label={t("dentelle.tapToOpen", "Tap to open")}
@@ -810,7 +878,7 @@ export const DentelleTemplate = ({
         {/* ==================== INVITATION ==================== */}
         <section className="text-center" style={{ padding: "96px 24px 104px", maxWidth: 600, margin: "0 auto" }}>
           <DrawOnView className="flex justify-center">
-            <Bow color={WINE} width={112} />
+            <Bow color={COCOA} width={112} />
           </DrawOnView>
           <Reveal delay={150}>
           <div style={{ marginTop: 22, fontFamily: FONT_HEADING, fontSize: 30, lineHeight: 1.2, color: INK }}>
@@ -855,13 +923,13 @@ export const DentelleTemplate = ({
         </section>
 
         {/* ==================== COUNTDOWN ==================== */}
-        <section style={{ background: WINE, color: BLUSH }}>
-          <LaceEdge lace={IVORY} holeColor={WINE} outline="#e4d6cc" />
+        <section style={{ background: COCOA, color: BAND_TEXT }}>
+          <LaceEdge lace={IVORY} band={COCOA} />
           <div className="text-center" style={{ padding: "64px 20px 70px" }}>
             <DrawOnView className="flex justify-center">
-              <Bow color="#e7aeb6" width={150} />
+              <Bow color={BAND_ACCENT} width={150} />
             </DrawOnView>
-            <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), "#fbeaea")}</div>
+            <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), BAND_TITLE)}</div>
             <div
               className="flex justify-center"
               style={{ gap: "clamp(18px, 7vw, 48px)", marginTop: 26 }}
@@ -869,20 +937,20 @@ export const DentelleTemplate = ({
             >
               {countdownUnits.map((u) => (
                 <div key={u.label} style={{ minWidth: 52 }}>
-                  <div style={{ fontFamily: FONT_COUNTDOWN, fontSize: "clamp(36px, 10vw, 54px)", lineHeight: 1, color: "#fff4f2" }}>
+                  <div style={{ fontFamily: FONT_COUNTDOWN, fontSize: "clamp(36px, 10vw, 54px)", lineHeight: 1, color: BAND_NUMBER }}>
                     <RollingNumber value={u.value} />
                   </div>
-                  <div style={{ ...smallCaps, fontSize: 9, letterSpacing: "0.24em", color: "#dca7ae", marginTop: 10 }}>{u.label}</div>
+                  <div style={{ ...smallCaps, fontSize: 9, letterSpacing: "0.24em", color: BAND_MUTED, marginTop: 10 }}>{u.label}</div>
                 </div>
               ))}
             </div>
             <div aria-hidden className="flex items-center justify-center" style={{ marginTop: 34, gap: 10 }}>
-              <span style={{ width: 54, height: 1, background: "#c98b94" }} />
-              <span style={{ width: 5, height: 5, borderRadius: 999, background: "#e7aeb6" }} />
-              <span style={{ width: 54, height: 1, background: "#c98b94" }} />
+              <span style={{ width: 54, height: 1, background: BAND_LINE }} />
+              <span style={{ width: 5, height: 5, borderRadius: 999, background: BAND_ACCENT }} />
+              <span style={{ width: 54, height: 1, background: BAND_LINE }} />
             </div>
           </div>
-          <LaceEdge lace={IVORY} holeColor={WINE} outline="#e4d6cc" flip />
+          <LaceEdge lace={IVORY} band={COCOA} flip />
         </section>
 
         {/* ==================== LOCATION ==================== */}
@@ -936,23 +1004,23 @@ export const DentelleTemplate = ({
                         backfaceVisibility: "hidden",
                         WebkitBackfaceVisibility: "hidden",
                         borderRadius: "50%",
-                        background: WINE,
+                        background: COCOA,
                         border: `1px solid ${CHAMPAGNE}`,
-                        outline: `3px dotted #e9c9cd`,
+                        outline: `3px dotted ${BAND_MUTED}`,
                         outlineOffset: -12,
-                        color: "#fbeaea",
+                        color: BAND_TITLE,
                         padding: "0 26px",
                         boxShadow: "0 24px 50px -30px rgba(60,10,20,.7)",
                       }}
                     >
-                      <p style={{ ...smallCaps, fontSize: 9.5, color: "#dca7ae" }}>{isVenue ? t("events.dinnerParty") : t("events.ceremony")}</p>
+                      <p style={{ ...smallCaps, fontSize: 9.5, color: BAND_MUTED }}>{isVenue ? t("events.dinnerParty") : t("events.ceremony")}</p>
                       {place.time && (
                         <p style={{ fontFamily: FONT_HEADING, fontSize: 40, lineHeight: 1.1, marginTop: 10 }} dir="ltr">
                           {formatTimeTo12Hour(place.time)}
                         </p>
                       )}
                       <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, marginTop: 6 }}>{longDate}</p>
-                      <span style={{ display: "block", width: 34, height: 1, background: "#c98b94", margin: "16px 0" }} />
+                      <span style={{ display: "block", width: 34, height: 1, background: BAND_LINE, margin: "16px 0" }} />
                       <p style={{ fontFamily: FONT_HEADING, fontSize: 18, lineHeight: 1.25 }}>{name}</p>
                     </div>
                     {/* front */}
@@ -999,7 +1067,7 @@ export const DentelleTemplate = ({
                           ) : (
                             <div
                               className="flex items-center justify-center rounded-full"
-                              style={{ width: 92, height: 92, background: IVORY, border: `1px solid ${CHAMPAGNE}`, color: WINE }}
+                              style={{ width: 92, height: 92, background: IVORY, border: `1px solid ${CHAMPAGNE}`, color: COCOA }}
                             >
                               <EventIcon
                                 icon={place.icon}
@@ -1024,14 +1092,14 @@ export const DentelleTemplate = ({
                         href={place.location_link}
                         target="_blank"
                         rel="noreferrer"
-                        className="transition-colors hover:bg-[#5a1824] hover:text-white focus-visible:outline-none focus-visible:ring-2"
+                        className="transition-colors hover:bg-[#6a5047] hover:text-white focus-visible:outline-none focus-visible:ring-2"
                         style={{
                           ...smallCaps,
                           marginTop: 30,
                           padding: "14px 30px",
-                          border: `1px solid ${WINE}`,
+                          border: `1px solid ${COCOA}`,
                           borderRadius: 999,
-                          color: WINE,
+                          color: COCOA,
                           textDecoration: "none",
                         }}
                       >
@@ -1089,7 +1157,7 @@ export const DentelleTemplate = ({
                           top: 15,
                           width: 1.5,
                           height: "calc(100% + 44px)",
-                          background: WINE,
+                          background: COCOA,
                           transformOrigin: "top",
                           transform: lit ? "scaleY(1)" : "scaleY(0)",
                           transition: "transform 1.4s cubic-bezier(.4,0,.2,1) .25s",
@@ -1115,8 +1183,8 @@ export const DentelleTemplate = ({
                         top: 10,
                         width: 10,
                         height: 10,
-                        background: lit ? WINE : IVORY,
-                        border: `1.5px solid ${lit ? WINE : CHAMPAGNE}`,
+                        background: lit ? COCOA : IVORY,
+                        border: `1.5px solid ${lit ? COCOA : CHAMPAGNE}`,
                         boxShadow: `0 0 0 3px ${IVORY}`,
                         transition: "background .5s ease, border-color .5s ease",
                         animation: lit ? "dt-pulse-dot 1.2s ease-out 1" : undefined,
@@ -1133,7 +1201,7 @@ export const DentelleTemplate = ({
                     >
                       <p style={{ ...smallCaps, fontSize: 12, color: INK, letterSpacing: "0.22em", paddingTop: 6 }}>{e.title}</p>
                       {e.place && (
-                        <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 16, color: WINE, marginTop: 4 }}>{e.place}</p>
+                        <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 16, color: COCOA, marginTop: 4 }}>{e.place}</p>
                       )}
                       <div style={{ fontSize: 14, lineHeight: 1.6, color: MUTED, marginTop: 4 }}>
                         <EditableField
@@ -1160,7 +1228,7 @@ export const DentelleTemplate = ({
         {/* ==================== WEDDING GIFT ==================== */}
         {giftCards.length > 0 && (
           <section style={{ backgroundImage: lacePattern("#dccbc0", "#f4ece6") }}>
-            <LaceEdge lace={IVORY} holeColor="#f4ece6" outline="#e4d6cc" />
+            <LaceEdge lace={IVORY} band="#f4ece6" />
             <Reveal style={{ padding: "54px 20px 70px" }}>
               <div
                 className="mx-auto text-center"
@@ -1174,7 +1242,7 @@ export const DentelleTemplate = ({
                 }}
               >
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
-                <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: WINE, marginTop: 16 }}>
+                <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
                   {t("dentelle.giftLead", "Your presence is our greatest gift.")}
                 </p>
                 <div style={{ marginTop: 12, fontSize: 15, lineHeight: 1.7, color: "#4c4040", maxWidth: 400, marginInline: "auto" }}>
@@ -1197,15 +1265,15 @@ export const DentelleTemplate = ({
                 </div>
               </div>
             </Reveal>
-            <LaceEdge lace={IVORY} holeColor="#f4ece6" outline="#e4d6cc" flip />
+            <LaceEdge lace={IVORY} band="#f4ece6" flip />
           </section>
         )}
 
         {/* ==================== RSVP ==================== */}
         {(wedding.rsvp_deadline || invitees.length > 0) && (
-          <section className="relative" style={{ background: WINE }}>
+          <section className="relative" style={{ background: COCOA }}>
             <Petals ref={rsvpPetals} ambient={0} active={false} />
-            <LaceEdge lace={IVORY} holeColor={WINE} outline="#e4d6cc" />
+            <LaceEdge lace={IVORY} band={COCOA} />
             <div style={{ padding: "40px 16px 56px" }}>
               <div
                 className="mx-auto"
@@ -1223,11 +1291,11 @@ export const DentelleTemplate = ({
                   submittingRsvp={submittingRsvp}
                   bgClassName="bg-transparent"
                   cardBgClassName="bg-white"
-                  accentColorClass="text-[#5a1824]"
+                  accentColorClass="text-[#6a5047]"
                 />
               </div>
             </div>
-            <LaceEdge lace={IVORY} holeColor={WINE} outline="#e4d6cc" flip />
+            <LaceEdge lace={IVORY} band={COCOA} flip />
           </section>
         )}
 
@@ -1258,15 +1326,15 @@ export const DentelleTemplate = ({
             href={calendarUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center transition-colors hover:bg-[#5a1824] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
+            className="inline-flex items-center transition-colors hover:bg-[#6a5047] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
             style={{
               ...smallCaps,
               marginTop: 30,
               gap: 10,
               padding: "14px 28px",
-              border: `1px solid ${WINE}`,
+              border: `1px solid ${COCOA}`,
               borderRadius: 999,
-              color: WINE,
+              color: COCOA,
               textDecoration: "none",
             }}
           >
@@ -1279,9 +1347,9 @@ export const DentelleTemplate = ({
           </Reveal>
         </section>
 
-        <footer style={{ background: WINE_DEEP }}>
-          <LaceEdge lace={IVORY} holeColor={WINE_DEEP} outline="#e4d6cc" />
-          <div style={{ padding: "26px 20px 34px", textAlign: "center", color: "#d9aab1", ...smallCaps, fontSize: 9 }}>
+        <footer style={{ background: COCOA_DEEP }}>
+          <LaceEdge lace={IVORY} band={COCOA_DEEP} />
+          <div style={{ padding: "26px 20px 34px", textAlign: "center", color: BAND_MUTED, ...smallCaps, fontSize: 9 }}>
             Auréa Invites
           </div>
           <div style={{ background: "#fff" }}>
