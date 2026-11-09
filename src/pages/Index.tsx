@@ -27,8 +27,6 @@ import heroInvitation from "@/assets/hero-invitation-realistic.jpg";
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
 
-const InvitationRevealHero = lazy(() => import("@/components/InvitationRevealHero"));
-
 const Index = () => {
   const navigate = useNavigate();
   const [showComingSoon, setShowComingSoon] = useState(false);
@@ -64,16 +62,20 @@ const Index = () => {
       </header>
 
       <section className="relative h-[600px] flex items-center justify-center overflow-hidden">
-        <Suspense
-          fallback={
-            <div
-              className="absolute inset-0"
-              style={{ background: "radial-gradient(ellipse at 50% 45%, #3a2a1c 0%, #1f1610 55%, #120d09 100%)" }}
-            />
-          }
-        >
-          <InvitationRevealHero />
-        </Suspense>
+        <img
+          src={heroInvitation}
+          alt="Luxury wedding invitation with a wax-sealed envelope"
+          className="absolute inset-0 h-full w-full object-cover"
+          width={1920}
+          height={1088}
+        />
+        <div
+          className="absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(ellipse at 50% 42%, rgba(18,13,9,0.62) 0%, rgba(18,13,9,0.38) 55%, rgba(18,13,9,0.55) 100%)",
+          }}
+        />
         <div className="relative z-10 text-center text-white px-4 max-w-4xl mx-auto">
           <h1 className="text-5xl md:text-7xl font-serif font-bold mb-3">
             The Modern Way to Invite Your Wedding Guests
