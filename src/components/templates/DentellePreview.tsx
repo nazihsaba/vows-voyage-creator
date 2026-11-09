@@ -50,7 +50,7 @@ const DentellePreview = () => {
       locations={sampleLocations}
       gallery={[]}
       giftCards={sampleGifts}
-      isPreview
+      isPreview={false}
       onFieldUpdate={() => {}}
       getFieldValue={(_id, def) => def}
       getFieldStyle={() => ({})}

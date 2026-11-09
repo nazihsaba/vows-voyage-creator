@@ -901,7 +901,6 @@ export const DentelleTemplate = ({
               {placesWithDirections.map((place: any) => {
                 const isVenue = place === venue;
                 const name = getLocalizedValue(isVenue ? "venue_location" : "ceremony_location", place.location_name || "");
-                const note = place.note ? getLocalizedValue(isVenue ? "venue_note" : "ceremony_note", place.note) : "";
                 return (
                   <Reveal key={place.type} className="flex flex-col items-center">
                     {placesWithDirections.length > 1 && (
@@ -909,47 +908,39 @@ export const DentelleTemplate = ({
                         {isVenue ? t("events.dinnerParty") : t("events.ceremony")}
                       </p>
                     )}
-                    <p style={{ fontFamily: FONT_TITLE, fontSize: "clamp(40px, 11vw, 58px)", lineHeight: 1.15, color: INK, marginTop: 8 }}>
-                      {name}
-                    </p>
-                    {note && (
-                      <p style={{ fontSize: 15.5, lineHeight: 1.7, color: "#4c4040", maxWidth: 440, marginTop: 14 }}>{note}</p>
-                    )}
-                    {/* Oval medallion with the time, date and place — once, for the main place */}
-                    {place === mainPlace && (
-                      <div
-                        className="flex flex-col items-center justify-center text-center"
-                        style={{
-                          marginTop: 30,
-                          width: "min(66vw, 250px)",
-                          aspectRatio: "3 / 4",
-                          borderRadius: "50%",
-                          background: COCOA,
-                          border: `1px solid ${CHAMPAGNE}`,
-                          outline: `3px dotted ${BAND_MUTED}`,
-                          outlineOffset: -12,
-                          color: BAND_TITLE,
-                          padding: "0 26px",
-                          boxShadow: "0 24px 50px -30px rgba(60,40,30,.7)",
-                        }}
-                      >
-                        <p style={{ ...smallCaps, fontSize: 9.5, color: BAND_MUTED }}>{isVenue ? t("events.dinnerParty") : t("events.ceremony")}</p>
-                        {place.time && (
-                          <p style={{ fontFamily: FONT_HEADING, fontSize: 40, lineHeight: 1.1, marginTop: 10 }} dir="ltr">
-                            {formatTimeTo12Hour(place.time)}
-                          </p>
-                        )}
-                        <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, marginTop: 6 }}>{longDate}</p>
-                        <span style={{ display: "block", width: 34, height: 1, background: BAND_LINE, margin: "16px 0" }} />
-                        <p style={{ fontFamily: FONT_HEADING, fontSize: 18, lineHeight: 1.25 }}>{name}</p>
-                      </div>
-                    )}
+                    {/* Oval medallion with the time, date and place */}
+                    <div
+                      className="flex flex-col items-center justify-center text-center"
+                      style={{
+                        marginTop: placesWithDirections.length > 1 ? 18 : 0,
+                        width: "min(66vw, 250px)",
+                        aspectRatio: "3 / 4",
+                        borderRadius: "50%",
+                        background: COCOA,
+                        border: `1px solid ${CHAMPAGNE}`,
+                        outline: `3px dotted ${BAND_MUTED}`,
+                        outlineOffset: -12,
+                        color: BAND_TITLE,
+                        padding: "0 26px",
+                        boxShadow: "0 24px 50px -30px rgba(60,40,30,.7)",
+                      }}
+                    >
+                      <p style={{ ...smallCaps, fontSize: 9.5, color: BAND_MUTED }}>{isVenue ? t("events.dinnerParty") : t("events.ceremony")}</p>
+                      {place.time && (
+                        <p style={{ fontFamily: FONT_HEADING, fontSize: 40, lineHeight: 1.1, marginTop: 10 }} dir="ltr">
+                          {formatTimeTo12Hour(place.time)}
+                        </p>
+                      )}
+                      <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, marginTop: 6 }}>{longDate}</p>
+                      <span style={{ display: "block", width: 34, height: 1, background: BAND_LINE, margin: "16px 0" }} />
+                      <p style={{ fontFamily: FONT_HEADING, fontSize: 18, lineHeight: 1.25 }}>{name}</p>
+                    </div>
                     {place.location_link && (
                       <a
                         href={place.location_link}
                         target="_blank"
                         rel="noreferrer"
-                        className="transition-colors hover:bg-[#6a5047] hover:text-white focus-visible:outline-none focus-visible:ring-2"
+                        className="focus-visible:outline-none focus-visible:ring-2"
                         style={{
                           ...smallCaps,
                           marginTop: 30,
@@ -1092,6 +1083,7 @@ export const DentelleTemplate = ({
                   maxWidth: 520,
                   background: "rgba(255,253,250,.94)",
                   border: `1px solid ${CHAMPAGNE}`,
+                  borderRadius: 16,
                   outline: `3px dotted ${LACE_LINE}`,
                   outlineOffset: 6,
                   padding: "46px 22px 34px",
@@ -1132,7 +1124,7 @@ export const DentelleTemplate = ({
             <div style={{ padding: "40px 16px 56px" }}>
               <div
                 className="mx-auto"
-                style={{ maxWidth: 760, background: IVORY, borderRadius: 4, border: `1px solid ${CHAMPAGNE}`, boxShadow: "0 30px 60px -30px rgba(0,0,0,.45)" }}
+                style={{ maxWidth: 760, background: IVORY, borderRadius: 16, overflow: "hidden", border: `1px solid ${CHAMPAGNE}`, boxShadow: "0 30px 60px -30px rgba(0,0,0,.45)" }}
               >
                 <RsvpSection
                   wedding={wedding}
@@ -1182,7 +1174,7 @@ export const DentelleTemplate = ({
             href={calendarUrl}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center transition-colors hover:bg-[#6a5047] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
+            className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
             style={{
               ...smallCaps,
               marginTop: 30,
