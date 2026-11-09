@@ -24,7 +24,7 @@ interface RsvpSectionProps {
   bgClassName?: string;
   cardBgClassName?: string;
   accentColorClass?: string;
-  /** Colour classes for the submit buttons; defaults to the primary (or black) button. */
+  /** Colour classes for the submit buttons; defaults to the site's white/bronze button (black when accentColorClass is "text-black"). */
   buttonClassName?: string;
 }
 
@@ -45,9 +45,12 @@ export const RsvpSection = ({
   buttonClassName,
 }: RsvpSectionProps) => {
   const { t, i18n } = useTranslation();
+  // Default: the site's button style (white, bronze text and border, no hover change).
   const submitButtonColors =
     buttonClassName ??
-    `${accentColorClass === "text-black" ? "bg-black hover:bg-black/90" : "bg-primary hover:bg-primary/90"} text-white`;
+    (accentColorClass === "text-black"
+      ? "bg-black hover:bg-black/90 text-white"
+      : "border border-bronze bg-button text-button-foreground");
   const { getLocalizedValue } = useArabicContent(wedding);
   const isArabic = i18n.language === "ar";
   const rsvpDeadline = staticDeadline || (wedding?.rsvp_deadline ? parseLocalDate(wedding.rsvp_deadline) : null);
