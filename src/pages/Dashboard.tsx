@@ -203,7 +203,7 @@ const Dashboard = () => {
       id: "dentelle-lace",
       name: "Dentelle",
       price: 100,
-      description: "Romantic lace with a wax-seal opening and burgundy accents",
+      description: "Romantic lace with a wax-sealed envelope opening and mocha accents",
       image: dentelleCover,
       features: [
         { icon: Sparkles, text: "Wax Seal Opening" },

@@ -614,7 +614,7 @@ export const templates: Template[] = [
     id: 'dentelle-lace',
     name: 'Dentelle',
     category: 'romantic',
-    description: 'Romantic ivory lace with a burgundy wax-seal opening, lace-edged burgundy bands and a timeline of the day.',
+    description: 'Romantic ivory lace that opens from a wax-sealed envelope, with lace-edged mocha bands and a timeline of the day.',
     thumbnail: '/placeholder.svg',
     isPremium: true,
     isPopular: true,
@@ -635,7 +635,7 @@ export const templates: Template[] = [
       fontSecondary: 'Cormorant Garamond',
       headingSize: 'xl',
       colorScheme: {
-        primary: '#5a1824',
+        primary: '#6a5047',
         secondary: '#b79c78',
         accent: '#f3ebe4',
         background: '#faf6f1',

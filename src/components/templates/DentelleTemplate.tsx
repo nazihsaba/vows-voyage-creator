@@ -271,13 +271,15 @@ const Envelope = ({
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const uid = useId().replace(/:/g, "");
-  const [size, setSize] = useState({ w: 390, h: 844 });
+  // h: the envelope's full height (the whole first section); vh: the part of it that fits on screen
+  const [size, setSize] = useState({ w: 390, h: 844, vh: 844 });
   const [card, setCard] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     const update = () => {
-      setSize({ w: el.clientWidth || 390, h: el.clientHeight || 844 });
+      const h = el.clientHeight || 844;
+      setSize({ w: el.clientWidth || 390, h, vh: Math.min(h, window.innerHeight || h) });
       const c = cardRef.current;
       if (c) {
         const o = el.getBoundingClientRect();
@@ -289,7 +291,11 @@ const Envelope = ({
     const ro = new ResizeObserver(update);
     ro.observe(el);
     if (cardRef.current) ro.observe(cardRef.current);
-    return () => ro.disconnect();
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
   }, [cardRef]);
 
   const reducedMotion = prefersReducedMotion();
@@ -302,13 +308,14 @@ const Envelope = ({
     return () => timers.forEach(clearTimeout);
   }, [opening, reducedMotion]);
 
-  // Geometry, in px. The envelope is the whole screen.
-  const { w, h } = size;
-  const flapH = Math.round(h * 0.54);
-  const meetY = h * 0.5;
-  const bottomTop = h * 0.47;
-  const seal = Math.round(Math.min(Math.max(Math.min(w, h) * 0.26, 84), 132));
-  const tipR = Math.max(12, Math.min(w, h) * 0.035);
+  // Geometry, in px. The envelope covers the whole first section; the flap and seal are
+  // placed against the visible screen so the seal stays centred when the section is taller.
+  const { w, h, vh } = size;
+  const flapH = Math.round(vh * 0.54);
+  const meetY = vh * 0.5;
+  const bottomTop = vh * 0.47;
+  const seal = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.26, 84), 132));
+  const tipR = Math.max(12, Math.min(w, vh) * 0.035);
   const sideLen = Math.hypot(w / 2, flapH);
   const ux = w / 2 / sideLen;
   const uy = flapH / sideLen;
@@ -316,7 +323,8 @@ const Envelope = ({
   const tipRt = `${(w / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)}`;
   const flapPath = `M0 0 H${w} L${tipRt} Q${w / 2} ${flapH} ${tipL} Z`;
   const flapEdge = `M0 0 L${tipL} Q${w / 2} ${flapH} ${tipRt} L${w} 0`;
-  const bottomEdge = `M0 ${h} Q${w * 0.27} ${h * 0.64} ${w / 2} ${bottomTop} Q${w * 0.73} ${h * 0.64} ${w} ${h}`;
+  const bottomCtrlY = bottomTop + (h - bottomTop) * 0.32;
+  const bottomEdge = `M0 ${h} Q${w * 0.27} ${bottomCtrlY} ${w / 2} ${bottomTop} Q${w * 0.73} ${bottomCtrlY} ${w} ${h}`;
   const bottomPath = `${bottomEdge} Z`;
   // Inside of the envelope: plain paper, a shade deeper than the outside.
   const inside: React.CSSProperties = { backgroundColor: "#ece4d9", backgroundImage: grain(0.3), backgroundSize: "180px 180px" };
