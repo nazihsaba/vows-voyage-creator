@@ -14,7 +14,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import aureaLogo from "@/assets/aureaLogoFullColored.png";
 import InvitationPreviewSection from "@/components/InvitationPreviewSection";
-import { useState, useEffect, lazy, Suspense } from "react";
+import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import eventWedding from "@/assets/event-wedding.jpg";
@@ -22,6 +22,7 @@ import eventBirthday from "@/assets/event-birthday.jpg";
 import eventParty from "@/assets/event-party.jpg";
 import eventCelebration from "@/assets/event-celebration.jpg";
 import previewWedding5 from "@/assets/preview-wedding-10.jpg";
+import heroInvitation from "@/assets/hero-invitation-realistic.jpg";
 
 import whatsappIcon from "@/assets/whatsappIcon.png";
 import { Icon } from "@iconify/react";
