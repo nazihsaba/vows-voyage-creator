@@ -651,6 +651,57 @@ export const DentelleTemplate = ({
   };
 
   const heroCardRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // No scrolling until the envelope has been opened and the card animation has finished.
+  // Locks the page and, when the template sits in a scrolling box (dashboard preview), that box too.
+  useEffect(() => {
+    if (opened) return;
+    const root = rootRef.current;
+    let box: HTMLElement | null = root?.parentElement ?? null;
+    while (box && box !== document.body) {
+      const oy = getComputedStyle(box).overflowY;
+      if (oy === "auto" || oy === "scroll") break;
+      box = box.parentElement;
+    }
+    if (box === document.body) box = null;
+
+    const html = document.documentElement;
+    const body = document.body;
+    const prev = {
+      html: html.style.overflow,
+      body: body.style.overflow,
+      touch: body.style.touchAction,
+      box: box?.style.overflowY ?? "",
+    };
+    window.scrollTo(0, 0);
+    if (box) box.scrollTop = 0;
+    html.style.overflow = "hidden";
+    body.style.overflow = "hidden";
+    body.style.touchAction = "none";
+    if (box) box.style.overflowY = "hidden";
+
+    const block = (e: Event) => e.preventDefault();
+    const scrollKeys = new Set([" ", "PageDown", "PageUp", "ArrowDown", "ArrowUp", "Home", "End"]);
+    const blockKeys = (e: KeyboardEvent) => {
+      const el = e.target as HTMLElement | null;
+      if (el && (el.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName))) return;
+      if (scrollKeys.has(e.key)) e.preventDefault();
+    };
+    window.addEventListener("wheel", block, { passive: false });
+    window.addEventListener("touchmove", block, { passive: false });
+    window.addEventListener("keydown", blockKeys);
+
+    return () => {
+      html.style.overflow = prev.html;
+      body.style.overflow = prev.body;
+      body.style.touchAction = prev.touch;
+      if (box) box.style.overflowY = prev.box;
+      window.removeEventListener("wheel", block);
+      window.removeEventListener("touchmove", block);
+      window.removeEventListener("keydown", blockKeys);
+    };
+  }, [opened]);
 
   const rsvpPetals = useRef<PetalsHandle>(null);
   const submitRsvp = (wishes?: string) => {
@@ -776,6 +827,7 @@ export const DentelleTemplate = ({
 
   return (
     <div
+      ref={rootRef}
       className="w-full min-h-screen overflow-x-clip"
       style={{
         backgroundColor: IVORY,
