@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useEffect, useState } from "react";
 import { Calendar, MapPin, Copy } from "lucide-react";
 import { Icon } from "@iconify/react";
@@ -12,7 +13,9 @@ import doree3 from "@/assets/doree3.jpeg";
 import doree4 from "@/assets/doree4.jpeg";
 import doree5 from "@/assets/doree5.jpeg";
 import doree6 from "@/assets/doree6.jpeg";
-const weddingDate = new Date("2026-08-16");
+const previewDates = getPreviewDates();
+
+const weddingDate = previewDates.weddingDate;
 
 export const AuraPreview = () => {
   const [loading, setLoading] = useState(true);
@@ -103,7 +106,7 @@ export const AuraPreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-primary/30 mx-auto" />
-                <p className="text-xl font-semibold tracking-wide text-primary">Saturday, August 16th, 2026</p>
+                <p className="text-xl font-semibold tracking-wide text-primary">{previewDates.weddingDateLabel}</p>
               </div>
             </div>
           </div>
@@ -134,7 +137,7 @@ export const AuraPreview = () => {
           <AnimatedSection animation="fade-in">
             <div className="flex items-center justify-center gap-4 mb-12">
               <Calendar className="w-7 h-7 text-primary" />
-              <h2 className="text-template-subtitle">16 August</h2>
+              <h2 className="text-template-subtitle">{previewDates.shortDateLabel}</h2>
             </div>
           </AnimatedSection>
 
@@ -226,7 +229,7 @@ export const AuraPreview = () => {
 
         {/* ===== RSVP SECTION ===== */}
         <RsvpSection
-          staticDeadline={new Date("2026-08-01")}
+          staticDeadline={previewDates.rsvpDeadline}
           bgClassName="bg-card"
           invitees={[
             { id: "1", name: "Daniel Farah" },

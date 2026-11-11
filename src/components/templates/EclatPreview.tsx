@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
@@ -14,13 +15,15 @@ import auraPreview5 from "@/assets/aura-preview-5.jpg";
 import auraPreview6 from "@/assets/aura-preview-11.jpg";
 
 // Static demo data
+const previewDates = getPreviewDates();
+
 const staticWedding = {
   groom_name: "Julien",
   bride_name: "Clara",
   groom_family: "Aris",
   bride_family: "Vienne",
-  wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days from now
-  rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000), // 60 days from now
+  wedding_date: previewDates.weddingDate,
+  rsvp_deadline: previewDates.rsvpDeadline,
   main_picture_url: auraPreview4,
 };
 

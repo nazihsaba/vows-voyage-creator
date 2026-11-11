@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useEffect, useState, useCallback } from "react";
 import { ChevronDown, Heart } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
@@ -16,7 +17,9 @@ import etoile4 from "@/assets/etoile-4.jpg";
 import etoile5 from "@/assets/etoile-5.jpg";
 import etoile6 from "@/assets/etoile-6.jpg";
 
-const weddingDate = new Date("2026-08-16");
+const previewDates = getPreviewDates();
+
+const weddingDate = previewDates.weddingDate;
 
 const sampleEvents = [
   {
@@ -149,7 +152,7 @@ const EtoilePreview = () => {
               className="text-xl md:text-2xl tracking-[0.2em]"
               style={{ animation: "gentleFadeUp 1.2s ease-out 1.2s both" }}
             >
-              Saturday, August 16, 2026
+              {previewDates.weddingDateLabel}
             </span>
           </div>
           <div className="absolute bottom-12 animate-bounce">
@@ -193,7 +196,7 @@ const EtoilePreview = () => {
 
         {/* ===== EVENTS — slides from LEFT ===== */}
         <div className="mt-64">
-          <EtoileEvents events={sampleEvents} dateFormatted="16 August" align="left" />
+          <EtoileEvents events={sampleEvents} dateFormatted={previewDates.shortDateLabel} align="left" />
         </div>
 
         {/* ===== GALLERY — slides from RIGHT ===== */}
@@ -209,9 +212,9 @@ const EtoilePreview = () => {
         {/* ===== RSVP — slides from RIGHT ===== */}
         <div className="mt-64">
           <EtoileRsvp
-            wedding={{ rsvp_deadline: "2026-08-01" }}
+            wedding={{ rsvp_deadline: previewDates.rsvpDeadlineString }}
             isPreview
-            staticDeadline={new Date("2026-08-01")}
+            staticDeadline={previewDates.rsvpDeadline}
             invitees={[
               { id: "1", name: "Daniel Farah" },
               { id: "2", name: "Sara Mansour" },

@@ -1,4 +1,7 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { ReverieTemplate } from "./ReverieTemplate";
+
+const previewDates = getPreviewDates();
 
 const sampleWedding = {
   id: "preview",
@@ -6,10 +9,10 @@ const sampleWedding = {
   bride_name: "Nour",
   groom_family: "Haddad",
   bride_family: "Khoury",
-  wedding_date: "2027-05-20",
+  wedding_date: previewDates.weddingDateString,
   main_description:
     "Request the pleasure of your company as they celebrate their marriage and begin this new chapter surrounded by the people they love most.",
-  rsvp_deadline: "2027-05-01",
+  rsvp_deadline: previewDates.rsvpDeadlineString,
   wishes_enabled: true,
   template_type: "dentelle-lace",
 };

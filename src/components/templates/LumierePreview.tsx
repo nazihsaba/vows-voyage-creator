@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useEffect, useRef, useState } from "react";
 import { ChevronDown } from "lucide-react";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -17,7 +18,9 @@ import lumiere4 from "@/assets/lumiere-4.jpg";
 import lumiere5 from "@/assets/lumiere-5.jpg";
 import lumiere6 from "@/assets/lumiere-6.jpg";
 
-const weddingDate = new Date("2026-08-16");
+const previewDates = getPreviewDates();
+
+const weddingDate = previewDates.weddingDate;
 
 const sampleEvents = [
   {
@@ -173,7 +176,7 @@ const LumierePreview = () => {
             <div className="opacity-0 animate-[fadeInUp_0.7s_ease-out_0.85s_forwards]">
               <div className="space-y-3">
                 <div className="w-16 h-px bg-white/30 mx-auto" />
-                <p className="text-xl font-semibold tracking-wide text-white">Saturday, August 16th, 2026</p>
+                <p className="text-xl font-semibold tracking-wide text-white">{previewDates.weddingDateLabel}</p>
               </div>
             </div>
           </div>
@@ -184,7 +187,7 @@ const LumierePreview = () => {
           <LumiereCountdown targetDate={weddingDate.toISOString()} />
         </div>
         <div className="mt-64">
-          <LumiereEvents events={sampleEvents} dateFormatted="16 August" />
+          <LumiereEvents events={sampleEvents} dateFormatted={previewDates.shortDateLabel} />
         </div>
         <div className="mt-64">
           <LumiereGallery images={sampleGallery} />
@@ -194,9 +197,9 @@ const LumierePreview = () => {
         </div>
         <div className="mt-64">
           <LumiereRsvp
-            wedding={{ rsvp_deadline: "2026-08-01" }}
+            wedding={{ rsvp_deadline: previewDates.rsvpDeadlineString }}
             isPreview
-            staticDeadline={new Date("2026-08-01")}
+            staticDeadline={previewDates.rsvpDeadline}
             invitees={[
               { id: "1", name: "Daniel Farah" },
               { id: "2", name: "Sara Mansour" },

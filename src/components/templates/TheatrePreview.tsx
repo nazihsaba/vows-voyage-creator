@@ -1,7 +1,10 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { TheatreTemplate } from "./TheatreTemplate";
 import etoile1 from "@/assets/etoile-1.jpg";
 import etoile2 from "@/assets/etoile-2.jpg";
 import etoile3 from "@/assets/etoile-3.jpg";
+
+const previewDates = getPreviewDates();
 
 const sampleWedding = {
   id: "preview",
@@ -9,12 +12,12 @@ const sampleWedding = {
   bride_name: "Clara",
   groom_family: "Karam Family",
   bride_family: "Nassar Family",
-  wedding_date: "2026-08-16",
+  wedding_date: previewDates.weddingDateString,
   main_picture_url: etoile1,
   main_photo_position: 50,
   main_description:
     "With joy in our hearts we invite you to a single evening of ceremony, supper, and celebration — the culmination of a story we have been rehearsing for years.",
-  rsvp_deadline: "2026-08-01",
+  rsvp_deadline: previewDates.rsvpDeadlineString,
   wishes_enabled: true,
 };
 

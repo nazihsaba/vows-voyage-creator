@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { TresorTemplate } from "./TresorTemplate";
 import tresor1 from "@/assets/tresor/tresor-1.jpeg";
 import tresor2 from "@/assets/tresor/tresor-2.jpeg";
@@ -8,10 +9,12 @@ import tresor6 from "@/assets/tresor/tresor-6.jpeg";
 import tresor7 from "@/assets/tresor/tresor-7.jpeg";
 import tresor8 from "@/assets/tresor/tresor-8.jpeg";
 
+const previewDates = getPreviewDates();
+
 const sampleWedding = {
   bride_name: "Aurélie",
   groom_name: "Maxime",
-  wedding_date: "2026-08-16",
+  wedding_date: previewDates.weddingDateString,
   hero_media: tresor3,
   bride_family: "Thomas Family",
   groom_family: "Martin Family",

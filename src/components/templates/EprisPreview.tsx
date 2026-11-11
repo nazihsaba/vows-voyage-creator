@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapPin, Heart, ChevronUp, Hand } from "lucide-react";
@@ -27,6 +28,8 @@ interface EprisData {
   invitationText?: string;
 }
 
+const previewDates = getPreviewDates();
+
 const defaultData: EprisData = {
   coupleName1: "Chris",
   coupleName2: "Sophie",
@@ -47,11 +50,11 @@ const defaultData: EprisData = {
   celebrationLocation: "Country Lodge",
   celebrationTime: "8:00 PM",
   celebrationCity: "Bsalim - Lebanon",
-  weddingDateLabel: "Saturday, October 10th, 2026",
+  weddingDateLabel: previewDates.weddingDateLabel,
   weddingTimeLabel: "10:10 AM",
-  rsvpDeadline: "October 10, 2026",
+  rsvpDeadline: previewDates.rsvpDeadline.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" }),
   numberOfPersons: 1,
-  weddingDate: new Date(Date.now() + 168 * 24 * 60 * 60 * 1000).toISOString(),
+  weddingDate: previewDates.weddingDate.toISOString(),
   quote: "Therefore what God has joined together, let no one separate.",
   invitationText: "Would be honored by your presence on this special day",
 };

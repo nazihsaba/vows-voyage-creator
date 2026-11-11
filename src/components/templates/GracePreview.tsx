@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
@@ -10,13 +11,15 @@ import previewWedding4 from "@/assets/preview-wedding-4.jpg";
 import { BackgroundVideo } from "@/components/templates/BackgroundVideo";
 import TemplateLoader from "@/components/templates/TemplateLoader";
 
+const previewDates = getPreviewDates();
+
 const staticWedding = {
   groom_name: "Noah",
   bride_name: "Mia",
   groom_family: "Elin",
   bride_family: "Soren",
-  wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-  rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+  wedding_date: previewDates.weddingDate,
+  rsvp_deadline: previewDates.rsvpDeadline,
   video_url: graceVideo,
 };
 

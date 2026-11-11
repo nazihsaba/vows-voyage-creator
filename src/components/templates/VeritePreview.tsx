@@ -1,3 +1,4 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useState, useEffect } from "react";
 import { ChevronDown } from "lucide-react";
 import { Icon } from "@iconify/react";
@@ -14,13 +15,15 @@ import previewWedding6 from "@/assets/verite-preview-6.jpg";
 import previewWedding7 from "@/assets/verite-preview-7.jpg";
 import previewWedding8 from "@/assets/verite-preview-8.jpg";
 
+const previewDates = getPreviewDates();
+
 const staticWedding = {
   groom_name: "Ryan",
   bride_name: "Ava",
   groom_family: "Johnson",
   bride_family: "Neril",
-  wedding_date: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
-  rsvp_deadline: new Date(Date.now() + 60 * 24 * 60 * 60 * 1000),
+  wedding_date: previewDates.weddingDate,
+  rsvp_deadline: previewDates.rsvpDeadline,
   main_picture_url: previewWedding1,
 };
 

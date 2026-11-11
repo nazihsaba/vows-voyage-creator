@@ -1,9 +1,12 @@
+import { getPreviewDates } from "@/lib/previewDates";
 import { useState, useEffect } from "react";
 import { MapPin, ChevronDown } from "lucide-react";
 import { AnimatedSection } from "@/hooks/useScrollAnimation";
 import { RsvpSection } from "@/components/templates/RsvpSection";
 
 /* ── Static Countdown ── */
+const previewDates = getPreviewDates();
+
 const StaticCountdownTimer = ({ targetDate }: { targetDate: Date }) => {
   const [timeRemaining, setTimeRemaining] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
@@ -154,8 +157,8 @@ const NavCircle = ({ label }: { label: string }) => (
 );
 
 const OpulencePreview = () => {
-  const staticWeddingDate = new Date("2025-09-15");
-  const staticRsvpDeadline = new Date("2025-08-15");
+  const staticWeddingDate = previewDates.weddingDate;
+  const staticRsvpDeadline = previewDates.rsvpDeadline;
   const [started, setStarted] = useState(false);
 
   return (
