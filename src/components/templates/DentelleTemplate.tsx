@@ -136,6 +136,114 @@ const Bow = ({ color, width = 120 }: { color: string; width?: number }) => (
   </svg>
 );
 
+/** Fine-line ornaments, one per section; drawn stroke by stroke by <DrawOnView>. */
+const Ornament = ({ color, width, children }: { color: string; width: number; children: React.ReactNode }) => (
+  <svg
+    aria-hidden
+    width={width}
+    height={(width * 80) / 120}
+    viewBox="0 0 120 80"
+    fill="none"
+    stroke={color}
+    strokeWidth="1.1"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    {children}
+  </svg>
+);
+
+/** Invitation: a letter in an envelope, closed with a heart seal. */
+const LoveLetter = ({ color, width = 112 }: { color: string; width?: number }) => (
+  <Ornament color={color} width={width}>
+    <path pathLength={1} d="M31 30 V11 H89 V30" />
+    <path pathLength={1} d="M39 17 H81 M45 22.5 H75" opacity="0.5" />
+    <path pathLength={1} d="M22 28 H98 V74 H22 Z" />
+    <path pathLength={1} d="M22 28 L60 54 L98 28" />
+    <path pathLength={1} d="M22 74 L50 50 M98 74 L70 50" opacity="0.55" />
+    <path pathLength={1} d="M60 62 C52 56 50 50 54 47.5 C57 45.5 60 48 60 50 C60 48 63 45.5 66 47.5 C70 50 68 56 60 62 Z" />
+  </Ornament>
+);
+
+/** Countdown: a pocket watch on its chain. */
+const PocketWatch = ({ color, width = 118 }: { color: string; width?: number }) => (
+  <Ornament color={color} width={width}>
+    <ellipse pathLength={1} cx="66" cy="10" rx="4.6" ry="4" />
+    <path pathLength={1} d="M63 17 H69 V21 H63 Z" />
+    <circle pathLength={1} cx="66" cy="45" r="24" />
+    <circle pathLength={1} cx="66" cy="45" r="20" opacity="0.45" />
+    <path pathLength={1} d="M66 27.5 V30.5 M83.5 45 H80.5 M66 62.5 V59.5 M48.5 45 H51.5" />
+    <path pathLength={1} d="M66 45 V32.5 M66 45 L75 49.5" />
+    <circle pathLength={1} cx="66" cy="45" r="1.3" />
+    <path pathLength={1} d="M61.5 9 C46 6 32 14 24 28 C20 35 18 42 19 50" opacity="0.6" />
+    <circle pathLength={1} cx="19.5" cy="53.5" r="3" opacity="0.6" />
+  </Ornament>
+);
+
+/** Location: a little chapel. */
+const Chapel = ({ color, width = 104 }: { color: string; width?: number }) => (
+  <Ornament color={color} width={width}>
+    <path pathLength={1} d="M28 76 H92" />
+    <path pathLength={1} d="M42 76 V47 H78 V76" />
+    <path pathLength={1} d="M38 49 L60 33 L82 49" />
+    <path pathLength={1} d="M53 37.5 V22 H67 V37.5" />
+    <path pathLength={1} d="M51 22.5 L60 10 L69 22.5" />
+    <path pathLength={1} d="M60 10 V2.5 M57 5.2 H63" />
+    <circle pathLength={1} cx="60" cy="29" r="2.6" />
+    <path pathLength={1} d="M55 76 V66 C55 60.5 65 60.5 65 66 V76" />
+    <path pathLength={1} d="M47 63 V57 C47 53.5 52 53.5 52 57 V63 Z M68 63 V57 C68 53.5 73 53.5 73 57 V63 Z" opacity="0.7" />
+    <path pathLength={1} d="M30 76 C27 69 33 64 37 70 M90 76 C93 69 87 64 83 70" opacity="0.6" />
+  </Ornament>
+);
+
+/** The Day: two champagne flutes clinking. */
+const Toast = ({ color, width = 104 }: { color: string; width?: number }) => {
+  const flute = (
+    <>
+      <path pathLength={1} d="M-7.5 0 C-7.5 15 -4.5 25 0 27 C4.5 25 7.5 15 7.5 0 Z" />
+      <path pathLength={1} d="M-6.8 8 H6.8" opacity="0.55" />
+      <path pathLength={1} d="M0 27 V46" />
+      <path pathLength={1} d="M-8.5 48.5 C-4 46 4 46 8.5 48.5" />
+    </>
+  );
+  return (
+    <Ornament color={color} width={width}>
+      <g transform="translate(51.5 20) rotate(14)">{flute}</g>
+      <g transform="translate(68.5 20) rotate(-14)">{flute}</g>
+      <path pathLength={1} d="M60 12 V5 M53.5 13 L49.5 8 M66.5 13 L70.5 8" opacity="0.7" />
+      <circle pathLength={1} cx="49" cy="36" r="0.9" opacity="0.6" />
+      <circle pathLength={1} cx="52" cy="31" r="0.7" opacity="0.6" />
+      <circle pathLength={1} cx="71" cy="36" r="0.9" opacity="0.6" />
+      <circle pathLength={1} cx="68" cy="31" r="0.7" opacity="0.6" />
+    </Ornament>
+  );
+};
+
+/** Wedding gift: a box tied with a ribbon bow. */
+const GiftBox = ({ color, width = 96 }: { color: string; width?: number }) => (
+  <Ornament color={color} width={width}>
+    <path pathLength={1} d="M34 42 H86 V76 H34 Z" />
+    <path pathLength={1} d="M30 33 H90 V42 H30 Z" />
+    <path pathLength={1} d="M56.5 33 V76 M63.5 33 V76" />
+    <path pathLength={1} d="M60 33 C50 17 37 19 43 30 C46 34 54 34 60 33 Z" />
+    <path pathLength={1} d="M60 33 C70 17 83 19 77 30 C74 34 66 34 60 33 Z" />
+    <path pathLength={1} d="M58 34 L51 45 M62 34 L69 45" opacity="0.7" />
+  </Ornament>
+);
+
+/** RSVP: a quill and an inkwell. */
+const Quill = ({ color, width = 100 }: { color: string; width?: number }) => (
+  <Ornament color={color} width={width}>
+    <path pathLength={1} d="M38 76 H66" />
+    <path pathLength={1} d="M41 76 V64 C41 59.5 45 57 52 57 C59 57 63 59.5 63 64 V76" />
+    <path pathLength={1} d="M47.5 57 V52.5 H56.5 V57" />
+    <path pathLength={1} d="M52 53 L93 6" />
+    <path pathLength={1} d="M93 6 C81 9 69 22 63 39 C70 31 80 22 93 6 Z" />
+    <path pathLength={1} d="M93 6 C91 19 82 31 69 40" opacity="0.7" />
+    <path pathLength={1} d="M80 19 L75 25 M86 13 L82 18.5 M73 27 L69.5 32" opacity="0.5" />
+  </Ornament>
+);
+
 /** Two interlaced wedding rings. */
 const Rings = ({ color }: { color: string }) => (
   <svg aria-hidden width="96" height="70" viewBox="0 0 120 88" fill="none" stroke={color} strokeWidth="1.3">
@@ -927,7 +1035,7 @@ export const DentelleTemplate = ({
         {/* ==================== INVITATION ==================== */}
         <section className="text-center" style={{ padding: "96px 24px 104px", maxWidth: 600, margin: "0 auto" }}>
           <DrawOnView className="flex justify-center">
-            <Bow color={COCOA} width={112} />
+            <LoveLetter color={COCOA} />
           </DrawOnView>
           <Reveal delay={150}>
           <div style={{ marginTop: 22, fontFamily: FONT_HEADING, fontSize: 30, lineHeight: 1.2, color: INK }}>
@@ -976,7 +1084,7 @@ export const DentelleTemplate = ({
           <LaceEdge lace={IVORY} band={COCOA} />
           <div className="text-center" style={{ padding: "64px 20px 70px" }}>
             <DrawOnView className="flex justify-center">
-              <Bow color={BAND_ACCENT} width={150} />
+              <PocketWatch color={BAND_ACCENT} />
             </DrawOnView>
             <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), BAND_TITLE)}</div>
             <div
@@ -1005,6 +1113,9 @@ export const DentelleTemplate = ({
         {/* ==================== LOCATION ==================== */}
         {placesWithDirections.length > 0 && (
           <section className="text-center" style={{ padding: "96px 24px 40px", maxWidth: 620, margin: "0 auto" }}>
+            <DrawOnView className="flex justify-center" style={{ marginBottom: 18 }}>
+              <Chapel color={COCOA} />
+            </DrawOnView>
             {sectionTitle(t("dentelle.location", "Location"))}
             <div className="flex flex-col" style={{ gap: 64, marginTop: 34 }}>
               {placesWithDirections.map((place: any) => {
@@ -1073,6 +1184,9 @@ export const DentelleTemplate = ({
         {/* ==================== THE DAY ==================== */}
         {dayEntries.length > 0 && (
           <section style={{ padding: "90px 22px 104px", maxWidth: 600, margin: "0 auto" }}>
+            <DrawOnView className="flex justify-center" style={{ marginBottom: 18 }}>
+              <Toast color={COCOA} />
+            </DrawOnView>
             <Reveal className="text-center">
               {sectionTitle(t("dentelle.theDay", "The Day"))}
               <div style={{ marginTop: 14, fontSize: 15.5, lineHeight: 1.65, color: MUTED }}>
@@ -1196,6 +1310,9 @@ export const DentelleTemplate = ({
                   padding: "46px 22px 34px",
                 }}
               >
+                <DrawOnView className="flex justify-center" style={{ marginBottom: 16 }}>
+                  <GiftBox color={COCOA} />
+                </DrawOnView>
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
                 <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
                   {t("dentelle.giftLead", "Your presence is our greatest gift.")}
@@ -1229,6 +1346,9 @@ export const DentelleTemplate = ({
             <Petals ref={rsvpPetals} ambient={0} active={false} />
             <LaceEdge lace={IVORY} band={COCOA} />
             <div style={{ padding: "40px 16px 56px" }}>
+              <DrawOnView className="flex justify-center" style={{ marginBottom: 22 }}>
+                <Quill color={BAND_ACCENT} />
+              </DrawOnView>
               <div
                 className="mx-auto"
                 style={{ maxWidth: 760, background: IVORY, borderRadius: 16, overflow: "hidden", border: `1px solid ${CHAMPAGNE}`, boxShadow: "0 30px 60px -30px rgba(0,0,0,.45)" }}
