@@ -26,18 +26,18 @@ import {
   RollingNumber,
   prefersReducedMotion,
   useInView,
-} from "@/components/templates/dentelle/DentelleEffects";
-import { DentelleLace } from "./dentelle/DentelleLace";
-import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./dentelle/DentelleOrnaments";
+} from "@/components/templates/reverie/ReverieEffects";
+import { ReverieLace } from "./reverie/ReverieLace";
+import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./reverie/ReverieOrnaments";
 
 /**
- * Dentelle — romantic lace invitation.
+ * Rêverie (formerly Dentelle) — romantic lace invitation.
  * Opens from a paper envelope sealed with wax, then an ivory card on linen,
  * mocha bands with a fine lace trim, and a vertical "The Day" timeline built
  * from the events.
  */
 
-interface DentelleTemplateProps {
+interface ReverieTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -493,10 +493,10 @@ const Envelope = ({
 };
 
 /**
- * Gift details for Dentelle: each provider's name in small caps, the number set
+ * Gift details for Rêverie: each provider's name in small caps, the number set
  * in the heading serif, and a small copy pill, separated by a fine ornament.
  */
-const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_name: string; card_number: string }> }) => {
+const ReverieGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_name: string; card_number: string }> }) => {
   const { t } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const timer = useRef<number>();
@@ -543,7 +543,7 @@ const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_
             <button
               type="button"
               onClick={() => copy(card.id, card.card_number)}
-              aria-label={`${t("dentelle.copy", "Copy")} ${card.card_name}`}
+              aria-label={`${t("reverie.copy", "Copy")} ${card.card_name}`}
               className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
               style={{
                 ...SMALL_CAPS,
@@ -561,7 +561,7 @@ const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_
               }}
             >
               {copied ? <Check aria-hidden className="h-3.5 w-3.5" /> : <Copy aria-hidden className="h-3.5 w-3.5" />}
-              <span aria-live="polite">{copied ? t("dentelle.copied", "Copied") : t("dentelle.copy", "Copy")}</span>
+              <span aria-live="polite">{copied ? t("reverie.copied", "Copied") : t("reverie.copy", "Copy")}</span>
             </button>
           </li>
         );
@@ -590,7 +590,7 @@ const KEYFRAMES = `
 }
 `;
 
-export const DentelleTemplate = ({
+export const ReverieTemplate = ({
   wedding,
   locations,
   giftCards,
@@ -605,7 +605,7 @@ export const DentelleTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: DentelleTemplateProps) => {
+}: ReverieTemplateProps) => {
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -737,7 +737,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(ceremony.time) || "",
       title: t("events.ceremony"),
       place: getLocalizedValue("ceremony_location", ceremony.location_name || ""),
-      note: t("dentelle.ceremonyNote", "We say “I do” surrounded by the people we love."),
+      note: t("reverie.ceremonyNote", "We say “I do” surrounded by the people we love."),
       icon: ceremony.icon,
       fallbackIcon: "material-symbols:church-rounded",
     });
@@ -748,7 +748,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(welcomeDrink.time) || "",
       title: t("events.welcomeDrink"),
       place: getLocalizedValue("venue_location", welcomeDrink.location_name || venue?.location_name || ""),
-      note: t("dentelle.welcomeNote", "Drinks and warm hugs as the evening begins."),
+      note: t("reverie.welcomeNote", "Drinks and warm hugs as the evening begins."),
       icon: welcomeDrink.icon,
       fallbackIcon: "asset:cheers",
     });
@@ -759,7 +759,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(venue.time) || "",
       title: t("events.dinnerParty"),
       place: getLocalizedValue("venue_location", venue.location_name || ""),
-      note: t("dentelle.venueNote", "Dinner, toasts and dancing until late."),
+      note: t("reverie.venueNote", "Dinner, toasts and dancing until late."),
       icon: venue.icon,
       fallbackIcon: "solar:confetti-bold",
     });
@@ -852,7 +852,7 @@ export const DentelleTemplate = ({
           className="relative overflow-hidden"
           style={{ minHeight: "100svh", ...LINEN }}
         >
-          <DentelleLace cardRef={heroCardRef} />
+          <ReverieLace cardRef={heroCardRef} />
           <Petals ambient={14} active={opened} />
           <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "44px clamp(28px, 8vw, 40px)" }}>
             {/* The invitation card, on linen */}
@@ -872,7 +872,7 @@ export const DentelleTemplate = ({
                 className="dt-anim flex flex-col items-center"
               >
                 <p style={{ fontFamily: FONT_HEADING, fontSize: 17, lineHeight: 1.3, color: MUTED, maxWidth: 160 }}>
-                  {t("dentelle.together", "Together with their families")}
+                  {t("reverie.together", "Together with their families")}
                 </p>
                 <HeartTap color="#a9776b">
                 <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26 }}>
@@ -920,7 +920,7 @@ export const DentelleTemplate = ({
               cardRef={heroCardRef}
               opening={opening}
               onOpen={openInvitation}
-              label={t("dentelle.tapToOpen", "Tap to open")}
+              label={t("reverie.tapToOpen", "Tap to open")}
             />
           )}
         </section>
@@ -932,7 +932,7 @@ export const DentelleTemplate = ({
           </DrawOnView>
           <Reveal delay={150}>
           <div style={{ marginTop: 22, fontFamily: FONT_HEADING, fontSize: 30, lineHeight: 1.2, color: INK }}>
-            {t("dentelle.together", "Together with their families")}
+            {t("reverie.together", "Together with their families")}
           </div>
           <div style={{ marginTop: 14, fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 19, lineHeight: 1.6, color: MUTED }}>
             <EditableField
@@ -979,7 +979,7 @@ export const DentelleTemplate = ({
             <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms" }}>
               <PocketWatchArt color={BAND_ACCENT} />
             </DrawOnView>
-            <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), BAND_TITLE)}</div>
+            <div style={{ marginTop: 18 }}>{sectionTitle(t("reverie.countdown", "Countdown"), BAND_TITLE)}</div>
             <div
               className="flex justify-center"
               style={{ gap: "clamp(18px, 7vw, 48px)", marginTop: 26 }}
@@ -1009,7 +1009,7 @@ export const DentelleTemplate = ({
             <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 18 }}>
               <ChapelArt color={COCOA} />
             </DrawOnView>
-            {sectionTitle(t("dentelle.location", "Location"))}
+            {sectionTitle(t("reverie.location", "Location"))}
             <div className="flex flex-col" style={{ gap: 64, marginTop: 34 }}>
               {placesWithDirections.map((place: any) => {
                 const isVenue = place === venue;
@@ -1064,7 +1064,7 @@ export const DentelleTemplate = ({
                           textDecoration: "none",
                         }}
                       >
-                        {t("dentelle.getDirections", "Get directions")}
+                        {t("reverie.getDirections", "Get directions")}
                       </a>
                     )}
                   </Reveal>
@@ -1081,13 +1081,13 @@ export const DentelleTemplate = ({
               <ToastArt color={COCOA} />
             </DrawOnView>
             <Reveal className="text-center">
-              {sectionTitle(t("dentelle.theDay", "The Day"))}
+              {sectionTitle(t("reverie.theDay", "The Day"))}
               <div style={{ marginTop: 14, fontSize: 15.5, lineHeight: 1.65, color: MUTED }}>
                 <EditableField
                   fieldId="dentelle-day-subtitle"
                   text={getFieldValue(
                     "dentelle-day-subtitle",
-                    t("dentelle.theDaySubtitle", "A day to celebrate,\nfrom the first hello to the last dance."),
+                    t("reverie.theDaySubtitle", "A day to celebrate,\nfrom the first hello to the last dance."),
                   )}
                   style={getFieldStyle("dentelle-day-subtitle")}
                   onUpdate={onFieldUpdate}
@@ -1208,14 +1208,14 @@ export const DentelleTemplate = ({
                 </DrawOnView>
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
                 <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
-                  {t("dentelle.giftLead", "Your presence is our greatest gift.")}
+                  {t("reverie.giftLead", "Your presence is our greatest gift.")}
                 </p>
                 <div style={{ marginTop: 12, fontSize: 15, lineHeight: 1.7, color: "#4c4040", maxWidth: 400, marginInline: "auto" }}>
                   <EditableField
                     fieldId="dentelle-gift-text"
                     text={getFieldValue(
                       "dentelle-gift-text",
-                      t("dentelle.giftText", "Should you wish to give a gift, you can use the details below."),
+                      t("reverie.giftText", "Should you wish to give a gift, you can use the details below."),
                     )}
                     style={getFieldStyle("dentelle-gift-text")}
                     onUpdate={onFieldUpdate}
@@ -1226,7 +1226,7 @@ export const DentelleTemplate = ({
                   />
                 </div>
                 <div style={{ marginTop: 26 }}>
-                  <DentelleGiftCards giftCards={giftCards} />
+                  <ReverieGiftCards giftCards={giftCards} />
                 </div>
               </div>
             </Reveal>
@@ -1276,7 +1276,7 @@ export const DentelleTemplate = ({
           <div style={{ marginTop: 20, fontFamily: FONT_HEADING, fontSize: 24, color: INK }}>
             <EditableField
               fieldId="dentelle-closing"
-              text={getFieldValue("dentelle-closing", t("dentelle.closing", "We can't wait to celebrate with you."))}
+              text={getFieldValue("dentelle-closing", t("reverie.closing", "We can't wait to celebrate with you."))}
               style={getFieldStyle("dentelle-closing")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -1285,7 +1285,7 @@ export const DentelleTemplate = ({
               className="whitespace-pre-line"
             />
           </div>
-          <p style={{ marginTop: 26, fontSize: 14, color: MUTED }}>{t("dentelle.withLove", "With love,")}</p>
+          <p style={{ marginTop: 26, fontSize: 14, color: MUTED }}>{t("reverie.withLove", "With love,")}</p>
           <p style={{ fontFamily: FONT_TITLE, fontSize: "clamp(44px, 12vw, 64px)", lineHeight: 1.15, color: INK, marginTop: 6 }}>
             {groomName} <span style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: "0.42em", color: CHAMPAGNE }}>&amp;</span> {brideName}
           </p>
@@ -1310,7 +1310,7 @@ export const DentelleTemplate = ({
               <rect x="3" y="5" width="18" height="16" rx="2" />
               <path d="M3 10h18M8 3v4M16 3v4" />
             </svg>
-            {t("dentelle.addToCalendar", "Add to calendar")}
+            {t("reverie.addToCalendar", "Add to calendar")}
           </a>
           </Reveal>
         </section>
@@ -1329,4 +1329,4 @@ export const DentelleTemplate = ({
   );
 };
 
-export default DentelleTemplate;
+export default ReverieTemplate;

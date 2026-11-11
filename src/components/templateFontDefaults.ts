@@ -72,7 +72,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
     monogram: '"Cormorant Garamond", serif',
     countdown: '"Cormorant Garamond", serif',
   },
-  // Dentelle — romantic lace
+  // Rêverie (formerly Dentelle) — romantic lace
   "dentelle-lace": {
     title: '"Monsieur La Doulaise", "Great Vibes", cursive',
     subtitle: '"Cormorant Garamond", serif',

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
 /**
- * Embossed lace backdrop for the Dentelle hero.
+ * Embossed lace backdrop for the Rêverie hero.
  * Raised ivory lace (vines, leaves, small flowers, rosettes) surrounds a smooth ivory
  * panel with a scalloped, beaded rim. The panel sits exactly where the invitation card is.
  * Drawn once per size on a canvas, then lit like a relief, so it costs nothing while
@@ -389,7 +389,7 @@ function render(out: HTMLCanvasElement, cssW: number, cssH: number, card: { x: n
   out.getContext("2d")!.putImageData(img, 0, 0);
 }
 
-export const DentelleLace = ({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) => {
+export const ReverieLace = ({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) => {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [ready, setReady] = useState(false);

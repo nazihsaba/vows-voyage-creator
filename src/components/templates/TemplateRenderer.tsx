@@ -13,7 +13,7 @@ import { LumiereTemplate } from './LumiereTemplate';
 import { EtoileTemplate } from './EtoileTemplate';
 import { TresorTemplate } from './TresorTemplate';
 import { TheatreTemplate } from './TheatreTemplate';
-import { DentelleTemplate } from './DentelleTemplate';
+import { ReverieTemplate } from './ReverieTemplate';
 import { ReactNode } from 'react';
 
 interface TemplateRendererProps {
@@ -242,9 +242,9 @@ export const TemplateRenderer = ({
     );
   }
 
-  if (template.component === 'DentelleTemplate') {
+  if (template.component === 'ReverieTemplate') {
     return (
-      <DentelleTemplate
+      <ReverieTemplate
         wedding={wedding}
         locations={locations}
         gallery={gallery}

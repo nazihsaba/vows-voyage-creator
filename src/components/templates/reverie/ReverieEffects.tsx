@@ -1,7 +1,7 @@
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef, useState } from "react";
 
 /**
- * Small, lightweight effects for the Dentelle template.
+ * Small, lightweight effects for the Rêverie template.
  * Everything respects "reduce motion" and pauses when off screen.
  */
 

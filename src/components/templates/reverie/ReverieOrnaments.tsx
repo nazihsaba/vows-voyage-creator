@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 /**
- * Pen-and-ink section illustrations for the Dentelle template.
+ * Pen-and-ink section illustrations for the Rêverie template.
  * Every stroke has pathLength=1 so <DrawOnView> can draw it; --i staggers the strokes
  * so the drawing appears as if sketched live. A light displacement filter gives the
  * lines a hand-drawn wobble.
