@@ -246,6 +246,71 @@ const WaxSeal = ({ initials, size = 96 }: { initials: string; size?: number }) =
   );
 };
 
+/** Scalloped lace edging along a polyline: scallops bulge to the outer side, each with a pinhole. */
+function laceTrim(pts: Array<[number, number]>, size: number) {
+  // resample the polyline evenly
+  const out: Array<[number, number]> = [];
+  for (let k = 0; k < pts.length - 1; k++) {
+    const [ax, ay] = pts[k];
+    const [bx, by] = pts[k + 1];
+    const n = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) / size));
+    for (let j = 0; j < n; j++) out.push([ax + ((bx - ax) * j) / n, ay + ((by - ay) * j) / n]);
+  }
+  out.push(pts[pts.length - 1]);
+  let edge = `M${out[0][0].toFixed(1)} ${out[0][1].toFixed(1)}`;
+  let holes = "";
+  for (let k = 0; k < out.length - 1; k++) {
+    const [ax, ay] = out[k];
+    const [bx, by] = out[k + 1];
+    const len = Math.hypot(bx - ax, by - ay) || 1;
+    const nx = -(by - ay) / len;
+    const ny = (bx - ax) / len;
+    const r = len / 2;
+    const c = r * 1.3;
+    edge += ` C${(ax + nx * c).toFixed(1)} ${(ay + ny * c).toFixed(1)} ${(bx + nx * c).toFixed(1)} ${(by + ny * c).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+    const hx = (ax + bx) / 2 + nx * r * 0.5;
+    const hy = (ay + by) / 2 + ny * r * 0.5;
+    const hr = r * 0.26;
+    holes += ` M${(hx - hr).toFixed(1)} ${hy.toFixed(1)} a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(hr * 2).toFixed(1)} 0 a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(-hr * 2).toFixed(1)} 0`;
+  }
+  // close the band back along the edge itself
+  const back = [...out].reverse().map(([x, y]) => `L${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+  return `${edge} ${back} Z${holes}`;
+}
+
+/** Round lace doily: scalloped rim, a ring of pinholes and a fine inner circle. */
+const LaceDoily = ({ size }: { size: number }) => {
+  const R = size / 2 - 6;
+  const n = 22;
+  const pts: Array<[number, number]> = [];
+  for (let k = 0; k <= n; k++) {
+    const a = (k / n) * Math.PI * 2;
+    pts.push([size / 2 + Math.cos(a) * R * 0.86, size / 2 + Math.sin(a) * R * 0.86]);
+  }
+  // scallops outward around a circle drawn clockwise on screen point outwards with (-dy, dx) reversed
+  const ring = laceTrim([...pts].reverse(), (2 * Math.PI * R * 0.86) / n);
+  const holes: React.ReactNode[] = [];
+  for (let k = 0; k < n; k++) {
+    const a = ((k + 0.5) / n) * Math.PI * 2;
+    holes.push(<circle key={k} cx={size / 2 + Math.cos(a) * R * 0.7} cy={size / 2 + Math.sin(a) * R * 0.7} r={1.3} fill="#e9dfd2" />);
+  }
+  return (
+    <svg aria-hidden width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ overflow: "visible", display: "block" }}>
+      <defs>
+        <filter id="dt-doily-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" floodColor="#463026" floodOpacity="0.2" />
+        </filter>
+      </defs>
+      <g filter="url(#dt-doily-shadow)">
+        <circle cx={size / 2} cy={size / 2} r={R * 0.86} fill="#fffdf9" />
+        <path d={ring} fill="#fffdf9" fillRule="evenodd" />
+      </g>
+      {holes}
+      <circle cx={size / 2} cy={size / 2} r={R * 0.6} fill="none" stroke="#e6dacb" strokeWidth="0.8" strokeDasharray="1.5 2.5" />
+    </svg>
+  );
+};
+
 /**
  * A paper envelope, sealed with wax, that fills the opening screen. The invitation
  * card underneath sits inside it: tapping lifts the seal and folds the flap back so
@@ -319,6 +384,10 @@ const Envelope = ({
   const tipRt = `${(w / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)}`;
   const flapPath = `M0 0 H${w} L${tipRt} Q${w / 2} ${flapH} ${tipL} Z`;
   const flapEdge = `M0 0 L${tipL} Q${w / 2} ${flapH} ${tipRt} L${w} 0`;
+  const laceSize = Math.max(9, Math.min(13, w / 34));
+  const flapLace = laceTrim([[0, 0], [w / 2, flapH], [w, 0]], laceSize);
+  const inset = 7;
+  const flapStitch = `M${inset * 1.6} 0 L${w / 2} ${flapH - inset * 1.9} L${w - inset * 1.6} 0`;
   const bottomCtrlY = bottomTop + (h - bottomTop) * 0.32;
   const bottomEdge = `M0 ${h} Q${w * 0.27} ${bottomCtrlY} ${w / 2} ${bottomTop} Q${w * 0.73} ${bottomCtrlY} ${w} ${h}`;
   const bottomPath = `${bottomEdge} Z`;
@@ -436,10 +505,16 @@ const Envelope = ({
                 <feGaussianBlur stdDeviation="3.2" />
               </filter>
               <PaperGrain id={`${uid}-gf`} />
+              <filter id={`${uid}-lace`} x="-5%" y="-5%" width="110%" height="120%">
+                <feDropShadow dx="0" dy="1.2" stdDeviation="1.1" floodColor="#463026" floodOpacity="0.22" />
+              </filter>
             </defs>
             <path d={flapPath} transform="translate(0 4)" fill="rgba(70,48,38,.28)" filter={`url(#${uid}-blur)`} />
             <path d={flapPath} fill={`url(#${uid}-flap)`} filter={`url(#${uid}-gf)`} />
             <path d={flapEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
+            {/* simple lace trim along the flap edge, with a stitched line just inside it */}
+            <path d={flapLace} fill="#fffdf9" fillRule="evenodd" filter={`url(#${uid}-lace)`} />
+            <path d={flapStitch} fill="none" stroke="#dccdbb" strokeWidth="0.9" strokeDasharray="1.2 3.2" strokeLinecap="round" />
           </svg>
           <span
             className="absolute inset-0 block"
@@ -467,7 +542,10 @@ const Envelope = ({
             transition: "transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s ease .05s",
           }}
         >
-          <span className="block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+          <span aria-hidden className="absolute block" style={{ left: -seal * 0.32, top: -seal * 0.32, width: seal * 1.64, height: seal * 1.64 }}>
+            <LaceDoily size={seal * 1.64} />
+          </span>
+          <span className="relative block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
             <WaxSeal initials={initials} size={seal} />
           </span>
         </span>
