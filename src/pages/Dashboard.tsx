@@ -33,7 +33,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import tresorCover from "@/assets/tresor-cover.jpeg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
-import dentelleCover from "@/assets/dentelle-cover.jpg";
+import dentelleCover from "@/assets/dentelle-cover.jpg.asset.json";
 
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
@@ -205,7 +205,7 @@ const Dashboard = () => {
       name: "Dentelle",
       price: 100,
       description: "Romantic lace with a wax-sealed envelope opening and mocha accents",
-      image: dentelleCover,
+      image: dentelleCover.url,
       features: [
         { icon: Sparkles, text: "Wax Seal Opening" },
         { icon: MapPin, text: "Event Locations" },
