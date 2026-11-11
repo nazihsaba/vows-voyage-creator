@@ -27,6 +27,7 @@ import {
   prefersReducedMotion,
   useInView,
 } from "@/components/templates/dentelle/DentelleEffects";
+import { DentelleLace } from "./dentelle/DentelleLace";
 
 /**
  * Dentelle — romantic lace invitation.
@@ -170,12 +171,6 @@ const LINEN: React.CSSProperties = {
 };
 
 /** Ivory cotton card stock. */
-const PAPER: React.CSSProperties = {
-  backgroundColor: "#fcf9f4",
-  backgroundImage: `radial-gradient(120% 90% at 50% 20%, rgba(255,255,255,.7), rgba(255,255,255,0) 60%), ${grain(0.32)}`,
-  backgroundSize: "auto, 180px 180px",
-};
-
 /** SVG filter that adds paper grain inside whatever it is applied to. */
 const PaperGrain = ({ id, amount = 0.2 }: { id: string; amount?: number }) => (
   <filter id={id} x="0" y="0" width="100%" height="100%">
@@ -856,24 +851,18 @@ export const DentelleTemplate = ({
           className="relative overflow-hidden"
           style={{ minHeight: "100svh", ...LINEN }}
         >
+          <DentelleLace cardRef={heroCardRef} />
           <Petals ambient={14} active={opened} />
-          <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "28px 22px" }}>
+          <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "44px clamp(28px, 8vw, 40px)" }}>
             {/* The invitation card, on linen */}
             <div
               ref={heroCardRef}
               className="relative w-full flex flex-col items-center justify-center text-center"
               style={{
-                ...PAPER,
-                borderRadius: 3,
-                boxShadow:
-                  "0 1px 2px rgba(70,48,38,.12), 0 14px 26px -16px rgba(70,48,38,.35), 0 40px 70px -40px rgba(70,48,38,.5)",
-                padding: "clamp(64px, 12vh, 104px) 30px",
-                minHeight: "min(calc(100svh - 56px), 820px)",
+                padding: "clamp(72px, 13vh, 112px) 30px",
+                minHeight: "min(calc(100svh - 88px), 820px)",
               }}
             >
-              {/* letterpress double frame */}
-              <span aria-hidden className="absolute pointer-events-none" style={{ inset: 12, border: "1px solid #d9c7b0" }} />
-              <span aria-hidden className="absolute pointer-events-none" style={{ inset: 17, border: "0.5px solid #e6d9c8" }} />
               <div
                 style={{
                   opacity: opened || opening ? 1 : 0,
