@@ -94,18 +94,24 @@ export const DrawOnView = ({
 };
 
 export const EFFECTS_CSS = `
-.dt-draw path, .dt-draw ellipse, .dt-draw circle {
-  stroke-dasharray: 1; stroke-dashoffset: 1;
-  transition: stroke-dashoffset var(--dt-draw-ms, 2200ms) cubic-bezier(.45,.05,.25,1);
-  transition-delay: calc(var(--i, 0) * var(--dt-step, 0ms));
+/* Line drawings sketch themselves in, hold, erase, and sketch again, forever. */
+.dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: 1; stroke-dashoffset: 1; }
+.dt-draw.dt-drawn path, .dt-draw.dt-drawn ellipse, .dt-draw.dt-drawn circle {
+  animation: dt-sketch calc(var(--dt-draw-ms, 2200ms) * 3.85) linear infinite both;
+  animation-delay: calc(var(--i, 0) * var(--dt-step, 0ms));
 }
-.dt-draw.dt-drawn path, .dt-draw.dt-drawn ellipse, .dt-draw.dt-drawn circle { stroke-dashoffset: 0; }
+@keyframes dt-sketch {
+  0%, 4% { stroke-dashoffset: 1; animation-timing-function: cubic-bezier(.45,.05,.25,1); }
+  30% { stroke-dashoffset: 0; }
+  82% { stroke-dashoffset: 0; animation-timing-function: cubic-bezier(.55,0,.75,.4); }
+  96%, 100% { stroke-dashoffset: -1; }
+}
 @keyframes dt-tick { from { transform: translateY(-55%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 @keyframes dt-heart { 0% { transform: translate(-50%, 0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(calc(-50% + var(--dx)), -150px) scale(1.15) rotate(var(--rot)); opacity: 0; } }
 @keyframes dt-shine { 0%, 62% { transform: translateX(-140%) rotate(18deg); } 82%, 100% { transform: translateX(140%) rotate(18deg); } }
 @keyframes dt-pulse-dot { 0% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 3px rgba(106,80,71,.35); } 100% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 12px rgba(106,80,71,0); } }
 @media (prefers-reduced-motion: reduce) {
-  .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; transition: none; }
+  .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; animation: none !important; }
   .dt-tick, .dt-shine, .dt-heart { animation: none !important; }
 }
 `;
