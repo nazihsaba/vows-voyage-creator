@@ -279,37 +279,71 @@ export const ChapelArt = ({ color, width = 176 }: { color: string; width?: numbe
   );
 };
 
-/** The Day: two champagne flutes clinking, bubbles, splash and a curling ribbon. */
-export const ToastArt = ({ color, width = 176 }: { color: string; width?: number }) => {
-  const flute = (i: number) => (
-    <>
-      <P d="M-9 0 C-9 22 -6 38 0 42 C6 38 9 22 9 0 Z" w={1.2} i={i} />
-      <P d="M-8.6 10 C-3 12 3 8 8.6 10" w={0.6} o={0.6} i={i + 1} />
-      <P d="M-5 3 C-5.5 14 -4.5 26 -1.5 36" w={0.5} o={0.45} i={i + 2} />
-      <P d="M0 42 V74" w={1.1} i={i + 2} />
-      <P d="M-12 78 C-6 74 6 74 12 78 C6 80 -6 80 -12 78" w={1} i={i + 3} />
-      <circle pathLength={1} cx={2} cy={30} r={1.1} strokeWidth={0.6} style={{ ["--i" as string]: i + 4 }} />
-      <circle pathLength={1} cx={-1} cy={22} r={0.9} strokeWidth={0.6} style={{ ["--i" as string]: i + 4.5 }} />
-      <circle pathLength={1} cx={3} cy={15} r={1.2} strokeWidth={0.6} style={{ ["--i" as string]: i + 5 }} />
-    </>
+/** The Day: a bride and groom dancing a waltz. Draws itself, then keeps dancing. */
+export const DancingCoupleArt = ({ color, width = 176 }: { color: string; width?: number }) => {
+  const note = (x: number, y: number, i: number, cls: string) => (
+    <g className={cls} style={{ transformBox: "view-box", transformOrigin: `${x}px ${y}px` }}>
+      <P d={`M${x} ${y} V${y - 9} Q${x + 4} ${y - 7} ${x + 5} ${y - 4}`} w={0.8} o={0.75} i={i} />
+      <ellipse pathLength={1} cx={x - 2} cy={y} rx={2.2} ry={1.6} transform={`rotate(-20 ${x - 2} ${y})`} strokeWidth={0.8} opacity={0.75} style={{ ["--i" as string]: i }} />
+    </g>
   );
   return (
     <Art color={color} width={width}>
-      <g transform="translate(88.5 30) rotate(15)">{flute(0)}</g>
-      <g transform="translate(111.5 30) rotate(-15)">{flute(1)}</g>
-      <P d="M100 22 C96 16 95 10 97 5 M100 22 C104 15 106 11 109 8 M100 22 C92 18 88 15 85 10" w={0.8} o={0.75} i={8} />
-      <circle pathLength={1} cx={93} cy={4} r={1.3} strokeWidth={0.7} style={{ ["--i" as string]: 9 }} />
-      <circle pathLength={1} cx={112} cy={5} r={1} strokeWidth={0.7} style={{ ["--i" as string]: 9.5 }} />
-      <circle pathLength={1} cx={82} cy={8} r={0.9} strokeWidth={0.7} style={{ ["--i" as string]: 10 }} />
-      <Sparkle x={70} y={16} r={5} i={10} />
-      <Sparkle x={132} y={20} r={4} i={11} />
-      <Sparkle x={124} y={6} r={2.4} i={11.5} o={0.6} />
-      {/* ribbon tied where the stems cross */}
-      <P d="M100 92 C92 84 82 86 86 93 C89 98 96 95 100 92 C104 89 111 86 114 91 C117 97 108 99 100 92" w={1} i={12} />
-      <P d="M98 93 C90 104 76 104 70 112 C66 118 72 124 78 119" w={0.9} i={13} />
-      <P d="M102 93 C110 106 128 100 134 110 C138 117 130 122 126 116" w={0.9} i={14} />
-      <Flourish x={22} y={104} scale={0.85} i={15} o={0.6} />
-      <Flourish x={178} y={104} scale={0.85} mirror i={15} o={0.6} />
+      <P d="M40 124 C70 121 140 121 170 124" w={0.7} o={0.5} i={0} />
+      {/* the couple sways together */}
+      <g className="dt-dance-sway" style={{ transformBox: "view-box", transformOrigin: "108px 122px" }}>
+        {/* ---------- groom ---------- */}
+        <circle pathLength={1} cx={88} cy={25} r={6.5} strokeWidth={1.2} style={{ ["--i" as string]: 1 }} />
+        <P d="M81.6 24 C81 16.5 90 15 94.4 21.5" w={1.3} i={2} />
+        <P d="M89 31.5 V34" w={1} i={2} />
+        <P d="M86 34.2 L89 36 L92 34.2 V37.8 L89 36 L86 37.8 Z" w={0.7} i={3} />
+        <P d="M80 37 C82 35.5 85 35 86.5 35.2 M91.5 35.2 C93 35 96 35.5 97.5 37" w={1.2} i={3} />
+        <P d="M80 37 C78 48 78.5 60 80.5 72 H95.5 C96.8 60 97.6 48 97.5 37" w={1.2} i={4} />
+        <P d="M86.5 35.5 L89 47 L91.5 35.5" w={0.7} o={0.7} i={5} />
+        <P d="M89 47 V71 M88 52 h2 M88 58 h2" w={0.5} o={0.55} i={5} />
+        {/* raised arm leading the twirl, other hand on his side */}
+        <P d="M96.5 38.5 C101 32 104 22 109 12.5" w={1.1} i={6} />
+        <P d="M80.5 39 C77.5 48 78 56 81.5 62" w={1.1} i={6} />
+        {/* trousers: back leg straight, front leg stepping */}
+        <P d="M81.5 72 L80 121 M87.5 74 L86 121" w={1.1} i={7} />
+        <P d="M89.5 74 L95.5 120 M95 72 L101 119" w={1.1} i={7} />
+        <P d="M77.5 122 H87.5 M94 121.5 C97 120 101 120 104 121.5" w={1.2} i={8} />
+        {/* ---------- bride ---------- */}
+        <circle pathLength={1} cx={121} cy={30} r={6} strokeWidth={1.2} style={{ ["--i" as string]: 2 }} />
+        <circle pathLength={1} cx={126.2} cy={25.5} r={2.8} strokeWidth={1} style={{ ["--i" as string]: 3 }} />
+        <P d="M115.2 29 C115 23 120 21.5 124 23" w={1.1} i={3} />
+        <P d="M120.5 36 V38.5" w={1} i={4} />
+        {/* veil */}
+        <g className="dt-dance-veil" style={{ transformBox: "view-box", transformOrigin: "127px 25px" }}>
+          <P d="M128.5 24 C140 27 150 40 158 58 C150 56 142 52 136 46 C131 41 128 34 127.5 28" w={0.8} o={0.75} i={5} />
+          <P d="M131 30 C138 38 146 48 152 55" w={0.5} o={0.5} i={6} />
+        </g>
+        {/* bodice */}
+        <P d="M115 39 C117.5 41 123.5 41 126 39" w={1} i={5} />
+        <P d="M115 39 C114 47 115 53 117 58 M126 39 C127.5 47 127 53 124.5 58" w={1.1} i={6} />
+        <P d="M117 58 C119.5 59 122 59 124.5 58" w={1} i={7} />
+        {/* arms: one raised to his hand, one sweeping out */}
+        <P d="M115.5 40.5 C111.5 32 110 22 109.5 12.5" w={1.1} i={7} />
+        <circle pathLength={1} cx={109.3} cy={11} r={1.8} strokeWidth={0.9} style={{ ["--i" as string]: 8 }} />
+        <P d="M126 41 C133 45 137 51 134.5 58" w={1.1} i={8} />
+        {/* twirling skirt */}
+        <g className="dt-dance-skirt" style={{ transformBox: "view-box", transformOrigin: "121px 58px" }}>
+          <P d="M117 58.5 C112 76 106 96 100 115" w={1.2} i={9} />
+          <P d="M124.5 58.5 C133 74 146 92 160 108" w={1.2} i={9} />
+          <P d="M100 115 C106 121 112 111 118 119 C124 126 131 112 138 119 C145 124 152 112 160 108" w={1.2} i={10} />
+          <P d="M120 61 C118 80 116 98 115 116 M122.5 61 C128 79 134 97 137 116" w={0.55} o={0.55} i={11} />
+          <P d="M119 61 C114 80 109 98 106 115 M123.5 60 C134 76 144 92 150 108" w={0.45} o={0.4} i={12} />
+          <P d="M107 117 C111 114 113 117 116 115" w={0.5} o={0.45} i={12} />
+        </g>
+      </g>
+      {/* music, floating up */}
+      {note(58, 46, 13, "dt-dance-note dt-dance-note-1")}
+      {note(160, 34, 14, "dt-dance-note dt-dance-note-2")}
+      {note(46, 70, 15, "dt-dance-note dt-dance-note-3")}
+      <Sparkle x={70} y={20} r={4} i={16} />
+      <Sparkle x={150} y={78} r={3} i={17} o={0.6} />
+      <Flourish x={22} y={112} scale={0.8} i={18} o={0.55} />
+      <Flourish x={178} y={112} scale={0.8} mirror i={18} o={0.55} />
     </Art>
   );
 };

@@ -104,9 +104,22 @@ export const EFFECTS_CSS = `
 @keyframes dt-heart { 0% { transform: translate(-50%, 0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(calc(-50% + var(--dx)), -150px) scale(1.15) rotate(var(--rot)); opacity: 0; } }
 @keyframes dt-shine { 0%, 62% { transform: translateX(-140%) rotate(18deg); } 82%, 100% { transform: translateX(140%) rotate(18deg); } }
 @keyframes dt-pulse-dot { 0% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 3px rgba(106,80,71,.35); } 100% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 12px rgba(106,80,71,0); } }
+/* Dancing couple (The Day): starts once drawn and never stops */
+@keyframes dt-sway { 0% { transform: rotate(-3.2deg) translateY(0); } 25% { transform: rotate(0deg) translateY(-1.6px); } 50% { transform: rotate(3.2deg) translateY(0); } 75% { transform: rotate(0deg) translateY(-1.6px); } 100% { transform: rotate(-3.2deg) translateY(0); } }
+@keyframes dt-skirt { 0%, 100% { transform: rotate(-5deg) scaleX(.95); } 50% { transform: rotate(6deg) scaleX(1.07); } }
+@keyframes dt-veil { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-9deg) scaleX(1.05); } }
+@keyframes dt-note { 0% { transform: translate(0, 6px) rotate(-8deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(6px, -26px) rotate(10deg); opacity: 0; } }
+.dt-drawn .dt-dance-sway { animation: dt-sway 3.6s ease-in-out 1.8s infinite; }
+.dt-drawn .dt-dance-skirt { animation: dt-skirt 1.8s ease-in-out 1.8s infinite; }
+.dt-drawn .dt-dance-veil { animation: dt-veil 1.8s ease-in-out 2.1s infinite; }
+.dt-drawn .dt-dance-note { animation: dt-note 4.2s ease-in-out infinite; opacity: 0; }
+.dt-drawn .dt-dance-note-1 { animation-delay: 2s; }
+.dt-drawn .dt-dance-note-2 { animation-delay: 3.4s; }
+.dt-drawn .dt-dance-note-3 { animation-delay: 4.8s; }
 @media (prefers-reduced-motion: reduce) {
   .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; transition: none; }
-  .dt-tick, .dt-shine, .dt-heart { animation: none !important; }
+  .dt-tick, .dt-shine, .dt-heart, .dt-dance-sway, .dt-dance-skirt, .dt-dance-veil { animation: none !important; }
+  .dt-dance-note { animation: none !important; opacity: 1 !important; }
 }
 `;
 
