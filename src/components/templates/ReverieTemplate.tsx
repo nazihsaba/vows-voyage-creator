@@ -311,6 +311,67 @@ const LaceDoily = ({ size }: { size: number }) => {
   );
 };
 
+/** Vintage postage stamp (perforated, with a little engraved rose) and a round postmark over it. */
+const VintageStamp = ({ width, postmark }: { width: number; postmark: string }) => {
+  const uid = useId().replace(/:/g, "");
+  const W = 64;
+  const H = 76;
+  const holes: React.ReactNode[] = [];
+  const step = 5.2;
+  for (let x = step / 2; x < W; x += step) {
+    holes.push(<circle key={`t${x}`} cx={x} cy={0} r={1.6} />, <circle key={`b${x}`} cx={x} cy={H} r={1.6} />);
+  }
+  for (let y = step / 2; y < H; y += step) {
+    holes.push(<circle key={`l${y}`} cx={0} cy={y} r={1.6} />, <circle key={`r${y}`} cx={W} cy={y} r={1.6} />);
+  }
+  const ink = "#7a5a4c";
+  return (
+    <svg aria-hidden width={width} height={(width * 120) / 112} viewBox="-6 -6 112 120" style={{ overflow: "visible", display: "block" }}>
+      <defs>
+        <mask id={`${uid}-perf`}>
+          <rect x="-2" y="-2" width={W + 4} height={H + 4} fill="#fff" />
+          <g fill="#000">{holes}</g>
+        </mask>
+        <filter id={`${uid}-sh`} x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0.6" dy="1.2" stdDeviation="1" floodColor="#463026" floodOpacity="0.25" />
+        </filter>
+        <path id={`${uid}-ring`} d="M58 86 m-19 0 a19 19 0 1 1 38 0 a19 19 0 1 1 -38 0" />
+      </defs>
+      <g transform="rotate(4 32 38)" filter={`url(#${uid}-sh)`}>
+        <rect x="0" y="0" width={W} height={H} fill="#fbf5ea" mask={`url(#${uid}-perf)`} />
+        <rect x="5" y="5" width={W - 10} height={H - 10} fill="#efe1cf" stroke={ink} strokeWidth="0.7" />
+        <rect x="7.5" y="7.5" width={W - 15} height={H - 15} fill="none" stroke={ink} strokeWidth="0.35" opacity="0.7" />
+        {/* engraved rose */}
+        <g fill="none" stroke={ink} strokeWidth="0.8" strokeLinecap="round">
+          <path d="M32 30 c2.4 -2.4 4.6 1 1.2 2.8 c-4 2 -5.6 -3 -2 -5.6 c4.4 -3 8.8 0.8 7 5.2" />
+          <path d="M25.6 30.6 C25 24.4 32 21.6 37.2 25.4" />
+          <path d="M39 28.6 C40.6 34.6 36 38.6 30.6 37.8" />
+          <path d="M27 36.4 C22.6 35.6 22.4 30 25 27.4" />
+          <path d="M32 38 C32.6 44 31.4 50 30 56" />
+          <path d="M31.4 46 C35.6 43.4 39.6 44 41.6 46.6 C38 48.8 34.4 48.4 31.4 46 Z" />
+          <path d="M30.8 51 C26.8 48.4 22.8 49 20.8 51.6 C24.4 53.8 28 53.4 30.8 51 Z" />
+        </g>
+        <text x="10" y="17" fontSize="7" fontFamily="var(--font-template-heading), serif" fill={ink}>20</text>
+        <text x={W / 2} y={H - 10} fontSize="5.4" letterSpacing="1.6" textAnchor="middle" fontFamily="var(--font-template-heading), serif" fill={ink}>
+          AMOUR
+        </text>
+      </g>
+      {/* postmark: double ring with the city and date, and wavy cancellation lines */}
+      <g fill="none" stroke="#5f4a40" opacity="0.55" strokeWidth="0.9">
+        <circle cx="58" cy="86" r="23" />
+        <circle cx="58" cy="86" r="14" strokeWidth="0.6" />
+        <path d="M44 86 H72" strokeWidth="0.6" />
+        <path d="M-4 78 q6 -4 12 0 t12 0 t12 0 M-4 86 q6 -4 12 0 t12 0 t12 0 M-4 94 q6 -4 12 0 t12 0 t12 0" strokeWidth="0.8" />
+      </g>
+      <text fontSize="5.2" letterSpacing="1.2" fontFamily="var(--font-template-heading), serif" fill="#5f4a40" opacity="0.6">
+        <textPath href={`#${uid}-ring`} startOffset="50%" textAnchor="middle">
+          {postmark}
+        </textPath>
+      </text>
+    </svg>
+  );
+};
+
 /**
  * A paper envelope, sealed with wax, that fills the opening screen. The invitation
  * card underneath sits inside it: tapping lifts the seal and folds the flap back so
@@ -322,6 +383,8 @@ const Envelope = ({
   opening,
   onOpen,
   label,
+  postmark,
+  note,
 }: {
   initials: string;
   /** The invitation card below the envelope; the envelope leaves a window where it sits. */
@@ -329,6 +392,10 @@ const Envelope = ({
   opening: boolean;
   onOpen: () => void;
   label: string;
+  /** City and date for the postmark. */
+  postmark: string;
+  /** Handwritten line on the bottom flap. */
+  note: string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const uid = useId().replace(/:/g, "");
@@ -388,6 +455,17 @@ const Envelope = ({
   const flapLace = laceTrim([[0, 0], [w / 2, flapH], [w, 0]], laceSize);
   const inset = 7;
   const flapStitch = `M${inset * 1.6} 0 L${w / 2} ${flapH - inset * 1.9} L${w - inset * 1.6} 0`;
+  const ageSpots = [
+    { x: w * 0.12, y: vh * 0.86, r: 4, o: 0.07 },
+    { x: w * 0.86, y: vh * 0.72, r: 3, o: 0.06 },
+    { x: w * 0.7, y: h - 18, r: 5, o: 0.05 },
+  ];
+  // the stamp sits on the flap, tucked just inside the lace on its right edge
+  const stampW = Math.round(Math.min(Math.max(w * 0.3, 112), 176));
+  const stampH = (stampW * 120) / 112;
+  const stampTop = Math.max(26, vh * 0.045);
+  const laceX = (y: number) => w - (y * (w / 2)) / flapH;
+  const stampRight = w - (laceX(stampTop + stampH) - laceSize * 1.8);
   const bottomCtrlY = bottomTop + (h - bottomTop) * 0.32;
   const bottomEdge = `M0 ${h} Q${w * 0.27} ${bottomCtrlY} ${w / 2} ${bottomTop} Q${w * 0.73} ${bottomCtrlY} ${w} ${h}`;
   const bottomPath = `${bottomEdge} Z`;
@@ -462,6 +540,10 @@ const Envelope = ({
                 <feGaussianBlur stdDeviation="3" />
               </filter>
               <PaperGrain id={`${uid}-gp`} />
+              <radialGradient id={`${uid}-age`} gradientUnits="userSpaceOnUse" cx={w / 2} cy={vh * 0.5} r={Math.hypot(w, vh) * 0.62}>
+                <stop offset="0.55" stopColor="#9b7450" stopOpacity="0" />
+                <stop offset="1" stopColor="#9b7450" stopOpacity="0.16" />
+              </radialGradient>
             </defs>
             <g filter={`url(#${uid}-gp)`}>
               <path d={`M0 0 L${w / 2} ${meetY} L0 ${h} Z`} fill={`url(#${uid}-l)`} />
@@ -472,7 +554,21 @@ const Envelope = ({
             </g>
             <path d={`M0 0 L${w / 2} ${meetY} L${w} 0`} fill="none" stroke="#fffdf9" strokeWidth="1.2" opacity="0.7" />
             <path d={bottomEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
+            {/* aged paper: warm toning towards the edges and a few faint spots */}
+            <rect width={w} height={h} fill={`url(#${uid}-age)`} />
+            {ageSpots.map((sp, k) => (
+              <circle key={k} cx={sp.x} cy={sp.y} r={sp.r} fill="#a0784f" opacity={sp.o} filter={`url(#${uid}-soft)`} />
+            ))}
           </svg>
+          <span
+            className="absolute left-0 right-0 block text-center"
+            style={{ top: vh * 0.79, fontFamily: FONT_TITLE, fontSize: Math.round(Math.min(Math.max(w * 0.085, 30), 44)), color: "#6f5a50", opacity: 0.85, lineHeight: 1.2 }}
+          >
+            {note}
+            <svg aria-hidden width="120" height="10" viewBox="0 0 120 10" className="mx-auto block" style={{ marginTop: 2, opacity: 0.6 }}>
+              <path d="M6 5 C30 1 46 9 60 5 C74 1 90 9 114 5" fill="none" stroke="#6f5a50" strokeWidth="0.8" strokeLinecap="round" />
+            </svg>
+          </span>
         </span>
 
         {/* top flap — closed it sits on top; opened it folds back out of view */}
@@ -505,17 +601,30 @@ const Envelope = ({
                 <feGaussianBlur stdDeviation="3.2" />
               </filter>
               <PaperGrain id={`${uid}-gf`} />
+              <radialGradient id={`${uid}-age2`} gradientUnits="userSpaceOnUse" cx={w / 2} cy={vh * 0.5} r={Math.hypot(w, vh) * 0.62}>
+                <stop offset="0.55" stopColor="#9b7450" stopOpacity="0" />
+                <stop offset="1" stopColor="#9b7450" stopOpacity="0.16" />
+              </radialGradient>
               <filter id={`${uid}-lace`} x="-5%" y="-5%" width="110%" height="120%">
                 <feDropShadow dx="0" dy="1.2" stdDeviation="1.1" floodColor="#463026" floodOpacity="0.22" />
               </filter>
             </defs>
             <path d={flapPath} transform="translate(0 4)" fill="rgba(70,48,38,.28)" filter={`url(#${uid}-blur)`} />
             <path d={flapPath} fill={`url(#${uid}-flap)`} filter={`url(#${uid}-gf)`} />
+            <path d={flapPath} fill={`url(#${uid}-age2)`} />
+            <circle cx={w * 0.2} cy={flapH * 0.22} r={3} fill="#a0784f" opacity={0.07} filter={`url(#${uid}-blur)`} />
             <path d={flapEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
             {/* simple lace trim along the flap edge, with a stitched line just inside it */}
             <path d={flapLace} fill="#fffdf9" fillRule="evenodd" filter={`url(#${uid}-lace)`} />
             <path d={flapStitch} fill="none" stroke="#dccdbb" strokeWidth="0.9" strokeDasharray="1.2 3.2" strokeLinecap="round" />
           </svg>
+          <span
+            aria-hidden
+            className="absolute block"
+            style={{ right: stampRight, top: stampTop, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
+          >
+            <VintageStamp width={stampW} postmark={postmark} />
+          </span>
           <span
             className="absolute inset-0 block"
             style={{
@@ -999,6 +1108,8 @@ export const ReverieTemplate = ({
               opening={opening}
               onOpen={openInvitation}
               label={t("reverie.tapToOpen", "Tap to open")}
+              postmark={`${t("reverie.city", "Beirut, Lebanon").split(/[,،]/)[0].trim().toUpperCase()} · ${numericDate}`}
+              note={t("reverie.envelopeNote", "For our dearest guest")}
             />
           )}
         </section>
