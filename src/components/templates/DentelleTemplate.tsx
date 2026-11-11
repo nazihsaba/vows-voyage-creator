@@ -28,6 +28,7 @@ import {
   useInView,
 } from "@/components/templates/dentelle/DentelleEffects";
 import { DentelleLace } from "./dentelle/DentelleLace";
+import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./dentelle/DentelleOrnaments";
 
 /**
  * Dentelle — romantic lace invitation.
@@ -926,8 +927,8 @@ export const DentelleTemplate = ({
 
         {/* ==================== INVITATION ==================== */}
         <section className="text-center" style={{ padding: "96px 24px 104px", maxWidth: 600, margin: "0 auto" }}>
-          <DrawOnView className="flex justify-center">
-            <Bow color={COCOA} width={112} />
+          <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms" }}>
+            <LoveLetterArt color={COCOA} />
           </DrawOnView>
           <Reveal delay={150}>
           <div style={{ marginTop: 22, fontFamily: FONT_HEADING, fontSize: 30, lineHeight: 1.2, color: INK }}>
@@ -975,8 +976,8 @@ export const DentelleTemplate = ({
         <section style={{ background: COCOA, color: BAND_TEXT }}>
           <LaceEdge lace={IVORY} band={COCOA} />
           <div className="text-center" style={{ padding: "64px 20px 70px" }}>
-            <DrawOnView className="flex justify-center">
-              <Bow color={BAND_ACCENT} width={150} />
+            <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms" }}>
+              <PocketWatchArt color={BAND_ACCENT} />
             </DrawOnView>
             <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), BAND_TITLE)}</div>
             <div
@@ -1005,6 +1006,9 @@ export const DentelleTemplate = ({
         {/* ==================== LOCATION ==================== */}
         {placesWithDirections.length > 0 && (
           <section className="text-center" style={{ padding: "96px 24px 40px", maxWidth: 620, margin: "0 auto" }}>
+            <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 18 }}>
+              <ChapelArt color={COCOA} />
+            </DrawOnView>
             {sectionTitle(t("dentelle.location", "Location"))}
             <div className="flex flex-col" style={{ gap: 64, marginTop: 34 }}>
               {placesWithDirections.map((place: any) => {
@@ -1073,6 +1077,9 @@ export const DentelleTemplate = ({
         {/* ==================== THE DAY ==================== */}
         {dayEntries.length > 0 && (
           <section style={{ padding: "90px 22px 104px", maxWidth: 600, margin: "0 auto" }}>
+            <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 18 }}>
+              <ToastArt color={COCOA} />
+            </DrawOnView>
             <Reveal className="text-center">
               {sectionTitle(t("dentelle.theDay", "The Day"))}
               <div style={{ marginTop: 14, fontSize: 15.5, lineHeight: 1.65, color: MUTED }}>
@@ -1196,6 +1203,9 @@ export const DentelleTemplate = ({
                   padding: "46px 22px 34px",
                 }}
               >
+                <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 16 }}>
+                  <GiftArt color={COCOA} />
+                </DrawOnView>
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
                 <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
                   {t("dentelle.giftLead", "Your presence is our greatest gift.")}
@@ -1229,6 +1239,9 @@ export const DentelleTemplate = ({
             <Petals ref={rsvpPetals} ambient={0} active={false} />
             <LaceEdge lace={IVORY} band={COCOA} />
             <div style={{ padding: "40px 16px 56px" }}>
+              <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 22 }}>
+                <QuillArt color={BAND_ACCENT} />
+              </DrawOnView>
               <div
                 className="mx-auto"
                 style={{ maxWidth: 760, background: IVORY, borderRadius: 16, overflow: "hidden", border: `1px solid ${CHAMPAGNE}`, boxShadow: "0 30px 60px -30px rgba(0,0,0,.45)" }}
