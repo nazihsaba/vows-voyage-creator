@@ -97,6 +97,7 @@ export const EFFECTS_CSS = `
 .dt-draw path, .dt-draw ellipse, .dt-draw circle {
   stroke-dasharray: 1; stroke-dashoffset: 1;
   transition: stroke-dashoffset var(--dt-draw-ms, 2200ms) cubic-bezier(.45,.05,.25,1);
+  transition-delay: calc(var(--i, 0) * var(--dt-step, 0ms));
 }
 .dt-draw.dt-drawn path, .dt-draw.dt-drawn ellipse, .dt-draw.dt-drawn circle { stroke-dashoffset: 0; }
 @keyframes dt-tick { from { transform: translateY(-55%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
