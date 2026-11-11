@@ -385,8 +385,8 @@ const Dashboard = () => {
           {/* Weddings Section */}
           <div>
             <div className="flex items-center gap-3 mb-6 sm:mb-8">
-              <div className="p-2.5 rounded-xl bg-gradient-to-br from-rose-100 to-rose-50 shadow-sm">
-                <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-rose-500" />
+              <div className="p-2.5 rounded-xl bg-gradient-to-br from-muted to-background shadow-sm ring-1 ring-border">
+                <Heart className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
               </div>
               <div>
                 <h2 className="text-xl sm:text-2xl font-serif font-bold text-foreground">Weddings</h2>
