@@ -116,10 +116,20 @@ export const EFFECTS_CSS = `
 .dt-drawn .dt-dance-note-1 { animation-delay: 2s; }
 .dt-drawn .dt-dance-note-2 { animation-delay: 3.4s; }
 .dt-drawn .dt-dance-note-3 { animation-delay: 4.8s; }
+@keyframes dt-tails { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-10deg); } }
+@keyframes dt-bouquet { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(7deg); } }
+@keyframes dt-fall { 0% { transform: translate(0, -6px) rotate(0deg); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translate(10px, 84px) rotate(220deg); opacity: 0; } }
+.dt-drawn .dt-dance-tails { animation: dt-tails 1.8s ease-in-out 1.9s infinite; }
+.dt-drawn .dt-dance-bouquet { animation: dt-bouquet 1.8s ease-in-out 2s infinite; }
+.dt-drawn .dt-dance-petal { animation: dt-fall 6.5s linear infinite; opacity: 0; }
+.dt-drawn .dt-dance-petal-1 { animation-delay: 1.6s; }
+.dt-drawn .dt-dance-petal-2 { animation-delay: 3.2s; }
+.dt-drawn .dt-dance-petal-3 { animation-delay: 4.6s; animation-duration: 7.5s; }
+.dt-drawn .dt-dance-petal-4 { animation-delay: 5.8s; animation-duration: 7s; }
 @media (prefers-reduced-motion: reduce) {
   .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; transition: none; }
-  .dt-tick, .dt-shine, .dt-heart, .dt-dance-sway, .dt-dance-skirt, .dt-dance-veil { animation: none !important; }
-  .dt-dance-note { animation: none !important; opacity: 1 !important; }
+  .dt-tick, .dt-shine, .dt-heart, .dt-dance-sway, .dt-dance-skirt, .dt-dance-veil, .dt-dance-tails, .dt-dance-bouquet { animation: none !important; }
+  .dt-dance-note, .dt-dance-petal { animation: none !important; opacity: 1 !important; }
 }
 `;
 
