@@ -51,6 +51,8 @@ const App = () => (
           <Route path="/dashboard/etoile-form" element={<WeddingForm />} />
           <Route path="/dashboard/tresor-form" element={<WeddingForm />} />
           <Route path="/dashboard/theatre-form" element={<WeddingForm />} />
+          <Route path="/dashboard/reverie-form" element={<WeddingForm />} />
+          {/* old address, kept so saved links still work */}
           <Route path="/dashboard/dentelle-form" element={<WeddingForm />} />
           
           <Route path="/dashboard/edit/:id" element={<WeddingForm />} />

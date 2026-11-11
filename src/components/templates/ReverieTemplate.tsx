@@ -26,18 +26,18 @@ import {
   RollingNumber,
   prefersReducedMotion,
   useInView,
-} from "@/components/templates/dentelle/DentelleEffects";
-import { DentelleLace } from "./dentelle/DentelleLace";
-import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./dentelle/DentelleOrnaments";
+} from "@/components/templates/reverie/ReverieEffects";
+import { ReverieLace } from "./reverie/ReverieLace";
+import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./reverie/ReverieOrnaments";
 
 /**
- * Dentelle — romantic lace invitation.
+ * Rêverie (formerly Dentelle) — romantic lace invitation.
  * Opens from a paper envelope sealed with wax, then an ivory card on linen,
  * mocha bands with a fine lace trim, and a vertical "The Day" timeline built
  * from the events.
  */
 
-interface DentelleTemplateProps {
+interface ReverieTemplateProps {
   wedding: any;
   locations: any[];
   gallery: any[];
@@ -246,6 +246,71 @@ const WaxSeal = ({ initials, size = 96 }: { initials: string; size?: number }) =
   );
 };
 
+/** Scalloped lace edging along a polyline: scallops bulge to the outer side, each with a pinhole. */
+function laceTrim(pts: Array<[number, number]>, size: number) {
+  // resample the polyline evenly
+  const out: Array<[number, number]> = [];
+  for (let k = 0; k < pts.length - 1; k++) {
+    const [ax, ay] = pts[k];
+    const [bx, by] = pts[k + 1];
+    const n = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) / size));
+    for (let j = 0; j < n; j++) out.push([ax + ((bx - ax) * j) / n, ay + ((by - ay) * j) / n]);
+  }
+  out.push(pts[pts.length - 1]);
+  let edge = `M${out[0][0].toFixed(1)} ${out[0][1].toFixed(1)}`;
+  let holes = "";
+  for (let k = 0; k < out.length - 1; k++) {
+    const [ax, ay] = out[k];
+    const [bx, by] = out[k + 1];
+    const len = Math.hypot(bx - ax, by - ay) || 1;
+    const nx = -(by - ay) / len;
+    const ny = (bx - ax) / len;
+    const r = len / 2;
+    const c = r * 1.3;
+    edge += ` C${(ax + nx * c).toFixed(1)} ${(ay + ny * c).toFixed(1)} ${(bx + nx * c).toFixed(1)} ${(by + ny * c).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
+    const hx = (ax + bx) / 2 + nx * r * 0.5;
+    const hy = (ay + by) / 2 + ny * r * 0.5;
+    const hr = r * 0.26;
+    holes += ` M${(hx - hr).toFixed(1)} ${hy.toFixed(1)} a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(hr * 2).toFixed(1)} 0 a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(-hr * 2).toFixed(1)} 0`;
+  }
+  // close the band back along the edge itself
+  const back = [...out].reverse().map(([x, y]) => `L${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
+  return `${edge} ${back} Z${holes}`;
+}
+
+/** Round lace doily: scalloped rim, a ring of pinholes and a fine inner circle. */
+const LaceDoily = ({ size }: { size: number }) => {
+  const R = size / 2 - 6;
+  const n = 22;
+  const pts: Array<[number, number]> = [];
+  for (let k = 0; k <= n; k++) {
+    const a = (k / n) * Math.PI * 2;
+    pts.push([size / 2 + Math.cos(a) * R * 0.86, size / 2 + Math.sin(a) * R * 0.86]);
+  }
+  // scallops outward around a circle drawn clockwise on screen point outwards with (-dy, dx) reversed
+  const ring = laceTrim([...pts].reverse(), (2 * Math.PI * R * 0.86) / n);
+  const holes: React.ReactNode[] = [];
+  for (let k = 0; k < n; k++) {
+    const a = ((k + 0.5) / n) * Math.PI * 2;
+    holes.push(<circle key={k} cx={size / 2 + Math.cos(a) * R * 0.7} cy={size / 2 + Math.sin(a) * R * 0.7} r={1.3} fill="#e9dfd2" />);
+  }
+  return (
+    <svg aria-hidden width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ overflow: "visible", display: "block" }}>
+      <defs>
+        <filter id="dt-doily-shadow" x="-20%" y="-20%" width="140%" height="140%">
+          <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" floodColor="#463026" floodOpacity="0.2" />
+        </filter>
+      </defs>
+      <g filter="url(#dt-doily-shadow)">
+        <circle cx={size / 2} cy={size / 2} r={R * 0.86} fill="#fffdf9" />
+        <path d={ring} fill="#fffdf9" fillRule="evenodd" />
+      </g>
+      {holes}
+      <circle cx={size / 2} cy={size / 2} r={R * 0.6} fill="none" stroke="#e6dacb" strokeWidth="0.8" strokeDasharray="1.5 2.5" />
+    </svg>
+  );
+};
+
 /**
  * A paper envelope, sealed with wax, that fills the opening screen. The invitation
  * card underneath sits inside it: tapping lifts the seal and folds the flap back so
@@ -319,6 +384,10 @@ const Envelope = ({
   const tipRt = `${(w / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)}`;
   const flapPath = `M0 0 H${w} L${tipRt} Q${w / 2} ${flapH} ${tipL} Z`;
   const flapEdge = `M0 0 L${tipL} Q${w / 2} ${flapH} ${tipRt} L${w} 0`;
+  const laceSize = Math.max(9, Math.min(13, w / 34));
+  const flapLace = laceTrim([[0, 0], [w / 2, flapH], [w, 0]], laceSize);
+  const inset = 7;
+  const flapStitch = `M${inset * 1.6} 0 L${w / 2} ${flapH - inset * 1.9} L${w - inset * 1.6} 0`;
   const bottomCtrlY = bottomTop + (h - bottomTop) * 0.32;
   const bottomEdge = `M0 ${h} Q${w * 0.27} ${bottomCtrlY} ${w / 2} ${bottomTop} Q${w * 0.73} ${bottomCtrlY} ${w} ${h}`;
   const bottomPath = `${bottomEdge} Z`;
@@ -436,10 +505,16 @@ const Envelope = ({
                 <feGaussianBlur stdDeviation="3.2" />
               </filter>
               <PaperGrain id={`${uid}-gf`} />
+              <filter id={`${uid}-lace`} x="-5%" y="-5%" width="110%" height="120%">
+                <feDropShadow dx="0" dy="1.2" stdDeviation="1.1" floodColor="#463026" floodOpacity="0.22" />
+              </filter>
             </defs>
             <path d={flapPath} transform="translate(0 4)" fill="rgba(70,48,38,.28)" filter={`url(#${uid}-blur)`} />
             <path d={flapPath} fill={`url(#${uid}-flap)`} filter={`url(#${uid}-gf)`} />
             <path d={flapEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
+            {/* simple lace trim along the flap edge, with a stitched line just inside it */}
+            <path d={flapLace} fill="#fffdf9" fillRule="evenodd" filter={`url(#${uid}-lace)`} />
+            <path d={flapStitch} fill="none" stroke="#dccdbb" strokeWidth="0.9" strokeDasharray="1.2 3.2" strokeLinecap="round" />
           </svg>
           <span
             className="absolute inset-0 block"
@@ -467,7 +542,10 @@ const Envelope = ({
             transition: "transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s ease .05s",
           }}
         >
-          <span className="block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+          <span aria-hidden className="absolute block" style={{ left: -seal * 0.32, top: -seal * 0.32, width: seal * 1.64, height: seal * 1.64 }}>
+            <LaceDoily size={seal * 1.64} />
+          </span>
+          <span className="relative block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
             <WaxSeal initials={initials} size={seal} />
           </span>
         </span>
@@ -493,10 +571,10 @@ const Envelope = ({
 };
 
 /**
- * Gift details for Dentelle: each provider's name in small caps, the number set
+ * Gift details for Rêverie: each provider's name in small caps, the number set
  * in the heading serif, and a small copy pill, separated by a fine ornament.
  */
-const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_name: string; card_number: string }> }) => {
+const ReverieGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_name: string; card_number: string }> }) => {
   const { t } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const timer = useRef<number>();
@@ -543,7 +621,7 @@ const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_
             <button
               type="button"
               onClick={() => copy(card.id, card.card_number)}
-              aria-label={`${t("dentelle.copy", "Copy")} ${card.card_name}`}
+              aria-label={`${t("reverie.copy", "Copy")} ${card.card_name}`}
               className="inline-flex items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#b79c78]"
               style={{
                 ...SMALL_CAPS,
@@ -561,7 +639,7 @@ const DentelleGiftCards = ({ giftCards }: { giftCards: Array<{ id: string; card_
               }}
             >
               {copied ? <Check aria-hidden className="h-3.5 w-3.5" /> : <Copy aria-hidden className="h-3.5 w-3.5" />}
-              <span aria-live="polite">{copied ? t("dentelle.copied", "Copied") : t("dentelle.copy", "Copy")}</span>
+              <span aria-live="polite">{copied ? t("reverie.copied", "Copied") : t("reverie.copy", "Copy")}</span>
             </button>
           </li>
         );
@@ -590,7 +668,7 @@ const KEYFRAMES = `
 }
 `;
 
-export const DentelleTemplate = ({
+export const ReverieTemplate = ({
   wedding,
   locations,
   giftCards,
@@ -605,7 +683,7 @@ export const DentelleTemplate = ({
   numberOfPersons = 0,
   isRsvpDeadlinePassed = false,
   submittingRsvp = false,
-}: DentelleTemplateProps) => {
+}: ReverieTemplateProps) => {
   const { t } = useTranslation();
   const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -737,7 +815,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(ceremony.time) || "",
       title: t("events.ceremony"),
       place: getLocalizedValue("ceremony_location", ceremony.location_name || ""),
-      note: t("dentelle.ceremonyNote", "We say “I do” surrounded by the people we love."),
+      note: t("reverie.ceremonyNote", "We say “I do” surrounded by the people we love."),
       icon: ceremony.icon,
       fallbackIcon: "material-symbols:church-rounded",
     });
@@ -748,7 +826,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(welcomeDrink.time) || "",
       title: t("events.welcomeDrink"),
       place: getLocalizedValue("venue_location", welcomeDrink.location_name || venue?.location_name || ""),
-      note: t("dentelle.welcomeNote", "Drinks and warm hugs as the evening begins."),
+      note: t("reverie.welcomeNote", "Drinks and warm hugs as the evening begins."),
       icon: welcomeDrink.icon,
       fallbackIcon: "asset:cheers",
     });
@@ -759,7 +837,7 @@ export const DentelleTemplate = ({
       time: formatTimeTo12Hour(venue.time) || "",
       title: t("events.dinnerParty"),
       place: getLocalizedValue("venue_location", venue.location_name || ""),
-      note: t("dentelle.venueNote", "Dinner, toasts and dancing until late."),
+      note: t("reverie.venueNote", "Dinner, toasts and dancing until late."),
       icon: venue.icon,
       fallbackIcon: "solar:confetti-bold",
     });
@@ -852,7 +930,7 @@ export const DentelleTemplate = ({
           className="relative overflow-hidden"
           style={{ minHeight: "100svh", ...LINEN }}
         >
-          <DentelleLace cardRef={heroCardRef} />
+          <ReverieLace cardRef={heroCardRef} />
           <Petals ambient={14} active={opened} />
           <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "44px clamp(28px, 8vw, 40px)" }}>
             {/* The invitation card, on linen */}
@@ -872,7 +950,7 @@ export const DentelleTemplate = ({
                 className="dt-anim flex flex-col items-center"
               >
                 <p style={{ fontFamily: FONT_HEADING, fontSize: 17, lineHeight: 1.3, color: MUTED, maxWidth: 160 }}>
-                  {t("dentelle.together", "Together with their families")}
+                  {t("reverie.together", "Together with their families")}
                 </p>
                 <HeartTap color="#a9776b">
                 <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26 }}>
@@ -920,7 +998,7 @@ export const DentelleTemplate = ({
               cardRef={heroCardRef}
               opening={opening}
               onOpen={openInvitation}
-              label={t("dentelle.tapToOpen", "Tap to open")}
+              label={t("reverie.tapToOpen", "Tap to open")}
             />
           )}
         </section>
@@ -932,7 +1010,7 @@ export const DentelleTemplate = ({
           </DrawOnView>
           <Reveal delay={150}>
           <div style={{ marginTop: 22, fontFamily: FONT_HEADING, fontSize: 30, lineHeight: 1.2, color: INK }}>
-            {t("dentelle.together", "Together with their families")}
+            {t("reverie.together", "Together with their families")}
           </div>
           <div style={{ marginTop: 14, fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 19, lineHeight: 1.6, color: MUTED }}>
             <EditableField
@@ -979,7 +1057,7 @@ export const DentelleTemplate = ({
             <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms" }}>
               <PocketWatchArt color={BAND_ACCENT} />
             </DrawOnView>
-            <div style={{ marginTop: 18 }}>{sectionTitle(t("dentelle.countdown", "Countdown"), BAND_TITLE)}</div>
+            <div style={{ marginTop: 18 }}>{sectionTitle(t("reverie.countdown", "Countdown"), BAND_TITLE)}</div>
             <div
               className="flex justify-center"
               style={{ gap: "clamp(18px, 7vw, 48px)", marginTop: 26 }}
@@ -1009,7 +1087,7 @@ export const DentelleTemplate = ({
             <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 18 }}>
               <ChapelArt color={COCOA} />
             </DrawOnView>
-            {sectionTitle(t("dentelle.location", "Location"))}
+            {sectionTitle(t("reverie.location", "Location"))}
             <div className="flex flex-col" style={{ gap: 64, marginTop: 34 }}>
               {placesWithDirections.map((place: any) => {
                 const isVenue = place === venue;
@@ -1064,7 +1142,7 @@ export const DentelleTemplate = ({
                           textDecoration: "none",
                         }}
                       >
-                        {t("dentelle.getDirections", "Get directions")}
+                        {t("reverie.getDirections", "Get directions")}
                       </a>
                     )}
                   </Reveal>
@@ -1081,13 +1159,13 @@ export const DentelleTemplate = ({
               <ToastArt color={COCOA} />
             </DrawOnView>
             <Reveal className="text-center">
-              {sectionTitle(t("dentelle.theDay", "The Day"))}
+              {sectionTitle(t("reverie.theDay", "The Day"))}
               <div style={{ marginTop: 14, fontSize: 15.5, lineHeight: 1.65, color: MUTED }}>
                 <EditableField
                   fieldId="dentelle-day-subtitle"
                   text={getFieldValue(
                     "dentelle-day-subtitle",
-                    t("dentelle.theDaySubtitle", "A day to celebrate,\nfrom the first hello to the last dance."),
+                    t("reverie.theDaySubtitle", "A day to celebrate,\nfrom the first hello to the last dance."),
                   )}
                   style={getFieldStyle("dentelle-day-subtitle")}
                   onUpdate={onFieldUpdate}
@@ -1208,14 +1286,14 @@ export const DentelleTemplate = ({
                 </DrawOnView>
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
                 <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
-                  {t("dentelle.giftLead", "Your presence is our greatest gift.")}
+                  {t("reverie.giftLead", "Your presence is our greatest gift.")}
                 </p>
                 <div style={{ marginTop: 12, fontSize: 15, lineHeight: 1.7, color: "#4c4040", maxWidth: 400, marginInline: "auto" }}>
                   <EditableField
                     fieldId="dentelle-gift-text"
                     text={getFieldValue(
                       "dentelle-gift-text",
-                      t("dentelle.giftText", "Should you wish to give a gift, you can use the details below."),
+                      t("reverie.giftText", "Should you wish to give a gift, you can use the details below."),
                     )}
                     style={getFieldStyle("dentelle-gift-text")}
                     onUpdate={onFieldUpdate}
@@ -1226,7 +1304,7 @@ export const DentelleTemplate = ({
                   />
                 </div>
                 <div style={{ marginTop: 26 }}>
-                  <DentelleGiftCards giftCards={giftCards} />
+                  <ReverieGiftCards giftCards={giftCards} />
                 </div>
               </div>
             </Reveal>
@@ -1276,7 +1354,7 @@ export const DentelleTemplate = ({
           <div style={{ marginTop: 20, fontFamily: FONT_HEADING, fontSize: 24, color: INK }}>
             <EditableField
               fieldId="dentelle-closing"
-              text={getFieldValue("dentelle-closing", t("dentelle.closing", "We can't wait to celebrate with you."))}
+              text={getFieldValue("dentelle-closing", t("reverie.closing", "We can't wait to celebrate with you."))}
               style={getFieldStyle("dentelle-closing")}
               onUpdate={onFieldUpdate}
               isPreview={isPreview}
@@ -1285,7 +1363,7 @@ export const DentelleTemplate = ({
               className="whitespace-pre-line"
             />
           </div>
-          <p style={{ marginTop: 26, fontSize: 14, color: MUTED }}>{t("dentelle.withLove", "With love,")}</p>
+          <p style={{ marginTop: 26, fontSize: 14, color: MUTED }}>{t("reverie.withLove", "With love,")}</p>
           <p style={{ fontFamily: FONT_TITLE, fontSize: "clamp(44px, 12vw, 64px)", lineHeight: 1.15, color: INK, marginTop: 6 }}>
             {groomName} <span style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: "0.42em", color: CHAMPAGNE }}>&amp;</span> {brideName}
           </p>
@@ -1310,7 +1388,7 @@ export const DentelleTemplate = ({
               <rect x="3" y="5" width="18" height="16" rx="2" />
               <path d="M3 10h18M8 3v4M16 3v4" />
             </svg>
-            {t("dentelle.addToCalendar", "Add to calendar")}
+            {t("reverie.addToCalendar", "Add to calendar")}
           </a>
           </Reveal>
         </section>
@@ -1329,4 +1407,4 @@ export const DentelleTemplate = ({
   );
 };
 
-export default DentelleTemplate;
+export default ReverieTemplate;

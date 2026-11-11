@@ -612,13 +612,13 @@ export const templates: Template[] = [
   },
   {
     id: 'dentelle-lace',
-    name: 'Dentelle',
+    name: 'Rêverie',
     category: 'romantic',
     description: 'Romantic ivory lace that opens from a wax-sealed envelope, with lace-edged mocha bands and a timeline of the day.',
     thumbnail: '/placeholder.svg',
     isPremium: true,
     isPopular: true,
-    component: 'DentelleTemplate',
+    component: 'ReverieTemplate',
     sections: [
       { id: 'hero', enabled: true, order: 1, customizable: true },
       { id: 'story', enabled: true, order: 2, customizable: true },

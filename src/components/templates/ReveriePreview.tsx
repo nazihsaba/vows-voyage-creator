@@ -1,4 +1,4 @@
-import { DentelleTemplate } from "./DentelleTemplate";
+import { ReverieTemplate } from "./ReverieTemplate";
 
 const sampleWedding = {
   id: "preview",
@@ -43,9 +43,9 @@ const sampleGifts = [
   { id: "2", card_name: "Whish", card_number: "987 654 321" },
 ];
 
-const DentellePreview = () => {
+const ReveriePreview = () => {
   return (
-    <DentelleTemplate
+    <ReverieTemplate
       wedding={sampleWedding}
       locations={sampleLocations}
       gallery={[]}
@@ -66,4 +66,4 @@ const DentellePreview = () => {
   );
 };
 
-export default DentellePreview;
+export default ReveriePreview;
