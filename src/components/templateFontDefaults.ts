@@ -74,7 +74,7 @@ export const TEMPLATE_FONT_DEFAULTS: Record<string, Required<TemplateFonts>> = {
   },
   // Dentelle — romantic lace
   "dentelle-lace": {
-    title: '"Great Vibes", cursive',
+    title: '"Monsieur La Doulaise", "Great Vibes", cursive',
     subtitle: '"Cormorant Garamond", serif',
     heading: '"Cormorant Garamond", serif',
     body: '"Jost", sans-serif',

@@ -21,6 +21,7 @@ const FONT_OPTIONS: { label: string; stack: string }[] = [
   { label: "Dancing Script", stack: '"Dancing Script", cursive' },
   { label: "Cormorant Garamond", stack: '"Cormorant Garamond", serif' },
   { label: "Great Vibes", stack: '"Great Vibes", cursive' },
+  { label: "Monsieur La Doulaise", stack: '"Monsieur La Doulaise", "Great Vibes", cursive' },
   { label: "Cinzel", stack: '"Cinzel", serif' },
   { label: "Montserrat", stack: '"Montserrat", sans-serif' },
   { label: "Inter", stack: '"Inter", sans-serif' },
