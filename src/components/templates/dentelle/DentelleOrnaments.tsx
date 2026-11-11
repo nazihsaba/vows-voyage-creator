@@ -292,158 +292,120 @@ function ruffle(x1: number, y1: number, x2: number, y2: number, n: number, amp: 
   return d;
 }
 
-/** The Day: a bride and groom dancing a waltz twirl, fashion-illustration style. Draws itself, then keeps dancing. */
-export const DancingCoupleArt = ({ color, width = 210 }: { color: string; width?: number }) => {
-  const note = (x: number, y: number, i: number, cls: string) => (
-    <g className={cls} style={{ transformBox: "view-box", transformOrigin: `${x}px ${y}px` }}>
-      <P d={`M${x} ${y} V${y - 9} Q${x + 4} ${y - 7} ${x + 5} ${y - 4}`} w={0.8} o={0.75} i={i} />
-      <ellipse pathLength={1} cx={x - 2} cy={y} rx={2.2} ry={1.6} transform={`rotate(-20 ${x - 2} ${y})`} strokeWidth={0.8} opacity={0.75} style={{ ["--i" as string]: i }} />
-    </g>
-  );
-  const petal = (x: number, y: number, s: number, cls: string, i: number) => (
-    <g className={`dt-dance-petal ${cls}`} style={{ transformBox: "view-box", transformOrigin: `${x}px ${y}px` }}>
-      <P d={`M${x} ${y} q${f(s * 0.9)} ${f(-s * 0.9)} ${f(s * 1.6)} 0 q${f(-s * 0.7)} ${f(s * 0.8)} ${f(-s * 1.6)} 0`} w={0.6} o={0.7} i={i} />
-    </g>
-  );
-  // lace dots across the bodice
-  const lace: React.ReactNode[] = [];
-  [[119, 44], [122.5, 44.5], [118.5, 49], [122, 49.5], [125, 48.5], [120, 53.5], [123.5, 53.5]].forEach(([x, y], k) =>
-    lace.push(<circle key={k} pathLength={1} cx={x} cy={y} r={0.55} strokeWidth={0.5} opacity={0.6} style={{ ["--i" as string]: 9 + k * 0.2 }} />),
-  );
-  const necklace = [116.8, 118.6, 120.6, 122.6, 124.4].map((x, k) => (
-    <circle key={k} pathLength={1} cx={x} cy={39.6 + Math.sin((k / 4) * Math.PI) * 1.4} r={0.45} strokeWidth={0.5} opacity={0.7} style={{ ["--i" as string]: 8 + k * 0.2 }} />
-  ));
+/** The Day: a couple slow-dancing by candlelight, their shadow dancing on the wall behind them. */
+export const CandlelitDanceArt = ({ color, width = 210, paper = "#faf6f1" }: { color: string; width?: number; paper?: string }) => {
+  const id = useId().replace(/:/g, "");
+  // Silhouettes (also used for the shadow). He kisses her forehead; she stands in front.
+  const groom =
+    "M64.6 118 C65.4 98 64.8 80 64.4 70.4 C63.6 62 63.8 54 65 46.6 C65.6 43.4 67.4 41.4 69.8 40.2 C68.6 38 67.8 36 67.6 33.4 " +
+    "C67 27.6 70.6 23.6 75.4 23.4 C78.4 23.3 80 25.4 79.8 27.6 L81.8 30.4 L80.2 31 L80.8 32.2 L80 33 C80.6 33.8 80.6 34.8 79.8 35.2 " +
+    "C78.8 36.8 77.4 37.4 76.2 37.6 L76.4 40 C78 42.6 79.6 46 80 50 L79 72 L76.6 118 Z";
+  const bride =
+    "M87 30 C84.6 29.6 82.8 30.8 82.4 33 L82.2 34.6 L80.6 37.2 L82 37.8 L81.4 39 L82.2 39.6 C81.8 40.6 82 41.4 82.8 41.8 " +
+    "C84 43 85.8 43.2 87.4 42.6 L87.8 45 C84 47 81.6 50 82.4 54 C83 57 84 59 84.4 60.4 C82 78 80 98 79 118.6 " +
+    "C86 121 92 116 98 119.6 C104 122 110 116 120 116.4 C116 108 108 92 101 78 C97 70 93.6 64 91.8 60 " +
+    "C93.4 56 94 52 93.6 48 C93 46 91.6 45 90.8 44.2 L90.6 40.2 C92 38.6 92.6 36.6 92 34 " +
+    "C94.6 33.4 95.6 30.6 94 28.8 C92.6 27.2 90.4 27.6 89.6 28.8 C88.8 29.6 88 29.8 87 30 Z";
+  const veil = "M93.6 29.8 C100.6 38.6 104.6 55 105 74 C105.2 87 102.4 98.6 97.6 106.6 C99 92 99.2 76 97.2 61 C96.2 52 94.8 44.6 92.6 36.2 Z";
+  const grow = "translate(90 119) scale(1.12) translate(-90 -119)";
   return (
     <Art color={color} width={width}>
-      {/* hanging rose garlands in the top corners */}
-      <P d="M2 4 C20 16 38 20 56 16" w={0.8} o={0.7} i={0} />
-      <P d="M198 4 C180 16 162 20 144 16" w={0.8} o={0.7} i={0} />
-      {[0.12, 0.26, 0.4, 0.55, 0.7, 0.86].flatMap((t, k) => {
-        const bez = (p0: number, p1: number, p2: number, p3: number) => (1 - t) ** 3 * p0 + 3 * (1 - t) ** 2 * t * p1 + 3 * (1 - t) * t * t * p2 + t ** 3 * p3;
-        const lx = bez(2, 20, 38, 56);
-        const ly = bez(4, 16, 20, 16);
-        const side = k % 2 ? 1 : -1;
-        const l1 = leaf(lx, ly, -0.4 + side * 1.2, 5);
-        const l2 = leaf(200 - lx, ly, Math.PI + 0.4 - side * 1.2, 5);
-        return [<P key={`gl${k}`} d={l1.outline} w={0.6} o={0.85} i={1 + k * 0.3} />, <P key={`gr${k}`} d={l2.outline} w={0.6} o={0.85} i={1 + k * 0.3} />];
-      })}
-      <Rose x={22} y={13} r={4.2} i={1} />
-      <Rose x={44} y={18} r={3.4} i={2} />
-      <Rose x={178} y={13} r={4.2} i={1} />
-      <Rose x={156} y={18} r={3.4} i={2} />
-      <Sprig from={{ x: 30, y: 16 }} ang={Math.PI * 0.55} len={16} bend={0.2} leaves={3} leafLen={5} i={3} w={0.7} />
-      <Sprig from={{ x: 170, y: 16 }} ang={Math.PI * 0.45} len={16} bend={-0.2} leaves={3} leafLen={5} i={3} w={0.7} />
-      <Sprig from={{ x: 54, y: 16 }} ang={0.4} len={12} bend={0.2} leaves={2} leafLen={4.5} i={4} w={0.6} />
-      <Sprig from={{ x: 146, y: 16 }} ang={Math.PI - 0.4} len={12} bend={-0.2} leaves={2} leafLen={4.5} i={4} w={0.6} />
+      <defs>
+        <radialGradient id={`glow${id}`}>
+          <stop offset="0" stopColor="#f6c77e" stopOpacity="0.55" />
+          <stop offset="0.45" stopColor="#f6c77e" stopOpacity="0.16" />
+          <stop offset="1" stopColor="#f6c77e" stopOpacity="0" />
+        </radialGradient>
+        <linearGradient id={`flame${id}`} x1="0" y1="1" x2="0" y2="0">
+          <stop offset="0" stopColor="#fff6dd" />
+          <stop offset="0.55" stopColor="#f8cf7c" />
+          <stop offset="1" stopColor="#e39a4e" />
+        </linearGradient>
+        <filter id={`soft${id}`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.8" />
+        </filter>
+      </defs>
 
-      {/* floor: soft reflection */}
-      <P d="M56 124.5 C84 128 136 128 172 124.5" w={0.7} o={0.5} i={0} />
-      <P d="M76 127.5 h8 M92 128.5 h10 M112 128.5 h12 M132 127.8 h10 M150 126.8 h7" w={0.4} o={0.35} i={1} />
+      {/* the room: a panelled wall and the floor */}
+      <P d="M0 120 H200" w={0.8} o={0.6} i={0} />
+      <P d="M8 86 H196 M8 89 H196" w={0.5} o={0.4} i={1} />
+      <P d="M104 10 H190 V80 H104 Z M108 14 H186 V76 H108 Z" w={0.5} o={0.35} i={2} />
+      <P d="M14 22 H52 V80 H14 Z" w={0.5} o={0.3} i={2} />
+      <P d="M20 126 L12 130 M60 126 L56 130 M120 126 L124 130 M170 126 L178 130" w={0.4} o={0.3} i={3} />
 
-      {/* the couple sways together */}
-      <g className="dt-dance-sway" style={{ transformBox: "view-box", transformOrigin: "110px 123px" }}>
-        {/* ---------- groom (leaning into the dance) ---------- */}
-        <g transform="rotate(-3 88 122)">
-          <P d="M84 18.5 C88 16 93.2 17.4 94.2 21.2 L95.8 24.4 L94.5 25.1 C94.9 26 94.6 27.1 93.9 27.5 C93.7 29.6 92 31.3 89.4 31.1 C86 30.8 83.2 28.6 82.6 25.2 C82.2 22 82.6 19.9 84 18.5 Z" w={1.1} i={1} />
-          <P d="M82.6 25 C80.8 18.5 85.5 14.6 91.5 16 C93.8 16.6 95 18 94.6 19.8 C92 18.4 89 18.6 86.6 20.5" w={1.2} i={2} />
-          <P d="M84.5 19.5 C86 18 88.5 17.4 90.6 17.6 M83.6 22 C84.6 20.4 86.4 19.5 88.2 19.4" w={0.4} o={0.55} i={3} />
-          <P d="M86.4 24 C85.2 24.2 85 26.6 86.6 26.8" w={0.6} o={0.7} i={3} />
-          <P d="M88.6 31 V34.4 M91.6 30.4 V34" w={0.9} i={3} />
-          <P d="M86 35 L89.6 36.6 L93 35 V38.4 L89.6 36.8 L86 38.4 Z" w={0.7} i={4} />
-          {/* tailcoat */}
-          <P d="M79.6 37.6 C82 35.6 85 35 87 35.4 M92.2 35.2 C94.5 35 97 35.8 98.2 37.8" w={1.2} i={4} />
-          <P d="M79.6 37.6 C77.6 49 78 61 80.2 72.5 M98.2 37.8 C99 47 98.6 56 96.6 63 L92 72.5" w={1.25} i={5} />
-          <P d="M87 35.6 L89.8 48 L92.2 35.4 M87 35.6 L84.6 42.6 L88.2 45 M92.2 35.4 L94.8 42 L91.4 44.8" w={0.7} o={0.85} i={6} />
-          <P d="M89.8 48 V63 M89.2 53 h1.4 M89.2 58 h1.4" w={0.5} o={0.6} i={7} />
-          <P d="M93.6 43.6 l3 -0.6 l-0.4 2.6 Z" w={0.5} o={0.7} i={7} />
-          <circle pathLength={1} cx={84.2} cy={41.4} r={1.3} strokeWidth={0.6} style={{ ["--i" as string]: 7 }} />
-          <P d="M83.6 42.8 l-1.2 2 M84.8 42.8 l1 2" w={0.45} o={0.7} i={7} />
-          {/* coat tails flare behind him */}
-          <g className="dt-dance-tails" style={{ transformBox: "view-box", transformOrigin: "80px 66px" }}>
-            <P d="M80.2 66 C78.6 76 76 86 71.5 94 L77.6 92 L80.6 86" w={1} i={8} />
-            <P d="M79.6 72 C78 80 76.4 86 74 91" w={0.4} o={0.5} i={9} />
+      {/* warm candle glow */}
+      <circle className="dt-late dt-candle-glow" cx="30" cy="52" r="58" fill={`url(#glow${id})`} stroke="none" style={{ transformBox: "view-box", transformOrigin: "30px 52px" }} />
+
+      {/* their shadow on the wall: larger, softer, leaning away from the flame */}
+      <g className="dt-late dt-shadow-flicker" style={{ transformBox: "view-box", transformOrigin: "126px 119px" }}>
+        <g transform="translate(34 0) translate(90 119) skewX(-9) scale(1.14) translate(-90 -119)">
+          <g className="dt-candle-sway" style={{ transformBox: "view-box", transformOrigin: "90px 119px" }}>
+            <g filter={`url(#soft${id})`} fill={color} stroke="none" opacity="0.2" transform={grow}>
+              <path d={groom} />
+              <path d={bride} />
+              <path d={veil} />
+            </g>
           </g>
-          {/* arms: one raised to lead her twirl, one at his waist */}
-          <P d="M97 39 C102.5 31 108.4 21.6 114.6 12.8" w={1.1} i={8} />
-          <P d="M98.4 40.6 C103.6 33 109.4 23.6 115.4 13.8" w={0.4} o={0.45} i={9} />
-          <P d="M80.4 39.5 C77.4 47 77.6 54 81.4 59.5 C83 61.5 85.6 61 86.4 59" w={1.1} i={8} />
-          <P d="M80.6 55.5 C82 57 83.6 57.4 85.4 57" w={0.45} o={0.5} i={9} />
-          {/* trousers and shoes */}
-          <P d="M81.2 72.5 L80 121 M87.4 74.5 L86 121" w={1.1} i={9} />
-          <P d="M89.4 74.5 L95.4 120 M95.4 72.5 L101.2 119" w={1.1} i={9} />
-          <P d="M83.8 76 L83 118 M92.8 78 L98.2 116" w={0.4} o={0.45} i={10} />
-          <P d="M77.4 122 C80 120.6 85 120.6 87.6 122 Z M93.6 121.6 C97 119.8 101.6 119.6 104.4 121.4 Z" w={1.1} i={10} />
-          <P d="M79 121 h3 M96 120.6 h3" w={0.4} o={0.6} i={11} />
-        </g>
-
-        {/* ---------- bride ---------- */}
-        {/* veil */}
-        <g className="dt-dance-veil" style={{ transformBox: "view-box", transformOrigin: "128px 24px" }}>
-          <P d="M130.6 22.6 C141 25 149 34 153 46 C156 56 159 66 166 76" w={0.85} o={0.8} i={6} />
-          <P d="M129.6 28.6 C131.6 40 136 52 140.4 62 C142 66 143 70 143.6 74" w={0.85} o={0.8} i={6} />
-          <P d={ruffle(143.6, 74, 166, 76, 5, 2.2)} w={0.75} o={0.8} i={7} />
-          <P d="M133 27 C139 36 144 48 148 60 C150 66 152 70 154 75 M136 25.6 C143 33 148 44 152 56 C154.6 63 157.6 69 160.6 75.4" w={0.4} o={0.45} i={8} />
-        </g>
-        {/* face, hair, comb */}
-        <P d="M124.6 23.4 C120 22.4 116.6 25 116.2 28.4 L114.7 31 L116.2 31.6 C115.8 32.6 116 33.6 116.8 34 C117.2 35.6 118.8 36.7 120.8 36.4 C124 36 126.6 33.4 126.8 30 C127 26.6 126.4 24.4 124.6 23.4 Z" w={1.05} i={2} />
-        <P d="M116.4 26.6 C117 21 123.4 19.4 127.4 22.6 C129 24 129 26.6 127.8 28.8" w={1.15} i={3} />
-        <circle pathLength={1} cx={129} cy={23.6} r={3.4} strokeWidth={1.1} style={{ ["--i" as string]: 3 }} />
-        <P d="M129 23.6 m-1.6 0 a1.6 1.6 0 1 1 1.6 1.6" w={0.5} o={0.6} i={4} />
-        <P d="M118 24 C120.4 22.2 123.6 21.8 126 23 M117.4 26 C119.4 24.2 122 23.6 124.6 24.4" w={0.4} o={0.55} i={4} />
-        <P d="M127 30.6 C128.8 33.6 128 36.8 126.2 38.6 C125.4 39.4 125.6 40.6 126.6 40.6" w={0.6} o={0.8} i={5} />
-        <circle pathLength={1} cx={127.2} cy={20.6} r={1} strokeWidth={0.6} style={{ ["--i" as string]: 5 }} />
-        <circle pathLength={1} cx={129.6} cy={20} r={0.8} strokeWidth={0.6} style={{ ["--i" as string]: 5.3 }} />
-        <circle pathLength={1} cx={131.6} cy={21.2} r={0.9} strokeWidth={0.6} style={{ ["--i" as string]: 5.6 }} />
-        <P d="M120.2 36.4 V39 M123.2 35.6 V38.6" w={0.9} i={5} />
-        {necklace}
-        {/* lace bodice with sweetheart neckline */}
-        <P d="M115 40 C116.4 42.4 119 42.6 120.6 41 C122.2 42.6 124.8 42.4 126.4 40" w={1} i={6} />
-        <P d="M115 40 C113.8 47 114.6 53 116.6 58.6 M126.4 40 C127.8 47 127.4 53 125 58.6" w={1.15} i={7} />
-        {lace}
-        <P d={ruffle(116, 47, 126.6, 46.6, 4, 1)} w={0.4} o={0.5} i={10} />
-        {/* sash and bow at the waist */}
-        <P d="M116.4 56.6 C119.4 57.6 122.6 57.6 125.4 56.6 M116.8 59 C119.6 60 122.6 60 125.2 59" w={0.9} i={11} />
-        <P d="M125.4 57.8 C129 54 132 55 131 57.8 C130.4 59.4 127.6 59 125.4 57.8 C128.6 61 130.6 62.6 129 64.4" w={0.8} i={12} />
-        {/* arms: one raised into his hand, one holding the bouquet out */}
-        <P d="M115.6 41.4 C111.6 33 110.2 22.6 109.6 12.8" w={1.1} i={8} />
-        <circle pathLength={1} cx={109.2} cy={11.2} r={1.9} strokeWidth={0.9} style={{ ["--i" as string]: 9 }} />
-        <P d="M126.4 42 C133 45.4 137.6 50.4 138.6 55.4" w={1.1} i={9} />
-        {/* bouquet with trailing ribbons */}
-        <g className="dt-dance-bouquet" style={{ transformBox: "view-box", transformOrigin: "139px 57px" }}>
-          <Rose x={139} y={58} r={3.2} i={10} />
-          <Rose x={143.6} y={55.4} r={2.6} i={11} />
-          <Rose x={142.4} y={61} r={2.4} i={12} />
-          <P d={leaf(136, 60, Math.PI * 0.7, 6).outline} w={0.6} i={12} />
-          <P d={leaf(146, 57, -0.3, 5.5).outline} w={0.6} i={12} />
-          <P d={leaf(145, 63, 0.6, 5).outline} w={0.6} i={13} />
-          <P d="M140 62 C139 70 142 76 138 84 M141.6 62.4 C143.6 70 147 74 146 82" w={0.6} o={0.8} i={13} />
-        </g>
-        {/* layered, ruffled skirt and train */}
-        <g className="dt-dance-skirt" style={{ transformBox: "view-box", transformOrigin: "121px 58px" }}>
-          <P d="M150 104 C163 110 176 116 190 120 C178 123.4 160 123.4 148 118" w={0.9} i={12} />
-          <P d={ruffle(150, 118.5, 189, 120.4, 6, 1.4)} w={0.45} o={0.5} i={13} />
-          <P d="M116.6 59.4 C111.4 76 105.8 96 100 115" w={1.25} i={13} />
-          <P d="M125 59.4 C133.4 74 146.4 92 160.4 108" w={1.25} i={13} />
-          <P d={ruffle(110.6, 78, 137, 77, 6, 2.4)} w={0.8} i={14} />
-          <P d={ruffle(105.2, 96, 148.6, 93.2, 8, 2.8)} w={0.85} i={15} />
-          <P d={ruffle(100, 115, 160.4, 108, 10, 3.4)} w={1.15} i={16} />
-          <P d={ruffle(100.8, 117.6, 160.8, 110.8, 10, 2.6)} w={0.4} o={0.55} i={17} />
-          <P d="M120 61 C118.6 72 117.6 74 117.2 79 M122.8 61 C126 70 128 72 130 79" w={0.45} o={0.5} i={17} />
-          <P d="M116 82 C113.6 88 112.4 92 111.2 97 M126 81 C130 87 132.6 91 135 96 M136 81 C140.6 86 143 90 145.6 95" w={0.45} o={0.5} i={18} />
-          <P d="M110 100 C107.6 106 106.4 110 105.6 116 M122.6 99 C123 106 123.4 110 123.4 117 M137 98 C141 104 143.4 108 145.6 113" w={0.45} o={0.5} i={18} />
         </g>
       </g>
 
-      {/* music and drifting petals */}
-      {note(56, 50, 19, "dt-dance-note dt-dance-note-1")}
-      {note(166, 76, 20, "dt-dance-note dt-dance-note-2")}
-      {note(44, 76, 21, "dt-dance-note dt-dance-note-3")}
-      {petal(66, 28, 3, "dt-dance-petal-1", 20)}
-      {petal(148, 30, 2.6, "dt-dance-petal-2", 21)}
-      {petal(170, 40, 2.4, "dt-dance-petal-3", 21)}
-      {petal(34, 44, 2.6, "dt-dance-petal-4", 22)}
-      <Sparkle x={70} y={40} r={3.6} i={22} />
-      <Sparkle x={150} y={86} r={2.8} i={23} o={0.6} />
+      {/* candlestick */}
+      <ellipse pathLength={1} cx={30} cy={118.4} rx={11} ry={2.4} strokeWidth={1} style={{ ["--i" as string]: 3 }} />
+      <P d="M23 117 C25 113 27 112 27.4 108 C27.6 104 25.6 102 25.6 99 C25.6 96 28.4 95.4 28.4 92 V86.6 M37 117 C35 113 33 112 32.6 108 C32.4 104 34.4 102 34.4 99 C34.4 96 31.6 95.4 31.6 92 V86.6" w={1} i={4} />
+      <P d="M26 104.6 H34 M26.8 99 H33.2" w={0.5} o={0.6} i={5} />
+      <ellipse pathLength={1} cx={30} cy={85.6} rx={8.4} ry={2} strokeWidth={1} style={{ ["--i" as string]: 5 }} />
+      <P d="M26.4 85 V61.4 C27.6 60.4 32.4 60.4 33.6 61.4 V85" w={1.1} i={6} />
+      <P d="M26.4 63 C27.4 66 28.2 67 27.8 70 M33.6 62.6 C32.8 64.6 32.8 66 33.2 67.6" w={0.6} o={0.7} i={7} />
+      <P d="M30 60.6 V57.6" w={0.8} i={7} />
+
+      {/* the flame */}
+      <g className="dt-late dt-flame" style={{ transformBox: "view-box", transformOrigin: "30px 58px" }}>
+        <path d="M30 58 C26.4 56 26.6 51.4 30 44.6 C33.4 51.4 33.6 56 30 58 Z" fill={`url(#flame${id})`} stroke="none" />
+        <path d="M30 57.4 C28.8 56.4 28.8 54.4 30 52 C31.2 54.4 31.2 56.4 30 57.4 Z" fill="#fffaf0" stroke="none" />
+      </g>
+
+      {/* the couple: he kisses her forehead as they sway */}
+      <g className="dt-candle-sway" style={{ transformBox: "view-box", transformOrigin: "90px 119px" }}>
+        <g transform={grow}>
+          {/* groom */}
+          <path d={groom} fill={paper} stroke="none" />
+          <P d={groom} w={1.1} i={8} />
+          <P d="M67.8 33 C66.8 26.6 71 22.8 76.2 23.2 C78.6 23.4 80 24.8 80 26.4 C77 25.8 73.6 26.4 71.6 29" w={1} i={9} />
+          <P d="M70 27.6 C71.6 25.4 74 24.4 76.6 24.6" w={0.4} o={0.55} i={10} />
+          <P d="M72.4 31.2 C71 31.4 70.8 33.8 72.6 34" w={0.6} o={0.75} i={10} />
+          <P d="M78.6 29.6 q-1.2 0.6 -2.2 0.1" w={0.5} o={0.7} i={11} />
+          <P d="M69.8 40.4 L73.2 45.8 L76.4 40.2 M73.2 45.8 V68" w={0.7} o={0.85} i={11} />
+          <P d="M64.4 70.4 C68 72 73 72.2 78.8 71" w={0.8} i={12} />
+          <P d="M71 74 L70.2 117" w={0.6} o={0.7} i={12} />
+          <P d="M62.6 118.4 C65.6 116.8 70.6 116.8 73.6 118.6" w={1} i={13} />
+          {/* bride, in front of him */}
+          <path d={bride} fill={paper} stroke="none" />
+          <P d={bride} w={1.1} i={10} />
+          <P d="M82.6 32.6 C83 28.8 87.8 27.2 91.4 29.6" w={0.9} i={11} />
+          <P d="M92.6 30.8 m-1.2 0 a1.2 1.2 0 1 1 1.2 1.2" w={0.45} o={0.6} i={12} />
+          <P d="M89.6 27.4 C90.6 26.2 92 25.8 93.4 26.2" w={0.6} o={0.8} i={12} />
+          <P d="M84.4 34.6 q1.1 0.9 2.2 0.1" w={0.5} o={0.8} i={13} />
+          <P d="M86.2 30.6 C87.6 31.6 88.8 33.4 89.2 35.6" w={0.4} o={0.5} i={13} />
+          {/* sheer veil down her back */}
+          <path d={veil} fill={paper} fillOpacity={0.55} stroke="none" />
+          <P d={veil} w={0.7} o={0.75} i={14} />
+          <P d="M95.4 40 C98 52 99.6 66 99.8 80 M96.4 46 C98.6 58 99.4 72 99.2 88" w={0.4} o={0.45} i={15} />
+          {/* her arm over his shoulder, his around her waist */}
+          <P d="M89.4 47.4 C82 44.4 74.6 43.8 67.4 46" w={0.9} i={15} />
+          <P d="M67.4 46 l-1.2 -1.6 M67.6 47 l-1.6 -0.8" w={0.5} o={0.7} i={16} />
+          <P d="M79.6 52 C84.6 56.4 89.6 57.6 93.4 54.4" w={0.9} i={15} />
+          <P d="M93.4 54.4 l1.4 -1.4 M93.4 55.6 l1.8 -0.6" w={0.5} o={0.7} i={16} />
+          {/* sash and gown */}
+          <P d="M84.2 59.6 C87 61.4 89.8 61.6 92 60" w={0.8} i={16} />
+          <P d={ruffle(79.4, 120.6, 120, 117.6, 8, 2)} w={0.4} o={0.5} i={17} />
+          <P d="M88.4 63 C89.4 80 91 98 92 118 M85.2 64 C84.6 82 84.4 100 84.8 118.6 M91.2 62.6 C97 78 104 94 110.4 112" w={0.45} o={0.5} i={17} />
+        </g>
+      </g>
+
+      {/* a few motes of light drifting up from the candle */}
+      <circle className="dt-late dt-mote dt-mote-1" cx="34" cy="46" r="0.9" fill="#e9b46a" stroke="none" />
+      <circle className="dt-late dt-mote dt-mote-2" cx="26" cy="44" r="0.7" fill="#e9b46a" stroke="none" />
+      <circle className="dt-late dt-mote dt-mote-3" cx="31" cy="40" r="0.8" fill="#e9b46a" stroke="none" />
     </Art>
   );
 };

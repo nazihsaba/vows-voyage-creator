@@ -28,7 +28,7 @@ import {
   useInView,
 } from "@/components/templates/dentelle/DentelleEffects";
 import { DentelleLace } from "./dentelle/DentelleLace";
-import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, DancingCoupleArt } from "./dentelle/DentelleOrnaments";
+import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, CandlelitDanceArt } from "./dentelle/DentelleOrnaments";
 
 /**
  * Dentelle — romantic lace invitation.
@@ -1078,7 +1078,7 @@ export const DentelleTemplate = ({
         {dayEntries.length > 0 && (
           <section style={{ padding: "90px 22px 104px", maxWidth: 600, margin: "0 auto" }}>
             <DrawOnView className="flex justify-center" duration={1500} style={{ ["--dt-step" as string]: "70ms", marginBottom: 18 }}>
-              <DancingCoupleArt color={COCOA} />
+              <CandlelitDanceArt color={COCOA} paper={IVORY} />
             </DrawOnView>
             <Reveal className="text-center">
               {sectionTitle(t("dentelle.theDay", "The Day"))}

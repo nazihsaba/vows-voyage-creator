@@ -104,32 +104,26 @@ export const EFFECTS_CSS = `
 @keyframes dt-heart { 0% { transform: translate(-50%, 0) scale(.4); opacity: 0; } 15% { opacity: 1; } 100% { transform: translate(calc(-50% + var(--dx)), -150px) scale(1.15) rotate(var(--rot)); opacity: 0; } }
 @keyframes dt-shine { 0%, 62% { transform: translateX(-140%) rotate(18deg); } 82%, 100% { transform: translateX(140%) rotate(18deg); } }
 @keyframes dt-pulse-dot { 0% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 3px rgba(106,80,71,.35); } 100% { box-shadow: 0 0 0 3px #faf6f1, 0 0 0 12px rgba(106,80,71,0); } }
-/* Dancing couple (The Day): starts once drawn and never stops */
-@keyframes dt-sway { 0% { transform: rotate(-3.2deg) translateY(0); } 25% { transform: rotate(0deg) translateY(-1.6px); } 50% { transform: rotate(3.2deg) translateY(0); } 75% { transform: rotate(0deg) translateY(-1.6px); } 100% { transform: rotate(-3.2deg) translateY(0); } }
-@keyframes dt-skirt { 0%, 100% { transform: rotate(-5deg) scaleX(.95); } 50% { transform: rotate(6deg) scaleX(1.07); } }
-@keyframes dt-veil { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-9deg) scaleX(1.05); } }
-@keyframes dt-note { 0% { transform: translate(0, 6px) rotate(-8deg); opacity: 0; } 20% { opacity: 1; } 80% { opacity: 1; } 100% { transform: translate(6px, -26px) rotate(10deg); opacity: 0; } }
-.dt-drawn .dt-dance-sway { animation: dt-sway 3.6s ease-in-out 1.8s infinite; }
-.dt-drawn .dt-dance-skirt { animation: dt-skirt 1.8s ease-in-out 1.8s infinite; }
-.dt-drawn .dt-dance-veil { animation: dt-veil 1.8s ease-in-out 2.1s infinite; }
-.dt-drawn .dt-dance-note { animation: dt-note 4.2s ease-in-out infinite; opacity: 0; }
-.dt-drawn .dt-dance-note-1 { animation-delay: 2s; }
-.dt-drawn .dt-dance-note-2 { animation-delay: 3.4s; }
-.dt-drawn .dt-dance-note-3 { animation-delay: 4.8s; }
-@keyframes dt-tails { 0%, 100% { transform: rotate(4deg); } 50% { transform: rotate(-10deg); } }
-@keyframes dt-bouquet { 0%, 100% { transform: rotate(-6deg); } 50% { transform: rotate(7deg); } }
-@keyframes dt-fall { 0% { transform: translate(0, -6px) rotate(0deg); opacity: 0; } 15% { opacity: .9; } 85% { opacity: .9; } 100% { transform: translate(10px, 84px) rotate(220deg); opacity: 0; } }
-.dt-drawn .dt-dance-tails { animation: dt-tails 1.8s ease-in-out 1.9s infinite; }
-.dt-drawn .dt-dance-bouquet { animation: dt-bouquet 1.8s ease-in-out 2s infinite; }
-.dt-drawn .dt-dance-petal { animation: dt-fall 6.5s linear infinite; opacity: 0; }
-.dt-drawn .dt-dance-petal-1 { animation-delay: 1.6s; }
-.dt-drawn .dt-dance-petal-2 { animation-delay: 3.2s; }
-.dt-drawn .dt-dance-petal-3 { animation-delay: 4.6s; animation-duration: 7.5s; }
-.dt-drawn .dt-dance-petal-4 { animation-delay: 5.8s; animation-duration: 7s; }
+/* Candle-lit dance (The Day): starts once drawn and never stops */
+@keyframes dt-candle-sway { 0%, 100% { transform: rotate(-2.4deg) translateY(0); } 25% { transform: rotate(0deg) translateY(-1.2px); } 50% { transform: rotate(2.4deg) translateY(0); } 75% { transform: rotate(0deg) translateY(-1.2px); } }
+@keyframes dt-flame { 0%, 100% { transform: scale(1, 1) skewX(0deg); } 20% { transform: scale(.94, 1.08) skewX(3deg); } 40% { transform: scale(1.04, .94) skewX(-2deg); } 60% { transform: scale(.96, 1.06) skewX(2deg); } 80% { transform: scale(1.02, .97) skewX(-3deg); } }
+@keyframes dt-glow { 0%, 100% { transform: scale(1); opacity: .95; } 30% { transform: scale(1.04); opacity: 1; } 55% { transform: scale(.97); opacity: .85; } 80% { transform: scale(1.02); opacity: 1; } }
+@keyframes dt-shadow { 0%, 100% { transform: scale(1) skewX(0deg); opacity: 1; } 20% { transform: scale(1.02, .985) skewX(-1.2deg); opacity: .85; } 40% { transform: scale(.99, 1.02) skewX(1deg); opacity: 1; } 60% { transform: scale(1.015, .99) skewX(-.8deg); opacity: .9; } 80% { transform: scale(.995, 1.01) skewX(1.4deg); opacity: 1; } }
+@keyframes dt-mote { 0% { transform: translate(0, 0); opacity: 0; } 25% { opacity: .9; } 100% { transform: translate(6px, -34px); opacity: 0; } }
+.dt-late { opacity: 0; transition: opacity 1.2s ease 1.4s; }
+.dt-drawn .dt-late { opacity: 1; }
+.dt-drawn .dt-candle-sway { animation: dt-candle-sway 4.4s ease-in-out 1.8s infinite; }
+.dt-drawn .dt-flame { animation: dt-flame .9s ease-in-out infinite; }
+.dt-drawn .dt-candle-glow { animation: dt-glow 1.8s ease-in-out infinite; }
+.dt-drawn .dt-shadow-flicker { animation: dt-shadow .9s ease-in-out infinite; }
+.dt-drawn .dt-mote { animation: dt-mote 3.6s ease-out infinite; }
+.dt-drawn .dt-mote-2 { animation-delay: 1.2s; }
+.dt-drawn .dt-mote-3 { animation-delay: 2.4s; }
 @media (prefers-reduced-motion: reduce) {
   .dt-draw path, .dt-draw ellipse, .dt-draw circle { stroke-dasharray: none; transition: none; }
-  .dt-tick, .dt-shine, .dt-heart, .dt-dance-sway, .dt-dance-skirt, .dt-dance-veil, .dt-dance-tails, .dt-dance-bouquet { animation: none !important; }
-  .dt-dance-note, .dt-dance-petal { animation: none !important; opacity: 1 !important; }
+  .dt-tick, .dt-shine, .dt-heart, .dt-candle-sway, .dt-flame, .dt-candle-glow, .dt-shadow-flicker { animation: none !important; }
+  .dt-mote { animation: none !important; opacity: 0 !important; }
+  .dt-late { transition: none; }
 }
 `;
 
