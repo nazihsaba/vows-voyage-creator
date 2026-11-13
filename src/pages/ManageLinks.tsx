@@ -46,6 +46,7 @@ import {
   ArrowUp,
   ArrowDown,
   CheckCircle2,
+  Camera,
 } from "lucide-react";
 import * as XLSX from "xlsx";
 import {
@@ -72,6 +73,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import SeatingQRSection from "@/components/SeatingQRSection";
+import PhotoWallPanel from "@/components/PhotoWallPanel";
+import { usePhotoWall, formatPrice } from "@/hooks/usePhotoWall";
 
 /** Show the "Venue ($30)" button? Set to true to bring it back. */
 const SHOW_VENUE_PLANNER = false;
@@ -150,7 +153,8 @@ const ManageLinks = () => {
   const [pendingUpdates, setPendingUpdates] = useState<Record<string, Partial<Invitee>>>({});
   const [newInviteeName, setNewInviteeName] = useState("");
   const [savingInvitee, setSavingInvitee] = useState(false);
-  const [activeView, setActiveView] = useState<"guests" | "tables" | "venue">("guests");
+  const [activeView, setActiveView] = useState<"guests" | "tables" | "venue" | "photo_wall">("guests");
+  const photoWall = usePhotoWall(weddingId);
   const venueRef = useRef<VenueLayoutPlannerRef>(null);
   const [statusFilter, setStatusFilter] = useState<"attending" | "pending" | "not_attending" | null>(null);
   const [sideFilter, setSideFilter] = useState<"GROOM" | "BRIDE" | null>(null);
@@ -243,6 +247,21 @@ const ManageLinks = () => {
     genState.weddingId === weddingId && (genState.status === "uploading" || genState.status === "polling");
 
   const isVenueUnlocked = wedding?.venue_payment_status === "paid";
+
+  // Handle photo wall payment return: the server confirms the payment with Whish and creates the wall
+  useEffect(() => {
+    const result = new URLSearchParams(window.location.search).get("photo_wall_payment");
+    if (!result) return;
+    setActiveView("photo_wall");
+    window.history.replaceState({}, "", window.location.pathname);
+    if (result === "success") {
+      photoWall.refresh().then((reply) => {
+        if (reply?.wall?.status === "created") toast({ title: "Photo Wall unlocked!", description: "Your guest link and QR code are ready." });
+      });
+    } else {
+      toast({ title: "Payment Failed", description: "The photo wall payment was not completed. Please try again.", variant: "destructive" });
+    }
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Handle venue payment return
   useEffect(() => {
@@ -1236,8 +1255,24 @@ const ManageLinks = () => {
                     {!isVenueUnlocked && <span className="ml-1 text-[10px] opacity-70">$30</span>}
                   </Button>
                   )}
+                  <Button
+                    variant={activeView === "photo_wall" ? "default" : "ghost"}
+                    size="sm"
+                    onClick={() => setActiveView("photo_wall")}
+                    className="rounded-md text-xs h-8 px-3"
+                  >
+                    {photoWall.isUnlocked ? (
+                      <Camera className="w-3.5 h-3.5 mr-1.5" />
+                    ) : (
+                      <Lock className="w-3.5 h-3.5 mr-1.5" />
+                    )}
+                    Photo Wall
+                    {!photoWall.isUnlocked && photoWall.price && (
+                      <span className="ml-1 text-[10px] opacity-70">{formatPrice(photoWall.price)}</span>
+                    )}
+                  </Button>
                 </div>
-                {(activeView === "venue" || links.length > 0) && (
+                {activeView !== "photo_wall" && (activeView === "venue" || links.length > 0) && (
                   <>
                     {/* Desktop buttons */}
                     <div className="hidden sm:flex items-center gap-2">
@@ -1332,7 +1367,9 @@ const ManageLinks = () => {
                         ? "translateX(-100%)"
                         : activeView === "venue"
                           ? "translateX(-200%)"
-                          : "translateX(0)",
+                          : activeView === "photo_wall"
+                            ? "translateX(-300%)"
+                            : "translateX(0)",
                   }}
                 >
                   {/* Guests Panel */}
@@ -2161,6 +2198,19 @@ const ManageLinks = () => {
                         </Button>
                       </div>
                     )}
+                  </div>
+
+                  {/* Photo Wall Panel */}
+                  <div className="w-full flex-shrink-0">
+                    <PhotoWallPanel
+                      wall={photoWall.wall}
+                      price={photoWall.price}
+                      loaded={photoWall.loaded}
+                      busy={photoWall.busy}
+                      error={photoWall.error}
+                      onUnlock={photoWall.unlock}
+                      onRefresh={photoWall.refresh}
+                    />
                   </div>
                 </div>
               </div>

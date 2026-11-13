@@ -23,3 +23,6 @@ verify_jwt = false
 
 [functions.physical-booking]
 verify_jwt = false
+
+[functions.photo-wall]
+verify_jwt = false
