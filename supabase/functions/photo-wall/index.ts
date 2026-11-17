@@ -16,7 +16,7 @@ import { z } from "npm:zod@3";
  */
 
 // ---------- Price (the single source of truth; the app shows what this returns) ----------
-const PHOTO_WALL_PRICE_USD = 0;
+const PHOTO_WALL_PRICE_USD = 40;
 const CURRENCY = "USD";
 
 // ---------- Connections ----------

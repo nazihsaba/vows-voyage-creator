@@ -163,23 +163,43 @@ const PhotoWallPanel = ({ wall, price, loaded, busy, openingDashboard, error, on
 
       {waitingForPayment ? (
         <>
-          <p className="text-sm text-muted-foreground mb-3">We're waiting for your payment to be confirmed.</p>
-          <Button variant="outline" onClick={onRefresh} className="rounded-full px-6">
-            <RefreshCw className="w-4 h-4 mr-2" /> Check again
-          </Button>
+          <p className="text-sm text-muted-foreground mb-1">We're waiting for your Whish payment to be confirmed.</p>
+          <p className="text-xs text-muted-foreground mb-4 max-w-sm">
+            Already paid? Tap "Check again". Closed the payment page before paying? You can start a new payment.
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <Button variant="outline" onClick={onRefresh} disabled={busy} className="rounded-full px-6">
+              <RefreshCw className="w-4 h-4 mr-2" /> Check again
+            </Button>
+            <Button variant="brand" onClick={onUnlock} disabled={busy} className="rounded-full px-6">
+              {busy ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Lock className="w-4 h-4 mr-2" />}
+              {busy ? "Opening Whish…" : `Pay ${formatPrice(price)} again`}
+            </Button>
+          </div>
         </>
       ) : (
         <>
-          {!paidNotCreated && price && (
+          {!paidNotCreated && price && price.amount > 0 && (
             <p className="text-sm text-muted-foreground mb-3">
-              Price: <span className="font-semibold text-foreground">{formatPrice(price)}</span>
+              <span className="font-semibold text-foreground text-base">{formatPrice(price)}</span> one-time, per invitation
             </p>
           )}
           {paidNotCreated && <p className="text-sm text-muted-foreground mb-3">Your photo wall is unlocked. Let's finish setting it up.</p>}
           <Button variant="brand" onClick={onUnlock} disabled={busy} className="rounded-full px-6">
             {busy ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : paidNotCreated ? <Camera className="w-4 h-4 mr-2" /> : <Lock className="w-4 h-4 mr-2" />}
-            {busy ? "Setting up your photo wall…" : paidNotCreated ? "Create my photo wall" : "Unlock Photo Wall"}
+            {busy
+              ? paidNotCreated || !price?.amount
+                ? "Setting up your photo wall…"
+                : "Opening Whish…"
+              : paidNotCreated
+                ? "Create my photo wall"
+                : price && price.amount > 0
+                  ? `Unlock Photo Wall · ${formatPrice(price)}`
+                  : "Unlock Photo Wall"}
           </Button>
+          {!paidNotCreated && price && price.amount > 0 && (
+            <p className="mt-2 text-xs text-muted-foreground">Secure payment with Whish</p>
+          )}
         </>
       )}
       {wall?.status === "payment_failed" && !error && (

@@ -42,8 +42,10 @@ async function callPhotoWall(action: "status" | "unlock" | "login", weddingId: s
 
 /**
  * Loads the photo wall for an invitation and unlocks it.
- * Unlocking is free while the price is $0 (the wall is created straight away); with a price,
- * it sends the couple to Whish and the wall is created once the payment is confirmed.
+ * Unlocking sends the couple to Whish to pay (the price comes from the server, $40 today);
+ * the wall is created once Whish confirms the payment. If the price were ever $0 the wall
+ * would be created straight away. Calling unlock again while a payment is still pending
+ * first re-checks that payment, then starts a fresh one if it never went through.
  */
 export function usePhotoWall(weddingId: string | undefined) {
   const [wall, setWall] = useState<PhotoWall | null>(null);
