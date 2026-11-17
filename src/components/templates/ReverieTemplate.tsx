@@ -730,7 +730,17 @@ const Envelope = ({
             <span
               key={i}
               className="absolute block"
-              style={{ left: r.x, top: r.y, width: r.w, height: r.h, ...inside, backgroundPosition: `0 0, ${-r.x}px ${-r.y}px` }}
+              style={{
+                left: r.x,
+                top: r.y,
+                width: r.w,
+                height: r.h,
+                ...inside,
+                backgroundPosition: `0 0, ${-r.x}px ${-r.y}px`,
+                // the inside of the envelope fades as it starts to slide, so it never passes over the card
+                opacity: phase >= 4 ? 0 : 1,
+                transition: "opacity .45s ease",
+              }}
             />
           ))}
           {/* front pocket: two side flaps under a bottom flap */}
