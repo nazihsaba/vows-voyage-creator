@@ -4,3 +4,4 @@
 - Derive template demo dates from src/lib/previewDates.ts, never from fixed calendar dates; previews stay future-dated without changing saved invitation countdowns.
 - Create Elan photo walls only through the authenticated photo-wall function on unlock (after payment confirmation when charged), signing exact request bytes with server-only ELAN_KEY/ELAN_SECRET and using the wedding ID for idempotency; this prevents credential exposure and duplicate billing.
 - Generate Elan dashboard login links only on an authenticated owner's click for a created wall, redirect immediately, and never store or log them; the single-use links expire in two minutes.
+- Reset Fast Refresh state for ManageLinks and usePhotoWall; nested hook changes must remount instead of reusing incompatible React hook queues in the preview.

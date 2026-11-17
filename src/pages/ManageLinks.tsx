@@ -1,3 +1,4 @@
+// @refresh reset
 import React, { useEffect, useState, useRef } from "react";
 import { getGenerationState, subscribeGeneration } from "@/lib/linkGenerationQueue";
 import { getInvitationLinkSlug } from "@/lib/slugifyLinkName";
