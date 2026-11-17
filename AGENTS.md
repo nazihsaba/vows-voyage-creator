@@ -5,3 +5,5 @@
 - Create Elan photo walls only through the authenticated photo-wall function on unlock (after payment confirmation when charged), signing exact request bytes with server-only ELAN_KEY/ELAN_SECRET and using the wedding ID for idempotency; this prevents credential exposure and duplicate billing.
 - Generate Elan dashboard login links only on an authenticated owner's click for a created wall, redirect immediately, and never store or log them; the single-use links expire in two minutes.
 - Reset Fast Refresh state for ManageLinks and usePhotoWall; nested hook changes must remount instead of reusing incompatible React hook queues in the preview.
+- Keep invitation-image write access bound to the event owner or explicitly shared editor via invites/{slug}, and video uploads bound to auth.uid() folders; public social previews must retain their existing addresses.
+- Manage promo-code records only through trusted service access; ordinary signed-in customers may read active codes but cannot write them.

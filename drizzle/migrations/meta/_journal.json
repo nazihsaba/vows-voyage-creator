@@ -15,6 +15,13 @@
       "when": 1794903830929,
       "tag": "0001_activate_photo_walls",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1794905160705,
+      "tag": "0002_restrict_selected_promo_and_storage_policies",
+      "breakpoints": true
     }
   ]
 }
