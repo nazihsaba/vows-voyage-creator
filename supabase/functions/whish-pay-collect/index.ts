@@ -32,6 +32,7 @@ const PROMO_CODES: Record<string, number> = {
 };
 const BASE_PUBLISH_FEE_USD = 100;
 const TRESOR_PUBLISH_FEE_USD = 120;
+const REVERIE_PUBLISH_FEE_USD = 110; // template id "dentelle-lace"
 
 serve(async (req: Request) => {
   // Handle CORS preflight
@@ -129,7 +130,12 @@ serve(async (req: Request) => {
         }
       }
 
-      const baseFee = wedding.template_type === "tresor-swipe" ? TRESOR_PUBLISH_FEE_USD : BASE_PUBLISH_FEE_USD;
+      const baseFee =
+        wedding.template_type === "tresor-swipe"
+          ? TRESOR_PUBLISH_FEE_USD
+          : wedding.template_type === "dentelle-lace"
+            ? REVERIE_PUBLISH_FEE_USD
+            : BASE_PUBLISH_FEE_USD;
       finalAmount = baseFee * (1 - discountPercent / 100);
       finalInvoice = `Event publishing fee for ${wedding.bride_name} & ${wedding.groom_name}${appliedPromoLabel}`;
     } else {

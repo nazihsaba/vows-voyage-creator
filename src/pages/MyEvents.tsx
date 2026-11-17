@@ -65,8 +65,9 @@ interface Wedding {
   payment_external_id?: string;
 }
 
+// Keep in sync with the fees in supabase/functions/whish-pay-collect (the server decides what is charged).
 const getPublishFee = (templateType?: string) =>
-  templateType === "tresor-swipe" ? 120 : 100;
+  templateType === "tresor-swipe" ? 120 : templateType === "dentelle-lace" ? 110 : 100;
 
 const PROMO_CODES: Record<string, number> = {
   "A-HOST": 40,
