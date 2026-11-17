@@ -171,234 +171,172 @@ const LINEN: React.CSSProperties = {
   backgroundSize: "auto, auto, 180px 180px, auto, auto",
 };
 
-/** Ivory cotton card stock. */
-/** SVG filter that adds paper grain inside whatever it is applied to. */
-const PaperGrain = ({ id, amount = 0.2 }: { id: string; amount?: number }) => (
-  <filter id={id} x="0" y="0" width="100%" height="100%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" seed="4" result="t" />
-    <feColorMatrix in="t" values={`0 0 0 0 0.33  0 0 0 0 0.26  0 0 0 0 0.2  0 0 0 ${amount} 0`} result="n" />
-    <feComposite in="n" in2="SourceGraphic" operator="in" result="g" />
-    <feMerge>
-      <feMergeNode in="SourceGraphic" />
-      <feMergeNode in="g" />
-    </feMerge>
-  </filter>
-);
+// ---------- Handmade-paper envelope ----------
 
-/** Mocha wax seal with a pressed rim, a small laurel and the couple's initials. */
-const WaxSeal = ({ initials, size = 96 }: { initials: string; size?: number }) => {
-  const id = `wax-${useId().replace(/:/g, "")}`;
-  const edge = useMemo(() => {
-    const pts: string[] = [];
-    const n = 90;
-    for (let i = 0; i <= n; i++) {
-      const a = (i / n) * Math.PI * 2;
-      const wob = 1 + Math.sin(a * 7 + 0.4) * 0.03 + Math.sin(a * 3 + 1.3) * 0.025 + Math.cos(a * 11) * 0.012;
-      pts.push(`${(60 + Math.cos(a) * 52 * wob).toFixed(2)} ${(60 + Math.sin(a) * 52 * wob).toFixed(2)}`);
-    }
-    return `M${pts.join(" L")} Z`;
-  }, []);
-  const leaves = useMemo(() => {
-    const out: string[] = [];
-    for (const side of [-1, 1]) {
-      for (let i = 0; i < 5; i++) {
-        const a = Math.PI / 2 + side * (0.5 + i * 0.27);
-        const x = 60 + Math.cos(a) * 30;
-        const y = 60 + Math.sin(a) * 30;
-        const rot = (a * 180) / Math.PI + (side > 0 ? 35 : -35);
-        out.push(`<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="1.8" ry="4" transform="rotate(${rot.toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`);
-      }
-    }
-    return out.join("");
-  }, []);
-  return (
-    <svg width={size} height={size} viewBox="0 0 120 120" aria-hidden style={{ overflow: "visible" }}>
-      <defs>
-        <radialGradient id={`${id}-g`} cx="38%" cy="32%" r="75%">
-          <stop offset="0%" stopColor="#957a6f" />
-          <stop offset="55%" stopColor="#6a5047" />
-          <stop offset="100%" stopColor="#47352f" />
-        </radialGradient>
-        <radialGradient id={`${id}-in`} cx="60%" cy="65%" r="70%">
-          <stop offset="0%" stopColor="#7a5f55" />
-          <stop offset="100%" stopColor="#5a433b" />
-        </radialGradient>
-        <filter id={`${id}-s`} x="-30%" y="-30%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="2.5" stdDeviation="2.4" floodColor="#2e211c" floodOpacity="0.45" />
-        </filter>
-      </defs>
-      <path d={edge} fill={`url(#${id}-g)`} filter={`url(#${id}-s)`} />
-      {/* pressed well with a raised rim */}
-      <circle cx="60" cy="60" r="39" fill={`url(#${id}-in)`} />
-      <circle cx="60" cy="60" r="39" fill="none" stroke="#3b2b25" strokeWidth="2" opacity="0.7" />
-      <circle cx="59.3" cy="59.2" r="40.6" fill="none" stroke="#b39a8e" strokeWidth="1" opacity="0.65" />
-      {/* laurel */}
-      <g fill="#8c7166" stroke="#4a3731" strokeWidth="0.4" dangerouslySetInnerHTML={{ __html: leaves }} />
-      {/* initials, embossed */}
-      <g style={{ fontFamily: FONT_MONOGRAM }} fontSize="25" textAnchor="middle">
-        <text x="60.8" y="65" fill="#3a2a24">{initials}</text>
-        <text x="59.4" y="63.6" fill="#b49c90" opacity="0.8">{initials}</text>
-        <text x="60" y="64.3" fill="#7d6258">{initials}</text>
-      </g>
-      {/* wax sheen */}
-      <ellipse cx="44" cy="36" rx="17" ry="9" fill="#fff" opacity="0.13" transform="rotate(-32 44 36)" />
-    </svg>
-  );
-};
-
-/** Scalloped lace edging along a polyline: scallops bulge to the outer side, each with a pinhole. */
-function laceTrim(pts: Array<[number, number]>, size: number) {
-  // resample the polyline evenly
-  const out: Array<[number, number]> = [];
-  for (let k = 0; k < pts.length - 1; k++) {
-    const [ax, ay] = pts[k];
-    const [bx, by] = pts[k + 1];
-    const n = Math.max(1, Math.round(Math.hypot(bx - ax, by - ay) / size));
-    for (let j = 0; j < n; j++) out.push([ax + ((bx - ax) * j) / n, ay + ((by - ay) * j) / n]);
-  }
-  out.push(pts[pts.length - 1]);
-  let edge = `M${out[0][0].toFixed(1)} ${out[0][1].toFixed(1)}`;
-  let holes = "";
-  for (let k = 0; k < out.length - 1; k++) {
-    const [ax, ay] = out[k];
-    const [bx, by] = out[k + 1];
-    const len = Math.hypot(bx - ax, by - ay) || 1;
-    const nx = -(by - ay) / len;
-    const ny = (bx - ax) / len;
-    const r = len / 2;
-    const c = r * 1.3;
-    edge += ` C${(ax + nx * c).toFixed(1)} ${(ay + ny * c).toFixed(1)} ${(bx + nx * c).toFixed(1)} ${(by + ny * c).toFixed(1)} ${bx.toFixed(1)} ${by.toFixed(1)}`;
-    const hx = (ax + bx) / 2 + nx * r * 0.5;
-    const hy = (ay + by) / 2 + ny * r * 0.5;
-    const hr = r * 0.26;
-    holes += ` M${(hx - hr).toFixed(1)} ${hy.toFixed(1)} a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(hr * 2).toFixed(1)} 0 a${hr.toFixed(1)} ${hr.toFixed(1)} 0 1 0 ${(-hr * 2).toFixed(1)} 0`;
-  }
-  // close the band back along the edge itself
-  const back = [...out].reverse().map(([x, y]) => `L${x.toFixed(1)} ${y.toFixed(1)}`).join(" ");
-  return `${edge} ${back} Z${holes}`;
+/** Tiny seeded random generator, so the paper and its torn edges look the same on every visit. */
+function seededRandom(seed: number) {
+  let s = seed >>> 0;
+  return () => {
+    s = (s * 1664525 + 1013904223) >>> 0;
+    return s / 4294967296;
+  };
 }
 
-/** Round lace doily: scalloped rim, a ring of pinholes and a fine inner circle. */
-const LaceDoily = ({ size }: { size: number }) => {
-  const R = size / 2 - 6;
-  const n = 22;
-  const pts: Array<[number, number]> = [];
-  for (let k = 0; k <= n; k++) {
-    const a = (k / n) * Math.PI * 2;
-    pts.push([size / 2 + Math.cos(a) * R * 0.86, size / 2 + Math.sin(a) * R * 0.86]);
+/**
+ * A tile of handmade cotton paper: soft bumps lit from the top left, pressed fibres and a few
+ * flecks. Drawn once on a canvas and reused as a repeating image.
+ */
+let handmadeTile: string | null = null;
+function handmadePaper(): string | null {
+  if (handmadeTile) return handmadeTile;
+  if (typeof document === "undefined") return null;
+  try {
+    const S = 600;
+    const c = document.createElement("canvas");
+    c.width = c.height = S;
+    const g = c.getContext("2d");
+    if (!g) return null;
+    const rnd = seededRandom(7);
+    // periodic value noise, so the tile repeats without seams
+    const layer = (cells: number) => {
+      const v = Array.from({ length: cells * cells }, () => rnd());
+      return (x: number, y: number) => {
+        const fx = (x / S) * cells;
+        const fy = (y / S) * cells;
+        const x0 = Math.floor(fx);
+        const y0 = Math.floor(fy);
+        const tx = fx - x0;
+        const ty = fy - y0;
+        const sx = tx * tx * (3 - 2 * tx);
+        const sy = ty * ty * (3 - 2 * ty);
+        const at = (i: number, j: number) => v[((j % cells) + cells) % cells * cells + (((i % cells) + cells) % cells)];
+        const a = at(x0, y0) + (at(x0 + 1, y0) - at(x0, y0)) * sx;
+        const b = at(x0, y0 + 1) + (at(x0 + 1, y0 + 1) - at(x0, y0 + 1)) * sx;
+        return a + (b - a) * sy;
+      };
+    };
+    const octaves: Array<[(x: number, y: number) => number, number]> = [
+      [layer(6), 0.42],
+      [layer(14), 0.3],
+      [layer(30), 0.18],
+      [layer(75), 0.1],
+    ];
+    const height = new Float32Array(S * S);
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      let hgt = 0;
+      for (const [f, a] of octaves) hgt += f(x, y) * a;
+      height[y * S + x] = hgt;
+    }
+    const img = g.createImageData(S, S);
+    const d = img.data;
+    const base = [243, 239, 231];
+    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
+      const i = y * S + x;
+      const l = height[y * S + ((x - 1 + S) % S)];
+      const r = height[y * S + ((x + 1) % S)];
+      const u = height[((y - 1 + S) % S) * S + x];
+      const dn = height[((y + 1) % S) * S + x];
+      // light from the top left: slopes facing it are brighter
+      const lit = ((l - r) * -0.6 + (u - dn) * -0.8) * 38;
+      const tone = 1 + lit * 0.065 + (height[i] - 0.5) * 0.04;
+      const n = (rnd() - 0.5) * 3;
+      d[i * 4] = base[0] * tone + n;
+      d[i * 4 + 1] = base[1] * tone + n;
+      d[i * 4 + 2] = base[2] * tone + n;
+      d[i * 4 + 3] = 255;
+    }
+    g.putImageData(img, 0, 0);
+    // pressed fibres and flecks, drawn on every side so the tile still repeats cleanly
+    const wrapDraw = (draw: (ox: number, oy: number) => void) => {
+      for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) draw(ox, oy);
+    };
+    for (let k = 0; k < 170; k++) {
+      const x = rnd() * S;
+      const y = rnd() * S;
+      const len = 8 + rnd() * 34;
+      const a = rnd() * Math.PI * 2;
+      const bend = (rnd() - 0.5) * len * 0.8;
+      const light = rnd() < 0.55;
+      g.strokeStyle = light ? "rgba(255,255,252,0.55)" : "rgba(150,128,100,0.16)";
+      g.lineWidth = 0.6 + rnd() * 0.7;
+      wrapDraw((ox, oy) => {
+        g.beginPath();
+        g.moveTo(x + ox, y + oy);
+        g.quadraticCurveTo(x + ox + Math.cos(a) * len * 0.5 - Math.sin(a) * bend, y + oy + Math.sin(a) * len * 0.5 + Math.cos(a) * bend, x + ox + Math.cos(a) * len, y + oy + Math.sin(a) * len);
+        g.stroke();
+      });
+    }
+    for (let k = 0; k < 90; k++) {
+      const x = rnd() * S;
+      const y = rnd() * S;
+      const r = 0.4 + rnd() * 1.1;
+      g.fillStyle = rnd() < 0.7 ? "rgba(160,138,108,0.22)" : "rgba(255,255,255,0.7)";
+      wrapDraw((ox, oy) => {
+        g.beginPath();
+        g.arc(x + ox, y + oy, r, 0, Math.PI * 2);
+        g.fill();
+      });
+    }
+    handmadeTile = c.toDataURL("image/jpeg", 0.9);
+    return handmadeTile;
+  } catch {
+    return null;
   }
-  // scallops outward around a circle drawn clockwise on screen point outwards with (-dy, dx) reversed
-  const ring = laceTrim([...pts].reverse(), (2 * Math.PI * R * 0.86) / n);
-  const holes: React.ReactNode[] = [];
-  for (let k = 0; k < n; k++) {
-    const a = ((k + 0.5) / n) * Math.PI * 2;
-    holes.push(<circle key={k} cx={size / 2 + Math.cos(a) * R * 0.7} cy={size / 2 + Math.sin(a) * R * 0.7} r={1.3} fill="#e9dfd2" />);
-  }
-  return (
-    <svg aria-hidden width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ overflow: "visible", display: "block" }}>
-      <defs>
-        <filter id="dt-doily-shadow" x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0" dy="1.5" stdDeviation="1.6" floodColor="#463026" floodOpacity="0.2" />
-        </filter>
-      </defs>
-      <g filter="url(#dt-doily-shadow)">
-        <circle cx={size / 2} cy={size / 2} r={R * 0.86} fill="#fffdf9" />
-        <path d={ring} fill="#fffdf9" fillRule="evenodd" />
-      </g>
-      {holes}
-      <circle cx={size / 2} cy={size / 2} r={R * 0.6} fill="none" stroke="#e6dacb" strokeWidth="0.8" strokeDasharray="1.5 2.5" />
-    </svg>
-  );
-};
+}
 
-/** Vintage postage stamp (perforated, with a little engraved rose) and a round postmark over it. */
-const VintageStamp = ({ width, postmark }: { width: number; postmark: string }) => {
-  const uid = useId().replace(/:/g, "");
-  const W = 64;
-  const H = 76;
-  const holes: React.ReactNode[] = [];
-  const step = 5.2;
-  for (let x = step / 2; x < W; x += step) {
-    holes.push(<circle key={`t${x}`} cx={x} cy={0} r={1.6} />, <circle key={`b${x}`} cx={x} cy={H} r={1.6} />);
+/** A torn, deckled edge along a polyline (handmade paper is never cut perfectly straight). */
+function deckle(points: Array<[number, number]>, seed: number, amp = 1.6) {
+  const rnd = seededRandom(seed);
+  const out: string[] = [];
+  for (let k = 0; k < points.length - 1; k++) {
+    const [ax, ay] = points[k];
+    const [bx, by] = points[k + 1];
+    const len = Math.hypot(bx - ax, by - ay);
+    const nx = -(by - ay) / (len || 1);
+    const ny = (bx - ax) / (len || 1);
+    const steps = Math.max(2, Math.round(len / 3.2));
+    for (let j = k === 0 ? 0 : 1; j <= steps; j++) {
+      const t = j / steps;
+      const ends = j === 0 || j === steps ? 0 : 1;
+      const off = ends * (Math.sin(t * len * 0.045 + seed) * amp * 0.6 + (rnd() - 0.5) * amp);
+      out.push(`${(ax + (bx - ax) * t + nx * off).toFixed(1)} ${(ay + (by - ay) * t + ny * off).toFixed(1)}`);
+    }
   }
-  for (let y = step / 2; y < H; y += step) {
-    holes.push(<circle key={`l${y}`} cx={0} cy={y} r={1.6} />, <circle key={`r${y}`} cx={W} cy={y} r={1.6} />);
-  }
-  const ink = "#7a5a4c";
-  return (
-    <svg aria-hidden width={width} height={(width * 120) / 112} viewBox="-6 -6 112 120" style={{ overflow: "visible", display: "block" }}>
-      <defs>
-        <mask id={`${uid}-perf`}>
-          <rect x="-2" y="-2" width={W + 4} height={H + 4} fill="#fff" />
-          <g fill="#000">{holes}</g>
-        </mask>
-        <filter id={`${uid}-sh`} x="-20%" y="-20%" width="140%" height="140%">
-          <feDropShadow dx="0.6" dy="1.2" stdDeviation="1" floodColor="#463026" floodOpacity="0.25" />
-        </filter>
-        <path id={`${uid}-ring`} d="M58 86 m-19 0 a19 19 0 1 1 38 0 a19 19 0 1 1 -38 0" />
-      </defs>
-      <g transform="rotate(4 32 38)" filter={`url(#${uid}-sh)`}>
-        <rect x="0" y="0" width={W} height={H} fill="#fbf5ea" mask={`url(#${uid}-perf)`} />
-        <rect x="5" y="5" width={W - 10} height={H - 10} fill="#efe1cf" stroke={ink} strokeWidth="0.7" />
-        <rect x="7.5" y="7.5" width={W - 15} height={H - 15} fill="none" stroke={ink} strokeWidth="0.35" opacity="0.7" />
-        {/* engraved rose */}
-        <g fill="none" stroke={ink} strokeWidth="0.8" strokeLinecap="round">
-          <path d="M32 30 c2.4 -2.4 4.6 1 1.2 2.8 c-4 2 -5.6 -3 -2 -5.6 c4.4 -3 8.8 0.8 7 5.2" />
-          <path d="M25.6 30.6 C25 24.4 32 21.6 37.2 25.4" />
-          <path d="M39 28.6 C40.6 34.6 36 38.6 30.6 37.8" />
-          <path d="M27 36.4 C22.6 35.6 22.4 30 25 27.4" />
-          <path d="M32 38 C32.6 44 31.4 50 30 56" />
-          <path d="M31.4 46 C35.6 43.4 39.6 44 41.6 46.6 C38 48.8 34.4 48.4 31.4 46 Z" />
-          <path d="M30.8 51 C26.8 48.4 22.8 49 20.8 51.6 C24.4 53.8 28 53.4 30.8 51 Z" />
-        </g>
-        <text x="10" y="17" fontSize="7" fontFamily="var(--font-template-heading), serif" fill={ink}>20</text>
-        <text x={W / 2} y={H - 10} fontSize="5.4" letterSpacing="1.6" textAnchor="middle" fontFamily="var(--font-template-heading), serif" fill={ink}>
-          AMOUR
-        </text>
-      </g>
-      {/* postmark: double ring with the city and date, and wavy cancellation lines */}
-      <g fill="none" stroke="#5f4a40" opacity="0.55" strokeWidth="0.9">
-        <circle cx="58" cy="86" r="23" />
-        <circle cx="58" cy="86" r="14" strokeWidth="0.6" />
-        <path d="M44 86 H72" strokeWidth="0.6" />
-        <path d="M-4 78 q6 -4 12 0 t12 0 t12 0 M-4 86 q6 -4 12 0 t12 0 t12 0 M-4 94 q6 -4 12 0 t12 0 t12 0" strokeWidth="0.8" />
-      </g>
-      <text fontSize="5.2" letterSpacing="1.2" fontFamily="var(--font-template-heading), serif" fill="#5f4a40" opacity="0.6">
-        <textPath href={`#${uid}-ring`} startOffset="50%" textAnchor="middle">
-          {postmark}
-        </textPath>
-      </text>
-    </svg>
-  );
-};
+  return out;
+}
+
+/** Jute twine: a warm strand painted with fine diagonal twists, a darker underside and a soft sheen. */
+const Twine = ({ d, width, twist }: { d: string; width: number; twist: string }) => (
+  <>
+    <path d={d} fill="none" stroke="#7a5d3c" strokeWidth={width * 1.12} strokeLinecap="round" strokeLinejoin="round" />
+    <path d={d} fill="none" stroke={`url(#${twist})`} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" />
+    <path d={d} fill="none" stroke="#e2cda6" strokeWidth={width * 0.22} strokeLinecap="round" opacity="0.45" transform={`translate(${-width * 0.18} ${-width * 0.2})`} />
+  </>
+);
 
 /**
- * A paper envelope, sealed with wax, that fills the opening screen. The invitation
- * card underneath sits inside it: tapping lifts the seal and folds the flap back so
- * the card shows through, then the envelope slides away, leaving the card.
+ * A handmade-paper envelope, tied with jute twine, that fills the opening screen. The invitation
+ * card underneath sits inside it: tapping slips the twine off and folds the flap back so the
+ * card shows through, then the envelope slides away, leaving the card.
  */
 const Envelope = ({
-  initials,
   cardRef,
   opening,
   onOpen,
   label,
-  postmark,
-  note,
 }: {
-  initials: string;
   /** The invitation card below the envelope; the envelope leaves a window where it sits. */
   cardRef: React.RefObject<HTMLDivElement>;
   opening: boolean;
   onOpen: () => void;
   label: string;
-  /** City and date for the postmark. */
-  postmark: string;
-  /** Handwritten line on the bottom flap. */
-  note: string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const uid = useId().replace(/:/g, "");
+  const [paper, setPaper] = useState<string | null>(handmadeTile);
+  useEffect(() => {
+    if (!paper) setPaper(handmadePaper());
+  }, [paper]);
   // h: the envelope's full height (the whole first section); vh: the part of it that fits on screen
   const [size, setSize] = useState({ w: 390, h: 844, vh: 844 });
   const [card, setCard] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
@@ -427,50 +365,38 @@ const Envelope = ({
   }, [cardRef]);
 
   const reducedMotion = prefersReducedMotion();
-  // 0 closed · 1 seal lifts · 2 flap opens · 3 flap behind · 4 envelope slides away
+  // 0 closed · 1 twine slips off · 2 flap opens · 3 flap behind · 4 envelope slides away
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     if (!opening || reducedMotion) return;
-    const steps: Array<[number, number]> = [[1, 0], [2, 380], [3, 830], [4, 1350]];
+    const steps: Array<[number, number]> = [[1, 0], [2, 520], [3, 970], [4, 1490]];
     const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
     return () => timers.forEach(clearTimeout);
   }, [opening, reducedMotion]);
 
-  // Geometry, in px. The envelope covers the whole first section; the flap and seal are
-  // placed against the visible screen so the seal stays centred when the section is taller.
+  // Geometry, in px. The envelope covers the whole first section; the flap and the knot are
+  // placed against the visible screen so they stay centred when the section is taller.
   const { w, h, vh } = size;
   const flapH = Math.round(vh * 0.54);
   const meetY = vh * 0.5;
-  const bottomTop = vh * 0.47;
-  const seal = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.26, 84), 132));
-  const tipR = Math.max(12, Math.min(w, vh) * 0.035);
-  const sideLen = Math.hypot(w / 2, flapH);
-  const ux = w / 2 / sideLen;
-  const uy = flapH / sideLen;
-  const tipL = `${(w / 2 - ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)}`;
-  const tipRt = `${(w / 2 + ux * tipR).toFixed(1)} ${(flapH - uy * tipR).toFixed(1)}`;
-  const flapPath = `M0 0 H${w} L${tipRt} Q${w / 2} ${flapH} ${tipL} Z`;
-  const flapEdge = `M0 0 L${tipL} Q${w / 2} ${flapH} ${tipRt} L${w} 0`;
-  const laceSize = Math.max(9, Math.min(13, w / 34));
-  const flapLace = laceTrim([[0, 0], [w / 2, flapH], [w, 0]], laceSize);
-  const inset = 7;
-  const flapStitch = `M${inset * 1.6} 0 L${w / 2} ${flapH - inset * 1.9} L${w - inset * 1.6} 0`;
-  const ageSpots = [
-    { x: w * 0.12, y: vh * 0.86, r: 4, o: 0.07 },
-    { x: w * 0.86, y: vh * 0.72, r: 3, o: 0.06 },
-    { x: w * 0.7, y: h - 18, r: 5, o: 0.05 },
-  ];
-  // the stamp sits on the flap, tucked just inside the lace on its right edge
-  const stampW = Math.round(Math.min(Math.max(w * 0.3, 112), 176));
-  const stampH = (stampW * 120) / 112;
-  const stampTop = Math.max(26, vh * 0.045);
-  const laceX = (y: number) => w - (y * (w / 2)) / flapH;
-  const stampRight = w - (laceX(stampTop + stampH) - laceSize * 1.8);
-  const bottomCtrlY = bottomTop + (h - bottomTop) * 0.32;
-  const bottomEdge = `M0 ${h} Q${w * 0.27} ${bottomCtrlY} ${w / 2} ${bottomTop} Q${w * 0.73} ${bottomCtrlY} ${w} ${h}`;
+  const bottomTop = vh * 0.46;
+  const cx = w / 2;
+  const s = Math.min(Math.max(Math.min(w, vh) / 390, 0.85), 1.5) * 1.18; // twine/bow scale
+  const knotY = flapH - 10 * s;
+
+  // flaps with torn edges
+  const flapEdgePts = deckle([[0, 0], [cx, flapH], [w, 0]], 3);
+  const flapPath = `M${flapEdgePts.join(" L")} Z`;
+  const flapEdge = `M${flapEdgePts.join(" L")}`;
+  const bottomEdgePts = deckle([[0, h], [cx, bottomTop], [w, h]], 11);
+  const bottomEdge = `M${bottomEdgePts.join(" L")}`;
   const bottomPath = `${bottomEdge} Z`;
-  // Inside of the envelope: plain paper, a shade deeper than the outside.
-  const inside: React.CSSProperties = { backgroundColor: "#ece4d9", backgroundImage: grain(0.3), backgroundSize: "180px 180px" };
+
+  const paperFill = paper ? `url(#${uid}-paper)` : "#f2eee7";
+  // Inside of the envelope: the same paper, a shade deeper.
+  const inside: React.CSSProperties = paper
+    ? { backgroundColor: "#e9e3d9", backgroundImage: `linear-gradient(rgba(120,96,70,.08), rgba(120,96,70,.08)), url(${paper})`, backgroundSize: "auto, 400px 400px" }
+    : { backgroundColor: "#e9e3d9" };
 
   // Inside of the envelope, around the window where the card sits.
   const strips = card
@@ -479,8 +405,20 @@ const Envelope = ({
         { x: 0, y: card.y + card.h, w, h: h - card.y - card.h },
         { x: 0, y: card.y, w: card.x, h: card.h },
         { x: card.x + card.w, y: card.y, w: w - card.x - card.w, h: card.h },
-      ].filter((s) => s.w > 0 && s.h > 0)
+      ].filter((r) => r.w > 0 && r.h > 0)
     : [{ x: 0, y: 0, w, h }];
+
+  // twine: one strand around the envelope, tied in a bow at the flap's tip
+  const tw = 3.2 * s;
+  const across = `M-10 ${knotY + 3 * s} C${w * 0.3} ${knotY + 6 * s} ${w * 0.7} ${knotY - 2 * s} ${w + 10} ${knotY + 2 * s}`;
+  const k = (dx: number, dy: number) => `${(cx + dx * s).toFixed(1)} ${(knotY + dy * s).toFixed(1)}`;
+  const bow = [
+    `M${k(0, 0)} C${k(-26, -30)} ${k(-64, -18)} ${k(-56, 2)} C${k(-50, 16)} ${k(-20, 12)} ${k(0, 0)}`,
+    `M${k(0, 0)} C${k(24, -32)} ${k(66, -22)} ${k(58, 0)} C${k(52, 14)} ${k(22, 12)} ${k(0, 0)}`,
+    `M${k(0, 0)} C${k(-8, 22)} ${k(-26, 40)} ${k(-30, 74)}`,
+    `M${k(0, 0)} C${k(8, 24)} ${k(24, 46)} ${k(22, 86)}`,
+  ];
+  const frays = `M${k(-30, 74)} l${-2 * s} ${5 * s} M${k(-30, 74)} l${1.5 * s} ${5.5 * s} M${k(22, 86)} l${-1.5 * s} ${5.5 * s} M${k(22, 86)} l${2.5 * s} ${4.5 * s}`;
 
   const ease = "cubic-bezier(.55,0,.25,1)";
   return (
@@ -507,68 +445,36 @@ const Envelope = ({
           className="dt-anim absolute inset-0 block"
           style={{ zIndex: 2, transform: phase >= 4 ? "translateY(105%)" : "none", transition: `transform 1.1s ${ease}` }}
         >
-          {strips.map((s, i) => (
+          {strips.map((r, i) => (
             <span
               key={i}
               className="absolute block"
-              style={{
-                left: s.x,
-                top: s.y,
-                width: s.w,
-                height: s.h,
-                ...inside,
-                backgroundPosition: `${-s.x}px ${-s.y}px`,
-              }}
+              style={{ left: r.x, top: r.y, width: r.w, height: r.h, ...inside, backgroundPosition: `0 0, ${-r.x}px ${-r.y}px` }}
             />
           ))}
           {/* front pocket: two side flaps under a bottom flap */}
           <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
             <defs>
-              <linearGradient id={`${uid}-l`} x1="0" y1="0" x2="1" y2="0">
-                <stop offset="0" stopColor="#f3ece2" />
-                <stop offset="1" stopColor="#ebe2d6" />
-              </linearGradient>
-              <linearGradient id={`${uid}-r`} x1="1" y1="0" x2="0" y2="0">
-                <stop offset="0" stopColor="#f1e9df" />
-                <stop offset="1" stopColor="#e9e0d3" />
-              </linearGradient>
-              <linearGradient id={`${uid}-b`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#f7f1e8" />
-                <stop offset="1" stopColor="#ede4d8" />
-              </linearGradient>
+              {paper && (
+                <pattern id={`${uid}-paper`} patternUnits="userSpaceOnUse" width="400" height="400">
+                  <image href={paper} width="400" height="400" />
+                </pattern>
+              )}
               <filter id={`${uid}-soft`} x="-10%" y="-20%" width="120%" height="140%">
-                <feGaussianBlur stdDeviation="3" />
+                <feGaussianBlur stdDeviation="3.4" />
               </filter>
-              <PaperGrain id={`${uid}-gp`} />
-              <radialGradient id={`${uid}-age`} gradientUnits="userSpaceOnUse" cx={w / 2} cy={vh * 0.5} r={Math.hypot(w, vh) * 0.62}>
-                <stop offset="0.55" stopColor="#9b7450" stopOpacity="0" />
-                <stop offset="1" stopColor="#9b7450" stopOpacity="0.16" />
-              </radialGradient>
             </defs>
-            <g filter={`url(#${uid}-gp)`}>
-              <path d={`M0 0 L${w / 2} ${meetY} L0 ${h} Z`} fill={`url(#${uid}-l)`} />
-              <path d={`M${w} 0 L${w / 2} ${meetY} L${w} ${h} Z`} fill={`url(#${uid}-r)`} />
-              {/* soft shade where the bottom flap overlaps */}
-              <path d={bottomEdge} fill="none" stroke="rgba(70,48,38,.2)" strokeWidth="7" filter={`url(#${uid}-soft)`} />
-              <path d={bottomPath} fill={`url(#${uid}-b)`} />
-            </g>
-            <path d={`M0 0 L${w / 2} ${meetY} L${w} 0`} fill="none" stroke="#fffdf9" strokeWidth="1.2" opacity="0.7" />
-            <path d={bottomEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
-            {/* aged paper: warm toning towards the edges and a few faint spots */}
-            <rect width={w} height={h} fill={`url(#${uid}-age)`} />
-            {ageSpots.map((sp, k) => (
-              <circle key={k} cx={sp.x} cy={sp.y} r={sp.r} fill="#a0784f" opacity={sp.o} filter={`url(#${uid}-soft)`} />
-            ))}
+            <path d={`M0 0 L${cx} ${meetY} L0 ${h} Z`} fill={paperFill} />
+            <path d={`M0 0 L${cx} ${meetY} L0 ${h} Z`} fill="rgba(255,255,255,.18)" />
+            <path d={`M${w} 0 L${cx} ${meetY} L${w} ${h} Z`} fill={paperFill} />
+            <path d={`M${w} 0 L${cx} ${meetY} L${w} ${h} Z`} fill="rgba(110,86,60,.07)" />
+            {/* the bottom flap's torn edge casts a soft shadow */}
+            <path d={bottomEdge} fill="none" stroke="rgba(70,52,36,.22)" strokeWidth="8" filter={`url(#${uid}-soft)`} transform="translate(0 -3)" />
+            <path d={bottomPath} fill={paperFill} />
+            <path d={bottomPath} fill="rgba(110,86,60,.035)" />
+            <path d={bottomEdge} fill="none" stroke="#fffefb" strokeWidth="1.4" opacity="0.9" />
+            <path d={bottomEdge} fill="none" stroke="rgba(120,98,74,.25)" strokeWidth="0.7" transform="translate(0 1.4)" />
           </svg>
-          <span
-            className="absolute left-0 right-0 block text-center"
-            style={{ top: vh * 0.79, fontFamily: FONT_TITLE, fontSize: Math.round(Math.min(Math.max(w * 0.085, 30), 44)), color: "#6f5a50", opacity: 0.85, lineHeight: 1.2 }}
-          >
-            {note}
-            <svg aria-hidden width="120" height="10" viewBox="0 0 120 10" className="mx-auto block" style={{ marginTop: 2, opacity: 0.6 }}>
-              <path d="M6 5 C30 1 46 9 60 5 C74 1 90 9 114 5" fill="none" stroke="#6f5a50" strokeWidth="0.8" strokeLinecap="round" />
-            </svg>
-          </span>
         </span>
 
         {/* top flap — closed it sits on top; opened it folds back out of view */}
@@ -593,38 +499,21 @@ const Envelope = ({
             style={{ overflow: "visible", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
           >
             <defs>
-              <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0" stopColor="#f7f1e9" />
-                <stop offset="1" stopColor="#f1e9de" />
-              </linearGradient>
+              {paper && (
+                <pattern id={`${uid}-paper2`} patternUnits="userSpaceOnUse" width="400" height="400">
+                  <image href={paper} width="400" height="400" />
+                </pattern>
+              )}
               <filter id={`${uid}-blur`} x="-10%" y="-10%" width="120%" height="140%">
-                <feGaussianBlur stdDeviation="3.2" />
-              </filter>
-              <PaperGrain id={`${uid}-gf`} />
-              <radialGradient id={`${uid}-age2`} gradientUnits="userSpaceOnUse" cx={w / 2} cy={vh * 0.5} r={Math.hypot(w, vh) * 0.62}>
-                <stop offset="0.55" stopColor="#9b7450" stopOpacity="0" />
-                <stop offset="1" stopColor="#9b7450" stopOpacity="0.16" />
-              </radialGradient>
-              <filter id={`${uid}-lace`} x="-5%" y="-5%" width="110%" height="120%">
-                <feDropShadow dx="0" dy="1.2" stdDeviation="1.1" floodColor="#463026" floodOpacity="0.22" />
+                <feGaussianBlur stdDeviation="4" />
               </filter>
             </defs>
-            <path d={flapPath} transform="translate(0 4)" fill="rgba(70,48,38,.28)" filter={`url(#${uid}-blur)`} />
-            <path d={flapPath} fill={`url(#${uid}-flap)`} filter={`url(#${uid}-gf)`} />
-            <path d={flapPath} fill={`url(#${uid}-age2)`} />
-            <circle cx={w * 0.2} cy={flapH * 0.22} r={3} fill="#a0784f" opacity={0.07} filter={`url(#${uid}-blur)`} />
-            <path d={flapEdge} fill="none" stroke="#fffdf9" strokeWidth="1.3" opacity="0.85" />
-            {/* simple lace trim along the flap edge, with a stitched line just inside it */}
-            <path d={flapLace} fill="#fffdf9" fillRule="evenodd" filter={`url(#${uid}-lace)`} />
-            <path d={flapStitch} fill="none" stroke="#dccdbb" strokeWidth="0.9" strokeDasharray="1.2 3.2" strokeLinecap="round" />
+            <path d={flapPath} transform="translate(0 5)" fill="rgba(70,52,36,.3)" filter={`url(#${uid}-blur)`} />
+            <path d={flapPath} fill={paper ? `url(#${uid}-paper2)` : "#f4f0e9"} />
+            <path d={flapPath} fill="rgba(255,255,255,.12)" />
+            <path d={flapEdge} fill="none" stroke="#fffefb" strokeWidth="1.5" opacity="0.95" />
+            <path d={flapEdge} fill="none" stroke="rgba(120,98,74,.28)" strokeWidth="0.7" transform="translate(0 1.5)" />
           </svg>
-          <span
-            aria-hidden
-            className="absolute block"
-            style={{ right: stampRight, top: stampTop, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-          >
-            <VintageStamp width={stampW} postmark={postmark} />
-          </span>
           <span
             className="absolute inset-0 block"
             style={{
@@ -637,31 +526,45 @@ const Envelope = ({
           />
         </span>
 
-        {/* wax seal on the flap tip */}
+        {/* jute twine tied in a loose bow; it slips off first when the envelope is opened */}
         <span
-          className="dt-anim absolute block"
+          aria-hidden
+          className="dt-anim absolute inset-0 block pointer-events-none"
           style={{
-            left: w / 2 - seal / 2,
-            top: flapH - seal * 0.6,
-            width: seal,
-            height: seal,
             zIndex: 5,
-            transform: phase >= 1 ? "translateY(-16px) scale(1.06) rotate(-4deg)" : "none",
             opacity: phase >= 1 ? 0 : 1,
-            transition: "transform .5s cubic-bezier(.2,.7,.2,1), opacity .4s ease .05s",
+            transform: phase >= 1 ? `translateY(${36 * s}px)` : "none",
+            transition: "transform .55s cubic-bezier(.4,0,.6,1), opacity .45s ease .08s",
           }}
         >
-          <span aria-hidden className="absolute block" style={{ left: -seal * 0.32, top: -seal * 0.32, width: seal * 1.64, height: seal * 1.64 }}>
-            <LaceDoily size={seal * 1.64} />
-          </span>
-          <span className="relative block" style={{ animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
-            <WaxSeal initials={initials} size={seal} />
-          </span>
+          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
+            <defs>
+              <pattern id={`${uid}-twist`} patternUnits="userSpaceOnUse" width={tw * 1.1} height={tw * 1.1} patternTransform="rotate(38)">
+                <rect width={tw * 1.1} height={tw * 1.1} fill="#a6855c" />
+                <rect width={tw * 0.42} height={tw * 1.1} fill="#7d5f3c" />
+                <rect x={tw * 0.62} width={tw * 0.16} height={tw * 1.1} fill="#c8aa7c" />
+              </pattern>
+              <filter id={`${uid}-twine`} x="-5%" y="-5%" width="110%" height="110%">
+                <feDropShadow dx={0.8 * s} dy={1.8 * s} stdDeviation={1.3 * s} floodColor="#3d2a18" floodOpacity="0.3" />
+              </filter>
+            </defs>
+            <g filter={`url(#${uid}-twine)`}>
+              <Twine d={across} width={tw} twist={`${uid}-twist`} />
+              <g style={{ transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px`, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+                {bow.map((p, i) => (
+                  <Twine key={i} d={p} width={tw} twist={`${uid}-twist`} />
+                ))}
+                <path d={frays} fill="none" stroke="#8e6f4a" strokeWidth={tw * 0.35} strokeLinecap="round" />
+                <ellipse cx={cx} cy={knotY} rx={5 * s} ry={4.2 * s} fill="#8e6f4a" />
+                <ellipse cx={cx - 1.2 * s} cy={knotY - 1.2 * s} rx={2.2 * s} ry={1.4 * s} fill="#c9ad82" opacity="0.7" />
+              </g>
+            </g>
+          </svg>
         </span>
         <span
           className="dt-anim absolute left-0 right-0 block text-center"
           style={{
-            top: flapH + seal * 0.48 + 20,
+            top: knotY + 104 * s,
             zIndex: 5,
             fontFamily: FONT_HEADING,
             fontStyle: "italic",
@@ -1102,15 +1005,7 @@ export const ReverieTemplate = ({
 
           {/* Envelope sealed with wax — tap to open */}
           {!opened && (
-            <Envelope
-              initials={initials}
-              cardRef={heroCardRef}
-              opening={opening}
-              onOpen={openInvitation}
-              label={t("reverie.tapToOpen", "Tap to open")}
-              postmark={`${t("reverie.city", "Beirut, Lebanon").split(/[,،]/)[0].trim().toUpperCase()} · ${numericDate}`}
-              note={t("reverie.envelopeNote", "For our dearest guest")}
-            />
+            <Envelope cardRef={heroCardRef} opening={opening} onOpen={openInvitation} label={t("reverie.tapToOpen", "Tap to open")} />
           )}
         </section>
 
