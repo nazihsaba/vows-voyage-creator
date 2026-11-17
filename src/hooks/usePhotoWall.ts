@@ -89,16 +89,25 @@ export function usePhotoWall(weddingId: string | undefined) {
 
   const openDashboard = useCallback(async () => {
     if (!weddingId || openingDashboard) return;
+    // Reserve a tab during the click so browsers do not block an asynchronous popup.
+    const dashboardTab = window.open("about:blank", "_blank");
+    if (!dashboardTab) {
+      setError("popup_blocked");
+      return;
+    }
+    dashboardTab.opener = null;
     setOpeningDashboard(true);
     setError(null);
     try {
       const reply = await callPhotoWall("login", weddingId);
-      if (reply.loginUrl) {
-        window.location.assign(reply.loginUrl);
+      if (reply.loginUrl && !dashboardTab.closed) {
+        dashboardTab.location.replace(reply.loginUrl);
         return;
       }
+      dashboardTab.close();
       setError(reply.error ?? "login_unavailable");
     } catch {
+      dashboardTab.close();
       setError("network");
     } finally {
       setOpeningDashboard(false);

@@ -14,6 +14,7 @@ const ERRORS: Record<string, string> = {
   payment_failed_to_start: "We couldn't start the payment. Please try again.",
   network: "We couldn't reach the server. Please check your connection and try again.",
   login_unavailable: "We couldn't open your photo wall dashboard. Please try again.",
+  popup_blocked: "Please allow pop-ups for this site, then try opening your photo wall dashboard again.",
   wall_not_ready: "Your photo wall isn't ready yet. Please refresh and try again.",
 };
 const errorText = (code: string | null) => (code ? ERRORS[code] ?? "Something went wrong setting up your photo wall. Please try again." : null);
