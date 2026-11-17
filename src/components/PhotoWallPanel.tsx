@@ -13,6 +13,8 @@ const ERRORS: Record<string, string> = {
   "invalid:date": "Please check your event date. The photo wall needs an upcoming date.",
   payment_failed_to_start: "We couldn't start the payment. Please try again.",
   network: "We couldn't reach the server. Please check your connection and try again.",
+  login_unavailable: "We couldn't open your photo wall dashboard. Please try again.",
+  wall_not_ready: "Your photo wall isn't ready yet. Please refresh and try again.",
 };
 const errorText = (code: string | null) => (code ? ERRORS[code] ?? "Something went wrong setting up your photo wall. Please try again." : null);
 
@@ -21,13 +23,15 @@ interface Props {
   price: PhotoWallPrice | null;
   loaded: boolean;
   busy: boolean;
+  openingDashboard: boolean;
   error: string | null;
   onUnlock: () => void;
   onRefresh: () => void;
+  onOpenDashboard: () => void;
 }
 
 /** Photo Wall tab: locked with its price until unlocked, then the guest link and QR code to print. */
-const PhotoWallPanel = ({ wall, price, loaded, busy, error, onUnlock, onRefresh }: Props) => {
+const PhotoWallPanel = ({ wall, price, loaded, busy, openingDashboard, error, onUnlock, onRefresh, onOpenDashboard }: Props) => {
   const { toast } = useToast();
 
   if (!loaded) {
@@ -40,12 +44,13 @@ const PhotoWallPanel = ({ wall, price, loaded, busy, error, onUnlock, onRefresh 
 
   // ---------- Unlocked: the wall exists ----------
   if (wall?.status === "created" && wall.guest_url) {
+    const guestUrl = wall.guest_url;
     const copy = async () => {
       try {
-        await navigator.clipboard.writeText(wall.guest_url!);
+        await navigator.clipboard.writeText(guestUrl);
         toast({ title: "Link copied", description: "Share it with your guests or add it to your invitation." });
       } catch {
-        toast({ title: "Couldn't copy", description: wall.guest_url!, variant: "destructive" });
+        toast({ title: "Couldn't copy", description: guestUrl, variant: "destructive" });
       }
     };
     const opens = fmtDate(wall.camera_opens_at);
@@ -87,6 +92,13 @@ const PhotoWallPanel = ({ wall, price, loaded, busy, error, onUnlock, onRefresh 
           )}
 
           <div className="space-y-5 min-w-0">
+            <div>
+              <Button variant="brand" onClick={onOpenDashboard} disabled={openingDashboard} className="w-full sm:w-auto">
+                {openingDashboard ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <ExternalLink className="w-4 h-4 mr-2" />}
+                {openingDashboard ? "Opening dashboard…" : "Open Photo Wall Dashboard"}
+              </Button>
+              {error && <p role="alert" className="mt-3 text-sm text-destructive">{errorText(error)}</p>}
+            </div>
             <div>
               <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground mb-2">Guest link</p>
               <div className="flex items-center gap-2 rounded-xl border border-border bg-muted/30 px-3 py-2">

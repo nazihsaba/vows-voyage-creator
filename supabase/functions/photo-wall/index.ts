@@ -24,12 +24,12 @@ const ELAN_BASE = Deno.env.get("ELAN_BASE_URL") ?? "https://elan.stridesoftware.
 const WHISH_API = "https://api.whish.money/itel-service/api";
 const EVENT_TIME_ZONE = "Asia/Beirut";
 
-const RequestSchema = z.object({ action: z.enum(["status", "unlock"]), weddingId: z.string().uuid() });
+const RequestSchema = z.object({ action: z.enum(["status", "unlock", "login"]), weddingId: z.string().uuid() });
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
     status,
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...corsHeaders, "Content-Type": "application/json", "Cache-Control": "no-store" },
   });
 
 const admin = (): SupabaseClient => {
@@ -259,6 +259,31 @@ async function ownedWedding(db: SupabaseClient, weddingId: unknown, authHeader: 
 
 const price = { amount: PHOTO_WALL_PRICE_USD, currency: CURRENCY };
 
+/** Mint a single-use customer dashboard link only after ownership has been verified. */
+export async function handleLogin(db: SupabaseClient, wedding: Wedding, request = elan) {
+  const row = await loadWall(db, wedding.id);
+  if (row?.status !== "created") return json({ error: "wall_not_ready" }, 409);
+  // The partner endpoint takes OUR invitation ID, not Elan's internal event_id.
+  const { status, data } = await request("POST", `/events/${encodeURIComponent(wedding.id)}/login`, {
+    language: wedding.field_customizations?.arabic_only === true ? "ar" : "en",
+  });
+  if (status < 200 || status >= 300 || typeof data?.url !== "string") {
+    console.error("Elan login failed", status, typeof data?.error === "string" ? data.error.replace(/[^a-z_]/g, "").slice(0, 60) : "missing_url");
+    return json({ error: "login_unavailable" }, 502);
+  }
+  try {
+    const url = new URL(data.url);
+    if (url.protocol !== "https:" || url.origin !== new URL(ELAN_BASE).origin || !url.pathname.startsWith("/partner/enter/") || url.username || url.password) {
+      console.error("Elan login rejected unsafe redirect");
+      return json({ error: "login_unavailable" }, 502);
+    }
+  } catch {
+    return json({ error: "login_unavailable" }, 502);
+  }
+  // Do not persist or log this short-lived credential.
+  return json({ loginUrl: data.url });
+}
+
 async function handleStatus(db: SupabaseClient, wedding: Wedding) {
   let row = await loadWall(db, wedding.id);
   if (row?.status === "pending_payment") {
@@ -337,6 +362,7 @@ export async function handler(req: Request) {
     if (owned.error) return owned.error;
     if (body.action === "status") return await handleStatus(db, owned.wedding);
     if (body.action === "unlock") return await handleUnlock(db, owned.wedding);
+    if (body.action === "login") return await handleLogin(db, owned.wedding);
     return json({ error: "unknown_action" }, 400);
   } catch (err) {
     if (err instanceof NotConfigured) {

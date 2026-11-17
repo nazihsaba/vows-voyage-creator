@@ -22,9 +22,9 @@ export interface PhotoWallPrice {
   currency: string;
 }
 
-type Reply = { price?: PhotoWallPrice; wall?: PhotoWall | null; collectUrl?: string; error?: string; message?: string };
+type Reply = { price?: PhotoWallPrice; wall?: PhotoWall | null; collectUrl?: string; loginUrl?: string; error?: string; message?: string };
 
-async function callPhotoWall(action: "status" | "unlock", weddingId: string): Promise<Reply> {
+async function callPhotoWall(action: "status" | "unlock" | "login", weddingId: string): Promise<Reply> {
   const { data, error } = await supabase.functions.invoke("photo-wall", { body: { action, weddingId } });
   if (error) {
     // Non-2xx replies still carry a JSON body with an error code.
@@ -49,6 +49,7 @@ export function usePhotoWall(weddingId: string | undefined) {
   const [price, setPrice] = useState<PhotoWallPrice | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [openingDashboard, setOpeningDashboard] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const apply = (reply: Reply) => {
@@ -85,8 +86,26 @@ export function usePhotoWall(weddingId: string | undefined) {
     }
   }, [weddingId, busy]);
 
+  const openDashboard = useCallback(async () => {
+    if (!weddingId || openingDashboard) return;
+    setOpeningDashboard(true);
+    setError(null);
+    try {
+      const reply = await callPhotoWall("login", weddingId);
+      if (reply.loginUrl) {
+        window.location.assign(reply.loginUrl);
+        return;
+      }
+      setError(reply.error ?? "login_unavailable");
+    } catch {
+      setError("network");
+    } finally {
+      setOpeningDashboard(false);
+    }
+  }, [weddingId, openingDashboard]);
+
   const isUnlocked = wall?.status === "created";
-  return { wall, price, loaded, busy, error, unlock, refresh, isUnlocked };
+  return { wall, price, loaded, busy, openingDashboard, error, unlock, refresh, openDashboard, isUnlocked };
 }
 
 /** "$0", "$25", "$12.50" */

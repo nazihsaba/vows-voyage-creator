@@ -2207,9 +2207,11 @@ const ManageLinks = () => {
                       price={photoWall.price}
                       loaded={photoWall.loaded}
                       busy={photoWall.busy}
+                      openingDashboard={photoWall.openingDashboard}
                       error={photoWall.error}
                       onUnlock={photoWall.unlock}
                       onRefresh={photoWall.refresh}
+                      onOpenDashboard={photoWall.openDashboard}
                     />
                   </div>
                 </div>
