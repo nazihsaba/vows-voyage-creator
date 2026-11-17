@@ -342,9 +342,12 @@ function sampleRope(segs: RopeBez[], step: number) {
  * Vintage jute rope: three twisted plies drawn strand by strand, a few loose fibres,
  * and optionally unravelled, frayed ends.
  */
-const Rope = ({ segs, width, seed, frayEnd = false }: { segs: RopeBez[]; width: number; seed: number; frayEnd?: boolean }) => {
+const Rope = ({ segs, width, seed, frayEnd = false, flow = 0 }: { segs: RopeBez[]; width: number; seed: number; frayEnd?: boolean; flow?: number }) => {
   const rnd = seededRandom(seed);
-  const pts = sampleRope(segs, width * 0.82);
+  const step = width * 0.82;
+  const pts = sampleRope(segs, step);
+  // shifting the twists along the rope makes it look like it is sliding
+  const slide = ((flow % step) + step) % step;
   const f = (n: number) => n.toFixed(1);
   const core = segs.map(([p0, p1, p2, p3], i) => `${i ? "" : `M${f(p0[0])} ${f(p0[1])} `}C${f(p1[0])} ${f(p1[1])} ${f(p2[0])} ${f(p2[1])} ${f(p3[0])} ${f(p3[1])}`).join(" ");
   let plies = "";
@@ -364,8 +367,8 @@ const Rope = ({ segs, width, seed, frayEnd = false }: { segs: RopeBez[]; width: 
       const by = py + ny * half * 0.92 + ty * half * 0.8;
       return `M${f(ax)} ${f(ay)} Q${f(px + tx * half * 0.35)} ${f(py + ty * half * 0.35)} ${f(bx)} ${f(by)}`;
     };
-    plies += ply(0);
-    grooves += ply(width * 0.41);
+    plies += ply(slide);
+    grooves += ply(slide + width * 0.41);
     if (rnd() < 0.22) {
       const side = rnd() < 0.5 ? -1 : 1;
       const sx = x + nx * half * side * 0.9;
@@ -533,9 +536,23 @@ const Envelope = ({
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     if (!opening || reducedMotion) return;
-    const steps: Array<[number, number]> = [[1, 0], [2, 1050], [3, 1500], [4, 2020]];
+    const steps: Array<[number, number]> = [[1, 0], [2, 1350], [3, 1800], [4, 2320]];
     const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
     return () => timers.forEach(clearTimeout);
+  }, [opening, reducedMotion]);
+  // how far the bow has been untied, 0 → 1 over 1.7s, redrawn every frame so the rope really moves
+  const [u, setU] = useState(0);
+  useEffect(() => {
+    if (!opening || reducedMotion) return;
+    let raf = 0;
+    const start = performance.now();
+    const tick = (now: number) => {
+      const t = Math.min(1, (now - start) / 1700);
+      setU(t);
+      if (t < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
   }, [opening, reducedMotion]);
 
   // Geometry, in px. The envelope covers the whole first section; the flap and the knot are
@@ -584,29 +601,77 @@ const Envelope = ({
     [[-20, knotY + 4 * s + rw * 1.9], [w * 0.25, knotY + 6 * s + rw * 1.9], [cx - 50 * s, knotY + 8 * s], at(-6, 3)],
     [at(6, 3), [cx + 50 * s, knotY + 8 * s], [w * 0.75, knotY + 7 * s + rw * 1.9], [w + 20, knotY + 5 * s + rw * 1.9]],
   ];
-  const loopL: RopeBez[] = [
-    [K, at(-26, -40), at(-80, -34), at(-74, -4)],
-    [at(-74, -4), at(-70, 18), at(-28, 16), K],
-  ];
-  const loopR: RopeBez[] = [
-    [K, at(24, -44), at(86, -36), at(78, -2)],
-    [at(78, -2), at(74, 20), at(26, 14), K],
-  ];
-  const tailL: RopeBez[] = [[K, at(-8, 24), at(-34, 46), at(-40, 92)]];
-  const tailR: RopeBez[] = [[K, at(10, 28), at(36, 58), at(30, 108)]];
-  // untying: each piece eases to its "undone" pose and fades, with its own timing
-  const knotOrigin: React.CSSProperties = { transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px` };
-  const untying = phase >= 1;
-  const untie = (to: string, dur: string, delay: string, curve = "cubic-bezier(.45,0,.55,1)"): React.CSSProperties => {
-    const d = parseFloat(dur);
-    const at = parseFloat(delay);
-    // move first, fade only towards the end of the movement
-    return {
-      transform: untying ? to : "none",
-      opacity: untying ? 0 : 1,
-      transition: `transform ${dur} ${curve} ${delay}, opacity ${(d * 0.5).toFixed(2)}s ease ${(at + d * 0.5).toFixed(2)}s`,
-    };
+  // The bow, as a function of how far it has been untied (u goes 0 → 1 after the tap):
+  //   A · the right tail is pulled, its loop slides through the knot and the twists run along the tail
+  //   B · the left loop slides through the same way as its tail is pulled
+  //   C · the knot opens, both ends lie flat and each half of the rope slides off its side
+  const sm = (a: number, b: number, x: number) => {
+    const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
+    return t * t * (3 - 2 * t);
   };
+  const eA = sm(0, 0.4, u);
+  const eB = sm(0.28, 0.68, u);
+  const eC = sm(0.6, 1, u);
+  const fade = 1 - sm(0.86, 1, u);
+  const towardKnot = (segs: RopeBez[], f: number, turn: number): RopeBez[] =>
+    segs.map((seg) =>
+      seg.map(([x, y]) => {
+        const dx = (x - K[0]) * f;
+        const dy = (y - K[1]) * f;
+        return [K[0] + dx * Math.cos(turn) - dy * Math.sin(turn), K[1] + dx * Math.sin(turn) + dy * Math.cos(turn)] as RopePt;
+      }) as RopeBez,
+    );
+  const mix = (a: RopeBez[], b: RopeBez[], t: number): RopeBez[] =>
+    a.map((seg, i) => seg.map((pt, j) => [pt[0] + (b[i][j][0] - pt[0]) * t, pt[1] + (b[i][j][1] - pt[1]) * t]) as RopeBez);
+  const loopL = towardKnot(
+    [
+      [K, at(-26, -40), at(-80, -34), at(-74, -4)],
+      [at(-74, -4), at(-70, 18), at(-28, 16), K],
+    ],
+    1 - eB,
+    -0.45 * eB,
+  );
+  const loopR = towardKnot(
+    [
+      [K, at(24, -44), at(86, -36), at(78, -2)],
+      [at(78, -2), at(74, 20), at(26, 14), K],
+    ],
+    1 - eA,
+    0.45 * eA,
+  );
+  const tailL = mix(
+    mix([[K, at(-8, 24), at(-34, 46), at(-40, 92)]], [[K, at(-12, 30), at(-50, 74), at(-60, 140)]], eB),
+    [[K, at(-30, 3), at(-72, 5), at(-124, 9)]],
+    eC,
+  );
+  const tailR = mix(
+    mix([[K, at(10, 28), at(36, 58), at(30, 108)]], [[K, at(14, 32), at(54, 72), at(64, 150)]], eA),
+    [[K, at(30, 3), at(72, 5), at(124, 9)]],
+    eC,
+  );
+  const slideOff = eC * (cx + 150 * s);
+  const knotScale = 1 - sm(0.58, 0.8, u);
+  const knotOrigin: React.CSSProperties = { transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px` };
+  const wrapLeft = useMemo(
+    () => (
+      <>
+        <Rope segs={[wrapB[0]]} width={rw} seed={21} />
+        <Rope segs={[wrapA[0]]} width={rw} seed={22} />
+      </>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [w, knotY, rw],
+  );
+  const wrapRight = useMemo(
+    () => (
+      <>
+        <Rope segs={[wrapB[1]]} width={rw} seed={27} />
+        <Rope segs={[wrapA[1]]} width={rw} seed={28} />
+      </>
+    ),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [w, knotY, rw],
+  );
   const monoSize = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.2, 72), 128));
   const monoY = Math.min(flapH * 0.5, knotY - 70 * s - monoSize * 0.9);
 
@@ -717,41 +782,45 @@ const Envelope = ({
           />
         </span>
 
-        {/* vintage rope tied in a bow; on tap it unties itself before the flap opens */}
-        <span aria-hidden className="dt-anim absolute inset-0 block pointer-events-none" style={{ zIndex: 5 }}>
+        {/* vintage rope tied in a bow; on tap it unties itself before the flap opens.
+            The long halves are drawn once and only slid (cheap); only the small bow is redrawn each frame. */}
+        {([["left", -1, wrapLeft], ["right", 1, wrapRight]] as const).map(([side, dir, strands]) => (
+          <span
+            key={side}
+            aria-hidden
+            className="absolute inset-0 block pointer-events-none"
+            style={{ zIndex: 5, transform: `translate3d(${dir * slideOff}px, 0, 0)`, opacity: fade, willChange: opening ? "transform, opacity" : undefined }}
+          >
+            <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
+              <defs>
+                <filter id={`${uid}-rope-${side}`} x="-5%" y="-50%" width="110%" height="200%">
+                  <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
+                </filter>
+              </defs>
+              <g filter={`url(#${uid}-rope-${side})`}>{strands}</g>
+            </svg>
+          </span>
+        ))}
+        <span aria-hidden className="absolute inset-0 block pointer-events-none" style={{ zIndex: 5, opacity: fade }}>
           <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
             <defs>
-              <filter id={`${uid}-rope`} x="-5%" y="-5%" width="110%" height="110%">
+              <filter id={`${uid}-bow`} x="-30%" y="-30%" width="160%" height="160%">
                 <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
               </filter>
             </defs>
-            <g filter={`url(#${uid}-rope)`}>
-              {/* 3 · once the bow is undone, each half of the rope slides off its own side */}
-              <g style={{ ...knotOrigin, ...untie("translateX(-" + (cx + 60) + "px) rotate(-3deg)", ".7s", ".42s", "cubic-bezier(.5,0,.8,.4)") }}>
-                <Rope segs={[wrapB[0]]} width={rw} seed={21} />
-                <Rope segs={[wrapA[0]]} width={rw} seed={22} />
+            <g filter={`url(#${uid}-bow)`} style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+              {/* the two ends travel with their halves once the knot opens */}
+              <g transform={`translate(${-slideOff} 0)`}>
+                <Rope segs={tailL} width={rw} seed={23} frayEnd flow={eB * 96 * s} />
               </g>
-              <g style={{ ...knotOrigin, ...untie("translateX(" + (cx + 60) + "px) rotate(3deg)", ".7s", ".42s", "cubic-bezier(.5,0,.8,.4)") }}>
-                <Rope segs={[wrapB[1]]} width={rw} seed={27} />
-                <Rope segs={[wrapA[1]]} width={rw} seed={28} />
+              <g transform={`translate(${slideOff} 0)`}>
+                <Rope segs={tailR} width={rw} seed={24} frayEnd flow={eA * 96 * s} />
               </g>
-              <g style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
-                {/* 2 · the frayed ends come loose and slide away */}
-                <g style={{ ...knotOrigin, ...untie(`translate(${-34 * s}px, ${18 * s}px) rotate(38deg)`, ".5s", ".2s") }}>
-                  <Rope segs={tailL} width={rw} seed={23} frayEnd />
-                </g>
-                <g style={{ ...knotOrigin, ...untie(`translate(${34 * s}px, ${18 * s}px) rotate(-38deg)`, ".5s", ".2s") }}>
-                  <Rope segs={tailR} width={rw} seed={24} frayEnd />
-                </g>
-                {/* 1 · the loops pull through the knot */}
-                <g style={{ ...knotOrigin, ...untie("scale(.08, .3) rotate(-18deg)", ".42s", "0s", "cubic-bezier(.6,0,.9,.5)") }}>
-                  <Rope segs={loopL} width={rw} seed={25} />
-                </g>
-                <g style={{ ...knotOrigin, ...untie("scale(.08, .3) rotate(18deg)", ".42s", ".05s", "cubic-bezier(.6,0,.9,.5)") }}>
-                  <Rope segs={loopR} width={rw} seed={26} />
-                </g>
-                {/* the knot, wound round itself, loosens and disappears */}
-                <g style={{ ...knotOrigin, ...untie("scale(.2)", ".35s", ".22s") }}>
+              {eB < 0.985 && <Rope segs={loopL} width={rw} seed={25} flow={-eB * 60 * s} />}
+              {eA < 0.985 && <Rope segs={loopR} width={rw} seed={26} flow={-eA * 60 * s} />}
+              {/* the knot, wound round itself; it opens as the ends pull apart */}
+              {knotScale > 0.01 && (
+                <g transform={`translate(${cx} ${knotY}) scale(${knotScale}) translate(${-cx} ${-knotY})`}>
                   <ellipse cx={cx} cy={knotY} rx={8 * s} ry={6.6 * s} fill="#7a5c3a" />
                   <path
                     d={`M${cx - 6 * s} ${knotY - 4 * s} q${4 * s} ${4 * s} ${2 * s} ${10 * s} M${cx - 1 * s} ${knotY - 6 * s} q${4 * s} ${5 * s} ${2 * s} ${12 * s} M${cx + 4 * s} ${knotY - 5 * s} q${3 * s} ${5 * s} ${1 * s} ${10 * s}`}
@@ -761,7 +830,7 @@ const Envelope = ({
                     strokeLinecap="round"
                   />
                 </g>
-              </g>
+              )}
             </g>
           </svg>
         </span>
