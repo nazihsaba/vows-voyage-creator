@@ -203,7 +203,7 @@ const Dashboard = () => {
     {
       id: "dentelle-lace",
       name: "Rêverie",
-      price: 100,
+      price: 110,
       description: "Romantic lace with a wax-sealed envelope opening and mocha accents",
       image: reverieCover.url,
       features: [
