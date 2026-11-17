@@ -8,6 +8,13 @@
       "when": 1793816276933,
       "tag": "0000_physical_card_bookings",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1794903830929,
+      "tag": "0001_activate_photo_walls",
+      "breakpoints": true
     }
   ]
 }

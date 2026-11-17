@@ -46,7 +46,7 @@ Deno.serve(async (req) => {
 
     const rawRecipients = (wedding.notification_email || "").trim();
     let recipientList: string[] = rawRecipients
-      ? rawRecipients.split(/[,;\s]+/).map((s) => s.trim()).filter(Boolean)
+      ? rawRecipients.split(/[,;\s]+/).map((s: string) => s.trim()).filter(Boolean)
       : [];
 
     if (recipientList.length === 0) {

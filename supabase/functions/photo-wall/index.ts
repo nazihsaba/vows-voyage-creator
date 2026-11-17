@@ -1,4 +1,6 @@
 import { createClient, type SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { corsHeaders } from "npm:@supabase/supabase-js@2.119.0/cors";
+import { z } from "npm:zod@3";
 
 /**
  * Elan photo wall add-on (see the Elan partner API).
@@ -22,10 +24,7 @@ const ELAN_BASE = Deno.env.get("ELAN_BASE_URL") ?? "https://elan.stridesoftware.
 const WHISH_API = "https://api.whish.money/itel-service/api";
 const EVENT_TIME_ZONE = "Asia/Beirut";
 
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
-};
+const RequestSchema = z.object({ action: z.enum(["status", "unlock"]), weddingId: z.string().uuid() });
 
 const json = (body: unknown, status = 200) =>
   new Response(JSON.stringify(body), {
@@ -33,8 +32,12 @@ const json = (body: unknown, status = 200) =>
     headers: { ...corsHeaders, "Content-Type": "application/json" },
   });
 
-const admin = (): SupabaseClient =>
-  createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+const admin = (): SupabaseClient => {
+  const url = Deno.env.get("SUPABASE_URL");
+  const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+  if (!url || !key) throw new Error("Missing backend configuration");
+  return createClient(url, key);
+};
 
 // ---------- Elan request signing ----------
 const enc = new TextEncoder();
@@ -95,7 +98,8 @@ const WALL_FIELDS =
   "wedding_id, status, price_amount, price_currency, elan_mode, guest_url, qr_png_url, qr_svg_url, camera_opens_at, camera_closes_at, album_deleted_after, last_error, updated_at";
 
 async function loadWall(db: SupabaseClient, weddingId: string) {
-  const { data } = await db.from("photo_walls").select(`${WALL_FIELDS}, payment_external_id`).eq("wedding_id", weddingId).maybeSingle();
+  const { data, error } = await db.from("photo_walls").select(`${WALL_FIELDS}, payment_external_id`).eq("wedding_id", weddingId).maybeSingle();
+  if (error) throw new Error("Could not load the photo wall");
   return data as (Record<string, any> & { payment_external_id: string | null }) | null;
 }
 
@@ -148,7 +152,7 @@ async function createWall(db: SupabaseClient, wedding: Wedding) {
   }
   // Payment stays confirmed, so the couple (or we) can simply try again later with the same id.
   const code = data?.error === "invalid" ? `invalid:${data?.field ?? ""}` : data?.error || `http_${status}`;
-  console.error("Elan create failed", status, JSON.stringify(data));
+  console.error("Elan create failed", status, code);
   await saveWall(db, wedding, { status: "paid", last_error: code });
   return { ok: false as const, code, message: data?.message as string | undefined };
 }
@@ -157,7 +161,7 @@ async function createWall(db: SupabaseClient, wedding: Wedding) {
 async function wallsAvailable() {
   const { status, data } = await elan("GET", "/me");
   if (status !== 200) {
-    console.error("Elan /me failed", status, JSON.stringify(data));
+    console.error("Elan availability failed", status);
     return false;
   }
   return Number(data?.walls_left ?? 0) > 0;
@@ -318,15 +322,17 @@ async function handleWhishCallback(db: SupabaseClient, url: URL) {
   return json({ ok: true, status: (await loadWall(db, weddingId))?.status ?? null });
 }
 
-Deno.serve(async (req) => {
+export async function handler(req: Request) {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
-  const db = admin();
   try {
+    const db = admin();
     const url = new URL(req.url);
     if (url.searchParams.has("whish")) return await handleWhishCallback(db, url);
     if (req.method !== "POST") return json({ error: "method_not_allowed" }, 405);
 
-    const body = await req.json().catch(() => ({}));
+    const parsed = RequestSchema.safeParse(await req.json().catch(() => null));
+    if (!parsed.success) return json({ error: "invalid_request" }, 400);
+    const body = parsed.data;
     const owned = await ownedWedding(db, body?.weddingId, req.headers.get("authorization"));
     if (owned.error) return owned.error;
     if (body.action === "status") return await handleStatus(db, owned.wedding);
@@ -340,4 +346,6 @@ Deno.serve(async (req) => {
     console.error("photo-wall error", err);
     return json({ error: "server_error" }, 500);
   }
-});
+}
+
+if (import.meta.main) Deno.serve(handler);

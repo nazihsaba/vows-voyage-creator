@@ -276,6 +276,74 @@ export type Database = {
           },
         ]
       }
+      photo_walls: {
+        Row: {
+          album_deleted_after: string | null
+          camera_closes_at: string | null
+          camera_opens_at: string | null
+          created_at: string
+          elan_event_id: string | null
+          elan_mode: string | null
+          guest_url: string | null
+          last_error: string | null
+          payment_external_id: string | null
+          price_amount: number
+          price_currency: string
+          qr_png_url: string | null
+          qr_svg_url: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          wedding_id: string
+        }
+        Insert: {
+          album_deleted_after?: string | null
+          camera_closes_at?: string | null
+          camera_opens_at?: string | null
+          created_at?: string
+          elan_event_id?: string | null
+          elan_mode?: string | null
+          guest_url?: string | null
+          last_error?: string | null
+          payment_external_id?: string | null
+          price_amount?: number
+          price_currency?: string
+          qr_png_url?: string | null
+          qr_svg_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          wedding_id: string
+        }
+        Update: {
+          album_deleted_after?: string | null
+          camera_closes_at?: string | null
+          camera_opens_at?: string | null
+          created_at?: string
+          elan_event_id?: string | null
+          elan_mode?: string | null
+          guest_url?: string | null
+          last_error?: string | null
+          payment_external_id?: string | null
+          price_amount?: number
+          price_currency?: string
+          qr_png_url?: string | null
+          qr_svg_url?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          wedding_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "photo_walls_wedding_id_fkey"
+            columns: ["wedding_id"]
+            isOneToOne: true
+            referencedRelation: "weddings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           created_at: string | null
