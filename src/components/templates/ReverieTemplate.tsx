@@ -536,18 +536,18 @@ const Envelope = ({
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     if (!opening || reducedMotion) return;
-    const steps: Array<[number, number]> = [[1, 0], [2, 1350], [3, 1800], [4, 2320]];
+    const steps: Array<[number, number]> = [[1, 0], [2, 2050], [3, 2500], [4, 3020]];
     const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
     return () => timers.forEach(clearTimeout);
   }, [opening, reducedMotion]);
-  // how far the bow has been untied, 0 → 1 over 1.7s, redrawn every frame so the rope really moves
+  // how far the bow has been untied, 0 → 1 over 2.4s, redrawn every frame so the rope really moves
   const [u, setU] = useState(0);
   useEffect(() => {
     if (!opening || reducedMotion) return;
     let raf = 0;
     const start = performance.now();
     const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / 1700);
+      const t = Math.min(1, (now - start) / 2400);
       setU(t);
       if (t < 1) raf = requestAnimationFrame(tick);
     };
@@ -601,18 +601,30 @@ const Envelope = ({
     [[-20, knotY + 4 * s + rw * 1.9], [w * 0.25, knotY + 6 * s + rw * 1.9], [cx - 50 * s, knotY + 8 * s], at(-6, 3)],
     [at(6, 3), [cx + 50 * s, knotY + 8 * s], [w * 0.75, knotY + 7 * s + rw * 1.9], [w + 20, knotY + 5 * s + rw * 1.9]],
   ];
-  // The bow, as a function of how far it has been untied (u goes 0 → 1 after the tap):
-  //   A · the right tail is pulled, its loop slides through the knot and the twists run along the tail
-  //   B · the left loop slides through the same way as its tail is pulled
-  //   C · the knot opens, both ends lie flat and each half of the rope slides off its side
+  // The bow, as a function of how far it has been untied (u goes 0 → 1 after the tap), as if a hand
+  // just off screen does it:
+  //   · it pulls the right end tight, then tugs it twice: the loop feeds through the knot and the end
+  //     grows by exactly as much rope as the loop loses (the twists run along with it); each tug
+  //     drags the knot a little towards the hand
+  //   · then the same on the left
+  //   · let go: the rope relaxes and each half slides off its side
   const sm = (a: number, b: number, x: number) => {
     const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
     return t * t * (3 - 2 * t);
   };
-  const eA = sm(0, 0.4, u);
-  const eB = sm(0.28, 0.68, u);
-  const eC = sm(0.6, 1, u);
-  const fade = 1 - sm(0.86, 1, u);
+  const pulse = (a: number, b: number, x: number) => Math.sin(Math.PI * sm(a, b, x));
+  const loopLen = 190 * s; // rope in each loop
+  const tailLen = 100 * s; // rope in each end
+  // right hand: pull tight, then two tugs
+  const rTight = sm(0, 0.1, u);
+  const rFed = sm(0.08, 0.24, u) * 0.55 + sm(0.3, 0.44, u) * 0.45;
+  // left hand: same, a beat later
+  const lTight = sm(0.44, 0.52, u);
+  const lFed = sm(0.5, 0.64, u) * 0.55 + sm(0.68, 0.8, u) * 0.45;
+  const release = sm(0.8, 1, u);
+  const fade = 1 - sm(0.9, 1, u);
+  const tug = pulse(0.08, 0.24, u) + 0.8 * pulse(0.3, 0.44, u) - pulse(0.5, 0.64, u) - 0.8 * pulse(0.68, 0.8, u);
+  const nudge = tug * 4 * s; // the knot is dragged towards whichever hand is pulling
   const towardKnot = (segs: RopeBez[], f: number, turn: number): RopeBez[] =>
     segs.map((seg) =>
       seg.map(([x, y]) => {
@@ -623,34 +635,41 @@ const Envelope = ({
     );
   const mix = (a: RopeBez[], b: RopeBez[], t: number): RopeBez[] =>
     a.map((seg, i) => seg.map((pt, j) => [pt[0] + (b[i][j][0] - pt[0]) * t, pt[1] + (b[i][j][1] - pt[1]) * t]) as RopeBez);
+  // a pulled end: straight from the knot towards the hand, a little slack until it is tight
+  const tautEnd = (dir: 1 | -1, fed: number, tight: number): RopeBez[] => {
+    const len = tailLen + fed * loopLen;
+    const ang = 0.32; // the hand pulls out and slightly down
+    const ex = K[0] + dir * Math.cos(ang) * len;
+    const ey = K[1] + Math.sin(ang) * len;
+    const sag = (1 - tight) * 18 * s;
+    return [[K, [K[0] + (ex - K[0]) * 0.33, K[1] + (ey - K[1]) * 0.33 + sag], [K[0] + (ex - K[0]) * 0.66, K[1] + (ey - K[1]) * 0.66 + sag], [ex, ey]]];
+  };
+  // released: the ends lie along their halves and slide off with them
+  const flatEnd = (dir: 1 | -1, len: number): RopeBez[] => [[K, at(dir * len * 0.3, 4), at(dir * len * 0.66, 7), at(dir * len, 10)]];
   const loopL = towardKnot(
     [
       [K, at(-26, -40), at(-80, -34), at(-74, -4)],
       [at(-74, -4), at(-70, 18), at(-28, 16), K],
     ],
-    1 - eB,
-    -0.45 * eB,
+    1 - lFed,
+    -0.35 * lFed,
   );
   const loopR = towardKnot(
     [
       [K, at(24, -44), at(86, -36), at(78, -2)],
       [at(78, -2), at(74, 20), at(26, 14), K],
     ],
-    1 - eA,
-    0.45 * eA,
+    1 - rFed,
+    0.35 * rFed,
   );
-  const tailL = mix(
-    mix([[K, at(-8, 24), at(-34, 46), at(-40, 92)]], [[K, at(-12, 30), at(-50, 74), at(-60, 140)]], eB),
-    [[K, at(-30, 3), at(-72, 5), at(-124, 9)]],
-    eC,
-  );
-  const tailR = mix(
-    mix([[K, at(10, 28), at(36, 58), at(30, 108)]], [[K, at(14, 32), at(54, 72), at(64, 150)]], eA),
-    [[K, at(30, 3), at(72, 5), at(124, 9)]],
-    eC,
-  );
-  const slideOff = eC * (cx + 150 * s);
-  const knotScale = 1 - sm(0.58, 0.8, u);
+  const restL: RopeBez[] = [[K, at(-8, 24), at(-34, 46), at(-40, 92)]];
+  const restR: RopeBez[] = [[K, at(10, 28), at(36, 58), at(30, 108)]];
+  const fullL = (tailLen + loopLen) / s;
+  const fullR = (tailLen + loopLen) / s;
+  const tailL = mix(mix(restL, tautEnd(-1, lFed, lTight), lTight), flatEnd(-1, fullL), release);
+  const tailR = mix(mix(restR, tautEnd(1, rFed, rTight), rTight), flatEnd(1, fullR), release);
+  const slideOff = release * (cx + 320 * s);
+  const knotScale = 1 - sm(0.76, 0.86, u);
   const knotOrigin: React.CSSProperties = { transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px` };
   const wrapLeft = useMemo(
     () => (
@@ -808,16 +827,17 @@ const Envelope = ({
                 <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
               </filter>
             </defs>
-            <g filter={`url(#${uid}-bow)`} style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+            <g filter={`url(#${uid}-bow)`} transform={`translate(${nudge} ${Math.abs(nudge) * 0.25})`}>
+            <g style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
               {/* the two ends travel with their halves once the knot opens */}
               <g transform={`translate(${-slideOff} 0)`}>
-                <Rope segs={tailL} width={rw} seed={23} frayEnd flow={eB * 96 * s} />
+                <Rope segs={tailL} width={rw} seed={23} frayEnd flow={lFed * loopLen} />
               </g>
               <g transform={`translate(${slideOff} 0)`}>
-                <Rope segs={tailR} width={rw} seed={24} frayEnd flow={eA * 96 * s} />
+                <Rope segs={tailR} width={rw} seed={24} frayEnd flow={rFed * loopLen} />
               </g>
-              {eB < 0.985 && <Rope segs={loopL} width={rw} seed={25} flow={-eB * 60 * s} />}
-              {eA < 0.985 && <Rope segs={loopR} width={rw} seed={26} flow={-eA * 60 * s} />}
+              {lFed < 0.985 && <Rope segs={loopL} width={rw} seed={25} flow={-lFed * loopLen} />}
+              {rFed < 0.985 && <Rope segs={loopR} width={rw} seed={26} flow={-rFed * loopLen} />}
               {/* the knot, wound round itself; it opens as the ends pull apart */}
               {knotScale > 0.01 && (
                 <g transform={`translate(${cx} ${knotY}) scale(${knotScale}) translate(${-cx} ${-knotY})`}>
@@ -831,6 +851,7 @@ const Envelope = ({
                   />
                 </g>
               )}
+            </g>
             </g>
           </svg>
         </span>
