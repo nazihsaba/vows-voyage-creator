@@ -529,11 +529,11 @@ const Envelope = ({
   }, [cardRef]);
 
   const reducedMotion = prefersReducedMotion();
-  // 0 closed · 1 twine slips off · 2 flap opens · 3 flap behind · 4 envelope slides away
+  // 0 closed · 1 the rope unties · 2 flap opens · 3 flap behind · 4 envelope slides away
   const [phase, setPhase] = useState(0);
   useEffect(() => {
     if (!opening || reducedMotion) return;
-    const steps: Array<[number, number]> = [[1, 0], [2, 520], [3, 970], [4, 1490]];
+    const steps: Array<[number, number]> = [[1, 0], [2, 1050], [3, 1500], [4, 2020]];
     const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
     return () => timers.forEach(clearTimeout);
   }, [opening, reducedMotion]);
@@ -594,6 +594,19 @@ const Envelope = ({
   ];
   const tailL: RopeBez[] = [[K, at(-8, 24), at(-34, 46), at(-40, 92)]];
   const tailR: RopeBez[] = [[K, at(10, 28), at(36, 58), at(30, 108)]];
+  // untying: each piece eases to its "undone" pose and fades, with its own timing
+  const knotOrigin: React.CSSProperties = { transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px` };
+  const untying = phase >= 1;
+  const untie = (to: string, dur: string, delay: string, curve = "cubic-bezier(.45,0,.55,1)"): React.CSSProperties => {
+    const d = parseFloat(dur);
+    const at = parseFloat(delay);
+    // move first, fade only towards the end of the movement
+    return {
+      transform: untying ? to : "none",
+      opacity: untying ? 0 : 1,
+      transition: `transform ${dur} ${curve} ${delay}, opacity ${(d * 0.5).toFixed(2)}s ease ${(at + d * 0.5).toFixed(2)}s`,
+    };
+  };
   const monoSize = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.2, 72), 128));
   const monoY = Math.min(flapH * 0.5, knotY - 70 * s - monoSize * 0.9);
 
@@ -704,17 +717,8 @@ const Envelope = ({
           />
         </span>
 
-        {/* jute twine tied in a loose bow; it slips off first when the envelope is opened */}
-        <span
-          aria-hidden
-          className="dt-anim absolute inset-0 block pointer-events-none"
-          style={{
-            zIndex: 5,
-            opacity: phase >= 1 ? 0 : 1,
-            transform: phase >= 1 ? `translateY(${36 * s}px)` : "none",
-            transition: "transform .55s cubic-bezier(.4,0,.6,1), opacity .45s ease .08s",
-          }}
-        >
+        {/* vintage rope tied in a bow; on tap it unties itself before the flap opens */}
+        <span aria-hidden className="dt-anim absolute inset-0 block pointer-events-none" style={{ zIndex: 5 }}>
           <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
             <defs>
               <filter id={`${uid}-rope`} x="-5%" y="-5%" width="110%" height="110%">
@@ -722,22 +726,41 @@ const Envelope = ({
               </filter>
             </defs>
             <g filter={`url(#${uid}-rope)`}>
-              <Rope segs={wrapB} width={rw} seed={21} />
-              <Rope segs={wrapA} width={rw} seed={22} />
-              <g style={{ transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px`, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
-                <Rope segs={tailL} width={rw} seed={23} frayEnd />
-                <Rope segs={tailR} width={rw} seed={24} frayEnd />
-                <Rope segs={loopL} width={rw} seed={25} />
-                <Rope segs={loopR} width={rw} seed={26} />
-                {/* the knot, wound round itself */}
-                <ellipse cx={cx} cy={knotY} rx={8 * s} ry={6.6 * s} fill="#7a5c3a" />
-                <path
-                  d={`M${cx - 6 * s} ${knotY - 4 * s} q${4 * s} ${4 * s} ${2 * s} ${10 * s} M${cx - 1 * s} ${knotY - 6 * s} q${4 * s} ${5 * s} ${2 * s} ${12 * s} M${cx + 4 * s} ${knotY - 5 * s} q${3 * s} ${5 * s} ${1 * s} ${10 * s}`}
-                  fill="none"
-                  stroke="#c7a676"
-                  strokeWidth={1.3 * s}
-                  strokeLinecap="round"
-                />
+              {/* 3 · once the bow is undone, each half of the rope slides off its own side */}
+              <g style={{ ...knotOrigin, ...untie("translateX(-" + (cx + 60) + "px) rotate(-3deg)", ".7s", ".42s", "cubic-bezier(.5,0,.8,.4)") }}>
+                <Rope segs={[wrapB[0]]} width={rw} seed={21} />
+                <Rope segs={[wrapA[0]]} width={rw} seed={22} />
+              </g>
+              <g style={{ ...knotOrigin, ...untie("translateX(" + (cx + 60) + "px) rotate(3deg)", ".7s", ".42s", "cubic-bezier(.5,0,.8,.4)") }}>
+                <Rope segs={[wrapB[1]]} width={rw} seed={27} />
+                <Rope segs={[wrapA[1]]} width={rw} seed={28} />
+              </g>
+              <g style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
+                {/* 2 · the frayed ends come loose and slide away */}
+                <g style={{ ...knotOrigin, ...untie(`translate(${-34 * s}px, ${18 * s}px) rotate(38deg)`, ".5s", ".2s") }}>
+                  <Rope segs={tailL} width={rw} seed={23} frayEnd />
+                </g>
+                <g style={{ ...knotOrigin, ...untie(`translate(${34 * s}px, ${18 * s}px) rotate(-38deg)`, ".5s", ".2s") }}>
+                  <Rope segs={tailR} width={rw} seed={24} frayEnd />
+                </g>
+                {/* 1 · the loops pull through the knot */}
+                <g style={{ ...knotOrigin, ...untie("scale(.08, .3) rotate(-18deg)", ".42s", "0s", "cubic-bezier(.6,0,.9,.5)") }}>
+                  <Rope segs={loopL} width={rw} seed={25} />
+                </g>
+                <g style={{ ...knotOrigin, ...untie("scale(.08, .3) rotate(18deg)", ".42s", ".05s", "cubic-bezier(.6,0,.9,.5)") }}>
+                  <Rope segs={loopR} width={rw} seed={26} />
+                </g>
+                {/* the knot, wound round itself, loosens and disappears */}
+                <g style={{ ...knotOrigin, ...untie("scale(.2)", ".35s", ".22s") }}>
+                  <ellipse cx={cx} cy={knotY} rx={8 * s} ry={6.6 * s} fill="#7a5c3a" />
+                  <path
+                    d={`M${cx - 6 * s} ${knotY - 4 * s} q${4 * s} ${4 * s} ${2 * s} ${10 * s} M${cx - 1 * s} ${knotY - 6 * s} q${4 * s} ${5 * s} ${2 * s} ${12 * s} M${cx + 4 * s} ${knotY - 5 * s} q${3 * s} ${5 * s} ${1 * s} ${10 * s}`}
+                    fill="none"
+                    stroke="#c7a676"
+                    strokeWidth={1.3 * s}
+                    strokeLinecap="round"
+                  />
+                </g>
               </g>
             </g>
           </svg>
