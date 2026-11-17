@@ -305,14 +305,174 @@ function deckle(points: Array<[number, number]>, seed: number, amp = 1.6) {
   return out;
 }
 
-/** Jute twine: a warm strand painted with fine diagonal twists, a darker underside and a soft sheen. */
-const Twine = ({ d, width, twist }: { d: string; width: number; twist: string }) => (
-  <>
-    <path d={d} fill="none" stroke="#7a5d3c" strokeWidth={width * 1.12} strokeLinecap="round" strokeLinejoin="round" />
-    <path d={d} fill="none" stroke={`url(#${twist})`} strokeWidth={width} strokeLinecap="round" strokeLinejoin="round" />
-    <path d={d} fill="none" stroke="#e2cda6" strokeWidth={width * 0.22} strokeLinecap="round" opacity="0.45" transform={`translate(${-width * 0.18} ${-width * 0.2})`} />
-  </>
-);
+type RopePt = [number, number];
+type RopeBez = [RopePt, RopePt, RopePt, RopePt];
+
+/** Points along a chain of cubic curves, spaced about `step` apart, with their direction. */
+function sampleRope(segs: RopeBez[], step: number) {
+  const out: Array<{ x: number; y: number; tx: number; ty: number }> = [];
+  for (const [p0, p1, p2, p3] of segs) {
+    const at = (t: number) => {
+      const u = 1 - t;
+      return [
+        u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
+        u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
+      ];
+    };
+    let len = 0;
+    let prev = at(0);
+    for (let k = 1; k <= 24; k++) {
+      const q = at(k / 24);
+      len += Math.hypot(q[0] - prev[0], q[1] - prev[1]);
+      prev = q;
+    }
+    const n = Math.max(2, Math.round(len / step));
+    for (let k = 0; k < n; k++) {
+      const t = k / n;
+      const [x, y] = at(t);
+      const [x2, y2] = at(Math.min(1, t + 0.01));
+      const l = Math.hypot(x2 - x, y2 - y) || 1;
+      out.push({ x, y, tx: (x2 - x) / l, ty: (y2 - y) / l });
+    }
+  }
+  return out;
+}
+
+/**
+ * Vintage jute rope: three twisted plies drawn strand by strand, a few loose fibres,
+ * and optionally unravelled, frayed ends.
+ */
+const Rope = ({ segs, width, seed, frayEnd = false }: { segs: RopeBez[]; width: number; seed: number; frayEnd?: boolean }) => {
+  const rnd = seededRandom(seed);
+  const pts = sampleRope(segs, width * 0.82);
+  const f = (n: number) => n.toFixed(1);
+  const core = segs.map(([p0, p1, p2, p3], i) => `${i ? "" : `M${f(p0[0])} ${f(p0[1])} `}C${f(p1[0])} ${f(p1[1])} ${f(p2[0])} ${f(p2[1])} ${f(p3[0])} ${f(p3[1])}`).join(" ");
+  let plies = "";
+  let grooves = "";
+  let fuzz = "";
+  const half = width / 2;
+  pts.forEach(({ x, y, tx, ty }, i) => {
+    const nx = -ty;
+    const ny = tx;
+    // each ply crosses the rope on a slant, bulging slightly, like twisted strands
+    const ply = (o: number) => {
+      const px = x + tx * o;
+      const py = y + ty * o;
+      const ax = px - nx * half * 0.92 - tx * half * 0.8;
+      const ay = py - ny * half * 0.92 - ty * half * 0.8;
+      const bx = px + nx * half * 0.92 + tx * half * 0.8;
+      const by = py + ny * half * 0.92 + ty * half * 0.8;
+      return `M${f(ax)} ${f(ay)} Q${f(px + tx * half * 0.35)} ${f(py + ty * half * 0.35)} ${f(bx)} ${f(by)}`;
+    };
+    plies += ply(0);
+    grooves += ply(width * 0.41);
+    if (rnd() < 0.22) {
+      const side = rnd() < 0.5 ? -1 : 1;
+      const sx = x + nx * half * side * 0.9;
+      const sy = y + ny * half * side * 0.9;
+      const a = Math.atan2(ny * side, nx * side) + (rnd() - 0.5) * 1.6;
+      const l = width * (0.35 + rnd() * 0.75);
+      fuzz += `M${f(sx)} ${f(sy)} q${f(Math.cos(a) * l * 0.5 + tx * 1.2)} ${f(Math.sin(a) * l * 0.5 + ty * 1.2)} ${f(Math.cos(a) * l)} ${f(Math.sin(a) * l)}`;
+    }
+    void i;
+  });
+  // unravelled end: fibres spreading out from the last point
+  let fray = "";
+  if (frayEnd && pts.length) {
+    const end = segs[segs.length - 1][3];
+    const last = pts[pts.length - 1];
+    for (let k = 0; k < 9; k++) {
+      const spread = (k / 8 - 0.5) * 1.3 + (rnd() - 0.5) * 0.25;
+      const ca = Math.cos(spread);
+      const sa = Math.sin(spread);
+      const dx = last.tx * ca - last.ty * sa;
+      const dy = last.tx * sa + last.ty * ca;
+      const l = width * (2.2 + rnd() * 2.4);
+      const bend = (rnd() - 0.5) * width * 1.4;
+      fray += `M${f(end[0] + (rnd() - 0.5) * width * 0.6)} ${f(end[1])} q${f(dx * l * 0.5 - dy * bend)} ${f(dy * l * 0.5 + dx * bend)} ${f(dx * l)} ${f(dy * l)}`;
+    }
+  }
+  return (
+    <>
+      <path d={core} fill="none" stroke="#5c4329" strokeWidth={width * 1.1} strokeLinecap="round" />
+      <path d={core} fill="none" stroke="#94734a" strokeWidth={width * 0.88} strokeLinecap="round" />
+      <path d={plies} fill="none" stroke="#c7a676" strokeWidth={width * 0.3} strokeLinecap="round" opacity="0.95" />
+      <path d={grooves} fill="none" stroke="#523b23" strokeWidth={width * 0.13} strokeLinecap="round" opacity="0.75" />
+      {fuzz && <path d={fuzz} fill="none" stroke="#b39468" strokeWidth={0.55} strokeLinecap="round" opacity="0.8" />}
+      {fray && <path d={fray} fill="none" stroke="#a5855a" strokeWidth={width * 0.16} strokeLinecap="round" opacity="0.9" />}
+    </>
+  );
+};
+
+/** Letterpress monogram pressed into the paper: initials in calligraphy within a fine laurel wreath. */
+const PressedMonogram = ({ x, y, size, groom, bride }: { x: number; y: number; size: number; groom: string; bride: string }) => {
+  const ink = "#8a705a";
+  const rx = size * 1.02;
+  const ry = size * 0.74;
+  const laurel = (side: 1 | -1) => {
+    let stem = "";
+    let leaves = "";
+    const n = 9;
+    for (let k = 0; k <= n; k++) {
+      // from the bottom, round the side, towards the top
+      const a = Math.PI / 2 + side * (0.32 + (k / n) * 1.95);
+      const px = x + Math.cos(a) * rx;
+      const py = y + Math.sin(a) * ry;
+      stem += `${k ? "L" : "M"}${px.toFixed(1)} ${py.toFixed(1)} `;
+      if (k > 0 && k < n + 1) {
+        const ta = a + side * Math.PI / 2;
+        for (const out of [1, -1]) {
+          const la = ta + out * 0.55 * side;
+          const len = size * (0.15 - k * 0.007);
+          const ex = px + Math.cos(la) * len;
+          const ey = py + Math.sin(la) * len;
+          const mx = (px + ex) / 2;
+          const my = (py + ey) / 2;
+          const qx = -Math.sin(la) * len * 0.32;
+          const qy = Math.cos(la) * len * 0.32;
+          leaves += `M${px.toFixed(1)} ${py.toFixed(1)} Q${(mx + qx).toFixed(1)} ${(my + qy).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(mx - qx).toFixed(1)} ${(my - qy).toFixed(1)} ${px.toFixed(1)} ${py.toFixed(1)} `;
+        }
+      }
+    }
+    return { stem, leaves };
+  };
+  const L = laurel(1);
+  const R = laurel(-1);
+  const letters = (dx: number, dy: number, fill: string, opacity: number) => (
+    <text
+      x={x + dx}
+      y={y + dy + size * 0.16}
+      textAnchor="middle"
+      fill={fill}
+      opacity={opacity}
+      style={{ fontFamily: "var(--font-template-title), 'Great Vibes', cursive" }}
+      fontSize={size * 0.6}
+    >
+      {groom}
+      <tspan fontSize={size * 0.34} dy={-size * 0.03} dx={size * 0.02}>
+        {" & "}
+      </tspan>
+      <tspan dy={size * 0.03}>{bride}</tspan>
+    </text>
+  );
+  const wreath = (dx: number, dy: number, color: string, opacity: number) => (
+    <g transform={`translate(${dx} ${dy})`} opacity={opacity} fill="none" stroke={color} strokeLinecap="round">
+      <path d={L.stem + R.stem} strokeWidth={0.9} />
+      <path d={L.leaves + R.leaves} strokeWidth={0.7} />
+    </g>
+  );
+  return (
+    <g aria-hidden>
+      {/* pressed into the paper: a light catch below each stroke, a soft shade above it */}
+      {wreath(0.7, 1, "#ffffff", 0.9)}
+      {wreath(-0.5, -0.7, "#5d4532", 0.25)}
+      {wreath(0, 0, ink, 0.7)}
+      {letters(0.8, 1.1, "#ffffff", 0.9)}
+      {letters(-0.6, -0.8, "#5d4532", 0.3)}
+      {letters(0, 0, ink, 0.82)}
+    </g>
+  );
+};
 
 /**
  * A handmade-paper envelope, tied with jute twine, that fills the opening screen. The invitation
@@ -324,12 +484,16 @@ const Envelope = ({
   opening,
   onOpen,
   label,
+  groomInitial,
+  brideInitial,
 }: {
   /** The invitation card below the envelope; the envelope leaves a window where it sits. */
   cardRef: React.RefObject<HTMLDivElement>;
   opening: boolean;
   onOpen: () => void;
   label: string;
+  groomInitial: string;
+  brideInitial: string;
 }) => {
   const ref = useRef<HTMLDivElement | null>(null);
   const uid = useId().replace(/:/g, "");
@@ -408,17 +572,30 @@ const Envelope = ({
       ].filter((r) => r.w > 0 && r.h > 0)
     : [{ x: 0, y: 0, w, h }];
 
-  // twine: one strand around the envelope, tied in a bow at the flap's tip
-  const tw = 3.2 * s;
-  const across = `M-10 ${knotY + 3 * s} C${w * 0.3} ${knotY + 6 * s} ${w * 0.7} ${knotY - 2 * s} ${w + 10} ${knotY + 2 * s}`;
-  const k = (dx: number, dy: number) => `${(cx + dx * s).toFixed(1)} ${(knotY + dy * s).toFixed(1)}`;
-  const bow = [
-    `M${k(0, 0)} C${k(-26, -30)} ${k(-64, -18)} ${k(-56, 2)} C${k(-50, 16)} ${k(-20, 12)} ${k(0, 0)}`,
-    `M${k(0, 0)} C${k(24, -32)} ${k(66, -22)} ${k(58, 0)} C${k(52, 14)} ${k(22, 12)} ${k(0, 0)}`,
-    `M${k(0, 0)} C${k(-8, 22)} ${k(-26, 40)} ${k(-30, 74)}`,
-    `M${k(0, 0)} C${k(8, 24)} ${k(24, 46)} ${k(22, 86)}`,
+  // vintage rope: wrapped twice around the envelope, tied in a full bow at the flap's tip
+  const rw = 4.4 * s;
+  const K: RopePt = [cx, knotY];
+  const at = (dx: number, dy: number): RopePt => [cx + dx * s, knotY + dy * s];
+  const wrapA: RopeBez[] = [
+    [[-20, knotY + 4 * s], [w * 0.22, knotY + 7 * s], [cx - 60 * s, knotY + 1 * s], K],
+    [K, [cx + 60 * s, knotY + 1 * s], [w * 0.78, knotY + 8 * s], [w + 20, knotY + 4 * s]],
   ];
-  const frays = `M${k(-30, 74)} l${-2 * s} ${5 * s} M${k(-30, 74)} l${1.5 * s} ${5.5 * s} M${k(22, 86)} l${-1.5 * s} ${5.5 * s} M${k(22, 86)} l${2.5 * s} ${4.5 * s}`;
+  const wrapB: RopeBez[] = [
+    [[-20, knotY + 4 * s + rw * 1.9], [w * 0.25, knotY + 6 * s + rw * 1.9], [cx - 50 * s, knotY + 8 * s], at(-6, 3)],
+    [at(6, 3), [cx + 50 * s, knotY + 8 * s], [w * 0.75, knotY + 7 * s + rw * 1.9], [w + 20, knotY + 5 * s + rw * 1.9]],
+  ];
+  const loopL: RopeBez[] = [
+    [K, at(-26, -40), at(-80, -34), at(-74, -4)],
+    [at(-74, -4), at(-70, 18), at(-28, 16), K],
+  ];
+  const loopR: RopeBez[] = [
+    [K, at(24, -44), at(86, -36), at(78, -2)],
+    [at(78, -2), at(74, 20), at(26, 14), K],
+  ];
+  const tailL: RopeBez[] = [[K, at(-8, 24), at(-34, 46), at(-40, 92)]];
+  const tailR: RopeBez[] = [[K, at(10, 28), at(36, 58), at(30, 108)]];
+  const monoSize = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.2, 72), 128));
+  const monoY = Math.min(flapH * 0.5, knotY - 70 * s - monoSize * 0.9);
 
   const ease = "cubic-bezier(.55,0,.25,1)";
   return (
@@ -513,6 +690,7 @@ const Envelope = ({
             <path d={flapPath} fill="rgba(255,255,255,.12)" />
             <path d={flapEdge} fill="none" stroke="#fffefb" strokeWidth="1.5" opacity="0.95" />
             <path d={flapEdge} fill="none" stroke="rgba(120,98,74,.28)" strokeWidth="0.7" transform="translate(0 1.5)" />
+            <PressedMonogram x={cx} y={monoY} size={monoSize} groom={groomInitial} bride={brideInitial} />
           </svg>
           <span
             className="absolute inset-0 block"
@@ -539,24 +717,27 @@ const Envelope = ({
         >
           <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
             <defs>
-              <pattern id={`${uid}-twist`} patternUnits="userSpaceOnUse" width={tw * 1.1} height={tw * 1.1} patternTransform="rotate(38)">
-                <rect width={tw * 1.1} height={tw * 1.1} fill="#a6855c" />
-                <rect width={tw * 0.42} height={tw * 1.1} fill="#7d5f3c" />
-                <rect x={tw * 0.62} width={tw * 0.16} height={tw * 1.1} fill="#c8aa7c" />
-              </pattern>
-              <filter id={`${uid}-twine`} x="-5%" y="-5%" width="110%" height="110%">
-                <feDropShadow dx={0.8 * s} dy={1.8 * s} stdDeviation={1.3 * s} floodColor="#3d2a18" floodOpacity="0.3" />
+              <filter id={`${uid}-rope`} x="-5%" y="-5%" width="110%" height="110%">
+                <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
               </filter>
             </defs>
-            <g filter={`url(#${uid}-twine)`}>
-              <Twine d={across} width={tw} twist={`${uid}-twist`} />
+            <g filter={`url(#${uid}-rope)`}>
+              <Rope segs={wrapB} width={rw} seed={21} />
+              <Rope segs={wrapA} width={rw} seed={22} />
               <g style={{ transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px`, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
-                {bow.map((p, i) => (
-                  <Twine key={i} d={p} width={tw} twist={`${uid}-twist`} />
-                ))}
-                <path d={frays} fill="none" stroke="#8e6f4a" strokeWidth={tw * 0.35} strokeLinecap="round" />
-                <ellipse cx={cx} cy={knotY} rx={5 * s} ry={4.2 * s} fill="#8e6f4a" />
-                <ellipse cx={cx - 1.2 * s} cy={knotY - 1.2 * s} rx={2.2 * s} ry={1.4 * s} fill="#c9ad82" opacity="0.7" />
+                <Rope segs={tailL} width={rw} seed={23} frayEnd />
+                <Rope segs={tailR} width={rw} seed={24} frayEnd />
+                <Rope segs={loopL} width={rw} seed={25} />
+                <Rope segs={loopR} width={rw} seed={26} />
+                {/* the knot, wound round itself */}
+                <ellipse cx={cx} cy={knotY} rx={8 * s} ry={6.6 * s} fill="#7a5c3a" />
+                <path
+                  d={`M${cx - 6 * s} ${knotY - 4 * s} q${4 * s} ${4 * s} ${2 * s} ${10 * s} M${cx - 1 * s} ${knotY - 6 * s} q${4 * s} ${5 * s} ${2 * s} ${12 * s} M${cx + 4 * s} ${knotY - 5 * s} q${3 * s} ${5 * s} ${1 * s} ${10 * s}`}
+                  fill="none"
+                  stroke="#c7a676"
+                  strokeWidth={1.3 * s}
+                  strokeLinecap="round"
+                />
               </g>
             </g>
           </svg>
@@ -564,7 +745,7 @@ const Envelope = ({
         <span
           className="dt-anim absolute left-0 right-0 block text-center"
           style={{
-            top: knotY + 104 * s,
+            top: knotY + 122 * s,
             zIndex: 5,
             fontFamily: FONT_HEADING,
             fontStyle: "italic",
@@ -1005,7 +1186,14 @@ export const ReverieTemplate = ({
 
           {/* Envelope sealed with wax — tap to open */}
           {!opened && (
-            <Envelope cardRef={heroCardRef} opening={opening} onOpen={openInvitation} label={t("reverie.tapToOpen", "Tap to open")} />
+            <Envelope
+              cardRef={heroCardRef}
+              opening={opening}
+              onOpen={openInvitation}
+              label={t("reverie.tapToOpen", "Tap to open")}
+              groomInitial={(wedding.groom_name || "A").trim().charAt(0).toUpperCase()}
+              brideInitial={(wedding.bride_name || "A").trim().charAt(0).toUpperCase()}
+            />
           )}
         </section>
 
