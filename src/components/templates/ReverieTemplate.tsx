@@ -344,70 +344,61 @@ function sampleRope(segs: RopeBez[], step: number) {
 }
 
 /**
- * Vintage jute rope: three twisted plies drawn strand by strand, a few loose fibres,
- * and optionally unravelled, frayed ends.
+ * A lace ribbon: an ivory band with scalloped, beaded edges, picot dots, fine stitched borders and
+ * little lace flowers with pinholes down its middle. `flow` slides the pattern along the ribbon,
+ * so it looks like it is moving when pulled.
  */
-const Rope = ({ segs, width, seed, frayEnd = false, flow = 0 }: { segs: RopeBez[]; width: number; seed: number; frayEnd?: boolean; flow?: number }) => {
-  const rnd = seededRandom(seed);
-  const step = width * 0.82;
-  const pts = sampleRope(segs, step);
-  // shifting the twists along the rope makes it look like it is sliding
-  const slide = ((flow % step) + step) % step;
+const LaceRibbon = ({ segs, width, flow = 0 }: { segs: RopeBez[]; width: number; seed?: number; frayEnd?: boolean; flow?: number }) => {
   const f = (n: number) => n.toFixed(1);
+  const W = width;
+  const step = W * 0.32;
+  const pts = sampleRope(segs, step);
   const core = segs.map(([p0, p1, p2, p3], i) => `${i ? "" : `M${f(p0[0])} ${f(p0[1])} `}C${f(p1[0])} ${f(p1[1])} ${f(p2[0])} ${f(p2[1])} ${f(p3[0])} ${f(p3[1])}`).join(" ");
-  let plies = "";
-  let grooves = "";
-  let fuzz = "";
-  const half = width / 2;
+  const shift = Math.round(((flow % (step * 4)) + step * 4) % (step * 4) / step); // whole samples, so motifs slide in steps
+  const circle = (x: number, y: number, r: number) => `M${f(x - r)} ${f(y)}a${f(r)} ${f(r)} 0 1 0 ${f(r * 2)} 0a${f(r)} ${f(r)} 0 1 0 ${f(-r * 2)} 0`;
+  let scallops = "";
+  let picots = "";
+  let stitches = "";
+  let petals = "";
+  let holes = "";
   pts.forEach(({ x, y, tx, ty }, i) => {
     const nx = -ty;
     const ny = tx;
-    // each ply crosses the rope on a slant, bulging slightly, like twisted strands
-    const ply = (o: number) => {
-      const px = x + tx * o;
-      const py = y + ty * o;
-      const ax = px - nx * half * 0.92 - tx * half * 0.8;
-      const ay = py - ny * half * 0.92 - ty * half * 0.8;
-      const bx = px + nx * half * 0.92 + tx * half * 0.8;
-      const by = py + ny * half * 0.92 + ty * half * 0.8;
-      return `M${f(ax)} ${f(ay)} Q${f(px + tx * half * 0.35)} ${f(py + ty * half * 0.35)} ${f(bx)} ${f(by)}`;
-    };
-    plies += ply(slide);
-    grooves += ply(slide + width * 0.41);
-    if (rnd() < 0.22) {
-      const side = rnd() < 0.5 ? -1 : 1;
-      const sx = x + nx * half * side * 0.9;
-      const sy = y + ny * half * side * 0.9;
-      const a = Math.atan2(ny * side, nx * side) + (rnd() - 0.5) * 1.6;
-      const l = width * (0.35 + rnd() * 0.75);
-      fuzz += `M${f(sx)} ${f(sy)} q${f(Math.cos(a) * l * 0.5 + tx * 1.2)} ${f(Math.sin(a) * l * 0.5 + ty * 1.2)} ${f(Math.cos(a) * l)} ${f(Math.sin(a) * l)}`;
+    const k = i + shift;
+    if (k % 2 === 0) {
+      for (const side of [-1, 1]) {
+        scallops += circle(x + nx * side * W * 0.47, y + ny * side * W * 0.47, W * 0.15);
+        picots += circle(x + nx * side * W * 0.68, y + ny * side * W * 0.68, W * 0.045);
+      }
     }
-    void i;
+    for (const side of [-1, 1]) stitches += circle(x + nx * side * W * 0.3, y + ny * side * W * 0.3, W * 0.028);
+    if (k % 4 === 0) {
+      // a small four-petal lace flower on the ribbon's centre line
+      for (let p = 0; p < 4; p++) {
+        const a = Math.atan2(ty, tx) + (p * Math.PI) / 2 + Math.PI / 4;
+        const px = x + Math.cos(a) * W * 0.13;
+        const py = y + Math.sin(a) * W * 0.13;
+        const r1 = W * 0.11;
+        const r2 = W * 0.06;
+        const ca = Math.cos(a);
+        const sa = Math.sin(a);
+        petals += `M${f(px + ca * r1)} ${f(py + sa * r1)} A${f(r1)} ${f(r2)} ${f((a * 180) / Math.PI)} 1 1 ${f(px - ca * r1)} ${f(py - sa * r1)} A${f(r1)} ${f(r2)} ${f((a * 180) / Math.PI)} 1 1 ${f(px + ca * r1)} ${f(py + sa * r1)}`;
+      }
+      holes += circle(x, y, W * 0.05);
+    } else if (k % 4 === 2) {
+      holes += circle(x, y, W * 0.07);
+    }
   });
-  // unravelled end: fibres spreading out from the last point
-  let fray = "";
-  if (frayEnd && pts.length) {
-    const end = segs[segs.length - 1][3];
-    const last = pts[pts.length - 1];
-    for (let k = 0; k < 9; k++) {
-      const spread = (k / 8 - 0.5) * 1.3 + (rnd() - 0.5) * 0.25;
-      const ca = Math.cos(spread);
-      const sa = Math.sin(spread);
-      const dx = last.tx * ca - last.ty * sa;
-      const dy = last.tx * sa + last.ty * ca;
-      const l = width * (2.2 + rnd() * 2.4);
-      const bend = (rnd() - 0.5) * width * 1.4;
-      fray += `M${f(end[0] + (rnd() - 0.5) * width * 0.6)} ${f(end[1])} q${f(dx * l * 0.5 - dy * bend)} ${f(dy * l * 0.5 + dx * bend)} ${f(dx * l)} ${f(dy * l)}`;
-    }
-  }
   return (
     <>
-      <path d={core} fill="none" stroke="#5c4329" strokeWidth={width * 1.1} strokeLinecap="round" />
-      <path d={core} fill="none" stroke="#94734a" strokeWidth={width * 0.88} strokeLinecap="round" />
-      <path d={plies} fill="none" stroke="#c7a676" strokeWidth={width * 0.3} strokeLinecap="round" opacity="0.95" />
-      <path d={grooves} fill="none" stroke="#523b23" strokeWidth={width * 0.13} strokeLinecap="round" opacity="0.75" />
-      {fuzz && <path d={fuzz} fill="none" stroke="#b39468" strokeWidth={0.55} strokeLinecap="round" opacity="0.8" />}
-      {fray && <path d={fray} fill="none" stroke="#a5855a" strokeWidth={width * 0.16} strokeLinecap="round" opacity="0.9" />}
+      {/* a soft outline so the ivory lace reads against the paper */}
+      <path d={core} fill="none" stroke="#d9cbb6" strokeWidth={W * 1.02} strokeLinecap="butt" opacity="0.55" />
+      <path d={scallops} fill="#fffdf8" stroke="#dccfbb" strokeWidth={W * 0.03} />
+      <path d={core} fill="none" stroke="#fffdf8" strokeWidth={W * 0.92} strokeLinecap="butt" />
+      <path d={picots} fill="#fbf7ef" stroke="#d8cab4" strokeWidth={W * 0.02} />
+      <path d={stitches} fill="#cdbda4" />
+      <path d={petals} fill="#f4ede1" stroke="#c9b89e" strokeWidth={W * 0.025} />
+      <path d={holes} fill="#e6dccd" stroke="#cbbba2" strokeWidth={W * 0.02} />
     </>
   );
 };
@@ -594,17 +585,13 @@ const Envelope = ({
       ].filter((r) => r.w > 0 && r.h > 0)
     : [{ x: 0, y: 0, w, h }];
 
-  // vintage rope: wrapped twice around the envelope, tied in a full bow at the flap's tip
-  const rw = 4.4 * s;
+  // lace ribbon: wrapped around the envelope, tied in a full bow at the flap's tip
+  const rw = 12 * s; // lace ribbon width
   const K: RopePt = [cx, knotY];
   const at = (dx: number, dy: number): RopePt => [cx + dx * s, knotY + dy * s];
   const wrapA: RopeBez[] = [
     [[-20, knotY + 4 * s], [w * 0.22, knotY + 7 * s], [cx - 60 * s, knotY + 1 * s], K],
     [K, [cx + 60 * s, knotY + 1 * s], [w * 0.78, knotY + 8 * s], [w + 20, knotY + 4 * s]],
-  ];
-  const wrapB: RopeBez[] = [
-    [[-20, knotY + 4 * s + rw * 1.9], [w * 0.25, knotY + 6 * s + rw * 1.9], [cx - 50 * s, knotY + 8 * s], at(-6, 3)],
-    [at(6, 3), [cx + 50 * s, knotY + 8 * s], [w * 0.75, knotY + 7 * s + rw * 1.9], [w + 20, knotY + 5 * s + rw * 1.9]],
   ];
   // The bow, as a function of how far it has been untied (u goes 0 → 1 after the tap), as if a hand
   // just off screen does it:
@@ -682,8 +669,7 @@ const Envelope = ({
   const wrapLeft = useMemo(
     () => (
       <>
-        <Rope segs={[wrapB[0]]} width={rw} seed={21} />
-        <Rope segs={[wrapA[0]]} width={rw} seed={22} />
+        <LaceRibbon segs={[wrapA[0]]} width={rw} />
       </>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -692,8 +678,7 @@ const Envelope = ({
   const wrapRight = useMemo(
     () => (
       <>
-        <Rope segs={[wrapB[1]]} width={rw} seed={27} />
-        <Rope segs={[wrapA[1]]} width={rw} seed={28} />
+        <LaceRibbon segs={[wrapA[1]]} width={rw} />
       </>
     ),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -848,18 +833,18 @@ const Envelope = ({
             <g style={{ ...knotOrigin, animation: opening ? undefined : "dt-breathe 3.4s ease-in-out infinite" }}>
               {/* the two ends travel with their halves once the knot opens */}
               <g transform={`translate(${-slideOff} 0)`}>
-                <Rope segs={tailL} width={rw} seed={23} frayEnd flow={lFed * loopLen} />
+                <LaceRibbon segs={tailL} width={rw} flow={lFed * loopLen} />
               </g>
               <g transform={`translate(${slideOff} 0)`}>
-                <Rope segs={tailR} width={rw} seed={24} frayEnd flow={rFed * loopLen} />
+                <LaceRibbon segs={tailR} width={rw} flow={rFed * loopLen} />
               </g>
-              {lFed < 0.985 && <Rope segs={loopL} width={rw} seed={25} flow={-lFed * loopLen} />}
-              {rFed < 0.985 && <Rope segs={loopR} width={rw} seed={26} flow={-rFed * loopLen} />}
-              {/* the knot: a short band of rope wound round the middle, over the loops' legs and the ends */}
+              {lFed < 0.985 && <LaceRibbon segs={loopL} width={rw} flow={-lFed * loopLen} />}
+              {rFed < 0.985 && <LaceRibbon segs={loopR} width={rw} flow={-rFed * loopLen} />}
+              {/* the knot: a short band of lace wound round the middle, over the loops' legs and the ends */}
               {knotScale > 0.01 && (
                 <g transform={`translate(${cx} ${knotY}) scale(${knotScale}) translate(${-cx} ${-knotY})`} opacity={Math.min(1, knotScale * 1.6)}>
-                  <ellipse cx={cx + 1 * s} cy={knotY} rx={7.5 * s} ry={10 * s} fill="#6b4f31" />
-                  <Rope segs={band} width={rw * 1.25} seed={29} />
+                  <ellipse cx={cx + 1 * s} cy={knotY} rx={9 * s} ry={12 * s} fill="#efe6d8" />
+                  <LaceRibbon segs={band} width={rw * 1.05} />
                 </g>
               )}
             </g>
