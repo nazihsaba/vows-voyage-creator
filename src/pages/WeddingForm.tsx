@@ -35,6 +35,7 @@ import GalleryImageEditor from "@/components/GalleryImageEditor";
 import NotificationEmailsField from "@/components/NotificationEmailsField";
 import { compressSocialPreview } from "@/lib/compressSocialPreview";
 import { compressImage } from "@/lib/compressImage";
+import { getGiftMessage } from "@/lib/giftMessage";
 import { getEtoileGallerySettings } from "@/lib/etoileGallery";
 
 import { extractFirstFrame } from "@/lib/extractVideoPoster";
@@ -179,6 +180,8 @@ const WeddingForm = () => {
   const [auraReference, setAuraReference] = useState("— Ecclesiastes 4:9-12");
   const [familyNameFormat, setFamilyNameFormat] = useState<"family" | "mr_mrs" | "none">("family");
   const [hideOurMoments, setHideOurMoments] = useState(false);
+  // the couple's own sentence above the gift cards (empty = the template's default)
+  const [giftMessage, setGiftMessage] = useState("");
   const [formData, setFormData] = useState({
     groom_name: "",
     bride_name: "",
@@ -392,6 +395,7 @@ const WeddingForm = () => {
       welcome_drink_note: locations.welcome_drink_note || "",
       gallery_subtitle: (formData as any).gallery_subtitle || "",
       rsvp_subtitle: (formData as any).rsvp_subtitle || "",
+      gift_message: giftMessage,
     };
     if (isAuraTemplate) {
       fieldsToTranslate.aura_quote = auraQuote;
@@ -407,7 +411,7 @@ const WeddingForm = () => {
         translateToArabic(key, value);
       }
     });
-  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic]);
+  }, [formData, locations, auraQuote, auraReference, isAuraTemplate, arabicFields, customSections, translateToArabic, giftMessage]);
 
   const handleEnableArabic = useCallback(
     (enabled: boolean) => {
@@ -481,6 +485,7 @@ const WeddingForm = () => {
         if (fc["bible-verse"]?.text) setAuraQuote(fc["bible-verse"].text);
         if (fc["bible-verse-reference"]?.text) setAuraReference(fc["bible-verse-reference"].text);
         if (fc.family_name_format) setFamilyNameFormat(fc.family_name_format);
+        setGiftMessage(getGiftMessage(fc));
         // Load Arabic fields
         if (fc["arabic"]) {
           setArabicFields((prev) => ({ ...prev, ...fc["arabic"] }));
@@ -1159,6 +1164,11 @@ const WeddingForm = () => {
           }
         : { ...existingCustomizations };
       fieldCustomizations.family_name_format = familyNameFormat;
+      if (giftMessage.trim()) {
+        fieldCustomizations.gift_message = giftMessage.trim();
+      } else {
+        delete fieldCustomizations.gift_message;
+      }
       if (template === "etoile-carousel") {
         fieldCustomizations.hide_our_moments = hideOurMoments;
       }
@@ -3125,6 +3135,42 @@ const WeddingForm = () => {
                   >
                     Add Card
                   </Button>
+                </div>
+
+                {/* Gift message — the sentence shown above the gift cards */}
+                <div className="space-y-1.5 p-3 rounded-lg border bg-muted/20">
+                  <Label htmlFor="gift_message" className="text-sm font-medium">
+                    Gift Message (optional)
+                  </Label>
+                  <p className="text-xs text-muted-foreground">
+                    The sentence shown above your gift cards on the invitation. Leave empty to use the default text.
+                  </p>
+                  <Textarea
+                    id="gift_message"
+                    value={giftMessage}
+                    onChange={(e) => {
+                      setGiftMessage(e.target.value);
+                      if (arabicEnabled) debouncedTranslate("gift_message", e.target.value);
+                    }}
+                    rows={3}
+                    maxLength={300}
+                    placeholder="Your presence is our biggest gift. For those who desire, a wedding list was set up:"
+                    className="min-h-[72px] text-base sm:text-sm"
+                  />
+                  {arabicEnabled && (
+                    <div className="space-y-1 mt-2">
+                      <Label className="text-xs text-muted-foreground">رسالة الهدية (Arabic)</Label>
+                      <Textarea
+                        value={arabicFields.gift_message || ""}
+                        onChange={(e) => setArabicFields((prev) => ({ ...prev, gift_message: e.target.value }))}
+                        dir="rtl"
+                        rows={3}
+                        className="min-h-[72px] text-right font-arabic"
+                        placeholder={translatingFields.gift_message ? "Translating..." : ""}
+                        disabled={translatingFields.gift_message}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {giftCards.map((card, index) => (

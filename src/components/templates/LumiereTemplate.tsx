@@ -96,7 +96,7 @@ export const LumiereTemplate = ({
   submittingRsvp = false,
 }: LumiereTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
@@ -672,7 +672,7 @@ export const LumiereTemplate = ({
         {/* ===== GIFTS ===== */}
         {hasGiftCards && (
           <div className="mt-64">
-            <LumiereGifts giftCards={giftCards} />
+            <LumiereGifts giftCards={giftCards} subtitle={giftMessage} />
           </div>
         )}
 

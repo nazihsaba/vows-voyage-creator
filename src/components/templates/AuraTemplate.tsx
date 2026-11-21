@@ -57,7 +57,7 @@ export const AuraTemplate = ({
   submittingRsvp = false,
 }: AuraTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [endingImageFailed, setEndingImageFailed] = useState(false);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
@@ -443,7 +443,7 @@ export const AuraTemplate = ({
             <div className="max-w-4xl mx-auto">
               <AnimatedSection animation="fade-in">
                 <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
-                <p className="text-center text-template-body mb-8 text-muted-foreground">{t("gifts.subtitle")}</p>
+                <p className="whitespace-pre-line text-center text-template-body mb-8 text-muted-foreground">{giftMessage || t("gifts.subtitle")}</p>
               </AnimatedSection>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>

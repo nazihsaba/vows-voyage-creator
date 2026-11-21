@@ -13,10 +13,12 @@ interface GiftCard {
 
 interface EtoileGiftsProps {
   giftCards: GiftCard[];
+  /** the couple\'s own sentence; empty uses the default */
+  subtitle?: string;
   align?: "left" | "right";
 }
 
-const EtoileGifts = ({ giftCards, align = "right" }: EtoileGiftsProps) => {
+const EtoileGifts = ({ giftCards, subtitle, align = "right" }: EtoileGiftsProps) => {
   const { t } = useTranslation();
   if (!giftCards || giftCards.length === 0) return null;
 
@@ -30,7 +32,7 @@ const EtoileGifts = ({ giftCards, align = "right" }: EtoileGiftsProps) => {
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
           <h2 className="text-template-subtitle text-center text-black mb-3">{t("gifts.title")}</h2>
-          <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
+          <p className="whitespace-pre-line text-center text-template-body text-muted-foreground mb-10">{subtitle || t("gifts.subtitle")}</p>
         </AnimatedSection>
         <div className={`grid gap-4 max-w-xl mx-auto ${giftCards.length === 1 ? "md:grid-cols-1" : "md:grid-cols-2"}`}>
           {giftCards.map((card, index) => (
