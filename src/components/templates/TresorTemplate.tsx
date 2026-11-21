@@ -58,7 +58,7 @@ export const TresorTemplate = ({
   submittingRsvp = false,
 }: TresorTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
     audioRef,
@@ -277,7 +277,7 @@ export const TresorTemplate = ({
   if (giftCards && giftCards.length > 0) {
     slides.push({
       id: "gifts",
-      node: <GiftsSlide giftCards={giftCards} backgroundImage={giftsBg} />,
+      node: <GiftsSlide giftCards={giftCards} backgroundImage={giftsBg} subtitle={giftMessage} />,
     });
   }
 
@@ -1093,7 +1093,7 @@ const CountdownSlide = ({ date, backgroundImage }: { date: string; backgroundIma
     </div>
   );
 };
-const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgroundImage?: string }) => {
+const GiftsSlide = ({ giftCards, backgroundImage, subtitle }: { giftCards: any[]; backgroundImage?: string; subtitle?: string }) => {
   const { t } = useTranslation();
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -1129,7 +1129,7 @@ const GiftsSlide = ({ giftCards, backgroundImage }: { giftCards: any[]; backgrou
           transition={{ delay: 0.2, duration: 0.9 }}
           className="text-[10px] md:text-xs tracking-[0.5em] uppercase text-white/80 text-center"
         >
-          {t("gifts.subtitle", "With Love & Gratitude")}
+          {subtitle || t("gifts.subtitle", "With Love & Gratitude")}
         </motion.p>
         <motion.h2
           initial={{ opacity: 0, y: 16 }}

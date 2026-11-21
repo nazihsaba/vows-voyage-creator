@@ -60,7 +60,7 @@ export const EclatTemplate = ({
   submittingRsvp = false,
 }: EclatTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const { showTapToPlay, handleTapToPlay, isMusicUnlocked, setAudioElement } = useTemplateAudio(
@@ -389,7 +389,7 @@ export const EclatTemplate = ({
           <section className="py-16 px-4 bg-card">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
+              <p className="whitespace-pre-line text-center text-template-body mb-8 text-gray-600">{giftMessage || t("gifts.subtitle")}</p>
               <GiftCards giftCards={giftCards} isOwner={isOwner} />
             </div>
           </section>

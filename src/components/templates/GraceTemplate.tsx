@@ -60,7 +60,7 @@ export const GraceTemplate = ({
   submittingRsvp = false,
 }: GraceTemplateProps) => {
   const { t, i18n } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const [hasStarted, setHasStarted] = useState(false);
   const [autoplayBlocked, setAutoplayBlocked] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -532,7 +532,7 @@ export const GraceTemplate = ({
           <section className="py-16 px-4 bg-[#faf8f5]">
             <div className="max-w-4xl mx-auto">
               <h2 className="text-template-subtitle text-center mb-12 text-primary">{t("gifts.title")}</h2>
-              <p className="text-center text-template-body mb-8 text-gray-600">{t("gifts.subtitle")}</p>
+              <p className="whitespace-pre-line text-center text-template-body mb-8 text-gray-600">{giftMessage || t("gifts.subtitle")}</p>
               <div className="grid gap-4 md:grid-cols-2">
                 {giftCards.map((card, index) => (
                   <AnimatedSection key={card.id} delay={index * 150} animation="scale-in">

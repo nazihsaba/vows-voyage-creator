@@ -13,9 +13,11 @@ interface GiftCard {
 
 interface LumiereGiftsProps {
   giftCards: GiftCard[];
+  /** the couple\'s own sentence; empty uses the default */
+  subtitle?: string;
 }
 
-const LumiereGifts = ({ giftCards }: LumiereGiftsProps) => {
+const LumiereGifts = ({ giftCards, subtitle }: LumiereGiftsProps) => {
   const { t } = useTranslation();
   if (!giftCards || giftCards.length === 0) return null;
 
@@ -29,7 +31,7 @@ const LumiereGifts = ({ giftCards }: LumiereGiftsProps) => {
       <div className="py-14 px-6">
         <AnimatedSection animation="fade-in">
           <h2 className="text-template-heading text-center text-black mb-3">{t("gifts.title")}</h2>
-          <p className="text-center text-template-body text-muted-foreground mb-10">{t("gifts.subtitle")}</p>
+          <p className="whitespace-pre-line text-center text-template-body text-muted-foreground mb-10">{subtitle || t("gifts.subtitle")}</p>
         </AnimatedSection>
         <div className={`grid gap-4 max-w-xl mx-auto ${giftCards.length === 1 ? "md:grid-cols-1" : "md:grid-cols-2"}`}>
           {giftCards.map((card, index) => (

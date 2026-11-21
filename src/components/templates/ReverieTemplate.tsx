@@ -967,7 +967,7 @@ export const ReverieTemplate = ({
   submittingRsvp = false,
 }: ReverieTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const ceremony = locations.find((l) => l.type === "ceremony");
@@ -1569,24 +1569,36 @@ export const ReverieTemplate = ({
                   <GiftArt color={COCOA} />
                 </DrawOnView>
                 {sectionTitle(t("gifts.title", "Wedding Gift"))}
-                <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
-                  {t("reverie.giftLead", "Your presence is our greatest gift.")}
-                </p>
-                <div style={{ marginTop: 12, fontSize: 15, lineHeight: 1.7, color: "#4c4040", maxWidth: 400, marginInline: "auto" }}>
-                  <EditableField
-                    fieldId="dentelle-gift-text"
-                    text={getFieldValue(
-                      "dentelle-gift-text",
-                      t("reverie.giftText", "Should you wish to give a gift, you can use the details below."),
-                    )}
-                    style={getFieldStyle("dentelle-gift-text")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    multiline
-                    tag="p"
+                {giftMessage ? (
+                  // the couple's own sentence, set in the form
+                  <p
                     className="whitespace-pre-line"
-                  />
-                </div>
+                    style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 21, lineHeight: 1.4, color: COCOA, marginTop: 16, maxWidth: 420, marginInline: "auto" }}
+                  >
+                    {giftMessage}
+                  </p>
+                ) : (
+                  <>
+                  <p style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 25, lineHeight: 1.3, color: COCOA, marginTop: 16 }}>
+                    {t("reverie.giftLead", "Your presence is our greatest gift.")}
+                  </p>
+                  <div style={{ marginTop: 12, fontSize: 15, lineHeight: 1.7, color: "#4c4040", maxWidth: 400, marginInline: "auto" }}>
+                    <EditableField
+                      fieldId="dentelle-gift-text"
+                      text={getFieldValue(
+                        "dentelle-gift-text",
+                        t("reverie.giftText", "Should you wish to give a gift, you can use the details below."),
+                      )}
+                      style={getFieldStyle("dentelle-gift-text")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      multiline
+                      tag="p"
+                      className="whitespace-pre-line"
+                    />
+                  </div>
+                  </>
+                )}
                 <div style={{ marginTop: 26 }}>
                   <ReverieGiftCards giftCards={giftCards} />
                 </div>

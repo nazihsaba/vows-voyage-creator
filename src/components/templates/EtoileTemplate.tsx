@@ -62,7 +62,7 @@ export const EtoileTemplate = ({
   submittingRsvp = false,
 }: EtoileTemplateProps) => {
   const { t } = useTranslation();
-  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily } = useArabicContent(wedding);
+  const { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage } = useArabicContent(wedding);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const ceremony = locations.find((loc) => loc.type === "ceremony");
   const venue = locations.find((loc) => loc.type === "venue");
@@ -406,7 +406,7 @@ export const EtoileTemplate = ({
         {/* ===== GIFTS — LEFT ===== */}
         {hasGiftCards && (
           <div className="mt-64">
-            <EtoileGifts giftCards={giftCards} align="left" />
+            <EtoileGifts giftCards={giftCards} subtitle={giftMessage} align="left" />
           </div>
         )}
 

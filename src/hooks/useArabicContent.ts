@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { useCallback, useEffect } from 'react';
+import { getGiftMessage } from '@/lib/giftMessage';
 
 /**
  * Hook that provides a function to get dynamic content 
@@ -64,5 +65,9 @@ export const useArabicContent = (wedding: any) => {
     [isArabic, arabicData, wedding?.field_customizations?.family_name_format],
   );
 
-  return { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily };
+  // The couple's own sentence above the gift cards ('' = use the template's default)
+  const customGift = getGiftMessage(wedding?.field_customizations);
+  const giftMessage = customGift ? getLocalizedValue('gift_message', customGift) : '';
+
+  return { isArabic, hasArabic, arabicOnly, getLocalizedValue, formatFamily, giftMessage };
 };
