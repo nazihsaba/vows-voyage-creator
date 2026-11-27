@@ -27,7 +27,6 @@ import {
   prefersReducedMotion,
   useInView,
 } from "@/components/templates/reverie/ReverieEffects";
-import { ReverieLace } from "./reverie/ReverieLace";
 import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./reverie/ReverieOrnaments";
 
 /**
@@ -74,6 +73,8 @@ const MUTED = "#7b6c66";
 const CHAMPAGNE = "#b79c78";
 
 const FONT_TITLE = "var(--font-template-title)";
+/** Ink pressed into the paper: a light catch under each stroke and a faint shade above it. */
+const PRESSED = "0 1px 0 rgba(255,255,255,.7), 0 -0.5px 0 rgba(70,48,32,.16)";
 const FONT_HEADING = "var(--font-template-heading)";
 const FONT_BODY = "var(--font-template-body)";
 const FONT_COUNTDOWN = "var(--font-template-countdown)";
@@ -123,19 +124,6 @@ const LaceEdge = ({
     </svg>
   );
 };
-
-/** Fine-line ribbon bow. */
-const Bow = ({ color, width = 120 }: { color: string; width?: number }) => (
-  <svg aria-hidden width={width} height={width * 0.62} viewBox="0 0 120 74" fill="none" stroke={color} strokeWidth="1.1" strokeLinecap="round">
-    <path pathLength={1} d="M60 28 C44 6 14 6 18 24 C21 38 46 36 60 28 Z" />
-    <path pathLength={1} d="M60 28 C76 6 106 6 102 24 C99 38 74 36 60 28 Z" />
-    <path pathLength={1} d="M54 25 C42 17 30 16 26 22" opacity="0.6" />
-    <path pathLength={1} d="M66 25 C78 17 90 16 94 22" opacity="0.6" />
-    <ellipse pathLength={1} cx="60" cy="28" rx="5.5" ry="6.5" />
-    <path pathLength={1} d="M57 34 C52 46 46 56 36 68 L44 66 L42 72" />
-    <path pathLength={1} d="M63 34 C68 46 74 56 84 68 L76 66 L78 72" />
-  </svg>
-);
 
 /** Two interlaced wedding rings. */
 const Rings = ({ color }: { color: string }) => (
@@ -427,6 +415,211 @@ const PressedMonogram = ({ x, y, size, groom, bride }: { x: number; y: number; s
       {letters(-0.6, -0.8, "#5d4532", 0.3)}
       {letters(0, 0, ink, 0.82)}
     </g>
+  );
+};
+
+/** Circle as a sub-path, for punching holes with fill-rule="evenodd". */
+const holeAt = (x: number, y: number, r: number) =>
+  `M${(x - r).toFixed(1)} ${y.toFixed(1)} a${r} ${r} 0 1 0 ${(2 * r).toFixed(1)} 0 a${r} ${r} 0 1 0 ${(-2 * r).toFixed(1)} 0 Z`;
+
+/**
+ * The first section once the envelope has gone: the invitation as a real piece of stationery on
+ * the linen. A card of the same handmade cotton paper as the envelope, with torn edges and a
+ * double frame pressed into it, a white satin ribbon threaded through two slits and tied in a bow,
+ * resting on a lace-cut backing card. Drawn as one SVG around the card's position on screen.
+ */
+const HeroSuite = ({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) => {
+  const ref = useRef<HTMLDivElement | null>(null);
+  const uid = useId().replace(/:/g, "");
+  const [paper, setPaper] = useState<string | null>(handmadeTile);
+  useEffect(() => {
+    if (!paper) setPaper(handmadePaper());
+  }, [paper]);
+  const [box, setBox] = useState<{ W: number; H: number; x: number; y: number; w: number; h: number } | null>(null);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const update = () => {
+      const c = cardRef.current;
+      if (!c) return;
+      const o = el.getBoundingClientRect();
+      const r = c.getBoundingClientRect();
+      if (!o.width || !r.width) return;
+      const next = { W: o.width, H: o.height, x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
+      setBox((prev) =>
+        prev && (Object.keys(next) as Array<keyof typeof next>).every((k) => Math.round(prev[k]) === Math.round(next[k])) ? prev : next,
+      );
+    };
+    update();
+    const ro = new ResizeObserver(update);
+    ro.observe(el);
+    if (cardRef.current) ro.observe(cardRef.current);
+    window.addEventListener("resize", update);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", update);
+    };
+  }, [cardRef]);
+
+  const art = useMemo(() => {
+    if (!box) return null;
+    const { x, y, w, h } = box;
+    const mobile = box.W < 600;
+    const cx = x + w / 2;
+    const f = (n: number) => n.toFixed(1);
+
+    // the card: straight-cut is too perfect for handmade paper, so its edges are torn
+    const card = `M${deckle([[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]], 23, mobile ? 1.2 : 1.5).join(" L")} Z`;
+
+    // the lace-cut backing card: scalloped edge, an eyelet in each scallop, a row of pinholes
+    const m = mobile ? 10 : 17;
+    const bx = x - m;
+    const by = y - m;
+    const bw = w + m * 2;
+    const bh = h + m * 2;
+    const sr = mobile ? 4.2 : 5.6; // scallop radius
+    const corners: Array<[number, number]> = [[bx, by], [bx + bw, by], [bx + bw, by + bh], [bx, by + bh]];
+    let outline = `M${f(bx)} ${f(by)}`;
+    let holes = "";
+    corners.forEach(([ax, ay], i) => {
+      const [ex, ey] = corners[(i + 1) % 4];
+      const len = Math.hypot(ex - ax, ey - ay);
+      const n = Math.max(1, Math.round(len / (sr * 2)));
+      const ux = (ex - ax) / len;
+      const uy = (ey - ay) / len;
+      const step = len / n;
+      for (let k = 1; k <= n; k++) {
+        // clockwise round the card, so each arc bulges outwards
+        outline += ` A${f(step / 2)} ${f(step / 2)} 0 0 1 ${f(ax + ux * step * k)} ${f(ay + uy * step * k)}`;
+        const mx = ax + ux * step * (k - 0.5);
+        const my = ay + uy * step * (k - 0.5);
+        holes += holeAt(mx, my, step * 0.16);
+      }
+      // pinholes running parallel to the edge, just inside it
+      // (going clockwise on screen, the inside of the card is to the right: (-uy, ux))
+      const inset = sr * 1.7;
+      const pins = Math.floor((len - inset * 2) / (mobile ? 5.2 : 6));
+      for (let k = 0; k <= pins; k++) {
+        const t = inset + ((len - inset * 2) * k) / Math.max(1, pins);
+        holes += holeAt(ax + ux * t - uy * inset, ay + uy * t + ux * inset, mobile ? 0.7 : 0.85);
+      }
+    });
+    const backer = `${outline} Z ${holes}`;
+
+    // a double frame pressed into the card
+    const fi = mobile ? 14 : 19;
+    const frame = (d: number) => `M${f(x + d)} ${f(y + d)} H${f(x + w - d)} V${f(y + h - d)} H${f(x + d)} Z`;
+
+    // satin ribbon threaded through two slits near the top, tied in a bow
+    const k = mobile ? 0.5 : 0.6;
+    const rw = mobile ? 7.5 : 9;
+    const ry = y + (mobile ? 50 : 58);
+    const sx = mobile ? 58 : 76; // slits sit well outside the loops, so the ribbon is seen going through
+    const at = (dx: number, dy: number): RopePt => [cx + dx * k, ry + dy * k];
+    const K: RopePt = [cx, ry];
+    const loop = (dir: 1 | -1): RopeBez[] => {
+      const tip = at(dir * 80, 9);
+      return [
+        [at(dir * 3, -4), at(dir * 26, -40), at(dir * 88, -27), tip],
+        [tip, at(dir * 84, 27), at(dir * 30, 16), at(dir * 3, 5)],
+      ];
+    };
+    const ribbon = {
+      rw,
+      band: [[[cx - sx, ry], [cx - sx / 3, ry], [cx + sx / 3, ry], [cx + sx, ry]]] as RopeBez[],
+      tailL: [[K, at(-8, 22), at(-28, 40), at(-34, 72)]] as RopeBez[],
+      tailR: [[K, at(10, 24), at(30, 48), at(26, 82)]] as RopeBez[],
+      loopL: loop(-1),
+      loopR: loop(1),
+      knot: [[at(-3, -11), at(8, -9), at(8, 9), at(-2, 12)]] as RopeBez[],
+      slits: [cx - sx, cx + sx].map((sxp) => ({ x: sxp, y: ry - rw * 0.75, h: rw * 1.5 })),
+    };
+    const tilt = mobile ? -0.9 : -1.4;
+    return { card, backer, frame, fi, ribbon, tilt, bcx: bx + bw / 2, bcy: by + bh / 2, x, y, w, h };
+  }, [box]);
+
+  return (
+    <div ref={ref} aria-hidden className="absolute inset-0 pointer-events-none">
+      {box && art && (
+        <svg width={box.W} height={box.H} viewBox={`0 0 ${box.W} ${box.H}`} className="absolute inset-0" style={{ overflow: "visible" }}>
+          <defs>
+            {/* a tight contact shadow and a soft one, so each piece sits on what is below it */}
+            <filter id={`${uid}-lift`} x="-15%" y="-15%" width="130%" height="135%" colorInterpolationFilters="sRGB">
+              <feGaussianBlur in="SourceAlpha" stdDeviation="0.9" result="b1" />
+              <feOffset in="b1" dy="1.2" result="o1" />
+              <feFlood floodColor="#3e2c20" floodOpacity="0.26" result="f1" />
+              <feComposite in="f1" in2="o1" operator="in" result="s1" />
+              <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="b2" />
+              <feOffset in="b2" dy="16" result="o2" />
+              <feFlood floodColor="#3e2c20" floodOpacity="0.2" result="f2" />
+              <feComposite in="f2" in2="o2" operator="in" result="s2" />
+              <feMerge>
+                <feMergeNode in="s2" />
+                <feMergeNode in="s1" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+            <filter id={`${uid}-soft`} filterUnits="userSpaceOnUse" x="0" y="0" width={box.W} height={box.H} colorInterpolationFilters="sRGB">
+              <feDropShadow dx="0.4" dy="1.8" stdDeviation="1.7" floodColor="#3e2c20" floodOpacity="0.38" />
+            </filter>
+            <linearGradient id={`${uid}-backer`} x1="0" y1="0" x2="0.35" y2="1">
+              <stop offset="0" stopColor="#fdfbf7" />
+              <stop offset="1" stopColor="#f3ede4" />
+            </linearGradient>
+            <linearGradient id={`${uid}-light`} x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stopColor="#ffffff" stopOpacity="0.38" />
+              <stop offset="0.55" stopColor="#ffffff" stopOpacity="0" />
+              <stop offset="1" stopColor="#6b5442" stopOpacity="0.08" />
+            </linearGradient>
+            {paper && (
+              <pattern id={`${uid}-paper`} patternUnits="userSpaceOnUse" width="400" height="400">
+                <image href={paper} width="400" height="400" />
+              </pattern>
+            )}
+          </defs>
+
+          {/* lace-cut backing card, set down slightly askew */}
+          <g transform={`rotate(${art.tilt} ${art.bcx} ${art.bcy})`} filter={`url(#${uid}-lift)`}>
+            <path d={art.backer} fill={`url(#${uid}-backer)`} fillRule="evenodd" />
+          </g>
+
+          {/* the handmade-paper card */}
+          <g filter={`url(#${uid}-lift)`}>
+            <path d={art.card} fill={paper ? `url(#${uid}-paper)` : "#f3efe7"} />
+          </g>
+          <path d={art.card} fill="#f8f4ee" opacity="0.32" />
+          <path d={art.card} fill={`url(#${uid}-light)`} />
+          <path d={art.card} fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.8" />
+
+          {/* pressed double frame: a light catch below, a soft shade above */}
+          {[art.fi, art.fi + 5].map((d, i) => (
+            <g key={d} fill="none" strokeWidth={i ? 0.6 : 0.9}>
+              <path d={art.frame(d)} stroke="#ffffff" opacity="0.9" transform="translate(0.7 1)" />
+              <path d={art.frame(d)} stroke="#5d4532" opacity="0.18" transform="translate(-0.5 -0.7)" />
+              <path d={art.frame(d)} stroke="#b9a48d" opacity="0.45" />
+            </g>
+          ))}
+
+          {/* the ribbon: through the slits, then tied */}
+          <g filter={`url(#${uid}-soft)`}>
+            <SatinRibbon segs={art.ribbon.band} width={art.ribbon.rw} />
+          </g>
+          {art.ribbon.slits.map((s) => (
+            <g key={s.x}>
+              <rect x={s.x - 1.3} y={s.y - 1} width={2.6} height={s.h + 2} rx={1.3} fill="#4a3628" opacity="0.55" />
+              <rect x={s.x + 1.1} y={s.y - 1} width={0.9} height={s.h + 2} rx={0.45} fill="#ffffff" opacity="0.85" />
+            </g>
+          ))}
+          <g filter={`url(#${uid}-soft)`}>
+            <SatinRibbon segs={art.ribbon.tailL} width={art.ribbon.rw} />
+            <SatinRibbon segs={art.ribbon.tailR} width={art.ribbon.rw} />
+            <SatinRibbon segs={art.ribbon.loopL} width={art.ribbon.rw} />
+            <SatinRibbon segs={art.ribbon.loopR} width={art.ribbon.rw} />
+            <SatinRibbon segs={art.ribbon.knot} width={art.ribbon.rw * 1.05} />
+          </g>
+        </svg>
+      )}
+    </div>
   );
 };
 
@@ -977,6 +1170,8 @@ export const ReverieTemplate = ({
 
   const groomName = getLocalizedValue("groom_name", wedding.groom_name || "");
   const brideName = getLocalizedValue("bride_name", wedding.bride_name || "");
+  const groomInitialLetter = (wedding.groom_name || "A").trim().charAt(0).toUpperCase();
+  const brideInitialLetter = (wedding.bride_name || "A").trim().charAt(0).toUpperCase();
   const initials = `${(wedding.groom_name || "A").trim().charAt(0)}&${(wedding.bride_name || "A").trim().charAt(0)}`.toUpperCase();
 
   const weddingDate = parseLocalDate(wedding.wedding_date);
@@ -1213,7 +1408,7 @@ export const ReverieTemplate = ({
           className="relative overflow-hidden"
           style={{ minHeight: "100svh", ...LINEN }}
         >
-          <ReverieLace cardRef={heroCardRef} />
+          <HeroSuite cardRef={heroCardRef} />
           <Petals ambient={14} active={opened} />
           <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "44px clamp(28px, 8vw, 40px)" }}>
             {/* The invitation card, on linen */}
@@ -1236,7 +1431,7 @@ export const ReverieTemplate = ({
                   {t("reverie.together", "Together with their families")}
                 </p>
                 <HeartTap color="#a9776b">
-                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26 }}>
+                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26, textShadow: PRESSED }}>
                   <EditableField
                     fieldId="groom-name"
                     text={getFieldValue("groom-name", groomName)}
@@ -1248,7 +1443,7 @@ export const ReverieTemplate = ({
                   />
                 </div>
                 <div style={{ fontFamily: FONT_HEADING, fontSize: 16, color: MUTED, margin: "4px 0" }}>&amp;</div>
-                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK }}>
+                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, textShadow: PRESSED }}>
                   <EditableField
                     fieldId="bride-name"
                     text={getFieldValue("bride-name", brideName)}
@@ -1263,13 +1458,9 @@ export const ReverieTemplate = ({
                 <p style={{ fontFamily: FONT_HEADING, fontSize: 18, letterSpacing: "0.04em", color: INK, marginTop: 30 }}>
                   {isArabic ? longDate : numericDate}
                 </p>
-                <div className="flex justify-center" style={{ marginTop: 30, minHeight: 54 }}>
-                  {opened && (
-                    <DrawOnView duration={2600}>
-                      <Bow color={INK} width={86} />
-                    </DrawOnView>
-                  )}
-                </div>
+                <svg aria-hidden width="132" height="96" viewBox="0 0 132 96" style={{ marginTop: 22, overflow: "visible" }}>
+                  <PressedMonogram x={66} y={48} size={44} groom={groomInitialLetter} bride={brideInitialLetter} />
+                </svg>
               </div>
             </div>
           </div>
@@ -1281,8 +1472,8 @@ export const ReverieTemplate = ({
               opening={opening}
               onOpen={openInvitation}
               label={t("reverie.tapToOpen", "Tap to open")}
-              groomInitial={(wedding.groom_name || "A").trim().charAt(0).toUpperCase()}
-              brideInitial={(wedding.bride_name || "A").trim().charAt(0).toUpperCase()}
+              groomInitial={groomInitialLetter}
+              brideInitial={brideInitialLetter}
             />
           )}
         </section>
