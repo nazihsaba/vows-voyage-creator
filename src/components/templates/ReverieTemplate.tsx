@@ -11,6 +11,7 @@ import { formatLocalizedDate } from "@/lib/formatDate";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { useArabicContent } from "@/hooks/useArabicContent";
 import waxSealHeart from "@/assets/wax-seal-heart.webp";
+import oliveShadow from "@/assets/reverie/olive-shadow.webp";
 import { useTemplateAudio } from "@/hooks/useTemplateAudio";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
@@ -34,7 +35,7 @@ import { ReverieGallery } from "./reverie/ReverieGallery";
 /**
  * Rêverie (formerly Dentelle) — romantic lace invitation.
  * Opens on mocha with an ivory envelope sealed in gold; tapping flies into it and
- * onto an ivory invitation card with a gold border. Then mocha bands with a fine
+ * onto an ivory invitation card with a gold border, under soft olive-branch shadows. Then mocha bands with a fine
  * lace trim, and a vertical "The Day" timeline built from the events.
  */
 
@@ -163,6 +164,41 @@ const OPEN_ZOOM_AT = 1500;
 const OPEN_FADE_AT = 2450;
 const OPENING_DONE_MS = 3050;
 const HERO_REVEAL_S = 2.35;
+
+/**
+ * Olive branches' shadows falling across the first section, as if the afternoon sun came
+ * through a tree: one spray reaching in from the top-left corner and one from the bottom-right.
+ * The image is ours (olive-shadow.webp); each spray sways slowly from where it enters.
+ */
+const OliveShadows = ({ shown, delay = 0 }: { shown: boolean; delay?: number }) => {
+  const spray = (style: React.CSSProperties, sway: string) => (
+    <div className="absolute" style={style}>
+      <img
+        src={oliveShadow}
+        alt=""
+        draggable={false}
+        className="dt-anim block w-full select-none"
+        style={{ transformOrigin: "0% 0%", animation: sway }}
+      />
+    </div>
+  );
+  return (
+    <div
+      aria-hidden
+      className="pointer-events-none absolute inset-0 overflow-hidden"
+      style={{ opacity: shown ? 1 : 0, transition: `opacity 2.4s ease ${delay}s` }}
+    >
+      {spray(
+        { top: 0, left: 0, width: "max(80vw, 470px)", maxWidth: 1020, transform: "translate(-12%, -10%)" },
+        "rv-sway 11s ease-in-out infinite alternate",
+      )}
+      {spray(
+        { bottom: 0, right: 0, width: "max(72vw, 430px)", maxWidth: 920, transform: "translate(14%, 12%) rotate(180deg)" },
+        "rv-sway 13s ease-in-out -5s infinite alternate",
+      )}
+    </div>
+  );
+};
 
 /** Soft drifting light: three glows moving slowly. "night" for the mocha opening, "day" for ivory. */
 const DreamLight = ({ tone = "day", strength = 1 }: { tone?: "day" | "night"; strength?: number }) => {
@@ -674,6 +710,7 @@ const KEYFRAMES = `
 @keyframes rv-drift3 { from { transform: translate(0, 0) scale(.95); } to { transform: translate(6vw, 9vh) scale(1.1); } }
 @keyframes rv-ring { 0% { opacity: .75; transform: scale(.92); } 100% { opacity: 0; transform: scale(1.3); } }
 @keyframes rv-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes rv-sway { from { transform: rotate(-1.3deg) skewX(.5deg); } to { transform: rotate(1.1deg) skewX(-.5deg) translate(.5%, .3%); } }
 @keyframes rv-cue { 0% { transform: scaleY(0); transform-origin: top; } 48% { transform: scaleY(1); transform-origin: top; } 52% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 @media (prefers-reduced-motion: reduce) {
   .dt-anim { animation: none !important; transition: opacity .4s ease !important; transform: none !important; }
@@ -949,6 +986,7 @@ export const ReverieTemplate = ({
         {/* ==================== HERO ==================== */}
         <section className="relative overflow-hidden" style={{ minHeight: "100svh", background: HERO_BG }}>
           <DreamLight tone="day" strength={0.8} />
+          <OliveShadows shown={reducedMotion || opening || opened} delay={reducedMotion ? 0 : HERO_REVEAL_S - 0.4} />
           <Petals ref={heroPetals} ambient={12} active={opened} />
           <div className="relative mx-auto flex flex-col items-center justify-center" style={{ minHeight: "100svh", padding: "56px 22px 64px" }}>
             {/* the invitation card, just out of the envelope, with a fine gold double border */}
@@ -1100,7 +1138,7 @@ export const ReverieTemplate = ({
         </section>
 
         {/* ==================== GALLERY ==================== */}
-        {gallery.some((img: any) => img?.image_url) && (
+        {gallery.some((img) => img?.image_url) && (
           <section className="text-center" style={{ padding: "96px 20px 16px", maxWidth: 560, margin: "0 auto" }}>
             <Reveal>
               <p style={{ ...smallCaps, color: CHAMPAGNE }}>{t("reverie.galleryKicker", "Captured with love")}</p>
