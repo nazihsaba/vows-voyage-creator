@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -10,6 +10,7 @@ import { formatTimeTo12Hour } from "@/lib/formatTime";
 import { formatLocalizedDate } from "@/lib/formatDate";
 import { parseLocalDate } from "@/lib/weddingDate";
 import { useArabicContent } from "@/hooks/useArabicContent";
+import waxSealHeart from "@/assets/wax-seal-heart.webp";
 import { useTemplateAudio } from "@/hooks/useTemplateAudio";
 import { applyFadeLoop } from "@/lib/audioFadeLoop";
 import TapToPlayMusic from "@/components/templates/TapToPlayMusic";
@@ -248,172 +249,42 @@ const FrameOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: b
   );
 };
 
+// a jagged crack down the middle of the seal image (x%, y%)
+const SEAL_CRACK = "50% 0, 46.5% 14%, 52.5% 28%, 47% 42%, 53% 56%, 48% 71%, 52.5% 86%, 50% 100%";
+
 /**
- * A real-looking gold wax seal: an irregular spilled edge with small drips, a raised rim squeezed
- * out by the stamp, a pressed well with an embossed laurel and the initials, a soft wax texture,
- * a glossy highlight and a shadow on the paper. When `cracked`, it splits in two and falls away.
+ * The gold wax seal (photo, src/assets/wax-seal-heart.webp) with a shadow on the paper.
+ * When `cracked`, it splits in two along a jagged line and the halves fall away.
  */
-const RealWaxSeal = ({ groomInitial, brideInitial, shown, cracked }: { groomInitial: string; brideInitial: string; shown: boolean; cracked: boolean }) => {
-  const uid = useId().replace(/:/g, "");
-  const edge = useMemo(() => {
-    const drips = [
-      { a: 0.75, amp: 0.12, w: 0.2 },
-      { a: 2.55, amp: 0.09, w: 0.16 },
-      { a: 4.35, amp: 0.14, w: 0.22 },
-      { a: 5.45, amp: 0.06, w: 0.14 },
-    ];
-    const pts: string[] = [];
-    const n = 120;
-    for (let i = 0; i <= n; i++) {
-      const a = (i / n) * Math.PI * 2;
-      let wob = 1 + Math.sin(a * 7 + 0.4) * 0.03 + Math.sin(a * 3 + 1.3) * 0.028 + Math.cos(a * 13) * 0.012;
-      for (const d of drips) {
-        const da = Math.atan2(Math.sin(a - d.a), Math.cos(a - d.a));
-        wob += d.amp * Math.exp(-(da * da) / (2 * d.w * d.w));
-      }
-      pts.push(`${(60 + Math.cos(a) * 44 * wob).toFixed(2)} ${(60 + Math.sin(a) * 44 * wob).toFixed(2)}`);
-    }
-    return `M${pts.join(" L")} Z`;
-  }, []);
-  const leaves = useMemo(() => {
-    let d = "";
-    for (const side of [-1, 1]) {
-      for (let k = 0; k < 6; k++) {
-        const a = Math.PI / 2 + side * (0.42 + k * 0.33);
-        const x = 60 + Math.cos(a) * 27;
-        const y = 60 + Math.sin(a) * 27;
-        const ta = a + side * (Math.PI / 2) + side * 0.6;
-        const len = 6.2 - k * 0.35;
-        const ex = x + Math.cos(ta) * len;
-        const ey = y + Math.sin(ta) * len;
-        const qx = -Math.sin(ta) * len * 0.36;
-        const qy = Math.cos(ta) * len * 0.36;
-        const mx = (x + ex) / 2;
-        const my = (y + ey) / 2;
-        d += `M${x.toFixed(1)} ${y.toFixed(1)} Q${(mx + qx).toFixed(1)} ${(my + qy).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(mx - qx).toFixed(1)} ${(my - qy).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)} `;
-      }
-    }
-    return d;
-  }, []);
-  // a jagged crack down the middle
-  const crack = "60 -4, 56 16, 63 33, 57 50, 64 66, 58 84, 63 102, 60 124";
-  const emboss = (node: (dx: number, dy: number, fill: string, op: number) => React.ReactNode) => (
-    <>
-      {node(0.7, 0.9, "#fff1cf", 0.8)}
-      {node(-0.6, -0.8, "#5e4019", 0.55)}
-      {node(0, 0, "#a9813f", 1)}
-    </>
-  );
-  const body = (
-    <>
-      <path d={edge} fill={`url(#${uid}-wax)`} filter={`url(#${uid}-tex)`} />
-      <path d={edge} fill="none" stroke={`url(#${uid}-rim)`} strokeWidth="1.6" opacity="0.75" />
-      {/* the rim the stamp squeezed out: lit at the top left, in shade at the bottom right */}
-      <circle cx="60" cy="60" r="37.5" fill="none" stroke={`url(#${uid}-rim)`} strokeWidth="6" />
-      <circle cx="60" cy="60" r="34.2" fill={`url(#${uid}-well)`} />
-      <circle cx="60.6" cy="60.8" r="34.2" fill="none" stroke="#5b3e17" strokeWidth="1.4" opacity="0.35" />
-      <circle cx="60" cy="60" r="30.5" fill="none" stroke="#e9cf98" strokeWidth="0.5" opacity="0.6" />
-      {emboss((dx, dy, fill, op) => (
-        <path d={leaves} transform={`translate(${dx} ${dy})`} fill={fill} opacity={op} />
-      ))}
-      {emboss((dx, dy, fill, op) => (
-        <text
-          x={60 + dx}
-          y={66 + dy}
-          textAnchor="middle"
-          fill={fill}
-          opacity={op}
-          style={{ fontFamily: FONT_HEADING, letterSpacing: "0.02em" }}
-          fontSize="19"
-          fontWeight={600}
-        >
-          {groomInitial}
-          <tspan fontSize="11" fontStyle="italic" dx="1.5" dy="-1">&amp;</tspan>
-          <tspan dx="1.5" dy="1">{brideInitial}</tspan>
-        </text>
-      ))}
-      {/* gloss */}
-      <ellipse cx="41" cy="34" rx="15" ry="6.5" fill="#fff" opacity="0.32" transform="rotate(-38 41 34)" filter={`url(#${uid}-soft)`} />
-      <ellipse cx="37" cy="31" rx="4" ry="1.6" fill="#fff" opacity="0.7" transform="rotate(-38 37 31)" />
-      <path d="M86 78 Q92 70 92 58" fill="none" stroke="#fff4d6" strokeWidth="1.2" opacity="0.35" strokeLinecap="round" />
-    </>
-  );
+const RealWaxSeal = ({ shown, cracked }: { shown: boolean; cracked: boolean }) => {
   const half = (side: "l" | "r") => (
-    <g
-      clipPath={`url(#${uid}-${side})`}
-      className="dt-anim"
+    <img
+      src={waxSealHeart}
+      alt=""
+      draggable={false}
+      className="dt-anim absolute inset-0 block h-full w-full select-none"
       style={{
-        transformBox: "fill-box",
-        transformOrigin: "center",
-        transform: cracked ? (side === "l" ? "translate(-7px, 6px) rotate(-9deg)" : "translate(8px, 5px) rotate(11deg)") : "none",
+        clipPath: side === "l" ? `polygon(0 0, ${SEAL_CRACK}, 0 100%)` : `polygon(100% 0, ${SEAL_CRACK}, 100% 100%)`,
+        transform: cracked ? (side === "l" ? "translate(-7%, 6%) rotate(-9deg)" : "translate(8%, 5%) rotate(11deg)") : "none",
         opacity: cracked ? 0 : 1,
         transition: "transform .65s cubic-bezier(.3,0,.4,1), opacity .4s ease .35s",
       }}
-    >
-      <use href={`#${uid}-body`} />
-    </g>
+    />
   );
   return (
-    <svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden style={{ overflow: "visible", display: "block" }}>
-      <defs>
-        <radialGradient id={`${uid}-wax`} cx="36%" cy="30%" r="78%">
-          <stop offset="0" stopColor="#f6e1ae" />
-          <stop offset="0.35" stopColor="#d9b06e" />
-          <stop offset="0.72" stopColor="#b58644" />
-          <stop offset="1" stopColor="#7f5927" />
-        </radialGradient>
-        <linearGradient id={`${uid}-rim`} x1="0.15" y1="0.1" x2="0.85" y2="0.9">
-          <stop offset="0" stopColor="#f8e5b6" />
-          <stop offset="0.5" stopColor="#c99c58" />
-          <stop offset="1" stopColor="#6f4d21" />
-        </linearGradient>
-        <radialGradient id={`${uid}-well`} cx="62%" cy="66%" r="72%">
-          <stop offset="0" stopColor="#d6ad6a" />
-          <stop offset="1" stopColor="#a47a3c" />
-        </radialGradient>
-        {/* wax surface: soft bumps lit from the top left */}
-        <filter id={`${uid}-tex`} x="-5%" y="-5%" width="110%" height="110%" colorInterpolationFilters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="11" result="n" />
-          <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lightingColor="#ffffff" result="l">
-            <feDistantLight azimuth="225" elevation="58" />
-          </feDiffuseLighting>
-          <feComponentTransfer in="l" result="lb">
-            <feFuncR type="linear" slope="1.12" intercept="0.02" />
-            <feFuncG type="linear" slope="1.12" intercept="0.02" />
-            <feFuncB type="linear" slope="1.12" intercept="0.02" />
-          </feComponentTransfer>
-          <feComposite in="lb" in2="SourceAlpha" operator="in" result="lc" />
-          <feBlend in="SourceGraphic" in2="lc" mode="multiply" />
-        </filter>
-        <filter id={`${uid}-soft`} x="-30%" y="-60%" width="160%" height="220%">
-          <feGaussianBlur stdDeviation="1.6" />
-        </filter>
-        <filter id={`${uid}-shadow`} x="-30%" y="-30%" width="160%" height="170%">
-          <feDropShadow dx="0.6" dy="2.4" stdDeviation="2.2" floodColor="#2c1d10" floodOpacity="0.42" />
-        </filter>
-        <clipPath id={`${uid}-l`}>
-          <polygon points={`-10 -10, ${crack}, -10 130`} />
-        </clipPath>
-        <clipPath id={`${uid}-r`}>
-          <polygon points={`130 -10, ${crack}, 130 130`} />
-        </clipPath>
-        <g id={`${uid}-body`}>{body}</g>
-      </defs>
-      <g
-        className="dt-anim"
-        filter={`url(#${uid}-shadow)`}
-        style={{
-          transformBox: "fill-box",
-          transformOrigin: "center",
-          opacity: shown ? 1 : 0,
-          transform: shown ? "scale(1)" : "scale(.55)",
-          transition: "opacity .6s ease 1s, transform .7s cubic-bezier(.2,.7,.25,1.3) 1s",
-        }}
-      >
-        {half("l")}
-        {half("r")}
-      </g>
-    </svg>
+    <span
+      aria-hidden
+      className="dt-anim absolute inset-0 block"
+      style={{
+        filter: "drop-shadow(0 3px 3px rgba(44,29,16,.35)) drop-shadow(0 8px 10px rgba(44,29,16,.2))",
+        opacity: shown ? 1 : 0,
+        transform: shown ? "scale(1)" : "scale(.55)",
+        transition: "opacity .6s ease 1s, transform .7s cubic-bezier(.2,.7,.25,1.3) 1s",
+      }}
+    >
+      {half("l")}
+      {half("r")}
+    </span>
   );
 };
 
@@ -425,16 +296,12 @@ const RealWaxSeal = ({ groomInitial, brideInitial, shown, cracked }: { groomInit
 const OpeningEnvelope = ({
   shown,
   stage,
-  groomInitial,
-  brideInitial,
   names,
   cardRef,
 }: {
   shown: boolean;
   /** 0 sealed · 1 seal cracks · 2 flap opens · 3 flap behind the card · 4 card slides out */
   stage: number;
-  groomInitial: string;
-  brideInitial: string;
   names: string;
   cardRef: React.RefObject<HTMLSpanElement>;
 }) => {
@@ -582,9 +449,9 @@ const OpeningEnvelope = ({
       {/* the wax seal, on the tip of the flap */}
       <span
         className="absolute block"
-        style={{ left: "50%", top: `${(126 / 210) * 100}%`, width: "31%", aspectRatio: "1", transform: "translate(-50%, -50%)", zIndex: 6 }}
+        style={{ left: "50%", top: `${(127 / 210) * 100}%`, width: "40%", aspectRatio: "1", transform: "translate(-50%, -50%)", zIndex: 6 }}
       >
-        <RealWaxSeal groomInitial={groomInitial} brideInitial={brideInitial} shown={shown} cracked={stage >= 1} />
+        <RealWaxSeal shown={shown} cracked={stage >= 1} />
       </span>
     </span>
   );
@@ -598,16 +465,12 @@ const Opening = ({
   opening,
   onOpen,
   label,
-  groomInitial,
-  brideInitial,
   names,
   dateText,
 }: {
   opening: boolean;
   onOpen: () => void;
   label: string;
-  groomInitial: string;
-  brideInitial: string;
   names: string;
   dateText: string;
 }) => {
@@ -698,7 +561,7 @@ const Opening = ({
                 transition: "opacity 1s ease, transform 1.3s cubic-bezier(.2,.7,.2,1)",
               }}
             >
-              <OpeningEnvelope shown={shown} stage={stage} groomInitial={groomInitial} brideInitial={brideInitial} names={names} cardRef={cardRef} />
+              <OpeningEnvelope shown={shown} stage={stage} names={names} cardRef={cardRef} />
             </span>
             <span className="block" style={{ ...SMALL_CAPS, fontSize: 12, letterSpacing: "0.36em", color: "#f6ecdf", marginTop: 46, ...rise(1) }}>
               {names}
@@ -867,8 +730,6 @@ export const ReverieTemplate = ({
 
   const groomName = getLocalizedValue("groom_name", wedding.groom_name || "");
   const brideName = getLocalizedValue("bride_name", wedding.bride_name || "");
-  const groomInitialLetter = (wedding.groom_name || "A").trim().charAt(0).toUpperCase();
-  const brideInitialLetter = (wedding.bride_name || "A").trim().charAt(0).toUpperCase();
   const initials = `${(wedding.groom_name || "A").trim().charAt(0)}&${(wedding.bride_name || "A").trim().charAt(0)}`.toUpperCase();
 
   const weddingDate = parseLocalDate(wedding.wedding_date);
@@ -1170,14 +1031,12 @@ export const ReverieTemplate = ({
             </div>
           </div>
 
-          {/* Opening: an ivory envelope sealed with gold wax — tap to open it and fly into the card */}
+          {/* Opening: an ivory envelope sealed with a gold wax seal — tap to open it and fly into the card */}
           {!opened && (
             <Opening
               opening={opening}
               onOpen={openInvitation}
               label={t("reverie.tapToOpen", "Tap to open")}
-              groomInitial={groomInitialLetter}
-              brideInitial={brideInitialLetter}
               names={`${groomName} & ${brideName}`}
               dateText={isArabic ? longDate : numericDate.replace(/\./g, " · ")}
             />
