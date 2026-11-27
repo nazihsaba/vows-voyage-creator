@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -73,8 +73,6 @@ const MUTED = "#7b6c66";
 const CHAMPAGNE = "#b79c78";
 
 const FONT_TITLE = "var(--font-template-title)";
-/** Ink pressed into the paper: a light catch under each stroke and a faint shade above it. */
-const PRESSED = "0 1px 0 rgba(255,255,255,.7), 0 -0.5px 0 rgba(70,48,32,.16)";
 const FONT_HEADING = "var(--font-template-heading)";
 const FONT_BODY = "var(--font-template-body)";
 const FONT_COUNTDOWN = "var(--font-template-countdown)";
@@ -146,730 +144,175 @@ const grain = (alpha = 0.5) => {
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 };
 
-/** Warm linen backdrop: soft light from above, fine weave, grain and a gentle vignette. */
-const LINEN: React.CSSProperties = {
-  backgroundColor: "#e9e1d7",
-  backgroundImage: [
-    "radial-gradient(120% 75% at 50% 28%, rgba(255,251,246,.75) 0%, rgba(255,251,246,0) 62%)",
-    "radial-gradient(140% 110% at 50% 50%, rgba(0,0,0,0) 58%, rgba(92,70,58,.16) 100%)",
-    grain(0.42),
-    "repeating-linear-gradient(0deg, rgba(255,255,255,.08) 0 1px, rgba(255,255,255,0) 1px 3px)",
-    "repeating-linear-gradient(90deg, rgba(110,88,72,.05) 0 1px, rgba(110,88,72,0) 1px 4px)",
-  ].join(","),
-  backgroundSize: "auto, auto, 180px 180px, auto, auto",
+// ---------- Opening & first section: a warm "dawn" palette ----------
+const DAWN_INK = "#4a332c"; // names and monogram
+const DAWN_TEXT = "#86625a"; // small lettering
+const DAWN_GOLD = "#c49a72"; // fine lines
+const DAWN_OPENING_BG = "radial-gradient(130% 90% at 50% 0%, #f8e6dc 0%, #efd2c5 52%, #e4bfb0 100%)";
+const DAWN_WINDOW_BG = "linear-gradient(180deg, #fdf8f4 0%, #faeee7 100%)";
+const DAWN_HERO_BG = "linear-gradient(180deg, #fdf6f1 0%, #f8e6dd 56%, #faf6f1 100%)";
+
+// Opening timeline (ms after the tap): the lettering fades (0–350), the view flies through the
+// arch (from 280, 1.3s), the opening fades away (from 1250). The first section's text rises as it fades.
+const OPEN_ZOOM_AT = 280;
+const OPEN_FADE_AT = 1250;
+const OPENING_DONE_MS = 1850;
+const HERO_REVEAL_S = 1.15;
+
+/** Soft drifting light: three warm glows moving slowly, like morning light through a window. */
+const DreamLight = ({ strength = 1 }: { strength?: number }) => (
+  <span aria-hidden className="absolute inset-0 block overflow-hidden pointer-events-none">
+    {[
+      { c: "rgba(255,205,182,.62)", s: "70vmax", x: "-22%", y: "-18%", a: "rv-drift1 22s" },
+      { c: "rgba(240,176,184,.42)", s: "62vmax", x: "48%", y: "46%", a: "rv-drift2 26s" },
+      { c: "rgba(255,238,210,.7)", s: "52vmax", x: "26%", y: "-20%", a: "rv-drift3 19s" },
+    ].map((o) => (
+      <span
+        key={o.a}
+        className="dt-anim absolute block rounded-full"
+        style={{
+          left: o.x,
+          top: o.y,
+          width: o.s,
+          height: o.s,
+          opacity: strength,
+          background: `radial-gradient(circle, ${o.c} 0%, rgba(255,255,255,0) 68%)`,
+          animation: `${o.a} ease-in-out infinite alternate`,
+        }}
+      />
+    ))}
+    <span className="absolute inset-0 block" style={{ backgroundImage: grain(0.2), backgroundSize: "180px 180px", opacity: 0.45 }} />
+  </span>
+);
+
+/** An arch (round top) filling a w×h box, inset by d. */
+const archPath = (w: number, h: number, d = 0) => {
+  const r = w / 2 - d;
+  return `M${d} ${h - d} V${r + d} A${r} ${r} 0 0 1 ${w - d} ${r + d} V${h - d} Z`;
 };
 
-// Opening timeline (ms after the tap): the rope unties (0–3000), the flap opens (from 2650),
-// the envelope slides away (from 3950, for 2.1s). The card's text appears as the flap opens.
-const ENVELOPE_DONE_MS = 6150;
-const CARD_REVEAL_DELAY = "3.1s";
-
-// ---------- Handmade-paper envelope ----------
-
-/** Tiny seeded random generator, so the paper and its torn edges look the same on every visit. */
-function seededRandom(seed: number) {
-  let s = seed >>> 0;
-  return () => {
-    s = (s * 1664525 + 1013904223) >>> 0;
-    return s / 4294967296;
-  };
-}
-
-/**
- * A tile of handmade cotton paper: soft bumps lit from the top left, pressed fibres and a few
- * flecks. Drawn once on a canvas and reused as a repeating image.
- */
-let handmadeTile: string | null = null;
-function handmadePaper(): string | null {
-  if (handmadeTile) return handmadeTile;
-  if (typeof document === "undefined") return null;
-  try {
-    const S = 600;
-    const c = document.createElement("canvas");
-    c.width = c.height = S;
-    const g = c.getContext("2d");
-    if (!g) return null;
-    const rnd = seededRandom(7);
-    // periodic value noise, so the tile repeats without seams
-    const layer = (cells: number) => {
-      const v = Array.from({ length: cells * cells }, () => rnd());
-      return (x: number, y: number) => {
-        const fx = (x / S) * cells;
-        const fy = (y / S) * cells;
-        const x0 = Math.floor(fx);
-        const y0 = Math.floor(fy);
-        const tx = fx - x0;
-        const ty = fy - y0;
-        const sx = tx * tx * (3 - 2 * tx);
-        const sy = ty * ty * (3 - 2 * ty);
-        const at = (i: number, j: number) => v[((j % cells) + cells) % cells * cells + (((i % cells) + cells) % cells)];
-        const a = at(x0, y0) + (at(x0 + 1, y0) - at(x0, y0)) * sx;
-        const b = at(x0, y0 + 1) + (at(x0 + 1, y0 + 1) - at(x0, y0 + 1)) * sx;
-        return a + (b - a) * sy;
-      };
-    };
-    const octaves: Array<[(x: number, y: number) => number, number]> = [
-      [layer(6), 0.42],
-      [layer(14), 0.3],
-      [layer(30), 0.18],
-      [layer(75), 0.1],
-    ];
-    const height = new Float32Array(S * S);
-    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-      let hgt = 0;
-      for (const [f, a] of octaves) hgt += f(x, y) * a;
-      height[y * S + x] = hgt;
-    }
-    const img = g.createImageData(S, S);
-    const d = img.data;
-    const base = [243, 239, 231];
-    for (let y = 0; y < S; y++) for (let x = 0; x < S; x++) {
-      const i = y * S + x;
-      const l = height[y * S + ((x - 1 + S) % S)];
-      const r = height[y * S + ((x + 1) % S)];
-      const u = height[((y - 1 + S) % S) * S + x];
-      const dn = height[((y + 1) % S) * S + x];
-      // light from the top left: slopes facing it are brighter
-      const lit = ((l - r) * -0.6 + (u - dn) * -0.8) * 38;
-      const tone = 1 + lit * 0.065 + (height[i] - 0.5) * 0.04;
-      const n = (rnd() - 0.5) * 3;
-      d[i * 4] = base[0] * tone + n;
-      d[i * 4 + 1] = base[1] * tone + n;
-      d[i * 4 + 2] = base[2] * tone + n;
-      d[i * 4 + 3] = 255;
-    }
-    g.putImageData(img, 0, 0);
-    // pressed fibres and flecks, drawn on every side so the tile still repeats cleanly
-    const wrapDraw = (draw: (ox: number, oy: number) => void) => {
-      for (const ox of [-S, 0, S]) for (const oy of [-S, 0, S]) draw(ox, oy);
-    };
-    for (let k = 0; k < 170; k++) {
-      const x = rnd() * S;
-      const y = rnd() * S;
-      const len = 8 + rnd() * 34;
-      const a = rnd() * Math.PI * 2;
-      const bend = (rnd() - 0.5) * len * 0.8;
-      const light = rnd() < 0.55;
-      g.strokeStyle = light ? "rgba(255,255,252,0.55)" : "rgba(150,128,100,0.16)";
-      g.lineWidth = 0.6 + rnd() * 0.7;
-      wrapDraw((ox, oy) => {
-        g.beginPath();
-        g.moveTo(x + ox, y + oy);
-        g.quadraticCurveTo(x + ox + Math.cos(a) * len * 0.5 - Math.sin(a) * bend, y + oy + Math.sin(a) * len * 0.5 + Math.cos(a) * bend, x + ox + Math.cos(a) * len, y + oy + Math.sin(a) * len);
-        g.stroke();
-      });
-    }
-    for (let k = 0; k < 90; k++) {
-      const x = rnd() * S;
-      const y = rnd() * S;
-      const r = 0.4 + rnd() * 1.1;
-      g.fillStyle = rnd() < 0.7 ? "rgba(160,138,108,0.22)" : "rgba(255,255,255,0.7)";
-      wrapDraw((ox, oy) => {
-        g.beginPath();
-        g.arc(x + ox, y + oy, r, 0, Math.PI * 2);
-        g.fill();
-      });
-    }
-    handmadeTile = c.toDataURL("image/jpeg", 0.9);
-    return handmadeTile;
-  } catch {
-    return null;
-  }
-}
-
-/** A torn, deckled edge along a polyline (handmade paper is never cut perfectly straight). */
-function deckle(points: Array<[number, number]>, seed: number, amp = 1.6) {
-  const rnd = seededRandom(seed);
-  const out: string[] = [];
-  for (let k = 0; k < points.length - 1; k++) {
-    const [ax, ay] = points[k];
-    const [bx, by] = points[k + 1];
-    const len = Math.hypot(bx - ax, by - ay);
-    const nx = -(by - ay) / (len || 1);
-    const ny = (bx - ax) / (len || 1);
-    const steps = Math.max(2, Math.round(len / 3.2));
-    for (let j = k === 0 ? 0 : 1; j <= steps; j++) {
-      const t = j / steps;
-      const ends = j === 0 || j === steps ? 0 : 1;
-      const off = ends * (Math.sin(t * len * 0.045 + seed) * amp * 0.6 + (rnd() - 0.5) * amp);
-      out.push(`${(ax + (bx - ax) * t + nx * off).toFixed(1)} ${(ay + (by - ay) * t + ny * off).toFixed(1)}`);
-    }
-  }
-  return out;
-}
-
-type RopePt = [number, number];
-type RopeBez = [RopePt, RopePt, RopePt, RopePt];
-
-/** Points along a chain of cubic curves, spaced about `step` apart, with their direction. */
-function sampleRope(segs: RopeBez[], step: number) {
-  const out: Array<{ x: number; y: number; tx: number; ty: number }> = [];
-  for (const [p0, p1, p2, p3] of segs) {
-    const at = (t: number) => {
-      const u = 1 - t;
-      return [
-        u * u * u * p0[0] + 3 * u * u * t * p1[0] + 3 * u * t * t * p2[0] + t * t * t * p3[0],
-        u * u * u * p0[1] + 3 * u * u * t * p1[1] + 3 * u * t * t * p2[1] + t * t * t * p3[1],
-      ];
-    };
-    let len = 0;
-    let prev = at(0);
-    for (let k = 1; k <= 24; k++) {
-      const q = at(k / 24);
-      len += Math.hypot(q[0] - prev[0], q[1] - prev[1]);
-      prev = q;
-    }
-    const n = Math.max(2, Math.round(len / step));
-    for (let k = 0; k < n; k++) {
-      const t = k / n;
-      const [x, y] = at(t);
-      const [x2, y2] = at(Math.min(1, t + 0.01));
-      const l = Math.hypot(x2 - x, y2 - y) || 1;
-      out.push({ x, y, tx: (x2 - x) / l, ty: (y2 - y) / l });
-    }
-  }
-  return out;
-}
-
-/**
- * A simple white satin ribbon: a soft shadowed edge, a white body and a gentle sheen down the middle.
- */
-const SatinRibbon = ({ segs, width }: { segs: RopeBez[]; width: number; flow?: number }) => {
-  const f = (n: number) => n.toFixed(1);
-  const W = width;
-  const core = segs.map(([p0, p1, p2, p3], i) => `${i ? "" : `M${f(p0[0])} ${f(p0[1])} `}C${f(p1[0])} ${f(p1[1])} ${f(p2[0])} ${f(p2[1])} ${f(p3[0])} ${f(p3[1])}`).join(" ");
-  return (
-    <>
-      <path d={core} fill="none" stroke="#d3c8b8" strokeWidth={W * 1.05} strokeLinecap="butt" opacity="0.6" />
-      <path d={core} fill="none" stroke="#f4efe7" strokeWidth={W * 0.95} strokeLinecap="butt" />
-      <path d={core} fill="none" stroke="#fdfbf8" strokeWidth={W * 0.72} strokeLinecap="butt" />
-      <path d={core} fill="none" stroke="#ffffff" strokeWidth={W * 0.3} strokeLinecap="butt" />
-    </>
-  );
-};
-
-/** Letterpress monogram pressed into the paper: initials in calligraphy within a fine laurel wreath. */
-const PressedMonogram = ({ x, y, size, groom, bride }: { x: number; y: number; size: number; groom: string; bride: string }) => {
-  const ink = "#8a705a";
-  const rx = size * 1.02;
-  const ry = size * 0.74;
-  const laurel = (side: 1 | -1) => {
-    let stem = "";
-    let leaves = "";
-    const n = 9;
-    for (let k = 0; k <= n; k++) {
-      // from the bottom, round the side, towards the top
-      const a = Math.PI / 2 + side * (0.32 + (k / n) * 1.95);
-      const px = x + Math.cos(a) * rx;
-      const py = y + Math.sin(a) * ry;
-      stem += `${k ? "L" : "M"}${px.toFixed(1)} ${py.toFixed(1)} `;
-      if (k > 0 && k < n + 1) {
-        const ta = a + side * Math.PI / 2;
-        for (const out of [1, -1]) {
-          const la = ta + out * 0.55 * side;
-          const len = size * (0.15 - k * 0.007);
-          const ex = px + Math.cos(la) * len;
-          const ey = py + Math.sin(la) * len;
-          const mx = (px + ex) / 2;
-          const my = (py + ey) / 2;
-          const qx = -Math.sin(la) * len * 0.32;
-          const qy = Math.cos(la) * len * 0.32;
-          leaves += `M${px.toFixed(1)} ${py.toFixed(1)} Q${(mx + qx).toFixed(1)} ${(my + qy).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(mx - qx).toFixed(1)} ${(my - qy).toFixed(1)} ${px.toFixed(1)} ${py.toFixed(1)} `;
-        }
-      }
-    }
-    return { stem, leaves };
-  };
-  const L = laurel(1);
-  const R = laurel(-1);
-  const letters = (dx: number, dy: number, fill: string, opacity: number) => (
-    <text
-      x={x + dx}
-      y={y + dy + size * 0.16}
-      textAnchor="middle"
-      fill={fill}
-      opacity={opacity}
-      style={{ fontFamily: "var(--font-template-title), 'Great Vibes', cursive" }}
-      fontSize={size * 0.6}
-    >
-      {groom}
-      <tspan fontSize={size * 0.34} dy={-size * 0.03} dx={size * 0.02}>
-        {" & "}
-      </tspan>
-      <tspan dy={size * 0.03}>{bride}</tspan>
-    </text>
-  );
-  const wreath = (dx: number, dy: number, color: string, opacity: number) => (
-    <g transform={`translate(${dx} ${dy})`} opacity={opacity} fill="none" stroke={color} strokeLinecap="round">
-      <path d={L.stem + R.stem} strokeWidth={0.9} />
-      <path d={L.leaves + R.leaves} strokeWidth={0.7} />
-    </g>
-  );
-  return (
-    <g aria-hidden>
-      {/* pressed into the paper: a light catch below each stroke, a soft shade above it */}
-      {wreath(0.7, 1, "#ffffff", 0.9)}
-      {wreath(-0.5, -0.7, "#5d4532", 0.25)}
-      {wreath(0, 0, ink, 0.7)}
-      {letters(0.8, 1.1, "#ffffff", 0.9)}
-      {letters(-0.6, -0.8, "#5d4532", 0.3)}
-      {letters(0, 0, ink, 0.82)}
-    </g>
-  );
-};
-
-/** Circle as a sub-path, for punching holes with fill-rule="evenodd". */
-const holeAt = (x: number, y: number, r: number) =>
-  `M${(x - r).toFixed(1)} ${y.toFixed(1)} a${r} ${r} 0 1 0 ${(2 * r).toFixed(1)} 0 a${r} ${r} 0 1 0 ${(-2 * r).toFixed(1)} 0 Z`;
-
-/**
- * The first section once the envelope has gone: the invitation as a real piece of stationery on
- * the linen. A card of the same handmade cotton paper as the envelope, with torn edges and a
- * double frame pressed into it, a white satin ribbon threaded through two slits and tied in a bow,
- * resting on a lace-cut backing card. Drawn as one SVG around the card's position on screen.
- */
-const HeroSuite = ({ cardRef }: { cardRef: React.RefObject<HTMLDivElement> }) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const uid = useId().replace(/:/g, "");
-  const [paper, setPaper] = useState<string | null>(handmadeTile);
-  useEffect(() => {
-    if (!paper) setPaper(handmadePaper());
-  }, [paper]);
-  const [box, setBox] = useState<{ W: number; H: number; x: number; y: number; w: number; h: number } | null>(null);
+/** Width and height of an element, kept up to date. */
+function useBoxSize<T extends HTMLElement>() {
+  const ref = useRef<T | null>(null);
+  const [size, setSize] = useState({ w: 0, h: 0 });
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    const update = () => {
-      const c = cardRef.current;
-      if (!c) return;
-      const o = el.getBoundingClientRect();
-      const r = c.getBoundingClientRect();
-      if (!o.width || !r.width) return;
-      const next = { W: o.width, H: o.height, x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height };
-      setBox((prev) =>
-        prev && (Object.keys(next) as Array<keyof typeof next>).every((k) => Math.round(prev[k]) === Math.round(next[k])) ? prev : next,
-      );
-    };
+    const update = () => setSize({ w: el.clientWidth, h: el.clientHeight });
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
-    if (cardRef.current) ro.observe(cardRef.current);
-    window.addEventListener("resize", update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", update);
-    };
-  }, [cardRef]);
+    return () => ro.disconnect();
+  }, []);
+  return [ref, size] as const;
+}
 
-  const art = useMemo(() => {
-    if (!box) return null;
-    const { x, y, w, h } = box;
-    const mobile = box.W < 600;
-    const cx = x + w / 2;
-    const f = (n: number) => n.toFixed(1);
-
-    // the card: straight-cut is too perfect for handmade paper, so its edges are torn
-    const card = `M${deckle([[x, y], [x + w, y], [x + w, y + h], [x, y + h], [x, y]], 23, mobile ? 1.2 : 1.5).join(" L")} Z`;
-
-    // the lace-cut backing card: scalloped edge, an eyelet in each scallop, a row of pinholes
-    const m = mobile ? 10 : 17;
-    const bx = x - m;
-    const by = y - m;
-    const bw = w + m * 2;
-    const bh = h + m * 2;
-    const sr = mobile ? 4.2 : 5.6; // scallop radius
-    const corners: Array<[number, number]> = [[bx, by], [bx + bw, by], [bx + bw, by + bh], [bx, by + bh]];
-    let outline = `M${f(bx)} ${f(by)}`;
-    let holes = "";
-    corners.forEach(([ax, ay], i) => {
-      const [ex, ey] = corners[(i + 1) % 4];
-      const len = Math.hypot(ex - ax, ey - ay);
-      const n = Math.max(1, Math.round(len / (sr * 2)));
-      const ux = (ex - ax) / len;
-      const uy = (ey - ay) / len;
-      const step = len / n;
-      for (let k = 1; k <= n; k++) {
-        // clockwise round the card, so each arc bulges outwards
-        outline += ` A${f(step / 2)} ${f(step / 2)} 0 0 1 ${f(ax + ux * step * k)} ${f(ay + uy * step * k)}`;
-        const mx = ax + ux * step * (k - 0.5);
-        const my = ay + uy * step * (k - 0.5);
-        holes += holeAt(mx, my, step * 0.16);
-      }
-      // pinholes running parallel to the edge, just inside it
-      // (going clockwise on screen, the inside of the card is to the right: (-uy, ux))
-      const inset = sr * 1.7;
-      const pins = Math.floor((len - inset * 2) / (mobile ? 5.2 : 6));
-      for (let k = 0; k <= pins; k++) {
-        const t = inset + ((len - inset * 2) * k) / Math.max(1, pins);
-        holes += holeAt(ax + ux * t - uy * inset, ay + uy * t + ux * inset, mobile ? 0.7 : 0.85);
-      }
-    });
-    const backer = `${outline} Z ${holes}`;
-
-    // a double frame pressed into the card
-    const fi = mobile ? 14 : 19;
-    const frame = (d: number) => `M${f(x + d)} ${f(y + d)} H${f(x + w - d)} V${f(y + h - d)} H${f(x + d)} Z`;
-
-    // satin ribbon threaded through two slits near the top, tied in a bow
-    const k = mobile ? 0.5 : 0.6;
-    const rw = mobile ? 7.5 : 9;
-    const ry = y + (mobile ? 50 : 58);
-    const sx = mobile ? 58 : 76; // slits sit well outside the loops, so the ribbon is seen going through
-    const at = (dx: number, dy: number): RopePt => [cx + dx * k, ry + dy * k];
-    const K: RopePt = [cx, ry];
-    const loop = (dir: 1 | -1): RopeBez[] => {
-      const tip = at(dir * 80, 9);
-      return [
-        [at(dir * 3, -4), at(dir * 26, -40), at(dir * 88, -27), tip],
-        [tip, at(dir * 84, 27), at(dir * 30, 16), at(dir * 3, 5)],
-      ];
-    };
-    const ribbon = {
-      rw,
-      band: [[[cx - sx, ry], [cx - sx / 3, ry], [cx + sx / 3, ry], [cx + sx, ry]]] as RopeBez[],
-      tailL: [[K, at(-8, 22), at(-28, 40), at(-34, 72)]] as RopeBez[],
-      tailR: [[K, at(10, 24), at(30, 48), at(26, 82)]] as RopeBez[],
-      loopL: loop(-1),
-      loopR: loop(1),
-      knot: [[at(-3, -11), at(8, -9), at(8, 9), at(-2, 12)]] as RopeBez[],
-      slits: [cx - sx, cx + sx].map((sxp) => ({ x: sxp, y: ry - rw * 0.75, h: rw * 1.5 })),
-    };
-    const tilt = mobile ? -0.9 : -1.4;
-    return { card, backer, frame, fi, ribbon, tilt, bcx: bx + bw / 2, bcy: by + bh / 2, x, y, w, h };
-  }, [box]);
-
+/** A fine double arch in gold that draws itself, with a small star at its crown. */
+const ArchOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: boolean; delay?: number }) => {
+  if (!w || !h) return null;
+  const line = (d: number, width: number, extra: number, opacity = 1) => (
+    <path
+      d={archPath(w, h, d)}
+      fill="none"
+      stroke={DAWN_GOLD}
+      strokeWidth={width}
+      opacity={opacity}
+      pathLength={1}
+      strokeDasharray="1 1"
+      className="dt-anim"
+      style={{ strokeDashoffset: draw ? 0 : 1, transition: `stroke-dashoffset 1.9s cubic-bezier(.45,0,.2,1) ${delay + extra}s` }}
+    />
+  );
+  const sx = w / 2;
+  const sy = -10;
+  const star = `M${sx} ${sy - 6} Q${sx} ${sy} ${sx + 6} ${sy} Q${sx} ${sy} ${sx} ${sy + 6} Q${sx} ${sy} ${sx - 6} ${sy} Q${sx} ${sy} ${sx} ${sy - 6} Z`;
   return (
-    <div ref={ref} aria-hidden className="absolute inset-0 pointer-events-none">
-      {box && art && (
-        <svg width={box.W} height={box.H} viewBox={`0 0 ${box.W} ${box.H}`} className="absolute inset-0" style={{ overflow: "visible" }}>
-          <defs>
-            {/* a tight contact shadow and a soft one, so each piece sits on what is below it */}
-            <filter id={`${uid}-lift`} x="-15%" y="-15%" width="130%" height="135%" colorInterpolationFilters="sRGB">
-              <feGaussianBlur in="SourceAlpha" stdDeviation="0.9" result="b1" />
-              <feOffset in="b1" dy="1.2" result="o1" />
-              <feFlood floodColor="#3e2c20" floodOpacity="0.26" result="f1" />
-              <feComposite in="f1" in2="o1" operator="in" result="s1" />
-              <feGaussianBlur in="SourceAlpha" stdDeviation="14" result="b2" />
-              <feOffset in="b2" dy="16" result="o2" />
-              <feFlood floodColor="#3e2c20" floodOpacity="0.2" result="f2" />
-              <feComposite in="f2" in2="o2" operator="in" result="s2" />
-              <feMerge>
-                <feMergeNode in="s2" />
-                <feMergeNode in="s1" />
-                <feMergeNode in="SourceGraphic" />
-              </feMerge>
-            </filter>
-            <filter id={`${uid}-soft`} filterUnits="userSpaceOnUse" x="0" y="0" width={box.W} height={box.H} colorInterpolationFilters="sRGB">
-              <feDropShadow dx="0.4" dy="1.8" stdDeviation="1.7" floodColor="#3e2c20" floodOpacity="0.38" />
-            </filter>
-            <linearGradient id={`${uid}-backer`} x1="0" y1="0" x2="0.35" y2="1">
-              <stop offset="0" stopColor="#fdfbf7" />
-              <stop offset="1" stopColor="#f3ede4" />
-            </linearGradient>
-            <linearGradient id={`${uid}-light`} x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0" stopColor="#ffffff" stopOpacity="0.38" />
-              <stop offset="0.55" stopColor="#ffffff" stopOpacity="0" />
-              <stop offset="1" stopColor="#6b5442" stopOpacity="0.08" />
-            </linearGradient>
-            {paper && (
-              <pattern id={`${uid}-paper`} patternUnits="userSpaceOnUse" width="400" height="400">
-                <image href={paper} width="400" height="400" />
-              </pattern>
-            )}
-          </defs>
-
-          {/* lace-cut backing card, set down slightly askew */}
-          <g transform={`rotate(${art.tilt} ${art.bcx} ${art.bcy})`} filter={`url(#${uid}-lift)`}>
-            <path d={art.backer} fill={`url(#${uid}-backer)`} fillRule="evenodd" />
-          </g>
-
-          {/* the handmade-paper card */}
-          <g filter={`url(#${uid}-lift)`}>
-            <path d={art.card} fill={paper ? `url(#${uid}-paper)` : "#f3efe7"} />
-          </g>
-          <path d={art.card} fill="#f8f4ee" opacity="0.32" />
-          <path d={art.card} fill={`url(#${uid}-light)`} />
-          <path d={art.card} fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.8" />
-
-          {/* pressed double frame: a light catch below, a soft shade above */}
-          {[art.fi, art.fi + 5].map((d, i) => (
-            <g key={d} fill="none" strokeWidth={i ? 0.6 : 0.9}>
-              <path d={art.frame(d)} stroke="#ffffff" opacity="0.9" transform="translate(0.7 1)" />
-              <path d={art.frame(d)} stroke="#5d4532" opacity="0.18" transform="translate(-0.5 -0.7)" />
-              <path d={art.frame(d)} stroke="#b9a48d" opacity="0.45" />
-            </g>
-          ))}
-
-          {/* the ribbon: through the slits, then tied */}
-          <g filter={`url(#${uid}-soft)`}>
-            <SatinRibbon segs={art.ribbon.band} width={art.ribbon.rw} />
-          </g>
-          {art.ribbon.slits.map((s) => (
-            <g key={s.x}>
-              <rect x={s.x - 1.3} y={s.y - 1} width={2.6} height={s.h + 2} rx={1.3} fill="#4a3628" opacity="0.55" />
-              <rect x={s.x + 1.1} y={s.y - 1} width={0.9} height={s.h + 2} rx={0.45} fill="#ffffff" opacity="0.85" />
-            </g>
-          ))}
-          <g filter={`url(#${uid}-soft)`}>
-            <SatinRibbon segs={art.ribbon.tailL} width={art.ribbon.rw} />
-            <SatinRibbon segs={art.ribbon.tailR} width={art.ribbon.rw} />
-            <SatinRibbon segs={art.ribbon.loopL} width={art.ribbon.rw} />
-            <SatinRibbon segs={art.ribbon.loopR} width={art.ribbon.rw} />
-            <SatinRibbon segs={art.ribbon.knot} width={art.ribbon.rw * 1.05} />
-          </g>
-        </svg>
-      )}
-    </div>
+    <svg aria-hidden className="absolute inset-0 pointer-events-none" width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: "visible" }}>
+      {line(-10, 0.8, 0, 0.75)}
+      {line(0, 1.2, 0.12)}
+      <path
+        d={star}
+        fill={DAWN_GOLD}
+        className="dt-anim"
+        style={{ opacity: draw ? 1 : 0, transform: draw ? "scale(1)" : "scale(.4)", transformOrigin: `${sx}px ${sy}px`, transition: `opacity .8s ease ${delay + 1.2}s, transform .8s cubic-bezier(.2,.7,.2,1.4) ${delay + 1.2}s` }}
+      />
+    </svg>
   );
 };
 
 /**
- * A handmade-paper envelope, tied with jute twine, that fills the opening screen. The invitation
- * card underneath sits inside it: tapping slips the twine off and folds the flap back so the
- * card shows through, then the envelope slides away, leaving the card.
+ * The opening screen: a warm dawn light with an arch-shaped window holding the couple's initials.
+ * Tapping fades the lettering and flies through the arch into the invitation.
  */
-const Envelope = ({
-  cardRef,
+const Opening = ({
   opening,
   onOpen,
   label,
   groomInitial,
   brideInitial,
+  names,
+  dateText,
 }: {
-  /** The invitation card below the envelope; the envelope leaves a window where it sits. */
-  cardRef: React.RefObject<HTMLDivElement>;
   opening: boolean;
   onOpen: () => void;
   label: string;
   groomInitial: string;
   brideInitial: string;
+  names: string;
+  dateText: string;
 }) => {
-  const ref = useRef<HTMLDivElement | null>(null);
-  const uid = useId().replace(/:/g, "");
-  const [paper, setPaper] = useState<string | null>(handmadeTile);
-  useEffect(() => {
-    if (!paper) setPaper(handmadePaper());
-  }, [paper]);
-  // h: the envelope's full height (the whole first section); vh: the part of it that fits on screen
-  const [size, setSize] = useState({ w: 390, h: 844, vh: 844 });
-  const [card, setCard] = useState<{ x: number; y: number; w: number; h: number } | null>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const update = () => {
-      const h = el.clientHeight || 844;
-      setSize({ w: el.clientWidth || 390, h, vh: Math.min(h, window.innerHeight || h) });
-      const c = cardRef.current;
-      if (c) {
-        const o = el.getBoundingClientRect();
-        const r = c.getBoundingClientRect();
-        setCard({ x: r.left - o.left, y: r.top - o.top, w: r.width, h: r.height });
-      }
-    };
-    update();
-    const ro = new ResizeObserver(update);
-    ro.observe(el);
-    if (cardRef.current) ro.observe(cardRef.current);
-    window.addEventListener("resize", update);
-    return () => {
-      ro.disconnect();
-      window.removeEventListener("resize", update);
-    };
-  }, [cardRef]);
-
-  const reducedMotion = prefersReducedMotion();
-  // 0 closed · 1 the rope unties · 2 flap opens · 3 flap behind · 4 envelope slides away
+  const reduced = prefersReducedMotion();
+  const rootRef = useRef<HTMLDivElement | null>(null);
+  const [archRef, arch] = useBoxSize<HTMLSpanElement>();
+  // 0 waiting · 1 lettering fades · 2 through the arch · 3 fading away
   const [phase, setPhase] = useState(0);
+  const [shown, setShown] = useState(false);
+  const [zoom, setZoom] = useState({ origin: "50% 45%", scale: 10 });
   useEffect(() => {
-    if (!opening || reducedMotion) return;
-    const steps: Array<[number, number]> = [[1, 0], [2, 2650], [3, 3350], [4, 3950]];
-    const timers = steps.map(([p, ms]) => window.setTimeout(() => setPhase(p), ms));
-    return () => timers.forEach(clearTimeout);
-  }, [opening, reducedMotion]);
-  // how far the bow has been untied, 0 → 1 over 3s, redrawn every frame so the rope really moves
-  const [u, setU] = useState(0);
+    const id = requestAnimationFrame(() => setShown(true));
+    return () => cancelAnimationFrame(id);
+  }, []);
   useEffect(() => {
-    if (!opening || reducedMotion) return;
-    let raf = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      const t = Math.min(1, (now - start) / 3000);
-      setU(t);
-      if (t < 1) raf = requestAnimationFrame(tick);
+    if (!opening) return;
+    if (reduced) {
+      setPhase(3);
+      return;
+    }
+    // fly through the middle of the arch, far enough that its inside fills the screen
+    const root = rootRef.current;
+    const a = archRef.current;
+    if (root && a) {
+      const r = root.getBoundingClientRect();
+      const b = a.getBoundingClientRect();
+      setZoom({
+        origin: `${b.left - r.left + b.width / 2}px ${b.top - r.top + b.height * 0.58}px`,
+        scale: 2.6 * Math.max(r.width / b.width, r.height / b.height) + 1,
+      });
+    }
+    setPhase(1);
+    const t1 = window.setTimeout(() => setPhase(2), OPEN_ZOOM_AT);
+    const t2 = window.setTimeout(() => setPhase(3), OPEN_FADE_AT);
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [opening, reducedMotion]);
+  }, [opening, reduced, archRef]);
 
-  // before the tap the ribbon moves gently (a slow breeze); this clock drives it, ~30 fps
-  const [idle, setIdle] = useState(0);
-  useEffect(() => {
-    if (opening || reducedMotion) return;
-    let raf = 0;
-    let last = 0;
-    const start = performance.now();
-    const tick = (now: number) => {
-      if (now - last > 32) {
-        last = now;
-        setIdle((now - start) / 1000);
-      }
-      raf = requestAnimationFrame(tick);
+  // each line rises in on arrival, and drops away when tapped
+  const rise = (delay: number): React.CSSProperties => {
+    const visible = shown && phase === 0;
+    return {
+      opacity: visible ? 1 : 0,
+      transform: visible ? "none" : phase > 0 ? "translateY(8px)" : "translateY(14px)",
+      transition: phase > 0 ? "opacity .35s ease, transform .35s ease" : `opacity 1s ease ${delay}s, transform 1.1s cubic-bezier(.2,.7,.2,1) ${delay}s`,
     };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [opening, reducedMotion]);
-
-  // Geometry, in px. The envelope covers the whole first section; the flap and the knot are
-  // placed against the visible screen so they stay centred when the section is taller.
-  const { w, h, vh } = size;
-  const flapH = Math.round(vh * 0.54);
-  const meetY = vh * 0.5;
-  const bottomTop = vh * 0.46;
-  const cx = w / 2;
-  const s = Math.min(Math.max(Math.min(w, vh) / 390, 0.85), 1.5) * 1.18; // twine/bow scale
-  const knotY = flapH - 10 * s;
-
-  // flaps with torn edges
-  const flapEdgePts = deckle([[0, 0], [cx, flapH], [w, 0]], 3);
-  const flapPath = `M${flapEdgePts.join(" L")} Z`;
-  const flapEdge = `M${flapEdgePts.join(" L")}`;
-  const bottomEdgePts = deckle([[0, h], [cx, bottomTop], [w, h]], 11);
-  const bottomEdge = `M${bottomEdgePts.join(" L")}`;
-  const bottomPath = `${bottomEdge} Z`;
-
-  const paperFill = paper ? `url(#${uid}-paper)` : "#f2eee7";
-  // Inside of the envelope: the same paper, a shade deeper.
-  const inside: React.CSSProperties = paper
-    ? { backgroundColor: "#e9e3d9", backgroundImage: `linear-gradient(rgba(120,96,70,.08), rgba(120,96,70,.08)), url(${paper})`, backgroundSize: "auto, 400px 400px" }
-    : { backgroundColor: "#e9e3d9" };
-
-  // Inside of the envelope, around the window where the card sits.
-  const strips = card
-    ? [
-        { x: 0, y: 0, w, h: card.y },
-        { x: 0, y: card.y + card.h, w, h: h - card.y - card.h },
-        { x: 0, y: card.y, w: card.x, h: card.h },
-        { x: card.x + card.w, y: card.y, w: w - card.x - card.w, h: card.h },
-      ].filter((r) => r.w > 0 && r.h > 0)
-    : [{ x: 0, y: 0, w, h }];
-
-  // white satin ribbon: wrapped around the envelope, tied in a full bow at the flap's tip
-  const rw = 13 * s; // ribbon width
-  const K: RopePt = [cx, knotY];
-  const at = (dx: number, dy: number): RopePt => [cx + dx * s, knotY + dy * s];
-  const wrapA: RopeBez[] = [
-    [[-20, knotY + 4 * s], [w * 0.22, knotY + 7 * s], [cx - 60 * s, knotY + 1 * s], K],
-    [K, [cx + 60 * s, knotY + 1 * s], [w * 0.78, knotY + 8 * s], [w + 20, knotY + 4 * s]],
-  ];
-  // The bow, as a function of how far it has been untied (u goes 0 → 1 after the tap), as if a hand
-  // just off screen does it:
-  //   · it pulls the right end tight, then tugs it twice: the loop feeds through the knot and the end
-  //     grows by exactly as much rope as the loop loses (the twists run along with it); each tug
-  //     drags the knot a little towards the hand
-  //   · then the same on the left
-  //   · let go: the rope relaxes and each half slides off its side
-  const sm = (a: number, b: number, x: number) => {
-    const t = Math.min(1, Math.max(0, (x - a) / (b - a)));
-    return t * t * (3 - 2 * t);
   };
-  const pulse = (a: number, b: number, x: number) => Math.sin(Math.PI * sm(a, b, x));
-  const loopLen = 190 * s; // rope in each loop
-  const tailLen = 100 * s; // rope in each end
-  // right hand: pull tight, then two tugs
-  const rTight = sm(0, 0.09, u);
-  const rFed = sm(0.07, 0.2, u) * 0.55 + sm(0.25, 0.37, u) * 0.45;
-  // left hand: same, a beat later
-  const lTight = sm(0.38, 0.46, u);
-  const lFed = sm(0.44, 0.56, u) * 0.55 + sm(0.61, 0.72, u) * 0.45;
-  // let go: the rope goes slack and droops, then slowly slides off
-  const release = sm(0.72, 0.86, u);
-  const slide = sm(0.8, 1, u);
-  const fade = 1 - sm(0.92, 1, u);
-  const tug = pulse(0.07, 0.2, u) + 0.8 * pulse(0.25, 0.37, u) - pulse(0.44, 0.56, u) - 0.8 * pulse(0.61, 0.72, u);
-  const nudge = tug * 4 * s; // the knot is dragged towards whichever hand is pulling
-  const towardKnot = (segs: RopeBez[], f: number, turn: number): RopeBez[] =>
-    segs.map((seg) =>
-      seg.map(([x, y]) => {
-        const dx = (x - K[0]) * f;
-        const dy = (y - K[1]) * f;
-        return [K[0] + dx * Math.cos(turn) - dy * Math.sin(turn), K[1] + dx * Math.sin(turn) + dy * Math.cos(turn)] as RopePt;
-      }) as RopeBez,
-    );
-  const mix = (a: RopeBez[], b: RopeBez[], t: number): RopeBez[] =>
-    a.map((seg, i) => seg.map((pt, j) => [pt[0] + (b[i][j][0] - pt[0]) * t, pt[1] + (b[i][j][1] - pt[1]) * t]) as RopeBez);
-  // a pulled end: straight from the knot towards the hand, a little slack until it is tight
-  const tautEnd = (dir: 1 | -1, fed: number, tight: number): RopeBez[] => {
-    const len = tailLen + fed * loopLen;
-    const ang = 0.32; // the hand pulls out and slightly down
-    const ex = K[0] + dir * Math.cos(ang) * len;
-    const ey = K[1] + Math.sin(ang) * len;
-    const sag = (1 - tight) * 18 * s;
-    return [[K, [K[0] + (ex - K[0]) * 0.33, K[1] + (ey - K[1]) * 0.33 + sag], [K[0] + (ex - K[0]) * 0.66, K[1] + (ey - K[1]) * 0.66 + sag], [ex, ey]]];
-  };
-  // released: the ends go slack and droop under their own weight, then slide off with their halves
-  const slackEnd = (dir: 1 | -1, len: number): RopeBez[] => [[K, at(dir * len * 0.28, 18), at(dir * len * 0.64, 30), at(dir * len, 22)]];
-  // a loop: both legs tucked under the knot band, the tip drooping a little under its weight.
-  // Pulling feeds it through the band: it gets shorter and narrower and slips under the band.
-  const loop = (dir: 1 | -1, fed: number, breathe = 0): RopeBez[] => {
-    const f = Math.max(0.02, 1 - fed) * (1 + breathe);
-    const g = Math.max(0.1, Math.pow(f, 0.6));
-    const droop = 7 * f;
-    const tip = at(dir * (8 + 72 * f), 2 + droop);
-    return [
-      [at(dir * 3, -4), at(dir * (8 + 18 * f), -40 * g), at(dir * (8 + 80 * f), -34 * g + droop), tip],
-      [tip, at(dir * (8 + 76 * f), 20 * g + droop), at(dir * (8 + 22 * f), 16 * g), at(dir * 3, 5)],
-    ];
-  };
-  // idle motion fades out as soon as the untie starts
-  const amp = 1 - sm(0, 0.08, u);
-  const ti = idle;
-  const loopL = loop(-1, lFed, 0.035 * amp * Math.sin(ti * 1.5));
-  const loopR = loop(1, rFed, 0.035 * amp * Math.sin(ti * 1.5 + 1.1));
-  // the ends flutter: a wave that grows towards the tip, the two ends out of step
-  const wave = (ph: number, k: number) => Math.sin(ti * 2.1 + ph - k * 1.3) * amp;
-  void towardKnot;
-  const restL: RopeBez[] = [[K, at(-8 + 2 * wave(0, 0), 24), at(-34 + 6 * wave(0, 1), 46 + 2 * wave(0.8, 1)), at(-40 + 11 * wave(0, 2), 92 + 3 * wave(0.8, 2))]];
-  const restR: RopeBez[] = [[K, at(10 + 2 * wave(2, 0), 28), at(36 + 6 * wave(2, 1), 58 + 2 * wave(2.8, 1)), at(30 + 11 * wave(2, 2), 108 + 3 * wave(2.8, 2))]];
-  const fullL = (tailLen + loopLen) / s;
-  const fullR = (tailLen + loopLen) / s;
-  const tailL = mix(mix(restL, tautEnd(-1, lFed, lTight), lTight), slackEnd(-1, fullL), release);
-  const tailR = mix(mix(restR, tautEnd(1, rFed, rTight), rTight), slackEnd(1, fullR), release);
-  const slideOff = slide * (cx + 320 * s);
-  // the band wound round the middle of the bow loosens once both loops are through
-  const knotScale = 1 - sm(0.7, 0.8, u);
-  const band: RopeBez[] = [[at(-3, -11), at(8, -9), at(8, 9), at(-2, 12)]];
-  const knotOrigin: React.CSSProperties = { transformBox: "view-box", transformOrigin: `${cx}px ${knotY}px` };
-  const wrapLeft = useMemo(
-    () => (
-      <>
-        <SatinRibbon segs={[wrapA[0]]} width={rw} />
-      </>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [w, knotY, rw],
-  );
-  const wrapRight = useMemo(
-    () => (
-      <>
-        <SatinRibbon segs={[wrapA[1]]} width={rw} />
-      </>
-    ),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [w, knotY, rw],
-  );
-  const monoSize = Math.round(Math.min(Math.max(Math.min(w, vh) * 0.2, 72), 128));
-  const monoY = Math.min(flapH * 0.5, knotY - 70 * s - monoSize * 0.9);
 
   return (
     <div
-      ref={ref}
+      ref={rootRef}
       className="absolute inset-0 z-20 overflow-hidden"
-      style={{
-        perspective: 2200,
-        opacity: reducedMotion && opening ? 0 : 1,
-        transition: "opacity .5s ease",
-        pointerEvents: opening ? "none" : "auto",
-      }}
+      style={{ opacity: phase >= 3 ? 0 : 1, transition: `opacity ${reduced ? ".45s" : ".6s"} ease`, pointerEvents: opening ? "none" : "auto" }}
     >
       <button
         type="button"
@@ -878,167 +321,72 @@ const Envelope = ({
         className="absolute inset-0 block focus-visible:outline-none"
         style={{ width: "100%", height: "100%", background: "none", border: 0, padding: 0, cursor: "pointer" }}
       >
-        {/* everything that slides away with the envelope */}
         <span
-          aria-hidden
           className="dt-anim absolute inset-0 block"
-          style={{ zIndex: 2, transform: phase >= 4 ? "translateY(105%)" : "none", transition: "transform 2.1s cubic-bezier(.45,0,.2,1)" }}
+          style={{
+            background: DAWN_OPENING_BG,
+            transformOrigin: zoom.origin,
+            transform: phase >= 2 ? `scale(${zoom.scale})` : "scale(1)",
+            transition: "transform 1.3s cubic-bezier(.66,0,.18,1)",
+          }}
         >
-          {strips.map((r, i) => (
+          <DreamLight />
+          <span className="absolute inset-0 flex flex-col items-center justify-center" style={{ padding: "40px 24px" }}>
+            {/* the arch: a window onto the invitation */}
             <span
-              key={i}
-              className="absolute block"
+              ref={archRef}
+              className="dt-anim relative block"
               style={{
-                left: r.x,
-                top: r.y,
-                width: r.w,
-                height: r.h,
-                ...inside,
-                backgroundPosition: `0 0, ${-r.x}px ${-r.y}px`,
-                // the inside of the envelope fades as it starts to slide, so it never passes over the card
-                opacity: phase >= 4 ? 0 : 1,
-                transition: "opacity .45s ease",
+                width: "min(58vw, 36vh, 280px)",
+                aspectRatio: "3 / 4",
+                borderTopLeftRadius: 999,
+                borderTopRightRadius: 999,
+                background: DAWN_WINDOW_BG,
+                boxShadow: "0 34px 70px -34px rgba(120,66,50,.5), inset 0 0 0 1px rgba(255,255,255,.65)",
+                opacity: shown ? 1 : 0,
+                transform: shown ? "scale(1)" : "scale(.94)",
+                transition: "opacity 1s ease, transform 1.3s cubic-bezier(.2,.7,.2,1)",
               }}
-            />
-          ))}
-          {/* front pocket: two side flaps under a bottom flap */}
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
-            <defs>
-              {paper && (
-                <pattern id={`${uid}-paper`} patternUnits="userSpaceOnUse" width="400" height="400">
-                  <image href={paper} width="400" height="400" />
-                </pattern>
-              )}
-              <filter id={`${uid}-soft`} x="-10%" y="-20%" width="120%" height="140%">
-                <feGaussianBlur stdDeviation="3.4" />
-              </filter>
-            </defs>
-            <path d={`M0 0 L${cx} ${meetY} L0 ${h} Z`} fill={paperFill} />
-            <path d={`M0 0 L${cx} ${meetY} L0 ${h} Z`} fill="rgba(255,255,255,.18)" />
-            <path d={`M${w} 0 L${cx} ${meetY} L${w} ${h} Z`} fill={paperFill} />
-            <path d={`M${w} 0 L${cx} ${meetY} L${w} ${h} Z`} fill="rgba(110,86,60,.07)" />
-            {/* the bottom flap's torn edge casts a soft shadow */}
-            <path d={bottomEdge} fill="none" stroke="rgba(70,52,36,.22)" strokeWidth="8" filter={`url(#${uid}-soft)`} transform="translate(0 -3)" />
-            <path d={bottomPath} fill={paperFill} />
-            <path d={bottomPath} fill="rgba(110,86,60,.035)" />
-            <path d={bottomEdge} fill="none" stroke="#fffefb" strokeWidth="1.4" opacity="0.9" />
-            <path d={bottomEdge} fill="none" stroke="rgba(120,98,74,.25)" strokeWidth="0.7" transform="translate(0 1.4)" />
-          </svg>
-        </span>
-
-        {/* top flap — closed it sits on top; opened it folds back out of view */}
-        <span
-          aria-hidden
-          className="dt-anim absolute left-0 top-0 block"
-          style={{
-            width: w,
-            height: flapH,
-            zIndex: phase >= 3 ? 1 : 4,
-            transformOrigin: "50% 0",
-            transformStyle: "preserve-3d",
-            transform: phase >= 2 ? "rotateX(180deg)" : "rotateX(0deg)",
-            transition: "transform 1.4s cubic-bezier(.5,0,.25,1)",
-          }}
-        >
-          <svg
-            width={w}
-            height={flapH}
-            viewBox={`0 0 ${w} ${flapH}`}
-            className="absolute inset-0"
-            style={{ overflow: "visible", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}
-          >
-            <defs>
-              {paper && (
-                <pattern id={`${uid}-paper2`} patternUnits="userSpaceOnUse" width="400" height="400">
-                  <image href={paper} width="400" height="400" />
-                </pattern>
-              )}
-              <filter id={`${uid}-blur`} x="-10%" y="-10%" width="120%" height="140%">
-                <feGaussianBlur stdDeviation="4" />
-              </filter>
-            </defs>
-            <path d={flapPath} transform="translate(0 5)" fill="rgba(70,52,36,.3)" filter={`url(#${uid}-blur)`} />
-            <path d={flapPath} fill={paper ? `url(#${uid}-paper2)` : "#f4f0e9"} />
-            <path d={flapPath} fill="rgba(255,255,255,.12)" />
-            <path d={flapEdge} fill="none" stroke="#fffefb" strokeWidth="1.5" opacity="0.95" />
-            <path d={flapEdge} fill="none" stroke="rgba(120,98,74,.28)" strokeWidth="0.7" transform="translate(0 1.5)" />
-            <PressedMonogram x={cx} y={monoY} size={monoSize} groom={groomInitial} bride={brideInitial} />
-          </svg>
-          <span
-            className="absolute inset-0 block"
-            style={{
-              transform: "rotateX(180deg)",
-              backfaceVisibility: "hidden",
-              WebkitBackfaceVisibility: "hidden",
-              clipPath: `path("${flapPath}")`,
-              ...inside,
-            }}
-          />
-        </span>
-
-        {/* white satin ribbon tied in a bow; on tap it unties itself before the flap opens.
-            The long halves are drawn once and only slid (cheap); only the small bow is redrawn each frame. */}
-        {([["left", -1, wrapLeft], ["right", 1, wrapRight]] as const).map(([side, dir, strands]) => (
-          <span
-            key={side}
-            aria-hidden
-            className="absolute inset-0 block pointer-events-none"
-            style={{ zIndex: 5, transform: `translate3d(${dir * slideOff}px, 0, 0)`, opacity: fade, willChange: opening ? "transform, opacity" : undefined }}
-          >
-            <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
-              <defs>
-                <filter id={`${uid}-rope-${side}`} x="-5%" y="-50%" width="110%" height="200%">
-                  <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
-                </filter>
-              </defs>
-              <g filter={`url(#${uid}-rope-${side})`}>{strands}</g>
-            </svg>
+            >
+              <ArchOutline w={arch.w} h={arch.h} draw={shown} delay={0.3} />
+              <span className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: "18%", ...rise(0.75) }}>
+                <span style={{ fontFamily: FONT_TITLE, color: DAWN_INK, fontSize: "clamp(40px, 10.5vw, 56px)", lineHeight: 1, whiteSpace: "nowrap" }}>
+                  {groomInitial}
+                  <span style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: "0.38em", color: DAWN_GOLD, margin: "0 0.16em" }}>&amp;</span>
+                  {brideInitial}
+                </span>
+              </span>
+            </span>
+            <span className="block" style={{ ...SMALL_CAPS, fontSize: 12, letterSpacing: "0.36em", color: DAWN_INK, marginTop: 38, ...rise(1) }}>
+              {names}
+            </span>
+            <span className="block" style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, letterSpacing: "0.12em", color: DAWN_TEXT, marginTop: 10, ...rise(1.15) }}>
+              {dateText}
+            </span>
+            <span className="relative inline-flex items-center justify-center" style={{ marginTop: 44, ...rise(1.4) }}>
+              <span
+                aria-hidden
+                className="dt-anim absolute rounded-full"
+                style={{ inset: -6, border: `1px solid ${DAWN_GOLD}`, animation: "rv-ring 2.4s ease-out infinite" }}
+              />
+              <span
+                className="rounded-full"
+                style={{
+                  ...SMALL_CAPS,
+                  fontSize: 10.5,
+                  letterSpacing: "0.32em",
+                  color: DAWN_INK,
+                  padding: "11px 24px",
+                  border: "1px solid rgba(110,70,58,.28)",
+                  background: "rgba(255,255,255,.42)",
+                  backdropFilter: "blur(6px)",
+                  WebkitBackdropFilter: "blur(6px)",
+                }}
+              >
+                {label}
+              </span>
+            </span>
           </span>
-        ))}
-        <span aria-hidden className="absolute inset-0 block pointer-events-none" style={{ zIndex: 5, opacity: fade }}>
-          <svg width={w} height={h} viewBox={`0 0 ${w} ${h}`} className="absolute inset-0" style={{ overflow: "visible" }}>
-            <defs>
-              <filter id={`${uid}-bow`} x="-30%" y="-30%" width="160%" height="160%">
-                <feDropShadow dx={1 * s} dy={2.2 * s} stdDeviation={1.6 * s} floodColor="#3d2a18" floodOpacity="0.32" />
-              </filter>
-            </defs>
-            <g filter={`url(#${uid}-bow)`} transform={`translate(${nudge} ${Math.abs(nudge) * 0.25})`}>
-            <g style={knotOrigin}>
-              {/* the two ends travel with their halves once the knot opens */}
-              <g transform={`translate(${-slideOff} 0)`}>
-                <SatinRibbon segs={tailL} width={rw} flow={lFed * loopLen} />
-              </g>
-              <g transform={`translate(${slideOff} 0)`}>
-                <SatinRibbon segs={tailR} width={rw} flow={rFed * loopLen} />
-              </g>
-              {lFed < 0.985 && <SatinRibbon segs={loopL} width={rw} flow={-lFed * loopLen} />}
-              {rFed < 0.985 && <SatinRibbon segs={loopR} width={rw} flow={-rFed * loopLen} />}
-              {/* the knot: a short band of ribbon wound round the middle, over the loops' legs and the ends */}
-              {knotScale > 0.01 && (
-                <g transform={`translate(${cx} ${knotY}) scale(${knotScale}) translate(${-cx} ${-knotY})`} opacity={Math.min(1, knotScale * 1.6)}>
-                  <ellipse cx={cx + 1 * s} cy={knotY} rx={9 * s} ry={12 * s} fill="#f3eee6" />
-                  <SatinRibbon segs={band} width={rw * 1.05} />
-                </g>
-              )}
-            </g>
-            </g>
-          </svg>
-        </span>
-        <span
-          className="dt-anim absolute left-0 right-0 block text-center"
-          style={{
-            top: knotY + 122 * s,
-            zIndex: 5,
-            fontFamily: FONT_HEADING,
-            fontStyle: "italic",
-            fontSize: 17,
-            color: "#6f5f57",
-            opacity: opening ? 0 : 1,
-            transition: "opacity .3s ease",
-            animation: opening ? undefined : "dt-hint 2.6s ease-in-out infinite",
-          }}
-        >
-          {label}
         </span>
       </button>
     </div>
@@ -1138,6 +486,12 @@ const KEYFRAMES = `
 @keyframes dt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.03); } }
 @keyframes dt-reveal { from { opacity: 0; filter: blur(6px); } to { opacity: 1; filter: blur(0); } }
 @keyframes dt-hint { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@keyframes rv-drift1 { from { transform: translate(0, 0) scale(1); } to { transform: translate(9vw, 7vh) scale(1.12); } }
+@keyframes rv-drift2 { from { transform: translate(0, 0) scale(1.05); } to { transform: translate(-10vw, -6vh) scale(.94); } }
+@keyframes rv-drift3 { from { transform: translate(0, 0) scale(.95); } to { transform: translate(6vw, 9vh) scale(1.1); } }
+@keyframes rv-ring { 0% { opacity: .75; transform: scale(.92); } 100% { opacity: 0; transform: scale(1.3); } }
+@keyframes rv-rise { from { opacity: 0; transform: translateY(16px); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
+@keyframes rv-cue { 0% { transform: scaleY(0); transform-origin: top; } 48% { transform: scaleY(1); transform-origin: top; } 52% { transform: scaleY(1); transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 @media (prefers-reduced-motion: reduce) {
   .dt-anim { animation: none !important; transition: opacity .4s ease !important; transform: none !important; }
 }
@@ -1191,18 +545,25 @@ export const ReverieTemplate = ({
     applyFadeLoop(audio, wedding.audio_start_time || 0, wedding.audio_end_time, 0.5);
   };
 
-  // ---------- Opening: envelope with wax seal ----------
+  // ---------- Opening: fly through the arch into the invitation ----------
   const [opening, setOpening] = useState(false);
   const [opened, setOpened] = useState(false);
+  const heroPetals = useRef<PetalsHandle>(null);
+  const reducedMotion = prefersReducedMotion();
   const openInvitation = () => {
     if (opening) return;
     setOpening(true);
     audioRef.current?.play().catch(() => {});
-    // keep the envelope until it has untied, opened and slid away (see Envelope's timeline)
-    window.setTimeout(() => setOpened(true), prefersReducedMotion() ? 600 : ENVELOPE_DONE_MS);
+    if (!reducedMotion) window.setTimeout(() => heroPetals.current?.burst(undefined, undefined, 36), OPEN_FADE_AT);
+    // keep the opening screen until the view has gone through the arch (see Opening's timeline)
+    window.setTimeout(() => setOpened(true), reducedMotion ? 600 : OPENING_DONE_MS);
   };
-
-  const heroCardRef = useRef<HTMLDivElement>(null);
+  // The first section's lines rise in one after another as the opening fades away.
+  const heroIn = (i: number): React.CSSProperties =>
+    reducedMotion
+      ? {}
+      : { opacity: 0, animation: opening || opened ? `rv-rise 1.1s cubic-bezier(.2,.7,.2,1) ${(HERO_REVEAL_S + i * 0.14).toFixed(2)}s both` : undefined };
+  const [heroArchRef, heroArch] = useBoxSize<HTMLDivElement>();
   const rootRef = useRef<HTMLDivElement>(null);
 
   // No scrolling until the envelope has been opened and the card animation has finished.
@@ -1404,76 +765,79 @@ export const ReverieTemplate = ({
 
       <div dir={isArabic ? "rtl" : "ltr"}>
         {/* ==================== HERO ==================== */}
-        <section
-          className="relative overflow-hidden"
-          style={{ minHeight: "100svh", ...LINEN }}
-        >
-          <HeroSuite cardRef={heroCardRef} />
-          <Petals ambient={14} active={opened} />
-          <div className="relative mx-auto flex items-center" style={{ minHeight: "100svh", maxWidth: 560, padding: "44px clamp(28px, 8vw, 40px)" }}>
-            {/* The invitation card, on linen */}
-            <div
-              ref={heroCardRef}
-              className="relative w-full flex flex-col items-center justify-center text-center"
-              style={{
-                padding: "clamp(72px, 13vh, 112px) 30px",
-                minHeight: "min(calc(100svh - 88px), 820px)",
-              }}
-            >
+        <section className="relative overflow-hidden" style={{ minHeight: "100svh", background: DAWN_HERO_BG }}>
+          <DreamLight strength={0.75} />
+          <Petals ref={heroPetals} ambient={12} active={opened} />
+          <div className="relative mx-auto flex flex-col items-center justify-center" style={{ minHeight: "100svh", padding: "56px 22px 64px" }}>
+            {/* the invitation, framed by a fine gold arch */}
+            <div ref={heroArchRef} className="relative" style={{ width: "min(86vw, 420px)" }}>
               <div
+                aria-hidden
+                className="absolute inset-0"
                 style={{
-                  opacity: opened || opening ? 1 : 0,
-                  animation: opening || opened ? `dt-reveal 1.5s ease ${CARD_REVEAL_DELAY} both` : undefined,
+                  borderTopLeftRadius: 999,
+                  borderTopRightRadius: 999,
+                  background: "linear-gradient(180deg, rgba(255,255,255,.62) 0%, rgba(255,255,255,.2) 100%)",
+                  boxShadow: "0 40px 80px -50px rgba(120,66,50,.45)",
+                  ...heroIn(0),
                 }}
-                className="dt-anim flex flex-col items-center"
-              >
-                <p style={{ fontFamily: FONT_HEADING, fontSize: 17, lineHeight: 1.3, color: MUTED, maxWidth: 160 }}>
+              />
+              <ArchOutline w={heroArch.w} h={heroArch.h} draw={reducedMotion || opening || opened} delay={reducedMotion ? 0 : HERO_REVEAL_S - 0.1} />
+              <div className="relative flex flex-col items-center text-center" style={{ padding: "clamp(96px, 17vh, 140px) 24px clamp(64px, 10vh, 92px)" }}>
+                <p style={{ ...SMALL_CAPS, fontSize: 10.5, letterSpacing: "0.34em", lineHeight: 1.9, color: DAWN_TEXT, maxWidth: 230, ...heroIn(1) }}>
                   {t("reverie.together", "Together with their families")}
                 </p>
-                <HeartTap color="#a9776b">
-                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, marginTop: 26, textShadow: PRESSED }}>
-                  <EditableField
-                    fieldId="groom-name"
-                    text={getFieldValue("groom-name", groomName)}
-                    style={getFieldStyle("groom-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="span"
-                    className=""
-                  />
-                </div>
-                <div style={{ fontFamily: FONT_HEADING, fontSize: 16, color: MUTED, margin: "4px 0" }}>&amp;</div>
-                <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(54px, 15vw, 86px)", lineHeight: 1.05, color: INK, textShadow: PRESSED }}>
-                  <EditableField
-                    fieldId="bride-name"
-                    text={getFieldValue("bride-name", brideName)}
-                    style={getFieldStyle("bride-name")}
-                    onUpdate={onFieldUpdate}
-                    isPreview={isPreview}
-                    tag="span"
-                    className=""
-                  />
-                </div>
+                <HeartTap color="#c27c74">
+                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: DAWN_INK, marginTop: 28, ...heroIn(2) }}>
+                    <EditableField
+                      fieldId="groom-name"
+                      text={getFieldValue("groom-name", groomName)}
+                      style={getFieldStyle("groom-name")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="span"
+                      className=""
+                    />
+                  </div>
+                  <div style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 22, color: DAWN_GOLD, margin: "2px 0", ...heroIn(3) }}>&amp;</div>
+                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: DAWN_INK, ...heroIn(4) }}>
+                    <EditableField
+                      fieldId="bride-name"
+                      text={getFieldValue("bride-name", brideName)}
+                      style={getFieldStyle("bride-name")}
+                      onUpdate={onFieldUpdate}
+                      isPreview={isPreview}
+                      tag="span"
+                      className=""
+                    />
+                  </div>
                 </HeartTap>
-                <p style={{ fontFamily: FONT_HEADING, fontSize: 18, letterSpacing: "0.04em", color: INK, marginTop: 30 }}>
-                  {isArabic ? longDate : numericDate}
-                </p>
-                <svg aria-hidden width="132" height="96" viewBox="0 0 132 96" style={{ marginTop: 22, overflow: "visible" }}>
-                  <PressedMonogram x={66} y={48} size={44} groom={groomInitialLetter} bride={brideInitialLetter} />
-                </svg>
+                <div className="flex items-center justify-center" style={{ gap: 14, marginTop: 32, ...heroIn(5) }}>
+                  <span style={{ width: 34, height: 1, background: DAWN_GOLD, opacity: 0.75 }} />
+                  <span style={{ fontFamily: FONT_HEADING, fontSize: 19, letterSpacing: "0.16em", color: DAWN_INK }} dir="ltr">
+                    {isArabic ? longDate : numericDate.replace(/\./g, " · ")}
+                  </span>
+                  <span style={{ width: 34, height: 1, background: DAWN_GOLD, opacity: 0.75 }} />
+                </div>
               </div>
+            </div>
+            {/* scroll cue */}
+            <div className="flex flex-col items-center" style={{ marginTop: 30, ...heroIn(7) }}>
+              <span style={{ ...SMALL_CAPS, fontSize: 9.5, letterSpacing: "0.4em", color: DAWN_TEXT }}>{t("reverie.scroll", "Scroll")}</span>
+              <span className="dt-anim block" style={{ width: 1, height: 34, marginTop: 10, background: DAWN_GOLD, animation: "rv-cue 2.2s ease-in-out infinite" }} />
             </div>
           </div>
 
-          {/* Envelope sealed with wax — tap to open */}
+          {/* Opening: an arch-shaped window with the couple's initials — tap to go through it */}
           {!opened && (
-            <Envelope
-              cardRef={heroCardRef}
+            <Opening
               opening={opening}
               onOpen={openInvitation}
               label={t("reverie.tapToOpen", "Tap to open")}
               groomInitial={groomInitialLetter}
               brideInitial={brideInitialLetter}
+              names={`${groomName} & ${brideName}`}
+              dateText={isArabic ? longDate : numericDate.replace(/\./g, " · ")}
             />
           )}
         </section>
