@@ -141,7 +141,7 @@ type Petal = {
   burst: boolean;
 };
 
-const PETAL_COLORS = ["#f6e3e1", "#f1d3d3", "#fbf3ee", "#ead2cc", "#f8e9e4"];
+const PETAL_COLORS = ["#f4e9da", "#ead9bf", "#fbf6ee", "#e3d0b3", "#f6eddf"]; // ivory and champagne
 
 export type PetalsHandle = { burst: (x?: number, y?: number, count?: number) => void };
 
@@ -228,7 +228,7 @@ export const Petals = forwardRef<PetalsHandle, { ambient?: number; active?: bool
         ctx.globalAlpha = 0.9;
         ctx.fill();
         ctx.globalAlpha = 0.35;
-        ctx.strokeStyle = "#c9a9a3";
+        ctx.strokeStyle = "#c8b08e";
         ctx.lineWidth = 0.6;
         ctx.stroke();
         ctx.restore();

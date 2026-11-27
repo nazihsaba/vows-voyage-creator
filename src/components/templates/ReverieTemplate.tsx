@@ -31,9 +31,9 @@ import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt }
 
 /**
  * Rêverie (formerly Dentelle) — romantic lace invitation.
- * Opens from a paper envelope sealed with wax, then an ivory card on linen,
- * mocha bands with a fine lace trim, and a vertical "The Day" timeline built
- * from the events.
+ * Opens on mocha with an ivory envelope sealed in gold; tapping flies into it and
+ * onto an ivory invitation card with a gold border. Then mocha bands with a fine
+ * lace trim, and a vertical "The Day" timeline built from the events.
  */
 
 interface ReverieTemplateProps {
@@ -144,52 +144,56 @@ const grain = (alpha = 0.5) => {
   return `url("data:image/svg+xml;utf8,${encodeURIComponent(svg)}")`;
 };
 
-// ---------- Opening & first section: a warm "dawn" palette ----------
-const DAWN_INK = "#4a332c"; // names and monogram
-const DAWN_TEXT = "#86625a"; // small lettering
-const DAWN_GOLD = "#c49a72"; // fine lines
-const DAWN_OPENING_BG = "radial-gradient(130% 90% at 50% 0%, #f8e6dc 0%, #efd2c5 52%, #e4bfb0 100%)";
-const DAWN_WINDOW_BG = "linear-gradient(180deg, #fdf8f4 0%, #faeee7 100%)";
-const DAWN_HERO_BG = "linear-gradient(180deg, #fdf6f1 0%, #f8e6dd 56%, #faf6f1 100%)";
+// ---------- Opening & first section: ivory, mocha and champagne gold ----------
+const HERO_INK = "#4a352e"; // names
+const HERO_TEXT = "#8a6f63"; // small lettering
+const GOLD = "#c4a274"; // fine gold lines
+const GOLD_LIGHT = "#e3cfa8"; // gold on mocha
+const OPENING_BG = "radial-gradient(120% 90% at 50% 16%, #7c5f53 0%, #5b443b 50%, #3c2c26 100%)";
+const HERO_BG = "linear-gradient(180deg, #fcf8f2 0%, #f6eee4 58%, #faf6f1 100%)";
 
-// Opening timeline (ms after the tap): the lettering fades (0–350), the view flies through the
-// arch (from 280, 1.3s), the opening fades away (from 1250). The first section's text rises as it fades.
+// Opening timeline (ms after the tap): the lettering and seal fade (0–350), the view flies into the
+// envelope (from 280, 1.3s), the opening fades away (from 1250). The first section's text rises as it fades.
 const OPEN_ZOOM_AT = 280;
 const OPEN_FADE_AT = 1250;
 const OPENING_DONE_MS = 1850;
 const HERO_REVEAL_S = 1.15;
 
-/** Soft drifting light: three warm glows moving slowly, like morning light through a window. */
-const DreamLight = ({ strength = 1 }: { strength?: number }) => (
-  <span aria-hidden className="absolute inset-0 block overflow-hidden pointer-events-none">
-    {[
-      { c: "rgba(255,205,182,.62)", s: "70vmax", x: "-22%", y: "-18%", a: "rv-drift1 22s" },
-      { c: "rgba(240,176,184,.42)", s: "62vmax", x: "48%", y: "46%", a: "rv-drift2 26s" },
-      { c: "rgba(255,238,210,.7)", s: "52vmax", x: "26%", y: "-20%", a: "rv-drift3 19s" },
-    ].map((o) => (
-      <span
-        key={o.a}
-        className="dt-anim absolute block rounded-full"
-        style={{
-          left: o.x,
-          top: o.y,
-          width: o.s,
-          height: o.s,
-          opacity: strength,
-          background: `radial-gradient(circle, ${o.c} 0%, rgba(255,255,255,0) 68%)`,
-          animation: `${o.a} ease-in-out infinite alternate`,
-        }}
-      />
-    ))}
-    <span className="absolute inset-0 block" style={{ backgroundImage: grain(0.2), backgroundSize: "180px 180px", opacity: 0.45 }} />
-  </span>
-);
-
-/** An arch (round top) filling a w×h box, inset by d. */
-const archPath = (w: number, h: number, d = 0) => {
-  const r = w / 2 - d;
-  return `M${d} ${h - d} V${r + d} A${r} ${r} 0 0 1 ${w - d} ${r + d} V${h - d} Z`;
+/** Soft drifting light: three glows moving slowly. "night" for the mocha opening, "day" for ivory. */
+const DreamLight = ({ tone = "day", strength = 1 }: { tone?: "day" | "night"; strength?: number }) => {
+  const glows =
+    tone === "night"
+      ? ["rgba(227,207,168,.20)", "rgba(196,150,120,.16)", "rgba(255,232,196,.14)"]
+      : ["rgba(236,216,186,.55)", "rgba(240,222,208,.5)", "rgba(255,247,230,.75)"];
+  return (
+    <span aria-hidden className="absolute inset-0 block overflow-hidden pointer-events-none">
+      {[
+        { s: "70vmax", x: "-22%", y: "-18%", a: "rv-drift1 22s" },
+        { s: "62vmax", x: "48%", y: "46%", a: "rv-drift2 26s" },
+        { s: "52vmax", x: "26%", y: "-20%", a: "rv-drift3 19s" },
+      ].map((o, i) => (
+        <span
+          key={o.a}
+          className="dt-anim absolute block rounded-full"
+          style={{
+            left: o.x,
+            top: o.y,
+            width: o.s,
+            height: o.s,
+            opacity: strength,
+            background: `radial-gradient(circle, ${glows[i]} 0%, rgba(255,255,255,0) 68%)`,
+            animation: `${o.a} ease-in-out infinite alternate`,
+          }}
+        />
+      ))}
+      <span className="absolute inset-0 block" style={{ backgroundImage: grain(tone === "night" ? 0.3 : 0.2), backgroundSize: "180px 180px", opacity: 0.45 }} />
+    </span>
+  );
 };
+
+/** A rounded rectangle filling a w×h box, inset by d. */
+const framePath = (w: number, h: number, d: number, r = 4) =>
+  `M${d + r} ${d} H${w - d - r} Q${w - d} ${d} ${w - d} ${d + r} V${h - d - r} Q${w - d} ${h - d} ${w - d - r} ${h - d} H${d + r} Q${d} ${h - d} ${d} ${h - d - r} V${d + r} Q${d} ${d} ${d + r} ${d} Z`;
 
 /** Width and height of an element, kept up to date. */
 function useBoxSize<T extends HTMLElement>() {
@@ -207,14 +211,14 @@ function useBoxSize<T extends HTMLElement>() {
   return [ref, size] as const;
 }
 
-/** A fine double arch in gold that draws itself, with a small star at its crown. */
-const ArchOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: boolean; delay?: number }) => {
+/** A fine double gold border that draws itself, with a small star at the top. */
+const FrameOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: boolean; delay?: number }) => {
   if (!w || !h) return null;
   const line = (d: number, width: number, extra: number, opacity = 1) => (
     <path
-      d={archPath(w, h, d)}
+      d={framePath(w, h, d)}
       fill="none"
-      stroke={DAWN_GOLD}
+      stroke={GOLD}
       strokeWidth={width}
       opacity={opacity}
       pathLength={1}
@@ -224,15 +228,16 @@ const ArchOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: bo
     />
   );
   const sx = w / 2;
-  const sy = -10;
+  const sy = 14;
   const star = `M${sx} ${sy - 6} Q${sx} ${sy} ${sx + 6} ${sy} Q${sx} ${sy} ${sx} ${sy + 6} Q${sx} ${sy} ${sx - 6} ${sy} Q${sx} ${sy} ${sx} ${sy - 6} Z`;
   return (
     <svg aria-hidden className="absolute inset-0 pointer-events-none" width={w} height={h} viewBox={`0 0 ${w} ${h}`} style={{ overflow: "visible" }}>
-      {line(-10, 0.8, 0, 0.75)}
-      {line(0, 1.2, 0.12)}
+      {line(14, 1.1, 0)}
+      {line(19, 0.6, 0.12, 0.75)}
+      <rect x={sx - 10} y={sy - 4} width={20} height={8} fill="#fffdf9" className="dt-anim" style={{ opacity: draw ? 1 : 0, transition: `opacity .6s ease ${delay + 1.1}s` }} />
       <path
         d={star}
-        fill={DAWN_GOLD}
+        fill={GOLD}
         className="dt-anim"
         style={{ opacity: draw ? 1 : 0, transform: draw ? "scale(1)" : "scale(.4)", transformOrigin: `${sx}px ${sy}px`, transition: `opacity .8s ease ${delay + 1.2}s, transform .8s cubic-bezier(.2,.7,.2,1.4) ${delay + 1.2}s` }}
       />
@@ -241,8 +246,113 @@ const ArchOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: bo
 };
 
 /**
- * The opening screen: a warm dawn light with an arch-shaped window holding the couple's initials.
- * Tapping fades the lettering and flies through the arch into the invitation.
+ * A modern ivory envelope: crisp folded flaps with soft shading, a gold-lined top flap and a gold
+ * seal with the couple's initials. Drawn at 300×210 and scaled to its box.
+ */
+const ModernEnvelope = ({ shown, sealOff, groomInitial, brideInitial }: { shown: boolean; sealOff: boolean; groomInitial: string; brideInitial: string }) => {
+  const uid = useId().replace(/:/g, "");
+  const flap = "M0 0 H300 L162 122 Q150 132 138 122 Z";
+  const flapLiner = "M10 6 L144 114 Q150 119 156 114 L290 6";
+  return (
+    <svg viewBox="0 0 300 210" width="100%" height="100%" aria-hidden style={{ overflow: "visible", display: "block" }}>
+      <defs>
+        <linearGradient id={`${uid}-body`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#f7f0e6" />
+          <stop offset="1" stopColor="#ece2d4" />
+        </linearGradient>
+        <linearGradient id={`${uid}-side`} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#f1e8db" />
+          <stop offset="1" stopColor="#e8dccc" />
+        </linearGradient>
+        <linearGradient id={`${uid}-sideR`} x1="1" y1="0" x2="0" y2="0">
+          <stop offset="0" stopColor="#efe5d8" />
+          <stop offset="1" stopColor="#e6d9c8" />
+        </linearGradient>
+        <linearGradient id={`${uid}-bottom`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fbf6ee" />
+          <stop offset="1" stopColor="#f0e6d8" />
+        </linearGradient>
+        <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#fbf6ef" />
+          <stop offset="1" stopColor="#f3eadf" />
+        </linearGradient>
+        <radialGradient id={`${uid}-seal`} cx="38%" cy="32%" r="75%">
+          <stop offset="0" stopColor="#f1dcae" />
+          <stop offset="0.5" stopColor="#c9a066" />
+          <stop offset="1" stopColor="#8f6a3b" />
+        </radialGradient>
+        <filter id={`${uid}-blur`} x="-10%" y="-20%" width="120%" height="160%">
+          <feGaussianBlur stdDeviation="2.4" />
+        </filter>
+        <filter id={`${uid}-sealShadow`} x="-40%" y="-40%" width="180%" height="180%">
+          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#2c1e18" floodOpacity="0.35" />
+        </filter>
+      </defs>
+      {/* body and folded flaps */}
+      <rect width="300" height="210" rx="5" fill={`url(#${uid}-body)`} />
+      <path d="M0 0 L150 112 L0 210 Z" fill={`url(#${uid}-side)`} />
+      <path d="M300 0 L150 112 L300 210 Z" fill={`url(#${uid}-sideR)`} />
+      <path d="M0 210 L150 98 L300 210 Z" fill="rgba(70,48,38,.16)" filter={`url(#${uid}-blur)`} transform="translate(0 -2)" />
+      <path d="M0 210 L150 98 L300 210 Z" fill={`url(#${uid}-bottom)`} />
+      <path d="M2 208 L150 99 L298 208" fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.85" />
+      {/* top flap, closed, with its shadow and a gold lining along its edge */}
+      <path d={flap} fill="rgba(60,40,30,.28)" filter={`url(#${uid}-blur)`} transform="translate(0 3)" />
+      <path d={flap} fill={`url(#${uid}-flap)`} />
+      <path
+        d={flapLiner}
+        fill="none"
+        stroke={GOLD}
+        strokeWidth="1.3"
+        pathLength={1}
+        strokeDasharray="1 1"
+        className="dt-anim"
+        style={{ strokeDashoffset: shown ? 0 : 1, transition: "stroke-dashoffset 1.8s cubic-bezier(.45,0,.2,1) .5s" }}
+      />
+      <rect x="0.5" y="0.5" width="299" height="209" rx="5" fill="none" stroke="rgba(255,255,255,.55)" />
+      {/* gold seal with the initials */}
+      <g
+        className="dt-anim"
+        style={{
+          transformBox: "fill-box",
+          transformOrigin: "center",
+          opacity: shown && !sealOff ? 1 : 0,
+          transform: shown && !sealOff ? "scale(1)" : sealOff ? "scale(1.12)" : "scale(.6)",
+          transition: sealOff ? "opacity .35s ease, transform .35s ease" : "opacity .7s ease 1s, transform .8s cubic-bezier(.2,.7,.2,1.35) 1s",
+        }}
+        filter={`url(#${uid}-sealShadow)`}
+      >
+        <circle cx="150" cy="124" r="23" fill={`url(#${uid}-seal)`} />
+        <circle cx="150" cy="124" r="17.5" fill="none" stroke="#f6e6c2" strokeWidth="0.8" opacity="0.7" />
+        {/* initials engraved into the gold: a dark edge below, a light edge above */}
+        {[
+          { dx: 0.5, dy: 0.7, fill: "#6b4c25", op: 0.7 },
+          { dx: -0.4, dy: -0.5, fill: "#fbefd3", op: 0.75 },
+          { dx: 0, dy: 0, fill: "#9a7442", op: 1 },
+        ].map((l) => (
+          <text
+            key={l.fill}
+            x={150 + l.dx}
+            y={128.2 + l.dy}
+            textAnchor="middle"
+            fill={l.fill}
+            opacity={l.op}
+            style={{ fontFamily: FONT_HEADING, letterSpacing: "0.04em" }}
+            fontSize="12.5"
+            fontWeight={600}
+          >
+            {groomInitial}
+            <tspan fontSize="8" fontStyle="italic" dx="1.2" dy="-0.6">&amp;</tspan>
+            <tspan dx="1.2" dy="0.6">{brideInitial}</tspan>
+          </text>
+        ))}
+      </g>
+    </svg>
+  );
+};
+
+/**
+ * The opening screen: mocha with a soft gold light and a modern ivory envelope sealed in gold.
+ * Tapping fades the lettering and the seal, then flies into the envelope, into the invitation.
  */
 const Opening = ({
   opening,
@@ -263,8 +373,8 @@ const Opening = ({
 }) => {
   const reduced = prefersReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const [archRef, arch] = useBoxSize<HTMLSpanElement>();
-  // 0 waiting · 1 lettering fades · 2 through the arch · 3 fading away
+  const envRef = useRef<HTMLSpanElement | null>(null);
+  // 0 waiting · 1 lettering fades · 2 into the envelope · 3 fading away
   const [phase, setPhase] = useState(0);
   const [shown, setShown] = useState(false);
   const [zoom, setZoom] = useState({ origin: "50% 45%", scale: 10 });
@@ -278,14 +388,14 @@ const Opening = ({
       setPhase(3);
       return;
     }
-    // fly through the middle of the arch, far enough that its inside fills the screen
+    // fly into the upper middle of the envelope (its flap), far enough that the ivory fills the screen
     const root = rootRef.current;
-    const a = archRef.current;
-    if (root && a) {
+    const e = envRef.current;
+    if (root && e) {
       const r = root.getBoundingClientRect();
-      const b = a.getBoundingClientRect();
+      const b = e.getBoundingClientRect();
       setZoom({
-        origin: `${b.left - r.left + b.width / 2}px ${b.top - r.top + b.height * 0.58}px`,
+        origin: `${b.left - r.left + b.width / 2}px ${b.top - r.top + b.height * 0.3}px`,
         scale: 2.6 * Math.max(r.width / b.width, r.height / b.height) + 1,
       });
     }
@@ -296,7 +406,7 @@ const Opening = ({
       clearTimeout(t1);
       clearTimeout(t2);
     };
-  }, [opening, reduced, archRef]);
+  }, [opening, reduced]);
 
   // each line rises in on arrival, and drops away when tapped
   const rise = (delay: number): React.CSSProperties => {
@@ -324,50 +434,39 @@ const Opening = ({
         <span
           className="dt-anim absolute inset-0 block"
           style={{
-            background: DAWN_OPENING_BG,
+            background: OPENING_BG,
             transformOrigin: zoom.origin,
             transform: phase >= 2 ? `scale(${zoom.scale})` : "scale(1)",
             transition: "transform 1.3s cubic-bezier(.66,0,.18,1)",
           }}
         >
-          <DreamLight />
+          <DreamLight tone="night" />
           <span className="absolute inset-0 flex flex-col items-center justify-center" style={{ padding: "40px 24px" }}>
-            {/* the arch: a window onto the invitation */}
             <span
-              ref={archRef}
+              ref={envRef}
               className="dt-anim relative block"
               style={{
-                width: "min(58vw, 36vh, 280px)",
-                aspectRatio: "3 / 4",
-                borderTopLeftRadius: 999,
-                borderTopRightRadius: 999,
-                background: DAWN_WINDOW_BG,
-                boxShadow: "0 34px 70px -34px rgba(120,66,50,.5), inset 0 0 0 1px rgba(255,255,255,.65)",
+                width: "min(80vw, 60vh, 380px)",
+                aspectRatio: "300 / 210",
+                filter: "drop-shadow(0 26px 34px rgba(20,12,8,.45)) drop-shadow(0 4px 8px rgba(20,12,8,.25))",
                 opacity: shown ? 1 : 0,
-                transform: shown ? "scale(1)" : "scale(.94)",
+                transform: shown ? "none" : "translateY(18px) scale(.96)",
                 transition: "opacity 1s ease, transform 1.3s cubic-bezier(.2,.7,.2,1)",
               }}
             >
-              <ArchOutline w={arch.w} h={arch.h} draw={shown} delay={0.3} />
-              <span className="absolute inset-0 flex items-center justify-center" style={{ paddingTop: "18%", ...rise(0.75) }}>
-                <span style={{ fontFamily: FONT_TITLE, color: DAWN_INK, fontSize: "clamp(40px, 10.5vw, 56px)", lineHeight: 1, whiteSpace: "nowrap" }}>
-                  {groomInitial}
-                  <span style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: "0.38em", color: DAWN_GOLD, margin: "0 0.16em" }}>&amp;</span>
-                  {brideInitial}
-                </span>
-              </span>
+              <ModernEnvelope shown={shown} sealOff={phase > 0} groomInitial={groomInitial} brideInitial={brideInitial} />
             </span>
-            <span className="block" style={{ ...SMALL_CAPS, fontSize: 12, letterSpacing: "0.36em", color: DAWN_INK, marginTop: 38, ...rise(1) }}>
+            <span className="block" style={{ ...SMALL_CAPS, fontSize: 12, letterSpacing: "0.36em", color: "#f6ecdf", marginTop: 46, ...rise(1) }}>
               {names}
             </span>
-            <span className="block" style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, letterSpacing: "0.12em", color: DAWN_TEXT, marginTop: 10, ...rise(1.15) }}>
+            <span className="block" style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 17, letterSpacing: "0.12em", color: GOLD_LIGHT, marginTop: 10, ...rise(1.15) }}>
               {dateText}
             </span>
             <span className="relative inline-flex items-center justify-center" style={{ marginTop: 44, ...rise(1.4) }}>
               <span
                 aria-hidden
                 className="dt-anim absolute rounded-full"
-                style={{ inset: -6, border: `1px solid ${DAWN_GOLD}`, animation: "rv-ring 2.4s ease-out infinite" }}
+                style={{ inset: -6, border: `1px solid ${GOLD_LIGHT}`, animation: "rv-ring 2.4s ease-out infinite" }}
               />
               <span
                 className="rounded-full"
@@ -375,10 +474,10 @@ const Opening = ({
                   ...SMALL_CAPS,
                   fontSize: 10.5,
                   letterSpacing: "0.32em",
-                  color: DAWN_INK,
+                  color: "#f6ecdf",
                   padding: "11px 24px",
-                  border: "1px solid rgba(110,70,58,.28)",
-                  background: "rgba(255,255,255,.42)",
+                  border: "1px solid rgba(227,207,168,.45)",
+                  background: "rgba(255,255,255,.08)",
                   backdropFilter: "blur(6px)",
                   WebkitBackdropFilter: "blur(6px)",
                 }}
@@ -765,30 +864,29 @@ export const ReverieTemplate = ({
 
       <div dir={isArabic ? "rtl" : "ltr"}>
         {/* ==================== HERO ==================== */}
-        <section className="relative overflow-hidden" style={{ minHeight: "100svh", background: DAWN_HERO_BG }}>
-          <DreamLight strength={0.75} />
+        <section className="relative overflow-hidden" style={{ minHeight: "100svh", background: HERO_BG }}>
+          <DreamLight tone="day" strength={0.8} />
           <Petals ref={heroPetals} ambient={12} active={opened} />
           <div className="relative mx-auto flex flex-col items-center justify-center" style={{ minHeight: "100svh", padding: "56px 22px 64px" }}>
-            {/* the invitation, framed by a fine gold arch */}
-            <div ref={heroArchRef} className="relative" style={{ width: "min(86vw, 420px)" }}>
+            {/* the invitation card, just out of the envelope, with a fine gold double border */}
+            <div ref={heroArchRef} className="relative" style={{ width: "min(86vw, 430px)" }}>
               <div
                 aria-hidden
                 className="absolute inset-0"
                 style={{
-                  borderTopLeftRadius: 999,
-                  borderTopRightRadius: 999,
-                  background: "linear-gradient(180deg, rgba(255,255,255,.62) 0%, rgba(255,255,255,.2) 100%)",
-                  boxShadow: "0 40px 80px -50px rgba(120,66,50,.45)",
+                  borderRadius: 6,
+                  background: "linear-gradient(180deg, #fffdf9 0%, #fbf6ee 100%)",
+                  boxShadow: "0 40px 70px -44px rgba(79,59,52,.45), 0 2px 8px rgba(79,59,52,.06)",
                   ...heroIn(0),
                 }}
               />
-              <ArchOutline w={heroArch.w} h={heroArch.h} draw={reducedMotion || opening || opened} delay={reducedMotion ? 0 : HERO_REVEAL_S - 0.1} />
-              <div className="relative flex flex-col items-center text-center" style={{ padding: "clamp(96px, 17vh, 140px) 24px clamp(64px, 10vh, 92px)" }}>
-                <p style={{ ...SMALL_CAPS, fontSize: 10.5, letterSpacing: "0.34em", lineHeight: 1.9, color: DAWN_TEXT, maxWidth: 230, ...heroIn(1) }}>
+              <FrameOutline w={heroArch.w} h={heroArch.h} draw={reducedMotion || opening || opened} delay={reducedMotion ? 0 : HERO_REVEAL_S - 0.1} />
+              <div className="relative flex flex-col items-center text-center" style={{ padding: "clamp(84px, 14vh, 120px) 26px clamp(70px, 11vh, 100px)" }}>
+                <p style={{ ...SMALL_CAPS, fontSize: 10.5, letterSpacing: "0.34em", lineHeight: 1.9, color: HERO_TEXT, maxWidth: 230, ...heroIn(1) }}>
                   {t("reverie.together", "Together with their families")}
                 </p>
-                <HeartTap color="#c27c74">
-                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: DAWN_INK, marginTop: 28, ...heroIn(2) }}>
+                <HeartTap color="#b98a7e">
+                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: HERO_INK, marginTop: 28, ...heroIn(2) }}>
                     <EditableField
                       fieldId="groom-name"
                       text={getFieldValue("groom-name", groomName)}
@@ -799,8 +897,8 @@ export const ReverieTemplate = ({
                       className=""
                     />
                   </div>
-                  <div style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 22, color: DAWN_GOLD, margin: "2px 0", ...heroIn(3) }}>&amp;</div>
-                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: DAWN_INK, ...heroIn(4) }}>
+                  <div style={{ fontFamily: FONT_HEADING, fontStyle: "italic", fontSize: 22, color: GOLD, margin: "2px 0", ...heroIn(3) }}>&amp;</div>
+                  <div style={{ fontFamily: FONT_TITLE, fontSize: "clamp(56px, 16vw, 92px)", lineHeight: 1.04, color: HERO_INK, ...heroIn(4) }}>
                     <EditableField
                       fieldId="bride-name"
                       text={getFieldValue("bride-name", brideName)}
@@ -813,22 +911,22 @@ export const ReverieTemplate = ({
                   </div>
                 </HeartTap>
                 <div className="flex items-center justify-center" style={{ gap: 14, marginTop: 32, ...heroIn(5) }}>
-                  <span style={{ width: 34, height: 1, background: DAWN_GOLD, opacity: 0.75 }} />
-                  <span style={{ fontFamily: FONT_HEADING, fontSize: 19, letterSpacing: "0.16em", color: DAWN_INK }} dir="ltr">
+                  <span style={{ width: 34, height: 1, background: GOLD, opacity: 0.75 }} />
+                  <span style={{ fontFamily: FONT_HEADING, fontSize: 19, letterSpacing: "0.16em", color: HERO_INK }} dir="ltr">
                     {isArabic ? longDate : numericDate.replace(/\./g, " · ")}
                   </span>
-                  <span style={{ width: 34, height: 1, background: DAWN_GOLD, opacity: 0.75 }} />
+                  <span style={{ width: 34, height: 1, background: GOLD, opacity: 0.75 }} />
                 </div>
               </div>
             </div>
             {/* scroll cue */}
             <div className="flex flex-col items-center" style={{ marginTop: 30, ...heroIn(7) }}>
-              <span style={{ ...SMALL_CAPS, fontSize: 9.5, letterSpacing: "0.4em", color: DAWN_TEXT }}>{t("reverie.scroll", "Scroll")}</span>
-              <span className="dt-anim block" style={{ width: 1, height: 34, marginTop: 10, background: DAWN_GOLD, animation: "rv-cue 2.2s ease-in-out infinite" }} />
+              <span style={{ ...SMALL_CAPS, fontSize: 9.5, letterSpacing: "0.4em", color: HERO_TEXT }}>{t("reverie.scroll", "Scroll")}</span>
+              <span className="dt-anim block" style={{ width: 1, height: 34, marginTop: 10, background: GOLD, animation: "rv-cue 2.2s ease-in-out infinite" }} />
             </div>
           </div>
 
-          {/* Opening: an arch-shaped window with the couple's initials — tap to go through it */}
+          {/* Opening: an ivory envelope sealed in gold — tap to fly into it */}
           {!opened && (
             <Opening
               opening={opening}
