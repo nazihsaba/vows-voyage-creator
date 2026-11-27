@@ -289,8 +289,8 @@ const RealWaxSeal = ({ shown, cracked }: { shown: boolean; cracked: boolean }) =
 };
 
 /**
- * A modern ivory envelope that opens: folded flaps with soft shading, a gold-lined top flap with a
- * gold-patterned lining inside, the invitation card tucked in it, and a gold wax seal on the flap.
+ * A modern ivory envelope that opens: folded flaps with soft shading, a gold-lined top flap (ivory
+ * inside too), the invitation card tucked in it, and a gold wax seal on the flap.
  * Each part is its own layer so the flap can swing open in 3D and the card can slide out.
  */
 const OpeningEnvelope = ({
@@ -323,7 +323,7 @@ const OpeningEnvelope = ({
         <rect width="300" height="210" rx="5" fill={`url(#${uid}-inside)`} />
       </svg>
 
-      {/* top flap: outside ivory with a gold lining along its edge; inside a gold-patterned liner */}
+      {/* top flap: outside ivory with a gold lining along its edge; inside ivory too */}
       <span
         aria-hidden
         className="dt-anim block"
@@ -376,17 +376,14 @@ const OpeningEnvelope = ({
           }}
         >
           <defs>
+            {/* the inside of the flap: the envelope's own ivory, a touch deeper than the outside */}
             <linearGradient id={`${uid}-liner`} x1="0" y1="1" x2="0" y2="0">
-              <stop offset="0" stopColor="#d9bd8c" />
-              <stop offset="1" stopColor="#c49f68" />
+              <stop offset="0" stopColor="#f1e8dc" />
+              <stop offset="1" stopColor="#e9dfd1" />
             </linearGradient>
-            <pattern id={`${uid}-dots`} width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <circle cx="5" cy="5" r="1.1" fill="#f3e2bd" opacity="0.55" />
-            </pattern>
           </defs>
           <path d={`M0 ${FLAP_H} H300 L162 12 Q150 2 138 12 Z`} fill={`url(#${uid}-liner)`} />
-          <path d={`M0 ${FLAP_H} H300 L162 12 Q150 2 138 12 Z`} fill={`url(#${uid}-dots)`} />
-          <path d={`M8 ${FLAP_H - 5} L146 18 Q150 13 154 18 L292 ${FLAP_H - 5}`} fill="none" stroke="#f6e7c6" strokeWidth="0.9" opacity="0.8" />
+          <path d={`M2 ${FLAP_H - 1} L146 14 Q150 9 154 14 L298 ${FLAP_H - 1}`} fill="none" stroke="#fffdf8" strokeWidth="0.9" opacity="0.7" />
         </svg>
       </span>
 
