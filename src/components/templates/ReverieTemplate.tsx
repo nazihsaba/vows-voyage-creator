@@ -153,8 +153,8 @@ const GOLD_LIGHT = "#e3cfa8"; // gold on mocha
 const OPENING_BG = "radial-gradient(120% 90% at 50% 16%, #7c5f53 0%, #5b443b 50%, #3c2c26 100%)";
 const HERO_BG = "linear-gradient(180deg, #fcf8f2 0%, #f6eee4 58%, #faf6f1 100%)";
 
-// Opening timeline (ms after the tap): the lettering fades and the seal cracks (0–550), the flap
-// swings open (from 380), the card slides out (from 900), the view flies into the card (from 1500,
+// Opening timeline (ms after the tap): the lettering fades (0–350), the flap swings open with the
+// wax seal still on it (from 380), the card slides out (from 900), the view flies into the card (from 1500,
 // 1.3s) and the opening fades away (from 2450). The first section's text rises as it fades.
 const OPEN_FLAP_AT = 380;
 const OPEN_CARD_AT = 900;
@@ -249,44 +249,22 @@ const FrameOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: b
   );
 };
 
-// a jagged crack down the middle of the seal image (x%, y%)
-const SEAL_CRACK = "50% 0, 46.5% 14%, 52.5% 28%, 47% 42%, 53% 56%, 48% 71%, 52.5% 86%, 50% 100%";
-
-/**
- * The gold wax seal (photo, src/assets/wax-seal-heart.webp) with a shadow on the paper.
- * When `cracked`, it splits in two along a jagged line and the halves fall away.
- */
-const RealWaxSeal = ({ shown, cracked }: { shown: boolean; cracked: boolean }) => {
-  const half = (side: "l" | "r") => (
-    <img
-      src={waxSealHeart}
-      alt=""
-      draggable={false}
-      className="dt-anim absolute inset-0 block h-full w-full select-none"
-      style={{
-        clipPath: side === "l" ? `polygon(0 0, ${SEAL_CRACK}, 0 100%)` : `polygon(100% 0, ${SEAL_CRACK}, 100% 100%)`,
-        transform: cracked ? (side === "l" ? "translate(-7%, 6%) rotate(-9deg)" : "translate(8%, 5%) rotate(11deg)") : "none",
-        opacity: cracked ? 0 : 1,
-        transition: "transform .65s cubic-bezier(.3,0,.4,1), opacity .4s ease .35s",
-      }}
-    />
-  );
-  return (
-    <span
-      aria-hidden
-      className="dt-anim absolute inset-0 block"
-      style={{
-        filter: "drop-shadow(0 3px 3px rgba(44,29,16,.35)) drop-shadow(0 8px 10px rgba(44,29,16,.2))",
-        opacity: shown ? 1 : 0,
-        transform: shown ? "scale(1)" : "scale(.55)",
-        transition: "opacity .6s ease 1s, transform .7s cubic-bezier(.2,.7,.25,1.3) 1s",
-      }}
-    >
-      {half("l")}
-      {half("r")}
-    </span>
-  );
-};
+/** The gold wax seal (photo, src/assets/wax-seal-heart.webp) with a shadow on the paper. */
+const RealWaxSeal = ({ shown }: { shown: boolean }) => (
+  <img
+    src={waxSealHeart}
+    alt=""
+    aria-hidden
+    draggable={false}
+    className="dt-anim absolute inset-0 block h-full w-full select-none"
+    style={{
+      filter: "drop-shadow(0 3px 3px rgba(44,29,16,.35)) drop-shadow(0 8px 10px rgba(44,29,16,.2))",
+      opacity: shown ? 1 : 0,
+      transform: shown ? "scale(1)" : "scale(.55)",
+      transition: "opacity .6s ease 1s, transform .7s cubic-bezier(.2,.7,.25,1.3) 1s",
+    }}
+  />
+);
 
 /**
  * A modern ivory envelope that opens: folded flaps with soft shading, a gold-lined top flap (ivory
@@ -300,7 +278,7 @@ const OpeningEnvelope = ({
   cardRef,
 }: {
   shown: boolean;
-  /** 0 sealed · 1 seal cracks · 2 flap opens · 3 flap behind the card · 4 card slides out */
+  /** 0 sealed · 1 lettering fades · 2 flap opens (seal on it) · 3 flap behind the card · 4 card slides out */
   stage: number;
   names: string;
   cardRef: React.RefObject<HTMLSpanElement>;
@@ -338,7 +316,8 @@ const OpeningEnvelope = ({
           transition: `transform .85s ${ease}`,
         }}
       >
-        <svg viewBox={`0 0 300 ${FLAP_H}`} aria-hidden style={{ ...layer, top: 0, height: flapPct, overflow: "visible", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+        <span className="block" style={{ ...layer, top: 0, height: flapPct, backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+        <svg viewBox={`0 0 300 ${FLAP_H}`} aria-hidden width="100%" height="100%" style={{ position: "absolute", inset: 0, overflow: "visible" }}>
           <defs>
             <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
               <stop offset="0" stopColor="#fbf6ef" />
@@ -361,6 +340,14 @@ const OpeningEnvelope = ({
             style={{ strokeDashoffset: shown ? 0 : 1, transition: "stroke-dashoffset 1.8s cubic-bezier(.45,0,.2,1) .5s" }}
           />
         </svg>
+        {/* the wax seal, on the tip of the flap: it lifts with the flap as it opens */}
+        <span
+          className="absolute block"
+          style={{ left: "50%", top: `${(127 / FLAP_H) * 100}%`, width: "40%", aspectRatio: "1", transform: "translate(-50%, -50%)" }}
+        >
+          <RealWaxSeal shown={shown} />
+        </span>
+        </span>
         <svg
           viewBox={`0 0 300 ${FLAP_H}`}
           aria-hidden
@@ -442,21 +429,13 @@ const OpeningEnvelope = ({
         <path d="M2 208 L150 99 L298 208" fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.85" />
         <path d="M0 1 L150 112 L300 1" fill="none" stroke="#fffdf8" strokeWidth="0.8" opacity="0.6" />
       </svg>
-
-      {/* the wax seal, on the tip of the flap */}
-      <span
-        className="absolute block"
-        style={{ left: "50%", top: `${(127 / 210) * 100}%`, width: "40%", aspectRatio: "1", transform: "translate(-50%, -50%)", zIndex: 6 }}
-      >
-        <RealWaxSeal shown={shown} cracked={stage >= 1} />
-      </span>
     </span>
   );
 };
 
 /**
  * The opening screen: mocha with a soft gold light and an ivory envelope sealed with gold wax.
- * Tapping cracks the seal, opens the flap, slides the card out, then flies into the card.
+ * Tapping opens the flap (the seal lifts with it), slides the card out, then flies into the card.
  */
 const Opening = ({
   opening,
