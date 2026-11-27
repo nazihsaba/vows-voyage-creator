@@ -92,6 +92,12 @@
     "tapToFlip": "Tap to turn",
     "copy": "Copy",
     "copied": "Copied",
-    "addToCalendar": "Add to calendar"
+    "addToCalendar": "Add to calendar",
+    "galleryKicker": "Captured with love",
+    "gallery": "Our Moments",
+    "openPhoto": "Open photo {{n}}",
+    "closePhoto": "Close",
+    "previousPhoto": "Previous photo",
+    "nextPhoto": "Next photo"
   }
 }

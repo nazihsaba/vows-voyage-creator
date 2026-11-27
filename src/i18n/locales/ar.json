@@ -91,6 +91,12 @@
     "tapToFlip": "اضغط للقلب",
     "copy": "نسخ",
     "copied": "تم النسخ",
-    "addToCalendar": "أضف إلى التقويم"
+    "addToCalendar": "أضف إلى التقويم",
+    "galleryKicker": "لحظات من القلب",
+    "gallery": "لحظاتنا",
+    "openPhoto": "عرض الصورة {{n}}",
+    "closePhoto": "إغلاق",
+    "previousPhoto": "الصورة السابقة",
+    "nextPhoto": "الصورة التالية"
   }
 }

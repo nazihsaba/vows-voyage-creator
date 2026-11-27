@@ -1,5 +1,9 @@
 import { getPreviewDates } from "@/lib/previewDates";
 import { ReverieTemplate } from "./ReverieTemplate";
+import gallery1 from "@/assets/reverie/gallery-1.jpg";
+import gallery2 from "@/assets/reverie/gallery-2.jpg";
+import gallery3 from "@/assets/reverie/gallery-3.jpg";
+import gallery4 from "@/assets/reverie/gallery-4.jpg";
 
 const previewDates = getPreviewDates();
 
@@ -41,6 +45,13 @@ const sampleLocations = [
   },
 ];
 
+const sampleGallery = [gallery1, gallery2, gallery3, gallery4].map((image_url, i) => ({
+  id: `sample-${i + 1}`,
+  image_url,
+  image_order: i + 1,
+  position_y: 40,
+}));
+
 const sampleGifts = [
   { id: "1", card_name: "OMT", card_number: "123 456 789" },
   { id: "2", card_name: "Whish", card_number: "987 654 321" },
@@ -51,7 +62,7 @@ const ReveriePreview = () => {
     <ReverieTemplate
       wedding={sampleWedding}
       locations={sampleLocations}
-      gallery={[]}
+      gallery={sampleGallery}
       giftCards={sampleGifts}
       isPreview={false}
       onFieldUpdate={() => {}}

@@ -455,7 +455,10 @@ const WeddingForm = () => {
     template === "opulence-curtain" ||
     template === "lumiere-editorial" ||
     template === "etoile-carousel" ||
-    template === "tresor-swipe";
+    template === "tresor-swipe" ||
+    template === "dentelle-lace";
+  // Rêverie's "Our Moments" gallery is optional: the section only appears when photos are added.
+  const galleryRequired = template !== "dentelle-lace";
 
   useEffect(() => {
     if (id) {
@@ -989,7 +992,7 @@ const WeddingForm = () => {
     e.preventDefault();
 
     // Validate gallery images are required for templates that show gallery
-    if (shouldShowGalleryUpload && existingGalleryImages.length + galleryFiles.length === 0) {
+    if (shouldShowGalleryUpload && galleryRequired && existingGalleryImages.length + galleryFiles.length === 0) {
       toast({
         title: "Gallery images required",
         description: "Please upload at least one gallery image.",
@@ -1308,6 +1311,7 @@ const WeddingForm = () => {
         "lumiere-editorial",
         "etoile-carousel",
         "tresor-swipe",
+        "dentelle-lace",
       ];
       if (galleryTemplates.includes(formData.template_type) && galleryFiles.length > 0) {
         // Get the highest image_order to append new images
@@ -3239,10 +3243,13 @@ const WeddingForm = () => {
                     </div>
                   )}
                   <Label>
-                    Gallery Images (up to {maxGalleryImages}) <span className="text-foreground">*</span>
+                    Gallery Images (up to {maxGalleryImages}){" "}
+                    {galleryRequired ? <span className="text-foreground">*</span> : <span className="text-muted-foreground font-normal">(optional)</span>}
                   </Label>
                   <p className="text-xs text-muted-foreground mb-2">
-                    Upload images to showcase in your wedding gallery
+                    {galleryRequired
+                      ? "Upload images to showcase in your wedding gallery"
+                      : "Add photos for the \u201cOur Moments\u201d gallery. Leave it empty to hide the section."}
                     <br />
                     Use the slider to align the image and highlight what matters most. ✨
                   </p>

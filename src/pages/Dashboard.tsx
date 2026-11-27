@@ -33,7 +33,7 @@ import auraTemplate from "@/assets/doree1.jpeg";
 import lumiereTemplate from "@/assets/lumiere-4.jpg";
 import tresorCover from "@/assets/tresor-cover.jpeg";
 import etoileTemplate from "@/assets/etoile-6.jpg";
-import reverieCover from "@/assets/reverie-cover.jpg.asset.json";
+import reverieCover from "@/assets/reverie/cover.jpg";
 
 import { VeritePreview } from "@/components/templates/VeritePreview";
 import { GracePreview } from "@/components/templates/GracePreview";
@@ -205,9 +205,10 @@ const Dashboard = () => {
       name: "Rêverie",
       price: 110,
       description: "Romantic lace with a wax-sealed envelope opening and mocha accents",
-      image: reverieCover.url,
+      image: reverieCover,
       features: [
         { icon: Sparkles, text: "Wax Seal Opening" },
+        { icon: Images, text: "Photo Gallery" },
         { icon: MapPin, text: "Event Locations" },
         { icon: Clock, text: "Day Timeline & Countdown" },
         { icon: GiftIcon, text: "Gift Registry" },

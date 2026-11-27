@@ -29,6 +29,7 @@ import {
   useInView,
 } from "@/components/templates/reverie/ReverieEffects";
 import { ChapelArt, GiftArt, LoveLetterArt, PocketWatchArt, QuillArt, ToastArt } from "./reverie/ReverieOrnaments";
+import { ReverieGallery } from "./reverie/ReverieGallery";
 
 /**
  * Rêverie (formerly Dentelle) — romantic lace invitation.
@@ -682,6 +683,7 @@ const KEYFRAMES = `
 export const ReverieTemplate = ({
   wedding,
   locations,
+  gallery = [],
   giftCards,
   isPreview,
   onFieldUpdate,
@@ -1096,6 +1098,32 @@ export const ReverieTemplate = ({
           </div>
           <LaceEdge lace={IVORY} band={COCOA} flip />
         </section>
+
+        {/* ==================== GALLERY ==================== */}
+        {gallery.some((img: any) => img?.image_url) && (
+          <section className="text-center" style={{ padding: "96px 20px 16px", maxWidth: 560, margin: "0 auto" }}>
+            <Reveal>
+              <p style={{ ...smallCaps, color: CHAMPAGNE }}>{t("reverie.galleryKicker", "Captured with love")}</p>
+              <div style={{ marginTop: 14 }}>{sectionTitle(t("reverie.gallery", "Our Moments"))}</div>
+              <div aria-hidden className="flex items-center justify-center" style={{ marginTop: 20, gap: 10 }}>
+                <span style={{ width: 44, height: 1, background: LACE_LINE }} />
+                <span style={{ width: 5, height: 5, borderRadius: 999, background: CHAMPAGNE }} />
+                <span style={{ width: 44, height: 1, background: LACE_LINE }} />
+              </div>
+            </Reveal>
+            <div style={{ marginTop: 40 }}>
+              <ReverieGallery
+                images={gallery}
+                labels={{
+                  open: (n) => t("reverie.openPhoto", { n, defaultValue: "Open photo {{n}}" }),
+                  close: t("reverie.closePhoto", "Close"),
+                  previous: t("reverie.previousPhoto", "Previous photo"),
+                  next: t("reverie.nextPhoto", "Next photo"),
+                }}
+              />
+            </div>
+          </section>
+        )}
 
         {/* ==================== LOCATION ==================== */}
         {placesWithDirections.length > 0 && (
