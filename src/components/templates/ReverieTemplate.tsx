@@ -1,4 +1,4 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { EditableField } from "@/components/EditableField";
 import TemplatePreviewFooter from "@/components/templates/TemplatePreviewFooter";
@@ -152,12 +152,15 @@ const GOLD_LIGHT = "#e3cfa8"; // gold on mocha
 const OPENING_BG = "radial-gradient(120% 90% at 50% 16%, #7c5f53 0%, #5b443b 50%, #3c2c26 100%)";
 const HERO_BG = "linear-gradient(180deg, #fcf8f2 0%, #f6eee4 58%, #faf6f1 100%)";
 
-// Opening timeline (ms after the tap): the lettering and seal fade (0–350), the view flies into the
-// envelope (from 280, 1.3s), the opening fades away (from 1250). The first section's text rises as it fades.
-const OPEN_ZOOM_AT = 280;
-const OPEN_FADE_AT = 1250;
-const OPENING_DONE_MS = 1850;
-const HERO_REVEAL_S = 1.15;
+// Opening timeline (ms after the tap): the lettering fades and the seal cracks (0–550), the flap
+// swings open (from 380), the card slides out (from 900), the view flies into the card (from 1500,
+// 1.3s) and the opening fades away (from 2450). The first section's text rises as it fades.
+const OPEN_FLAP_AT = 380;
+const OPEN_CARD_AT = 900;
+const OPEN_ZOOM_AT = 1500;
+const OPEN_FADE_AT = 2450;
+const OPENING_DONE_MS = 3050;
+const HERO_REVEAL_S = 2.35;
 
 /** Soft drifting light: three glows moving slowly. "night" for the mocha opening, "day" for ivory. */
 const DreamLight = ({ tone = "day", strength = 1 }: { tone?: "day" | "night"; strength?: number }) => {
@@ -246,113 +249,350 @@ const FrameOutline = ({ w, h, draw, delay = 0 }: { w: number; h: number; draw: b
 };
 
 /**
- * A modern ivory envelope: crisp folded flaps with soft shading, a gold-lined top flap and a gold
- * seal with the couple's initials. Drawn at 300×210 and scaled to its box.
+ * A real-looking gold wax seal: an irregular spilled edge with small drips, a raised rim squeezed
+ * out by the stamp, a pressed well with an embossed laurel and the initials, a soft wax texture,
+ * a glossy highlight and a shadow on the paper. When `cracked`, it splits in two and falls away.
  */
-const ModernEnvelope = ({ shown, sealOff, groomInitial, brideInitial }: { shown: boolean; sealOff: boolean; groomInitial: string; brideInitial: string }) => {
+const RealWaxSeal = ({ groomInitial, brideInitial, shown, cracked }: { groomInitial: string; brideInitial: string; shown: boolean; cracked: boolean }) => {
   const uid = useId().replace(/:/g, "");
-  const flap = "M0 0 H300 L162 122 Q150 132 138 122 Z";
-  const flapLiner = "M10 6 L144 114 Q150 119 156 114 L290 6";
+  const edge = useMemo(() => {
+    const drips = [
+      { a: 0.75, amp: 0.12, w: 0.2 },
+      { a: 2.55, amp: 0.09, w: 0.16 },
+      { a: 4.35, amp: 0.14, w: 0.22 },
+      { a: 5.45, amp: 0.06, w: 0.14 },
+    ];
+    const pts: string[] = [];
+    const n = 120;
+    for (let i = 0; i <= n; i++) {
+      const a = (i / n) * Math.PI * 2;
+      let wob = 1 + Math.sin(a * 7 + 0.4) * 0.03 + Math.sin(a * 3 + 1.3) * 0.028 + Math.cos(a * 13) * 0.012;
+      for (const d of drips) {
+        const da = Math.atan2(Math.sin(a - d.a), Math.cos(a - d.a));
+        wob += d.amp * Math.exp(-(da * da) / (2 * d.w * d.w));
+      }
+      pts.push(`${(60 + Math.cos(a) * 44 * wob).toFixed(2)} ${(60 + Math.sin(a) * 44 * wob).toFixed(2)}`);
+    }
+    return `M${pts.join(" L")} Z`;
+  }, []);
+  const leaves = useMemo(() => {
+    let d = "";
+    for (const side of [-1, 1]) {
+      for (let k = 0; k < 6; k++) {
+        const a = Math.PI / 2 + side * (0.42 + k * 0.33);
+        const x = 60 + Math.cos(a) * 27;
+        const y = 60 + Math.sin(a) * 27;
+        const ta = a + side * (Math.PI / 2) + side * 0.6;
+        const len = 6.2 - k * 0.35;
+        const ex = x + Math.cos(ta) * len;
+        const ey = y + Math.sin(ta) * len;
+        const qx = -Math.sin(ta) * len * 0.36;
+        const qy = Math.cos(ta) * len * 0.36;
+        const mx = (x + ex) / 2;
+        const my = (y + ey) / 2;
+        d += `M${x.toFixed(1)} ${y.toFixed(1)} Q${(mx + qx).toFixed(1)} ${(my + qy).toFixed(1)} ${ex.toFixed(1)} ${ey.toFixed(1)} Q${(mx - qx).toFixed(1)} ${(my - qy).toFixed(1)} ${x.toFixed(1)} ${y.toFixed(1)} `;
+      }
+    }
+    return d;
+  }, []);
+  // a jagged crack down the middle
+  const crack = "60 -4, 56 16, 63 33, 57 50, 64 66, 58 84, 63 102, 60 124";
+  const emboss = (node: (dx: number, dy: number, fill: string, op: number) => React.ReactNode) => (
+    <>
+      {node(0.7, 0.9, "#fff1cf", 0.8)}
+      {node(-0.6, -0.8, "#5e4019", 0.55)}
+      {node(0, 0, "#a9813f", 1)}
+    </>
+  );
+  const body = (
+    <>
+      <path d={edge} fill={`url(#${uid}-wax)`} filter={`url(#${uid}-tex)`} />
+      <path d={edge} fill="none" stroke={`url(#${uid}-rim)`} strokeWidth="1.6" opacity="0.75" />
+      {/* the rim the stamp squeezed out: lit at the top left, in shade at the bottom right */}
+      <circle cx="60" cy="60" r="37.5" fill="none" stroke={`url(#${uid}-rim)`} strokeWidth="6" />
+      <circle cx="60" cy="60" r="34.2" fill={`url(#${uid}-well)`} />
+      <circle cx="60.6" cy="60.8" r="34.2" fill="none" stroke="#5b3e17" strokeWidth="1.4" opacity="0.35" />
+      <circle cx="60" cy="60" r="30.5" fill="none" stroke="#e9cf98" strokeWidth="0.5" opacity="0.6" />
+      {emboss((dx, dy, fill, op) => (
+        <path d={leaves} transform={`translate(${dx} ${dy})`} fill={fill} opacity={op} />
+      ))}
+      {emboss((dx, dy, fill, op) => (
+        <text
+          x={60 + dx}
+          y={66 + dy}
+          textAnchor="middle"
+          fill={fill}
+          opacity={op}
+          style={{ fontFamily: FONT_HEADING, letterSpacing: "0.02em" }}
+          fontSize="19"
+          fontWeight={600}
+        >
+          {groomInitial}
+          <tspan fontSize="11" fontStyle="italic" dx="1.5" dy="-1">&amp;</tspan>
+          <tspan dx="1.5" dy="1">{brideInitial}</tspan>
+        </text>
+      ))}
+      {/* gloss */}
+      <ellipse cx="41" cy="34" rx="15" ry="6.5" fill="#fff" opacity="0.32" transform="rotate(-38 41 34)" filter={`url(#${uid}-soft)`} />
+      <ellipse cx="37" cy="31" rx="4" ry="1.6" fill="#fff" opacity="0.7" transform="rotate(-38 37 31)" />
+      <path d="M86 78 Q92 70 92 58" fill="none" stroke="#fff4d6" strokeWidth="1.2" opacity="0.35" strokeLinecap="round" />
+    </>
+  );
+  const half = (side: "l" | "r") => (
+    <g
+      clipPath={`url(#${uid}-${side})`}
+      className="dt-anim"
+      style={{
+        transformBox: "fill-box",
+        transformOrigin: "center",
+        transform: cracked ? (side === "l" ? "translate(-7px, 6px) rotate(-9deg)" : "translate(8px, 5px) rotate(11deg)") : "none",
+        opacity: cracked ? 0 : 1,
+        transition: "transform .65s cubic-bezier(.3,0,.4,1), opacity .4s ease .35s",
+      }}
+    >
+      <use href={`#${uid}-body`} />
+    </g>
+  );
   return (
-    <svg viewBox="0 0 300 210" width="100%" height="100%" aria-hidden style={{ overflow: "visible", display: "block" }}>
+    <svg viewBox="0 0 120 120" width="100%" height="100%" aria-hidden style={{ overflow: "visible", display: "block" }}>
       <defs>
-        <linearGradient id={`${uid}-body`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f7f0e6" />
-          <stop offset="1" stopColor="#ece2d4" />
-        </linearGradient>
-        <linearGradient id={`${uid}-side`} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#f1e8db" />
-          <stop offset="1" stopColor="#e8dccc" />
-        </linearGradient>
-        <linearGradient id={`${uid}-sideR`} x1="1" y1="0" x2="0" y2="0">
-          <stop offset="0" stopColor="#efe5d8" />
-          <stop offset="1" stopColor="#e6d9c8" />
-        </linearGradient>
-        <linearGradient id={`${uid}-bottom`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fbf6ee" />
-          <stop offset="1" stopColor="#f0e6d8" />
-        </linearGradient>
-        <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fbf6ef" />
-          <stop offset="1" stopColor="#f3eadf" />
-        </linearGradient>
-        <radialGradient id={`${uid}-seal`} cx="38%" cy="32%" r="75%">
-          <stop offset="0" stopColor="#f1dcae" />
-          <stop offset="0.5" stopColor="#c9a066" />
-          <stop offset="1" stopColor="#8f6a3b" />
+        <radialGradient id={`${uid}-wax`} cx="36%" cy="30%" r="78%">
+          <stop offset="0" stopColor="#f6e1ae" />
+          <stop offset="0.35" stopColor="#d9b06e" />
+          <stop offset="0.72" stopColor="#b58644" />
+          <stop offset="1" stopColor="#7f5927" />
         </radialGradient>
-        <filter id={`${uid}-blur`} x="-10%" y="-20%" width="120%" height="160%">
-          <feGaussianBlur stdDeviation="2.4" />
+        <linearGradient id={`${uid}-rim`} x1="0.15" y1="0.1" x2="0.85" y2="0.9">
+          <stop offset="0" stopColor="#f8e5b6" />
+          <stop offset="0.5" stopColor="#c99c58" />
+          <stop offset="1" stopColor="#6f4d21" />
+        </linearGradient>
+        <radialGradient id={`${uid}-well`} cx="62%" cy="66%" r="72%">
+          <stop offset="0" stopColor="#d6ad6a" />
+          <stop offset="1" stopColor="#a47a3c" />
+        </radialGradient>
+        {/* wax surface: soft bumps lit from the top left */}
+        <filter id={`${uid}-tex`} x="-5%" y="-5%" width="110%" height="110%" colorInterpolationFilters="sRGB">
+          <feTurbulence type="fractalNoise" baseFrequency="0.07" numOctaves="2" seed="11" result="n" />
+          <feDiffuseLighting in="n" surfaceScale="2.2" diffuseConstant="1" lightingColor="#ffffff" result="l">
+            <feDistantLight azimuth="225" elevation="58" />
+          </feDiffuseLighting>
+          <feComponentTransfer in="l" result="lb">
+            <feFuncR type="linear" slope="1.12" intercept="0.02" />
+            <feFuncG type="linear" slope="1.12" intercept="0.02" />
+            <feFuncB type="linear" slope="1.12" intercept="0.02" />
+          </feComponentTransfer>
+          <feComposite in="lb" in2="SourceAlpha" operator="in" result="lc" />
+          <feBlend in="SourceGraphic" in2="lc" mode="multiply" />
         </filter>
-        <filter id={`${uid}-sealShadow`} x="-40%" y="-40%" width="180%" height="180%">
-          <feDropShadow dx="0" dy="2" stdDeviation="2" floodColor="#2c1e18" floodOpacity="0.35" />
+        <filter id={`${uid}-soft`} x="-30%" y="-60%" width="160%" height="220%">
+          <feGaussianBlur stdDeviation="1.6" />
         </filter>
+        <filter id={`${uid}-shadow`} x="-30%" y="-30%" width="160%" height="170%">
+          <feDropShadow dx="0.6" dy="2.4" stdDeviation="2.2" floodColor="#2c1d10" floodOpacity="0.42" />
+        </filter>
+        <clipPath id={`${uid}-l`}>
+          <polygon points={`-10 -10, ${crack}, -10 130`} />
+        </clipPath>
+        <clipPath id={`${uid}-r`}>
+          <polygon points={`130 -10, ${crack}, 130 130`} />
+        </clipPath>
+        <g id={`${uid}-body`}>{body}</g>
       </defs>
-      {/* body and folded flaps */}
-      <rect width="300" height="210" rx="5" fill={`url(#${uid}-body)`} />
-      <path d="M0 0 L150 112 L0 210 Z" fill={`url(#${uid}-side)`} />
-      <path d="M300 0 L150 112 L300 210 Z" fill={`url(#${uid}-sideR)`} />
-      <path d="M0 210 L150 98 L300 210 Z" fill="rgba(70,48,38,.16)" filter={`url(#${uid}-blur)`} transform="translate(0 -2)" />
-      <path d="M0 210 L150 98 L300 210 Z" fill={`url(#${uid}-bottom)`} />
-      <path d="M2 208 L150 99 L298 208" fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.85" />
-      {/* top flap, closed, with its shadow and a gold lining along its edge */}
-      <path d={flap} fill="rgba(60,40,30,.28)" filter={`url(#${uid}-blur)`} transform="translate(0 3)" />
-      <path d={flap} fill={`url(#${uid}-flap)`} />
-      <path
-        d={flapLiner}
-        fill="none"
-        stroke={GOLD}
-        strokeWidth="1.3"
-        pathLength={1}
-        strokeDasharray="1 1"
-        className="dt-anim"
-        style={{ strokeDashoffset: shown ? 0 : 1, transition: "stroke-dashoffset 1.8s cubic-bezier(.45,0,.2,1) .5s" }}
-      />
-      <rect x="0.5" y="0.5" width="299" height="209" rx="5" fill="none" stroke="rgba(255,255,255,.55)" />
-      {/* gold seal with the initials */}
       <g
         className="dt-anim"
+        filter={`url(#${uid}-shadow)`}
         style={{
           transformBox: "fill-box",
           transformOrigin: "center",
-          opacity: shown && !sealOff ? 1 : 0,
-          transform: shown && !sealOff ? "scale(1)" : sealOff ? "scale(1.12)" : "scale(.6)",
-          transition: sealOff ? "opacity .35s ease, transform .35s ease" : "opacity .7s ease 1s, transform .8s cubic-bezier(.2,.7,.2,1.35) 1s",
+          opacity: shown ? 1 : 0,
+          transform: shown ? "scale(1)" : "scale(.55)",
+          transition: "opacity .6s ease 1s, transform .7s cubic-bezier(.2,.7,.25,1.3) 1s",
         }}
-        filter={`url(#${uid}-sealShadow)`}
       >
-        <circle cx="150" cy="124" r="23" fill={`url(#${uid}-seal)`} />
-        <circle cx="150" cy="124" r="17.5" fill="none" stroke="#f6e6c2" strokeWidth="0.8" opacity="0.7" />
-        {/* initials engraved into the gold: a dark edge below, a light edge above */}
-        {[
-          { dx: 0.5, dy: 0.7, fill: "#6b4c25", op: 0.7 },
-          { dx: -0.4, dy: -0.5, fill: "#fbefd3", op: 0.75 },
-          { dx: 0, dy: 0, fill: "#9a7442", op: 1 },
-        ].map((l) => (
-          <text
-            key={l.fill}
-            x={150 + l.dx}
-            y={128.2 + l.dy}
-            textAnchor="middle"
-            fill={l.fill}
-            opacity={l.op}
-            style={{ fontFamily: FONT_HEADING, letterSpacing: "0.04em" }}
-            fontSize="12.5"
-            fontWeight={600}
-          >
-            {groomInitial}
-            <tspan fontSize="8" fontStyle="italic" dx="1.2" dy="-0.6">&amp;</tspan>
-            <tspan dx="1.2" dy="0.6">{brideInitial}</tspan>
-          </text>
-        ))}
+        {half("l")}
+        {half("r")}
       </g>
     </svg>
   );
 };
 
 /**
- * The opening screen: mocha with a soft gold light and a modern ivory envelope sealed in gold.
- * Tapping fades the lettering and the seal, then flies into the envelope, into the invitation.
+ * A modern ivory envelope that opens: folded flaps with soft shading, a gold-lined top flap with a
+ * gold-patterned lining inside, the invitation card tucked in it, and a gold wax seal on the flap.
+ * Each part is its own layer so the flap can swing open in 3D and the card can slide out.
+ */
+const OpeningEnvelope = ({
+  shown,
+  stage,
+  groomInitial,
+  brideInitial,
+  names,
+  cardRef,
+}: {
+  shown: boolean;
+  /** 0 sealed · 1 seal cracks · 2 flap opens · 3 flap behind the card · 4 card slides out */
+  stage: number;
+  groomInitial: string;
+  brideInitial: string;
+  names: string;
+  cardRef: React.RefObject<HTMLSpanElement>;
+}) => {
+  const uid = useId().replace(/:/g, "");
+  const FLAP_H = 134; // the flap's depth in the 300×210 envelope
+  const flapPct = `${(FLAP_H / 210) * 100}%`;
+  const layer: React.CSSProperties = { position: "absolute", left: 0, width: "100%" };
+  const ease = "cubic-bezier(.55,0,.25,1)";
+  return (
+    <span className="absolute inset-0 block" style={{ perspective: 1100 }}>
+      {/* inside of the envelope */}
+      <svg viewBox="0 0 300 210" width="100%" height="100%" aria-hidden style={{ ...layer, top: 0, zIndex: 1, display: "block" }}>
+        <defs>
+          <linearGradient id={`${uid}-inside`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#e6d9c7" />
+            <stop offset="1" stopColor="#efe5d6" />
+          </linearGradient>
+        </defs>
+        <rect width="300" height="210" rx="5" fill={`url(#${uid}-inside)`} />
+      </svg>
+
+      {/* top flap: outside ivory with a gold lining along its edge; inside a gold-patterned liner */}
+      <span
+        aria-hidden
+        className="dt-anim block"
+        style={{
+          ...layer,
+          top: 0,
+          height: "100%",
+          zIndex: stage >= 3 ? 2 : 5,
+          transformOrigin: "50% 0",
+          transformStyle: "preserve-3d",
+          transform: stage >= 2 ? "rotateX(180deg)" : "rotateX(0deg)",
+          transition: `transform .85s ${ease}`,
+        }}
+      >
+        <svg viewBox={`0 0 300 ${FLAP_H}`} aria-hidden style={{ ...layer, top: 0, height: flapPct, overflow: "visible", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" }}>
+          <defs>
+            <linearGradient id={`${uid}-flap`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stopColor="#fbf6ef" />
+              <stop offset="1" stopColor="#f3eadf" />
+            </linearGradient>
+            <filter id={`${uid}-fblur`} x="-10%" y="-20%" width="120%" height="160%">
+              <feGaussianBlur stdDeviation="2.4" />
+            </filter>
+          </defs>
+          <path d="M0 0 H300 L162 122 Q150 132 138 122 Z" fill="rgba(60,40,30,.28)" filter={`url(#${uid}-fblur)`} transform="translate(0 3)" />
+          <path d="M0 0 H300 L162 122 Q150 132 138 122 Z" fill={`url(#${uid}-flap)`} />
+          <path
+            d="M10 6 L144 114 Q150 119 156 114 L290 6"
+            fill="none"
+            stroke={GOLD}
+            strokeWidth="1.3"
+            pathLength={1}
+            strokeDasharray="1 1"
+            className="dt-anim"
+            style={{ strokeDashoffset: shown ? 0 : 1, transition: "stroke-dashoffset 1.8s cubic-bezier(.45,0,.2,1) .5s" }}
+          />
+        </svg>
+        <svg
+          viewBox={`0 0 300 ${FLAP_H}`}
+          aria-hidden
+          style={{
+            ...layer,
+            top: `-${flapPct}`,
+            height: flapPct,
+            overflow: "visible",
+            transformOrigin: "50% 100%",
+            transform: "rotateX(180deg)",
+            backfaceVisibility: "hidden",
+            WebkitBackfaceVisibility: "hidden",
+          }}
+        >
+          <defs>
+            <linearGradient id={`${uid}-liner`} x1="0" y1="1" x2="0" y2="0">
+              <stop offset="0" stopColor="#d9bd8c" />
+              <stop offset="1" stopColor="#c49f68" />
+            </linearGradient>
+            <pattern id={`${uid}-dots`} width="10" height="10" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <circle cx="5" cy="5" r="1.1" fill="#f3e2bd" opacity="0.55" />
+            </pattern>
+          </defs>
+          <path d={`M0 ${FLAP_H} H300 L162 12 Q150 2 138 12 Z`} fill={`url(#${uid}-liner)`} />
+          <path d={`M0 ${FLAP_H} H300 L162 12 Q150 2 138 12 Z`} fill={`url(#${uid}-dots)`} />
+          <path d={`M8 ${FLAP_H - 5} L146 18 Q150 13 154 18 L292 ${FLAP_H - 5}`} fill="none" stroke="#f6e7c6" strokeWidth="0.9" opacity="0.8" />
+        </svg>
+      </span>
+
+      {/* the invitation card, tucked inside */}
+      <span
+        ref={cardRef}
+        aria-hidden
+        className="dt-anim block text-center"
+        style={{
+          position: "absolute",
+          left: "7%",
+          width: "86%",
+          top: "9%",
+          height: "80%",
+          zIndex: 3,
+          borderRadius: 3,
+          background: "linear-gradient(180deg, #fffdf9 0%, #fbf6ee 100%)",
+          boxShadow: "0 1px 2px rgba(60,40,30,.12), 0 10px 20px -12px rgba(60,40,30,.35)",
+          transform: stage >= 4 ? "translateY(-56%)" : "none",
+          transition: `transform .8s ${ease}`,
+        }}
+      >
+        <span className="absolute block" style={{ inset: "5%", border: `1px solid ${GOLD}`, borderRadius: 2 }} />
+        <span className="absolute block" style={{ inset: "7.5%", border: `0.5px solid ${GOLD}`, opacity: 0.6, borderRadius: 1 }} />
+        <span
+          className="dt-anim absolute inset-x-0 block"
+          style={{ top: "20%", fontFamily: FONT_TITLE, color: HERO_INK, fontSize: "clamp(18px, 5.6vw, 26px)", lineHeight: 1.1, opacity: stage >= 5 ? 0 : 1, transition: "opacity .3s ease" }}
+        >
+          {names}
+        </span>
+      </span>
+
+      {/* front pocket: side flaps under the bottom flap */}
+      <svg viewBox="0 0 300 210" width="100%" height="100%" aria-hidden style={{ ...layer, top: 0, zIndex: 4, display: "block", overflow: "visible" }}>
+        <defs>
+          <linearGradient id={`${uid}-side`} x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0" stopColor="#f1e8db" />
+            <stop offset="1" stopColor="#e8dccc" />
+          </linearGradient>
+          <linearGradient id={`${uid}-sideR`} x1="1" y1="0" x2="0" y2="0">
+            <stop offset="0" stopColor="#efe5d8" />
+            <stop offset="1" stopColor="#e6d9c8" />
+          </linearGradient>
+          <linearGradient id={`${uid}-bottom`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stopColor="#fbf6ee" />
+            <stop offset="1" stopColor="#f0e6d8" />
+          </linearGradient>
+          <filter id={`${uid}-pblur`} x="-10%" y="-20%" width="120%" height="160%">
+            <feGaussianBlur stdDeviation="2.4" />
+          </filter>
+        </defs>
+        <path d="M0 0 L150 112 L0 210 Z" fill={`url(#${uid}-side)`} />
+        <path d="M300 0 L150 112 L300 210 Z" fill={`url(#${uid}-sideR)`} />
+        <path d="M0 210 L150 98 L300 210 Z" fill="rgba(70,48,38,.16)" filter={`url(#${uid}-pblur)`} transform="translate(0 -2)" />
+        <path d="M0 210 L150 98 L300 210 Z" fill={`url(#${uid}-bottom)`} />
+        <path d="M2 208 L150 99 L298 208" fill="none" stroke="#fffdf8" strokeWidth="1" opacity="0.85" />
+        <path d="M0 1 L150 112 L300 1" fill="none" stroke="#fffdf8" strokeWidth="0.8" opacity="0.6" />
+      </svg>
+
+      {/* the wax seal, on the tip of the flap */}
+      <span
+        className="absolute block"
+        style={{ left: "50%", top: `${(126 / 210) * 100}%`, width: "31%", aspectRatio: "1", transform: "translate(-50%, -50%)", zIndex: 6 }}
+      >
+        <RealWaxSeal groomInitial={groomInitial} brideInitial={brideInitial} shown={shown} cracked={stage >= 1} />
+      </span>
+    </span>
+  );
+};
+
+/**
+ * The opening screen: mocha with a soft gold light and an ivory envelope sealed with gold wax.
+ * Tapping cracks the seal, opens the flap, slides the card out, then flies into the card.
  */
 const Opening = ({
   opening,
@@ -373,9 +613,9 @@ const Opening = ({
 }) => {
   const reduced = prefersReducedMotion();
   const rootRef = useRef<HTMLDivElement | null>(null);
-  const envRef = useRef<HTMLSpanElement | null>(null);
-  // 0 waiting · 1 lettering fades · 2 into the envelope · 3 fading away
-  const [phase, setPhase] = useState(0);
+  const cardRef = useRef<HTMLSpanElement>(null);
+  // envelope stages (see OpeningEnvelope), then 5 into the card · 6 fading away
+  const [stage, setStage] = useState(0);
   const [shown, setShown] = useState(false);
   const [zoom, setZoom] = useState({ origin: "50% 45%", scale: 10 });
   useEffect(() => {
@@ -385,36 +625,40 @@ const Opening = ({
   useEffect(() => {
     if (!opening) return;
     if (reduced) {
-      setPhase(3);
+      setStage(6);
       return;
     }
-    // fly into the upper middle of the envelope (its flap), far enough that the ivory fills the screen
-    const root = rootRef.current;
-    const e = envRef.current;
-    if (root && e) {
-      const r = root.getBoundingClientRect();
-      const b = e.getBoundingClientRect();
-      setZoom({
-        origin: `${b.left - r.left + b.width / 2}px ${b.top - r.top + b.height * 0.3}px`,
-        scale: 2.6 * Math.max(r.width / b.width, r.height / b.height) + 1,
-      });
-    }
-    setPhase(1);
-    const t1 = window.setTimeout(() => setPhase(2), OPEN_ZOOM_AT);
-    const t2 = window.setTimeout(() => setPhase(3), OPEN_FADE_AT);
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-    };
+    const timers = [
+      window.setTimeout(() => setStage(1), 0),
+      window.setTimeout(() => setStage(2), OPEN_FLAP_AT),
+      window.setTimeout(() => setStage(3), OPEN_FLAP_AT + 430),
+      window.setTimeout(() => setStage(4), OPEN_CARD_AT),
+      window.setTimeout(() => {
+        // fly into the part of the card that is out of the envelope, far enough to fill the screen
+        const root = rootRef.current;
+        const c = cardRef.current;
+        if (root && c) {
+          const r = root.getBoundingClientRect();
+          const b = c.getBoundingClientRect();
+          setZoom({
+            origin: `${b.left - r.left + b.width / 2}px ${b.top - r.top + b.height * 0.24}px`,
+            scale: 2.6 * Math.max(r.width / b.width, r.height / (b.height * 0.5)) + 1,
+          });
+        }
+        setStage(5);
+      }, OPEN_ZOOM_AT),
+      window.setTimeout(() => setStage(6), OPEN_FADE_AT),
+    ];
+    return () => timers.forEach(clearTimeout);
   }, [opening, reduced]);
 
   // each line rises in on arrival, and drops away when tapped
   const rise = (delay: number): React.CSSProperties => {
-    const visible = shown && phase === 0;
+    const visible = shown && stage === 0;
     return {
       opacity: visible ? 1 : 0,
-      transform: visible ? "none" : phase > 0 ? "translateY(8px)" : "translateY(14px)",
-      transition: phase > 0 ? "opacity .35s ease, transform .35s ease" : `opacity 1s ease ${delay}s, transform 1.1s cubic-bezier(.2,.7,.2,1) ${delay}s`,
+      transform: visible ? "none" : stage > 0 ? "translateY(8px)" : "translateY(14px)",
+      transition: stage > 0 ? "opacity .35s ease, transform .35s ease" : `opacity 1s ease ${delay}s, transform 1.1s cubic-bezier(.2,.7,.2,1) ${delay}s`,
     };
   };
 
@@ -422,7 +666,7 @@ const Opening = ({
     <div
       ref={rootRef}
       className="absolute inset-0 z-20 overflow-hidden"
-      style={{ opacity: phase >= 3 ? 0 : 1, transition: `opacity ${reduced ? ".45s" : ".6s"} ease`, pointerEvents: opening ? "none" : "auto" }}
+      style={{ opacity: stage >= 6 ? 0 : 1, transition: `opacity ${reduced ? ".45s" : ".6s"} ease`, pointerEvents: opening ? "none" : "auto" }}
     >
       <button
         type="button"
@@ -436,25 +680,25 @@ const Opening = ({
           style={{
             background: OPENING_BG,
             transformOrigin: zoom.origin,
-            transform: phase >= 2 ? `scale(${zoom.scale})` : "scale(1)",
+            transform: stage >= 5 ? `scale(${zoom.scale})` : "scale(1)",
             transition: "transform 1.3s cubic-bezier(.66,0,.18,1)",
           }}
         >
           <DreamLight tone="night" />
           <span className="absolute inset-0 flex flex-col items-center justify-center" style={{ padding: "40px 24px" }}>
             <span
-              ref={envRef}
               className="dt-anim relative block"
               style={{
                 width: "min(80vw, 60vh, 380px)",
                 aspectRatio: "300 / 210",
-                filter: "drop-shadow(0 26px 34px rgba(20,12,8,.45)) drop-shadow(0 4px 8px rgba(20,12,8,.25))",
+                marginTop: "10vh",
+                filter: stage >= 5 ? "none" : "drop-shadow(0 26px 34px rgba(20,12,8,.45)) drop-shadow(0 4px 8px rgba(20,12,8,.25))",
                 opacity: shown ? 1 : 0,
                 transform: shown ? "none" : "translateY(18px) scale(.96)",
                 transition: "opacity 1s ease, transform 1.3s cubic-bezier(.2,.7,.2,1)",
               }}
             >
-              <ModernEnvelope shown={shown} sealOff={phase > 0} groomInitial={groomInitial} brideInitial={brideInitial} />
+              <OpeningEnvelope shown={shown} stage={stage} groomInitial={groomInitial} brideInitial={brideInitial} names={names} cardRef={cardRef} />
             </span>
             <span className="block" style={{ ...SMALL_CAPS, fontSize: 12, letterSpacing: "0.36em", color: "#f6ecdf", marginTop: 46, ...rise(1) }}>
               {names}
@@ -926,7 +1170,7 @@ export const ReverieTemplate = ({
             </div>
           </div>
 
-          {/* Opening: an ivory envelope sealed in gold — tap to fly into it */}
+          {/* Opening: an ivory envelope sealed with gold wax — tap to open it and fly into the card */}
           {!opened && (
             <Opening
               opening={opening}
